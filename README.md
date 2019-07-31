@@ -2,6 +2,13 @@
 
 ## Development process
 
+### Environment
+
+_/client/.env_
+```
+SKIP_PREFLIGHT_CHECK=true
+```
+
 ### Branches
 
 In this project we follow with [Pull Request process](https://help.github.com/en/articles/about-pull-requests). Two main branches are protected with a [Github branch protection rules](https://help.github.com/en/articles/defining-the-mergeability-of-pull-requests):
