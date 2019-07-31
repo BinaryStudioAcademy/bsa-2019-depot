@@ -14,13 +14,13 @@ const staticPath = path.resolve(`${__dirname}/../client/build`);
 app.use(express.static(staticPath));
 
 app.get('*', (req, res) => {
-    res.write(fs.readFileSync(`${__dirname}/../client/build/index.html`));
-    res.end();
+  res.write(fs.readFileSync(`${__dirname}/../client/build/index.html`));
+  res.end();
 });
 
 const port = process.env.APP_PORT || 3000;
 
 app.listen(port, () => {
-    // eslint-disable-next-line no-console
-    console.log(`Server listening on port ${port}!`);
+  // eslint-disable-next-line no-console
+  console.log(`Server listening on port ${port}!`);
 });
