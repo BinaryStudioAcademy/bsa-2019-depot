@@ -15,9 +15,9 @@
 		"indent": 2,
 		"quotes": [2, "single", "avoid-escape"],
 		"semi": 2,
-		"react/display-name": 0,
+		"react/display-name": 2,
 		"react/no-unescaped-entities": 0,
-		"react/prop-types": 0,
+		"react/prop-types": 2,
 		"react/jsx-no-bind": 2
 	},
 	"settings": {
