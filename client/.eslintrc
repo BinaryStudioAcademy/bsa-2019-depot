@@ -12,7 +12,6 @@
 		"no-unused-vars": 2,
 		"eqeqeq": 2,
 		"no-console": [2, { "allow": ["warn", "error"] }],
-		"no-case-declarations": 0,
 		"indent": 2,
 		"quotes": [2, "single", "avoid-escape"],
 		"semi": 2,
