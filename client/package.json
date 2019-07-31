@@ -1,59 +1,60 @@
 {
-    "name": "client",
-    "version": "0.1.0",
-    "private": true,
-    "dependencies": {
-        "babel-eslint": "^10.0.2",
-        "prettier": "^1.18.2",
-        "react": "^16.8.6",
-        "react-dom": "^16.8.6",
-        "react-scripts": "3.0.1"
-    },
-    "scripts": {
-        "start": "react-scripts start",
-        "build": "react-scripts build",
-        "test": "react-scripts test",
-        "eject": "react-scripts eject",
-        "lint": "eslint --fix '**/*.{js,jsx}'",
-        "prettify": "prettier --write '**/*.{css,scss,sass,js,jsx,json,md}'",
-        "codecheck": "yarn prettify && yarn lint"
-    },
-    "devDependencies": {
-        "eslint-config-react-app": "^4.0.1",
-        "eslint-plugin-flowtype": "^3.11.1",
-        "eslint-plugin-import": "^2.18.2",
-        "eslint-plugin-jsx-a11y": "^6.2.3",
-        "eslint-plugin-react": "^7.14.3",
-        "eslint-plugin-react-hooks": "^1.6.1",
-        "husky": "^3.0.2",
-        "lint-staged": "^9.2.1",
-        "redux-devtools-extension": "^2.13.8"
-    },
-    "browserslist": {
-        "production": [
-            ">0.2%",
-            "not dead",
-            "not op_mini all"
-        ],
-        "development": [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version"
-        ]
-    },
-    "husky": {
-        "hooks": {
-            "pre-commit": "lint-staged"
-        }
-    },
-    "lint-staged": {
-        "**/*.{css,scss,sass,js,jsx,json,md}": [
-            "prettier --write",
-            "git add"
-        ],
-        "**/*.{js,jsx}": [
-            "eslint --fix",
-            "git add"
-        ]
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "babel-eslint": "^10.0.2",
+    "eslint": "^6.1.0",
+    "prettier": "^1.18.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-scripts": "3.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint": "eslint --fix '**/*.{js,jsx}'",
+    "prettify": "prettier --write '**/*.{css,scss,sass,js,jsx,json,md}'",
+    "codecheck": "yarn prettify && yarn lint"
+  },
+  "devDependencies": {
+    "eslint-config-react-app": "^4.0.1",
+    "eslint-plugin-flowtype": "^3.11.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.14.3",
+    "eslint-plugin-react-hooks": "^1.6.1",
+    "husky": "^3.0.2",
+    "lint-staged": "^9.2.1",
+    "redux-devtools-extension": "^2.13.8"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
     }
+  },
+  "lint-staged": {
+    "**/*.{css,scss,sass,js,jsx,json,md}": [
+      "prettier --write",
+      "git add"
+    ],
+    "**/*.{js,jsx}": [
+      "eslint --fix",
+      "git add"
+    ]
+  }
 }
