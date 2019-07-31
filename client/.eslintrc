@@ -1,37 +1,36 @@
 {
-    "env": {
-        "browser": true,
-        "es6": true
-    },
-    "extends": [
-        "react-app",
-        "airbnb"
-    ],
-    "globals": {
-        "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly"
-    },
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "ecmaVersion": 2018,
-        "sourceType": "module"
-    },
-    "plugins": [
-        "react"
-    ],
-    "rules": {
-        "semi": ["error", "always"],
-        "indent": ["error", 4, { "SwitchCase": 1 }],
-        "react/jsx-indent": ["error", 4],
-        "react/jsx-indent-props": ["error", 4],
-        "comma-dangle": "off",
-        "import/no-unresolved": "off",
-        "react/destructuring-assignment": "off",
-        "import/prefer-default-export": "off",
-        "jsx-a11y/no-static-element-interactions": "off",
-        "jsx-a11y/click-events-have-key-events": "off",
-        "object-curly-newline": "off"
-    }
+	"env": {
+		"browser": true
+	},
+	"extends": [
+		"plugin:react/recommended",
+		"react-app"
+	],
+	"plugins": ["react"],
+	"rules": {
+		"camelcase": 2,
+		"no-unused-vars": 2,
+		"eqeqeq": 2,
+		"no-console": [2, { "allow": ["warn", "error"] }],
+		"no-case-declarations": 0,
+		"indent": 2,
+		"quotes": [2, "single", "avoid-escape"],
+		"semi": 2,
+		"react/display-name": 0,
+		"react/no-unescaped-entities": 0,
+		"react/prop-types": 0,
+		"react/jsx-no-bind": 2
+	},
+	"settings": {
+		"react": {
+			"version": "detect"
+		}
+	},
+	"parser": "babel-eslint",
+	"parserOptions": {
+		"sourceType": "module",
+		"ecmaFeatures": {
+			"jsx": true
+		}
+	}
 }
