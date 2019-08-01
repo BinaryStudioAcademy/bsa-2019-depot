@@ -3,6 +3,10 @@ os: linux
 files:
   - source: ./
     destination: /home/ubuntu/bsa-2019-depot
+permissions:
+  - object: /
+    pattern: "**"
+    owner: ubuntu
 hooks:
   AfterInstall:
     - location: scripts/after-install.sh
