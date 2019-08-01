@@ -4,8 +4,8 @@ node_js:
 branches:
   only:
   - master
-notifications:
-  slack: binary-academy-2019:VopRXnH9k7BZE3O1kYxc127T
+# notifications:
+#   slack: binary-academy-2019:VopRXnH9k7BZE3O1kYxc127T
 deploy:
 - provider: s3
   access_key_id: $AWS_ACCESS_KEY
