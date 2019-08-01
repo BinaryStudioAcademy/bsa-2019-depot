@@ -1,9 +1,11 @@
 language: node_js
 node_js:
 - "10.16.0"
-cache:
-  directories:
-    - node_modules
+branches:
+  only:
+  - master
+notifications:
+  slack: binary-academy-2019:VopRXnH9k7BZE3O1kYxc127T
 deploy:
 - provider: s3
   access_key_id: $AWS_ACCESS_KEY
