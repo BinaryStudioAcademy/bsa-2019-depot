@@ -2,4 +2,4 @@ version: 0.0
 os: linux
 files:
   - source: ./
-    destination: /home/ubuntu/bsa-2019-depot
+    destination: /home/ubuntu
