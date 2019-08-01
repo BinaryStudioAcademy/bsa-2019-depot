@@ -3,3 +3,7 @@ os: linux
 files:
   - source: ./
     destination: /home/ubuntu/bsa-2019-depot
+hooks:
+  AfterInstall:
+    - location: /home/ubuntu/bsa-2019-depot/install.sh
+      runas: ubuntu
