@@ -5,5 +5,8 @@ files:
     destination: /home/ubuntu/bsa-2019-depot
 hooks:
   AfterInstall:
-    - location: /home/ubuntu/bsa-2019-depot/install.sh
+    - location: /home/ubuntu/bsa-2019-depot/scripts/after-install.sh
+      runas: ubuntu
+  ApplicationStart:
+    - location: /home/ubuntu/bsa-2019-depot/scripts/app-start.sh
       runas: ubuntu
