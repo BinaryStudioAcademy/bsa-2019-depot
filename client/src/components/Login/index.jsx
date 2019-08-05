@@ -93,7 +93,10 @@ class Login extends React.Component {
                           </Button>
                       </Segment>
                   </Form>
-                  <Message>New to Depot? {/* <NavLink exact to="/registration">Create an account</NavLink> */}</Message>
+                  <Message>
+            New to Depot? [place for /register link]
+                      {/* <NavLink exact to="/registration">Create an account</NavLink> */}
+                  </Message>
               </Grid.Column>
           </Grid>
       ) : (
