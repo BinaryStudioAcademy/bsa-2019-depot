@@ -3,7 +3,7 @@ $header-color: #253858;
 $text-color: #42526e;
 
 :local(.main) {
-  padding: 40px 0 16px;
+  padding: 80px 0 16px;
   background-color: #f4f5f7;
   text-align: center;
 }
@@ -35,5 +35,81 @@ $text-color: #42526e;
 :local(.advantage) {
   svg {
     transform: rotate(180deg);
+  }
+}
+
+:local(.advantageSmall) {
+  margin-top: 50px;
+  img {
+    height: 140px;
+    margin: 0 auto;
+  }
+  h3 {
+    font-size: 24px;
+    color: $header-color;
+    text-align: center;
+  }
+  p {
+    font-size: 16px;
+    text-align: center;
+  }
+}
+
+:local(.advantageImg) {
+  margin-top: 60px;
+}
+
+:local(.advantageText) {
+  margin-top: 60px;
+  h5 {
+    text-transform: uppercase;
+    font-size: 12px;
+    padding-top: 15px;
+  }
+  h2 {
+    font-size: 36px;
+    color: $header-color;
+    margin-bottom: 24px;
+  }
+  p {
+    font-size: 20px;
+  }
+  a {
+    font-size: 16px;
+    color: $blue-color;
+  }
+}
+
+:local(.advantageTextHide) {
+  @media screen and (min-width: 992px) {
+    display: none !important;
+  }
+}
+
+:local(.advantageTextShow) {
+  @media screen and (max-width: 992px) {
+    display: none !important;
+  }
+}
+
+:local(.new) {
+  composes: main;
+  margin-top: 100px;
+}
+
+:local(.newCard) {
+  height: 400px;
+  padding: 40px;
+  margin-top: 20px;
+  background-color: #fff;
+  img {
+    height: 90px;
+  }
+  h3 {
+    font-size: 24px;
+  }
+  p {
+    font-size: 16px;
+    line-height: 24px;
   }
 }
