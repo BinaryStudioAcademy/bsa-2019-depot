@@ -1,0 +1,32 @@
+language: node_js
+node_js:
+- "10.16.0"
+branches:
+  only:
+  - master
+# notifications:
+#   slack: binary-academy-2019:VopRXnH9k7BZE3O1kYxc127T
+deploy:
+- provider: s3
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  local_dir: dpl_cd_upload
+  skip_cleanup: true
+  on: &2
+    repo: BinaryStudioAcademy/bsa-2019-depot
+  bucket: depotbucket
+  region: eu-central-1
+- provider: codedeploy
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
+  bucket: depotbucket
+  key: latest.zip
+  bundle_type: zip
+  application: depot-deploy-app
+  deployment_group: depot-deploy-app-group
+  region: eu-central-1
+  on: *2
+script:
+  - zip -r latest *
+  - mkdir -p dpl_cd_upload
+  - mv latest.zip dpl_cd_upload/latest.zip
