@@ -4,11 +4,11 @@ import UserRepository from '../data/repositories/user.repository';
 
 passport.use(
   'login',
-  new LocalStrategy(async (username, password, done) => {
+  new LocalStrategy(async (loginInput, password, done) => {
     try {
-      const user = username.includes('@')
-        ? UserRepository.getByEmail(username)
-        : UserRepository.getByUsername(username);
+      const user = loginInput.includes('@')
+        ? UserRepository.getByEmail(loginInput)
+        : UserRepository.getByUsername(loginInput);
 
       if (!user) {
         return done({ status: 401, message: 'Incorrect email or username' }, false);
