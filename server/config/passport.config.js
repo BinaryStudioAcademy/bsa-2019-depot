@@ -1,6 +1,10 @@
 import passport from 'passport';
+import dotenv from 'dotenv';
 import { Strategy as LocalStrategy } from 'passport-local';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
 import UserRepository from '../data/repositories/user.repository';
+
+dotenv.config();
 
 passport.use(
   'login',
@@ -40,6 +44,29 @@ passport.use(
       } catch (err) {
         return done(err);
       }
+    }
+  )
+);
+
+const clientID = process.env.GOOGLE_CLIENT_ID;
+const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+const callbackURL = process.env.GOOGLE_CALLBACK_URL;
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID,
+      clientSecret,
+      callbackURL
+    },
+    (accessToken, refreshToken, profile, done) => {
+      const user = UserRepository.getByEmail(profile.emails[0]);
+
+      if (!user) {
+        return done({ status: 401, message: 'You need to sign up or connect your Google account' }, false);
+      }
+
+      return done(null, user);
     }
   )
 );

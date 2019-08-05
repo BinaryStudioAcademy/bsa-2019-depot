@@ -1,12 +1,25 @@
 import { Router } from 'express';
 
 import authenticationMiddleware from '../middlewares/authentication.middleware';
+import { googleMiddleware, googleCallbackMiddleware } from '../middlewares/google-authentication.middleware';
 import registrationMiddleware from '../middlewares/registration.middleware';
 import { login, register } from '../services/auth.service';
 
 const router = Router();
 
 router.post('/login', authenticationMiddleware, (req, res, next) => {
+  login(req.user)
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.post('/google', googleMiddleware, (req, res, next) => {
+  login(req.user)
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.post('/google/callback', googleCallbackMiddleware, (req, res, next) => {
   login(req.user)
     .then(data => res.send(data))
     .catch(next);
