@@ -1,12 +1,12 @@
 import { all } from 'redux-saga/effects';
 
-// import sagas
+// import sagasA from '../containers/ContainerA/sagasA'
 
 export default function* rootSaga() {
     yield all([
     /*
-        sagaA(),
-        sagaB(),
+        sagasA(),
+        sagasB(),
         ...
       */
     ]);

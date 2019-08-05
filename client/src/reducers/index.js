@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-// import reducers
+// import reducerA from '../containers/ContainerA/reducerA'
 
 export default combineReducers({
     /*
