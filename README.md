@@ -9,6 +9,16 @@ _/client/.env_
 SKIP_PREFLIGHT_CHECK=true
 ```
 
+_/server/.env_
+```
+DB_NAME = depot # default. has to be changed to local DB name if it is different
+DB_USERNAME = postgres # default. has to be changed to local PostgreSQL username if it is different
+DB_PASSWORD = postgres # default. has to be changed to local PostgreSQL password if it is different
+DB_HOST = localhost # default. has to be changed to local used host if it is different
+DB_PORT = 5432 # default. has to be changed to local used port if it is different
+DB_DIALECT = postgres # default. do not change
+```
+
 ### Branches
 
 In this project we follow with [Pull Request process](https://help.github.com/en/articles/about-pull-requests). Two main branches are protected with a [Github branch protection rules](https://help.github.com/en/articles/defining-the-mergeability-of-pull-requests):
