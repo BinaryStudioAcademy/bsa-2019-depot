@@ -1,12 +1,19 @@
 import { Router } from 'express';
 
 import authenticationMiddleware from '../middlewares/authentication.middleware';
-import { login } from '../services/auth.service';
+import registrationMiddleware from '../middlewares/registration.middleware';
+import { login, register } from '../services/auth.service';
 
 const router = Router();
 
 router.post('/login', authenticationMiddleware, (req, res, next) => {
   login(req.user)
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.post('/register', registrationMiddleware, (req, res, next) => {
+  register(req.user)
     .then(data => res.send(data))
     .catch(next);
 });
