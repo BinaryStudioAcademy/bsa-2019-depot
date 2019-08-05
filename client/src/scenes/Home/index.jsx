@@ -1,6 +1,6 @@
 import React from 'react';
-import NotFound from '../NotFound';
+import MainPage from '../../components/MainPage';
 
-const Home = () => <NotFound />;
+const Home = () => <MainPage />;
 
 export default Home;

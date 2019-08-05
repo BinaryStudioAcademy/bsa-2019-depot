@@ -1,0 +1,39 @@
+$blue-color: #0052cc;
+$header-color: #253858;
+$text-color: #42526e;
+
+:local(.main) {
+  padding: 40px 0 16px;
+  background-color: #f4f5f7;
+  text-align: center;
+}
+
+:local(.header) {
+  color: $header-color;
+  font-size: 44px;
+  text-align: center;
+  @media screen and (max-width: 768px) {
+    font-size: 36px;
+  }
+}
+
+:local(.mainText) {
+  font-size: 20px;
+  text-align: center;
+}
+
+:local(.mainHost) {
+  font-size: 16px;
+}
+
+:local(.button) {
+  margin: 24px 0 !important;
+  background-color: $blue-color !important;
+  color: #fff !important;
+}
+
+:local(.advantage) {
+  svg {
+    transform: rotate(180deg);
+  }
+}
