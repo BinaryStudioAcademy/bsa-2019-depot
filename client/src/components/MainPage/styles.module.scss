@@ -32,10 +32,8 @@ $text-color: #42526e;
   color: #fff !important;
 }
 
-:local(.advantage) {
-  svg {
-    transform: rotate(180deg);
-  }
+:local(.wave) {
+  transform: rotate(180deg);
 }
 
 :local(.advantageSmall) {
@@ -52,6 +50,7 @@ $text-color: #42526e;
   p {
     font-size: 16px;
     text-align: center;
+    line-height: 24px;
   }
 }
 
@@ -112,4 +111,105 @@ $text-color: #42526e;
     font-size: 16px;
     line-height: 24px;
   }
+}
+
+:local(.integrations) {
+  composes: main;
+  padding: 50px 0;
+}
+
+:local(.integrationsBlock) {
+  composes: advantageSmall;
+  margin: 20px 0;
+  img {
+    height: 90px;
+    margin: 0;
+  }
+  h3,
+  p {
+    text-align: left;
+  }
+}
+
+:local(.clients) {
+  .header {
+    padding-top: 80px;
+  }
+  img {
+    margin: 30px 0 50px;
+  }
+}
+
+:local(.plans) {
+  padding-bottom: 80px;
+  .header {
+    padding-top: 50px;
+  }
+  p {
+    text-align: center;
+  }
+}
+
+:local(.plan) {
+  box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.1);
+  hr {
+    background-color: #dfe1e5 !important;
+    border: none;
+    height: 2px;
+  }
+  .planHeader {
+    text-align: center;
+    padding: 40px;
+    background-color: #f4f5f7;
+    h4 {
+      font-size: 20px;
+    }
+    p {
+      font-size: 16px;
+      &:last-child {
+        font-size: 20px;
+      }
+    }
+    h2 {
+      font-size: 72px;
+      color: $blue-color;
+      font-weight: bold;
+    }
+  }
+  .planBody {
+    padding: 40px;
+    li {
+      padding-left: 32px;
+      font-size: 16px;
+      line-height: 24px;
+      &:not(:last-child) {
+        margin-bottom: 12px;
+      }
+      &.featured {
+        background: url('https://bitbucket.org/dam/jcr:743645da-cea8-4466-879b-0c0f99aee501/check-mark-adg3-blue.svg')
+          no-repeat;
+        background-size: 24px 24px;
+      }
+      &.deemphasized {
+        opacity: 0.15;
+      }
+    }
+  }
+  .planFooter {
+    padding: 40px;
+    li {
+      font-size: 16px;
+      &:not(:last-child) {
+        margin-bottom: 12px;
+      }
+      i {
+        font-style: italic;
+      }
+    }
+  }
+}
+
+:local(.btnWrapper) {
+  display: flex;
+  justify-content: center;
 }
