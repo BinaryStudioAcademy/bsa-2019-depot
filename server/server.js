@@ -5,6 +5,7 @@ import path from 'path';
 import passport from 'passport';
 
 import routes from './api/routes/index';
+import errorHandlerMiddleware from './api/middlewares/error-handler.middleware';
 import './config/passport.config';
 
 dotenv.config();
@@ -26,6 +27,8 @@ app.get('*', (req, res) => {
 });
 
 const port = process.env.APP_PORT || 3000;
+
+app.use(errorHandlerMiddleware);
 
 app.listen(port, () => {
   // eslint-disable-next-line no-console
