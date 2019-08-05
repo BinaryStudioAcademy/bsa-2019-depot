@@ -1,37 +1,42 @@
 // import BaseRepository from './base.repository';
 
+const users = [
+  {
+    email: 'test@test.com',
+    username: 'test_user',
+    password: '1111',
+    id: '001',
+    name: 'Sasha'
+  }
+];
+
 class UserRepository /* extends BaseRepository */ {
-  static getByEmail(email) {
-    const user = {
-      email,
-      username: 'test_user',
-      password: '1111',
-      id: '001',
-      name: 'Sasha'
+  static addUser({ ...userData }) {
+    const newUser = {
+      ...userData,
+      id: '002',
+      name: 'Ivan'
     };
-    return user;
+    users.push(newUser);
+    return newUser;
+  }
+
+  static getByEmail(email) {
+    const user = users.find(user1 => user1.email === email);
+    if (user) return user;
+    return null;
   }
 
   static getByUsername(username) {
-    const user = {
-      email: 'test@test.com',
-      username,
-      password: '1111',
-      id: '001',
-      name: 'Sasha'
-    };
-    return user;
+    const user = users.find(user1 => user1.username === username);
+    if (user) return user;
+    return null;
   }
 
   static getUserById(id) {
-    const user = {
-      email: 'test@test.com',
-      username: 'test_user',
-      password: '1111',
-      id,
-      name: 'Sasha'
-    };
-    return user;
+    const user = users.find(user1 => user1.id === id);
+    if (user) return user;
+    return null;
   }
 }
 
