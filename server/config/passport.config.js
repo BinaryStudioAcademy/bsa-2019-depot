@@ -52,20 +52,29 @@ const clientID = process.env.GOOGLE_CLIENT_ID;
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
 const callbackURL = process.env.GOOGLE_CALLBACK_URL;
 
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
+
 passport.use(
+  'google',
   new GoogleStrategy(
     {
       clientID,
       clientSecret,
-      callbackURL
+      callbackURL,
+      passReqToCallback: true
     },
-    (accessToken, refreshToken, profile, done) => {
-      const user = UserRepository.getByEmail(profile.emails[0]);
+    (req, accessToken, refreshToken, profile, done) => {
+      const user = UserRepository.getByEmail(profile.email);
 
       if (!user) {
         return done({ status: 401, message: 'You need to sign up or connect your Google account' }, false);
       }
-
       return done(null, user);
     }
   )

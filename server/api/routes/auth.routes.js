@@ -13,13 +13,9 @@ router.post('/login', authenticationMiddleware, (req, res, next) => {
     .catch(next);
 });
 
-router.post('/google', googleMiddleware, (req, res, next) => {
-  login(req.user)
-    .then(data => res.send(data))
-    .catch(next);
-});
+router.get('/google', googleMiddleware);
 
-router.post('/google/callback', googleCallbackMiddleware, (req, res, next) => {
+router.get('/google/callback', googleCallbackMiddleware, (req, res, next) => {
   login(req.user)
     .then(data => res.send(data))
     .catch(next);
