@@ -1,10 +1,15 @@
-import passport from 'passport';
+const passport = require('passport');
+const dotenv = require('dotenv');
 
-export const googleMiddleware = passport.authenticate('google', {
-  scope: 'https://www.googleapis.com/auth/userinfo.email'
-});
+dotenv.config();
 
-export const googleCallbackMiddleware = passport.authenticate('google', {
+const scope = process.env.GOOGLE_SCOPE;
+
+const googleMiddleware = passport.authenticate('google', { scope });
+
+const googleCallbackMiddleware = passport.authenticate('google', {
   failureRedirect: '/login',
-  scope: 'https://www.googleapis.com/auth/userinfo.email'
+  scope
 });
+
+module.exports = { googleMiddleware, googleCallbackMiddleware };

@@ -1,10 +1,11 @@
 import passport from 'passport';
-import dotenv from 'dotenv';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
 import UserRepository from '../data/repositories/user.repository';
 
-dotenv.config();
+const clientID = process.env.GOOGLE_CLIENT_ID;
+const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+const callbackURL = process.env.GOOGLE_CALLBACK_URL;
 
 passport.use(
   'login',
@@ -47,10 +48,6 @@ passport.use(
     }
   )
 );
-
-const clientID = process.env.GOOGLE_CLIENT_ID;
-const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-const callbackURL = process.env.GOOGLE_CALLBACK_URL;
 
 passport.serializeUser((user, done) => {
   done(null, user);
