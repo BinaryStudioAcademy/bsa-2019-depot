@@ -2,6 +2,9 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const passport = require('passport');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const routes = require('./api/routes/index');
 const errorHandlerMiddleware = require('./api/middlewares/error-handler.middleware');

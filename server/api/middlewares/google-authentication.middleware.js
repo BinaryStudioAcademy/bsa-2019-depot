@@ -1,7 +1,4 @@
 const passport = require('passport');
-const dotenv = require('dotenv');
-
-dotenv.config();
 
 const scope = process.env.GOOGLE_SCOPE;
 
