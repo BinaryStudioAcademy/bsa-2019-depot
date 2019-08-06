@@ -2,3 +2,34 @@
   max-width: 1200px;
   margin: auto;
 }
+
+:local(.filterRow) {
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+:local(.issuesContainer) {
+  margin-top: 10px;
+  border: 1px solid lightgrey;
+  border-radius: 5px;
+}
+
+:local(.issuesHeader) {
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f6f6f6;
+  border-bottom: 1px solid lightgrey;
+  border-radius: 5px 5px 0 0;
+}
+
+:local(.openedIssues) {
+  margin-right: 15px;
+}
+
+:local(.issueFilters) > :not(:last-child) {
+  margin-right: 10px;
+}
