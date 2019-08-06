@@ -1,0 +1,11 @@
+:global(.ui.divided.middle.aligned.list) {
+  font-size: 16px;
+
+  :global(.item) {
+    padding: 10px;
+  }
+
+  :global(.item):hover {
+    background-color: #f6f6f6;
+  }
+}

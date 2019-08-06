@@ -1,6 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { List, Icon } from 'semantic-ui-react';
+import moment from 'moment';
+import { getUserImgLink } from '../../helpers/imageHelper';
+import { List, Icon, Image, Popup } from 'semantic-ui-react';
+
+import './styles.module.scss';
 
 const IssuesList = ({ issues }) => {
     return (
@@ -10,8 +14,25 @@ const IssuesList = ({ issues }) => {
                     <List.Content floated="right">
                         <Icon name="comments outline" /> {issue.commentCount}
                     </List.Content>
+                    <List.Content floated="right">
+                        {issue.assignees &&
+              issue.assignees
+                  .slice(0, 3)
+                  .map(assignee => (
+                      <Popup
+                          key={assignee.username}
+                          content={`Assigned to ${assignee.username}`}
+                          trigger={<Image src={getUserImgLink(assignee.avatar)} avatar />}
+                      />
+                  ))}
+                    </List.Content>
                     <Icon name={issue.opened ? 'info' : 'check'} color={issue.opened ? 'green' : 'red'} />
-                    <List.Content>{issue.text}</List.Content>
+                    <List.Content>
+                        <List.Header>{issue.text}</List.Header>
+                        <List.Description>{`#${issue.id} opened ${moment(issue.createdAt).fromNow()} by ${
+                            issue.author.username
+                        }`}</List.Description>
+                    </List.Content>
                 </List.Item>
             ))}
         </List>
