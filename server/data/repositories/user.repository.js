@@ -1,4 +1,4 @@
-// import BaseRepository from './base.repository';
+// const BaseRepository = require('./base.repository');
 
 const users = [
   {
@@ -54,4 +54,4 @@ class UserRepository /* extends BaseRepository */ {
   }
 }
 
-export default UserRepository;
+module.exports = UserRepository;

@@ -1,9 +1,9 @@
-import { Router } from 'express';
+const { Router } = require('express');
 
-import authenticationMiddleware from '../middlewares/authentication.middleware';
-import { googleMiddleware, googleCallbackMiddleware } from '../middlewares/google-authentication.middleware';
-import registrationMiddleware from '../middlewares/registration.middleware';
-import { login, register } from '../services/auth.service';
+const authenticationMiddleware = require('../middlewares/authentication.middleware');
+const { googleMiddleware, googleCallbackMiddleware } = require('../middlewares/google-authentication.middleware');
+const registrationMiddleware = require('../middlewares/registration.middleware');
+const { login, register } = require('../services/auth.service');
 
 const router = Router();
 
@@ -27,4 +27,4 @@ router.post('/register', registrationMiddleware, (req, res, next) => {
     .catch(next);
 });
 
-export default router;
+module.exports = router;

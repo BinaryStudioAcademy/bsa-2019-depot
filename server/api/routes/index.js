@@ -1,5 +1,5 @@
-import authRoutes from './auth.route';
+const authRoutes = require('./auth.route');
 
-export default (app) => {
+module.exports = (app) => {
   app.use('/auth', authRoutes);
 };

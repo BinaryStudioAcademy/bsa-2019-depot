@@ -1,3 +1,3 @@
-import passport from 'passport';
+const passport = require('passport');
 
-export default passport.authenticate('register', { session: false });
+module.exports = passport.authenticate('register', { session: false });

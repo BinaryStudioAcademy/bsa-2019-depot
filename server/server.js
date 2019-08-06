@@ -1,12 +1,12 @@
-import dotenv from 'dotenv';
-import express from 'express';
-import fs from 'fs';
-import path from 'path';
-import passport from 'passport';
+const dotenv = require('dotenv');
+const express = require('express');
+const fs = require('fs');
+const path = require('path');
+const passport = require('passport');
 
-import routes from './api/routes/index';
-import errorHandlerMiddleware from './api/middlewares/error-handler.middleware';
-import './config/passport.config';
+const routes = require('./api/routes/index');
+const errorHandlerMiddleware = require('./api/middlewares/error-handler.middleware');
+require('./config/passport.config');
 
 dotenv.config();
 

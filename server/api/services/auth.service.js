@@ -1,12 +1,14 @@
-import UserRepository from '../../data/repositories/user.repository';
+const UserRepository = require('../../data/repositories/user.repository');
 
-export const login = async ({ id }) => ({
+const login = async ({ id }) => ({
   user: await UserRepository.getUserById(id)
 });
 
-export const register = async (userData) => {
+const register = async (userData) => {
   const newUser = await UserRepository.addUser({
     ...userData
   });
   return login(newUser);
 };
+
+module.exports = { login, register };
