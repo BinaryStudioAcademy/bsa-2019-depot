@@ -1,20 +1,39 @@
 $blue-color: #0052cc;
 $header-color: #253858;
 $text-color: #42526e;
+$gray-color: #f4f5f7;
 
 :local(.main) {
   padding: 80px 0 16px;
-  background-color: #f4f5f7;
+  background-color: $gray-color;
   text-align: center;
 }
 
 :local(.header) {
   color: $header-color;
   font-size: 44px;
-  text-align: center;
   @media screen and (max-width: 768px) {
-    font-size: 36px;
+    font-size: 30px !important;
   }
+}
+
+:local(.link) {
+  // display: block;
+  color: $blue-color !important;
+  &:hover {
+    svg {
+      transform: translate3d(5px, 0, 0);
+      transition: transform 250ms;
+    }
+  }
+  svg {
+    margin-left: 5px;
+  }
+}
+
+:local(.headerCentered) {
+  composes: header;
+  text-align: center;
 }
 
 :local(.mainText) {
@@ -160,7 +179,7 @@ $text-color: #42526e;
   .planHeader {
     text-align: center;
     padding: 40px;
-    background-color: #f4f5f7;
+    background-color: $gray-color;
     h4 {
       font-size: 20px;
     }
@@ -212,4 +231,147 @@ $text-color: #42526e;
 :local(.btnWrapper) {
   display: flex;
   justify-content: center;
+}
+
+:local(.cloud) {
+  .block {
+    padding: 40px;
+    background-color: $gray-color;
+    img {
+      width: 90px;
+    }
+    h2 {
+      color: $header-color;
+      font-size: 44px;
+      margin-bottom: 24px;
+    }
+    p {
+      font-size: 16px;
+      line-height: 24px;
+    }
+  }
+}
+
+:local(.betterWay) {
+  margin-top: 100px;
+  min-height: 300px;
+  background-image: url(https://wac-cdn.atlassian.com/dam/jcr:6db86e6a-a05c-414c-a3e9-58db75bce1bb/left_bottom_hero.png?cdnVersion=494),
+    url(https://wac-cdn.atlassian.com/dam/jcr:42a7d2a5-669b-44c9-8980-9f83600ab4d9/right_bottom_hero.png?cdnVersion=494);
+  background-position: bottom left, bottom right;
+  background-repeat: no-repeat, no-repeat;
+  background-size: 600px 300px, 600px 300px;
+  button {
+    margin-top: 0 !important;
+  }
+  @media screen and (max-width: 992px) {
+    background: none;
+  }
+}
+
+:local(.footer) {
+  padding-top: 60px;
+  background-color: $gray-color;
+  color: $text-color;
+  h4 {
+    font-size: 20px;
+    color: $header-color;
+    &:not(:last-child) {
+      @media screen and (max-width: 992px) {
+        margin-top: 50px;
+      }
+    }
+  }
+  li:not(:last-child) {
+    margin-bottom: 8px;
+  }
+  a {
+    color: $text-color;
+    font-size: 14px;
+    &:hover {
+      color: $text-color;
+      text-decoration: underline;
+    }
+  }
+  p {
+    font-size: 16px;
+    margin: 26px 0;
+  }
+  .form {
+    div {
+      justify-content: space-between;
+      div:first-child {
+        width: 100%;
+        @media screen and (max-width: 992px) {
+          width: auto;
+        }
+      }
+      @media screen and (max-width: 992px) {
+        justify-content: flex-start;
+      }
+    }
+    button {
+      background: $gray-color;
+      border: 1px solid $blue-color;
+      color: $blue-color;
+      &:hover {
+        color: $blue-color;
+        background-color: darken($gray-color, $amount: 1);
+      }
+    }
+  }
+  .social {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    p {
+      display: inline-block;
+      margin: 0 30px 0 0;
+    }
+    ul {
+      display: inline-flex;
+      li {
+        margin: 0;
+        &:not(:last-child) {
+          margin-right: 12px;
+        }
+      }
+    }
+    a {
+      display: block;
+      height: 32px;
+      width: 32px;
+      background-size: 100%;
+      color: transparent;
+    }
+  }
+  .fb {
+    background: url(https://wac-cdn.atlassian.com/assets/img/icons/social-icons/facebook-badge.svg) center center
+      no-repeat;
+  }
+  .tw {
+    background: url(https://wac-cdn.atlassian.com/assets/img/icons/social-icons/twitter.svg) center center no-repeat;
+  }
+  .foterLine {
+    border-top: 2px solid #dfe1e5;
+    padding-top: 25px;
+    justify-content: space-between;
+    ul {
+      display: inline-flex;
+      align-items: center;
+      li {
+        margin: 0;
+        &:not(:last-child) {
+          margin-right: 30px;
+        }
+        img {
+          width: 120px !important;
+        }
+      }
+    }
+  }
+  .selectLeng div {
+    background: $gray-color !important;
+    border: none !important;
+    color: $text-color !important;
+  }
 }
