@@ -65,7 +65,7 @@ class UserRepository /* extends BaseRepository */ {
   }
 
   static getUserById(id) {
-    const user = users.find(user1 => user1.id === id);
+    const user = users.find(user1 => +user1.id === +id);
     if (user) return user;
     return null;
   }
