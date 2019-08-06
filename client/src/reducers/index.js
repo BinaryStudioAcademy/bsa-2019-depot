@@ -1,11 +1,7 @@
 import { combineReducers } from 'redux';
 
-// import reducerA from '../containers/ContainerA/reducerA'
+import issuesReducer from '../containers/IssuesTab/reducer';
 
 export default combineReducers({
-    /*
-    reducerA,
-    reducerB,
-    ...
-     */
+    issuesData: issuesReducer
 });
