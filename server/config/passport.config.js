@@ -1,11 +1,10 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const JwtStrategy = require('passport-jwt').Strategy;
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const UserRepository = require('../data/repositories/user.repository');
-
-const clientID = process.env.GOOGLE_CLIENT_ID;
-const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
-const callbackURL = process.env.GOOGLE_CALLBACK_URL;
+const { jwtOptions } = require('./jwt.config');
+const { clientID, clientSecret, callbackURL } = require('./google.config');
 
 passport.use(
   'login',
@@ -72,4 +71,15 @@ passport.use(
       return done(null, user);
     }
   )
+);
+
+passport.use(
+  new JwtStrategy(jwtOptions, async ({ id }, done) => {
+    try {
+      const user = await UserRepository.getUserById(id);
+      return user ? done(null, user) : done({ status: 401, message: 'Token is invalid.' }, null);
+    } catch (err) {
+      return done(err);
+    }
+  })
 );

@@ -1,17 +1,20 @@
 const { Router } = require('express');
 
-const { setUsername, getUsername } = require('../services/user.service');
+const jwtMiddleware = require('../middlewares/jwt.middleware');
+const { setUsername, checkUsernameExists } = require('../services/user.service');
 
 const router = Router();
 
-router.post('/username', (req, res, next) => {
-  setUsername({ ...req.body })
+router.post('/username', jwtMiddleware, (req, res, next) => {
+  const { username } = req.body;
+  const { id } = req.user;
+  setUsername({ id, username })
     .then(data => res.send(data))
     .catch(next);
 });
 
-router.get('/username', (req, res, next) => {
-  getUsername({ ...req.body })
+router.get('/username-exists', (req, res, next) => {
+  checkUsernameExists({ ...req.body })
     .then(data => res.send(data))
     .catch(next);
 });
