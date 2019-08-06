@@ -58,20 +58,17 @@ class UserRepository /* extends BaseRepository */ {
 
   static getByEmail(email) {
     const user = users.find(user1 => user1.email === email);
-    if (user) return user;
-    return null;
+    return user;
   }
 
   static getByUsername(username) {
     const user = users.find(user1 => user1.username === username);
-    if (user) return user;
-    return null;
+    return user;
   }
 
   static getUserById(id) {
     const user = users.find(user1 => +user1.id === +id);
-    if (user) return user;
-    return null;
+    return user;
   }
 }
 
