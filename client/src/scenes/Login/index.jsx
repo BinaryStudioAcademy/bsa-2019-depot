@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Redirect, NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import createHandler from 'react-cached-handler';
 import PropTypes from 'prop-types';
 import validator from 'validator';
 
 import { Grid, Header, Form, Button, Segment, Message } from 'semantic-ui-react';
 
-class Login extends React.Component {
+//Actions
+import { authActions } from '../../sagas/auth/actions';
+
+class Login extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -48,15 +53,14 @@ class Login extends React.Component {
 
   handleClickLogin = async () => {
       const { isLoading, email, password } = this.state;
+      const { actions } = this.props;
       const valid = this.validateForm();
       if (!valid || isLoading) {
           return;
       }
       this.setState({ isLoading: true });
       try {
-      // eslint-disable-next-line no-console
-          console.log(`login as ${email} ${password}`);
-      //await this.props.login({ email, password });
+          await actions.loginAsync({ email, password });
       } catch (error) {
           this.setState({ isLoading: false });
       }
@@ -64,7 +68,7 @@ class Login extends React.Component {
 
   render() {
       const { isLoading, isEmailValid, isPasswordValid } = this.state;
-      return !this.props.isAuthorized ? (
+      return !this.props.isAuthenticated ? (
           <Grid textAlign="center" verticalAlign="middle" className="fill">
               <Grid.Column style={{ maxWidth: 450 }}>
                   <Header as="h2" color="blue" textAlign="center">
@@ -106,14 +110,28 @@ class Login extends React.Component {
       );
   }
 }
-
 Login.propTypes = {
-    isAuthorized: PropTypes.bool
-    //login: PropTypes.func.isRequired
+    isAuthenticated: PropTypes.bool,
+    actions: PropTypes.object,
+    isLoading: PropTypes.bool
 };
 
 Login.defaultProps = {
-    isAuthorized: false
+    isAuthenticated: false,
+    isLoading: false
 };
 
-export default Login;
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated
+});
+
+const mapDispatchToProps = dispatch => {
+    return {
+        actions: bindActionCreators({ ...authActions }, dispatch)
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Login);

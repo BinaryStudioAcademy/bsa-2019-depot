@@ -1,13 +1,9 @@
-import { all } from 'redux-saga/effects';
+import { call, all } from 'redux-saga/effects';
 
-// import sagasA from '../containers/ContainerA/sagasA'
+//Watchers
+
+import { watchAuth } from '../sagas/auth/saga/watchers';
 
 export default function* rootSaga() {
-    yield all([
-    /*
-        sagasA(),
-        sagasB(),
-        ...
-      */
-    ]);
+    yield all([call(watchAuth)]);
 }
