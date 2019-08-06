@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, NavLink } from 'react-router-dom';
 import createHandler from 'react-cached-handler';
 import PropTypes from 'prop-types';
 import validator from 'validator';
@@ -94,8 +94,10 @@ class Login extends React.Component {
                       </Segment>
                   </Form>
                   <Message>
-            New to Depot? [place for /register link]
-                      {/* <NavLink exact to="/registration">Create an account</NavLink> */}
+            New to Depot?{' '}
+                      <NavLink exact to="/registration">
+              Create an account
+                      </NavLink>
                   </Message>
               </Grid.Column>
           </Grid>
