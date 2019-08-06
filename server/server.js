@@ -1,4 +1,3 @@
-const dotenv = require('dotenv');
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -7,8 +6,6 @@ const passport = require('passport');
 const routes = require('./api/routes/index');
 const errorHandlerMiddleware = require('./api/middlewares/error-handler.middleware');
 require('./config/passport.config');
-
-dotenv.config();
 
 const app = express();
 
