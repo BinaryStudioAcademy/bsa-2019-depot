@@ -24,4 +24,23 @@ const register = async (userData) => {
   return login(newUser);
 };
 
-module.exports = { login, register, googleLogin };
+const setUsername = async ({ id, username }) => {
+  const user = await UserRepository.getByUsername(username);
+  if (user) {
+    return {
+      success: false
+    };
+  }
+
+  const success = UserRepository.setUsernameById(id, username);
+  return {
+    success
+  };
+};
+
+module.exports = {
+  login,
+  register,
+  googleLogin,
+  setUsername
+};

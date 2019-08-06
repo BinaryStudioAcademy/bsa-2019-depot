@@ -1,6 +1,6 @@
 // const BaseRepository = require('./base.repository');
 
-const users = [
+let users = [
   {
     email: 'test@test.com',
     username: 'test_user',
@@ -35,6 +35,21 @@ class UserRepository /* extends BaseRepository */ {
     };
     users.push(newUser);
     return newUser;
+  }
+
+  static setUsernameById(id, username) {
+    users = users.map((user) => {
+      if (+user.id === +id) {
+        const updatedUser = {
+          ...user,
+          username
+        };
+        return updatedUser;
+      }
+      return user;
+    });
+
+    return true;
   }
 
   static getByEmail(email) {

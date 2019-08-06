@@ -3,7 +3,9 @@ const { Router } = require('express');
 const authenticationMiddleware = require('../middlewares/authentication.middleware');
 const { googleMiddleware, googleCallbackMiddleware } = require('../middlewares/google-authentication.middleware');
 const registrationMiddleware = require('../middlewares/registration.middleware');
-const { login, register, googleLogin } = require('../services/auth.service');
+const {
+  login, register, googleLogin, setUsername
+} = require('../services/auth.service');
 
 const router = Router();
 
@@ -23,6 +25,12 @@ router.get('/google/callback', googleCallbackMiddleware, (req, res, next) => {
 
 router.post('/register', registrationMiddleware, (req, res, next) => {
   register(req.user)
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.post('/username', (req, res, next) => {
+  setUsername({ ...req.body })
     .then(data => res.send(data))
     .catch(next);
 });
