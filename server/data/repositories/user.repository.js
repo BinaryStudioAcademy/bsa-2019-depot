@@ -27,9 +27,11 @@ const users = [
 class UserRepository /* extends BaseRepository */ {
   static addUser({ ...userData }) {
     const newUser = {
-      ...userData,
-      id: '002',
-      name: 'Ivan'
+      id: Date.now(),
+      username: '',
+      password: '',
+      name: '',
+      ...userData
     };
     users.push(newUser);
     return newUser;

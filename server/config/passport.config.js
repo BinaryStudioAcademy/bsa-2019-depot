@@ -68,9 +68,9 @@ passport.use(
     },
     (req, accessToken, refreshToken, profile, done) => {
       const user = UserRepository.getByEmail(profile.email);
-
       if (!user) {
-        return done({ status: 401, message: 'You need to sign up or connect your Google account' }, false);
+        const newUser = UserRepository.addUser({ email: profile.email });
+        return done(null, newUser);
       }
       return done(null, user);
     }
