@@ -1,11 +1,6 @@
 import { combineReducers } from 'redux';
-
-// import reducerA from '../containers/ContainerA/reducerA'
+import authReducer from '../sagas/auth/reducer';
 
 export default combineReducers({
-    /*
-    reducerA,
-    reducerB,
-    ...
-     */
+    authReducer
 });
