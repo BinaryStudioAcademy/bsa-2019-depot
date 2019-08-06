@@ -3,9 +3,9 @@ const tokenHelper = require('../../helpers/token.helper');
 
 const setUsername = async ({ jwt, username }) => {
   const { id } = tokenHelper.decode(jwt);
-  const success = UserRepository.setUsernameById(id, username);
+  const data = UserRepository.setUsernameById(id, username);
   return {
-    success
+    ...data
   };
 };
 

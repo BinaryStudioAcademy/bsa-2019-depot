@@ -38,18 +38,22 @@ class UserRepository /* extends BaseRepository */ {
   }
 
   static setUsernameById(id, username) {
-    users = users.map((user) => {
-      if (+user.id === +id) {
-        const updatedUser = {
-          ...user,
-          username
-        };
-        return updatedUser;
-      }
-      return user;
-    });
+    try {
+      users = users.map((user) => {
+        if (+user.id === +id) {
+          const updatedUser = {
+            ...user,
+            username
+          };
+          return updatedUser;
+        }
+        return user;
+      });
 
-    return true;
+      return { status: true };
+    } catch (err) {
+      return { status: false, errorMessage: err.message };
+    }
   }
 
   static getByEmail(email) {
