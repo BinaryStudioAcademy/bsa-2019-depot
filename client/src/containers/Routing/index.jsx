@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Login from '../../components/Login';
-import NotFound from '../../scenes/NotFound';
+import { NotFound, Login } from '../../scenes';
 
 const Routing = () => {
     return (
