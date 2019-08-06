@@ -7,17 +7,14 @@ import IssuesList from '../../components/IssuesList';
 
 import styles from './styles.module.scss';
 
-const issuesPerPage = 25;
-
 class IssuesTab extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            page: 1,
             filter: {
+                title: '',
                 author: '',
-                labels: [],
                 assignees: [],
                 opened: true
             }
@@ -26,8 +23,6 @@ class IssuesTab extends React.Component {
 
     componentDidMount() {
         this.props.fetchIssues({
-            from: 0,
-            to: issuesPerPage,
             filter: this.state.filter
         });
     }
@@ -84,7 +79,7 @@ class IssuesTab extends React.Component {
                         <span className={styles.openedIssues}>
                             <Icon name="info" /> {openIssues} Open
                         </span>
-                        <span>
+                        <span className={styles.closedIssues}>
                             <Icon name="check" /> {closedIssues} Closed
                         </span>
                     </div>

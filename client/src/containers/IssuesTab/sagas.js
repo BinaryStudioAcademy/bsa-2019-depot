@@ -2,11 +2,11 @@ import { takeEvery, put, call, all } from 'redux-saga/effects';
 import * as issuesService from '../../services/issuesService';
 import { fetchIssues } from '../../routines/routines';
 
-function* issuesRequest({ payload: { from, to, filter } }) {
+function* issuesRequest({ payload: { filter } }) {
     try {
         yield put(fetchIssues.request());
 
-        const response = yield call(issuesService.getIssues, from, to, filter);
+        const response = yield call(issuesService.getIssues, filter);
 
         yield put(fetchIssues.success(response));
     } catch (error) {

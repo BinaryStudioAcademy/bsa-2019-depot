@@ -26,6 +26,17 @@
   border-radius: 5px 5px 0 0;
 }
 
+:local(.openedIssues),
+:local(.closedIssues),
+:global(.ui.dropdown) {
+  color: #575757;
+  cursor: pointer;
+
+  &:hover {
+    color: #000000;
+  }
+}
+
 :local(.openedIssues) {
   margin-right: 15px;
 }

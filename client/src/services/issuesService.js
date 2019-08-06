@@ -143,15 +143,14 @@ const issues = [
     }
 ];
 
-export const getIssues = (from, to, { author, labels, assignees, opened }) => {
+export const getIssues = ({ author, title, assignees, opened }) => {
     return new Promise(resolve => {
     // Mocking server response
         const filteredIssues = issues
             .filter(issue => (author ? issue.author === author : true))
-            .filter(issue => (labels.length ? labels.every(label => issue.labels.includes(label)) : true))
+            .filter(issue => (title ? issue.title.includes(title) : true))
             .filter(issue => (assignees.length ? assignees.every(assignee => issue.assignees.includes(assignee)) : true))
             .filter(issue => issue.opened === opened)
-            .slice(from, to)
             .sort((issueA, issueB) => new Date(issueB.createdAt) - new Date(issueA.createdAt));
 
         setTimeout(() => {
