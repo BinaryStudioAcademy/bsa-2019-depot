@@ -1,11 +1,7 @@
 import { combineReducers } from 'redux';
 
-// import reducerA from '../containers/ContainerA/reducerA'
+import auth from '../auth/reducer';
 
 export default combineReducers({
-    /*
-    reducerA,
-    reducerB,
-    ...
-     */
+    auth
 });
