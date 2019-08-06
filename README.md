@@ -7,10 +7,13 @@
 _/client/.env_
 ```
 SKIP_PREFLIGHT_CHECK=true
+PORT=3001
 ```
 
 _/server/.env_
 ```
+APP_PORT = 3000
+
 DB_NAME = depot # default. has to be changed to local DB name if it is different
 DB_USERNAME = postgres # default. has to be changed to local PostgreSQL username if it is different
 DB_PASSWORD = postgres # default. has to be changed to local PostgreSQL password if it is different
