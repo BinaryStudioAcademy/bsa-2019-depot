@@ -57,7 +57,7 @@ class Login extends React.Component {
       // eslint-disable-next-line no-console
           console.log(`login as ${email} ${password}`);
       //await this.props.login({ email, password });
-      } catch {
+      } catch (error) {
           this.setState({ isLoading: false });
       }
   };
