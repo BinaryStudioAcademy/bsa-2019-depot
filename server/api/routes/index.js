@@ -1,4 +1,4 @@
-import authRoutes from './auth.routes';
+import authRoutes from './auth.route';
 
 export default (app) => {
   app.use('/auth', authRoutes);
