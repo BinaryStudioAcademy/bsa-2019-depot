@@ -88,7 +88,6 @@ class IssuesTab extends React.Component {
                             <Icon name="check" /> {closedIssues} Closed
                         </span>
                     </div>
-                    <div className={styles.issueList}></div>
                     <div className={styles.issueFilters}>
                         <Dropdown text="Author" icon="filter">
                             <Dropdown.Menu>
