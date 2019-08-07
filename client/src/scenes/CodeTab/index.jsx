@@ -96,8 +96,6 @@ const CodeTab = () => {
                         on="click"
                         position="bottom right"
                         className={styles.repoPopup}
-                        // eslint-disable-next-line react/jsx-no-bind
-                        onClick={e => e.stopPropagation()}
                     >
                         <div className={styles.repoPopupBody}>
                             <Header className={styles.readmeHeader} as="h4">
