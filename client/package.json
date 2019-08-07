@@ -13,6 +13,8 @@
     "react-cached-handler": "^1.0.7",
     "react-dom": "^16.8.6",
     "react-github-contribution-calendar": "^1.0.0",
+    "react-markdown": "^4.1.0",
+    "react-mde": "^7.6.2",
     "react-redux": "^7.1.0",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
@@ -21,6 +23,7 @@
     "redux-saga-routines": "^3.2.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.87.3",
+    "showdown": "^1.9.0",
     "validator": "^11.1.0"
   },
   "scripts": {
