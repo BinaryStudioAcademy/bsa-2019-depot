@@ -2,6 +2,7 @@ const userRepository = require('../../data/repositories/user.repository');
 const tokenHelper = require('../../helpers/token.helper');
 
 const login = async ({ id, email }) => ({
+  user: await userRepository.getById(id),
   token: tokenHelper.createToken({ id, email })
 });
 

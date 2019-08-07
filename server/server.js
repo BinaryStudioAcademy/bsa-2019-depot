@@ -3,6 +3,7 @@ require('./config/passport.config');
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const cors = require('cors');
 const passport = require('passport');
 const routes = require('./api/routes/index');
 const errorHandlerMiddleware = require('./api/middlewares/error-handler.middleware');
@@ -15,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 const staticPath = path.resolve(`${__dirname}/../client/build`);
 app.use(express.static(staticPath));
-
+app.use(cors());
 routes(app);
 
 app.get('*', (req, res) => {

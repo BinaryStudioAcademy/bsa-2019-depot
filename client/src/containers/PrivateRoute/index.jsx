@@ -20,6 +20,10 @@ PrivateRoute.defaultProps = {
     location: undefined
 };
 
-const mapStateToProps = rootState => rootState.authReducer;
+const mapStateToProps = rootState => {
+    return {
+        ...rootState.auth
+    };
+};
 
 export default connect(mapStateToProps)(PrivateRoute);
