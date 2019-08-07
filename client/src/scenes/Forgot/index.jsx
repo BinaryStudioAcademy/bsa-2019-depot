@@ -46,7 +46,7 @@ class Forgot extends Component {
       }
       this.setState({ isLoading: true });
       try {
-          await actions.loginAsync({ email });
+          await actions.loginAsync({ email }); //TODO need change action
           this.setState({ currentEmail: email });
           this.setState({ isLoading: false });
       } catch (error) {
