@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validator from 'validator';
 
-import { Grid, Header, Form, Button, Message, Segment } from 'semantic-ui-react';
+import { Grid, Header, Form, Button, Message, Segment, Label } from 'semantic-ui-react';
 
 class Signup extends React.Component {
     constructor(props) {
@@ -101,40 +101,61 @@ class Signup extends React.Component {
       const { loading, username, email, password, formValid } = this.state;
 
       return !this.props.isAuthenticated ? (
-          <Grid textAlign="center" verticalAlign="middle" className="fill">
+          <Grid textAlign="center" centered className="signup-grid">
               <Grid.Column style={{ maxWidth: 450 }}>
                   <Header as="h2" color="blue" textAlign="center">
             Join Depot
                   </Header>
                   <Form name="signupForm" size="large" onSubmit={this.handleClickSignup} loading={loading} error={!formValid}>
-                      <Segment>
-                          <Form.Input
-                              fluid
-                              placeholder="Username"
-                              name="username"
-                              type="text"
-                              error={!username.valid}
-                              onChange={this.changeHandler}
-                              onBlur={this.validateHandler}
-                          />
-                          <Form.Input
-                              fluid
-                              placeholder="Email"
-                              name="email"
-                              type="email"
-                              error={!email.valid}
-                              onChange={this.changeHandler}
-                              onBlur={this.validateHandler}
-                          />
-                          <Form.Input
-                              fluid
-                              placeholder="Password"
-                              name="password"
-                              type="password"
-                              error={!password.valid}
-                              onChange={this.changeHandler}
-                              onBlur={this.validateHandler}
-                          />
+                      <Segment textAlign="left">
+                          <Form.Field required>
+                              <label htmlFor="username" floating>
+                  Username
+                              </label>
+                              <Form.Input
+                                  fluid
+                                  placeholder="Username"
+                                  name="username"
+                                  type="text"
+                                  error={!username.valid}
+                                  onChange={this.changeHandler}
+                                  onBlur={this.validateHandler}
+                                  required
+                              />
+                              <Label className="signup-pointing-label" pointing>
+                  Username can contain alphanumeric characters and single hyphens, cannot begin or end with a hyphen
+                              </Label>
+                          </Form.Field>
+                          <Form.Field required>
+                              <label htmlFor="email">Email</label>
+                              <Form.Input
+                                  fluid
+                                  placeholder="Email"
+                                  name="email"
+                                  type="email"
+                                  error={!email.valid}
+                                  onChange={this.changeHandler}
+                                  onBlur={this.validateHandler}
+                                  required
+                              />
+                          </Form.Field>
+                          <Form.Field required>
+                              <label htmlFor="password">Password</label>
+                              <Form.Input
+                                  fluid
+                                  placeholder="Password"
+                                  name="password"
+                                  type="password"
+                                  error={!password.valid}
+                                  onChange={this.changeHandler}
+                                  onBlur={this.validateHandler}
+                                  required
+                              />
+                              <Label className="signup-pointing-label" pointing>
+                  Password should be at least 8 characters including a number and a lowercase letter
+                              </Label>
+                          </Form.Field>
+
                           <Button type="submit" color="blue" fluid size="large">
                 Sign Up
                           </Button>
