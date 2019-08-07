@@ -10,9 +10,10 @@
     grid-template-areas:
       'avatar username'
       'avatar edit_profile';
-    grid-gap: 20px;
+    grid-gap: 15px;
     grid-template-columns: 30% 65%;
-    grid-template-rows: 70% 25%;
+    grid-template-rows: 68% 22%;
+    min-height: 150px;
   }
 }
 
@@ -178,6 +179,10 @@
       }
     }
   }
+}
+
+:global(.ui.dropdown):local(.dropdown_header) {
+  min-width: 152px;
 }
 
 :global(.calendar) {

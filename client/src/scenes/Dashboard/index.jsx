@@ -1,15 +1,19 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Calendar from 'react-github-contribution-calendar';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { Container, Grid, Dropdown, Accordion, Button } from 'semantic-ui-react';
 import Octicon, { Repo, Grabber, Fold, Unfold, RepoPush, GitPullRequest, Smiley } from '@primer/octicons-react';
 
 import styles from './styles.module.scss';
 
-class Dashboard extends Component {
-  state = {
-      activeIndex: -1
-  };
+class Dashboard extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            activeIndex: -1
+        };
+    }
 
   handleActivityState = (e, titleProps) => {
       const { index } = titleProps;
@@ -40,13 +44,13 @@ class Dashboard extends Component {
                   <Grid.Row columns={2}>
                       <Grid.Column className={styles.userinfo_wrapper} mobile={16} tablet={4} computer={4}>
                           <div className={styles.avatar_wrapper}>
-                              <a href="">
+                              <Link>
                                   <img src="http://cameronmcefee.com/img/work/the-octocat/ironcat.jpg" alt="user_avatar" />
-                              </a>
-                              <a className={styles.set_status} href="">
+                              </Link>
+                              <Link className={styles.set_status}>
                                   <Octicon icon={Smiley} />
                   Set status
-                              </a>
+                              </Link>
                           </div>
                           <h1 className={styles.username}>octocat</h1>
                           <Button fluid basic className={styles.edit_profile}>
@@ -56,29 +60,27 @@ class Dashboard extends Component {
                       <Grid.Column mobile={16} tablet={12} computer={12}>
                           <Container className={styles.navbar_wrapper}>
                               <nav className={styles.navbar}>
-                                  <a className={styles.active_link} href="#">
-                    Overview
-                                  </a>
-                                  <a href="#">
+                                  <Link className={styles.active_link}>Overview</Link>
+                                  <Link>
                     Repositories<span>15</span>
-                                  </a>
-                                  <a href="#">
+                                  </Link>
+                                  <Link>
                     Projects<span>2</span>
-                                  </a>
-                                  <a href="#">
+                                  </Link>
+                                  <Link>
                     Stars<span>128</span>
-                                  </a>
-                                  <a href="#">
+                                  </Link>
+                                  <Link>
                     Followers<span>8</span>
-                                  </a>
-                                  <a href="#">
+                                  </Link>
+                                  <Link>
                     Following<span>19</span>
-                                  </a>
+                                  </Link>
                               </nav>
                           </Container>
                           <Container className={styles.pinned_header}>
                               <h2>Pinned</h2>
-                              <a href="">Customize your pins</a>
+                              <Link>Customize your pins</Link>
                           </Container>
                           <Grid>
                               <Grid.Row columns={2}>
@@ -86,7 +88,7 @@ class Dashboard extends Component {
                                       <div className={styles.pinned_item}>
                                           <div>
                                               <Octicon className={styles.card_icon} icon={Repo} />
-                                              <a href="">My first favorite repo</a>
+                                              <Link>My first favorite repo</Link>
                                               <Octicon className={styles.card_icon_grab} icon={Grabber} />
                                           </div>
                                           <p className={styles.pinned_item_desc}>I don't know what's in it</p>
@@ -97,7 +99,7 @@ class Dashboard extends Component {
                                       <div className={styles.pinned_item}>
                                           <div>
                                               <Octicon className={styles.card_icon} icon={Repo} />
-                                              <a href="">My second favorite repo</a>
+                                              <Link>My second favorite repo</Link>
                                               <Octicon className={styles.card_icon_grab} icon={Grabber} />
                                           </div>
                                           <p className={styles.pinned_item_lang}>
@@ -109,7 +111,7 @@ class Dashboard extends Component {
                                       <div className={styles.pinned_item}>
                                           <div>
                                               <Octicon className={styles.card_icon} icon={Repo} />
-                                              <a href="">My third favorite repo</a>
+                                              <Link>My third favorite repo</Link>
                                               <Octicon className={styles.card_icon_grab} icon={Grabber} />
                                           </div>
                                           <p className={styles.pinned_item_lang}>
@@ -124,7 +126,7 @@ class Dashboard extends Component {
                                   <Grid.Column mobile={16} computer={13}>
                                       <Container className={styles.pinned_header}>
                                           <h2>275 contributions in 2019</h2>
-                                          <Dropdown text="Contribution settings">
+                                          <Dropdown className={styles.dropdown_header} text="Contribution settings">
                                               <Dropdown.Menu>
                                                   <Dropdown.Item text="Private contributions" />
                                                   <Dropdown.Item text="Activity overview" />
@@ -154,7 +156,7 @@ class Dashboard extends Component {
                                                       <Octicon icon={activeIndex === 0 ? Fold : Unfold} />
                                                   </Accordion.Title>
                                                   <Accordion.Content active={activeIndex === 0}>
-                                                      <a className={styles.activity_link}>octocat/my_first_favorite_repo 25 commits</a>
+                                                      <Link className={styles.activity_link}>octocat/my_first_favorite_repo 25 commits</Link>
                                                   </Accordion.Content>
                                               </Accordion>
                                           </div>
@@ -168,7 +170,7 @@ class Dashboard extends Component {
                                                       <Octicon icon={activeIndex === 1 ? Fold : Unfold} />
                                                   </Accordion.Title>
                                                   <Accordion.Content active={activeIndex === 1}>
-                                                      <a className={styles.activity_link}>octocat/my_third_favorite_repo</a>
+                                                      <Link className={styles.activity_link}>octocat/my_third_favorite_repo</Link>
                                                   </Accordion.Content>
                                               </Accordion>
                                           </div>
@@ -182,7 +184,7 @@ class Dashboard extends Component {
                                                       <Octicon icon={activeIndex === 2 ? Fold : Unfold} />
                                                   </Accordion.Title>
                                                   <Accordion.Content active={activeIndex === 2}>
-                                                      <a className={styles.activity_link}>octocat/my_first_favorite_repo 5 pull requests</a>
+                                                      <Link className={styles.activity_link}>octocat/my_first_favorite_repo 5 pull requests</Link>
                                                   </Accordion.Content>
                                               </Accordion>
                                           </div>
@@ -199,9 +201,9 @@ class Dashboard extends Component {
                                                       <Octicon icon={activeIndex === 3 ? Fold : Unfold} />
                                                   </Accordion.Title>
                                                   <Accordion.Content active={activeIndex === 3}>
-                                                      <a className={styles.activity_link}>octocat/my_second_favorite_repo 1 commit</a>
-                                                      <a className={styles.activity_link}>octocat/my_first_favorite_repo 4 commits</a>
-                                                      <a className={styles.activity_link}>octocat/my_third_favorite_repo 1 commit</a>
+                                                      <Link className={styles.activity_link}>octocat/my_second_favorite_repo 1 commit</Link>
+                                                      <Link className={styles.activity_link}>octocat/my_first_favorite_repo 4 commits</Link>
+                                                      <Link className={styles.activity_link}>octocat/my_third_favorite_repo 1 commit</Link>
                                                   </Accordion.Content>
                                               </Accordion>
                                           </div>
@@ -218,8 +220,8 @@ class Dashboard extends Component {
                                                       <Octicon icon={activeIndex === 4 ? Fold : Unfold} />
                                                   </Accordion.Title>
                                                   <Accordion.Content active={activeIndex === 4}>
-                                                      <a className={styles.activity_link}>octocat/my_first_favorite_repo 1 commit</a>
-                                                      <a className={styles.activity_link}>octocat/my_second_favorite_repo 2 commits</a>
+                                                      <Link className={styles.activity_link}>octocat/my_first_favorite_repo 1 commit</Link>
+                                                      <Link className={styles.activity_link}>octocat/my_second_favorite_repo 2 commits</Link>
                                                   </Accordion.Content>
                                               </Accordion>
                                           </div>
@@ -236,8 +238,8 @@ class Dashboard extends Component {
                                                       <Octicon icon={activeIndex === 5 ? Fold : Unfold} />
                                                   </Accordion.Title>
                                                   <Accordion.Content active={activeIndex === 5}>
-                                                      <a className={styles.activity_link}>octocat/my_first_favorite_repo 2 commits</a>
-                                                      <a className={styles.activity_link}>octocat/my_second_favorite_repo 2 commits</a>
+                                                      <Link className={styles.activity_link}>octocat/my_first_favorite_repo 2 commits</Link>
+                                                      <Link className={styles.activity_link}>octocat/my_second_favorite_repo 2 commits</Link>
                                                   </Accordion.Content>
                                               </Accordion>
                                           </div>
@@ -255,7 +257,7 @@ class Dashboard extends Component {
                                                       <Octicon icon={activeIndex === 6 ? Fold : Unfold} />
                                                   </Accordion.Title>
                                                   <Accordion.Content active={activeIndex === 6}>
-                                                      <a className={styles.activity_link}>octocat/my_first_favorite_repo 3 commits</a>
+                                                      <Link className={styles.activity_link}>octocat/my_first_favorite_repo 3 commits</Link>
                                                   </Accordion.Content>
                                               </Accordion>
                                           </div>
@@ -269,7 +271,7 @@ class Dashboard extends Component {
                                                       <Octicon icon={activeIndex === 7 ? Fold : Unfold} />
                                                   </Accordion.Title>
                                                   <Accordion.Content active={activeIndex === 7}>
-                                                      <a className={styles.activity_link}>octocat/my_third_favorite_repo</a>
+                                                      <Link className={styles.activity_link}>octocat/my_third_favorite_repo</Link>
                                                   </Accordion.Content>
                                               </Accordion>
                                           </div>
@@ -283,29 +285,23 @@ class Dashboard extends Component {
                                                       <Octicon icon={activeIndex === 8 ? Fold : Unfold} />
                                                   </Accordion.Title>
                                                   <Accordion.Content active={activeIndex === 8}>
-                                                      <a className={styles.activity_link}>octocat/my_first_favorite_repo 2 pull requests</a>
+                                                      <Link className={styles.activity_link}>octocat/my_first_favorite_repo 2 pull requests</Link>
                                                   </Accordion.Content>
                                               </Accordion>
                                           </div>
                                       </Container>
-                                      <a className={styles.load_more_activity}>Show more activity</a>
+                                      <Link className={styles.load_more_activity}>Show more activity</Link>
                                   </Grid.Column>
                                   <Grid.Column width={3} only="computer">
                                       <ul className={styles.contribution_year_list}>
                                           <li>
-                                              <a className={styles.contribution_year__active} href="">
-                          2019
-                                              </a>
+                                              <Link className={styles.contribution_year__active}>2019</Link>
                                           </li>
                                           <li>
-                                              <a className={styles.contribution_year} href="">
-                          2018
-                                              </a>
+                                              <Link className={styles.contribution_year}>2018</Link>
                                           </li>
                                           <li>
-                                              <a className={styles.contribution_year} href="">
-                          2017
-                                              </a>
+                                              <Link className={styles.contribution_year}>2017</Link>
                                           </li>
                                       </ul>
                                   </Grid.Column>
