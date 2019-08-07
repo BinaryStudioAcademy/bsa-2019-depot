@@ -30,7 +30,10 @@ class Signup extends React.Component {
   validateField = (field, value) => {
       switch (field) {
       case 'username': {
-          return !validator.isEmpty(value); // todo: add validate by regexp
+          return (
+              !validator.isEmpty(value) &&
+          validator.matches(value, '(^[\\d\\w]*(?:[a-zA-Z0-9]|-(?!-))*[\\d\\w]$)|(^[\\d\\w]$)', 'ig')
+          );
       }
 
       case 'email': {
@@ -38,7 +41,12 @@ class Signup extends React.Component {
       }
 
       case 'password': {
-          return !validator.isEmpty(value);
+          return (
+              !validator.isEmpty(value) &&
+          validator.matches(value, '\\d', 'ig') &&
+          validator.matches(value, '[a-z]', 'g') &&
+          validator.matches(value, '.{8,}', 'ig')
+          );
       }
 
       default:
@@ -57,16 +65,18 @@ class Signup extends React.Component {
               valid: valid
           }
       });
+      console.warn('validateHandler', field, value, valid, this.state);
   };
 
   changeHandler = evt => {
       const field = evt.target.name;
       const { value } = evt.target;
+      const valid = this.validateField(field, value);
       this.setState({
           ...this.state,
           [field]: {
               value,
-              valid: true
+              valid
           },
           formValid: true
       });
@@ -109,9 +119,7 @@ class Signup extends React.Component {
                   <Form name="signupForm" size="large" onSubmit={this.handleClickSignup} loading={loading} error={!formValid}>
                       <Segment textAlign="left">
                           <Form.Field required>
-                              <label htmlFor="username" floating>
-                  Username
-                              </label>
+                              <label htmlFor="username">Username</label>
                               <Form.Input
                                   fluid
                                   placeholder="Username"
@@ -121,6 +129,10 @@ class Signup extends React.Component {
                                   onChange={this.changeHandler}
                                   onBlur={this.validateHandler}
                                   required
+                                  icon={{
+                                      name: 'check',
+                                      className: `icon-green ${username.value && username.valid ? '' : 'icon-hidden'}`
+                                  }}
                               />
                               <Label className="signup-pointing-label" pointing>
                   Username can contain alphanumeric characters and single hyphens, cannot begin or end with a hyphen
@@ -137,6 +149,10 @@ class Signup extends React.Component {
                                   onChange={this.changeHandler}
                                   onBlur={this.validateHandler}
                                   required
+                                  icon={{
+                                      name: 'check',
+                                      className: `icon-green ${email.value && email.valid ? '' : 'icon-hidden'}`
+                                  }}
                               />
                           </Form.Field>
                           <Form.Field required>
@@ -150,6 +166,10 @@ class Signup extends React.Component {
                                   onChange={this.changeHandler}
                                   onBlur={this.validateHandler}
                                   required
+                                  icon={{
+                                      name: 'check',
+                                      className: `icon-green ${password.value && password.valid ? '' : 'icon-hidden'}`
+                                  }}
                               />
                               <Label className="signup-pointing-label" pointing>
                   Password should be at least 8 characters including a number and a lowercase letter
