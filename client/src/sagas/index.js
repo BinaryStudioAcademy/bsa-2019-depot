@@ -1,13 +1,7 @@
 import { all } from 'redux-saga/effects';
 
-// import sagasA from '../containers/ContainerA/sagasA'
+import issuesSagas from '../containers/IssuesTab/sagas';
 
 export default function* rootSaga() {
-    yield all([
-    /*
-        sagasA(),
-        sagasB(),
-        ...
-      */
-    ]);
+    yield all([issuesSagas()]);
 }

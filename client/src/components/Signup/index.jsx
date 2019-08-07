@@ -157,7 +157,7 @@ class Signup extends React.Component {
                           </Form.Field>
 
                           <Button type="submit" color="blue" fluid size="large">
-                Sign Up
+                Sign Up for Depot
                           </Button>
                           <Message
                               error
