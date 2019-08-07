@@ -26,6 +26,11 @@ GOOGLE_CALLBACK_URL = http://localhost:3000/auth/google/callback # default. has 
 GOOGLE_SCOPE = https://www.googleapis.com/auth/userinfo.email # default. has to be changed to google scope if it is different
 ```
 
+###Git Repository
+We are working with git server using [nodegit](https://www.nodegit.org/).
+To create a git server use a special route(/repo). Git server doens't need to be runned. You can work with it as a usual git repository.
+
+
 ### Branches
 
 In this project we follow with [Pull Request process](https://help.github.com/en/articles/about-pull-requests). Two main branches are protected with a [Github branch protection rules](https://help.github.com/en/articles/defining-the-mergeability-of-pull-requests):
