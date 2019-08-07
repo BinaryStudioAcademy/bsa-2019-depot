@@ -1,5 +1,6 @@
 import React, { Fragment, useState } from 'react';
-import { Grid, Menu, Sidebar, Icon, Accordion } from 'semantic-ui-react';
+import PropTypes from 'prop-types';
+import { Grid, Menu, Sidebar, Icon, Accordion, Dropdown, Responsive } from 'semantic-ui-react';
 
 import styles from './styles.module.scss';
 
@@ -155,6 +156,16 @@ const SearchInp = () => {
 
 const signIn = <a href="/">Sign in</a>;
 const signUp = <a href="/">Sign up</a>;
+const logo = (
+    <a className={styles.logo} href="/">
+        <svg height={32} viewBox="0 0 16 16" version="1.1" width={32} aria-hidden="true">
+            <path
+                fillRule="evenodd"
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"
+            />
+        </svg>
+    </a>
+);
 
 const SidebarUnauth = (closeSidebar, sidebarOpened) => {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -232,16 +243,7 @@ const SidebarUnauth = (closeSidebar, sidebarOpened) => {
 
 const MenuDesktop = () => (
     <ul>
-        <li>
-            <a href="/">
-                <svg height={32} viewBox="0 0 16 16" version="1.1" width={32} aria-hidden="true">
-                    <path
-                        fillRule="evenodd"
-                        d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"
-                    />
-                </svg>
-            </a>
-        </li>
+        <li>{logo}</li>
         <li>
             <p>
         Why GitHub?
@@ -316,7 +318,8 @@ const MenuDesktop = () => (
     </ul>
 );
 
-const Header = () => {
+// HOC
+const WithSidebar = Comp => {
     const [sidebarOpened, setSidebarOpened] = useState(false);
 
     function closeSidebar() {
@@ -326,38 +329,193 @@ const Header = () => {
         setSidebarOpened(true);
     }
 
-    return (
-        <div className={styles.headerWrp}>
-            <Grid centered container>
-                <Grid.Row>
-                    <Grid.Column width={10}>{MenuDesktop()}</Grid.Column>
-                    <Grid.Column width={6}>
-                        <div className={styles.form}>
-                            {SearchInp()}
-                            {signIn}
-                            {signUp}
-                            <svg
-                                className={styles.burger}
-                                onClick={openSidebar}
-                                height={24}
-                                viewBox="0 0 12 16"
-                                version="1.1"
-                                width={18}
-                                aria-hidden="true"
-                            >
-                                <path
-                                    fillRule="evenodd"
-                                    d="M11.41 9H.59C0 9 0 8.59 0 8c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zm0-4H.59C0 5 0 4.59 0 4c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zM.59 11H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1H.59C0 13 0 12.59 0 12c0-.59 0-1 .59-1z"
-                                />
-                            </svg>
-                        </div>
-                    </Grid.Column>
-                </Grid.Row>
-            </Grid>
+    return <Comp sidebarOpened={sidebarOpened} closeSidebar={closeSidebar} openSidebar={openSidebar} />;
+};
 
-            {SidebarUnauth(closeSidebar, sidebarOpened)}
-        </div>
-    );
+const HeaderDesktopUnauth = ({ openSidebar, closeSidebar, sidebarOpened }) => (
+    <div className={styles.headerWrp}>
+        <Grid centered container>
+            <Grid.Row>
+                <Grid.Column computer={10} mobile={8}>
+                    {MenuDesktop()}
+                </Grid.Column>
+                <Grid.Column computer={6} mobile={8}>
+                    <div className={styles.form}>
+                        {SearchInp()}
+                        {signIn}
+                        {signUp}
+                        <svg
+                            className={styles.burger}
+                            onClick={openSidebar}
+                            height={24}
+                            viewBox="0 0 12 16"
+                            version="1.1"
+                            width={18}
+                            aria-hidden="true"
+                        >
+                            <path
+                                fillRule="evenodd"
+                                d="M11.41 9H.59C0 9 0 8.59 0 8c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zm0-4H.59C0 5 0 4.59 0 4c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zM.59 11H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1H.59C0 13 0 12.59 0 12c0-.59 0-1 .59-1z"
+                            />
+                        </svg>
+                    </div>
+                </Grid.Column>
+            </Grid.Row>
+        </Grid>
+
+        {SidebarUnauth(closeSidebar, sidebarOpened)}
+    </div>
+);
+
+HeaderDesktopUnauth.propTypes = {
+    openSidebar: PropTypes.func.isRequired,
+    closeSidebar: PropTypes.func.isRequired,
+    sidebarOpened: PropTypes.bool.isRequired
+};
+
+const pullRequests = <a href="/">Pull requests</a>;
+const issues = <a href="/">Issues</a>;
+const avatar = <img src="https://avatars0.githubusercontent.com/u/9952444?s=40&v=4" alt="user" />;
+const userName = 'USER_NAME';
+
+const SidebarAuth = (closeSidebar, sidebarOpened) => (
+    <Sidebar
+        as={Menu}
+        animation="overlay"
+        icon="labeled"
+        inverted
+        onHide={closeSidebar}
+        vertical
+        visible={sidebarOpened}
+        width="wide"
+        direction="top"
+        className={styles.sidebar}
+    >
+        <Menu.Item onClick={closeSidebar} as="a">
+            <Icon name="close" />
+        </Menu.Item>
+        <Menu.Item as="div">{SearchInp()}</Menu.Item>
+        <Menu.Item as="div">
+            <a href="/">Dashboard</a>
+        </Menu.Item>
+        <Menu.Item as="div">{pullRequests}</Menu.Item>
+        <Menu.Item as="div">{issues}</Menu.Item>
+        <Menu.Item as="div">
+            <a href="/">
+                {avatar}
+                {userName}
+            </a>
+        </Menu.Item>
+        <Menu.Item as="div">
+            <a href="/">
+                <Icon name="sign out" />
+        SIGN_OUT
+            </a>
+        </Menu.Item>
+    </Sidebar>
+);
+
+const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened }) => (
+    <div className={styles.headerWrpAuth}>
+        <Grid>
+            <Grid.Column computer={6} floated="left">
+                <Responsive minWidth={1200}>
+                    <ul>
+                        <li>{logo}</li>
+                        <li>{SearchInp()}</li>
+                        <li>{pullRequests}</li>
+                        <li>{issues}</li>
+                    </ul>
+                </Responsive>
+                <Responsive maxWidth={1200}>
+                    <svg
+                        className={styles.burger}
+                        onClick={openSidebar}
+                        height={24}
+                        viewBox="0 0 12 16"
+                        version="1.1"
+                        width={18}
+                        aria-hidden="true"
+                    >
+                        <path
+                            fillRule="evenodd"
+                            d="M11.41 9H.59C0 9 0 8.59 0 8c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zm0-4H.59C0 5 0 4.59 0 4c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zM.59 11H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1H.59C0 13 0 12.59 0 12c0-.59 0-1 .59-1z"
+                        />
+                    </svg>
+                </Responsive>
+            </Grid.Column>
+
+            <Grid.Column computer={5}>
+                <Responsive maxWidth={1200}>{logo}</Responsive>
+            </Grid.Column>
+            <Grid.Column computer={4} floated="right">
+                <ul className={styles.rightMenu}>
+                    <li>
+                        <a href="/">
+                            <Icon name="bell" />
+                        </a>
+                    </li>
+                    <li>
+                        <Dropdown
+                            pointing="top right"
+                            icon={null}
+                            trigger={
+                                <div>
+                                    <Icon name="plus" />
+                                    <Icon name="dropdown" />
+                                </div>
+                            }
+                        >
+                            <Dropdown.Menu>
+                                <Dropdown.Item>New repository</Dropdown.Item>
+                                <Dropdown.Item>Import repository</Dropdown.Item>
+                                <Dropdown.Item>New organization</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </li>
+                    <li>
+                        <Dropdown
+                            pointing="top right"
+                            icon={null}
+                            trigger={
+                                <div>
+                                    {avatar}
+                                    <Icon name="dropdown" />
+                                </div>
+                            }
+                        >
+                            <Dropdown.Menu>
+                                <Dropdown.Item>
+                  Signed in as <b>{userName}</b>
+                                </Dropdown.Item>
+                                <Dropdown.Divider />
+                                <Dropdown.Item>SET_STATUS</Dropdown.Item>
+                                <Dropdown.Divider />
+                                <Dropdown.Item>Your profile</Dropdown.Item>
+                                <Dropdown.Item>Your repositories</Dropdown.Item>
+                                <Dropdown.Divider />
+                                <Dropdown.Item>Settings</Dropdown.Item>
+                                <Dropdown.Item>Sign out</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </li>
+                </ul>
+            </Grid.Column>
+        </Grid>
+
+        {SidebarAuth(closeSidebar, sidebarOpened)}
+    </div>
+);
+
+HeaderDesktopAuth.propTypes = {
+    openSidebar: PropTypes.func.isRequired,
+    closeSidebar: PropTypes.func.isRequired,
+    sidebarOpened: PropTypes.bool.isRequired
+};
+
+const Header = () => {
+    const auth = true; // <<< TODO: change it to real data
+    return auth ? WithSidebar(HeaderDesktopAuth) : WithSidebar(HeaderDesktopUnauth);
 };
 
 export default Header;
