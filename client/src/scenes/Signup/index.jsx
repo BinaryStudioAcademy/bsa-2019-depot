@@ -4,9 +4,11 @@ import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validator from 'validator';
 
-import { Grid, Header, Form, Button, Message, Segment, Label } from 'semantic-ui-react';
+import { Grid, Header, Form, Button, Segment, Label } from 'semantic-ui-react';
 
 import './styles.module.scss';
+
+import { signup } from './actions';
 
 class Signup extends React.Component {
     constructor(props) {
@@ -82,16 +84,18 @@ class Signup extends React.Component {
       console.warn('changeHandler', this.state);
   };
 
-  handleClickSignup = async () => {
+  handleClickSignup = () => {
       const { loading, username, email, password } = this.state;
       if (loading) {
           return;
       }
-      //   this.setState({ loading: true });
       try {
-      // eslint-disable-next-line no-console
-          console.log(`register as ${username.value} ${email.value} ${password.value}`);
-      //await this.props.signup({ username, email, password });
+          const user = {
+              username: username.value,
+              email: email.value,
+              password: password.value
+          };
+          this.props.signup(user);
       } catch {
           this.setState({ loading: false });
       }
@@ -188,7 +192,8 @@ class Signup extends React.Component {
 
 Signup.propTypes = {
     isAuthenticated: PropTypes.bool,
-    user: PropTypes.object
+    user: PropTypes.object,
+    signup: PropTypes.func
 };
 
 const mapStateToProps = state => {
@@ -198,10 +203,9 @@ const mapStateToProps = state => {
     };
 };
 
-// const mapDispatchToProps = { ...actions };
+const mapDispatchToProps = { signup };
 
 export default connect(
     mapStateToProps,
-    // mapDispatchToProps
-    null
+    mapDispatchToProps
 )(Signup);
