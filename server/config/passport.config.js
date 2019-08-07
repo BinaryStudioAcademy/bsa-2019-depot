@@ -2,7 +2,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const JwtStrategy = require('passport-jwt').Strategy;
 const GoogleStrategy = require('passport-google-oauth2').Strategy;
-const UserRepository = require('../data/repositories/user.repository');
+const userRepository = require('../data/repositories/user.repository');
 const { jwtOptions } = require('./jwt.config');
 const { clientID, clientSecret, callbackURL } = require('./google.config');
 
@@ -11,8 +11,8 @@ passport.use(
   new LocalStrategy(async (loginInput, password, done) => {
     try {
       const user = loginInput.includes('@')
-        ? UserRepository.getByEmail(loginInput)
-        : UserRepository.getByUsername(loginInput);
+        ? await userRepository.getByEmail(loginInput)
+        : await userRepository.getByUsername(loginInput);
 
       if (!user) {
         return done({ status: 401, message: 'Incorrect email or username' }, false);
@@ -34,7 +34,7 @@ passport.use(
     },
     async ({ body: { email } }, username, password, done) => {
       try {
-        const userByEmail = UserRepository.getByEmail(email);
+        const userByEmail = await userRepository.getByEmail(email);
         if (userByEmail) return done({ status: 401, message: 'This email is already used' }, false);
 
         return done(null, { email, username, password });
@@ -62,10 +62,10 @@ passport.use(
       callbackURL,
       passReqToCallback: true
     },
-    (req, accessToken, refreshToken, profile, done) => {
-      const user = UserRepository.getByEmail(profile.email);
+    async (req, accessToken, refreshToken, profile, done) => {
+      const user = await userRepository.getByEmail(profile.email);
       if (!user) {
-        const newUser = UserRepository.addUser({ email: profile.email });
+        const newUser = userRepository.addUser({ email: profile.email });
         return done(null, newUser);
       }
       return done(null, user);
@@ -76,7 +76,7 @@ passport.use(
 passport.use(
   new JwtStrategy(jwtOptions, async ({ id }, done) => {
     try {
-      const user = await UserRepository.getUserById(id);
+      const user = await userRepository.getUserById(id);
       return user ? done(null, user) : done({ status: 401, message: 'Token is invalid.' }, null);
     } catch (err) {
       return done(err);

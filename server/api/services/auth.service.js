@@ -1,4 +1,4 @@
-const UserRepository = require('../../data/repositories/user.repository');
+const userRepository = require('../../data/repositories/user.repository');
 const tokenHelper = require('../../helpers/token.helper');
 
 const login = async ({ id, email }) => ({
@@ -18,7 +18,7 @@ const googleLogin = async ({ id, email, username }) => {
 };
 
 const register = async (userData) => {
-  const newUser = await UserRepository.addUser({
+  const newUser = await userRepository.addUser({
     ...userData
   });
   return login(newUser);

@@ -3,12 +3,7 @@ const { UserModel } = require('../models/index');
 
 class UserRepository extends BaseRepository {
   addUser({ ...userData }) {
-    const newUser = {
-      username: '',
-      password: '',
-      ...userData
-    };
-    return this.create(newUser);
+    return this.create(userData);
   }
 
   setUsernameById(id, username) {

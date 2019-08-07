@@ -16,13 +16,21 @@ class BaseRepository {
   }
 
   async updateById(id, data) {
-    const result = await this.model.update(data, {
-      where: { id },
-      returning: true,
-      plain: true
-    });
-
-    return result[1];
+    try {
+      await this.model.update(data, {
+        where: { id },
+        returning: true,
+        plain: true
+      });
+      return {
+        status: true
+      };
+    } catch (err) {
+      return {
+        status: false,
+        errorMessage: err.message
+      };
+    }
   }
 
   deleteById(id) {
