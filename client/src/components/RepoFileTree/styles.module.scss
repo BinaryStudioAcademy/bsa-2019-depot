@@ -2,12 +2,11 @@
   float: right;
 }
 
-a:hover {
-  text-decoration: underline;
-}
-
-:local(.link:hover) {
-  text-decoration: underline;
+:global(a):local(.link) {
+  font-weight: normal;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 :local(.sha),
@@ -15,94 +14,13 @@ a:hover {
 :local(.prNumber) {
   font-weight: bold;
   margin: 0 5px;
-}
-
-:global(.octicon) {
-  color: rgba(3, 47, 98, 0.55);
-  margin-right: 5px;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 :global(.ui.table):local(td) {
   border-top: 1px solid #eaecef;
   line-height: 20px;
   padding: 6px 3px;
-}
-:global(.ui.message):local(.lastCommitMessage) {
-  margin-top: 10px;
-}
-
-:global(.ui.button):local(.actionButton) {
-  background-color: #eff3f6;
-  background-image: linear-gradient(-180deg, #fafbfc, #eff3f6 90%);
-  border: 1px solid rgba(27, 31, 35, 0.2);
-  color: #24292e;
-  font-size: 12px;
-  line-height: 20px;
-  padding: 3px 10px;
-  &:hover {
-    background-color: #e6ebf1;
-    background-image: linear-gradient(-180deg, #f0f3f6, #e6ebf1 90%);
-    background-position: -0.5em;
-    border-color: rgba(27, 31, 35, 0.35);
-  }
-}
-
-:global(.ui.buttons, .ui.button):local(.actionButton) {
-  font-size: 12px;
-}
-
-:local(.repoNav) {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-:global(.ui.button):local(.repoBranchesButton) {
-  margin-right: 6px;
-}
-
-:global(.ui.button):local(.cloneRepoButton) {
-  margin-left: 6px;
-  background-color: #28a745;
-  background-image: linear-gradient(-180deg, #34d058, #28a745 90%);
-  color: #fff;
-  &:hover {
-    background-color: #269f42;
-    background-image: linear-gradient(-180deg, #2fcb53, #269f42 90%);
-    background-position: -0.5em;
-    border-color: rgba(27, 31, 35, 0.5);
-    color: #fff;
-  }
-}
-
-:local(.readmeHeader) {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-:global(.ui.horizontal.segments):local(.languageSegments) {
-  border-radius: 0px 0px 4px 4px;
-  box-shadow: none;
-  border: none;
-  width: calc(100% + 2px);
-  margin: 0px 0px 10px 0px;
-  overflow: hidden;
-}
-
-:global(.ui.segment):local(.languageSegment) {
-  padding: 0.25em;
-}
-
-:local(.repoDescription) {
-  margin: 0.35em 0em 1em;
-  font-size: 16px;
-  line-height: 22px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-:local(.repoDescriptionText) {
-  line-height: 1.5;
 }
