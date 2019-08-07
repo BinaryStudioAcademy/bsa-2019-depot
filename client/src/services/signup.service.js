@@ -11,6 +11,14 @@ export const signup = async request => {
     return response.json();
 };
 
+export const googleSignup = async () => {
+    const response = await callWebApi({
+        endpoint: serverURL + '/auth/google',
+        type: 'GET'
+    });
+    return response.json();
+};
+
 export const setToken = token => {
     localStorage.setItem('token', token);
 };

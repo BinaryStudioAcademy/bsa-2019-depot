@@ -1,4 +1,4 @@
-import { signupRoutine } from '../../routines/routines';
+import { signupRoutine, googleSignupRoutine } from '../../routines/routines';
 
 const initialState = {
     loading: false,
@@ -8,6 +8,27 @@ const initialState = {
 
 export default (state = initialState, action) => {
     switch (action.type) {
+    case googleSignupRoutine.REQUEST: {
+        return {
+            state,
+            loading: true
+        };
+    }
+    case googleSignupRoutine.SUCCESS:
+        return {
+            state
+        };
+    case googleSignupRoutine.FAILURE:
+        return {
+            ...state,
+            error: action.payload
+        };
+    case googleSignupRoutine.FULFILL:
+        return {
+            ...state,
+            loading: false
+        };
+
     case signupRoutine.REQUEST:
         return {
             ...state,

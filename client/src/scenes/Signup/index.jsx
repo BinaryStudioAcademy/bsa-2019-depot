@@ -8,7 +8,7 @@ import { Grid, Header, Form, Button, Segment, Label, Message } from 'semantic-ui
 
 import './styles.module.scss';
 
-import { signup } from './actions';
+import { signup, googleSignup } from './actions';
 import GoogleAuth from '../../components/GoogleAuth';
 
 class Signup extends React.Component {
@@ -121,6 +121,10 @@ class Signup extends React.Component {
       }
   };
 
+  handleClickGoogleSignup = () => {
+      this.props.googleSignup();
+  };
+
   renderSignupForm = () => {
       const { username, email, password } = this.state;
       const { loading, error } = this.props;
@@ -200,7 +204,7 @@ class Signup extends React.Component {
   };
 
   renderGoogleAuth = () => {
-      return <GoogleAuth text="Sign up with Google"></GoogleAuth>;
+      return <GoogleAuth text="Sign up with Google" handleClick={this.handleClickGoogleSignup}></GoogleAuth>;
   };
 
   renderSignup = () => {
@@ -227,6 +231,7 @@ Signup.propTypes = {
     isAuthorized: PropTypes.bool,
     user: PropTypes.object,
     signup: PropTypes.func,
+    googleSignup: PropTypes.func,
     error: PropTypes.string,
     loading: PropTypes.bool,
     history: PropTypes.object
@@ -241,7 +246,7 @@ const mapStateToProps = state => {
     };
 };
 
-const mapDispatchToProps = { signup };
+const mapDispatchToProps = { signup, googleSignup };
 
 export default connect(
     mapStateToProps,
