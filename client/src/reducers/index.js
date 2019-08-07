@@ -1,8 +1,11 @@
 import { combineReducers } from 'redux';
-import authReducer from '../sagas/auth/reducer';
+
+import { authReducer as auth } from '../sagas/auth/reducer';
+import { profileReducer as profile } from '../sagas/profile/reducer';
 import issuesReducer from '../containers/IssuesTab/reducer';
 
 export default combineReducers({
-    issuesData: issuesReducer,
-    authReducer
+    auth,
+    profile,
+    issuesData: issuesReducer
 });
