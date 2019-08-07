@@ -11,6 +11,10 @@ export const signup = async request => {
     return response.json();
 };
 
+export const setToken = token => {
+    localStorage.setItem('token', token);
+};
+
 // export const getCurrentUser = async () => {
 //     try {
 //         const response = await callWebApi({

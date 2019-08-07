@@ -13,3 +13,7 @@
 :global(.check.icon.icon-hidden) {
   display: none;
 }
+
+:global(ui.error.message) {
+  text-align: center;
+}

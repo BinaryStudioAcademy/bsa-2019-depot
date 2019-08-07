@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validator from 'validator';
 
-import { Grid, Header, Form, Button, Segment, Label } from 'semantic-ui-react';
+import { Grid, Header, Form, Button, Segment, Label, Message } from 'semantic-ui-react';
 
 import './styles.module.scss';
 
@@ -25,10 +25,26 @@ class Signup extends React.Component {
             password: {
                 value: '',
                 valid: true
-            },
-            loading: false
+            }
         };
     }
+
+  componentDidMount = () => {
+      this.setState({
+          username: {
+              value: '',
+              valid: true
+          },
+          email: {
+              value: '',
+              valid: true
+          },
+          password: {
+              value: '',
+              valid: true
+          }
+      });
+  };
 
   validateField = (field, value) => {
       switch (field) {
@@ -81,11 +97,11 @@ class Signup extends React.Component {
               valid
           }
       });
-      console.warn('changeHandler', this.state);
   };
 
   handleClickSignup = () => {
-      const { loading, username, email, password } = this.state;
+      const { username, email, password } = this.state;
+      const { loading } = this.props;
       if (loading) {
           return;
       }
@@ -95,14 +111,19 @@ class Signup extends React.Component {
               email: email.value,
               password: password.value
           };
-          this.props.signup(user);
+          this.props.signup({
+              user,
+              history: this.props.history
+          });
       } catch {
           this.setState({ loading: false });
       }
   };
 
   render() {
-      const { loading, username, email, password } = this.state;
+      const { username, email, password } = this.state;
+      const { loading, error } = this.props;
+
       const formValid = ['username', 'email', 'password'].every(
           field => this.state[field].valid && this.state[field].value
       );
@@ -113,7 +134,7 @@ class Signup extends React.Component {
                   <Header as="h2" color="blue" textAlign="center">
             Join Depot
                   </Header>
-                  <Form name="signupForm" size="large" onSubmit={this.handleClickSignup} loading={loading} error={!formValid}>
+                  <Form name="signupForm" size="large" onSubmit={this.handleClickSignup} loading={loading} error={error}>
                       <Segment textAlign="left">
                           <Form.Field required>
                               <label htmlFor="username">Username</label>
@@ -176,10 +197,7 @@ class Signup extends React.Component {
                           <Button type="submit" color="blue" fluid size="large" disabled={!formValid}>
                 Sign Up for Depot
                           </Button>
-                          {/* <Message
-                              error
-                              content="One or more fields are missing or invalid. Please check your input and try again."
-                          /> */}
+                          <Message error content={error} />
                       </Segment>
                   </Form>
               </Grid.Column>
@@ -193,13 +211,18 @@ class Signup extends React.Component {
 Signup.propTypes = {
     isAuthenticated: PropTypes.bool,
     user: PropTypes.object,
-    signup: PropTypes.func
+    signup: PropTypes.func,
+    error: PropTypes.string,
+    loading: PropTypes.bool,
+    history: PropTypes.object
 };
 
 const mapStateToProps = state => {
     return {
         isAuthenticated: state.auth.isAuthenticated,
-        user: state.auth.user
+        user: state.auth.user,
+        loading: state.signup.loading,
+        error: state.signup.error
     };
 };
 

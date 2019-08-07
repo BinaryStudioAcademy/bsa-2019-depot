@@ -1,3 +1,7 @@
 import { signupRoutine } from '../../routines/routines';
 
-export const signup = user => signupRoutine.request(user);
+export const signup = ({ user, history }) =>
+    signupRoutine.request({
+        user,
+        history
+    });

@@ -7,5 +7,5 @@ import signupReducer from '../scenes/Signup/reducer';
 export default combineReducers({
     auth,
     issuesData: issuesReducer,
-    signupReducer
+    signup: signupReducer
 });

@@ -31,7 +31,6 @@ function getFetchArgs(args) {
     return {
         method: args.type,
         headers,
-        mode: 'no-cors',
         signal: args.ct,
         ...(args.request === 'GET' ? {} : { body })
     };
