@@ -24,14 +24,56 @@ class Dashboard extends React.Component {
 
   panelColors = ['#EEEEEE', '#D6E685', '#8CC665', '#44A340', '#1E6823'];
 
-  values = {
-      //mock, must be replaced with real data
+  contributionValues = {
+      // mock, must be replaced with real data
       '2019-07-23': 1,
       '2019-07-26': 2,
       '2019-07-27': 3,
       '2019-07-28': 4,
       '2019-07-29': 4
   };
+
+  username = 'octocat';
+
+  userActivity = [
+      // mock, must be replaced with real data
+      {
+          year: 2019,
+          month: 'August',
+          commitCount: 25,
+          commitRepoCount: 1,
+          commitRepoNames: {
+              myFirstFavoriteRepo: 25
+          },
+          createdRepoCount: 1,
+          createdRepoNames: ['my_third_favorite_repo'],
+          requestCount: 5,
+          requestRepoNames: {
+              myFirstFavoriteRepo: 5
+          }
+      },
+      {
+          year: 2019,
+          month: 'July',
+          commitCount: 6,
+          commitRepoCount: 3,
+          commitRepoNames: {
+              mySecondFavoriteRepo: 1,
+              myFirstFavoriteRepo: 4,
+              myThirdFavoriteRepo: 1
+          }
+      },
+      {
+          year: 2019,
+          month: 'June',
+          commitCount: 3,
+          commitRepoCount: 2,
+          commitRepoNames: {
+              myFirstFavoriteRepo: 1,
+              mySecondFavoriteRepo: 2
+          }
+      }
+  ];
 
   until = new Date().toISOString().slice(0, 10);
 
@@ -134,7 +176,7 @@ class Dashboard extends React.Component {
                                           </Dropdown>
                                       </Container>
                                       <Calendar
-                                          values={this.values}
+                                          values={this.contributionValues}
                                           until={this.until}
                                           weekNames={this.weekNames}
                                           monthNames={this.monthNames}
@@ -144,152 +186,101 @@ class Dashboard extends React.Component {
                                       <Container className={styles.pinned_header}>
                                           <h2>Contribution activity</h2>
                                       </Container>
-                                      <Container className={styles.contribution_activity}>
-                                          <h3>August 2019</h3>
-                                          <div className={styles.contribution_activity_desc}>
-                                              <span className={styles.contribution_activity_icon}>
-                                                  <Octicon icon={RepoPush} />
-                                              </span>
-                                              <Accordion>
-                                                  <Accordion.Title active={activeIndex === 0} index={0} onClick={this.handleActivityState}>
-                                                      <p>Created 25 commits in 1 repository</p>
-                                                      <Octicon icon={activeIndex === 0 ? Fold : Unfold} />
-                                                  </Accordion.Title>
-                                                  <Accordion.Content active={activeIndex === 0}>
-                                                      <Link className={styles.activity_link}>octocat/my_first_favorite_repo 25 commits</Link>
-                                                  </Accordion.Content>
-                                              </Accordion>
-                                          </div>
-                                          <div className={styles.contribution_activity_desc}>
-                                              <span className={styles.contribution_activity_icon}>
-                                                  <Octicon icon={Repo} />
-                                              </span>
-                                              <Accordion>
-                                                  <Accordion.Title active={activeIndex === 1} index={1} onClick={this.handleActivityState}>
-                                                      <p>Created 1 repository</p>
-                                                      <Octicon icon={activeIndex === 1 ? Fold : Unfold} />
-                                                  </Accordion.Title>
-                                                  <Accordion.Content active={activeIndex === 1}>
-                                                      <Link className={styles.activity_link}>octocat/my_third_favorite_repo</Link>
-                                                  </Accordion.Content>
-                                              </Accordion>
-                                          </div>
-                                          <div className={styles.contribution_activity_desc}>
-                                              <span className={styles.contribution_activity_icon}>
-                                                  <Octicon icon={GitPullRequest} />
-                                              </span>
-                                              <Accordion>
-                                                  <Accordion.Title active={activeIndex === 2} index={2} onClick={this.handleActivityState}>
-                                                      <p>Opened 5 pull requests</p>
-                                                      <Octicon icon={activeIndex === 2 ? Fold : Unfold} />
-                                                  </Accordion.Title>
-                                                  <Accordion.Content active={activeIndex === 2}>
-                                                      <Link className={styles.activity_link}>octocat/my_first_favorite_repo 5 pull requests</Link>
-                                                  </Accordion.Content>
-                                              </Accordion>
-                                          </div>
-                                      </Container>
-                                      <Container className={styles.contribution_activity}>
-                                          <h3>July 2019</h3>
-                                          <div className={styles.contribution_activity_desc}>
-                                              <span className={styles.contribution_activity_icon}>
-                                                  <Octicon icon={RepoPush} />
-                                              </span>
-                                              <Accordion>
-                                                  <Accordion.Title active={activeIndex === 3} index={3} onClick={this.handleActivityState}>
-                                                      <p>Created 6 commits in 3 repository</p>
-                                                      <Octicon icon={activeIndex === 3 ? Fold : Unfold} />
-                                                  </Accordion.Title>
-                                                  <Accordion.Content active={activeIndex === 3}>
-                                                      <Link className={styles.activity_link}>octocat/my_second_favorite_repo 1 commit</Link>
-                                                      <Link className={styles.activity_link}>octocat/my_first_favorite_repo 4 commits</Link>
-                                                      <Link className={styles.activity_link}>octocat/my_third_favorite_repo 1 commit</Link>
-                                                  </Accordion.Content>
-                                              </Accordion>
-                                          </div>
-                                      </Container>
-                                      <Container className={styles.contribution_activity}>
-                                          <h3>June 2019</h3>
-                                          <div className={styles.contribution_activity_desc}>
-                                              <span className={styles.contribution_activity_icon}>
-                                                  <Octicon icon={RepoPush} />
-                                              </span>
-                                              <Accordion>
-                                                  <Accordion.Title active={activeIndex === 4} index={4} onClick={this.handleActivityState}>
-                                                      <p>Created 3 commits in 2 repositories</p>
-                                                      <Octicon icon={activeIndex === 4 ? Fold : Unfold} />
-                                                  </Accordion.Title>
-                                                  <Accordion.Content active={activeIndex === 4}>
-                                                      <Link className={styles.activity_link}>octocat/my_first_favorite_repo 1 commit</Link>
-                                                      <Link className={styles.activity_link}>octocat/my_second_favorite_repo 2 commits</Link>
-                                                  </Accordion.Content>
-                                              </Accordion>
-                                          </div>
-                                      </Container>
-                                      <Container className={styles.contribution_activity}>
-                                          <h3>May 2019</h3>
-                                          <div className={styles.contribution_activity_desc}>
-                                              <span className={styles.contribution_activity_icon}>
-                                                  <Octicon icon={RepoPush} />
-                                              </span>
-                                              <Accordion>
-                                                  <Accordion.Title active={activeIndex === 5} index={5} onClick={this.handleActivityState}>
-                                                      <p>Created 4 commits in 2 repositories</p>
-                                                      <Octicon icon={activeIndex === 5 ? Fold : Unfold} />
-                                                  </Accordion.Title>
-                                                  <Accordion.Content active={activeIndex === 5}>
-                                                      <Link className={styles.activity_link}>octocat/my_first_favorite_repo 2 commits</Link>
-                                                      <Link className={styles.activity_link}>octocat/my_second_favorite_repo 2 commits</Link>
-                                                  </Accordion.Content>
-                                              </Accordion>
-                                          </div>
-                                      </Container>
-                                      <Container className={styles.contribution_activity}>
-                                          <h3>April 2019</h3>
 
-                                          <div className={styles.contribution_activity_desc}>
-                                              <span className={styles.contribution_activity_icon}>
-                                                  <Octicon icon={RepoPush} />
-                                              </span>
-                                              <Accordion>
-                                                  <Accordion.Title active={activeIndex === 6} index={6} onClick={this.handleActivityState}>
-                                                      <p>Created 5 commits in 1 repository</p>
-                                                      <Octicon icon={activeIndex === 6 ? Fold : Unfold} />
-                                                  </Accordion.Title>
-                                                  <Accordion.Content active={activeIndex === 6}>
-                                                      <Link className={styles.activity_link}>octocat/my_first_favorite_repo 3 commits</Link>
-                                                  </Accordion.Content>
-                                              </Accordion>
-                                          </div>
-                                          <div className={styles.contribution_activity_desc}>
-                                              <span className={styles.contribution_activity_icon}>
-                                                  <Octicon icon={Repo} />
-                                              </span>
-                                              <Accordion>
-                                                  <Accordion.Title active={activeIndex === 7} index={7} onClick={this.handleActivityState}>
-                                                      <p>Created 2 repositories</p>
-                                                      <Octicon icon={activeIndex === 7 ? Fold : Unfold} />
-                                                  </Accordion.Title>
-                                                  <Accordion.Content active={activeIndex === 7}>
-                                                      <Link className={styles.activity_link}>octocat/my_third_favorite_repo</Link>
-                                                  </Accordion.Content>
-                                              </Accordion>
-                                          </div>
-                                          <div className={styles.contribution_activity_desc}>
-                                              <span className={styles.contribution_activity_icon}>
-                                                  <Octicon icon={GitPullRequest} />
-                                              </span>
-                                              <Accordion>
-                                                  <Accordion.Title active={activeIndex === 8} index={8} onClick={this.handleActivityState}>
-                                                      <p>Opened 2 pull requests</p>
-                                                      <Octicon icon={activeIndex === 8 ? Fold : Unfold} />
-                                                  </Accordion.Title>
-                                                  <Accordion.Content active={activeIndex === 8}>
-                                                      <Link className={styles.activity_link}>octocat/my_first_favorite_repo 2 pull requests</Link>
-                                                  </Accordion.Content>
-                                              </Accordion>
-                                          </div>
-                                      </Container>
+                                      {this.userActivity.map(
+                                          (
+                                              {
+                                                  year,
+                                                  month,
+                                                  commitCount,
+                                                  commitRepoCount,
+                                                  commitRepoNames,
+                                                  createdRepoCount,
+                                                  createdRepoNames,
+                                                  requestCount,
+                                                  requestRepoNames
+                                              },
+                                              idx
+                                          ) => (
+                                              <Container key={month} className={styles.contribution_activity}>
+                                                  <h3>{`${month} ${year}`}</h3>
+                                                  {commitCount && (
+                                                      <div className={styles.contribution_activity_desc}>
+                                                          <span className={styles.contribution_activity_icon}>
+                                                              <Octicon icon={RepoPush} />
+                                                          </span>
+                                                          <Accordion>
+                                                              <Accordion.Title
+                                                                  active={activeIndex === `commit-${idx}`}
+                                                                  index={`commit-${idx}`}
+                                                                  onClick={this.handleActivityState}
+                                                              >
+                                                                  <p>
+                                    Created {commitCount} commits in {commitRepoCount} repository
+                                                                  </p>
+                                                                  <Octicon icon={activeIndex === `commit-${idx}` ? Fold : Unfold} />
+                                                              </Accordion.Title>
+                                                              <Accordion.Content active={activeIndex === `commit-${idx}`}>
+                                                                  {Object.entries(commitRepoNames).map((val, i) => (
+                                                                      <Link key={`commit-${i}`} className={styles.activity_link}>
+                                                                          {this.username}/{val[0]} {val[1]} commits
+                                                                      </Link>
+                                                                  ))}
+                                                              </Accordion.Content>
+                                                          </Accordion>
+                                                      </div>
+                                                  )}
+                                                  {createdRepoCount && (
+                                                      <div className={styles.contribution_activity_desc}>
+                                                          <span className={styles.contribution_activity_icon}>
+                                                              <Octicon icon={Repo} />
+                                                          </span>
+                                                          <Accordion>
+                                                              <Accordion.Title
+                                                                  active={activeIndex === `repo-${idx}`}
+                                                                  index={`repo-${idx}`}
+                                                                  onClick={this.handleActivityState}
+                                                              >
+                                                                  <p>Created {createdRepoCount} repository</p>
+                                                                  <Octicon icon={activeIndex === `repo-${idx}` ? Fold : Unfold} />
+                                                              </Accordion.Title>
+                                                              <Accordion.Content active={activeIndex === `repo-${idx}`}>
+                                                                  {createdRepoNames.map((repoName, i) => (
+                                                                      <Link key={`repo-${i}`} className={styles.activity_link}>
+                                                                          {this.username}/{repoName}
+                                                                      </Link>
+                                                                  ))}
+                                                              </Accordion.Content>
+                                                          </Accordion>
+                                                      </div>
+                                                  )}
+                                                  {requestCount && (
+                                                      <div className={styles.contribution_activity_desc}>
+                                                          <span className={styles.contribution_activity_icon}>
+                                                              <Octicon icon={GitPullRequest} />
+                                                          </span>
+                                                          <Accordion>
+                                                              <Accordion.Title
+                                                                  active={activeIndex === idx}
+                                                                  index={idx}
+                                                                  onClick={this.handleActivityState}
+                                                              >
+                                                                  <p>Opened {requestCount} pull requests</p>
+                                                                  <Octicon icon={activeIndex === idx ? Fold : Unfold} />
+                                                              </Accordion.Title>
+                                                              <Accordion.Content active={activeIndex === idx}>
+                                                                  {Object.entries(requestRepoNames).map((val, i) => (
+                                                                      <Link key={`request-${i}`} className={styles.activity_link}>
+                                                                          {this.username}/{val[0]} {val[1]} requests
+                                                                      </Link>
+                                                                  ))}
+                                                              </Accordion.Content>
+                                                          </Accordion>
+                                                      </div>
+                                                  )}
+                                              </Container>
+                                          )
+                                      )}
                                       <Link className={styles.load_more_activity}>Show more activity</Link>
                                   </Grid.Column>
                                   <Grid.Column width={3} only="computer">
