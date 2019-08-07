@@ -2,13 +2,13 @@
 import { put, apply } from 'redux-saga/effects';
 
 // Instruments
-import { api } from '../../../../REST';
 import { authActions } from '../../../auth/actions';
 import { profileActions } from '../../../profile/actions';
+import * as authService from '../../../../services/authService';
 
 export function* login({ payload }) {
     try {
-        const response = yield apply(api, api.auth.login, [payload]);
+        const response = yield apply(authService, authService.login, [payload]);
         const profile = yield apply(response, response.json);
 
         if (response.status !== 200) {
