@@ -12,7 +12,7 @@
       'avatar edit_profile';
     grid-gap: 20px;
     grid-template-columns: 30% 65%;
-    grid-template-rows: 60% 25%;
+    grid-template-rows: 70% 25%;
   }
 }
 
@@ -29,7 +29,7 @@
     object-fit: cover;
   }
 
-  .set_status {
+  :local(.set_status) {
     display: inline-block;
     margin: 10px;
 
@@ -53,6 +53,13 @@
   }
 }
 
+:local(.navbar_wrapper) {
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+  z-index: 2;
+}
+
 :local(.navbar) {
   display: flex;
   border-bottom: 1px solid #d1d5da;
@@ -64,7 +71,7 @@
     padding: 16px 8px;
     border-bottom: 2px solid transparent;
 
-    &.active_link {
+    &:local(.active_link) {
       font-weight: bold;
       border-bottom-color: #e36209;
 
@@ -114,7 +121,7 @@
 }
 
 :global(.wide.column):local(.pinned) {
-  .pinned_item {
+  :local(.pinned_item) {
     min-height: 110px;
     display: flex;
     flex-direction: column;
@@ -131,12 +138,12 @@
       justify-content: space-between;
       align-items: center;
 
-      .card_icon {
+      :local(.card_icon) {
         margin-right: 5px;
+      }
 
-        &_grab {
-          cursor: grab;
-        }
+      :local(.card_icon_grab) {
+        cursor: grab;
       }
 
       & a {
@@ -150,12 +157,12 @@
       }
     }
 
-    .pinned_item_desc {
+    :local(.pinned_item_desc) {
       margin: 8px 0 16px;
       font-size: 12px;
     }
 
-    .pinned_item_lang {
+    :local(.pinned_item_lang) {
       font-size: 12px;
       line-height: 1.5;
 
@@ -230,7 +237,8 @@
     font-size: 12px;
     background-color: #fff;
   }
-  .contribution_activity_desc {
+
+  :local(.contribution_activity_desc) {
     margin-left: 16px;
     padding: 24px 0 24px 24px;
 
@@ -243,7 +251,7 @@
       }
     }
 
-    .contribution_activity_icon {
+    :local(.contribution_activity_icon) {
       background-color: #e6ebf1;
       border: 2px solid #fff;
       border-radius: 50%;
@@ -309,9 +317,9 @@
   :local(.contribution_year_list) {
     width: 100%;
     position: sticky;
-    top: 0;
+    top: 54px;
 
-    .contribution_year__active {
+    :local(.contribution_year__active) {
       display: block;
       margin-bottom: 5px;
       padding: 8px 16px;

@@ -54,30 +54,25 @@ class Dashboard extends Component {
                           </Button>
                       </Grid.Column>
                       <Grid.Column mobile={16} tablet={12} computer={12}>
-                          <Container>
+                          <Container className={styles.navbar_wrapper}>
                               <nav className={styles.navbar}>
                                   <a className={styles.active_link} href="#">
                     Overview
                                   </a>
                                   <a href="#">
-                    Repositories
-                                      <span>15</span>
+                    Repositories<span>15</span>
                                   </a>
                                   <a href="#">
-                    Projects
-                                      <span>2</span>
+                    Projects<span>2</span>
                                   </a>
                                   <a href="#">
-                    Stars
-                                      <span>128</span>
+                    Stars<span>128</span>
                                   </a>
                                   <a href="#">
-                    Followers
-                                      <span>8</span>
+                    Followers<span>8</span>
                                   </a>
                                   <a href="#">
-                    Following
-                                      <span>19</span>
+                    Following<span>19</span>
                                   </a>
                               </nav>
                           </Container>
@@ -96,8 +91,7 @@ class Dashboard extends Component {
                                           </div>
                                           <p className={styles.pinned_item_desc}>I don't know what's in it</p>
                                           <p className={styles.pinned_item_lang}>
-                                              <span></span>
-                        Javascript
+                                              <span></span>Javascript
                                           </p>
                                       </div>
                                       <div className={styles.pinned_item}>
@@ -107,8 +101,7 @@ class Dashboard extends Component {
                                               <Octicon className={styles.card_icon_grab} icon={Grabber} />
                                           </div>
                                           <p className={styles.pinned_item_lang}>
-                                              <span></span>
-                        C++
+                                              <span></span>C++
                                           </p>
                                       </div>
                                   </Grid.Column>
@@ -120,8 +113,7 @@ class Dashboard extends Component {
                                               <Octicon className={styles.card_icon_grab} icon={Grabber} />
                                           </div>
                                           <p className={styles.pinned_item_lang}>
-                                              <span></span>
-                        Java
+                                              <span></span>Java
                                           </p>
                                       </div>
                                   </Grid.Column>
