@@ -74,13 +74,14 @@ $black-color: #24292e;
     width: 200px;
     padding: 10px;
     border: none;
-    opacity: 0.3;
+    background-color: #404447;
     border-radius: 3px;
     &:focus {
-      opacity: 1;
+      background-color: #fff;
+      outline: none;
     }
     &::placeholder {
-      color: $black-color;
+      color: grey;
     }
   }
   a {
