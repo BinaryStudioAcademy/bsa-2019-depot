@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect, NavLink } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import createHandler from 'react-cached-handler';
@@ -11,15 +11,14 @@ import { Grid, Header, Form, Button, Segment, Message } from 'semantic-ui-react'
 //Actions
 import { authActions } from '../../sagas/auth/actions';
 
-class Login extends Component {
+class Forgot extends Component {
     constructor(props) {
         super(props);
         this.state = {
             email: '',
-            password: '',
             isLoading: false,
             isEmailValid: true,
-            isPasswordValid: true
+            currentEmail: ''
         };
     }
 
@@ -30,29 +29,16 @@ class Login extends Component {
       return isEmailValid;
   };
 
-  validatePassword = () => {
-      const { password } = this.state;
-      const isPasswordValid = !validator.isEmpty(password);
-      this.setState({ isPasswordValid });
-      return isPasswordValid;
-  };
-
   emailChangeHandler = createHandler(ev => {
       this.emailChanged(ev.target.value);
   });
 
-  passwordChangeHandler = createHandler(ev => {
-      this.passwordChanged(ev.target.value);
-  });
-
   emailChanged = email => this.setState({ email, isEmailValid: true });
 
-  passwordChanged = password => this.setState({ password, isPasswordValid: true });
+  validateForm = () => [this.validateEmail()].every(Boolean);
 
-  validateForm = () => [this.validateEmail(), this.validatePassword()].every(Boolean);
-
-  handleClickLogin = async () => {
-      const { isLoading, email, password } = this.state;
+  handleClickForgot = async () => {
+      const { isLoading, email } = this.state;
       const { actions } = this.props;
       const valid = this.validateForm();
       if (!valid || isLoading) {
@@ -60,21 +46,27 @@ class Login extends Component {
       }
       this.setState({ isLoading: true });
       try {
-          await actions.loginAsync({ email, password });
+          await actions.loginAsync({ email });
+          this.setState({ currentEmail: email });
+          this.setState({ isLoading: false });
       } catch (error) {
           this.setState({ isLoading: false });
       }
   };
 
   render() {
-      const { isLoading, isEmailValid, isPasswordValid } = this.state;
+      const { isLoading, isEmailValid, currentEmail } = this.state;
+      const succsessMessage = currentEmail ? (
+          <Message color="teal">The email was successfully sent to {currentEmail}</Message>
+      ) : null;
       return !this.props.isAuthorized ? (
           <Grid textAlign="center" verticalAlign="middle" className="fill">
               <Grid.Column style={{ maxWidth: 450 }}>
                   <Header as="h2" color="blue" textAlign="center">
-            Sign in to Depot
+            Forgot password?
                   </Header>
-                  <Form name="loginForm" size="large" onSubmit={this.handleClickLogin}>
+                  {succsessMessage}
+                  <Form name="forgotForm" size="large" onSubmit={this.handleClickForgot}>
                       <Segment>
                           <Form.Input
                               fluid
@@ -84,28 +76,11 @@ class Login extends Component {
                               onChange={this.emailChangeHandler()}
                               onBlur={this.validateEmail}
                           />
-                          <Form.Input
-                              fluid
-                              placeholder="Password"
-                              type="password"
-                              error={!isPasswordValid}
-                              onChange={this.passwordChangeHandler()}
-                              onBlur={this.validatePassword}
-                          />
                           <Button type="submit" color="blue" fluid size="large" loading={isLoading}>
-                Sign In
+                Reset password
                           </Button>
                       </Segment>
-                      <NavLink exact to="/forgot">
-              forgot password?
-                      </NavLink>
                   </Form>
-                  <Message>
-            New to Depot?{' '}
-                      <NavLink exact to="/registration">
-              Create an account
-                      </NavLink>
-                  </Message>
               </Grid.Column>
           </Grid>
       ) : (
@@ -113,15 +88,16 @@ class Login extends Component {
       );
   }
 }
-Login.propTypes = {
+Forgot.propTypes = {
     isAuthorized: PropTypes.bool,
     actions: PropTypes.object,
     isLoading: PropTypes.bool
 };
 
-Login.defaultProps = {
+Forgot.defaultProps = {
     isAuthorized: false,
-    isLoading: false
+    isLoading: false,
+    currentEmail: ''
 };
 
 const mapStateToProps = state => ({
@@ -137,4 +113,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Login);
+)(Forgot);
