@@ -134,7 +134,7 @@ class Signup extends React.Component {
                   <Header as="h2" color="blue" textAlign="center">
             Join Depot
                   </Header>
-                  <Form name="signupForm" size="large" onSubmit={this.handleClickSignup} loading={loading} error={error}>
+                  <Form name="signupForm" size="large" onSubmit={this.handleClickSignup} loading={loading} error={!!error}>
                       <Segment textAlign="left">
                           <Form.Field required>
                               <label htmlFor="username">Username</label>

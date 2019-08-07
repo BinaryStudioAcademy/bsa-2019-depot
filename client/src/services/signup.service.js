@@ -1,6 +1,6 @@
 import callWebApi from '../helpers/webApiHelper';
 
-const serverURL = 'http://localhost:3000';
+const serverURL = process.env.REACT_APP_SERVER_URL;
 
 export const signup = async request => {
     const response = await callWebApi({
