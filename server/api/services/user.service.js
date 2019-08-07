@@ -14,7 +14,15 @@ const checkUsernameExists = async ({ username }) => {
   };
 };
 
+const checkEmailExists = async ({ email }) => {
+  const user = await UserRepository.getByEmail(email);
+  return {
+    emailExists: Boolean(user)
+  };
+};
+
 module.exports = {
   setUsername,
-  checkUsernameExists
+  checkUsernameExists,
+  checkEmailExists
 };
