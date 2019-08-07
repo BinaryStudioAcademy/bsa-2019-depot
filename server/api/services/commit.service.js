@@ -3,7 +3,7 @@ const NodeGit = require('nodegit');
 const gitPath = process.env.GIT_PATH;
 
 const getCommits = async ({ user, name, branch }) => {
-  const pathToRepo = require('path').resolve(`../${gitPath}/${user}/${name}`);
+  const pathToRepo = require('path').resolve(`${gitPath}/${user}/${name}`);
   const allCommits = [];
   await NodeGit.Repository.open(pathToRepo)
     .then(repo => repo.getBranchCommit(branch))
