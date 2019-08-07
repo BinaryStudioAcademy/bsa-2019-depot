@@ -1,6 +1,5 @@
 const passport = require('passport');
-
-const scope = process.env.GOOGLE_SCOPE;
+const { scope } = require('../../config/google.config');
 
 const googleMiddleware = passport.authenticate('google', { scope });
 
