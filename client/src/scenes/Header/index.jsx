@@ -154,7 +154,7 @@ const SearchInp = () => {
 };
 
 const signIn = <a href="/">Sign in</a>;
-const signUp = <a href="/">Sign up</a>;
+const signUp = <a href="/signup">Sign up</a>;
 
 const SidebarUnauth = (closeSidebar, sidebarOpened) => {
     const [activeIndex, setActiveIndex] = useState(0);
