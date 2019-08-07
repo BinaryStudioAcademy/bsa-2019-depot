@@ -12,7 +12,7 @@ const getCommits = async ({ user, name, branch }) => {
       const commitPromise = new Promise((resolve, reject) => {
         history.on('commit', commit => {
           const commitObject = {
-            commit: commit.sha(),
+            sha: commit.sha(),
             author: commit.author().name(),
             date: commit.date(),
             message: commit.message()
