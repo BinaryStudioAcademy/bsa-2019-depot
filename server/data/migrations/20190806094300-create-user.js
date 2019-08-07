@@ -9,7 +9,7 @@ module.exports = {
         defaultValue: Sequelize.literal('gen_random_uuid()')
       },
       username: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING,
         unique: true
       },
@@ -19,7 +19,7 @@ module.exports = {
         unique: true
       },
       password: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING,
         unique: true
       },
