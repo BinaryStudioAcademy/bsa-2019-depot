@@ -1,0 +1,16 @@
+:global(.ui.divided.middle.aligned.list) {
+  margin-top: 0;
+  font-size: 16px;
+
+  :global(.item) {
+    padding: 10px;
+
+    &:last-child {
+      border-radius: 0 0 5px 5px;
+    }
+  }
+
+  :global(.item):hover {
+    background-color: #f6f6f6;
+  }
+}

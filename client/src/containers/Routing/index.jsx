@@ -1,13 +1,18 @@
+/* eslint-disable react/jsx-no-bind */
+
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import CodeTab from '../../scenes/CodeTab/index';
-import { NotFound, Login } from '../../scenes';
+import PrivateRoute from '../PrivateRoute';
+import { NotFound, Login, MainPage, CodeTab } from '../../scenes';
 
 const Routing = () => {
     return (
         <Switch>
+            <Route exact path="/" component={MainPage} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/code" component={CodeTab} />
+            <PrivateRoute exact path="/" component={MainPage} />
+            <PrivateRoute exact path="/dashboard" component={MainPage} />
             <Route exact path="*" component={NotFound} />
         </Switch>
     );
