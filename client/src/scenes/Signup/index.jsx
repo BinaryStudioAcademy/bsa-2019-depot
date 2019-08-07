@@ -6,6 +6,8 @@ import validator from 'validator';
 
 import { Grid, Header, Form, Button, Message, Segment, Label } from 'semantic-ui-react';
 
+import './styles.module.scss';
+
 class Signup extends React.Component {
     constructor(props) {
         super(props);
@@ -22,8 +24,7 @@ class Signup extends React.Component {
                 value: '',
                 valid: true
             },
-            loading: false,
-            formValid: true
+            loading: false
         };
     }
 
@@ -62,10 +63,9 @@ class Signup extends React.Component {
           ...this.state,
           [field]: {
               value,
-              valid: valid
+              valid
           }
       });
-      console.warn('validateHandler', field, value, valid, this.state);
   };
 
   changeHandler = evt => {
@@ -77,24 +77,14 @@ class Signup extends React.Component {
           [field]: {
               value,
               valid
-          },
-          formValid: true
+          }
       });
-  };
-
-  validateForm = () => {
-      const formValid = ['username', 'email', 'password'].every(field => this.state[field].valid);
-      this.setState({
-          ...this.state,
-          formValid
-      });
+      console.warn('changeHandler', this.state);
   };
 
   handleClickSignup = async () => {
-      this.validateForm();
-
-      const { loading, formValid, username, email, password } = this.state;
-      if (!formValid || loading) {
+      const { loading, username, email, password } = this.state;
+      if (loading) {
           return;
       }
       //   this.setState({ loading: true });
@@ -108,7 +98,10 @@ class Signup extends React.Component {
   };
 
   render() {
-      const { loading, username, email, password, formValid } = this.state;
+      const { loading, username, email, password } = this.state;
+      const formValid = ['username', 'email', 'password'].every(
+          field => this.state[field].valid && this.state[field].value
+      );
 
       return !this.props.isAuthenticated ? (
           <Grid textAlign="center" centered className="signup-grid">
@@ -176,13 +169,13 @@ class Signup extends React.Component {
                               </Label>
                           </Form.Field>
 
-                          <Button type="submit" color="blue" fluid size="large">
+                          <Button type="submit" color="blue" fluid size="large" disabled={!formValid}>
                 Sign Up for Depot
                           </Button>
-                          <Message
+                          {/* <Message
                               error
                               content="One or more fields are missing or invalid. Please check your input and try again."
-                          />
+                          /> */}
                       </Segment>
                   </Form>
               </Grid.Column>
