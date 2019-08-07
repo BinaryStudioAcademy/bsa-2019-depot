@@ -68,7 +68,7 @@ class Login extends Component {
 
   render() {
       const { isLoading, isEmailValid, isPasswordValid } = this.state;
-      return !this.props.isAuthenticated ? (
+      return !this.props.isAuthorized ? (
           <Grid textAlign="center" verticalAlign="middle" className="fill">
               <Grid.Column style={{ maxWidth: 450 }}>
                   <Header as="h2" color="blue" textAlign="center">
@@ -111,18 +111,18 @@ class Login extends Component {
   }
 }
 Login.propTypes = {
-    isAuthenticated: PropTypes.bool,
+    isAuthorized: PropTypes.bool,
     actions: PropTypes.object,
     isLoading: PropTypes.bool
 };
 
 Login.defaultProps = {
-    isAuthenticated: false,
+    isAuthorized: false,
     isLoading: false
 };
 
 const mapStateToProps = state => ({
-    isAuthenticated: state.auth.isAuthenticated
+    isAuthorized: state.auth.isAuthorized
 });
 
 const mapDispatchToProps = dispatch => {
