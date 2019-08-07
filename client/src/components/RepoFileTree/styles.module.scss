@@ -80,3 +80,29 @@ a:hover {
   justify-content: space-between;
   align-items: center;
 }
+
+:global(.ui.horizontal.segments):local(.languageSegments) {
+  border-radius: 0px 0px 4px 4px;
+  box-shadow: none;
+  border: none;
+  width: calc(100% + 2px);
+  margin: 0px 0px 10px 0px;
+  overflow: hidden;
+}
+
+:global(.ui.segment):local(.languageSegment) {
+  padding: 0.25em;
+}
+
+:local(.repoDescription) {
+  margin: 0.35em 0em 1em;
+  font-size: 16px;
+  line-height: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+:local(.repoDescriptionText) {
+  line-height: 1.5;
+}

@@ -1,12 +1,53 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { Container, Button, Table, Segment, Image, Message, Header, List } from 'semantic-ui-react';
+import { Container, Button, Table, Segment, Image, Message, Header, List, Menu } from 'semantic-ui-react';
 import Octicon, { getIconByName } from '@primer/octicons-react';
 import styles from './styles.module.scss';
 
 const RepoFileTree = () => (
     <Container>
+        <div className={styles.repoDescription}>
+            <div className={styles.repoDescriptionText}>
+        Semantic is a UI component framework based around useful principles from natural language.{' '}
+                <Link to="http://www.semantic-ui.com"> http://www.semantic-ui.com</Link>
+            </div>
+            <Button className={styles.actionButton}>Edit</Button>
+        </div>
+        <div>
+            <Menu borderless attached="top" widths={4}>
+                <Menu.Item>
+                    <Octicon icon={getIconByName('history')} />
+                    <Link to="">
+                        <b>4,325 </b> commits
+                    </Link>
+                </Menu.Item>
+                <Menu.Item>
+                    <Octicon icon={getIconByName('git-branch')} />
+                    <Link to="">
+                        <b>7 </b> branches
+                    </Link>
+                </Menu.Item>
+                <Menu.Item>
+                    <Octicon icon={getIconByName('tag')} />
+                    <Link to="">
+                        <b>77 </b> releases
+                    </Link>
+                </Menu.Item>
+                <Menu.Item>
+                    <Octicon icon={getIconByName('organization')} />
+                    <Link to="">
+                        <b>10 </b> contributors
+                    </Link>
+                </Menu.Item>
+            </Menu>
+            <Segment.Group className={styles.languageSegments} attached="bottom" horizontal>
+                <Segment className={styles.languageSegment} inverted color="yellow" />
+                <Segment className={styles.languageSegment} inverted color="purple" />
+                <Segment className={styles.languageSegment} inverted color="red" />
+            </Segment.Group>
+        </div>
+
         <div className={styles.repoNav}>
             <div>
                 <Button className={[styles.actionButton, styles.repoBranchesButton]}>Branch: master</Button>
