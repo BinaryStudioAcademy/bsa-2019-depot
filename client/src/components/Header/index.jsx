@@ -1,5 +1,4 @@
 import React, { Fragment, useState } from 'react';
-import PropTypes from 'prop-types';
 import { Grid, Menu, Sidebar, Icon, Accordion } from 'semantic-ui-react';
 
 import styles from './styles.module.scss';
@@ -156,16 +155,6 @@ const SearchInp = () => {
 
 const signIn = <a href="/">Sign in</a>;
 const signUp = <a href="/">Sign up</a>;
-const logo = (
-    <a className={styles.logo} href="/">
-        <svg height={32} viewBox="0 0 16 16" version="1.1" width={32} aria-hidden="true">
-            <path
-                fillRule="evenodd"
-                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"
-            />
-        </svg>
-    </a>
-);
 
 const SidebarUnauth = (closeSidebar, sidebarOpened) => {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -243,7 +232,16 @@ const SidebarUnauth = (closeSidebar, sidebarOpened) => {
 
 const MenuDesktop = () => (
     <ul>
-        <li>{logo}</li>
+        <li>
+            <a href="/">
+                <svg height={32} viewBox="0 0 16 16" version="1.1" width={32} aria-hidden="true">
+                    <path
+                        fillRule="evenodd"
+                        d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"
+                    />
+                </svg>
+            </a>
+        </li>
         <li>
             <p>
         Why GitHub?
@@ -318,8 +316,7 @@ const MenuDesktop = () => (
     </ul>
 );
 
-// HOC
-const WithSidebar = Comp => {
+const Header = () => {
     const [sidebarOpened, setSidebarOpened] = useState(false);
 
     function closeSidebar() {
@@ -329,92 +326,38 @@ const WithSidebar = Comp => {
         setSidebarOpened(true);
     }
 
-    return <Comp sidebarOpened={sidebarOpened} closeSidebar={closeSidebar} openSidebar={openSidebar} />;
-};
+    return (
+        <div className={styles.headerWrp}>
+            <Grid centered container>
+                <Grid.Row>
+                    <Grid.Column width={10}>{MenuDesktop()}</Grid.Column>
+                    <Grid.Column width={6}>
+                        <div className={styles.form}>
+                            {SearchInp()}
+                            {signIn}
+                            {signUp}
+                            <svg
+                                className={styles.burger}
+                                onClick={openSidebar}
+                                height={24}
+                                viewBox="0 0 12 16"
+                                version="1.1"
+                                width={18}
+                                aria-hidden="true"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M11.41 9H.59C0 9 0 8.59 0 8c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zm0-4H.59C0 5 0 4.59 0 4c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zM.59 11H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1H.59C0 13 0 12.59 0 12c0-.59 0-1 .59-1z"
+                                />
+                            </svg>
+                        </div>
+                    </Grid.Column>
+                </Grid.Row>
+            </Grid>
 
-const HeaderDesktopUnauth = ({ openSidebar, closeSidebar, sidebarOpened }) => (
-    <div className={styles.headerWrp}>
-        <Grid centered container>
-            <Grid.Row>
-                <Grid.Column width={10}>{MenuDesktop()}</Grid.Column>
-                <Grid.Column width={6}>
-                    <div className={styles.form}>
-                        {SearchInp()}
-                        {signIn}
-                        {signUp}
-                        <svg
-                            className={styles.burger}
-                            onClick={openSidebar}
-                            height={24}
-                            viewBox="0 0 12 16"
-                            version="1.1"
-                            width={18}
-                            aria-hidden="true"
-                        >
-                            <path
-                                fillRule="evenodd"
-                                d="M11.41 9H.59C0 9 0 8.59 0 8c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zm0-4H.59C0 5 0 4.59 0 4c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zM.59 11H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1H.59C0 13 0 12.59 0 12c0-.59 0-1 .59-1z"
-                            />
-                        </svg>
-                    </div>
-                </Grid.Column>
-            </Grid.Row>
-        </Grid>
-
-        {SidebarUnauth(closeSidebar, sidebarOpened)}
-    </div>
-);
-
-HeaderDesktopUnauth.propTypes = {
-    openSidebar: PropTypes.func.isRequired,
-    closeSidebar: PropTypes.func.isRequired,
-    sidebarOpened: PropTypes.bool.isRequired
-};
-
-const HeaderDesktopAuth = () => (
-    <div className={styles.headerWrpAuth}>
-        <Grid>
-            <Grid.Column floated="left">
-                <ul>
-                    <li>{logo}</li>
-                    <li>{SearchInp()}</li>
-                    <li>
-                        <a href="/">Link</a>
-                    </li>
-                    <li>
-                        <a href="/">Link</a>
-                    </li>
-                    <li>
-                        <a href="/">Link</a>
-                    </li>
-                    <li>
-                        <a href="/">Link</a>
-                    </li>
-                </ul>
-            </Grid.Column>
-            <Grid.Column floated="right">
-                <ul>
-                    <li>
-                        <a href="/">
-                            <Icon name="bell" />
-                        </a>
-                    </li>
-                    <li>
-                        <Icon name="plus" />
-                        <Icon name="dropdown" />
-                    </li>
-                    <li>
-                        <Icon name="dropdown" />
-                    </li>
-                </ul>
-            </Grid.Column>
-        </Grid>
-    </div>
-);
-
-const Header = () => {
-    const auth = true; // <<< TODO: change it to real data
-    return auth ? <HeaderDesktopAuth /> : WithSidebar(HeaderDesktopUnauth);
+            {SidebarUnauth(closeSidebar, sidebarOpened)}
+        </div>
+    );
 };
 
 export default Header;

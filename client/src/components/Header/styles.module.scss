@@ -19,8 +19,7 @@ $black-color: #24292e;
           display: none;
         }
       }
-      svg,
-      .logo {
+      svg {
         color: #fff;
         fill: currentColor;
       }
@@ -75,13 +74,13 @@ $black-color: #24292e;
     width: 200px;
     padding: 10px;
     border: none;
-    background-color: #404447;
+    opacity: 0.3;
     border-radius: 3px;
     &:focus {
-      background-color: #fff;
+      opacity: 1;
     }
     &::placeholder {
-      color: grey;
+      color: $black-color;
     }
   }
   a {
@@ -94,9 +93,6 @@ $black-color: #24292e;
     &:nth-child(3) {
       border: 1px solid #fff;
       border-radius: 3px;
-    }
-    &:hover {
-      color: #fff;
     }
   }
 }
@@ -149,33 +145,6 @@ $black-color: #24292e;
     }
     &::before {
       display: none;
-    }
-  }
-}
-
-:local(.headerWrpAuth) {
-  composes: headerWrp;
-  padding: 16px;
-  a {
-    font-size: 14px !important;
-    font-weight: bold;
-  }
-  i {
-    color: #fff;
-  }
-  input {
-    width: 300px;
-    height: 28px;
-    padding: 0 5px;
-    border: none;
-    background-color: #404447;
-    border-radius: 3px;
-    &:focus {
-      background-color: #fff;
-      outline: none;
-    }
-    &::placeholder {
-      color: grey;
     }
   }
 }
