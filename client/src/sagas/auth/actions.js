@@ -7,5 +7,12 @@ export const authActions = {
         return {
             type: types.AUTHENTICATE
         };
+    },
+    //Async
+    loginAsync: credentials => {
+        return {
+            type: types.LOGIN_ASYNC,
+            payload: credentials
+        };
     }
 };

@@ -1,10 +1,12 @@
+//Types
+
 import { types } from './types';
 
 const initialState = {
     isAuthorized: false
 };
 
-const authReducer = (state = initialState, action) => {
+export const authReducer = (state = initialState, action) => {
     switch (action.type) {
     case types.AUTHENTICATE:
         return { isAuthorized: true };
@@ -14,5 +16,3 @@ const authReducer = (state = initialState, action) => {
         return state;
     }
 };
-
-export default authReducer;
