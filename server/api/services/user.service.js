@@ -1,22 +1,20 @@
 const UserRepository = require('../../data/repositories/user.repository');
-const tokenHelper = require('../../helpers/token.helper');
 
-const setUsername = async ({ jwt, username }) => {
-  const { id } = tokenHelper.decode(jwt);
+const setUsername = async ({ id, username }) => {
   const data = UserRepository.setUsernameById(id, username);
   return {
     ...data
   };
 };
 
-const getUsername = async ({ username }) => {
+const checkUsernameExists = async ({ username }) => {
   const user = await UserRepository.getByUsername(username);
   return {
-    usernameExists: !!user
+    usernameExists: Boolean(user)
   };
 };
 
 module.exports = {
   setUsername,
-  getUsername
+  checkUsernameExists
 };

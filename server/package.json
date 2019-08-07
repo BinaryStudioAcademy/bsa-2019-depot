@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --exec babel-node server.js",
+    "start": "node server.js",
+    "dev": "nodemon server.js",
     "lint": "eslint --fix '**/*.{js,jsx}'",
     "prettify": "prettier --write '**/*.{css,scss,sass,js,jsx,json,md}'",
     "codecheck": "yarn prettify && yarn lint"
@@ -13,13 +14,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/polyfill": "^7.4.4",
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "nodemon": "^1.19.1",
     "passport": "^0.4.0",
     "passport-google-oauth2": "^0.2.0",
+    "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
     "pg": "^7.12.0",
@@ -28,10 +29,6 @@
     "sequelize-cli": "^5.5.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.5.5",
-    "@babel/node": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
-    "@babel/register": "^7.5.5",
     "eslint": "5.16.0",
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-plugin-import": "^2.18.2",

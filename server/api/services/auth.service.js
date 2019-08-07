@@ -6,7 +6,7 @@ const login = async ({ id, email }) => ({
 });
 
 const googleLogin = async ({ id, email, username }) => {
-  const usernameExists = !!username;
+  const usernameExists = Boolean(username);
   const jwt = tokenHelper.createToken({ id, email });
 
   const data = {
