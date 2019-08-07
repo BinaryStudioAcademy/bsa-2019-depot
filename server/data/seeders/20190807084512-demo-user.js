@@ -1,4 +1,4 @@
-const { usersSeed } = require('../seed-data/users.seed');
+const usersSeed = require('../seed-data/users.seed');
 
 module.exports = {
   up: async (queryInterface /* Sequelize */) => {
