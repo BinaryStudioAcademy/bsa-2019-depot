@@ -28,7 +28,7 @@ GOOGLE_SCOPE = https://www.googleapis.com/auth/userinfo.email # default. has to 
 
 ###Git Repository
 We are working with git server using [nodegit](https://www.nodegit.org/).
-To create a git server use a special route(/repo). Git server doens't need to be runned. You can work with it as a usual git repository.
+To create a git server use a special route(/repo), it will execute `git --bare init`. Git server doesn't need to be runned. You can work with it as a usual git repository.
 
 
 ### Branches

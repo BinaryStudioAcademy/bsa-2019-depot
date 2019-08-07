@@ -5,13 +5,11 @@ const getCommits = async ({ user, name, branch }) => {
   const pathToRepo = require('path').resolve(`../${gitpath}/${user}/${name}`);
   const allCommits = [];
   await NodeGit.Repository.open(pathToRepo)
-    .then(function(repo) {
-      return repo.getBranchCommit(branch);
-    })
-    .then(function(firstCommitOnMaster) {
+    .then(repo => repo.getBranchCommit(branch))
+    .then(firstCommitOnMaster => {
       const history = firstCommitOnMaster.history(NodeGit.Revwalk.SORT.TIME);
-      const commitPromise = new Promise(function(resolve, reject) {
-        history.on('commit', function(commit) {
+      const commitPromise = new Promise((resolve, reject) => {
+        history.on('commit', commit => {
           const commitObject = {
             commit: commit.sha(),
             author: commit.author().name(),
@@ -20,7 +18,7 @@ const getCommits = async ({ user, name, branch }) => {
           };
           allCommits.push(commitObject);
         });
-        history.on('end', function(commits) {
+        history.on('end', commits => {
           resolve();
         });
       });
