@@ -3,11 +3,11 @@ import * as commitsService from '../../services/commitsService';
 import * as branchesService from '../../services/branchesService';
 import { fetchCommits, fetchBranches } from '../../routines/routines';
 
-function* commitsRequest({ payload: { repoName } }) {
+function* commitsRequest({ payload: { owner, repoName, branch } }) {
     try {
         yield put(fetchCommits.request());
 
-        const response = yield call(commitsService.getCommits, repoName);
+        const response = yield call(commitsService.getCommits, owner, repoName, branch);
 
         yield put(fetchCommits.success(response));
     } catch (error) {
@@ -21,11 +21,11 @@ function* watchCommitsRequest() {
     yield takeEvery(fetchCommits.TRIGGER, commitsRequest);
 }
 
-function* branchesRequest() {
+function* branchesRequest({ payload: { owner, repoName } }) {
     try {
         yield put(fetchBranches.request());
 
-        const response = yield call(branchesService.getBranches);
+        const response = yield call(branchesService.getBranches, owner, repoName);
 
         yield put(fetchBranches.success(response));
     } catch (error) {

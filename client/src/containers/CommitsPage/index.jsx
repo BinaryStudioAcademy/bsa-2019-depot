@@ -14,60 +14,92 @@ class CommitsPage extends React.Component {
         this.state = {
             branch: 'master'
         };
+
+        this.handleBranchChange = this.handleBranchChange.bind(this);
     }
 
     componentDidMount() {
         this.props.fetchBranches({
-            repoName: this.props.repoName
+            // Mock
+            owner: 'TheSubliminal',
+            repoName: 'depot-test'
         });
         this.props.fetchCommits({
+            // Mock
+            owner: 'TheSubliminal',
+            repoName: 'depot-test',
             branch: this.state.branch
         });
     }
 
-    render() {
-        const { commitData, branchData } = this.props.commitData;
-        const branchOptions = branchData.branches.map((branch, index) => ({
-            key: index,
-            text: branch.name,
-            value: branch.name
-        }));
+    handleBranchChange(event, data) {
+        this.setState(
+            {
+                branch: data.value
+            },
+            () => {
+                this.props.fetchCommits({
+                    // Mock
+                    owner: 'TheSubliminal',
+                    repoName: 'depot-test',
+                    branch: this.state.branch
+                });
+            }
+        );
+    }
 
-        return commitData.loading || branchData.loading ? (
+    render() {
+        const { commitsData, branchesData } = this.props;
+
+        let branchOptions;
+        if (!branchesData.loading) {
+            branchOptions = branchesData.branches.map((branch, index) => ({
+                key: index,
+                text: branch,
+                value: branch
+            }));
+        }
+
+        return commitsData.loading || branchesData.loading ? (
             <Dimmer active>
                 <Loader />
             </Dimmer>
         ) : (
             <div className={styles.commitsContainer}>
-                <div className="branchSelectRow">
-                    <Dropdown text="Branches" options={branchOptions} />
+                <div className={styles.branchSelectRow}>
+                    <Dropdown
+                        value={this.state.branch}
+                        text="Branches"
+                        options={branchOptions}
+                        onChange={this.handleBranchChange}
+                    />
                 </div>
-                <CommitsList commits={commitData.commits} />
+                <CommitsList commits={commitsData.commits} />
             </div>
         );
     }
 }
 
 CommitsPage.propTypes = {
-    commitData: PropTypes.exact({
+    commitsData: PropTypes.exact({
         loading: PropTypes.bool.isRequired,
         error: PropTypes.string,
         commits: PropTypes.array
     }).isRequired,
-    branchData: PropTypes.exact({
+    branchesData: PropTypes.exact({
         loading: PropTypes.bool.isRequired,
         error: PropTypes.string,
         branches: PropTypes.array
     }).isRequired,
-    repoName: PropTypes.string.isRequired,
+    /*repoName: PropTypes.string.isRequired,*/
     fetchCommits: PropTypes.func.isRequired,
     fetchBranches: PropTypes.func.isRequired
 };
 
-const mapStateToProps = ({ commitData, branchData, repoName }) => ({
-    commitData,
-    branchData,
-    repoName
+const mapStateToProps = ({ commitsData, branchesData /*, repoName*/ }) => ({
+    commitsData,
+    branchesData /*,
+    repoName*/
 });
 
 const mapDispatchToProps = {
