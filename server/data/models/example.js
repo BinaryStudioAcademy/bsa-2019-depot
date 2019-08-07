@@ -1,4 +1,4 @@
-// export default (orm, DataTypes) => {
+// module.exports = (orm, DataTypes) => {
 //     const Example = orm.define('example', {
 //         link: {
 //             allowNull: false,
