@@ -1,21 +1,22 @@
-import nodegit from 'nodegit';
+const NodeGit = require('nodegit');
+const { gitpath } = require('../../config/git.config');
 
-const getCommits = async ({user, name, branch}) => {
-  let pathToRepo = require("path").resolve(`../repositories/${user}/${name}`);
-  let allCommits = [];
-  await nodegit.Repository.open(pathToRepo)
+const getCommits = async ({ user, name, branch }) => {
+  const pathToRepo = require('path').resolve(`../${gitpath}/${user}/${name}`);
+  const allCommits = [];
+  await NodeGit.Repository.open(pathToRepo)
     .then(function(repo) {
-      return repo.getBranchCommit(branch)
+      return repo.getBranchCommit(branch);
     })
-    .then( function(firstCommitOnMaster){
-      var history = firstCommitOnMaster.history(nodegit.Revwalk.SORT.TIME);
-      var commitPromise = new Promise(function(resolve, reject) {
-        history.on("commit", function(commit) {
-          let commitObject = {
+    .then(function(firstCommitOnMaster) {
+      const history = firstCommitOnMaster.history(NodeGit.Revwalk.SORT.TIME);
+      const commitPromise = new Promise(function(resolve, reject) {
+        history.on('commit', function(commit) {
+          const commitObject = {
             commit: commit.sha(),
             author: commit.author().name(),
             date: commit.date(),
-            message: commit.message(),
+            message: commit.message()
           };
           allCommits.push(commitObject);
         });
