@@ -7,16 +7,23 @@
 _/client/.env_
 ```
 SKIP_PREFLIGHT_CHECK=true
+PORT=3001
 ```
 
 _/server/.env_
 ```
+APP_PORT = 3000
+
 DB_NAME = depot # default. has to be changed to local DB name if it is different
 DB_USERNAME = postgres # default. has to be changed to local PostgreSQL username if it is different
 DB_PASSWORD = postgres # default. has to be changed to local PostgreSQL password if it is different
 DB_HOST = localhost # default. has to be changed to local used host if it is different
 DB_PORT = 5432 # default. has to be changed to local used port if it is different
 DB_DIALECT = postgres # default. do not change
+GOOGLE_CLIENT_ID = 97XXXXXXXX05-sgfxxxxxxxxxxxxxxxxxxxxxxxxxxxcmj0.apps.googleusercontent.com # has to be replaced with actual google client secret
+GOOGLE_CLIENT_SECRET = ygyxxxXXXXxxxxxxxXXXXXxxxi # has to be replaced with actual google client secret
+GOOGLE_CALLBACK_URL = http://localhost:3000/auth/google/callback # default. has to be changed to google callback uri if it is different
+GOOGLE_SCOPE = https://www.googleapis.com/auth/userinfo.email # default. has to be changed to google scope if it is different
 ```
 
 ### Branches
