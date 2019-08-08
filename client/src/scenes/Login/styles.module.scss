@@ -1,0 +1,27 @@
+:global(.ui.grid.login-grid) {
+  margin-top: -50px;
+}
+:global(.ui.center.aligned.header.login-header) {
+  position: relative;
+  &:before {
+    content: '';
+    display: block;
+    margin: 0 auto;
+    width: 150px;
+    height: 150px;
+    background: url('../../images/depot-logo-1.png') no-repeat;
+    background-size: cover;
+  }
+}
+//:global(.ui.form .field) {
+//  > label {
+//    text-align: left;
+//  }
+//}
+:global(.ui.form .field.password-wrapper) {
+  position: relative;
+  > a {
+    position: absolute;
+    right: 0;
+  }
+}

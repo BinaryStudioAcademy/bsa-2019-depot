@@ -11,6 +11,8 @@ import { Grid, Header, Form, Button, Segment, Message } from 'semantic-ui-react'
 //Actions
 import { authActions } from '../../sagas/auth/actions';
 
+import './styles.module.scss';
+
 class Login extends Component {
     constructor(props) {
         super(props);
@@ -60,7 +62,7 @@ class Login extends Component {
       }
       this.setState({ isLoading: true });
       try {
-          await actions.loginAsync({ email, password });
+          await actions.loginAsync({ username: email, password });
       } catch (error) {
           this.setState({ isLoading: false });
       }
@@ -69,36 +71,42 @@ class Login extends Component {
   render() {
       const { isLoading, isEmailValid, isPasswordValid } = this.state;
       return !this.props.isAuthorized ? (
-          <Grid textAlign="center" verticalAlign="middle" className="fill">
-              <Grid.Column style={{ maxWidth: 450 }}>
-                  <Header as="h2" color="blue" textAlign="center">
+          <Grid textAlign="center" style={{ height: '100vh' }} verticalAlign="middle" className="login-grid">
+              <Grid.Column style={{ maxWidth: 400 }}>
+                  <Header as="h2" color="black" textAlign="center" className="login-header">
             Sign in to Depot
                   </Header>
                   <Form name="loginForm" size="large" onSubmit={this.handleClickLogin}>
                       <Segment>
                           <Form.Input
                               fluid
+                              label="Email"
                               placeholder="Email"
                               type="email"
                               error={!isEmailValid}
                               onChange={this.emailChangeHandler()}
                               onBlur={this.validateEmail}
                           />
-                          <Form.Input
-                              fluid
-                              placeholder="Password"
-                              type="password"
-                              error={!isPasswordValid}
-                              onChange={this.passwordChangeHandler()}
-                              onBlur={this.validatePassword}
-                          />
-                          <Button type="submit" color="blue" fluid size="large" loading={isLoading}>
+
+                          <Form.Field className="password-wrapper">
+                              <NavLink exact to="/forgot" className="forgot-link">
+                  forgot password?
+                              </NavLink>
+                              <Form.Input
+                                  fluid
+                                  name="password"
+                                  label="Password"
+                                  placeholder="Password"
+                                  type="password"
+                                  error={!isPasswordValid}
+                                  onChange={this.passwordChangeHandler()}
+                                  onBlur={this.validatePassword}
+                              />
+                          </Form.Field>
+                          <Button type="submit" color="green" fluid size="large" loading={isLoading}>
                 Sign In
                           </Button>
                       </Segment>
-                      <NavLink exact to="/forgot">
-              forgot password?
-                      </NavLink>
                   </Form>
                   <Message>
             New to Depot?{' '}
