@@ -2,14 +2,16 @@
 import { types } from './types';
 
 export const forgotActions = {
-    emailSend: () => {
+    emailSend: message => {
         return {
-            type: types.EMAIL_SEND
+            type: types.EMAIL_SEND,
+            payload: message
         };
     },
-    emailNotExist: () => {
+    emailNotExist: message => {
         return {
-            type: types.EMAIL_NOT_EXIST
+            type: types.EMAIL_NOT_EXIST,
+            payload: message
         };
     },
     //Async

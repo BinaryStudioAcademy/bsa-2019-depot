@@ -4,5 +4,6 @@ import Reset from './Reset/index';
 import Home from './Home/index';
 import NotFound from './NotFound/index';
 import MainPage from './MainPage/index';
+import Dashboard from './Dashboard/index';
 
-export { Login, Forgot, Reset, Home, NotFound, MainPage };
+export { Login, Forgot, Reset, Home, NotFound, MainPage, Dashboard };

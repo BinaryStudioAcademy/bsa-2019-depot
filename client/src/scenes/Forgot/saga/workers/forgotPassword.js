@@ -7,16 +7,13 @@ import * as userService from '../../../../services/userService';
 
 export function* forgotPassword({ payload }) {
     try {
-    //console.log('payload', payload);
         const response = yield apply(userService, userService.forgot, [payload]);
-        // const profile = yield apply(response, response.json);
-
-        if (response.status !== 200) {
-            yield put(forgotActions.emailNotExist());
-            throw new Error(response.message);
+        if (response.failure) {
+            yield put(forgotActions.emailNotExist(response.failure));
+            return;
         }
 
-        yield put(forgotActions.emailSend());
+        yield put(forgotActions.emailSend(response.success));
     } catch (error) {
         throw new Error(error + ' forgotPassword worker');
     }

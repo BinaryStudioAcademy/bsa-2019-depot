@@ -3,7 +3,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import PrivateRoute from '../PrivateRoute';
-import { NotFound, Login, Forgot, Reset, MainPage } from '../../scenes';
+import { NotFound, Login, Forgot, Reset, MainPage, Dashboard } from '../../scenes';
 
 const Routing = () => {
     return (
@@ -13,7 +13,7 @@ const Routing = () => {
             <Route exact path="/forgot" component={Forgot} />
             <Route exact path="/reset/:hash" component={Reset} />
             <PrivateRoute exact path="/" component={MainPage} />
-            <PrivateRoute exact path="/dashboard" component={MainPage} />
+            <PrivateRoute exact path="/dashboard" component={Dashboard} />
             <Route exact path="*" component={NotFound} />
         </Switch>
     );

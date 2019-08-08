@@ -17,8 +17,7 @@ class Forgot extends Component {
         this.state = {
             email: '',
             isLoading: false,
-            isEmailValid: true,
-            currentEmail: ''
+            isEmailValid: true
         };
     }
 
@@ -46,8 +45,7 @@ class Forgot extends Component {
       }
       this.setState({ isLoading: true });
       try {
-          await actions.forgotAsync({ email }); //TODO need change action
-          this.setState({ currentEmail: email });
+          await actions.forgotAsync({ email });
           this.setState({ isLoading: false });
       } catch (error) {
           this.setState({ isLoading: false });
@@ -55,31 +53,33 @@ class Forgot extends Component {
   };
 
   render() {
-      const { isLoading, isEmailValid, currentEmail } = this.state;
-      const succsessMessage = currentEmail ? (
-          <Message color="teal">The email was successfully sent to {currentEmail}</Message>
-      ) : null;
-      return !this.props.isAuthorized ? (
+      const { isLoading, isEmailValid } = this.state;
+      const { isAuthorized, message, emailNotExist, emailSend } = this.props;
+      const succsessMessage = emailSend ? <Message color="teal">{message}</Message> : null;
+      const failureMessage = emailNotExist ? <Message color="red">{message}</Message> : null;
+      return !isAuthorized ? (
           <Grid textAlign="center" verticalAlign="middle" className="fill">
               <Grid.Column style={{ maxWidth: 450 }}>
                   <Header as="h2" color="blue" textAlign="center">
             Forgot password?
                   </Header>
                   {succsessMessage}
-                  <Form name="forgotForm" size="large" onSubmit={this.handleClickForgot}>
+                  <Form name="forgotForm" size="large" onSubmit={this.handleClickForgot} disabled={emailSend}>
                       <Segment>
                           <Form.Input
                               fluid
+                              disabled={emailSend}
                               placeholder="Email"
                               type="email"
-                              error={!isEmailValid}
+                              error={!isEmailValid || emailNotExist}
                               onChange={this.emailChangeHandler()}
                               onBlur={this.validateEmail}
                           />
-                          <Button type="submit" color="blue" fluid size="large" loading={isLoading}>
+                          <Button type="submit" color="blue" fluid size="large" loading={isLoading} disabled={emailSend}>
                 Reset password
                           </Button>
                       </Segment>
+                      {failureMessage}
                   </Form>
               </Grid.Column>
           </Grid>
@@ -90,6 +90,9 @@ class Forgot extends Component {
 }
 Forgot.propTypes = {
     isAuthorized: PropTypes.bool,
+    message: PropTypes.string,
+    emailNotExist: PropTypes.bool,
+    emailSend: PropTypes.bool,
     actions: PropTypes.object,
     isLoading: PropTypes.bool
 };
@@ -97,11 +100,16 @@ Forgot.propTypes = {
 Forgot.defaultProps = {
     isAuthorized: false,
     isLoading: false,
-    currentEmail: ''
+    message: '',
+    emailNotExist: false,
+    emailSend: false
 };
 
 const mapStateToProps = state => ({
-    isAuthorized: state.auth.isAuthorized
+    isAuthorized: state.auth.isAuthorized,
+    message: state.forgot.message,
+    emailNotExist: state.forgot.emailNotExist,
+    emailSend: state.forgot.emailSend
 });
 
 const mapDispatchToProps = dispatch => {
