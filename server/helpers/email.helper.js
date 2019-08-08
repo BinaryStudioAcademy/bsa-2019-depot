@@ -16,7 +16,7 @@ const sendTokenEmail = (email, token) => {
   const params = {
     Destination: { /* required */
       ToAddresses: [
-        'andreoven@ukr.net',
+        email,
         /* more items */
       ]
     },
