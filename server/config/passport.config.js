@@ -5,6 +5,7 @@ const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const userRepository = require('../data/repositories/user.repository');
 const { jwtOptions } = require('./jwt.config');
 const { clientID, clientSecret, callbackURL } = require('./google.config');
+const cryptoHelper = require('../helpers/crypro.helper');
 
 passport.use(
   'login',
@@ -17,7 +18,7 @@ passport.use(
       if (!user) {
         return done({ status: 401, message: 'Incorrect email or username' }, false);
       }
-      return password === user.password
+      return await cryptoHelper.compare(password, user.password)
         ? done(null, user)
         : done({ status: 401, message: 'Password is incorrect' }, false);
     } catch (err) {
@@ -37,7 +38,12 @@ passport.use(
         const userByEmail = await userRepository.getByEmail(email);
         if (userByEmail) return done({ status: 401, message: 'This email is already used' }, false);
 
-        return done(null, { email, username, password });
+        return done(null,
+          {
+            email,
+            username,
+            password: await cryptoHelper.encrypt(password)
+          });
       } catch (err) {
         return done(err);
       }
