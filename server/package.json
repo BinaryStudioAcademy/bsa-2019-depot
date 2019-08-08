@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.504.0",
+    "bcrypt": "^3.0.6",
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
     "express": "^4.17.1",

@@ -1,35 +1,43 @@
-// class BaseRepository {
-//     constructor(model) {
-//         this.model = model;
-//     }
+class BaseRepository {
+  constructor(model) {
+    this.model = model;
+  }
 
-//     getAll() {
-//         return this.model.findAll();
-//     }
+  getAll() {
+    return this.model.findAll();
+  }
 
-//     getById(id) {
-//         return this.model.findByPk(id);
-//     }
+  getById(id) {
+    return this.model.findByPk(id);
+  }
 
-//     create(data) {
-//         return this.model.create(data);
-//     }
+  create(data) {
+    return this.model.create(data);
+  }
 
-//     async updateById(id, data) {
-//         const result = await this.model.update(data, {
-//             where: { id },
-//             returning: true,
-//             plain: true
-//         });
+  async updateById(id, data) {
+    try {
+      await this.model.update(data, {
+        where: { id },
+        returning: true,
+        plain: true
+      });
+      return {
+        status: true
+      };
+    } catch (err) {
+      return {
+        status: false,
+        errorMessage: err.message
+      };
+    }
+  }
 
-//         return result[1];
-//     }
+  deleteById(id) {
+    return this.model.destroy({
+      where: { id }
+    });
+  }
+}
 
-//     deleteById(id) {
-//         return this.model.destroy({
-//             where: { id }
-//         });
-//     }
-// }
-
-// module.exports = BaseRepository;
+module.exports = BaseRepository;

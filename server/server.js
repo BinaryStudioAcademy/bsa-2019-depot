@@ -18,7 +18,6 @@ app.use(express.urlencoded({ extended: true }));
 
 const staticPath = path.resolve(`${__dirname}/../client/build`);
 app.use(express.static(staticPath));
-
 routes(app);
 
 app.get('*', (req, res) => {
@@ -30,7 +29,4 @@ const port = process.env.APP_PORT || 3000;
 
 app.use(errorHandlerMiddleware);
 
-app.listen(port, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Server listening on port ${port}!`);
-});
+app.listen(port);
