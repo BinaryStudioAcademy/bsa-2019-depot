@@ -99,7 +99,7 @@ class Login extends Component {
                   </Form>
                   <Message>
             New to Depot?{' '}
-                      <NavLink exact to="/signup">
+                      <NavLink exact to="/registration">
               Create an account
                       </NavLink>
                   </Message>
