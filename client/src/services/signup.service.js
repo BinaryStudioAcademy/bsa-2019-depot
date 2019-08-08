@@ -23,6 +23,17 @@ export const setToken = token => {
     localStorage.setItem('token', token);
 };
 
+export const setUsername = async username => {
+    const response = await callWebApi({
+        endpoint: serverURL + '/user/username-exists',
+        type: 'GET',
+        query: {
+            username
+        }
+    });
+    return response.json();
+};
+
 // export const getCurrentUser = async () => {
 //     try {
 //         const response = await callWebApi({

@@ -8,7 +8,7 @@ import { Grid, Header, Form, Button, Segment, Label, Message } from 'semantic-ui
 
 import './styles.module.scss';
 
-import { signup, googleSignup } from './actions';
+import { signup, googleSignup, setUsername } from './actions';
 import GoogleAuth from '../../components/GoogleAuth';
 
 class Signup extends React.Component {
@@ -106,23 +106,31 @@ class Signup extends React.Component {
       if (loading) {
           return;
       }
-      try {
-          const user = {
-              username: username.value,
-              email: email.value,
-              password: password.value
-          };
-          this.props.signup({
-              user,
-              history: this.props.history
-          });
-      } catch {
-          this.setState({ loading: false });
-      }
+      const user = {
+          username: username.value,
+          email: email.value,
+          password: password.value
+      };
+      this.props.signup({
+          user,
+          history: this.props.history
+      });
   };
 
   handleClickGoogleSignup = () => {
       this.props.googleSignup();
+  };
+
+  handleClickSetUsername = () => {
+      const { username } = this.state;
+      const { loading } = this.props;
+      if (loading) {
+          return;
+      }
+      this.props.setUsername({
+          username: username.value,
+          history: this.props.history
+      });
   };
 
   renderSignupForm = () => {
@@ -209,24 +217,77 @@ class Signup extends React.Component {
 
   renderSignup = () => {
       return (
+          <Grid.Row columns={3}>
+              <Grid.Column style={{ maxWidth: 450 }}>{this.renderSignupForm()}</Grid.Column>
+              <Grid.Column style={{ maxWidth: 300 }}>{this.renderGoogleAuth()}</Grid.Column>
+              <Grid.Column style={{ maxWidth: 300 }}>
+                  <a href="http://localhost:3000/auth/google">DIRECT LINK</a>
+              </Grid.Column>
+          </Grid.Row>
+      );
+  };
+
+  renderSetUsername = () => {
+      const { loading, error } = this.props;
+      const { username } = this.state;
+      return (
+          <Grid.Row columns={1}>
+              <Grid.Column style={{ maxWidth: 450 }}>
+                  <Form
+                      name="setusernameForm"
+                      size="large"
+                      onSubmit={this.handleClickSetUsername}
+                      loading={loading}
+                      error={!!error}
+                  >
+                      <Segment textAlign="left">
+                          <p>Please set your Depot username</p>
+                          <Form.Field required>
+                              <label htmlFor="username">Username</label>
+                              <Form.Input
+                                  fluid
+                                  placeholder="Username"
+                                  name="username"
+                                  type="text"
+                                  error={!username.valid}
+                                  onChange={this.changeHandler}
+                                  onBlur={this.validateHandler}
+                                  required
+                                  icon={{
+                                      name: 'check',
+                                      className: `icon-green ${username.value && username.valid ? '' : 'icon-hidden'}`
+                                  }}
+                              />
+                              <Label className="signup-pointing-label" pointing>
+                  Username can contain alphanumeric characters and single hyphens, cannot begin or end with a hyphen
+                              </Label>
+                          </Form.Field>
+                          <Button type="submit" color="blue" fluid size="large" disabled={!username.valid}>
+                Set Username
+                          </Button>
+                          <Message error content={error} />
+                      </Segment>
+                  </Form>
+              </Grid.Column>
+          </Grid.Row>
+      );
+  };
+
+  renderForms = () => {
+      const { shouldSetUsername } = this.props;
+      return (
           <Grid textAlign="center" centered className="signup-grid">
               <Header as="h2" color="blue" textAlign="center">
           Join Depot
               </Header>
-              <Grid.Row columns={2}>
-                  <Grid.Column style={{ maxWidth: 450 }}>{this.renderSignupForm()}</Grid.Column>
-                  <Grid.Column style={{ maxWidth: 300 }}>{this.renderGoogleAuth()}</Grid.Column>
-                  <Grid.Column style={{ maxWidth: 300 }}>
-                      <a href="http://localhost:3000/auth/google">DIRECT LINK</a>
-                  </Grid.Column>
-              </Grid.Row>
+              {shouldSetUsername ? this.renderSetUsername() : this.renderSignup()}
           </Grid>
       );
   };
 
   render() {
       const { isAuthorized } = this.props;
-      return !isAuthorized ? this.renderSignup() : <Redirect to="/" />;
+      return isAuthorized ? <Redirect to="/" /> : this.renderForms();
   }
 }
 
@@ -235,8 +296,10 @@ Signup.propTypes = {
     user: PropTypes.object,
     signup: PropTypes.func,
     googleSignup: PropTypes.func,
+    setUsername: PropTypes.func,
     error: PropTypes.string,
     loading: PropTypes.bool,
+    shouldSetUsername: PropTypes.bool,
     history: PropTypes.object
 };
 
@@ -245,11 +308,12 @@ const mapStateToProps = state => {
         isAuthorized: state.auth.isAuthorized,
         user: state.auth.user,
         loading: state.signup.loading,
-        error: state.signup.error
+        error: state.signup.error,
+        shouldSetUsername: state.signup.shouldSetUsername
     };
 };
 
-const mapDispatchToProps = { signup, googleSignup };
+const mapDispatchToProps = { signup, googleSignup, setUsername };
 
 export default connect(
     mapStateToProps,

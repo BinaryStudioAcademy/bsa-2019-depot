@@ -1,6 +1,6 @@
 import { takeEvery, takeLatest, put, call, all, delay } from 'redux-saga/effects';
 import * as signupService from '../../services/signup.service';
-import { signupRoutine, googleSignupRoutine } from '../../routines/routines';
+import { signupRoutine, googleSignupRoutine, setUsernameRoutine } from '../../routines/routines';
 
 function* signup({ payload: { user, history } }) {
     try {
@@ -18,12 +18,25 @@ function* signup({ payload: { user, history } }) {
 
 function* googleSignup() {
     try {
-        debugger;
         yield delay(1000); // check that Loader is working
         const response = yield call(signupService.googleSignup);
+        const { jwt } = response;
+        yield call(signupService.setToken, jwt);
         yield put(googleSignupRoutine.success(response));
     } catch (error) {
         yield put(googleSignupRoutine.failure(error.message));
+    }
+}
+
+function* setUsername({ payload: { username, history } }) {
+    debugger;
+    try {
+        const response = yield call(signupService.setUsername, username);
+        yield put(setUsernameRoutine.success(response));
+    } catch (error) {
+        yield put(setUsernameRoutine.failure(error.message));
+    } finally {
+        yield put(setUsernameRoutine.fulfill());
     }
 }
 
@@ -35,6 +48,10 @@ function* watchGoogleSignupRequest() {
     yield takeLatest(googleSignupRoutine.REQUEST, googleSignup);
 }
 
+function* watchSetUsername() {
+    yield takeEvery(setUsernameRoutine.REQUEST, setUsername);
+}
+
 export default function* issuesSagas() {
-    yield all([watchSignupRequest(), watchGoogleSignupRequest()]);
+    yield all([watchSignupRequest(), watchGoogleSignupRequest(), watchSetUsername()]);
 }

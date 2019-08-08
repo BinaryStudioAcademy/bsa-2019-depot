@@ -1,9 +1,10 @@
-import { signupRoutine, googleSignupRoutine } from '../../routines/routines';
+import { signupRoutine, googleSignupRoutine, setUsernameRoutine } from '../../routines/routines';
 
 const initialState = {
     loading: false,
     user: null,
-    error: ''
+    error: '',
+    shouldSetUsername: true
 };
 
 export default (state = initialState, action) => {
@@ -15,8 +16,10 @@ export default (state = initialState, action) => {
         };
     }
     case googleSignupRoutine.SUCCESS:
+        const { usernameExists } = action.payload;
         return {
-            state
+            ...state,
+            shouldSetUsername: !usernameExists
         };
     case googleSignupRoutine.FAILURE:
         return {
@@ -45,6 +48,28 @@ export default (state = initialState, action) => {
             error: action.payload
         };
     case signupRoutine.FULFILL:
+        return {
+            ...state,
+            loading: false
+        };
+
+    case setUsernameRoutine.REQUEST:
+        return {
+            ...state,
+            loading: true
+        };
+    case setUsernameRoutine.SUCCESS:
+        return {
+            ...state,
+            user: action.payload,
+            shouldSetUsername: false
+        };
+    case setUsernameRoutine.FAILURE:
+        return {
+            ...state,
+            error: action.payload
+        };
+    case setUsernameRoutine.FULFILL:
         return {
             ...state,
             loading: false
