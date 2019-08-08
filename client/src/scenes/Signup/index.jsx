@@ -216,6 +216,9 @@ class Signup extends React.Component {
               <Grid.Row columns={2}>
                   <Grid.Column style={{ maxWidth: 450 }}>{this.renderSignupForm()}</Grid.Column>
                   <Grid.Column style={{ maxWidth: 300 }}>{this.renderGoogleAuth()}</Grid.Column>
+                  <Grid.Column style={{ maxWidth: 300 }}>
+                      <a href="http://localhost:3000/auth/google">DIRECT LINK</a>
+                  </Grid.Column>
               </Grid.Row>
           </Grid>
       );

@@ -4,12 +4,13 @@ import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import PrivateRoute from '../PrivateRoute';
-import { NotFound, Login, MainPage, Signup } from '../../scenes';
+import { NotFound, Login, MainPage, Signup, GoogleCallback } from '../../scenes';
 
 const Routing = () => {
     return (
         <Switch>
             <Route exact path="/signup" component={Signup} />
+            <Route exact path="/auth/google/callback" component={GoogleCallback} />
             <Route exact path="/" component={MainPage} />
             <Route exact path="/login" component={Login} />
             <PrivateRoute exact path="/" component={MainPage} />

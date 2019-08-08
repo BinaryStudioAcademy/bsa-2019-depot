@@ -3,5 +3,6 @@ import Home from './Home/index';
 import NotFound from './NotFound/index';
 import MainPage from './MainPage/index';
 import Signup from './Signup/index';
+import GoogleCallback from './GoogleCallback/index';
 
-export { Login, Home, NotFound, MainPage, Signup };
+export { Login, Home, NotFound, MainPage, Signup, GoogleCallback };
