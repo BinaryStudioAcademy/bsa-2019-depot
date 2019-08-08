@@ -13,7 +13,7 @@ const Routing = () => {
       <Route exact path="/login" component={Login} />
       <Route exact path="/forgot" component={Forgot} />
       <Route exact path="/reset/:hash" component={Reset} />
-      {/*<Route exact path="/code" component={CodeTab} />*/}
+      <Route exact path="/code" component={CodeTab} />
       <PrivateRoute exact path="/" component={MainPage} />
       <PrivateRoute exact path="/dashboard" component={Dashboard} />
       <Route exact path="*" component={NotFound} />
