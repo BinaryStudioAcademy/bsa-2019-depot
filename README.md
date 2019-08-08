@@ -24,7 +24,13 @@ GOOGLE_CLIENT_ID = 97XXXXXXXX05-sgfxxxxxxxxxxxxxxxxxxxxxxxxxxxcmj0.apps.googleus
 GOOGLE_CLIENT_SECRET = ygyxxxXXXXxxxxxxxXXXXXxxxi # has to be replaced with actual google client secret
 GOOGLE_CALLBACK_URL = http://localhost:3000/auth/google/callback # default. has to be changed to google callback uri if it is different
 GOOGLE_SCOPE = https://www.googleapis.com/auth/userinfo.email # default. has to be changed to google scope if it is different
+GIT_PATH = '' # Has to be changed to path where you want to save repositories
 ```
+
+### Git Server
+We are working with git server using [nodegit](https://www.nodegit.org/).
+To create a git server use a special route (/repo), it will execute `git --bare init`. Git server doesn't need to be runned. You can work with it as a usual git repository.
+
 
 ### Branches
 
@@ -74,6 +80,18 @@ Example:
 `fix: Add error handling` 👍  
 ~~`fixed error handling.`~~ 👎
 
+## Project Structure
+
+As an example of project structure used [this repository](https://github.com/react-boilerplate/react-boilerplate/tree/master/app).
+
+Directory purposes: 
+```
+/components - any reusable components that are independent of business logic
+/containers - modules that contain or are bound to business logic
+/scenes - any container that has separate route
+```
+
+[More on this](https://tech.offgrid-electric.com/domain-directory-structure-for-react-apps-why-its-worth-trying-b3855ee77a1e?gi=be41e3fca7f3)
 
 ## Code linting and formatting
 
