@@ -2,13 +2,14 @@
 
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+
 import PrivateRoute from '../PrivateRoute';
-import { NotFound, Login, MainPage, Dashboard, CodeTab } from '../../scenes';
+import { NotFound, Login, MainPage, Signup, Dashboard, CodeTab } from '../../scenes';
 
 const Routing = () => {
     return (
         <Switch>
-            <Route exact path="/" component={MainPage} />
+            <Route exact path="/registration" component={Signup} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/code" component={CodeTab} />
             <PrivateRoute exact path="/" component={MainPage} />
