@@ -3,7 +3,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import PrivateRoute from '../PrivateRoute';
-import { NotFound, Login, MainPage, CodeTab } from '../../scenes';
+import { NotFound, Login, MainPage, Dashboard, CodeTab } from '../../scenes';
 
 const Routing = () => {
     return (
@@ -12,7 +12,7 @@ const Routing = () => {
             <Route exact path="/login" component={Login} />
             <Route exact path="/code" component={CodeTab} />
             <PrivateRoute exact path="/" component={MainPage} />
-            <PrivateRoute exact path="/dashboard" component={MainPage} />
+            <PrivateRoute exact path="/dashboard" component={Dashboard} />
             <Route exact path="*" component={NotFound} />
         </Switch>
     );
