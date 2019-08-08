@@ -24,7 +24,13 @@ const sendTokenEmail = (email, token) => {
       Body: { /* required */
         Html: {
           Charset: 'UTF-8',
-          Data: `<html><body> <p>Hello. Your link for reset password is: ${token} </p></body></html>`
+          Data: `<html><body> <p>We heard that you lost your Depot password. Sorry about that!</p>
+                    <p>But don’t worry! You can use the following link to reset your password: </p>
+                    <p>${token} </p>
+                    <p>If you don’t use this link within 1 hour, it will expire.</p>
+                    <p>Thanks,</p>
+                    <p>Your friends at Depot</p>
+                    </body></html>`
         },
         Text: {
           Charset: 'UTF-8',

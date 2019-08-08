@@ -13,11 +13,6 @@
     background-size: cover;
   }
 }
-//:global(.ui.form .field) {
-//  > label {
-//    text-align: left;
-//  }
-//}
 :global(.ui.form .field.password-wrapper) {
   position: relative;
   > a {
