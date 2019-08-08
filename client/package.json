@@ -2,6 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:3000",
   "dependencies": {
     "@primer/octicons-react": "^9.1.1",
     "immutable": "^4.0.0-rc.12",
@@ -11,6 +12,7 @@
     "query-string": "^6.8.2",
     "react": "^16.8.6",
     "react-cached-handler": "^1.0.7",
+    "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "^16.8.6",
     "react-github-contribution-calendar": "^1.0.0",
     "react-markdown": "^4.1.0",
