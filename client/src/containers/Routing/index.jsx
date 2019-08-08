@@ -1,5 +1,3 @@
-/* eslint-disable react/jsx-no-bind */
-
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 

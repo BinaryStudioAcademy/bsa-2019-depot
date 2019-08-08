@@ -3,9 +3,9 @@ import { types } from './types';
 
 export const authActions = {
     //Sync
-    authenticate: () => {
+    authorize: () => {
         return {
-            type: types.AUTHENTICATE
+            type: types.AUTHORIZE
         };
     },
     //Async

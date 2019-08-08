@@ -5,5 +5,6 @@ import MainPage from './MainPage/index';
 import Signup from './Signup/index';
 import GoogleCallback from './GoogleCallback/index';
 import Dashboard from './Dashboard/index';
+import CodeTab from './CodeTab/index';
 
-export { Login, Home, NotFound, MainPage, Signup, GoogleCallback, Dashboard };
+export { Login, Home, NotFound, MainPage, Signup, GoogleCallback, Dashboard, CodeTab };
