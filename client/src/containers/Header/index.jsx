@@ -1,6 +1,8 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Grid, Menu, Sidebar, Icon, Accordion, Dropdown, Responsive, Modal } from 'semantic-ui-react';
+import { getUserImgLink } from '../../helpers/imageHelper';
 
 import styles from './styles.module.scss';
 
@@ -319,7 +321,7 @@ const MenuDesktop = () => (
 );
 
 // HOC
-const WithSidebar = Comp => {
+const WithSidebar = (Comp, options) => {
     const [sidebarOpened, setSidebarOpened] = useState(false);
 
     function closeSidebar() {
@@ -329,7 +331,7 @@ const WithSidebar = Comp => {
         setSidebarOpened(true);
     }
 
-    return <Comp sidebarOpened={sidebarOpened} closeSidebar={closeSidebar} openSidebar={openSidebar} />;
+    return <Comp sidebarOpened={sidebarOpened} closeSidebar={closeSidebar} openSidebar={openSidebar} options={options} />;
 };
 
 const HeaderDesktopUnauth = ({ openSidebar, closeSidebar, sidebarOpened }) => (
@@ -375,10 +377,8 @@ HeaderDesktopUnauth.propTypes = {
 
 const pullRequests = <a href="/">Pull requests</a>;
 const issues = <a href="/">Issues</a>;
-const avatar = <img src="https://avatars0.githubusercontent.com/u/9952444?s=40&v=4" alt="user" />;
-const userName = 'USER_NAME';
 
-const SidebarAuth = (closeSidebar, sidebarOpened) => (
+const SidebarAuth = (closeSidebar, sidebarOpened, userName, avatar) => (
     <Sidebar
         as={Menu}
         animation="overlay"
@@ -402,7 +402,7 @@ const SidebarAuth = (closeSidebar, sidebarOpened) => (
         <Menu.Item as="div">{issues}</Menu.Item>
         <Menu.Item as="div">
             <a href="/">
-                {avatar}
+                {<img src={getUserImgLink(avatar)} alt="user" />}
                 {userName}
             </a>
         </Menu.Item>
@@ -443,7 +443,7 @@ const StatusModal = (showStatusModal, hideModal) => {
     );
 };
 
-const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened }) => {
+const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: { username, avatar } }) => {
     const [showStatusModal, setShowStatusModal] = useState(false);
     function showModal() {
         setShowStatusModal(true);
@@ -516,14 +516,14 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened }) => {
                                 icon={null}
                                 trigger={
                                     <div>
-                                        {avatar}
+                                        {<img src={getUserImgLink(avatar)} alt="user" />}
                                         <Icon name="dropdown" />
                                     </div>
                                 }
                             >
                                 <Dropdown.Menu>
                                     <Dropdown.Item>
-                    Signed in as <b>{userName}</b>
+                    Signed in as <b>{username}</b>
                                     </Dropdown.Item>
                                     <Dropdown.Divider />
                                     <Dropdown.Item onClick={showModal}>
@@ -545,7 +545,7 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened }) => {
                 </Grid.Column>
             </Grid>
 
-            {SidebarAuth(closeSidebar, sidebarOpened)}
+            {SidebarAuth(closeSidebar, sidebarOpened, username, avatar)}
             {StatusModal(showStatusModal, hideModal)}
         </div>
     );
@@ -554,12 +554,26 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened }) => {
 HeaderDesktopAuth.propTypes = {
     openSidebar: PropTypes.func.isRequired,
     closeSidebar: PropTypes.func.isRequired,
-    sidebarOpened: PropTypes.bool.isRequired
+    sidebarOpened: PropTypes.bool.isRequired,
+    options: PropTypes.exact({
+        username: PropTypes.string.isRequired,
+        avatar: PropTypes.string
+    })
 };
 
-const Header = () => {
-    const auth = true; // <<< TODO: change it to real data
-    return auth ? WithSidebar(HeaderDesktopAuth) : WithSidebar(HeaderDesktopUnauth);
+const Header = ({ isAuthorized, username, avatar }) => {
+    return isAuthorized ? WithSidebar(HeaderDesktopAuth, { username, avatar }) : WithSidebar(HeaderDesktopUnauth);
 };
 
-export default Header;
+const mapStateToProps = ({
+    profile: {
+        isAuthorized,
+        currentUser: { username, avatar }
+    }
+}) => ({
+    isAuthorized,
+    username,
+    avatar
+});
+
+export default connect(mapStateToProps)(Header);
