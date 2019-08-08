@@ -2,13 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
-
 import PrivateRoute from '../PrivateRoute';
-import { NotFound, Login, MainPage, Signup, Dashboard } from '../../scenes';
-
-import { fetchCurrentUser } from '../../routines/routines';
-
 import Header from '../Header';
+import Spinner from '../../components/Spinner';
+import { NotFound, Login, MainPage, Signup, Dashboard } from '../../scenes';
+import { fetchCurrentUser } from '../../routines/routines';
 
 class Routing extends React.Component {
     componentDidMount() {
@@ -16,7 +14,11 @@ class Routing extends React.Component {
     }
 
     render() {
-        return (
+        const { loading } = this.props;
+
+        return loading ? (
+            <Spinner />
+        ) : (
             <Switch>
                 <Route exact path="/registration" component={Signup} />
                 <Route exact path="/login" component={Login} />
@@ -30,14 +32,19 @@ class Routing extends React.Component {
 }
 
 Routing.propTypes = {
+    loading: PropTypes.bool.isRequired,
     fetchCurrentUser: PropTypes.func.isRequired
 };
+
+const mapStateToProps = ({ profile: { loading } }) => ({
+    loading
+});
 
 const mapDispatchToProps = {
     fetchCurrentUser
 };
 
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps
 )(Routing);
