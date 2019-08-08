@@ -27,7 +27,7 @@ GOOGLE_SCOPE = https://www.googleapis.com/auth/userinfo.email # default. has to 
 GIT_PATH = '' # Has to be changed to path where you want to save repositories
 ```
 
-###Git Repository
+### Git Server
 We are working with git server using [nodegit](https://www.nodegit.org/).
 To create a git server use a special route (/repo), it will execute `git --bare init`. Git server doesn't need to be runned. You can work with it as a usual git repository.
 
