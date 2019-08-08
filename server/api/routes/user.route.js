@@ -19,4 +19,8 @@ router.get('/username-exists', (req, res, next) => {
     .catch(next);
 });
 
+router.get('/', jwtMiddleware, (req, res) => {
+  res.send(req.user);
+});
+
 module.exports = router;
