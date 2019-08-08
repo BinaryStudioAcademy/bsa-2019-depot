@@ -17,7 +17,7 @@ router.get('/google', googleMiddleware);
 
 router.get('/google/callback', googleCallbackMiddleware, (req, res, next) => {
   googleLogin(req.user)
-    .then(data => res.send(data))
+    .then(data => res.redirect(`${process.env.CLIENT_URL}/?token=${data.jwt}`))
     .catch(next);
 });
 

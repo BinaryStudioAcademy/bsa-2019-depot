@@ -29,7 +29,6 @@ function* googleSignup() {
 }
 
 function* setUsername({ payload: { username, history } }) {
-    debugger;
     try {
         const response = yield call(signupService.setUsername, username);
         yield put(setUsernameRoutine.success(response));

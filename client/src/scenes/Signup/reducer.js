@@ -4,7 +4,7 @@ const initialState = {
     loading: false,
     user: null,
     error: '',
-    shouldSetUsername: true
+    shouldSetUsername: false
 };
 
 export default (state = initialState, action) => {
