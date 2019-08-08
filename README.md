@@ -86,9 +86,9 @@ As an example of project structure used [this repository](https://github.com/rea
 
 Directory purposes: 
 ```
-/components - любые переиспользуемые части, которые независимы от бизнес логики
-/containers - модули содержащие или связанные с бизнес-логикой
-/scenes - любой контейнер, которому отведен отдельный роут
+/components - any reusable components that are independent of business logic
+/containers - modules that contain or are bound to business logic
+/scenes - any container that has separate route
 ```
 
 [More on this](https://tech.offgrid-electric.com/domain-directory-structure-for-react-apps-why-its-worth-trying-b3855ee77a1e?gi=be41e3fca7f3)
