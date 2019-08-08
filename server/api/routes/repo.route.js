@@ -7,9 +7,8 @@ const { getBranches } = require('../services/branch.service');
 const router = Router();
 
 router
-  .post('/', (req, res, next) => {
-    createRepo({ ...req.body })
-      .then(data => res.send(data));
+  .post('/', (req, res) => {
+    createRepo({ ...req.body }).then(data => res.send(data));
   })
   .get('/:owner/:repoName/:branchName/commits', (req, res, next) => {
     const { owner, repoName, branchName } = req.params;
