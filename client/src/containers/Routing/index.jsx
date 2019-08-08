@@ -11,7 +11,6 @@ const Routing = () => {
         <Switch>
             <Route exact path="/registration" component={Signup} />
             <Route exact path="/auth/google/callback" component={GoogleCallback} />
-            <Route exact path="/" component={MainPage} />
             <Route exact path="/login" component={Login} />
             <PrivateRoute exact path="/" component={MainPage} />
             <PrivateRoute exact path="/dashboard" component={Dashboard} />
