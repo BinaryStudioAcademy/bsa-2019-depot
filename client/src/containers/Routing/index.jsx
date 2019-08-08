@@ -9,7 +9,7 @@ import { NotFound, Login, MainPage, Signup } from '../../scenes';
 const Routing = () => {
     return (
         <Switch>
-            <Route exact path="/signup" component={Signup} />
+            <Route exact path="/registration" component={Signup} />
             <Route exact path="/" component={MainPage} />
             <Route exact path="/login" component={Login} />
             <PrivateRoute exact path="/" component={MainPage} />
