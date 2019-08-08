@@ -1,0 +1,26 @@
+:local(.commit) {
+  float: right;
+}
+
+:global(a):local(.link) {
+  font-weight: normal;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+:local(.sha),
+:local(.commitAuthor),
+:local(.prNumber) {
+  font-weight: bold;
+  margin: 0 5px;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+:global(.ui.table):local(td) {
+  border-top: 1px solid #eaecef;
+  line-height: 20px;
+  padding: 6px 3px;
+}

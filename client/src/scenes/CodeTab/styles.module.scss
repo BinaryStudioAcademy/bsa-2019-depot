@@ -1,0 +1,182 @@
+:global(.octicon) {
+  color: rgba(3, 47, 98, 0.55);
+  margin-right: 5px;
+}
+
+:global(.ui.button):local(.actionButton) {
+  background-color: #eff3f6;
+  background-image: linear-gradient(-180deg, #fafbfc, #eff3f6 90%);
+  border: 1px solid rgba(27, 31, 35, 0.2);
+  color: #24292e;
+  font-size: 12px;
+  line-height: 20px;
+  padding: 3px 10px;
+  &:hover {
+    background-color: #e6ebf1;
+    background-image: linear-gradient(-180deg, #f0f3f6, #e6ebf1 90%);
+    background-position: -0.5em;
+    border-color: rgba(27, 31, 35, 0.35);
+  }
+  &:active {
+    background-color: #e9ecef;
+    background-image: none;
+    border-color: rgba(27, 31, 35, 0.35);
+    box-shadow: inset 0 0.15em 0.3em rgba(27, 31, 35, 0.15);
+  }
+}
+
+:global(.ui.buttons, .ui.button):local(.actionButton) {
+  border-left: 1px solid rgba(27, 31, 35, 0.2);
+  font-size: 12px;
+}
+
+:global(a):local(.link) {
+  font-weight: normal;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+:local(.readmeHeader) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+:global(.ui.dropdown .menu > .item):local(.branchesMenuItem) {
+  border-bottom: 1px solid #eaecef;
+  padding: 8px 8px 8px 30px;
+  &:first-child {
+    border-top: 1px solid #eaecef;
+  }
+  &:hover {
+    background: #0366d6;
+    color: #fff;
+  }
+}
+
+:global(.ui.horizontal.segments):local(.languageSegments) {
+  border-radius: 0px 0px 4px 4px;
+  box-shadow: none;
+  border: none;
+  width: calc(100% + 2px);
+  margin: 0px 0px 10px 0px;
+  overflow: hidden;
+}
+
+:global(.ui.segment):local(.languageSegment) {
+  padding: 0.25em;
+}
+
+:local(.repoDescription) {
+  margin: 0.35em 0em 1em;
+  font-size: 16px;
+  line-height: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+:local(.repoDescriptionText) {
+  line-height: 1.5;
+}
+
+:local(.repoMetaDataLinks) {
+  color: #24292e;
+}
+
+:local(.repoNav) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+:global(.ui.button):local(.repoBranchesButton) {
+  margin-right: 6px;
+  &:active,
+  &:focus {
+    background-color: #e9ecef;
+    background-image: none;
+    border-color: rgba(27, 31, 35, 0.35);
+    box-shadow: inset 0 0.15em 0.3em rgba(27, 31, 35, 0.15);
+  }
+}
+
+:global(.ui.button):local(.cloneRepoButton) {
+  margin-left: 6px;
+  background-color: #28a745;
+  background-image: linear-gradient(-180deg, #34d058, #28a745 90%);
+  color: #fff;
+  &:hover {
+    background-color: #269f42;
+    background-image: linear-gradient(-180deg, #2fcb53, #269f42 90%);
+    background-position: -0.5em;
+    border-color: rgba(27, 31, 35, 0.5);
+    color: #fff;
+  }
+  &:active {
+    background-color: #279f43;
+    background-image: none;
+    border-color: rgba(27, 31, 35, 0.5);
+    box-shadow: inset 0 0.15em 0.3em rgba(27, 31, 35, 0.15);
+  }
+}
+
+:local(.repoLinkInput) {
+  width: 100%;
+}
+
+:global(.ui.popup):local(.repoPopup) {
+  padding: 0;
+  :local(.repoPopupBody) {
+    padding: 0.833em 1em;
+  }
+}
+
+:global(.ui.buttons .button:first-child):local(.repoPopupAction) {
+  border-left: 1px solid #e1e4e8;
+}
+
+:global(.ui.button):local(.repoPopupAction) {
+  box-shadow: none;
+  border: 1px solid #e1e4e8;
+  border-bottom-left-radius: 3px;
+  background-color: #fff;
+  background-image: none;
+  color: #0366d6;
+  padding: 10px 0;
+  text-align: center;
+  &:hover {
+    background-color: #0366d6;
+    background-image: none;
+    border-color: #0366d6;
+    color: #fff;
+  }
+  &:active,
+  &:focus {
+    background-color: #fff;
+    background-image: none;
+    color: #0366d6;
+  }
+}
+
+:global(.ui.dropdown input):local(.searchBranchInput) {
+  border: 1px solid #dfe2e5;
+  border-radius: 3px;
+  display: block;
+  max-width: 100%;
+  padding: 10px 5px;
+  width: 100%;
+  font-size: 14px;
+}
+:global(.ui.floating.dropdown > .menu):local(.searchBranchList) {
+  min-width: 300px;
+  padding: 0.833em 0.2em;
+  background-color: #fff;
+  border: 1px solid rgba(27, 31, 35, 0.15);
+  border-radius: 3px;
+  box-shadow: 0 3px 12px rgba(27, 31, 35, 0.15);
+  color: #586069;
+  font-size: 12px;
+}
