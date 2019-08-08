@@ -9,7 +9,7 @@ import validator from 'validator';
 import { Grid, Header, Form, Button, Segment, Message } from 'semantic-ui-react';
 
 //Actions
-import { authActions } from '../../sagas/auth/actions';
+import { forgotActions } from './actions';
 
 class Forgot extends Component {
     constructor(props) {
@@ -46,7 +46,7 @@ class Forgot extends Component {
       }
       this.setState({ isLoading: true });
       try {
-          await actions.loginAsync({ email }); //TODO need change action
+          await actions.forgotAsync({ email }); //TODO need change action
           this.setState({ currentEmail: email });
           this.setState({ isLoading: false });
       } catch (error) {
@@ -106,7 +106,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
     return {
-        actions: bindActionCreators({ ...authActions }, dispatch)
+        actions: bindActionCreators({ ...forgotActions }, dispatch)
     };
 };
 

@@ -19,9 +19,9 @@ router.get('/username-exists', (req, res, next) => {
     .catch(next);
 });
 
-router.get('/email-exists', (req, res, next) => {
+router.get('/forgot', (req, res, next) => {
   checkEmailExists({ ...req.body })
-    .then(data => res.send(data))
+    .then(data => res.send(data))//TODO smth for sent email
     .catch(next);
 });
 
