@@ -19,12 +19,6 @@ router.get('/username-exists', (req, res, next) => {
     .catch(next);
 });
 
-router.get('/forgot', (req, res, next) => {
-  checkEmailExists({ ...req.body })
-    .then(data => res.send(data))//TODO smth for sent email
-    .catch(next);
-});
-
 router.post('/forget-password', (req, res, next) => {
   sendForgetPasswordEmail({ ...req.body })
     .then(data => res.send(data))

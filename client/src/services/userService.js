@@ -2,7 +2,7 @@ import callWebApi from '../helpers/webApiHelper';
 
 export const forgot = async request => {
     const response = await callWebApi({
-        endpoint: '/user/forgot-password',
+        endpoint: '/user/forget-password',
         type: 'POST',
         request
     });

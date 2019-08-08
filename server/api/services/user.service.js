@@ -33,7 +33,7 @@ const sendForgetPasswordEmail = async ({ email }) => {
   const user = await UserRepository.getByEmail(email);
   const token = jwt.sign({ data: user.email }, secret, { expiresIn: '1h' });
   sendTokenEmail(email, token);
-  return { success: 'Email with password reset link was sent' };
+  return { success: `Email with password reset link was sent to ${user.email}` };
 };
 
 const resetPassword = async ({ token, password }) => {
