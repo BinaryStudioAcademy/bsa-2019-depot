@@ -39,6 +39,6 @@ function* watchBranchesRequest() {
     yield takeEvery(fetchBranches.TRIGGER, branchesRequest);
 }
 
-export default function* commitsSagas() {
+export default function* commitPageSagas() {
     yield all([watchCommitsRequest(), watchBranchesRequest()]);
 }
