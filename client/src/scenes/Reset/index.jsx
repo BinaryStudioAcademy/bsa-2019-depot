@@ -8,6 +8,8 @@ import validator from 'validator';
 
 import { Grid, Header, Form, Button, Segment } from 'semantic-ui-react';
 
+import './styles.module.scss';
+
 //Actions
 import { authActions } from '../../sagas/auth/actions';
 
@@ -78,15 +80,16 @@ class Reset extends Component {
   render() {
       const { isLoading, isPasswordValid, isRepeatPasswordValid, isConfirmedPassword } = this.state;
       return !this.props.isAuthorized ? (
-          <Grid textAlign="center" verticalAlign="middle" className="fill">
-              <Grid.Column style={{ maxWidth: 450 }}>
-                  <Header as="h2" color="blue" textAlign="center">
+          <Grid textAlign="center" style={{ height: '100vh' }} verticalAlign="middle" className="reset-grid">
+              <Grid.Column style={{ maxWidth: 400 }}>
+                  <Header as="h2" color="black" textAlign="center" className="reset-header">
             Reset password
                   </Header>
                   <Form name="resetForm" size="large" onSubmit={this.handleClickReset}>
                       <Segment>
                           <Form.Input
                               fluid
+                              label="New password"
                               placeholder="New password"
                               type="password"
                               error={!isPasswordValid}
@@ -95,13 +98,14 @@ class Reset extends Component {
                           />
                           <Form.Input
                               fluid
+                              label="Repeat password"
                               placeholder="Repeat password"
                               type="password"
                               error={!isRepeatPasswordValid && !isConfirmedPassword}
                               onChange={this.repeatPasswordChangeHandler()}
                               onBlur={this.validateRepeatPassword}
                           />
-                          <Button type="submit" color="blue" fluid size="large" loading={isLoading}>
+                          <Button type="submit" color="green" fluid size="large" loading={isLoading}>
                 Set new password
                           </Button>
                       </Segment>
