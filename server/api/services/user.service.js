@@ -1,5 +1,7 @@
 const userRepository = require('../../data/repositories/user.repository');
 
+export const getUserById = userId => userRepository.getUserById(userId);
+
 const setUsername = async ({ id, username }) => {
   const data = await userRepository.setUsernameById(id, username);
   return {
