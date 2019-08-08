@@ -170,9 +170,11 @@ $black-color: #24292e;
     font-size: 14px !important;
     font-weight: bold;
   }
-  i {
+  :global(.bell.icon),
+  :global(.plus.icon),
+  :global(.dropdown.icon) {
     color: #fff;
-    margin: 0 !important;
+    margin: 0;
   }
   input {
     width: 300px;
@@ -204,6 +206,15 @@ $black-color: #24292e;
   }
   .rightMenu {
     justify-content: flex-end;
+  }
+  .statusItem {
+    border: 1px solid rgb(223, 226, 230);
+    border-radius: 5px;
+    padding: 10px;
+
+    :global(.black.smile.outline.icon) {
+      margin-right: 15px;
+    }
   }
   .burger {
     display: flex;
