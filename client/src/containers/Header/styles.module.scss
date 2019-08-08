@@ -242,6 +242,12 @@ $black-color: #24292e;
   }
 }
 
+:local(.statusFormButtons) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .logo {
   color: #fff;
   fill: currentColor;

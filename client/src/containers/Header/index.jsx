@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Grid, Menu, Sidebar, Icon, Accordion, Dropdown, Responsive, Modal } from 'semantic-ui-react';
+import { Grid, Menu, Sidebar, Icon, Accordion, Dropdown, Responsive, Modal, Form, Button } from 'semantic-ui-react';
 import { getUserImgLink } from '../../helpers/imageHelper';
 
 import styles from './styles.module.scss';
@@ -417,28 +417,21 @@ const SidebarAuth = (closeSidebar, sidebarOpened, userName, avatar) => (
 
 const StatusModal = (showStatusModal, hideModal) => {
     return (
-        <Modal
-            open={showStatusModal}
-            // closeOnEscape={closeOnEscape}
-            // closeOnDimmerClick={closeOnDimmerClick}
-            onClose={hideModal}
-        >
+        <Modal open={showStatusModal} onClose={hideModal} size="tiny">
             <Modal.Header>Edit status</Modal.Header>
             <Modal.Content>
-                <p>Are you sure you want to delete your account</p>
+                <Form>
+                    <Form.Field control="input" placeholder="What's happening?" />
+                    <div className={styles.statusFormButtons}>
+                        <Button type="submit" color="green" fluid>
+              Set status
+                        </Button>
+                        <Button basic fluid>
+              Clear status
+                        </Button>
+                    </div>
+                </Form>
             </Modal.Content>
-            <Modal.Actions>
-                {/* <Button onClick={this.close} negative>
-                No
-                </Button>
-                <Button
-                    onClick={this.close}
-                    positive
-                    labelPosition='right'
-                    icon='checkmark'
-                    content='Yes'
-                /> */}
-            </Modal.Actions>
         </Modal>
     );
 };
