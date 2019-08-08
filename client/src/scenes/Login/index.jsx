@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 import { Redirect, NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import createHandler from 'react-cached-handler';
 import PropTypes from 'prop-types';
 import validator from 'validator';
-
 import { Grid, Header, Form, Button, Segment, Message } from 'semantic-ui-react';
-
-//Actions
-import { authActions } from '../../sagas/auth/actions';
+import { authorizeUser } from '../../routines/routines';
 
 class Login extends Component {
     constructor(props) {
@@ -17,7 +13,6 @@ class Login extends Component {
         this.state = {
             email: '',
             password: '',
-            isLoading: false,
             isEmailValid: true,
             isPasswordValid: true
         };
@@ -52,22 +47,18 @@ class Login extends Component {
   validateForm = () => [this.validateEmail(), this.validatePassword()].every(Boolean);
 
   handleClickLogin = async () => {
-      const { isLoading, email, password } = this.state;
-      const { actions } = this.props;
+      const { email, password } = this.state;
       const valid = this.validateForm();
-      if (!valid || isLoading) {
+      if (!valid || this.props.loading) {
           return;
       }
-      this.setState({ isLoading: true });
-      try {
-          await actions.loginAsync({ username: email, password });
-      } catch (error) {
-          this.setState({ isLoading: false });
-      }
+      this.props.authorizeUser({ username: email, password });
   };
 
   render() {
-      const { isLoading, isEmailValid, isPasswordValid } = this.state;
+      const { isEmailValid, isPasswordValid } = this.state;
+      const { loading } = this.props;
+
       return !this.props.isAuthorized ? (
           <Grid textAlign="center" verticalAlign="middle" className="fill">
               <Grid.Column style={{ maxWidth: 450 }}>
@@ -92,7 +83,7 @@ class Login extends Component {
                               onChange={this.passwordChangeHandler()}
                               onBlur={this.validatePassword}
                           />
-                          <Button type="submit" color="blue" fluid size="large" loading={isLoading}>
+                          <Button type="submit" color="blue" fluid size="large" loading={loading}>
                 Sign In
                           </Button>
                       </Segment>
@@ -111,24 +102,24 @@ class Login extends Component {
   }
 }
 Login.propTypes = {
-    isAuthorized: PropTypes.bool,
-    actions: PropTypes.object,
-    isLoading: PropTypes.bool
+    isAuthorized: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
+    error: PropTypes.string,
+    authorizeUser: PropTypes.func.isRequired
 };
 
 Login.defaultProps = {
-    isAuthorized: false,
-    isLoading: false
+    error: ''
 };
 
-const mapStateToProps = state => ({
-    isAuthorized: state.auth.isAuthorized
+const mapStateToProps = ({ profile: { isAuthorized, loading, error } }) => ({
+    isAuthorized,
+    loading,
+    error
 });
 
-const mapDispatchToProps = dispatch => {
-    return {
-        actions: bindActionCreators({ ...authActions }, dispatch)
-    };
+const mapDispatchToProps = {
+    authorizeUser
 };
 
 export default connect(
