@@ -70,6 +70,14 @@ class UserRepository /* extends BaseRepository */ {
     const user = users.find(user1 => +user1.id === +id);
     return user;
   }
+
+  static setUserPassword(email, password) {
+    users.forEach(user => {
+      if (user.email === email) {
+        user.password = password;
+      }
+    });
+  }
 }
 
 module.exports = UserRepository;
