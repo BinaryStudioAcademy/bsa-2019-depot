@@ -1,8 +1,8 @@
 export const types = {
     //Sync
-    AUTHENTICATE: 'AUTHENTICATE',
+    AUTHORIZE: 'AUTHORIZE',
     //Async
     LOGIN_ASYNC: 'LOGIN_ASYNC',
 
-    UNAUTHENTICATE: 'UNAUTHENTICATE'
+    UNAUTHORIZE: 'UNAUTHORIZE'
 };

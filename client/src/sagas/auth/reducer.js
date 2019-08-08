@@ -8,9 +8,9 @@ const initialState = {
 
 export const authReducer = (state = initialState, action) => {
     switch (action.type) {
-    case types.AUTHENTICATE:
+    case types.AUTHORIZE:
         return { isAuthorized: true };
-    case types.UNAUTHENTICATE:
+    case types.UNAUTHORIZE:
         return { isAuthorized: false };
     default:
         return state;

@@ -18,7 +18,7 @@ export function* login({ payload }) {
         yield apply(localStorage, localStorage.setItem, ['token', profile.token]);
 
         yield put(profileActions.fillProfile(profile.user));
-        yield put(authActions.authenticate());
+        yield put(authActions.authorize());
     } catch (error) {
         throw new Error(error + ' login worker');
     }
