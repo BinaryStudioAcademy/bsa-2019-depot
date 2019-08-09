@@ -53,7 +53,7 @@ function* signup({ payload: { user, history } }) {
         const { token } = response;
 
         yield call(signupService.setToken, token);
-        yield put(signupRoutine.success(response));
+        yield put(signupRoutine.success(response.user));
 
         yield call(history.push, '/');
     } catch (error) {
