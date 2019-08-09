@@ -7,4 +7,3 @@ export const fetchBranches = createRoutine('BRANCHES');
 export const fetchRepoSettings = createRoutine('REPO_SETTINGS');
 export const authorizeUser = createRoutine('AUTHORIZE_USER');
 export const fetchCurrentUser = createRoutine('CURRENT_USER');
-export const postRepoSettings = createRoutine('REPO_SETTINGS1');

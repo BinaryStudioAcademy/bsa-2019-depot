@@ -1,5 +1,4 @@
 import { fetchRepoSettings } from '../../routines/routines';
-import { postRepoSettings } from '../../routines/routines';
 
 const initialSettingsState = {
     settings: {
@@ -23,11 +22,6 @@ export const repoSettingsData = (state = initialSettingsState, action) => {
             ...state,
             settings: { ...action.payload }
         };
-    case postRepoSettings.SUCCESS:
-        return {
-            ...state,
-            settings: action.payload
-        };
     case fetchRepoSettings.FAILURE:
         return {
             ...state,
@@ -39,11 +33,6 @@ export const repoSettingsData = (state = initialSettingsState, action) => {
             settings: action.payload
         };
     case fetchRepoSettings.FULFILL:
-        return {
-            ...state,
-            loading: false
-        };
-    case postRepoSettings.FULFILL:
         return {
             ...state,
             loading: false

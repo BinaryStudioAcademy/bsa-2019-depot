@@ -1,11 +1,11 @@
 import React from 'react';
 import { Grid, Menu, Header, Divider, Input, Button, Message } from 'semantic-ui-react';
-import styles from './styles.module.scss';
 import { connect } from 'react-redux';
-import { fetchRepoSettings } from '../../routines/routines';
-import { postRepoSettings } from '../../routines/routines';
-import { changePrivacy, renameRepo } from './actions';
 import PropTypes from 'prop-types';
+
+import { fetchRepoSettings } from '../../routines/routines';
+import { changePrivacy, renameRepo, deleteRepo } from './actions';
+import styles from './styles.module.scss';
 
 const renderDangerField = (header, description, buttonName, clickHandler) => (
     <Message className={styles.dangerField}>
@@ -26,11 +26,23 @@ const renderDangerField = (header, description, buttonName, clickHandler) => (
 class RepoSettings extends React.Component {
     constructor(props) {
         super(props);
+
+        const params = this.props.location.pathname.split('/');
+        const { isPublic } = this.props.repoSettingsData.settings;
+
         this.state = {
-            name: this.props.location.pathname.split('/')[2],
-            owner: this.props.location.pathname.split('/')[1],
-            isPublic: this.props.repoSettingsData.settings.isPublic
+            owner: params[2],
+            name: params[3],
+            isPublic
         };
+    }
+
+    componentDidMount() {
+        const { owner, name } = this.state;
+        this.props.fetchRepoSettings({
+            owner,
+            name
+        });
     }
 
   makePrivateHandleClick = () => {
@@ -47,14 +59,11 @@ class RepoSettings extends React.Component {
       });
   };
 
-  transferHandleClick = () => {
-      this.props.fetchRepoSettings({
-          owner: this.state.owner,
-          name: this.state.name
+  deleteHandleClick = () => {
+      this.props.deleteRepo({
+          ...this.state
       });
   };
-
-  deleteHandleClick = () => {};
 
   handleChangeRepoName = event => {
       this.setState({
@@ -63,23 +72,18 @@ class RepoSettings extends React.Component {
   };
 
   onClickRename = () => {
+      const { owner, name } = this.state;
       this.props.renameRepo({
-          owner: this.state.owner,
+          owner,
           oldName: this.props.repoSettingsData.settings.name,
-          name: this.state.name
+          name
       });
   };
 
-  componentDidMount() {
-      this.props.fetchRepoSettings({
-          owner: this.state.owner,
-          name: this.state.name
-      });
-  }
   render() {
       const { settings } = this.props.repoSettingsData;
       return (
-          <Grid container>
+          <Grid container stackable>
               <Grid.Column width={4}>
                   <Menu vertical>
                       <Menu.Item>Options</Menu.Item>
@@ -111,12 +115,6 @@ class RepoSettings extends React.Component {
                               this.makePublicHandleClick
                           )}
                       {renderDangerField(
-                          'Transfer ownership',
-                          'Transfer this repository to another user or to an organization where you have the ability to create repositories.',
-                          'Transfer',
-                          this.transferHandleClick
-                      )}
-                      {renderDangerField(
                           'Delete this repository',
                           'Once you delete a repository, there is no going back. Please be certain.',
                           'Delete this repository',
@@ -136,7 +134,8 @@ RepoSettings.propTypes = {
         settings: PropTypes.exact({
             name: PropTypes.string,
             owner: PropTypes.string,
-            isPublic: PropTypes.bool
+            isPublic: PropTypes.bool,
+            id: PropTypes.string
         })
     }).isRequired,
     location: PropTypes.exact({
@@ -145,9 +144,9 @@ RepoSettings.propTypes = {
         hash: PropTypes.string
     }),
     fetchRepoSettings: PropTypes.func.isRequired,
-    postRepoSettings: PropTypes.func.isRequired,
     changePrivacy: PropTypes.func.isRequired,
-    renameRepo: PropTypes.func.isRequired
+    renameRepo: PropTypes.func.isRequired,
+    deleteRepo: PropTypes.func.isRequired
 };
 
 const mapStateToProps = ({ repoSettingsData }) => ({
@@ -156,9 +155,9 @@ const mapStateToProps = ({ repoSettingsData }) => ({
 
 const mapDispatchToProps = {
     fetchRepoSettings,
-    postRepoSettings,
     changePrivacy,
-    renameRepo
+    renameRepo,
+    deleteRepo
 };
 
 export default connect(

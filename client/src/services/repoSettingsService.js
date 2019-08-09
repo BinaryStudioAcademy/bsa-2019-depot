@@ -1,31 +1,36 @@
-let settings = {
-    name: '123',
-    owner: '',
-    isPublic: true
+import callWebApi from '../helpers/webApiHelper';
+
+export const getSettings = async ({ owner, name }) => {
+    const response = await callWebApi({
+        endpoint: `/repo/${owner}/${name}/settings`,
+        type: 'GET'
+    });
+    return response.json();
 };
 
-export const getSettings = ({ owner, name }) => {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve(settings);
-        }, 500);
+export const renameRepo = async ({ owner, name, oldName }) => {
+    const response = await callWebApi({
+        endpoint: `/repo/${owner}/${oldName}/settings/rename`,
+        type: 'post',
+        request: {
+            newName: name
+        }
     });
+    return response.json();
 };
 
-export const renameRepo = ({ owner, name, oldName }) => {
-    return new Promise(resolve => {
-        settings.name = name;
-        setTimeout(() => {
-            resolve(settings);
-        }, 500);
+export const changePrivacy = async ({ owner, name }) => {
+    const response = await callWebApi({
+        endpoint: `/repo/${owner}/${name}/settings/privacy`,
+        type: 'post'
     });
+    return response.json();
 };
 
-export const changePrivacy = payload => {
-    return new Promise(resolve => {
-        settings.isPublic = payload.isPublic;
-        setTimeout(() => {
-            resolve(settings);
-        }, 500);
+export const deleteRepo = async ({ owner, name }) => {
+    const response = await callWebApi({
+        endpoint: `/repo/${owner}/${name}/settings/delete`,
+        type: 'delete'
     });
+    return response.json();
 };
