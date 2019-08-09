@@ -10,10 +10,10 @@ permissions:
     group: ubuntu
 hooks:
   BeforeInstall:
-    - location: scripts/before-install.sh
+    - location: bin/before-install.sh
   AfterInstall:
-    - location: scripts/after-install.sh
+    - location: bin/after-install.sh
       runas: ubuntu
   ApplicationStart:
-    - location: scripts/app-start.sh
+    - location: bin/app-start.sh
       runas: ubuntu
