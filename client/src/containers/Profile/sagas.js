@@ -15,7 +15,7 @@ function* authorizationRequest({ payload }) {
         }
 
         yield apply(localStorage, localStorage.setItem, ['token', userData.token]);
-        yield put(authorizeUser.success(userData));
+        yield put(authorizeUser.success(userData.user));
     } catch (error) {
         yield put(authorizeUser.failure(error.message));
     } finally {
@@ -53,7 +53,7 @@ function* signup({ payload: { user, history } }) {
         const { token } = response;
 
         yield call(signupService.setToken, token);
-        yield put(signupRoutine.success(response));
+        yield put(signupRoutine.success(response.user));
 
         yield call(history.push, '/');
     } catch (error) {
