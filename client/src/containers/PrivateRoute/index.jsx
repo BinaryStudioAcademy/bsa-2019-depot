@@ -26,6 +26,8 @@ PrivateRoute.defaultProps = {
 };
 
 const mapStateToProps = rootState => {
+    console.warn(rootState.profile.isAuthorized);
+
     return {
         isAuthorized: rootState.profile.isAuthorized
     };
