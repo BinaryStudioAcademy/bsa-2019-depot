@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const jwtMiddleware = require('../middlewares/jwt.middleware');
 const {
-  createRepo, getSettings, renameRepo, changePrivacyRepo, deleteRepo
+  createRepo, getSettings, renameRepo, changePrivacyRepo, deleteRepo, getReposNames
 } = require('../services/repo.service');
 const { getCommits } = require('../services/commit.service');
 const { getBranches } = require('../services/branch.service');
@@ -11,6 +11,12 @@ const router = Router();
 router
   .post('/', (req, res) => {
     createRepo({ ...req.body }).then(data => res.send(data));
+  })
+  .get('/:owner/repos', (req, res, next) => {
+    const { owner } = req.params;
+    getReposNames({ user: owner, filter: req.query })
+      .then(repos => res.send(repos))
+      .catch(next);
   })
   .get('/:owner/:repoName/:branchName/commits', (req, res, next) => {
     const { owner, repoName, branchName } = req.params;
