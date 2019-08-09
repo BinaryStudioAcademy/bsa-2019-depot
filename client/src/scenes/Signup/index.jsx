@@ -3,12 +3,10 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validator from 'validator';
-
 import { Grid, Header, Form, Button, Segment, Label, Message } from 'semantic-ui-react';
+import { signupRoutine } from '../../routines/routines';
 
 import './styles.module.scss';
-
-import { signup } from './actions';
 
 class Signup extends React.Component {
     constructor(props) {
@@ -105,19 +103,16 @@ class Signup extends React.Component {
       if (loading) {
           return;
       }
-      try {
-          const user = {
-              username: username.value,
-              email: email.value,
-              password: password.value
-          };
-          this.props.signup({
-              user,
-              history: this.props.history
-          });
-      } catch {
-          this.setState({ loading: false });
-      }
+
+      const user = {
+          username: username.value,
+          email: email.value,
+          password: password.value
+      };
+      this.props.signupRoutine({
+          user,
+          history: this.props.history
+      });
   };
 
   render() {
@@ -128,7 +123,7 @@ class Signup extends React.Component {
           field => this.state[field].valid && this.state[field].value
       );
 
-      return !this.props.isAuthenticated ? (
+      return !this.props.isAuthorized ? (
           <Grid textAlign="center" centered className="signup-grid">
               <Grid.Column style={{ maxWidth: 450 }}>
                   <Header as="h2" color="blue" textAlign="center">
@@ -209,23 +204,22 @@ class Signup extends React.Component {
 }
 
 Signup.propTypes = {
-    isAuthenticated: PropTypes.bool,
-    user: PropTypes.object,
-    signup: PropTypes.func,
+    isAuthorized: PropTypes.bool,
+    signupRoutine: PropTypes.func,
     error: PropTypes.string,
     loading: PropTypes.bool,
     history: PropTypes.object
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ profile: { isAuthorized, loading, error } }) => {
     return {
-        isAuthenticated: state.auth.isAuthorized,
-        loading: state.signup.loading,
-        error: state.signup.error
+        isAuthorized,
+        loading,
+        error
     };
 };
 
-const mapDispatchToProps = { signup };
+const mapDispatchToProps = { signupRoutine };
 
 export default connect(
     mapStateToProps,

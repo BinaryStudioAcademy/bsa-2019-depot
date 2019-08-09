@@ -1,19 +1,22 @@
 const jwt = require('jsonwebtoken');
 const UserRepository = require('../../data/repositories/user.repository');
+
 const { sendTokenEmail } = require('../../helpers/email.helper');
 const tokenHelper = require('../../helpers/token.helper');
 
 const secret = process.env.SECRET_KEY;
 
+const getUserById = userId => UserRepository.getUserById(userId);
+
 const setUsername = async ({ id, username }) => {
-  const data = await userRepository.setUsernameById(id, username);
+  const data = await UserRepository.setUsernameById(id, username);
   return {
     ...data
   };
 };
 
 const checkUsernameExists = async ({ username }) => {
-  const user = await userRepository.getByUsername(username);
+  const user = await UserRepository.getByUsername(username);
   return {
     usernameExists: Boolean(user)
   };
@@ -46,6 +49,7 @@ const resetPassword = async ({ token, password }) => {
 };
 
 module.exports = {
+  getUserById,
   setUsername,
   checkUsernameExists,
   checkEmailExists,

@@ -90,12 +90,11 @@ class Forgot extends Component {
   }
 }
 Forgot.propTypes = {
-    isAuthorized: PropTypes.bool,
-    message: PropTypes.string,
-    emailNotExist: PropTypes.bool,
-    emailSend: PropTypes.bool,
-    actions: PropTypes.object,
-    isLoading: PropTypes.bool
+  isAuthorized: PropTypes.bool.isRequired,
+  message: PropTypes.string,
+  emailNotExist: PropTypes.bool,
+  emailSend: PropTypes.bool,
+  actions: PropTypes.object
 };
 
 Forgot.defaultProps = {
@@ -107,7 +106,7 @@ Forgot.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-    isAuthorized: state.auth.isAuthorized,
+    isAuthorized: state.profile.isAuthorized,
     message: state.forgot.message,
     emailNotExist: state.forgot.emailNotExist,
     emailSend: state.forgot.emailSend

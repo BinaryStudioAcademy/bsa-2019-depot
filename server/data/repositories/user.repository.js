@@ -29,4 +29,4 @@ class UserRepository extends BaseRepository {
   }
 }
 
-module.exports = new UserRepository(UserModel);
+export default new UserRepository(UserModel);

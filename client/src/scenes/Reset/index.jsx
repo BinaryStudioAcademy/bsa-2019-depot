@@ -151,7 +151,7 @@ Reset.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-    isAuthorized: state.auth.isAuthorized,
+    isAuthorized: state.profile.isAuthorized,
     message: state.reset.message,
     passwordNotReset: state.reset.passwordNotReset,
     passwordReset: state.reset.passwordReset
