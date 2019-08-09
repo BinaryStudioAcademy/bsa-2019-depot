@@ -5,7 +5,7 @@ import { Route, Switch } from 'react-router-dom';
 import PrivateRoute from '../PrivateRoute';
 import Header from '../Header';
 import Spinner from '../../components/Spinner';
-import { NotFound, Login, Forgot, Reset, MainPage, Signup, Dashboard } from '../../scenes';
+import { NotFound, Login, Forgot, Reset, MainPage, Signup, Dashboard, SettingsProfile } from '../../scenes';
 import { fetchCurrentUser } from '../../routines/routines';
 
 class Routing extends React.Component {
@@ -25,6 +25,7 @@ class Routing extends React.Component {
                 <Route exact path="/forgot" component={Forgot} />
                 <Route exact path="/reset/:hash" component={Reset} />
                 <Route exact path="/header" component={Header} />
+                <Route exact path="/settings/profile" component={SettingsProfile} />
                 <PrivateRoute exact path="/" component={MainPage} />
                 <PrivateRoute exact path="/dashboard" component={Dashboard} />
                 <Route exact path="*" component={NotFound} />
