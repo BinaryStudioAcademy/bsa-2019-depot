@@ -3,6 +3,7 @@ const associate = require('../db/associations');
 
 const User = orm.import('./user');
 const Repository = orm.import('./repository');
+
 associate({
   User,
   Repository

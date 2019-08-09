@@ -19,35 +19,43 @@ const createRepo = async ({ user, name }) => {
 
 const getSettings = async ({ ownerID, repoName }) => {
   const settings = await repoRepository.getSettings({
-    ownerID, repoName
+    ownerID,
+    repoName
   });
   return settings;
 };
 
 const renameRepo = async ({ ownerID, repoName, newName }) => {
   const result = await repoRepository.renameRepo({
-    ownerID, repoName, newName
+    ownerID,
+    repoName,
+    newName
   });
   return result;
 };
 
 const changePrivacyRepo = async ({ ownerID, repoName }) => {
   const result = await repoRepository.changePrivacy({
-    ownerID, repoName
+    ownerID,
+    repoName
   });
   return result;
 };
 
 const deleteRepo = async ({ ownerID, repoName, username }) => {
   const result = await repoRepository.delete({
-    ownerID, repoName
+    ownerID,
+    repoName
   });
 
   const success = repoHelper.removeDir(username, repoName);
-
   return result && success;
 };
 
 module.exports = {
-  createRepo, getSettings, renameRepo, changePrivacyRepo, deleteRepo
+  createRepo,
+  getSettings,
+  renameRepo,
+  changePrivacyRepo,
+  deleteRepo
 };

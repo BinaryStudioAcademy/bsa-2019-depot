@@ -2,7 +2,7 @@ const usersSeed = require('../seed-data/users.seed');
 const reposSeed = require('../seed-data/repositories.seed');
 
 const randomIndex = length => Math.floor(Math.random() * length);
-const createUrl = (user, post) => `http://localhost:3001/${user.username}/${post.name}/settings`;
+const createUrl = (user, repo) => `http://localhost:3001/${user.username}/${repo.name}/settings`;
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -12,12 +12,12 @@ module.exports = {
       };
       await queryInterface.bulkInsert('users', usersSeed, {});
       const users = await queryInterface.sequelize.query('SELECT * FROM "users";', options);
-      const reposMappedSeed = reposSeed.map((post) => {
+      const reposMappedSeed = reposSeed.map((repo) => {
         const id = randomIndex(users.length);
         return {
-          ...post,
+          ...repo,
           ownerID: users[id].id,
-          url: createUrl(users[id], post)
+          url: createUrl(users[id], repo)
         };
       });
       await queryInterface.bulkInsert('Repositories', reposMappedSeed, {});

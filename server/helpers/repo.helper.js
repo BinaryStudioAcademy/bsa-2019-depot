@@ -4,11 +4,13 @@ const path = require('path');
 const gitPath = process.env.GIT_PATH;
 
 const removeDir = (username, repoName) => {
-  const directory = path.resolve(`${gitPath}/${username}/${repoName}`);
-  fs.remove(directory, (err) => {
-    if (err) return false;
-  });
-  return true;
+  try {
+    const directory = path.resolve(`${gitPath}/${username}/${repoName}`);
+    fs.remove(directory, err => err);
+    return true;
+  } catch (e) {
+    return false;
+  }
 };
 
 module.exports = {

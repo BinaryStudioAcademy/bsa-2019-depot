@@ -1,11 +1,10 @@
 import * as types from './types';
 
-export const changePrivacy = ({ owner, name, isPublic }) => ({
+export const changePrivacy = ({ owner, name }) => ({
     type: types.CHANGE_PRIVACY,
     payload: {
         owner,
-        name,
-        isPublic
+        name
     }
 });
 

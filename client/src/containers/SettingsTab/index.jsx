@@ -45,17 +45,9 @@ class RepoSettings extends React.Component {
         });
     }
 
-  makePrivateHandleClick = () => {
+  changePrivacyHandleClick = () => {
       this.props.changePrivacy({
-          ...this.state,
-          isPublic: false
-      });
-  };
-
-  makePublicHandleClick = () => {
-      this.props.changePrivacy({
-          ...this.state,
-          isPublic: true
+          ...this.state
       });
   };
 
@@ -106,13 +98,13 @@ class RepoSettings extends React.Component {
                               'Make this repository private',
                               'Hide this repository from the public. ',
                               'Make private',
-                              this.makePrivateHandleClick
+                              this.changePrivacyHandleClick
                           )
                           : renderDangerField(
                               'Make this repository public',
                               'Make this repository visible to anyone.',
                               'Make public',
-                              this.makePublicHandleClick
+                              this.changePrivacyHandleClick
                           )}
                       {renderDangerField(
                           'Delete this repository',

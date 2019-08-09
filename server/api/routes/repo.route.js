@@ -25,8 +25,7 @@ router
       .catch(next);
   })
   .get('/:owner/:repoName/settings', jwtMiddleware, (req, res, next) => {
-    const { owner, repoName } = req.params;
-    console.log(req.user.id);
+    const { repoName } = req.params;
     getSettings({ ownerID: req.user.id, repoName })
       .then(settings => res.send(settings))
       .catch(next);
