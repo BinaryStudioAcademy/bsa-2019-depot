@@ -20,7 +20,10 @@ class Dashboard extends React.Component {
 
     componentDidMount() {
         const { actions } = this.props;
-        actions.fetchRepositories();
+        actions.fetchRepositories({
+            limit: '',
+            filterWord: ''
+        });
     }
 
   handleActivityState = (e, titleProps) => {

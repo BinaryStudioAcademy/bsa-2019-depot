@@ -8,7 +8,8 @@ export const repositoryActions = {
         payload: repositories
     }),
     // Async
-    fetchRepositories: () => ({
-        type: types.FETCH_REPOSITORIES
+    fetchRepositories: filter => ({
+        type: types.FETCH_REPOSITORIES,
+        payload: filter
     })
 };
