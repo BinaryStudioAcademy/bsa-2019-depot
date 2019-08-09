@@ -14,5 +14,18 @@ export const authActions = {
             type: types.LOGIN_ASYNC,
             payload: credentials
         };
+    },
+
+    loginSuccess: () => {
+        return {
+            type: types.LOGIN_SUCCESS
+        };
+    },
+
+    loginFailure: error => {
+        return {
+            type: types.LOGIN_FAILURE,
+            payload: error
+        };
     }
 };

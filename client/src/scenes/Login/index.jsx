@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Redirect, NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import createHandler from 'react-cached-handler';
 import PropTypes from 'prop-types';
 import validator from 'validator';
 
 import { Grid, Header, Form, Button, Segment, Message } from 'semantic-ui-react';
 
-//Actions
-import { authActions } from '../../sagas/auth/actions';
+import { login } from './actions';
+
+import './styles.module.scss';
 
 class Login extends Component {
     constructor(props) {
@@ -17,7 +17,6 @@ class Login extends Component {
         this.state = {
             email: '',
             password: '',
-            isLoading: false,
             isEmailValid: true,
             isPasswordValid: true
         };
@@ -52,29 +51,29 @@ class Login extends Component {
   validateForm = () => [this.validateEmail(), this.validatePassword()].every(Boolean);
 
   handleClickLogin = async () => {
-      const { isLoading, email, password } = this.state;
-      const { actions } = this.props;
+      const { email, password } = this.state;
+      const { loading, login, history } = this.props;
       const valid = this.validateForm();
-      if (!valid || isLoading) {
+      if (!valid || loading) {
           return;
       }
-      this.setState({ isLoading: true });
-      try {
-          await actions.loginAsync({ username: email, password });
-      } catch (error) {
-          this.setState({ isLoading: false });
-      }
+      login({
+          username: email,
+          password,
+          history
+      });
   };
 
   render() {
-      const { isLoading, isEmailValid, isPasswordValid } = this.state;
+      const { isEmailValid, isPasswordValid } = this.state;
+      const { loading, error } = this.props;
       return !this.props.isAuthorized ? (
-          <Grid textAlign="center" verticalAlign="middle" className="fill">
+          <Grid textAlign="center" verticalAlign="middle" className="fill login-grid">
               <Grid.Column style={{ maxWidth: 450 }}>
                   <Header as="h2" color="blue" textAlign="center">
             Sign in to Depot
                   </Header>
-                  <Form name="loginForm" size="large" onSubmit={this.handleClickLogin}>
+                  <Form name="loginForm" size="large" onSubmit={this.handleClickLogin} loading={loading} error={!!error}>
                       <Segment>
                           <Form.Input
                               fluid
@@ -92,9 +91,10 @@ class Login extends Component {
                               onChange={this.passwordChangeHandler()}
                               onBlur={this.validatePassword}
                           />
-                          <Button type="submit" color="blue" fluid size="large" loading={isLoading}>
+                          <Button type="submit" color="blue" fluid size="large">
                 Sign In
                           </Button>
+                          <Message error content={error} />
                       </Segment>
                   </Form>
                   <Message>
@@ -112,24 +112,19 @@ class Login extends Component {
 }
 Login.propTypes = {
     isAuthorized: PropTypes.bool,
-    actions: PropTypes.object,
-    isLoading: PropTypes.bool
-};
-
-Login.defaultProps = {
-    isAuthorized: false,
-    isLoading: false
+    login: PropTypes.func,
+    loading: PropTypes.bool,
+    history: PropTypes.object,
+    error: PropTypes.string
 };
 
 const mapStateToProps = state => ({
-    isAuthorized: state.auth.isAuthorized
+    isAuthorized: state.auth.isAuthorized,
+    loading: state.auth.loading,
+    error: state.auth.error
 });
 
-const mapDispatchToProps = dispatch => {
-    return {
-        actions: bindActionCreators({ ...authActions }, dispatch)
-    };
-};
+const mapDispatchToProps = { login };
 
 export default connect(
     mapStateToProps,

@@ -11,7 +11,7 @@ module.exports = {
   username,
   password,
   host,
-  port,
   dialect,
+  port,
   logging
 };

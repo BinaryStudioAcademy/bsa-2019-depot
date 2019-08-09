@@ -5,7 +5,7 @@ const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const userRepository = require('../data/repositories/user.repository');
 const { jwtOptions } = require('./jwt.config');
 const { clientID, clientSecret, callbackURL } = require('./google.config');
-const cryptoHelper = require('../helpers/crypro.helper');
+const cryptoHelper = require('../helpers/crypto.helper');
 
 passport.use(
   'login',

@@ -14,7 +14,7 @@ router.post('/username', jwtMiddleware, (req, res, next) => {
 });
 
 router.get('/username-exists', (req, res, next) => {
-  checkUsernameExists({ ...req.query.username })
+  checkUsernameExists({ username: req.query.username })
     .then(data => res.send(data))
     .catch(next);
 });

@@ -29,3 +29,4 @@ const port = process.env.APP_PORT || 3000;
 app.use(errorHandlerMiddleware);
 
 app.listen(port);
+console.warn(`Server listening at port ${port}`);

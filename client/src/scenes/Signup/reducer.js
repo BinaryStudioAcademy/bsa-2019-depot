@@ -1,36 +1,35 @@
-import { signupRoutine, googleSignupRoutine, setUsernameRoutine } from '../../routines/routines';
+import { signupRoutine, setUsernameRoutine } from '../../routines/routines';
 
 const initialState = {
     loading: false,
-    user: null,
-    error: '',
+    error: null,
     shouldSetUsername: false
 };
 
 export default (state = initialState, action) => {
     switch (action.type) {
-    case googleSignupRoutine.REQUEST: {
-        return {
-            state,
-            loading: true
-        };
-    }
-    case googleSignupRoutine.SUCCESS:
-        const { usernameExists } = action.payload;
-        return {
-            ...state,
-            shouldSetUsername: !usernameExists
-        };
-    case googleSignupRoutine.FAILURE:
-        return {
-            ...state,
-            error: action.payload
-        };
-    case googleSignupRoutine.FULFILL:
-        return {
-            ...state,
-            loading: false
-        };
+    // case googleSignupRoutine.REQUEST: {
+    //     return {
+    //         ...state,
+    //         loading: true
+    //     };
+    // }
+    // case googleSignupRoutine.SUCCESS:
+    //     const { usernameExists } = action.payload;
+    //     return {
+    //         ...state,
+    //         shouldSetUsername: !usernameExists
+    //     };
+    // case googleSignupRoutine.FAILURE:
+    //     return {
+    //         ...state,
+    //         error: action.payload
+    //     };
+    // case googleSignupRoutine.FULFILL:
+    //     return {
+    //         ...state,
+    //         loading: false
+    //     };
 
     case signupRoutine.REQUEST:
         return {
@@ -38,10 +37,7 @@ export default (state = initialState, action) => {
             loading: true
         };
     case signupRoutine.SUCCESS:
-        return {
-            ...state,
-            user: action.payload
-        };
+        return state;
     case signupRoutine.FAILURE:
         return {
             ...state,
@@ -61,7 +57,6 @@ export default (state = initialState, action) => {
     case setUsernameRoutine.SUCCESS:
         return {
             ...state,
-            user: action.payload,
             shouldSetUsername: false
         };
     case setUsernameRoutine.FAILURE:

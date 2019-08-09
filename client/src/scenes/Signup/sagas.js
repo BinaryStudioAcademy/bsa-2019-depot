@@ -1,15 +1,28 @@
 import { takeEvery, takeLatest, put, call, all, delay } from 'redux-saga/effects';
 import * as signupService from '../../services/signup.service';
-import { signupRoutine, googleSignupRoutine, setUsernameRoutine } from '../../routines/routines';
-import { authActions } from '../../sagas/auth/actions';
 
-function* signup({ payload: { user, history } }) {
+import {
+    signupRoutine,
+    googleSignupRoutine,
+    setUsernameRoutine,
+    fillProfileRoutine,
+    loginRoutine
+} from '../../routines/routines';
+// import { authActions } from '../../sagas/auth/actions';
+
+function* signup({ payload: { user: newUser, history } }) {
     try {
-        const response = yield call(signupService.signup, user);
-        const { token } = response;
-        yield call(signupService.setToken, token);
+        const response = yield call(signupService.signup, newUser);
+        const { token, user } = response;
+        const profile = {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            token
+        };
+        yield put(fillProfileRoutine.request({ profile }));
+        yield put(loginRoutine.success(response));
         yield put(signupRoutine.success(response));
-        yield put(authActions.authenticate());
         yield call(history.push, '/');
     } catch (error) {
         yield put(signupRoutine.failure(error.message));

@@ -12,6 +12,10 @@ export const authReducer = (state = initialState, action) => {
         return { isAuthorized: true };
     case types.UNAUTHORIZE:
         return { isAuthorized: false };
+    case types.LOGIN_FAILURE:
+        return { isAuthorized: false };
+    case types.LOGIN_SUCCESS:
+        return { isAuthorized: true };
     default:
         return state;
     }
