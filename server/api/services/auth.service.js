@@ -12,7 +12,10 @@ const googleLogin = async ({ id, email, username }) => {
 
   const data = {
     usernameExists,
-    jwt
+    jwt,
+    id,
+    email,
+    username
   };
 
   return { ...data };

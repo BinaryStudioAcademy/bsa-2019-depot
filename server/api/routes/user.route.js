@@ -6,8 +6,9 @@ const { setUsername, checkUsernameExists } = require('../services/user.service')
 const router = Router();
 
 router.post('/username', jwtMiddleware, (req, res, next) => {
-  const { username } = req.body;
-  const { id } = req.user;
+  const { username, profile } = req.body;
+  const { id } = profile;
+
   setUsername({ id, username })
     .then(data => res.send(data))
     .catch(next);

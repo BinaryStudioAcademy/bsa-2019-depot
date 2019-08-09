@@ -12,7 +12,6 @@ const MainPage = () => {
     }
 
     function handleSubmit() {
-    // console.log(email);
         setEmail('');
     }
 

@@ -1,4 +1,4 @@
-import { loginRoutine, fillProfileRoutine } from '../../routines/routines';
+import { loginRoutine, fillProfileRoutine, setUsernameRoutine } from '../../routines/routines';
 
 const initialState = {
     loading: false,
@@ -39,6 +39,33 @@ export default (state = initialState, action) => {
             profile
         };
     }
+
+    case setUsernameRoutine.REQUEST:
+        return {
+            ...state,
+            loading: true
+        };
+    case setUsernameRoutine.SUCCESS:
+        const { profile } = state;
+        const { username } = action.payload;
+        return {
+            ...state,
+            profile: {
+                ...profile,
+                username,
+                usernameExists: true
+            }
+        };
+    case setUsernameRoutine.FAILURE:
+        return {
+            ...state,
+            error: action.payload
+        };
+    case setUsernameRoutine.FULFILL:
+        return {
+            ...state,
+            loading: false
+        };
 
     default:
         return state;
