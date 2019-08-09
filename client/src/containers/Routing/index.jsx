@@ -1,21 +1,50 @@
-/* eslint-disable react/jsx-no-bind */
-
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import PrivateRoute from '../PrivateRoute';
-import { NotFound, Login, MainPage, SettingsPage } from '../../scenes';
+import Header from '../Header';
+import Spinner from '../../components/Spinner';
+import { NotFound, Login, MainPage, Signup, Dashboard } from '../../scenes';
+import { fetchCurrentUser } from '../../routines/routines';
 
-const Routing = () => {
-    return (
-        <Switch>
-            <Route exact path="/" component={MainPage} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/settings" component={SettingsPage} />
-            <PrivateRoute exact path="/" component={MainPage} />
-            <PrivateRoute exact path="/dashboard" component={MainPage} />
-            <Route exact path="*" component={NotFound} />
-        </Switch>
-    );
+class Routing extends React.Component {
+    componentDidMount() {
+        this.props.fetchCurrentUser();
+    }
+
+    render() {
+        const { loading } = this.props;
+
+        return loading ? (
+            <Spinner />
+        ) : (
+            <Switch>
+                <Route exact path="/registration" component={Signup} />
+                <Route exact path="/login" component={Login} />
+                <Route exact path="/header" component={Header} />
+                <PrivateRoute exact path="/" component={MainPage} />
+                <PrivateRoute exact path="/dashboard" component={Dashboard} />
+                <Route exact path="*" component={NotFound} />
+            </Switch>
+        );
+    }
+}
+
+Routing.propTypes = {
+    loading: PropTypes.bool.isRequired,
+    fetchCurrentUser: PropTypes.func.isRequired
 };
 
-export default Routing;
+const mapStateToProps = ({ profile: { loading } }) => ({
+    loading
+});
+
+const mapDispatchToProps = {
+    fetchCurrentUser
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Routing);

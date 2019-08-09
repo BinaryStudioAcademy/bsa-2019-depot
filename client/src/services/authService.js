@@ -6,5 +6,13 @@ export const login = async request => {
         type: 'POST',
         request
     });
+    return response;
+};
+
+export const getCurrentUser = async () => {
+    const response = await callWebApi({
+        endpoint: '/auth/user',
+        type: 'GET'
+    });
     return response.json();
 };

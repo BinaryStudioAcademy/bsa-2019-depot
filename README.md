@@ -27,9 +27,38 @@ GOOGLE_SCOPE = https://www.googleapis.com/auth/userinfo.email # default. has to 
 GIT_PATH = '' # Has to be changed to path where you want to save repositories
 ```
 
-###Git Repository
-We are working with git server using [nodegit](https://www.nodegit.org/).
-To create a git server use a special route (/repo), it will execute `git --bare init`. Git server doesn't need to be runned. You can work with it as a usual git repository.
+### Git Server
+Git server is like usual repository that used to save and retreat git data. The only difference is that git server saves all the files and changes in his own objects, not in folder. The best example of it is a GitHub repository.
+
+- What I need to do to start GIT server on my local machine using console?
+1. `cd .. && mkdir repositories/ && cd repositories/`
+2. `mkdir initial-repo.git && cd initial-repo.git`
+3. `git --bare init`
+
+- What I need to do to start GIT server on my local machine using [nodegit](https://www.nodegit.org/)?
+1. Set an env variable GIT_PATH = 'folder name where you want to store repositories'
+2. Start node server and use post route `/repo` with body
+
+ ```
+ {
+    "user": "Jack", //name of user
+    "name" : "FirstRepo" //name of repository
+}
+```
+To populate git server with some data using a console, run `git clone 'path to folder'`, add some files, commit and push. Git server now has all the changes.
+
+Example of using [nodegit](https://www.nodegit.org/):
+``` 
+NodeGit.Repository.open(pathToRepo).then(function (repo) {
+  console.log("Opened repository", repo); 
+}); 
+pathToRepo - path to git server you created.
+repo - git server you just opened, which contains all information(files, branches, commits)
+```
+
+
+
+
 
 
 ### Branches
@@ -80,6 +109,18 @@ Example:
 `fix: Add error handling` 👍  
 ~~`fixed error handling.`~~ 👎
 
+## Project Structure
+
+As an example of project structure used [this repository](https://github.com/react-boilerplate/react-boilerplate/tree/master/app).
+
+Directory purposes: 
+```
+/components - any reusable components that are independent of business logic
+/containers - modules that contain or are bound to business logic
+/scenes - any container that has separate route
+```
+
+[More on this](https://tech.offgrid-electric.com/domain-directory-structure-for-react-apps-why-its-worth-trying-b3855ee77a1e?gi=be41e3fca7f3)
 
 ## Code linting and formatting
 
