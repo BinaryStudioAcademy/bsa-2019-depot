@@ -71,8 +71,8 @@ class Login extends Component {
   render() {
       const { isLoading, isEmailValid, isPasswordValid } = this.state;
       return !this.props.isAuthorized ? (
-          <Grid textAlign="center" style={{ height: '100vh' }} verticalAlign="middle" className="login-grid">
-              <Grid.Column style={{ maxWidth: 400 }}>
+          <Grid textAlign="center" verticalAlign="middle" className="login-grid">
+              <Grid.Column className="grid-column">
                   <Header as="h2" color="black" textAlign="center" className="login-header">
             Sign in to Depot
                   </Header>

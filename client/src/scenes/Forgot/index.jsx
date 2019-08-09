@@ -58,8 +58,8 @@ class Forgot extends Component {
       const succsessMessage = emailSend ? <Message color="teal">{message}</Message> : null;
       const failureMessage = emailNotExist ? <Message color="red">{message}</Message> : null;
       return !isAuthorized ? (
-          <Grid textAlign="center" style={{ height: '100vh' }} verticalAlign="middle" className="forgot-grid fill">
-              <Grid.Column style={{ maxWidth: 400 }}>
+          <Grid textAlign="center" verticalAlign="middle" className="forgot-grid fill">
+              <Grid.Column className="grid-column">
                   <Header as="h2" color="black" textAlign="center" className="forgot-header">
             Reset your password
                   </Header>

@@ -91,8 +91,8 @@ class Reset extends Component {
       this.renderRedirect(succsessMessage);
       if (this.state.redirect === true) return <Redirect to="/login" />;
       return !isAuthorized ? (
-          <Grid textAlign="center" style={{ height: '100vh' }} verticalAlign="middle" className="reset-grid fill">
-              <Grid.Column style={{ maxWidth: 400 }}>
+          <Grid textAlign="center" verticalAlign="middle" className="reset-grid fill">
+              <Grid.Column className="grid-column">
                   <Header as="h2" color="black" textAlign="center" className="reset-header">
             Reset password
                   </Header>
