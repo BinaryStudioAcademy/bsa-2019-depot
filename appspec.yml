@@ -11,9 +11,6 @@ permissions:
 hooks:
   BeforeInstall:
     - location: bin/before-install.sh
-  AfterInstall:
-    - location: bin/after-install.sh
-      runas: ubuntu
   ApplicationStart:
     - location: bin/app-start.sh
       runas: ubuntu
