@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-no-bind */
+
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 
@@ -9,8 +11,9 @@ const Routing = () => {
         <Switch>
             <Route exact path="/registration" component={Signup} />
             <Route exact path="/login" component={Login} />
+            {/* <Route exact path="/code" component={CodeTab} /> */}
+            <Route exact path="/dashboard" component={Dashboard} />
             <PrivateRoute exact path="/" component={MainPage} />
-            <PrivateRoute exact path="/dashboard" component={Dashboard} />
             <Route exact path="*" component={NotFound} />
         </Switch>
     );

@@ -60,7 +60,7 @@ class Login extends Component {
       }
       this.setState({ isLoading: true });
       try {
-          await actions.loginAsync({ username: email, password });
+          await actions.loginAsync({ email, password });
       } catch (error) {
           this.setState({ isLoading: false });
       }

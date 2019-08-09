@@ -219,7 +219,8 @@ Signup.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        isAuthenticated: state.auth.isAuthorized,
+        isAuthenticated: state.auth.isAuthenticated,
+        user: state.auth.user,
         loading: state.signup.loading,
         error: state.signup.error
     };

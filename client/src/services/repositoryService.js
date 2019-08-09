@@ -1,10 +1,9 @@
 import callWebApi from '../helpers/webApiHelper';
 
-export const login = async request => {
+export const getRepositories = async owner => {
     const response = await callWebApi({
-        endpoint: '/auth/login',
-        type: 'POST',
-        request
+        endpoint: `/repo/${owner}/repos`,
+        type: 'GET'
     });
     return response.json();
 };

@@ -7,8 +7,6 @@ import Octicon, { getIconByName } from '@primer/octicons-react';
 import { Container, Button, Header, Dropdown, Input, Popup, Segment, Menu } from 'semantic-ui-react';
 import styles from './styles.module.scss';
 
-const OnDropdownClick = e => e.stopPropagation();
-
 const CodeTab = () => {
     return (
         <Container>
@@ -71,7 +69,8 @@ const CodeTab = () => {
                                 type="text"
                                 className={styles.searchBranchInput}
                                 placeholder="Find or create a branch"
-                                onClick={OnDropdownClick}
+                                // eslint-disable-next-line react/jsx-no-bind
+                                onClick={e => e.stopPropagation()}
                             />
                             <Dropdown.Divider />
                             <Dropdown.Header content="branch" as="h4" />
@@ -115,7 +114,8 @@ const CodeTab = () => {
                                         <Octicon verticalAlign="middle" icon={getIconByName('clippy')} />
                                     </Button>
                                 }
-                                onClick={OnDropdownClick}
+                                // eslint-disable-next-line react/jsx-no-bind
+                                onClick={e => e.stopPropagation()}
                                 actionPosition="right"
                                 size="small"
                                 className={styles.repoLinkInput}
@@ -140,4 +140,4 @@ const CodeTab = () => {
     );
 };
 
-export default CodeTab;
+export { CodeTab };

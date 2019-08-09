@@ -1,0 +1,1 @@
+export { fetchRepositories } from './fetchRepositories';

@@ -1,7 +1,6 @@
 import { takeEvery, put, call, all, delay } from 'redux-saga/effects';
 import * as signupService from '../../services/signup.service';
 import { signupRoutine } from '../../routines/routines';
-import { authActions } from '../../sagas/auth/actions';
 
 function* signup({ payload: { user, history } }) {
     try {
@@ -10,7 +9,6 @@ function* signup({ payload: { user, history } }) {
         const { token } = response;
         yield call(signupService.setToken, token);
         yield put(signupRoutine.success(response));
-        yield put(authActions.authenticate());
         yield call(history.push, '/');
     } catch (error) {
         yield put(signupRoutine.failure(error.message));
