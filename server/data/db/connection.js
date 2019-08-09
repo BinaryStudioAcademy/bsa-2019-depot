@@ -3,11 +3,8 @@ const config = require('../../config/db.config');
 
 const sequelize = new Sequelize(config);
 
-sequelize
-  .authenticate()
-  .then()
-  .catch((err) => {
-    console.error('Unable to connect to the database:', err);
-  });
+sequelize.authenticate().catch((err) => {
+  console.error('Unable to connect to the database:', err);
+});
 
 module.exports = sequelize;

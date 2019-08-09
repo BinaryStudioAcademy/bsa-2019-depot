@@ -27,7 +27,7 @@ PrivateRoute.defaultProps = {
 
 const mapStateToProps = rootState => {
     return {
-        ...rootState.auth
+        isAuthorized: rootState.profile.isAuthorized
     };
 };
 
