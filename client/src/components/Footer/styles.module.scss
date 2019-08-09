@@ -1,0 +1,42 @@
+:local(.footer) {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 40px;
+  margin: 40px 0;
+  border-top: 1px solid #e1e4e8;
+  font-size: 12px;
+  .menuLeft,
+  .menuRight {
+    width: 100%;
+    display: inline-flex;
+    vertical-align: middle;
+    li:not(:last-child) {
+      margin-right: 20px;
+    }
+  }
+  .menuRight {
+    justify-content: flex-end;
+  }
+  a {
+    color: #0366d6;
+    &:hover {
+      text-decoration: underline;
+    }
+    svg {
+      fill: #e1e4e8;
+    }
+  }
+  :hover {
+    svg {
+      fill: #999;
+    }
+  }
+}
+
+:local(.logo) {
+  text-align: center;
+}
+
+:local(.copy) {
+  color: #586069;
+}
