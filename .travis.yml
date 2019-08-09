@@ -13,6 +13,7 @@ install:
   - npm install
   - cd ..
 script:
+  - export SKIP_PREFLIGHT_CHECK=true
   - cd client/
   - npm run build
   - cd ..
