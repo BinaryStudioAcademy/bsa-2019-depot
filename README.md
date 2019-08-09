@@ -25,6 +25,9 @@ GOOGLE_CLIENT_SECRET = ygyxxxXXXXxxxxxxxXXXXXxxxi # has to be replaced with actu
 GOOGLE_CALLBACK_URL = http://localhost:3000/auth/google/callback # default. has to be changed to google callback uri if it is different
 GOOGLE_SCOPE = https://www.googleapis.com/auth/userinfo.email # default. has to be changed to google scope if it is different
 GIT_PATH = '' # Has to be changed to path where you want to save repositories
+AWS_SES_ACCESS_KEY = AKIAWBOCxxxxxxx # has to be replaced with actual aws ses access key 
+AWS_SES_SECRET_KEY = EtKJdUrnWxxxxxxxxx # has to be replaced with actual aws ses secret key
+AWS_SES_REGION = us-east-1 # has to be replaced with actual aws region
 ```
 
 ### Git Server

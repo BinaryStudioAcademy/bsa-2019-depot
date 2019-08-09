@@ -7,6 +7,8 @@ import validator from 'validator';
 import { Grid, Header, Form, Button, Segment, Message } from 'semantic-ui-react';
 import { authorizeUser } from '../../routines/routines';
 
+import './styles.module.scss';
+
 class Login extends Component {
     constructor(props) {
         super(props);
@@ -60,30 +62,39 @@ class Login extends Component {
       const { loading } = this.props;
 
       return !this.props.isAuthorized ? (
-          <Grid textAlign="center" verticalAlign="middle" className="fill">
-              <Grid.Column style={{ maxWidth: 450 }}>
-                  <Header as="h2" color="blue" textAlign="center">
+          <Grid textAlign="center" verticalAlign="middle" className="login-grid">
+              <Grid.Column className="grid-column">
+                  <Header as="h2" color="black" textAlign="center" className="login-header">
             Sign in to Depot
                   </Header>
                   <Form name="loginForm" size="large" onSubmit={this.handleClickLogin}>
                       <Segment>
                           <Form.Input
                               fluid
+                              label="Email"
                               placeholder="Email"
                               type="email"
                               error={!isEmailValid}
                               onChange={this.emailChangeHandler()}
                               onBlur={this.validateEmail}
                           />
-                          <Form.Input
-                              fluid
-                              placeholder="Password"
-                              type="password"
-                              error={!isPasswordValid}
-                              onChange={this.passwordChangeHandler()}
-                              onBlur={this.validatePassword}
-                          />
-                          <Button type="submit" color="blue" fluid size="large" loading={loading}>
+
+                          <Form.Field className="password-wrapper">
+                              <NavLink exact to="/forgot" className="forgot-link">
+                  forgot password?
+                              </NavLink>
+                              <Form.Input
+                                  fluid
+                                  name="password"
+                                  label="Password"
+                                  placeholder="Password"
+                                  type="password"
+                                  error={!isPasswordValid}
+                                  onChange={this.passwordChangeHandler()}
+                                  onBlur={this.validatePassword}
+                              />
+                          </Form.Field>
+                          <Button type="submit" color="green" fluid size="large" loading={loading}>
                 Sign In
                           </Button>
                       </Segment>
