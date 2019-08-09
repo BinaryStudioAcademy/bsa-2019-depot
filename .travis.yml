@@ -14,6 +14,7 @@ deploy:
   skip_cleanup: true
   on: &2
     repo: BinaryStudioAcademy/bsa-2019-depot
+    branch: feature/ci
   bucket: depotbucket
   region: eu-central-1
 - provider: codedeploy
@@ -26,6 +27,7 @@ deploy:
   deployment_group: depot-deploy-app-group
   region: eu-central-1
   on: *2
+    branch: feature/ci
 script:
   - zip -r latest *
   - mkdir -p dpl_cd_upload
