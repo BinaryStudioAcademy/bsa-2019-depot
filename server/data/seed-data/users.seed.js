@@ -12,8 +12,8 @@ const usersSeed = [
   },
   {
     email: 'sandrk27@gmail.com',
-    username: '',
-    password: hash('')
+    username: 'user0',
+    password: hash('1234')
   },
   {
     email: 'user1@ukr.net',
