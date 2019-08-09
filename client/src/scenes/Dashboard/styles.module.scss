@@ -1,3 +1,6 @@
+$primary-color: #586069;
+$secondary-color: #d1d5da;
+
 :local(.wrapper) {
   margin: 0 auto;
   max-width: 1200px;
@@ -18,7 +21,7 @@
 }
 
 :local(.avatar_wrapper) {
-  border: 1px solid #d1d5da;
+  border: 1px solid $secondary-color;
   border-radius: 3px;
 
   @media (max-width: 768px) {
@@ -63,11 +66,11 @@
 
 :local(.navbar) {
   display: flex;
-  border-bottom: 1px solid #d1d5da;
+  border-bottom: 1px solid $secondary-color;
   overflow: auto;
 
   a {
-    color: #586069;
+    color: $primary-color;
     margin-right: 14px;
     padding: 16px 8px;
     border-bottom: 2px solid transparent;
@@ -84,7 +87,7 @@
     &:hover {
       color: #24292e;
       transition: 0.2s ease;
-      border-bottom-color: #d1d5da;
+      border-bottom-color: $secondary-color;
     }
 
     & span {
@@ -92,7 +95,7 @@
       padding: 2px 5px;
       background-color: rgba(27, 31, 35, 0.08);
       border-radius: 20px;
-      color: #586069;
+      color: $primary-color;
       display: inline-block;
       font-size: 12px;
       font-weight: 600;
@@ -117,66 +120,67 @@
   }
 
   a {
-    color: #586069;
+    color: $primary-color;
   }
 }
 
-:global(.wide.column):local(.pinned) {
+:global(.ui.container):local(.favorite_repos_wrapper) {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
   :local(.pinned_item) {
+    width: 48%;
     min-height: 110px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    margin: 1em 0;
+    margin-bottom: 20px;
     padding: 16px;
-    width: 100%;
-    border: 1px solid #d1d5da;
+    border: 1px solid $secondary-color;
     border-radius: 3px;
-    box-shadow: none;
 
     & div {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      :local(.card_icon) {
-        margin-right: 5px;
-      }
-
-      :local(.card_icon_grab) {
-        cursor: grab;
-      }
-
-      & a {
-        flex: 1 1 auto;
-        font-weight: bold;
-        color: #0366d6;
-
-        &:hover {
-          text-decoration: underline;
-        }
-      }
     }
 
-    :local(.pinned_item_desc) {
-      margin: 8px 0 16px;
-      font-size: 12px;
+    :local(.card_icon) {
+      margin-right: 5px;
     }
 
-    :local(.pinned_item_lang) {
-      font-size: 12px;
-      line-height: 1.5;
+    :local(.card_icon_grab) {
+      cursor: grab;
+    }
 
-      & span {
-        position: relative;
-        top: 2px;
-        width: 12px;
-        height: 12px;
-        margin-right: 4px;
-        display: inline-block;
-        border-radius: 50%;
-        background-color: #f1e05a;
+    & a {
+      flex: 1 1 auto;
+      font-weight: bold;
+      color: #0366d6;
+
+      &:hover {
+        text-decoration: underline;
       }
+    }
+  }
+
+  :local(.pinned_item_desc) {
+    margin: 8px 0 16px;
+    font-size: 12px;
+  }
+
+  :local(.pinned_item_lang) {
+    font-size: 12px;
+    line-height: 1.5;
+
+    & span {
+      position: relative;
+      top: 2px;
+      width: 12px;
+      height: 12px;
+      margin-right: 4px;
+      display: inline-block;
+      border-radius: 50%;
+      background-color: #f1e05a;
     }
   }
 }
@@ -195,7 +199,7 @@
 :global(.calendar-wrapper) {
   margin-top: 10px;
   padding: 16px;
-  border: 1px solid #d1d5da;
+  border: 1px solid $secondary-color;
   border-radius: 3px 3px 0 0;
 
   :global(.calendar) {
@@ -221,12 +225,12 @@
     left: 15px;
     position: absolute;
     top: 0;
-    background-color: #eaecef;
+    background-color: $secondary-color;
     z-index: -1;
   }
 
   &:after {
-    background-color: #eaecef;
+    background-color: $secondary-color;
     content: '';
     height: 1px;
     left: 0;
@@ -260,7 +264,7 @@
       background-color: #e6ebf1;
       border: 2px solid #fff;
       border-radius: 50%;
-      color: #586069;
+      color: $primary-color;
       float: left;
       height: 32px;
       line-height: 28px;
@@ -285,7 +289,7 @@
   font-size: 12px;
   font-weight: 600;
   background-color: #fff;
-  border: 1px solid #e1e4e8;
+  border: 1px solid $secondary-color;
   border-radius: 3px;
   text-align: center;
 
@@ -300,12 +304,12 @@
     display: block;
     margin-bottom: 5px;
     padding: 8px 16px;
-    color: #586069;
+    color: $primary-color;
     font-size: 12px;
     border-radius: 3px;
 
     &:hover {
-      background-color: #eaecef;
+      background-color: $secondary-color;
     }
   }
 

@@ -10,6 +10,12 @@ router
   .post('/', (req, res) => {
     createRepo({ ...req.body }).then(data => res.send(data));
   })
+  .get('/:owner/repos', (req, res, next) => {
+    const { owner } = req.params;
+    getReposNames({ user: owner, filter: req.query })
+      .then(repos => res.send(repos))
+      .catch(next);
+  })
   .get('/:owner/:repoName/:branchName/commits', (req, res, next) => {
     const { owner, repoName, branchName } = req.params;
     getCommits({ user: owner, name: repoName, branch: branchName })

@@ -13,4 +13,13 @@ const createRepo = async ({ user, name }) => {
   return result;
 };
 
-module.exports = { createRepo };
+const getReposNames = async ({ user, filter: { filterWord, limit } }) => {
+  const pathToRepo = path.resolve(`${gitPath}/${user}`);
+  const repos = readdirSync(pathToRepo, { withFileTypes: true })
+    .filter(dir => dir.isDirectory())
+    .map(dir => dir.name)
+    .filter(name => name.includes(filterWord));
+  return repos.slice(0, limit);
+};
+
+module.exports = { createRepo, getReposNames };
