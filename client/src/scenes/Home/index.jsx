@@ -1,6 +1,15 @@
 import React from 'react';
-import NotFound from '../NotFound';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router } from 'react-router-dom';
+import Routing from '../../containers/Routing';
+import { store } from '../../store';
 
-const Home = () => <NotFound />;
+const Home = () => (
+    <Provider store={store}>
+        <Router>
+            <Routing />
+        </Router>
+    </Provider>
+);
 
 export default Home;
