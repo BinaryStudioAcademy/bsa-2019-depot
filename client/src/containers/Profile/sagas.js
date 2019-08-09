@@ -15,7 +15,7 @@ function* authorizationRequest({ payload }) {
         }
 
         yield apply(localStorage, localStorage.setItem, ['token', userData.token]);
-        yield put(authorizeUser.success(userData));
+        yield put(authorizeUser.success(userData.user));
     } catch (error) {
         yield put(authorizeUser.failure(error.message));
     } finally {
