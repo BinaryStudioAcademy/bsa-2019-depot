@@ -6,7 +6,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING,
       url: DataTypes.STRING,
-      id: DataTypes.Sequelize.UUID,
       isPublic: DataTypes.BOOLEAN
     },
     {}
