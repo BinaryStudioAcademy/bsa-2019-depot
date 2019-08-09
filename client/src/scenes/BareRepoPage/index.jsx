@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Container, Button, Icon } from 'semantic-ui-react';
 import styles from './styles.module.scss';
 import { Link } from 'react-router-dom';
+import  CopyableTerminal from '../../components/CopyableTerminal';
 
 const url = 'https://github.com/NickNaumenko/test.git';
 
-function BareRepoPage() {
+function BareRepoPage({ url }) {
     const [protocol, setProtocol] = useState('HTTPS');
 
     const createRepoStr = [
@@ -28,20 +30,8 @@ function BareRepoPage() {
         });
     };
 
-    const copyToClipboard = (str) => navigator.clipboard.writeText(str);
-
-    function copyCreateRepoStr() {
-        const str = getString(pushRepoSrt);
-        copyToClipboard(str);
-    }
-
-    function copyPushRepoStr() {
-        const str = getString(createRepoStr);
-        copyToClipboard(str);
-    }
-
     function copyUrl() {
-        copyToClipboard(url);
+        navigator.clipboard.writeText(url);
     }
 
     function setHttp() {
@@ -90,30 +80,11 @@ function BareRepoPage() {
                 </section>
                 <section className={styles.boxSection}>
                     <h2>…or create a new repository on the command line</h2>
-                    <div className={styles.copyable}>
-                        <pre>
-                            {getString(createRepoStr)}
-                        </pre>
-                        <Button
-                            className={styles.clipboardButton}
-                            icon="clipboard"
-                            onClick={copyCreateRepoStr}
-                        >
-                        </Button>
-                    </div>
+                    <CopyableTerminal str={getString(createRepoStr)} />
                 </section>
                 <section className={styles.boxSection}>
                     <h2>…or push an existing repository from the command line</h2>
-                    <div className={styles.copyable}>
-                        <pre>
-                            {getString(pushRepoSrt)}
-                        </pre>
-                        <Button
-                            className={styles.clipboardButton}
-                            icon="clipboard"
-                            onClick={copyPushRepoStr}
-                        ></Button>
-                    </div>
+                    <CopyableTerminal str={getString(pushRepoSrt)} />
                 </section>
                 <section className={styles.boxSection}>
                     <h2>…or import code from another repository</h2>
@@ -129,4 +100,7 @@ function BareRepoPage() {
     );
 }
 
+BareRepoPage.propTypes = {
+    url: PropTypes.string.isRequired
+};
 export default BareRepoPage;
