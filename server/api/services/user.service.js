@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const UserRepository = require('../../data/repositories/user.repository');
 const { sendTokenEmail } = require('../../helpers/email.helper');
+const tokenHelper = require('../../helpers/token.helper');
 
 const secret = process.env.SECRET_KEY;
 
@@ -31,21 +32,16 @@ const sendForgetPasswordEmail = async ({ email }) => {
     return { failure: 'Email is not exist' };
   }
   const user = await UserRepository.getByEmail(email);
-  const token = jwt.sign({ data: user.email }, secret, { expiresIn: '1h' });
+  const token = jwt.sign({ data: user.dataValues.email }, secret, { expiresIn: '1h' });
   sendTokenEmail(email, token);
   return { success: `Email with password reset link was sent to ${user.email}` };
 };
 
 const resetPassword = async ({ token, password }) => {
-  let result;
-  await jwt.verify(token, secret, async (err, authorizedData) => {
-    if (err) {
-      result = { failure: 'Incorrect token' };
-    } else {
-      await UserRepository.setUserPassword(authorizedData.data, password);
-      result = { success: 'Password updated' };
-    }
-  });
+  let result = { success: 'Password updated' };
+  const authorizedData = await tokenHelper.verifyToken(token);
+  if (!authorizedData) result = { failure: 'Incorrect token' };
+  await UserRepository.setUserPassword(authorizedData.data, password);
   return result;
 };
 
