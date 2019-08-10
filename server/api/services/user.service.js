@@ -52,7 +52,7 @@ const updateUserSettings = async ({ id, settings }) => {
   const {
     name, bio, url, company, location, imgUrl
   } = settings;
-  const user = await UserRepository.updateUserById(id, {
+  const data = await UserRepository.updateUserById(id, {
     name,
     bio,
     url,
@@ -61,7 +61,7 @@ const updateUserSettings = async ({ id, settings }) => {
     imgUrl
   });
   return {
-    ...user
+    ...data
   };
 };
 

@@ -38,8 +38,6 @@ router.post('/reset-password', (req, res, next) => {
 });
 
 router.post('/settings', (req, res, next) => {
-  console.warn(req.body);
-
   updateUserSettings({ ...req.body })
     .then(data => res.send(data))
     .catch(next);
