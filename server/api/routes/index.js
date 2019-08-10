@@ -7,5 +7,5 @@ module.exports = (app) => {
   app.use('/auth', authRoutes);
   app.use('/user', userRoutes);
   app.use('/commit', commitRoutes);
-  app.use('/repo', repoRoutes);
+  app.use('api/repo', repoRoutes);
 };

@@ -1,5 +1,4 @@
 const { Router } = require('express');
-const jwtMiddleware = require('../middlewares/jwt.middleware');
 const {
   createRepo, getSettings, renameRepo, changePrivacyRepo, deleteRepo
 } = require('../services/repo.service');
@@ -24,26 +23,26 @@ router
       .then(branches => res.send(branches))
       .catch(next);
   })
-  .get('/:owner/:repoName/settings', jwtMiddleware, (req, res, next) => {
+  .get('/:owner/:repoName/settings', (req, res, next) => {
     const { repoName } = req.params;
     getSettings({ ownerID: req.user.id, repoName })
       .then(settings => res.send(settings))
       .catch(next);
   })
-  .post('/:owner/:repoName/settings/rename', jwtMiddleware, (req, res, next) => {
+  .post('/:owner/:repoName/settings/rename', (req, res, next) => {
     const { repoName } = req.params;
     const { newName } = req.body;
     renameRepo({ ownerID: req.user.id, repoName, newName })
       .then(result => res.send(result))
       .catch(next);
   })
-  .post('/:owner/:repoName/settings/privacy', jwtMiddleware, (req, res, next) => {
+  .post('/:owner/:repoName/settings/privacy', (req, res, next) => {
     const { repoName } = req.params;
     changePrivacyRepo({ ownerID: req.user.id, repoName })
       .then(result => res.send(result))
       .catch(next);
   })
-  .delete('/:owner/:repoName/settings/delete', jwtMiddleware, (req, res, next) => {
+  .delete('/:owner/:repoName/settings/delete', (req, res, next) => {
     const { repoName } = req.params;
     deleteRepo({ ownerID: req.user.id, repoName, username: req.user.username })
       .then(result => res.send(result))
