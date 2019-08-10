@@ -26,7 +26,7 @@ const CodeTab = () => {
                 <Menu borderless attached="top" widths={4}>
                     <Menu.Item>
                         <Octicon icon={getIconByName('history')} />
-                        <Link className={styles.repoMetaDataLinks} to="">
+                        <Link className={styles.repoMetaDataLinks} to="/repository/commits">
                             <b>4,325 </b> commits
                         </Link>
                     </Menu.Item>
