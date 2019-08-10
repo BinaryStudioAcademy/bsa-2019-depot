@@ -51,7 +51,7 @@ const deleteRepo = async ({ ownerID, repoName, username }) => {
     repoName
   });
 
-  const success = repoHelper.removeDir(username, repoName);
+  const success = await repoHelper.removeDir(username, repoName);
   return result && success;
 };
 

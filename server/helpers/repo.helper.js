@@ -3,10 +3,10 @@ const path = require('path');
 
 const gitPath = process.env.GIT_PATH;
 
-const removeDir = (username, repoName) => {
+const removeDir = async (username, repoName) => {
   try {
     const directory = path.resolve(`${gitPath}/${username}/${repoName}`);
-    fs.remove(directory, err => err);
+    await fs.remove(directory);
     return true;
   } catch (e) {
     return false;
