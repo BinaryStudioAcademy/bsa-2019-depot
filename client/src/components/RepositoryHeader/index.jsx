@@ -30,7 +30,7 @@ const RepositoryHeader = ({ owner, repoName, activeTab, forkCount, issueCount })
                     </Button>
                 </div>
                 <div className="ui top attached tabular menu">
-                    <div className={`${!activeTab && 'active'} item`}>
+                    <div className={`${(!activeTab || activeTab === 'commits') && 'active'} item`}>
                         <Link to="/repository">
                             <Icon name="code" /> Code
                         </Link>
