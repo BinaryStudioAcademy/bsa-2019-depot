@@ -1,9 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import Calendar from 'react-github-contribution-calendar';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Container, Grid, Dropdown, Accordion, Button } from 'semantic-ui-react';
 import Octicon, { Repo, Grabber, Fold, Unfold, RepoPush, GitPullRequest, Smiley } from '@primer/octicons-react';
+import { repositoryActions } from './actions';
 
 import styles from './styles.module.scss';
 
@@ -13,6 +16,14 @@ class Dashboard extends React.Component {
         this.state = {
             activeIndex: -1
         };
+    }
+
+    componentDidMount() {
+        const { actions } = this.props;
+        actions.fetchRepositories({
+            limit: '',
+            filterWord: ''
+        });
     }
 
   handleActivityState = (e, titleProps) => {
@@ -79,6 +90,7 @@ class Dashboard extends React.Component {
 
   render() {
       const { activeIndex } = this.state;
+      const { repositoriesNames } = this.props;
 
       return (
           <Container className={styles.wrapper}>
@@ -86,10 +98,10 @@ class Dashboard extends React.Component {
                   <Grid.Row columns={2}>
                       <Grid.Column className={styles.userinfo_wrapper} mobile={16} tablet={4} computer={4}>
                           <div className={styles.avatar_wrapper}>
-                              <Link>
+                              <Link to="">
                                   <img src="http://cameronmcefee.com/img/work/the-octocat/ironcat.jpg" alt="user_avatar" />
                               </Link>
-                              <Link className={styles.set_status}>
+                              <Link to="" className={styles.set_status}>
                                   <Octicon icon={Smiley} />
                   Set status
                               </Link>
@@ -102,67 +114,47 @@ class Dashboard extends React.Component {
                       <Grid.Column mobile={16} tablet={12} computer={12}>
                           <Container className={styles.navbar_wrapper}>
                               <nav className={styles.navbar}>
-                                  <Link className={styles.active_link}>Overview</Link>
-                                  <Link>
+                                  <Link to="" className={styles.active_link}>
+                    Overview
+                                  </Link>
+                                  <Link to="">
                     Repositories<span>15</span>
                                   </Link>
-                                  <Link>
+                                  <Link to="">
                     Projects<span>2</span>
                                   </Link>
-                                  <Link>
+                                  <Link to="">
                     Stars<span>128</span>
                                   </Link>
-                                  <Link>
+                                  <Link to="">
                     Followers<span>8</span>
                                   </Link>
-                                  <Link>
+                                  <Link to="">
                     Following<span>19</span>
                                   </Link>
                               </nav>
                           </Container>
                           <Container className={styles.pinned_header}>
                               <h2>Pinned</h2>
-                              <Link>Customize your pins</Link>
+                              <Link to="">Customize your pins</Link>
                           </Container>
-                          <Grid>
-                              <Grid.Row columns={2}>
-                                  <Grid.Column className={styles.pinned} mobile={16} tablet={8} computer={8}>
-                                      <div className={styles.pinned_item}>
+                          <Container className={styles.favorite_repos_wrapper}>
+                              {repositoriesNames.map(repo => {
+                                  return (
+                                      <div key={repo} className={styles.pinned_item}>
                                           <div>
                                               <Octicon className={styles.card_icon} icon={Repo} />
-                                              <Link>My first favorite repo</Link>
+                                              <Link to="">{repo}</Link>
                                               <Octicon className={styles.card_icon_grab} icon={Grabber} />
                                           </div>
-                                          <p className={styles.pinned_item_desc}>I don't know what's in it</p>
+                                          <p className={styles.pinned_item_desc}>Some kind of description</p>
                                           <p className={styles.pinned_item_lang}>
                                               <span></span>Javascript
                                           </p>
                                       </div>
-                                      <div className={styles.pinned_item}>
-                                          <div>
-                                              <Octicon className={styles.card_icon} icon={Repo} />
-                                              <Link>My second favorite repo</Link>
-                                              <Octicon className={styles.card_icon_grab} icon={Grabber} />
-                                          </div>
-                                          <p className={styles.pinned_item_lang}>
-                                              <span></span>C++
-                                          </p>
-                                      </div>
-                                  </Grid.Column>
-                                  <Grid.Column className={styles.pinned} mobile={16} tablet={8} computer={8}>
-                                      <div className={styles.pinned_item}>
-                                          <div>
-                                              <Octicon className={styles.card_icon} icon={Repo} />
-                                              <Link>My third favorite repo</Link>
-                                              <Octicon className={styles.card_icon_grab} icon={Grabber} />
-                                          </div>
-                                          <p className={styles.pinned_item_lang}>
-                                              <span></span>Java
-                                          </p>
-                                      </div>
-                                  </Grid.Column>
-                              </Grid.Row>
-                          </Grid>
+                                  );
+                              })}
+                          </Container>
                           <Grid>
                               <Grid.Row columns={2}>
                                   <Grid.Column mobile={16} computer={13}>
@@ -222,7 +214,7 @@ class Dashboard extends React.Component {
                                                               </Accordion.Title>
                                                               <Accordion.Content active={activeIndex === `commit-${idx}`}>
                                                                   {Object.entries(commitRepoNames).map((val, i) => (
-                                                                      <Link key={`commit-${i}`} className={styles.activity_link}>
+                                                                      <Link to="" key={`commit-${i}`} className={styles.activity_link}>
                                                                           {this.username}/{val[0]} {val[1]} commits
                                                                       </Link>
                                                                   ))}
@@ -246,7 +238,7 @@ class Dashboard extends React.Component {
                                                               </Accordion.Title>
                                                               <Accordion.Content active={activeIndex === `repo-${idx}`}>
                                                                   {createdRepoNames.map((repoName, i) => (
-                                                                      <Link key={`repo-${i}`} className={styles.activity_link}>
+                                                                      <Link to="" key={`repo-${i}`} className={styles.activity_link}>
                                                                           {this.username}/{repoName}
                                                                       </Link>
                                                                   ))}
@@ -270,7 +262,7 @@ class Dashboard extends React.Component {
                                                               </Accordion.Title>
                                                               <Accordion.Content active={activeIndex === idx}>
                                                                   {Object.entries(requestRepoNames).map((val, i) => (
-                                                                      <Link key={`request-${i}`} className={styles.activity_link}>
+                                                                      <Link to="" key={`request-${i}`} className={styles.activity_link}>
                                                                           {this.username}/{val[0]} {val[1]} requests
                                                                       </Link>
                                                                   ))}
@@ -281,18 +273,26 @@ class Dashboard extends React.Component {
                                               </Container>
                                           )
                                       )}
-                                      <Link className={styles.load_more_activity}>Show more activity</Link>
+                                      <Link to="" className={styles.load_more_activity}>
+                      Show more activity
+                                      </Link>
                                   </Grid.Column>
                                   <Grid.Column width={3} only="computer">
                                       <ul className={styles.contribution_year_list}>
                                           <li>
-                                              <Link className={styles.contribution_year__active}>2019</Link>
+                                              <Link to="" className={styles.contribution_year__active}>
+                          2019
+                                              </Link>
                                           </li>
                                           <li>
-                                              <Link className={styles.contribution_year}>2018</Link>
+                                              <Link to="" className={styles.contribution_year}>
+                          2018
+                                              </Link>
                                           </li>
                                           <li>
-                                              <Link className={styles.contribution_year}>2017</Link>
+                                              <Link to="" className={styles.contribution_year}>
+                          2017
+                                              </Link>
                                           </li>
                                       </ul>
                                   </Grid.Column>
@@ -309,7 +309,21 @@ class Dashboard extends React.Component {
 Dashboard.defaultProps = {};
 
 Dashboard.propTypes = {
-    username: PropTypes.string
+    actions: PropTypes.object.isRequired,
+    repositoriesNames: PropTypes.array.isRequired
 };
 
-export default Dashboard;
+const mapStateToProps = ({ repositories }) => ({
+    repositoriesNames: repositories.repositoriesNames
+});
+
+const mapDispatchToProps = dispatch => {
+    return {
+        actions: bindActionCreators({ ...repositoryActions }, dispatch)
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Dashboard);
