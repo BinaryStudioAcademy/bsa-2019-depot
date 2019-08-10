@@ -34,8 +34,8 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject",
-    "lint": "eslint --fix '**/*.{js,jsx}'",
-    "prettify": "prettier --write '**/*.{css,scss,sass,js,jsx,json,md}'",
+    "lint": "eslint --fix \"**/*.{js,jsx}\"",
+    "prettify": "prettier --write \"**/*.{css,scss,sass,js,jsx,json,md}\"",
     "codecheck": "yarn prettify && yarn lint"
   },
   "devDependencies": {
