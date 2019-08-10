@@ -1,6 +1,18 @@
 const userRepository = require('../../data/repositories/user.repository');
 const tokenHelper = require('../../helpers/token.helper');
 
+// const login = async ({ id, email }) => {
+//   const dbUser = await userRepository.getById(id);
+//   const token = tokenHelper.createToken({ id, email });
+//   const user = Object.assign({}, dbUser);
+//   delete user.password;
+//   console.log('login', user);
+//   return {
+//     user,
+//     token
+//   };
+// };
+
 const login = async ({ id, email }) => ({
   user: await userRepository.getById(id),
   token: tokenHelper.createToken({ id, email })
@@ -8,11 +20,11 @@ const login = async ({ id, email }) => ({
 
 const googleLogin = async ({ id, email, username }) => {
   const usernameExists = Boolean(username);
-  const jwt = tokenHelper.createToken({ id, email });
+  const token = tokenHelper.createToken({ id, email });
 
   const data = {
     usernameExists,
-    jwt,
+    token,
     id,
     email,
     username

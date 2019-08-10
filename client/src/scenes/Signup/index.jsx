@@ -1,17 +1,15 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validator from 'validator';
-
 import { Grid, Header, Form, Button, Segment, Label, Message } from 'semantic-ui-react';
+import { signupRoutine } from '../../routines/routines';
+import GoogleAuth from '../../components/GoogleAuth';
 
 import './styles.module.scss';
 
-import { signup } from './actions';
-import GoogleAuth from '../../components/GoogleAuth';
-
-class Signup extends React.Component {
+class Signup extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -29,23 +27,6 @@ class Signup extends React.Component {
             }
         };
     }
-
-  componentDidMount = () => {
-      this.setState({
-          username: {
-              value: '',
-              valid: true
-          },
-          email: {
-              value: '',
-              valid: true
-          },
-          password: {
-              value: '',
-              valid: true
-          }
-      });
-  };
 
   validateField = (field, value) => {
       switch (field) {
@@ -106,27 +87,34 @@ class Signup extends React.Component {
       if (loading) {
           return;
       }
+
       const user = {
           username: username.value,
           email: email.value,
           password: password.value
       };
-      this.props.signup({
-          user,
-          history: this.props.history
+
+      this.props.signupRoutine({
+          user
       });
   };
 
   renderSignupForm = () => {
       const { username, email, password } = this.state;
-      const { loading, error } = this.props;
+      const { loading, signupError } = this.props;
 
       const formValid = ['username', 'email', 'password'].every(
           field => this.state[field].valid && this.state[field].value
       );
 
       return (
-          <Form name="signupForm" size="large" onSubmit={this.handleClickSignup} loading={loading} error={!!error}>
+          <Form
+              name="signupForm"
+              size="large"
+              onSubmit={this.handleClickSignup}
+              loading={loading}
+              error={Boolean(signupError)}
+          >
               <Segment textAlign="left">
                   <Form.Field required>
                       <label htmlFor="username">Username</label>
@@ -186,10 +174,10 @@ class Signup extends React.Component {
                       </Label>
                   </Form.Field>
 
-                  <Button type="submit" color="blue" fluid size="large" disabled={!formValid}>
+                  <Button type="submit" color="green" fluid size="large" disabled={!formValid}>
             Sign Up for Depot
                   </Button>
-                  <Message error content={error} />
+                  <Message error content={signupError} />
               </Segment>
           </Form>
       );
@@ -212,7 +200,7 @@ class Signup extends React.Component {
   renderForms = () => {
       return (
           <Grid textAlign="center" centered className="signup-grid">
-              <Header as="h2" color="blue" textAlign="center">
+              <Header as="h2" color="black" textAlign="center">
           Join Depot
               </Header>
               {this.renderSignup()}
@@ -227,25 +215,22 @@ class Signup extends React.Component {
 }
 
 Signup.propTypes = {
-    isAuthorized: PropTypes.bool,
-    user: PropTypes.object,
-    signup: PropTypes.func,
-    error: PropTypes.string,
-    loading: PropTypes.bool,
-    shouldSetUsername: PropTypes.bool,
-    history: PropTypes.object
+    isAuthorized: PropTypes.bool.isRequired,
+    signupRoutine: PropTypes.func.isRequired,
+    signupError: PropTypes.string,
+    loading: PropTypes.bool.isRequired,
+    location: PropTypes.object.isRequired
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = ({ profile: { isAuthorized, loading, signupError } }) => {
     return {
-        user: state.auth.user,
-        isAuthenticated: state.auth.isAuthorized,
-        loading: state.signup.loading,
-        error: state.signup.error
+        isAuthorized,
+        loading,
+        signupError
     };
 };
 
-const mapDispatchToProps = { signup };
+const mapDispatchToProps = { signupRoutine };
 
 export default connect(
     mapStateToProps,

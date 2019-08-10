@@ -4,12 +4,11 @@ import { connect } from 'react-redux';
 import createHandler from 'react-cached-handler';
 import PropTypes from 'prop-types';
 import validator from 'validator';
-import * as queryString from 'query-string';
 
+import * as queryString from 'query-string';
 import { Grid, Header, Form, Button, Segment, Message, Label } from 'semantic-ui-react';
 import GoogleAuth from '../../components/GoogleAuth';
-
-import { login, loginGoogle, setUsername } from './actions';
+import { authorizeUser, loginGoogleRoutine, setUsernameRoutine } from '../../routines/routines';
 
 import './styles.module.scss';
 
@@ -30,12 +29,11 @@ class Login extends Component {
 
   componentDidMount = () => {
       const user = this.getUserFromQuery();
-      const { history, loginGoogle } = this.props;
       if (user) {
-          loginGoogle({
-              user,
-              history
-          });
+          localStorage.setItem('token', user.token);
+          delete user.usernameExists;
+          delete user.token;
+          this.props.loginGoogleRoutine({ user });
       }
   };
 
@@ -69,28 +67,22 @@ class Login extends Component {
 
   handleClickLogin = async () => {
       const { email, password } = this.state;
-      const { loading, login, history } = this.props;
       const valid = this.validateForm();
-      if (!valid || loading) {
+      if (!valid || this.props.loading) {
           return;
       }
-      login({
-          username: email,
-          password,
-          history
-      });
+      this.props.authorizeUser({ username: email, password });
   };
 
   handleClickSetUsername = () => {
       const { username } = this.state;
-      const { loading, profile, history } = this.props;
+      const { loading, currentUser } = this.props;
       if (loading) {
           return;
       }
-      this.props.setUsername({
+      this.props.setUsernameRoutine({
           username: username.value,
-          profile,
-          history
+          currentUser
       });
   };
 
@@ -131,7 +123,7 @@ class Login extends Component {
       const { username } = this.state;
       return (
           <Grid textAlign="center" centered className="signup-grid">
-              <Header as="h2" color="blue" textAlign="center">
+              <Header as="h2" color="black" textAlign="center">
           Join Depot
               </Header>
               <Grid.Row columns={1}>
@@ -154,7 +146,6 @@ class Login extends Component {
                                       type="text"
                                       error={!username.valid}
                                       onChange={this.usernameChangeHandler}
-                                      //   onBlur={this.validateHandler}
                                       required
                                       icon={{
                                           name: 'check',
@@ -165,7 +156,7 @@ class Login extends Component {
                     Username can contain alphanumeric characters and single hyphens, cannot begin or end with a hyphen
                                   </Label>
                               </Form.Field>
-                              <Button type="submit" color="blue" fluid size="large" disabled={!username.valid}>
+                              <Button type="submit" color="green" fluid size="large" disabled={!username.valid}>
                   Set Username
                               </Button>
                               <Message error content={error} />
@@ -179,20 +170,19 @@ class Login extends Component {
 
   render() {
       const { isEmailValid, isPasswordValid } = this.state;
-      const { loading, error, profile, isAuthorized } = this.props;
-      if (isAuthorized && profile && profile.usernameExists) {
+      const { loading, error, currentUser, isAuthorized } = this.props;
+      if (isAuthorized && currentUser.username) {
           return <Redirect to="/" />;
       }
 
-      if (profile && !profile.usernameExists) {
+      if (isAuthorized && !currentUser.username) {
           return <>{this.renderSetUsername()}</>;
       }
-
       return (
-          <Grid textAlign="center" verticalAlign="middle" className="fill login-grid">
+          <Grid textAlign="center" verticalAlign="middle" className="login-grid">
               <Grid.Row columns={2}>
-                  <Grid.Column style={{ maxWidth: 450 }}>
-                      <Header as="h2" color="blue" textAlign="center">
+                  <Grid.Column className="grid-column">
+                      <Header as="h2" color="black" textAlign="center">
               Sign in to Depot
                       </Header>
                       <Form name="loginForm" size="large" onSubmit={this.handleClickLogin} loading={loading} error={!!error}>
@@ -205,15 +195,23 @@ class Login extends Component {
                                   onChange={this.emailChangeHandler()}
                                   onBlur={this.validateEmail}
                               />
-                              <Form.Input
-                                  fluid
-                                  placeholder="Password"
-                                  type="password"
-                                  error={!isPasswordValid}
-                                  onChange={this.passwordChangeHandler()}
-                                  onBlur={this.validatePassword}
-                              />
-                              <Button type="submit" color="blue" fluid size="large">
+
+                              <Form.Field className="password-wrapper">
+                                  <NavLink exact to="/forgot" className="forgot-link">
+                    forgot password?
+                                  </NavLink>
+                                  <Form.Input
+                                      fluid
+                                      name="password"
+                                      label="Password"
+                                      placeholder="Password"
+                                      type="password"
+                                      error={!isPasswordValid}
+                                      onChange={this.passwordChangeHandler()}
+                                      onBlur={this.validatePassword}
+                                  />
+                              </Form.Field>
+                              <Button type="submit" color="green" fluid size="large">
                   Sign In
                               </Button>
                               <Message error content={error} />
@@ -235,25 +233,28 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-    isAuthorized: PropTypes.bool,
-    login: PropTypes.func,
-    loading: PropTypes.bool,
-    history: PropTypes.object,
+    isAuthorized: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired,
     error: PropTypes.string,
     location: PropTypes.object,
-    loginGoogle: PropTypes.func,
-    setUsername: PropTypes.func,
-    profile: PropTypes.object
+    loginGoogleRoutine: PropTypes.func.isRequired,
+    setUsernameRoutine: PropTypes.func.isRequired,
+    currentUser: PropTypes.object,
+    authorizeUser: PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({
-    isAuthorized: state.auth.isAuthorized,
-    loading: state.auth.loading,
-    error: state.auth.error,
-    profile: state.auth.profile
+const mapStateToProps = ({ profile: { isAuthorized, loading, error, currentUser } }) => ({
+    isAuthorized,
+    loading,
+    error,
+    currentUser
 });
 
-const mapDispatchToProps = { login, loginGoogle, setUsername };
+const mapDispatchToProps = { authorizeUser, loginGoogleRoutine, setUsernameRoutine };
+
+Login.defaultProps = {
+    error: ''
+};
 
 export default connect(
     mapStateToProps,

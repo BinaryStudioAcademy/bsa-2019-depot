@@ -1,13 +1,15 @@
 import { combineReducers } from 'redux';
 
 import issuesReducer from '../containers/IssuesTab/reducer';
-import signupReducer from '../scenes/Signup/reducer';
+import { forgotReducer as forgot } from '../scenes/Forgot/reducer';
+import { resetReducer as reset } from '../scenes/Reset/reducer';
 import { commitsData, branchesData } from '../containers/CommitsPage/reducer';
-import authReducer from '../scenes/Login/reducer';
+import profile from '../containers/Profile/reducer';
 
 export default combineReducers({
-    auth: authReducer,
-    signup: signupReducer,
+    profile,
+    forgot,
+    reset,
     issuesData: issuesReducer,
     commitsData,
     branchesData

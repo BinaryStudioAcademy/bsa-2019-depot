@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Grid, Image, Form, Select } from 'semantic-ui-react';
 
 import styles from './styles.module.scss';
-import Header from '../Header';
+import Header from '../../containers/Header';
 
 const MainPage = () => {
     const [email, setEmail] = useState('');

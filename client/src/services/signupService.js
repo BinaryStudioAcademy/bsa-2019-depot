@@ -1,10 +1,8 @@
 import callWebApi from '../helpers/webApiHelper';
 
-const serverURL = process.env.REACT_APP_SERVER_URL;
-
 export const signup = async request => {
     const response = await callWebApi({
-        endpoint: serverURL + '/auth/register',
+        endpoint: '/auth/register',
         type: 'POST',
         request
     });
@@ -13,7 +11,7 @@ export const signup = async request => {
 
 export const googleSignup = async () => {
     const response = await callWebApi({
-        endpoint: serverURL + '/auth/google',
+        endpoint: '/auth/google',
         type: 'GET'
     });
     return response.json();
@@ -29,7 +27,7 @@ export const setUsername = async (username, profile) => {
         profile
     };
     const response = await callWebApi({
-        endpoint: serverURL + '/user/username',
+        endpoint: '/user/username',
         type: 'POST',
         request
     });
@@ -38,7 +36,7 @@ export const setUsername = async (username, profile) => {
 
 export const checkUsername = async username => {
     const response = await callWebApi({
-        endpoint: serverURL + '/user/username-exists',
+        endpoint: '/user/username-exists',
         type: 'GET',
         query: {
             username
@@ -46,15 +44,3 @@ export const checkUsername = async username => {
     });
     return response.json();
 };
-
-// export const getCurrentUser = async () => {
-//     try {
-//         const response = await callWebApi({
-//             endpoint: '/api/auth/user',
-//             type: 'GET'
-//         });
-//         return response.json();
-//     } catch (e) {
-//         return null;
-//     }
-// };
