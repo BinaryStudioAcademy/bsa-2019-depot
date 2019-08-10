@@ -19,8 +19,11 @@ import { connect } from 'react-redux';
 import PageHeader from '../../containers/Header';
 
 import styles from './styles.module.scss';
+import avatarPlaceholder from './avatar-placeholder.svg';
 
 const renderField = ({ field }) => <Input fluid {...field} />;
+
+const renderDisabledField = ({ field }) => <Input disabled fluid {...field} />;
 
 const renderTextArea = ({ field }) => (
     <TextArea {...field} rows="3" placeholder="Tell us a little bit about yourself" style={{ maxHeight: 200 }} />
@@ -68,11 +71,11 @@ const SettingsProfile = props => (
                             {({ isSubmitting }) => (
                                 <Form className="ui form">
                                     <Header as="h4">Name</Header>
-                                    <Field type="text" name="name" render={renderField} />
+                                    <Field type="text" name="name" render={renderDisabledField} />
                                     <div>{NOTES.name}</div>
 
                                     <Header as="h4">Public email</Header>
-                                    <Field type="email" name="email" render={renderField} />
+                                    <Field type="email" name="email" render={renderDisabledField} />
                                     <div>{NOTES.email}</div>
 
                                     <Header as="h4">Bio</Header>
@@ -105,11 +108,7 @@ const SettingsProfile = props => (
                     <Grid.Column computer={5} tablet={8} mobile={16}>
                         <Segment basic className={styles.no_padding}>
                             <Header as="h4">Profile picture</Header>
-                            <Image
-                                src="https://avatars3.githubusercontent.com/u/43011715?s=400&u=ad60df6df50e7d47ba97c26709508502feb4f342&v=4"
-                                fluid
-                                rounded
-                            ></Image>
+                            <Image src={props.currentUser.imgUrl || avatarPlaceholder} fluid rounded></Image>
                             <Dropdown trigger={imgEditBtn} pointing="top left" icon={null} className={styles.img_edit_btn}>
                                 <Dropdown.Menu className={styles.dropdown}>
                                     <Dropdown.Item onClick={onUploadPhoto}>Upload a photo...</Dropdown.Item>
@@ -125,6 +124,10 @@ const SettingsProfile = props => (
 );
 
 renderField.propTypes = {
+    field: PropTypes.object
+};
+
+renderDisabledField.propTypes = {
     field: PropTypes.object
 };
 
