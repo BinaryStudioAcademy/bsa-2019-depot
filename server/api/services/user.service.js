@@ -48,11 +48,29 @@ const resetPassword = async ({ token, password }) => {
   return result;
 };
 
+const updateUserSettings = async ({ id, settings }) => {
+  const {
+    name, bio, url, company, location, imgUrl
+  } = settings;
+  const user = await UserRepository.updateUserById(id, {
+    name,
+    bio,
+    url,
+    company,
+    location,
+    imgUrl
+  });
+  return {
+    ...user
+  };
+};
+
 module.exports = {
   getUserById,
   setUsername,
   checkUsernameExists,
   checkEmailExists,
   sendForgetPasswordEmail,
+  updateUserSettings,
   resetPassword
 };
