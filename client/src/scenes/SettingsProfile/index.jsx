@@ -26,7 +26,7 @@ const renderField = ({ field }) => <Input fluid {...field} />;
 const renderDisabledField = ({ field }) => <Input disabled fluid {...field} />;
 
 const renderTextArea = ({ field }) => (
-    <TextArea {...field} rows="3" placeholder="Tell us a little bit about yourself" style={{ maxHeight: 200 }} />
+    <TextArea {...field} rows="3" placeholder="Tell us a little bit about yourself" className={styles.textarea} />
 );
 
 const onSubmit = (values, { setSubmitting }) => {
@@ -71,7 +71,7 @@ const SettingsProfile = props => (
                             {({ isSubmitting }) => (
                                 <Form className="ui form">
                                     <Header as="h4">Name</Header>
-                                    <Field type="text" name="name" render={renderDisabledField} />
+                                    <Field type="text" name="name" render={renderField} />
                                     <div>{NOTES.name}</div>
 
                                     <Header as="h4">Public email</Header>
