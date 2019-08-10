@@ -1,11 +1,10 @@
 const { Router } = require('express');
 
-const jwtMiddleware = require('../middlewares/jwt.middleware');
 const { setUsername, checkUsernameExists, checkEmailExists, sendForgetPasswordEmail, resetPassword } = require('../services/user.service');
 
 const router = Router();
 
-router.post('/username', jwtMiddleware, (req, res, next) => {
+router.post('/username', (req, res, next) => {
   const { username } = req.body;
   const { id } = req.user;
   setUsername({ id, username })
