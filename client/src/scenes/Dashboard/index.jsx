@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { Container, Grid, Button } from 'semantic-ui-react';
 import Octicon, { Smiley } from '@primer/octicons-react';
 import { repositoryActions } from './actions';
-import Overview from '../../components/Overview';
+import Overview from '../../containers/Overview';
 import RepositoriesList from '../../components/RepositoriesList';
 
 import styles from './styles.module.scss';
@@ -44,10 +44,13 @@ class Dashboard extends React.Component {
                         <Grid.Column mobile={16} tablet={12} computer={12}>
                             <Container className={styles.navbar_wrapper}>
                                 <nav className={styles.navbar}>
-                                    <Link to="/dashboard" className={styles.active_link}>
+                                    <Link to="/dashboard" className={!tab ? styles.active_link : undefined}>
                     Overview
                                     </Link>
-                                    <Link to={{ pathname: '/dashboard', search: '?tab=repositories' }}>
+                                    <Link
+                                        to={{ pathname: '/dashboard', search: '?tab=repositories' }}
+                                        className={tab === 'repositories' ? styles.active_link : undefined}
+                                    >
                     Repositories<span>15</span>
                                     </Link>
                                     <Link to="">

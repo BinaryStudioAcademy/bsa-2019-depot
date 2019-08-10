@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Container, Grid, Dropdown, Accordion } from 'semantic-ui-react';
 import Octicon, { Repo, Grabber, Fold, Unfold, RepoPush, GitPullRequest } from '@primer/octicons-react';
-import { repositoryActions } from './actions';
+import { repositoryActions } from '../../scenes/Dashboard/actions';
 
 import styles from './styles.module.scss';
 
@@ -173,9 +173,9 @@ export class Overview extends React.Component {
                                                       <Octicon icon={activeIndex === `commit-${idx}` ? Fold : Unfold} />
                                                   </Accordion.Title>
                                                   <Accordion.Content active={activeIndex === `commit-${idx}`}>
-                                                      {Object.entries(commitRepoNames).map((val, i) => (
+                                                      {Object.entries(commitRepoNames).map(([repoName, numOfRequests], i) => (
                                                           <Link to="" key={`commit-${i}`} className={styles.activity_link}>
-                                                              {this.username}/{val[0]} {val[1]} commits
+                                                              {this.username}/{repoName} {numOfRequests} commits
                                                           </Link>
                                                       ))}
                                                   </Accordion.Content>
@@ -217,9 +217,9 @@ export class Overview extends React.Component {
                                                       <Octicon icon={activeIndex === idx ? Fold : Unfold} />
                                                   </Accordion.Title>
                                                   <Accordion.Content active={activeIndex === idx}>
-                                                      {Object.entries(requestRepoNames).map((val, i) => (
+                                                      {Object.entries(requestRepoNames).map(([repoName, numOfRequests], i) => (
                                                           <Link to="" key={`request-${i}`} className={styles.activity_link}>
-                                                              {this.username}/{val[0]} {val[1]} requests
+                                                              {this.username}/{repoName} {numOfRequests} requests
                                                           </Link>
                                                       ))}
                                                   </Accordion.Content>
