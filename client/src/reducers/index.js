@@ -5,6 +5,7 @@ import { profileReducer as profile } from '../sagas/profile/reducer';
 import issuesReducer from '../containers/IssuesTab/reducer';
 import signupReducer from '../scenes/Signup/reducer';
 import { commitsData, branchesData } from '../containers/CommitsPage/reducer';
+import { lastCommitReducer, fileTreeReducer } from '../scenes/CodeTab/reducer';
 
 export default combineReducers({
     auth,
@@ -12,5 +13,7 @@ export default combineReducers({
     profile,
     issuesData: issuesReducer,
     commitsData,
-    branchesData
+    branchesData,
+    lastCommitData: lastCommitReducer,
+    fileTreeData: fileTreeReducer
 });
