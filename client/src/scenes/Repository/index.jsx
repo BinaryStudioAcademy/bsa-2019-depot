@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
 import RepositoryHeader from '../../components/RepositoryHeader';
 import CodeTab from '../CodeTab/index';
@@ -11,7 +10,8 @@ import './styles.module.scss';
 
 class RepositoryPage extends React.Component {
     render() {
-        const { owner, repoName, match, location } = this.props;
+        const { match, location } = this.props;
+        const { owner, repository } = match.params;
 
         // Mocks
         const issueCount = 14;
@@ -21,10 +21,11 @@ class RepositoryPage extends React.Component {
       <>
         <RepositoryHeader
             owner={owner}
-            repoName={repoName}
+            repoName={repository}
             issueCount={issueCount}
             forkCount={forkCount}
-            activeTab={location.pathname.split('/')[2]}
+            activePage={location.pathname.split('/')[3]}
+            baseUrl={match.url}
         />
         <div className="ui bottom attached active tab">
             <Switch>
@@ -56,9 +57,4 @@ RepositoryPage.propTypes = {
     }).isRequired
 };
 
-const mapStateToProps = (/* { owner, repoName } */) => ({
-    owner: 'username',
-    repoName: 'depot-test'
-});
-
-export default connect(mapStateToProps)(RepositoryPage);
+export default RepositoryPage;
