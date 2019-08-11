@@ -2,9 +2,8 @@ import React from 'react';
 import { Grid, Menu, Header, Divider, Input, Button, Message } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
 import { fetchRepoSettings } from '../../routines/routines';
-import { changePrivacy, renameRepo, deleteRepo } from './actions';
+import { renameRepo, deleteRepo } from './actions';
 import styles from './styles.module.scss';
 
 const renderDangerField = (header, description, buttonName, clickHandler) => (
@@ -28,12 +27,13 @@ class RepoSettings extends React.Component {
         super(props);
 
         const params = this.props.location.pathname.split('/');
-        const { isPublic } = this.props.repoSettingsData.settings;
+
+        const repoOwner = params[2];
+        this.oldRepoName = params[3];
 
         this.state = {
-            owner: params[2],
-            name: params[3],
-            isPublic
+            owner: repoOwner,
+            name: this.oldRepoName
         };
     }
 
@@ -45,13 +45,7 @@ class RepoSettings extends React.Component {
         });
     }
 
-  changePrivacyHandleClick = () => {
-      this.props.changePrivacy({
-          ...this.state
-      });
-  };
-
-  deleteHandleClick = () => {
+  onClickDelete = () => {
       this.props.deleteRepo({
           ...this.state
       });
@@ -67,13 +61,13 @@ class RepoSettings extends React.Component {
       const { owner, name } = this.state;
       this.props.renameRepo({
           owner,
-          oldName: this.props.repoSettingsData.settings.name,
+          oldName: this.oldRepoName,
           name
       });
+      this.oldRepoName = name;
   };
 
   render() {
-      const { settings } = this.props.repoSettingsData;
       return (
           <Grid container stackable>
               <Grid.Column width={4}>
@@ -93,24 +87,11 @@ class RepoSettings extends React.Component {
 
                   <Header as="h2">Danger Zone</Header>
                   <div className={styles.dangerZone}>
-                      {settings.isPublic
-                          ? renderDangerField(
-                              'Make this repository private',
-                              'Hide this repository from the public. ',
-                              'Make private',
-                              this.changePrivacyHandleClick
-                          )
-                          : renderDangerField(
-                              'Make this repository public',
-                              'Make this repository visible to anyone.',
-                              'Make public',
-                              this.changePrivacyHandleClick
-                          )}
                       {renderDangerField(
                           'Delete this repository',
                           'Once you delete a repository, there is no going back. Please be certain.',
                           'Delete this repository',
-                          this.deleteHandleClick
+                          this.onClickDelete
                       )}
                   </div>
               </Grid.Column>
@@ -126,17 +107,14 @@ RepoSettings.propTypes = {
         settings: PropTypes.exact({
             name: PropTypes.string,
             owner: PropTypes.string,
-            isPublic: PropTypes.bool,
-            id: PropTypes.string
+            id: PropTypes.string,
+            isPublic: PropTypes.bool
         })
     }).isRequired,
     location: PropTypes.exact({
-        pathname: PropTypes.string,
-        search: PropTypes.string,
-        hash: PropTypes.string
+        pathname: PropTypes.string
     }),
     fetchRepoSettings: PropTypes.func.isRequired,
-    changePrivacy: PropTypes.func.isRequired,
     renameRepo: PropTypes.func.isRequired,
     deleteRepo: PropTypes.func.isRequired
 };
@@ -147,7 +125,6 @@ const mapStateToProps = ({ repoSettingsData }) => ({
 
 const mapDispatchToProps = {
     fetchRepoSettings,
-    changePrivacy,
     renameRepo,
     deleteRepo
 };

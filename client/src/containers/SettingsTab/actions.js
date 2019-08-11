@@ -1,13 +1,5 @@
 import * as types from './types';
 
-export const changePrivacy = ({ owner, name }) => ({
-    type: types.CHANGE_PRIVACY,
-    payload: {
-        owner,
-        name
-    }
-});
-
 export const renameRepo = ({ name, owner, oldName }) => ({
     type: types.RENAME_REPO,
     payload: {

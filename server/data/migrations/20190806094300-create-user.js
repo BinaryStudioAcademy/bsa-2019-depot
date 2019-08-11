@@ -31,40 +31,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    }),
-    queryInterface.createTable('Repositories', {
-      id: {
-        allowNull: false,
-        autoIncrement: false,
-        primaryKey: true,
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.literal('gen_random_uuid()')
-      },
-      name: {
-        allowNull: false,
-        type: Sequelize.STRING,
-        unique: false
-      },
-      url: {
-        allowNull: false,
-        type: Sequelize.STRING,
-        unique: true
-      },
-      isPublic: {
-        type: Sequelize.BOOLEAN
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      }
     })
   ]))),
-  down: queryInterface => queryInterface.sequelize.transaction(transaction => Promise.all([
-    queryInterface.dropTable('users', { transaction }),
-    queryInterface.dropTable('Repositories', { transaction })
-  ]))
+  down: queryInterface => queryInterface.sequelize.transaction(transaction => Promise.all([queryInterface.dropTable('users', { transaction })]))
 };

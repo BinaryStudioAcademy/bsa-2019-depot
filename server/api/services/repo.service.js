@@ -1,8 +1,6 @@
 const NodeGit = require('nodegit');
+const fs = require('fs-extra');
 const path = require('path');
-
-const repoRepository = require('../../data/repositories/repo.repository');
-const repoHelper = require('../../helpers/repo.helper');
 
 const { readdirSync } = require('fs');
 
@@ -13,46 +11,32 @@ const createRepo = async ({ user, name }) => {
   const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`);
 
   await NodeGit.Repository.init(pathToRepo.replace(/\\/g, '/'), 1)
-    .then(repo => {})
-    .catch(reasonForFailure => {
+    .then((repo) => {})
+    .catch((reasonForFailure) => {
       result = 'Error! Repos wasn`t created';
     });
   return result;
 };
 
-const getSettings = async ({ ownerID, repoName }) => {
-  const settings = await repoRepository.getSettings({
-    ownerID,
-    repoName
-  });
-  return settings;
+const renameRepo = async ({ repoName, newName, username }) => {
+  try {
+    const oldDirectory = path.resolve(`${gitPath}/${username}/${repoName}`);
+    const newDirectory = path.resolve(`${gitPath}/${username}/${newName}`);
+    fs.renameSync(oldDirectory, newDirectory);
+    return true;
+  } catch (e) {
+    return false;
+  }
 };
 
-const renameRepo = async ({ ownerID, repoName, newName }) => {
-  const result = await repoRepository.renameRepo({
-    ownerID,
-    repoName,
-    newName
-  });
-  return result;
-};
-
-const changePrivacyRepo = async ({ ownerID, repoName }) => {
-  const result = await repoRepository.changePrivacy({
-    ownerID,
-    repoName
-  });
-  return result;
-};
-
-const deleteRepo = async ({ ownerID, repoName, username }) => {
-  const result = await repoRepository.delete({
-    ownerID,
-    repoName
-  });
-
-  const success = await repoHelper.removeDir(username, repoName);
-  return result && success;
+const deleteRepo = async ({ repoName, username }) => {
+  try {
+    const directory = path.resolve(`${gitPath}/${username}/${repoName}`);
+    await fs.remove(directory);
+    return true;
+  } catch (e) {
+    return false;
+  }
 };
 
 const getReposNames = async ({ user, filter: { filterWord, limit } }) => {
@@ -66,9 +50,7 @@ const getReposNames = async ({ user, filter: { filterWord, limit } }) => {
 
 module.exports = {
   createRepo,
-  getSettings,
   renameRepo,
-  changePrivacyRepo,
   deleteRepo,
   getReposNames
 };

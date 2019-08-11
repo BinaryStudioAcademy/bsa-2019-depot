@@ -19,14 +19,6 @@ export const renameRepo = async ({ owner, name, oldName }) => {
     return response.json();
 };
 
-export const changePrivacy = async ({ owner, name }) => {
-    const response = await callWebApi({
-        endpoint: `/api/repo/${owner}/${name}/settings/privacy`,
-        type: 'post'
-    });
-    return response.json();
-};
-
 export const deleteRepo = async ({ owner, name }) => {
     const response = await callWebApi({
         endpoint: `/api/repo/${owner}/${name}/settings/delete`,

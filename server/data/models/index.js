@@ -2,14 +2,11 @@ const orm = require('../db/connection');
 const associate = require('../db/associations');
 
 const User = orm.import('./user');
-const Repository = orm.import('./repository');
 
-associate({
-  User,
-  Repository
-});
+// associate({
+//  User,
+// });
 
 module.exports = {
   UserModel: User,
-  RepositoryModel: Repository
 };

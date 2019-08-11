@@ -30,27 +30,24 @@ router
       .catch(next);
   })
   .get('/:owner/:repoName/settings', (req, res, next) => {
+    res.sendStatus(200);
+    /* Can be used in future to get settings data from DB
     const { repoName } = req.params;
     getSettings({ ownerID: req.user.id, repoName })
       .then(settings => res.send(settings))
       .catch(next);
+    */
   })
   .post('/:owner/:repoName/settings/rename', (req, res, next) => {
     const { repoName } = req.params;
     const { newName } = req.body;
-    renameRepo({ ownerID: req.user.id, repoName, newName })
-      .then(result => res.send(result))
-      .catch(next);
-  })
-  .post('/:owner/:repoName/settings/privacy', (req, res, next) => {
-    const { repoName } = req.params;
-    changePrivacyRepo({ ownerID: req.user.id, repoName })
+    renameRepo({ repoName, newName, username: req.user.username })
       .then(result => res.send(result))
       .catch(next);
   })
   .delete('/:owner/:repoName/settings/delete', (req, res, next) => {
     const { repoName } = req.params;
-    deleteRepo({ ownerID: req.user.id, repoName, username: req.user.username })
+    deleteRepo({ repoName, username: req.user.username })
       .then(result => res.send(result))
       .catch(next);
   });

@@ -15,7 +15,7 @@ export default function* rootSaga() {
         watchResetPassword(),
         commitPageSagas(),
         profileSagas(),
-        repoSettingsSagas()
+        repoSettingsSagas(),
         watchRepositories()
     ]);
 }

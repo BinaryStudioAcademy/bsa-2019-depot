@@ -27,11 +27,6 @@ export const repoSettingsData = (state = initialSettingsState, action) => {
             ...state,
             error: action.payload
         };
-    case fetchRepoSettings.POST:
-        return {
-            ...state,
-            settings: action.payload
-        };
     case fetchRepoSettings.FULFILL:
         return {
             ...state,

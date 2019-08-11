@@ -20,21 +20,6 @@ function* watchSettingsRequest() {
     yield takeEvery(fetchRepoSettings.TRIGGER, settingsRequest);
 }
 
-export function* changePrivacy(action) {
-    try {
-        const { owner, name } = action.payload;
-        yield call(repoSettingsService.changePrivacy, { ...action.payload });
-        const response = yield call(repoSettingsService.getSettings, { owner, name });
-        yield put(fetchRepoSettings.success(response));
-    } catch (error) {
-        yield put(fetchRepoSettings.request(error.message));
-    }
-}
-
-function* watchSetSettings() {
-    yield takeEvery(types.CHANGE_PRIVACY, changePrivacy);
-}
-
 export function* renameRepo(action) {
     try {
         const { name, owner } = action.payload;
@@ -66,5 +51,5 @@ function* watchDeleteRepo() {
 }
 
 export default function* repoSettingsSagas() {
-    yield all([watchSettingsRequest(), watchSetSettings(), watchRenameRepo(), watchDeleteRepo()]);
+    yield all([watchSettingsRequest(), watchRenameRepo(), watchDeleteRepo()]);
 }
