@@ -1,20 +1,21 @@
-import { takeEvery, put, all } from 'redux-saga/effects';
-// import * as userService from '../../services/userService';
+import { takeEvery, put, all, call } from 'redux-saga/effects';
+import * as userService from '../../services/userService';
 import { updateUserSettings } from '../../routines/routines';
+import { fetchCurrentUser } from '../../routines/routines';
 
-function* updateSettings({ payload: { values } }) {
+function* updateSettings({ payload }) {
     try {
-        console.warn(values);
-
         yield put(updateUserSettings.request());
 
-    // const { status } = yield call(userService.updateSettings, [user.id, settings]);
-    // if (status) {
-    //     yield put(updateUserSettings.success());
-    //     yield put(fetchCurrentUser.trigger());
-    // }
+        const response = yield call(userService.updateSettings, payload);
+        if (response.status) {
+            yield put(updateUserSettings.success());
+            yield put(fetchCurrentUser.trigger());
+        } else {
+            yield put(fetchCurrentUser.failure(response.error.message));
+        }
     } catch (error) {
-        yield put(updateUserSettings.failure(error.message));
+        yield put(fetchCurrentUser.failure(error.message));
     } finally {
         yield put(updateUserSettings.fulfill());
     }
