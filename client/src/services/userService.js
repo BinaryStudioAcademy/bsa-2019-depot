@@ -17,3 +17,12 @@ export const reset = async request => {
     });
     return response.json();
 };
+
+export const updateSettings = async request => {
+    const response = await callWebApi({
+        endpoint: '/api/user/settings',
+        type: 'POST',
+        request
+    });
+    return response.json();
+};

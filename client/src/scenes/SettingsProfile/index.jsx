@@ -17,6 +17,7 @@ import NOTES from './notes';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import PageHeader from '../../containers/Header';
+import { updateUserSettings } from '../../routines/routines';
 
 import styles from './styles.module.scss';
 import avatarPlaceholder from './avatar-placeholder.svg';
@@ -30,10 +31,16 @@ const renderTextArea = ({ field }) => (
 );
 
 const onSubmit = (values, { setSubmitting }) => {
-    setTimeout(() => {
-        alert(JSON.stringify(values, null, 2));
-        setSubmitting(false);
-    }, 400);
+    // console.warn(updateUserSettings);
+    // console.warn(values);
+
+    updateUserSettings({ values });
+    setSubmitting(false);
+
+    // setTimeout(() => {
+    //     alert(JSON.stringify(values, null, 2));
+    //     setSubmitting(false);
+    // }, 400);
 };
 
 const onUploadPhoto = ev => {
@@ -159,7 +166,7 @@ const mapStateToProps = state => {
     return state.profile;
 };
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = { updateUserSettings };
 
 export default connect(
     mapStateToProps,
