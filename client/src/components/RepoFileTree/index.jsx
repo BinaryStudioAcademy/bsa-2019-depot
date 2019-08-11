@@ -10,7 +10,7 @@ import moment from 'moment';
 const RepoFileTree = (props) => {
     const { sha, message, author, date } = props.lastCommitData.commit;
     const { files, directories } = props.fileTreeData.tree;
-    return (props.lastCommitData.loading && props.fileTreeData.loading
+    return (props.lastCommitData.loading || props.fileTreeData.loading
         ? (
             <div>
                 <Dimmer active >
@@ -61,11 +61,11 @@ const RepoFileTree = (props) => {
                                     </Table.Cell>
                                     <Table.Cell>
                                         <Link className={styles.link} to="">
-                                        Build 2.0.7
+                                            {dir.commitMessage}
                                         </Link>
                                     </Table.Cell>
                                     <Table.Cell textAlign="right" collapsing>
-                                    4 days ago
+                                        {moment(dir.date).fromNow()}
                                     </Table.Cell>
                                 </Table.Row>
                             </React.Fragment>    
@@ -82,11 +82,11 @@ const RepoFileTree = (props) => {
                                     </Table.Cell>
                                     <Table.Cell>
                                         <Link className={styles.link} to="">
-                                    Iteration on regex for comment replacemen
+                                            {file.commitMessage}
                                         </Link>
                                     </Table.Cell>
                                     <Table.Cell textAlign="right" collapsing>
-                                6 days ago
+                                        {moment(file.date).fromNow()}
                                     </Table.Cell>
                                 </Table.Row>
                             </React.Fragment>    

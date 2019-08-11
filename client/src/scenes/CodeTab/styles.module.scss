@@ -94,6 +94,7 @@
 
 :global(.ui.button):local(.repoBranchesButton) {
   margin-right: 6px;
+  text-overflow: ellipsis;
   &:active,
   &:focus {
     background-color: #e9ecef;

@@ -12,6 +12,20 @@ const getBranches = async ({ user, repoName }) => {
   return refNames.map(refName => refName.slice(11));
 };
 
+const getLastModifiedCommit = async ({
+  user, name, branch, entry
+}) => {
+  const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`);
+  const repo = await NodeGit.Repository.open(pathToRepo.replace(/\\/g, '/'));
+  const lastCommitOnBranch = await repo.getBranchCommit(branch);
+  const walker = repo.createRevWalk();
+  walker.push(lastCommitOnBranch.sha());
+  walker.sorting(NodeGit.Revwalk.SORT.Time);
+
+  const history = await walker.fileHistoryWalk(entry.path(), 500);
+  return history[history.length - 1].commit;
+};
+
 const getBranchTree = async ({ user, name, branch }) => {
   const fileTree = {
     directories: [],
@@ -21,35 +35,33 @@ const getBranchTree = async ({ user, name, branch }) => {
   const repo = await NodeGit.Repository.open(pathToRepo.replace(/\\/g, '/'));
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
   const tree = await lastCommitOnBranch.getTree();
-  tree.entries().forEach(async (entry) => {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const entry of tree.entries()) {
     try {
-      // const entryOid = await entry.oid();
-      // console.log(entryOid);
-      // const lastModifiedCommit = await repo.getCommit(entryOid);
-      // console.log(lastModifiedCommit);
+      // eslint-disable-next-line no-await-in-loop
+      const lastModifiedCommit = await getLastModifiedCommit({
+        user,
+        name,
+        branch,
+        entry
+      });
       if (entry.isDirectory()) {
         fileTree.directories.push({
-          name: entry.name()
-          // time: lastModifiedCommit.date(),
-          // commitName: lastModifiedCommit.name()
+          name: entry.name(),
+          time: lastModifiedCommit.date(),
+          commitMessage: lastModifiedCommit.message()
         });
       } else {
         fileTree.files.push({
-          name: entry.name()
-          // time: lastModifiedCommit.date(),
-          // commitName: lastModifiedCommit.name()
+          name: entry.name(),
+          time: lastModifiedCommit.date(),
+          commitMessage: lastModifiedCommit.message()
         });
       }
     } catch (error) {
       console.error(error);
     }
-  });
-  // fileTree.directories = tree.entries()
-  //   .filter(entry => entry.isDirectory())
-  //   .map(directory => directory.name());
-  // fileTree.files = tree.entries()
-  //   .filter(entry => entry.isFile())
-  //   .map(file => file.name());
+  }
   return fileTree;
 };
 

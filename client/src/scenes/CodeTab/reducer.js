@@ -1,4 +1,4 @@
-import { fetchBranches, fetchLastCommitOnBranch, fetchFileTree } from '../../routines/routines';
+import { fetchLastCommitOnBranch, fetchFileTree } from '../../routines/routines';
 
 const initialLastCommitState = {
     commit: {

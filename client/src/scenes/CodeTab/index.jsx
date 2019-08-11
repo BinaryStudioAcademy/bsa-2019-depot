@@ -28,8 +28,8 @@ class CodeTab extends React.Component {
             branch: 'master'
         };
 
-        // this.handleBranchChange = this.handleBranchChange.bind(this);
-        this.OnDropdownClick = this.OnDropdownClick.bind(this);
+        this.onBranchChange = this.onBranchChange.bind(this);
+        this.onDropdownClick = this.onDropdownClick.bind(this);
     }
 
     componentDidMount() {
@@ -45,12 +45,33 @@ class CodeTab extends React.Component {
         });
     }
 
-    OnDropdownClick = event => {
+    onDropdownClick = event => {
         event.stopPropagation();
         this.props.fetchBranches({
             owner: 'pavel',
             repoName: 'test-repo.git'
         });
+    }
+
+    onBranchChange = (event, data) => {
+        this.setState(
+            {
+                branch: data.value
+            },
+            () => {
+                
+                this.props.fetchLastCommitOnBranch({
+                    owner: 'pavel',
+                    repoName: 'test-repo.git',
+                    branch: this.state.branch
+                });
+                this.props.fetchFileTree({
+                    owner: 'pavel',
+                    repoName: 'test-repo.git',
+                    branch: this.state.branch
+                });
+            }
+        );
     }
 
     render() {
@@ -106,12 +127,12 @@ class CodeTab extends React.Component {
                     <div>
                         <Dropdown
                             button
-                            text="Branch: master"
+                            text={'Branch: ' + this.state.branch}
                             floating
                             width="seven"
                             className={[styles.actionButton, styles.repoBranchesButton]}
                             position="top left"
-                            onClick={this.OnDropdownClick}
+                            onClick={this.onDropdownClick}
                         >
                             <Dropdown.Menu className={styles.searchBranchList}>
                                 {branchesData.loading
@@ -130,7 +151,15 @@ class CodeTab extends React.Component {
                                             />
                                             <Dropdown.Divider />
                                             <Dropdown.Header content="branch" as="h4" />
-                                            {branchesData.branches.map((branch, index) => <Dropdown.Item key={index} className={styles.branchesMenuItem}>{branch}</Dropdown.Item>)}
+                                            {branchesData.branches.map((branch, index) => 
+                                                <Dropdown.Item key={index} 
+                                                    onClick={this.onBranchChange} 
+                                                    value={branch}
+                                                    className={styles.branchesMenuItem}
+                                                >
+                                                    {branch}
+                                                </Dropdown.Item>)
+                                            }
                                         </React.Fragment>
                                     )
                                 }
