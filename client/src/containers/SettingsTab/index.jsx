@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Menu, Header, Divider, Input, Button, Message } from 'semantic-ui-react';
+import { Grid, Menu, Header, Divider, Input, Button, Message, Loader } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { fetchRepoSettings } from '../../routines/routines';
@@ -26,19 +26,14 @@ class RepoSettings extends React.Component {
     constructor(props) {
         super(props);
 
-        const params = this.props.location.pathname.split('/');
-
-        const repoOwner = params[2];
-        this.oldRepoName = params[3];
-
+        const { name } = this.props;
         this.state = {
-            owner: repoOwner,
-            name: this.oldRepoName
+            name
         };
     }
 
     componentDidMount() {
-        const { owner, name } = this.state;
+        const { owner, name } = this.props;
         this.props.fetchRepoSettings({
             owner,
             name
@@ -46,8 +41,10 @@ class RepoSettings extends React.Component {
     }
 
   onClickDelete = () => {
+      const { owner, name } = this.props;
       this.props.deleteRepo({
-          ...this.state
+          owner,
+          name
       });
   };
 
@@ -58,17 +55,19 @@ class RepoSettings extends React.Component {
   };
 
   onClickRename = () => {
-      const { owner, name } = this.state;
+      const { name } = this.state;
+      const { owner, name: oldName } = this.props;
+
       this.props.renameRepo({
           owner,
-          oldName: this.oldRepoName,
+          oldName,
           name
       });
-      this.oldRepoName = name;
   };
 
   render() {
-      return (
+      const { loading } = this.props.repoSettingsData;
+      return !loading ? (
           <Grid container stackable>
               <Grid.Column width={4}>
                   <Menu vertical>
@@ -80,7 +79,7 @@ class RepoSettings extends React.Component {
                   <Divider />
 
                   <Header as="h4">Repository name</Header>
-                  <Input className={styles.text_input} defaultValue={this.state.name} onChange={this.handleChangeRepoName} />
+                  <Input className={styles.text_input} defaultValue={this.props.name} onChange={this.handleChangeRepoName} />
                   <Button className={styles.button_rename} type="button" onClick={this.onClickRename}>
             Rename
                   </Button>
@@ -96,6 +95,8 @@ class RepoSettings extends React.Component {
                   </div>
               </Grid.Column>
           </Grid>
+      ) : (
+          <Loader />
       );
   }
 }
@@ -111,9 +112,8 @@ RepoSettings.propTypes = {
             isPublic: PropTypes.bool
         })
     }).isRequired,
-    location: PropTypes.exact({
-        pathname: PropTypes.string
-    }),
+    owner: PropTypes.string,
+    name: PropTypes.string,
     fetchRepoSettings: PropTypes.func.isRequired,
     renameRepo: PropTypes.func.isRequired,
     deleteRepo: PropTypes.func.isRequired
