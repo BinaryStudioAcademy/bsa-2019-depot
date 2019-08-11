@@ -33,7 +33,13 @@ export class Overview extends React.Component {
       this.setState({ activeIndex: newIndex });
   };
 
-  panelColors = ['#EEEEEE', '#D6E685', '#8CC665', '#44A340', '#1E6823'];
+  panelColors = [
+      styles.activity_lvl1,
+      styles.activity_lvl2,
+      styles.activity_lvl3,
+      styles.activity_lvl4,
+      styles.activity_lvl5
+  ];
 
   contributionValues = {
       // mock, must be replaced with real data
@@ -173,9 +179,9 @@ export class Overview extends React.Component {
                                                       <Octicon icon={activeIndex === `commit-${idx}` ? Fold : Unfold} />
                                                   </Accordion.Title>
                                                   <Accordion.Content active={activeIndex === `commit-${idx}`}>
-                                                      {Object.entries(commitRepoNames).map(([repoName, numOfRequests], i) => (
+                                                      {Object.entries(commitRepoNames).map(([repoName, numOfCommits], i) => (
                                                           <Link to="" key={`commit-${i}`} className={styles.activity_link}>
-                                                              {this.username}/{repoName} {numOfRequests} commits
+                                                              {this.username}/{repoName} {numOfCommits} commits
                                                           </Link>
                                                       ))}
                                                   </Accordion.Content>

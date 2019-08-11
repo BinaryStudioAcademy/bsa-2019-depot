@@ -1,6 +1,14 @@
 $primary-color: #586069;
 $secondary-color: #d1d5da;
 
+:export {
+  activity_lvl1: #eeeeee;
+  activity_lvl2: #d6e685;
+  activity_lvl3: #8cc665;
+  activity_lvl4: #44a340;
+  activity_lvl5: #1e6823;
+}
+
 :global(svg.octicon) {
   margin-right: 0;
   color: $primary-color;
