@@ -1,4 +1,10 @@
-import { authorizeUser, fetchCurrentUser, signupRoutine, loginGoogleRoutine } from '../../routines/routines';
+import {
+    authorizeUser,
+    fetchCurrentUser,
+    signupRoutine,
+    loginGoogleRoutine,
+    setUsernameRoutine
+} from '../../routines/routines';
 
 const initialState = {
     currentUser: {},
@@ -12,6 +18,7 @@ export default (state = initialState, action) => {
     case authorizeUser.TRIGGER:
     case fetchCurrentUser.TRIGGER:
     case signupRoutine.TRIGGER:
+    case setUsernameRoutine.TRIGGER:
         return {
             ...state,
             loading: true,
@@ -26,8 +33,19 @@ export default (state = initialState, action) => {
             currentUser: action.payload,
             isAuthorized: true
         };
+    case setUsernameRoutine.SUCCESS: {
+        const { currentUser } = state;
+        return {
+            ...state,
+            currentUser: {
+                ...currentUser,
+                username: action.payload
+            }
+        };
+    }
     case authorizeUser.FAILURE:
-    case fetchCurrentUser.FAILURE: {
+    case fetchCurrentUser.FAILURE:
+    case setUsernameRoutine.FAILURE: {
         return {
             ...state,
             error: action.payload
@@ -41,6 +59,7 @@ export default (state = initialState, action) => {
     case authorizeUser.FULFILL:
     case fetchCurrentUser.FULFILL:
     case signupRoutine.FULFILL:
+    case setUsernameRoutine.FULFILL:
         return {
             ...state,
             loading: false

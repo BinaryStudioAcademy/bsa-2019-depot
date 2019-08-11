@@ -76,13 +76,14 @@ class Login extends Component {
 
   handleClickSetUsername = () => {
       const { username } = this.state;
-      const { loading, currentUser } = this.props;
+      const { loading, currentUser, history } = this.props;
       if (loading) {
           return;
       }
       this.props.setUsernameRoutine({
           username: username.value,
-          currentUser
+          user: currentUser,
+          history
       });
   };
 
@@ -133,7 +134,7 @@ class Login extends Component {
                           size="large"
                           onSubmit={this.handleClickSetUsername}
                           loading={loading}
-                          error={!!error}
+                          error={Boolean(error)}
                       >
                           <Segment textAlign="left">
                               <p>Please set your Depot username</p>
@@ -236,7 +237,8 @@ Login.propTypes = {
     isAuthorized: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
     error: PropTypes.string,
-    location: PropTypes.object,
+    location: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
     loginGoogleRoutine: PropTypes.func.isRequired,
     setUsernameRoutine: PropTypes.func.isRequired,
     currentUser: PropTypes.object,

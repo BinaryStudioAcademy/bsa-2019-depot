@@ -56,9 +56,6 @@ function* loginGoogle({ payload: { user, history } }) {
             token: jwt
         };
         yield put(loginGoogleRoutine.success(authorizedUser));
-    // if (user.usernameExists) {
-    //     yield call(history.push, '/');
-    // }
     } catch (error) {
         yield put(loginGoogleRoutine.failure(error.message));
     }
@@ -90,9 +87,9 @@ function* watchSignupRequest() {
     yield takeEvery(signupRoutine.TRIGGER, signup);
 }
 
-function* setUsername({ payload: { username, profile, history } }) {
+function* setUsername({ payload: { username, user, history } }) {
     try {
-        const response = yield call(signupService.setUsername, username, profile);
+        const response = yield call(signupService.setUsername, username, user);
         const { status } = response;
         if (status) {
             yield put(setUsernameRoutine.success(username));
@@ -106,7 +103,7 @@ function* setUsername({ payload: { username, profile, history } }) {
 }
 
 function* watchSetUsernameRequest() {
-    yield takeEvery(setUsernameRoutine.REQUEST, setUsername);
+    yield takeEvery(setUsernameRoutine.TRIGGER, setUsername);
 }
 
 export default function* profileSagas() {

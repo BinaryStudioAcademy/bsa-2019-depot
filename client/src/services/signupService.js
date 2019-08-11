@@ -26,6 +26,7 @@ export const setUsername = async (username, profile) => {
         username,
         profile
     };
+    debugger;
     const response = await callWebApi({
         endpoint: '/user/username',
         type: 'POST',
