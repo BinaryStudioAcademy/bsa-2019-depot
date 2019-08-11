@@ -2,7 +2,7 @@ import callWebApi from '../helpers/webApiHelper';
 
 export const login = async request => {
     const response = await callWebApi({
-        endpoint: '/auth/login',
+        endpoint: '/api/auth/login',
         type: 'POST',
         request
     });
@@ -11,7 +11,7 @@ export const login = async request => {
 
 export const getCurrentUser = async () => {
     const response = await callWebApi({
-        endpoint: '/auth/user',
+        endpoint: '/api/auth/user',
         type: 'GET'
     });
     return response.json();

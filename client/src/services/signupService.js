@@ -2,7 +2,7 @@ import callWebApi from '../helpers/webApiHelper';
 
 export const signup = async request => {
     const response = await callWebApi({
-        endpoint: '/auth/register',
+        endpoint: '/api/auth/register',
         type: 'POST',
         request
     });

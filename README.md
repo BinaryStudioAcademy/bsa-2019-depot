@@ -59,10 +59,26 @@ pathToRepo - path to git server you created.
 repo - git server you just opened, which contains all information(files, branches, commits)
 ```
 
+### Connection to Git via SSH
+How it works:
+1. We set up Node.js server on our EC2 instance.
+2. When user sends us his pubic key, Node server appends it to the `.ssh/authorized_key` - file where SSH server of EC2 instance stores all public keys of users who can access it.
+3. Return link with path to repository directory to user.
+4. To pass authorization and connect to Git user has to store his private key at `~/.ssh/id_rsa` (or `C:\Users\MyUser\.ssh\id_rsa` for Windows) - default location where SSH would search private key.
+5. User can access repo via `git@server.com:path/to/repo.git`
+For example:
+```
+git clone git@54.229.247.124:myproject.git
+git clone git@depot.xyz:myproject.git
+git remote add origin git@depot.xyz:myproject.git
+```
+More info:
 
+[Info on managing users in EC2](https://docs.aws.amazon.com/en_us/AWSEC2/latest/UserGuide/managing-users.html)
 
+[Setting up Git server using SSH](https://git-scm.com/book/en/v2/Git-on-the-Server-Setting-Up-the-Server)
 
-
+[Guide on how to set up a Git server on EC2](https://www.freecodecamp.org/news/create-your-own-github-kinda-9b4581db675c/)
 
 ### Branches
 
