@@ -1,12 +1,12 @@
 const orm = require('../db/connection');
-const associate = require('../db/associations');
+// const associate = require('../db/associations');
 
 const User = orm.import('./user');
 
 // associate({
-//  User,
+//  User
 // });
 
 module.exports = {
-  UserModel: User,
+  UserModel: User
 };
