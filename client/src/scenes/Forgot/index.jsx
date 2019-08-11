@@ -90,11 +90,11 @@ class Forgot extends Component {
   }
 }
 Forgot.propTypes = {
-  isAuthorized: PropTypes.bool.isRequired,
-  message: PropTypes.string,
-  emailNotExist: PropTypes.bool,
-  emailSend: PropTypes.bool,
-  actions: PropTypes.object
+    isAuthorized: PropTypes.bool.isRequired,
+    message: PropTypes.string,
+    emailNotExist: PropTypes.bool,
+    emailSend: PropTypes.bool,
+    actions: PropTypes.object
 };
 
 Forgot.defaultProps = {

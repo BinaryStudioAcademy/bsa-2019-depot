@@ -1,6 +1,6 @@
 const { Router } = require('express');
 
-const jwtMiddleware = require('../middlewares/jwt.middleware');
+// const jwtMiddleware = require('../middlewares/jwt.middleware');
 const {
   setUsername,
   checkUsernameExists,
@@ -11,10 +11,9 @@ const {
 
 const router = Router();
 
-router.post('/username', jwtMiddleware, (req, res, next) => {
-  const { username, profile } = req.body;
-  const { id } = profile;
-
+router.post('/username', (req, res, next) => {
+  const { username } = req.body;
+  const { id } = req.user;
   setUsername({ id, username })
     .then(data => res.send(data))
     .catch(next);
