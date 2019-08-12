@@ -11,7 +11,7 @@ import {
   Reset,
   MainPage,
   Signup,
-  //GoogleCallback,
+  // GoogleCallback,
   Dashboard,
   SettingsProfile
 } from '../../scenes';
