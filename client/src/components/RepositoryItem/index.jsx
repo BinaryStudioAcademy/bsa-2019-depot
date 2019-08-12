@@ -51,7 +51,9 @@ export class RepositoryItem extends React.Component {
     }
 }
 
-RepositoryItem.defaultProps = {};
+RepositoryItem.defaultProps = {
+    data: PropTypes.array.isRequired
+};
 
 RepositoryItem.propTypes = {
     repo: PropTypes.string

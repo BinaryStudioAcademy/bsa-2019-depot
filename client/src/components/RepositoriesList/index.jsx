@@ -24,15 +24,15 @@ export class RepositoriesList extends React.Component {
         //Mock
 
         const repoTypes = [
-            { key: 0, text: 'Type: All', value: 'All' },
-            { key: 1, text: 'Type: Public', value: 'Public' },
-            { key: 2, text: 'Type: Private', value: 'Private' }
+            { key: 'rt_1', text: 'Type: All', value: 'All' },
+            { key: 'rt_2', text: 'Type: Public', value: 'Public' },
+            { key: 'rt_3', text: 'Type: Private', value: 'Private' }
         ];
 
         const languageTypes = [
-            { key: 0, text: 'JavaScript', value: 'JavaScript' },
-            { key: 1, text: 'HTML', value: 'HTML' },
-            { key: 2, text: 'CSS', value: 'CSS' }
+            { key: 'lt_1', text: 'JavaScript', value: 'JavaScript' },
+            { key: 'lt_2', text: 'HTML', value: 'HTML' },
+            { key: 'lt_3', text: 'CSS', value: 'CSS' }
         ];
 
         return (
@@ -74,7 +74,10 @@ export class RepositoriesList extends React.Component {
     }
 }
 
-RepositoriesList.defaultProps = {};
+RepositoriesList.defaultProps = {
+    repoTypes: PropTypes.array.isRequired,
+    languageTypes: PropTypes.array.isRequired
+};
 
 RepositoriesList.propTypes = {
     actions: PropTypes.object.isRequired,

@@ -265,11 +265,16 @@ export class Overview extends React.Component {
   }
 }
 
-Overview.defaultProps = {};
+Overview.defaultProps = {
+    panelColors: PropTypes.array,
+    contributionValues: PropTypes.object.isRequired
+};
 
 Overview.propTypes = {
     actions: PropTypes.object.isRequired,
-    repositoriesNames: PropTypes.array.isRequired
+    repositoriesNames: PropTypes.array.isRequired,
+    username: PropTypes.string.isRequired,
+    userActivity: PropTypes.array.isRequired
 };
 
 const mapStateToProps = ({ repositories }) => ({
