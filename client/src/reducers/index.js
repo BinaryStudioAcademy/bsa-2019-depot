@@ -9,12 +9,12 @@ import profile from '../containers/Profile/reducer';
 import { repositoriesReducer } from '../scenes/Dashboard/reducer';
 
 export default combineReducers({
-    profile,
-    forgot,
-    reset,
-    issuesData: issuesReducer,
-    commitsData,
-    branchesData,
-    repoSettingsData,
-    repositories: repositoriesReducer
+  profile,
+  forgot,
+  reset,
+  issuesData: issuesReducer,
+  commitsData,
+  branchesData,
+  repoSettingsData,
+  repositories: repositoriesReducer
 });

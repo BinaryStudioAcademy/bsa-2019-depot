@@ -11,8 +11,7 @@ const createRepo = async ({ user, name }) => {
   const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`);
 
   await NodeGit.Repository.init(pathToRepo.replace(/\\/g, '/'), 1)
-    .then((repo) => {})
-    .catch((reasonForFailure) => {
+    .catch(() => {
       result = 'Error! Repos wasn`t created';
     });
   return result;
