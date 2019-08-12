@@ -1,5 +1,7 @@
 const { Router } = require('express');
-const { createRepo, renameRepo, deleteRepo, getReposNames } = require('../services/repo.service');
+const {
+  createRepo, renameRepo, deleteRepo, getReposNames
+} = require('../services/repo.service');
 const { getCommits } = require('../services/commit.service');
 const { getBranches } = require('../services/branch.service');
 

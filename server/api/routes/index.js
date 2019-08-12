@@ -3,7 +3,7 @@ const userRoutes = require('./user.route');
 const commitRoutes = require('./commit.route');
 const repoRoutes = require('./repo.route');
 
-module.exports = app => {
+module.exports = (app) => {
   app.use('/api/auth', authRoutes);
   app.use('/api/user', userRoutes);
   app.use('/api/commit', commitRoutes);
