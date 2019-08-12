@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Button, Label, Icon, Modal, Header, List, Image } from 'semantic-ui-react';
+import { Button, Label, Icon, Modal } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-
-import styles from './styles.module.scss';
 
 class ForkButton extends Component {
   state = { modalOpen: false };
@@ -11,7 +9,8 @@ class ForkButton extends Component {
   handleOpen = () => this.setState({ modalOpen: true });
   handleClose = () => this.setState({ modalOpen: false });
 
-  render(props) {
+  render() {
+      const { forkCount, repoName } = this.props;
       return (
           <Modal
               closeIcon
@@ -25,23 +24,12 @@ class ForkButton extends Component {
               Fork
                       </Button>
                       <Label as="a" basic pointing="left">
-                          {this.props.forkCount}
+                          {forkCount}
                       </Label>
                   </Button>
               }
           >
-              <Modal.Header>Fork {this.props.repoName}</Modal.Header>
-              <Modal.Content>
-                  <Header>Where should we fork {this.props.repoName}?</Header>
-                  <List>
-                      <List.Item className={styles.cursor_pointer}>
-                          <Image avatar src="https://i.pravatar.cc/300" />
-                          <Label basic size="big" className={styles.username}>
-                              {this.props.currentUser.username}
-                          </Label>
-                      </List.Item>
-                  </List>
-              </Modal.Content>
+              <Modal.Header>You are going to fork {repoName}</Modal.Header>
               <Modal.Actions>
                   <Button onClick={this.handleClose}>Cancel</Button>
                   <Button primary onClick={this.handleClose}>
