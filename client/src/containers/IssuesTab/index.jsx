@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Loader, Icon, Input, Dropdown, Button } from 'semantic-ui-react';
+import { ToastContainer, toast } from 'react-toastify';
 import { fetchIssues } from '../../routines/routines';
 import IssuesList from '../../components/IssuesList';
 
@@ -22,10 +23,20 @@ class IssuesTab extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fetchIssues({
+    const {
+      fetchIssues,
+      issuesData: { error }
+    } = this.props;
+    fetchIssues({
       filter: this.state.filter
     });
+
+    if (error) {
+      this.notify();
+    }
   }
+
+  notify = () => toast(this.props.issuesData.error, { type: toast.TYPE.ERROR, hideProgressBar: true });
 
   render() {
     const {
@@ -116,6 +127,7 @@ class IssuesTab extends React.Component {
           </div>
           <IssuesList issues={issues} />
         </div>
+        <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} />
       </>
     );
   }
