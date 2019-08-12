@@ -9,6 +9,12 @@ import { ReactComponent as LogoSVG } from '../../styles/assets/icons/home.svg';
 import { ReactComponent as DropdownSVG } from '../../styles/assets/icons/dropdown.svg';
 import { ReactComponent as BurgerSVG } from '../../styles/assets/icons/burger.svg';
 
+const signOut = () => {
+    const { localStorage, location } = window;
+    localStorage.clear();
+    location.reload();
+};
+
 const whyGitHub = (
     <Fragment>
         <Menu.Item>
@@ -349,7 +355,7 @@ const SidebarAuth = (closeSidebar, sidebarOpened, userName, avatar) => (
                 {userName}
             </a>
         </Menu.Item>
-        <Menu.Item as="div">
+        <Menu.Item as="div" onClick={signOut}>
             <a href="/">
                 <Icon name="sign out" />
         Sign Out
@@ -460,7 +466,7 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
                                     <Dropdown.Item>Your repositories</Dropdown.Item>
                                     <Dropdown.Divider />
                                     <Dropdown.Item>Settings</Dropdown.Item>
-                                    <Dropdown.Item>Sign out</Dropdown.Item>
+                                    <Dropdown.Item onClick={signOut}>Sign out</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
                         </li>

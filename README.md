@@ -1,34 +1,11 @@
 # Depot
 
-## Development process
+![TravisCI](https://api.travis-ci.org/BinaryStudioAcademy/bsa-2019-depot.svg?branch=develop)
 
-### Environment
+Powerful tool for team work with code, based on GIT version control system.
+![logo](https://user-images.githubusercontent.com/28801003/62847518-5f0e1c80-bcdf-11e9-9621-a0aeb4265019.png)
 
-_/client/.env_
-```
-SKIP_PREFLIGHT_CHECK=true
-PORT=3001
-```
-
-_/server/.env_
-```
-APP_PORT = 3000
-
-DB_NAME = depot # default. has to be changed to local DB name if it is different
-DB_USERNAME = postgres # default. has to be changed to local PostgreSQL username if it is different
-DB_PASSWORD = postgres # default. has to be changed to local PostgreSQL password if it is different
-DB_HOST = localhost # default. has to be changed to local used host if it is different
-DB_PORT = 5432 # default. has to be changed to local used port if it is different
-DB_DIALECT = postgres # default. do not change
-GOOGLE_CLIENT_ID = 97XXXXXXXX05-sgfxxxxxxxxxxxxxxxxxxxxxxxxxxxcmj0.apps.googleusercontent.com # has to be replaced with actual google client secret
-GOOGLE_CLIENT_SECRET = ygyxxxXXXXxxxxxxxXXXXXxxxi # has to be replaced with actual google client secret
-GOOGLE_CALLBACK_URL = http://localhost:3000/auth/google/callback # default. has to be changed to google callback uri if it is different
-GOOGLE_SCOPE = https://www.googleapis.com/auth/userinfo.email # default. has to be changed to google scope if it is different
-GIT_PATH = '' # Has to be changed to path where you want to save repositories
-AWS_SES_ACCESS_KEY = AKIAWBOCxxxxxxx # has to be replaced with actual aws ses access key 
-AWS_SES_SECRET_KEY = EtKJdUrnWxxxxxxxxx # has to be replaced with actual aws ses secret key
-AWS_SES_REGION = us-east-1 # has to be replaced with actual aws region
-```
+## About
 
 ### Git Server
 Git server is like usual repository that used to save and retreat git data. The only difference is that git server saves all the files and changes in his own objects, not in folder. The best example of it is a GitHub repository.
@@ -80,6 +57,50 @@ More info:
 
 [Guide on how to set up a Git server on EC2](https://www.freecodecamp.org/news/create-your-own-github-kinda-9b4581db675c/)
 
+
+### File Structure
+
+As an example of project structure used [this repository](https://github.com/react-boilerplate/react-boilerplate/tree/master/app).
+
+Directory purposes: 
+```
+/components - any reusable components that are independent of business logic
+/containers - modules that contain or are bound to business logic
+/scenes - any container that has separate route
+```
+
+[Article: "Domain directory file structure"](https://tech.offgrid-electric.com/domain-directory-structure-for-react-apps-why-its-worth-trying-b3855ee77a1e?gi=be41e3fca7f3)
+
+## Development process
+
+### Environment
+
+_/client/.env_
+```
+SKIP_PREFLIGHT_CHECK=true
+PORT=3001
+```
+
+_/server/.env_
+```
+APP_PORT = 3000
+
+DB_NAME = depot # default. has to be changed to local DB name if it is different
+DB_USERNAME = postgres # default. has to be changed to local PostgreSQL username if it is different
+DB_PASSWORD = postgres # default. has to be changed to local PostgreSQL password if it is different
+DB_HOST = localhost # default. has to be changed to local used host if it is different
+DB_PORT = 5432 # default. has to be changed to local used port if it is different
+DB_DIALECT = postgres # default. do not change
+GOOGLE_CLIENT_ID = 97XXXXXXXX05-sgfxxxxxxxxxxxxxxxxxxxxxxxxxxxcmj0.apps.googleusercontent.com # has to be replaced with actual google client secret
+GOOGLE_CLIENT_SECRET = ygyxxxXXXXxxxxxxxXXXXXxxxi # has to be replaced with actual google client secret
+GOOGLE_CALLBACK_URL = http://localhost:3000/auth/google/callback # default. has to be changed to google callback uri if it is different
+GOOGLE_SCOPE = https://www.googleapis.com/auth/userinfo.email # default. has to be changed to google scope if it is different
+GIT_PATH = '' # Has to be changed to path where you want to save repositories
+AWS_SES_ACCESS_KEY = AKIAWBOCxxxxxxx # has to be replaced with actual aws ses access key 
+AWS_SES_SECRET_KEY = EtKJdUrnWxxxxxxxxx # has to be replaced with actual aws ses secret key
+AWS_SES_REGION = us-east-1 # has to be replaced with actual aws region
+```
+
 ### Branches
 
 In this project we follow with [Pull Request process](https://help.github.com/en/articles/about-pull-requests). Two main branches are protected with a [Github branch protection rules](https://help.github.com/en/articles/defining-the-mergeability-of-pull-requests):
@@ -127,19 +148,6 @@ This project follows the [Conventional Commits](https://www.conventionalcommits.
 Example:  
 `fix: Add error handling` 👍  
 ~~`fixed error handling.`~~ 👎
-
-## Project Structure
-
-As an example of project structure used [this repository](https://github.com/react-boilerplate/react-boilerplate/tree/master/app).
-
-Directory purposes: 
-```
-/components - any reusable components that are independent of business logic
-/containers - modules that contain or are bound to business logic
-/scenes - any container that has separate route
-```
-
-[More on this](https://tech.offgrid-electric.com/domain-directory-structure-for-react-apps-why-its-worth-trying-b3855ee77a1e?gi=be41e3fca7f3)
 
 ## Code linting and formatting
 
