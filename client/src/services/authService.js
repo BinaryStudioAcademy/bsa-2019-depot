@@ -6,7 +6,7 @@ export const login = async request => {
     type: 'POST',
     request
   });
-  return response;
+  return response.json();
 };
 
 export const getCurrentUser = async () => {

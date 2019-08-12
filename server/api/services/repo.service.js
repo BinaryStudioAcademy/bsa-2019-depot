@@ -16,6 +16,7 @@ const createRepo = async ({ owner, repository }) => {
     .catch(() => {
       result = 'Error! Repos wasn`t created';
     });
+
   return result;
 };
 

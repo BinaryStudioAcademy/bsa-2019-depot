@@ -1,4 +1,4 @@
-import { call, all } from 'redux-saga/effects';
+import { all, call } from 'redux-saga/effects';
 
 import issuesSagas from '../containers/IssuesTab/sagas';
 import { watchForgotPassword } from '../scenes/Forgot/saga/watchers';
