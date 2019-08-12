@@ -21,13 +21,13 @@ class CommitsPage extends React.Component {
     componentDidMount() {
         this.props.fetchBranches({
             // Mock
-            owner: 'TheSubliminal',
-            repoName: 'depot-test'
+            owner: 'meowcat',
+            repoName: 'new-repo'
         });
         this.props.fetchCommits({
             // Mock
-            owner: 'TheSubliminal',
-            repoName: 'depot-test',
+            owner: 'meowcat',
+            repoName: 'new-repo',
             branch: this.state.branch
         });
     }
@@ -40,8 +40,8 @@ class CommitsPage extends React.Component {
             () => {
                 this.props.fetchCommits({
                     // Mock
-                    owner: 'TheSubliminal',
-                    repoName: 'depot-test',
+                    owner: 'meowcat',
+                    repoName: 'new-repo',
                     branch: this.state.branch
                 });
             }

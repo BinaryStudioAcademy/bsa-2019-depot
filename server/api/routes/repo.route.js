@@ -1,7 +1,7 @@
 const { Router } = require('express');
 
 const { createRepo, getReposNames } = require('../services/repo.service');
-const { getCommits } = require('../services/commit.service');
+const { getCommits, getCommitDiff } = require('../services/commit.service');
 const { getBranches } = require('../services/branch.service');
 
 const router = Router();
@@ -26,6 +26,12 @@ router
     const { owner, repoName } = req.params;
     getBranches({ user: owner, repoName })
       .then(branches => res.send(branches))
+      .catch(next);
+  })
+  .get('/:owner/:repoName/:hash/commit', (req, res, next) => {
+    const { owner, repoName, hash } = req.params;
+    getCommitDiff({ user: owner, name: repoName, hash })
+      .then(data => res.send(data))
       .catch(next);
   });
 
