@@ -82,6 +82,12 @@ class SettingsProfile extends Component {
   );
 
   render() {
+      //   const { currentUser: initialValues } = this.props;
+      const {
+          currentUser: initialValues,
+          currentUser: { loading, imgUrl }
+      } = this.props;
+
       return (
           <div>
               <PageHeader />
@@ -98,7 +104,7 @@ class SettingsProfile extends Component {
                       <Divider />
                       <Grid>
                           <Grid.Column computer={11} tablet={16} mobile={16}>
-                              <Formik initialValues={this.props.currentUser} onSubmit={this.onSubmit}>
+                              <Formik initialValues={initialValues} onSubmit={this.onSubmit}>
                                   {({ isSubmitting }) => (
                                       <Form className="ui form">
                                           <Header as="h4">Name</Header>
@@ -129,7 +135,7 @@ class SettingsProfile extends Component {
                                           <div>{this.NOTES.disclaimer}</div>
                                           <Divider hidden />
 
-                                          <Button color="green" type="submit" disabled={this.props.currentUser.loading}>
+                                          <Button color="green" type="submit" disabled={loading}>
                         Update profile
                                           </Button>
                                       </Form>
@@ -139,7 +145,7 @@ class SettingsProfile extends Component {
                           <Grid.Column computer={5} tablet={8} mobile={16}>
                               <Segment basic className={styles.no_padding}>
                                   <Header as="h4">Profile picture</Header>
-                                  <Image src={this.props.currentUser.imgUrl || avatarPlaceholder} fluid rounded></Image>
+                                  <Image src={imgUrl || avatarPlaceholder} fluid rounded></Image>
                                   <Dropdown trigger={this.imgEditBtn} pointing="top left" icon={null} className={styles.img_edit_btn}>
                                       <Dropdown.Menu className={styles.dropdown}>
                                           <Dropdown.Item onClick={this.onUploadPhoto}>Upload a photo...</Dropdown.Item>
