@@ -1,10 +1,8 @@
 const { Router } = require('express');
 
-// const jwtMiddleware = require('../middlewares/jwt.middleware');
 const {
   setUsername,
   checkUsernameExists,
-  // checkEmailExists,
   sendForgetPasswordEmail,
   resetPassword
 } = require('../services/user.service');

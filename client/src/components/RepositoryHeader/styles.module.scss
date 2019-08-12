@@ -1,0 +1,46 @@
+:global(.ui.top.attached.tabular.menu) {
+  position: relative;
+  top: 1px;
+
+  :global(.item) {
+    padding: 5px 10px;
+
+    :global(a) {
+      color: #252525;
+    }
+
+    :global(.ui.circular.label) {
+      margin-left: 5px;
+    }
+  }
+}
+
+:global(header) {
+  border-bottom: none;
+}
+
+:local(.repoHeader) {
+  border-bottom: 1px solid lightgrey;
+
+  :local(.repoHeaderContainer) {
+    max-width: 1000px;
+    margin: auto;
+    padding-top: 20px;
+  }
+}
+
+:local(.repoNameRow) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  :local(.repoName) {
+    :local(.repoPath) {
+      margin-left: 10px;
+      font-size: 20px;
+      :local(.pathDivider) {
+        margin: 0 5px;
+      }
+    }
+  }
+}

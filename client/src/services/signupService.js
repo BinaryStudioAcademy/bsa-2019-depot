@@ -1,12 +1,12 @@
 import callWebApi from '../helpers/webApiHelper';
 
 export const signup = async request => {
-    const response = await callWebApi({
-        endpoint: '/api/auth/register',
-        type: 'POST',
-        request
-    });
-    return response.json();
+  const response = await callWebApi({
+    endpoint: '/api/auth/register',
+    type: 'POST',
+    request
+  });
+  return response.json();
 };
 
 export const googleSignup = async () => {
@@ -18,7 +18,7 @@ export const googleSignup = async () => {
 };
 
 export const setToken = token => {
-    localStorage.setItem('token', token);
+  localStorage.setItem('token', token);
 };
 
 export const setUsername = async (username, profile) => {
