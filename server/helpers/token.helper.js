@@ -8,6 +8,7 @@ const verifyToken = async (token) => {
       return err;
     }
     result = authorizedData;
+    return result;
   });
   return result;
 };
