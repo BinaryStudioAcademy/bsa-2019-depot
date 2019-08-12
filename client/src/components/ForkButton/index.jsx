@@ -10,48 +10,48 @@ class ForkButton extends Component {
   handleClose = () => this.setState({ modalOpen: false });
 
   render() {
-      const { forkCount, repoName } = this.props;
-      return (
-          <Modal
-              closeIcon
-              open={this.state.modalOpen}
-              onClose={this.handleClose}
-              size="small"
-              trigger={
-                  <Button size="small" as="div" compact labelPosition="right" onClick={this.handleOpen}>
-                      <Button size="small" compact>
-                          <Icon name="fork" />
+    const { forkCount, repoName } = this.props;
+    return (
+      <Modal
+        closeIcon
+        open={this.state.modalOpen}
+        onClose={this.handleClose}
+        size="small"
+        trigger={
+          <Button size="small" as="div" compact labelPosition="right" onClick={this.handleOpen}>
+            <Button size="small" compact>
+              <Icon name="fork" />
               Fork
-                      </Button>
-                      <Label as="a" basic pointing="left">
-                          {forkCount}
-                      </Label>
-                  </Button>
-              }
-          >
-              <Modal.Header>You are going to fork {repoName}</Modal.Header>
-              <Modal.Actions>
-                  <Button onClick={this.handleClose}>Cancel</Button>
-                  <Button primary onClick={this.handleClose}>
+            </Button>
+            <Label as="a" basic pointing="left">
+              {forkCount}
+            </Label>
+          </Button>
+        }
+      >
+        <Modal.Header>You are going to fork {repoName}</Modal.Header>
+        <Modal.Actions>
+          <Button onClick={this.handleClose}>Cancel</Button>
+          <Button primary onClick={this.handleClose}>
             Fork
-                  </Button>
-              </Modal.Actions>
-          </Modal>
-      );
+          </Button>
+        </Modal.Actions>
+      </Modal>
+    );
   }
 }
 
 ForkButton.propTypes = {
-    owner: PropTypes.string,
-    repoName: PropTypes.string,
-    forkCount: PropTypes.number,
-    currentUser: PropTypes.object
+  owner: PropTypes.string,
+  repoName: PropTypes.string,
+  forkCount: PropTypes.number,
+  currentUser: PropTypes.object
 };
 
 ForkButton.defaultProps = {
-    owner: '',
-    repoName: '',
-    forkCount: 0
+  owner: '',
+  repoName: '',
+  forkCount: 0
 };
 
 const mapStateToProps = state => state.profile;
@@ -59,6 +59,6 @@ const mapStateToProps = state => state.profile;
 const mapDispatchToProps = {};
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(ForkButton);
