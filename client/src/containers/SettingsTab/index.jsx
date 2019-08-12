@@ -26,14 +26,21 @@ class RepoSettings extends React.Component {
     constructor(props) {
         super(props);
 
-        const { name } = this.props;
+        const {
+            match: {
+                params: { owner, repository }
+            }
+        } = this.props;
+        this.oldName = repository;
+
         this.state = {
-            name
+            name: repository,
+            owner
         };
     }
 
     componentDidMount() {
-        const { owner, name } = this.props;
+        const { owner, name } = this.state;
         this.props.fetchRepoSettings({
             owner,
             name
@@ -41,7 +48,7 @@ class RepoSettings extends React.Component {
     }
 
   onClickDelete = () => {
-      const { owner, name } = this.props;
+      const { owner, name } = this.state;
       this.props.deleteRepo({
           owner,
           name
@@ -55,14 +62,16 @@ class RepoSettings extends React.Component {
   };
 
   onClickRename = () => {
-      const { name } = this.state;
-      const { owner, name: oldName } = this.props;
+      const { name, owner } = this.state;
+      const { oldName } = this;
 
       this.props.renameRepo({
           owner,
           oldName,
           name
       });
+      this.props.history.push(`/${owner}/${name}/settings`);
+      window.location.reload();
   };
 
   render() {
@@ -79,7 +88,7 @@ class RepoSettings extends React.Component {
                   <Divider />
 
                   <Header as="h4">Repository name</Header>
-                  <Input className={styles.text_input} defaultValue={this.props.name} onChange={this.handleChangeRepoName} />
+                  <Input className={styles.text_input} defaultValue={this.state.name} onChange={this.handleChangeRepoName} />
                   <Button className={styles.button_rename} type="button" onClick={this.onClickRename}>
             Rename
                   </Button>
@@ -112,8 +121,13 @@ RepoSettings.propTypes = {
             isPublic: PropTypes.bool
         })
     }).isRequired,
-    owner: PropTypes.string,
-    name: PropTypes.string,
+    match: PropTypes.exact({
+        params: PropTypes.object.isRequired,
+        isExact: PropTypes.bool.isRequired,
+        path: PropTypes.string.isRequired,
+        url: PropTypes.string.isRequired
+    }).isRequired,
+    history: PropTypes.object,
     fetchRepoSettings: PropTypes.func.isRequired,
     renameRepo: PropTypes.func.isRequired,
     deleteRepo: PropTypes.func.isRequired
