@@ -45,9 +45,25 @@ const getReposNames = async ({ user, filter: { filterWord, limit } }) => {
   return limit ? repos.slice(0, limit) : repos;
 };
 
+const forkRepo = async ({ username, owner, repoName }) => {
+  try {
+    await setTimeout(() => {
+      console.warn(username);
+      console.warn(owner);
+      console.warn(repoName);
+    }, 1000);
+    // const directory = path.resolve(`${gitPath}/${username}/${repoName}`);
+    // await fs.remove(directory);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
 module.exports = {
   createRepo,
   renameRepo,
   deleteRepo,
-  getReposNames
+  getReposNames,
+  forkRepo
 };
