@@ -18,11 +18,41 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import PageHeader from '../../containers/Header';
 import { updateUserSettings } from '../../routines/routines';
+import { NavLink } from 'react-router-dom';
 
 import styles from './styles.module.scss';
 import avatarPlaceholder from './avatar-placeholder.svg';
 
 class SettingsProfile extends Component {
+  NOTES = {
+      name: (
+          <div>Your name may appear around Depot where you contribute or are mentioned. You can remove it at any time.</div>
+      ),
+      email: (
+          <div>
+        You have set your email address to private. To toggle email privacy, go to email settings and uncheck "Keep my
+        email address private."
+          </div>
+      ),
+      bio: (
+          <div>
+        You can @<strong>mention</strong> other users and organizations to link to them.
+          </div>
+      ),
+      company: (
+          <div>
+        You can @<strong>mention</strong> your company’s Depot organization to link it.
+          </div>
+      ),
+      disclaimer: (
+          <div>
+        All of the fields on this page are optional and can be deleted at any time, and by filling them out, you're
+        giving us consent to share this data wherever your user profile appears. Please see our{' '}
+              <NavLink to="/">privacy statement</NavLink> to learn more about how we use this information.
+          </div>
+      )
+  };
+
   renderField = ({ field }) => <Input fluid {...field} />;
 
   renderDisabledField = ({ field }) => <Input disabled fluid {...field} />;
@@ -38,11 +68,11 @@ class SettingsProfile extends Component {
   };
 
   onUploadPhoto = ev => {
-      console.warn('Upload photo!');
+      // code for uploading photo goes here
   };
 
   onRemovePhoto = ev => {
-      console.warn('Remove photo!');
+      // code for removing photo goes here
   };
 
   imgEditBtn = (
