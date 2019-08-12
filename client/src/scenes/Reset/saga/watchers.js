@@ -3,9 +3,9 @@ import { types } from '../types';
 import { resetPassword } from './workers';
 
 function* watchReset() {
-    yield takeEvery(types.RESET_ASYNC, resetPassword);
+  yield takeEvery(types.RESET_ASYNC, resetPassword);
 }
 
 export function* watchResetPassword() {
-    yield all([call(watchReset)]);
+  yield all([call(watchReset)]);
 }
