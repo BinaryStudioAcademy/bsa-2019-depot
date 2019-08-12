@@ -6,6 +6,7 @@ import validator from 'validator';
 import { Grid, Header, Form, Button, Segment, Label, Message } from 'semantic-ui-react';
 import { signupRoutine } from '../../routines/routines';
 import GoogleAuth from '../../components/GoogleAuth';
+import appConfig from '../../app.config';
 
 import './styles.module.scss';
 
@@ -184,8 +185,8 @@ class Signup extends Component {
   };
 
   renderGoogleAuth = () => {
-      const serverLoginURL = `${process.env.REACT_APP_SERVER_URL}/auth/google`;
-      return <GoogleAuth text="Sign up with Google" link={serverLoginURL}></GoogleAuth>;
+      const serverLoginURL = `${appConfig.SERVER_URL}/auth/google`;
+      return <GoogleAuth text="Sign up with Google" link={serverLoginURL} />;
   };
 
   renderSignup = () => {
