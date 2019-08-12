@@ -21,6 +21,7 @@
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
+    "fs-extra": "^8.1.0",
     "jsonwebtoken": "^8.5.1",
     "nodegit": "^0.24.3",
     "nodemon": "^1.19.1",

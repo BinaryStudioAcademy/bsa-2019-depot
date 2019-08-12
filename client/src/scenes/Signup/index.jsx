@@ -1,11 +1,12 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import validator from 'validator';
 import { Grid, Header, Form, Button, Segment, Label, Message } from 'semantic-ui-react';
-import { ToastContainer, toast } from 'react-toastify';
 import { signupRoutine } from '../../routines/routines';
+import GoogleAuth from '../../components/GoogleAuth';
+import { serverUrl } from '../../app.config';
 
 import './styles.module.scss';
 
@@ -43,10 +44,6 @@ class Signup extends React.Component {
         valid: true
       }
     });
-
-    if (this.props.error) {
-      this.notify();
-    }
   };
 
   validateField = (field, value) => {
@@ -114,118 +111,139 @@ class Signup extends React.Component {
       email: email.value,
       password: password.value
     };
+
     this.props.signupRoutine({
-      user,
-      history: this.props.history
+      user
     });
   };
 
-  notify = () => toast(this.props.error, { type: toast.TYPE.ERROR, hideProgressBar: true });
-
-  render() {
+  renderSignupForm = () => {
     const { username, email, password } = this.state;
-    const { loading, error } = this.props;
-
+    const { loading, signupError } = this.props;
     const formValid = ['username', 'email', 'password'].every(
       field => this.state[field].valid && this.state[field].value
     );
 
-    return !this.props.isAuthorized ? (
-      <Fragment>
-        <Grid textAlign="center" centered className="signup-grid">
-          <Grid.Column style={{ maxWidth: 450 }}>
-            <Header as="h2" color="blue" textAlign="center">
-              Join Depot
-            </Header>
-            <Form name="signupForm" size="large" onSubmit={this.handleClickSignup} loading={loading} error={!!error}>
-              <Segment textAlign="left">
-                <Form.Field required>
-                  <label htmlFor="username">Username</label>
-                  <Form.Input
-                    fluid
-                    placeholder="Username"
-                    name="username"
-                    type="text"
-                    error={!username.valid}
-                    onChange={this.changeHandler}
-                    onBlur={this.validateHandler}
-                    required
-                    icon={{
-                      name: 'check',
-                      className: `icon-green ${username.value && username.valid ? '' : 'icon-hidden'}`
-                    }}
-                  />
-                  <Label className="signup-pointing-label" pointing>
-                    Username can contain alphanumeric characters and single hyphens, cannot begin or end with a hyphen
-                  </Label>
-                </Form.Field>
-                <Form.Field required>
-                  <label htmlFor="email">Email</label>
-                  <Form.Input
-                    fluid
-                    placeholder="Email"
-                    name="email"
-                    type="email"
-                    error={!email.valid}
-                    onChange={this.changeHandler}
-                    onBlur={this.validateHandler}
-                    required
-                    icon={{
-                      name: 'check',
-                      className: `icon-green ${email.value && email.valid ? '' : 'icon-hidden'}`
-                    }}
-                  />
-                </Form.Field>
-                <Form.Field required>
-                  <label htmlFor="password">Password</label>
-                  <Form.Input
-                    fluid
-                    placeholder="Password"
-                    name="password"
-                    type="password"
-                    error={!password.valid}
-                    onChange={this.changeHandler}
-                    onBlur={this.validateHandler}
-                    required
-                    icon={{
-                      name: 'check',
-                      className: `icon-green ${password.value && password.valid ? '' : 'icon-hidden'}`
-                    }}
-                  />
-                  <Label className="signup-pointing-label" pointing>
-                    Password should be at least 8 characters including a number and a lowercase letter
-                  </Label>
-                </Form.Field>
+    return (
+      <Form
+        name="signupForm"
+        size="large"
+        onSubmit={this.handleClickSignup}
+        loading={loading}
+        error={Boolean(signupError)}
+      >
+        <Segment textAlign="left">
+          <Form.Field required>
+            <label htmlFor="username">Username</label>
+            <Form.Input
+              fluid
+              placeholder="Username"
+              name="username"
+              type="text"
+              error={!username.valid}
+              onChange={this.changeHandler}
+              onBlur={this.validateHandler}
+              required
+              icon={{
+                name: 'check',
+                className: `icon-green ${username.value && username.valid ? '' : 'icon-hidden'}`
+              }}
+            />
+            <Label className="signup-pointing-label" pointing>
+              Username can contain alphanumeric characters and single hyphens, cannot begin or end with a hyphen
+            </Label>
+          </Form.Field>
+          <Form.Field required>
+            <label htmlFor="email">Email</label>
+            <Form.Input
+              fluid
+              placeholder="Email"
+              name="email"
+              type="email"
+              error={!email.valid}
+              onChange={this.changeHandler}
+              onBlur={this.validateHandler}
+              required
+              icon={{
+                name: 'check',
+                className: `icon-green ${email.value && email.valid ? '' : 'icon-hidden'}`
+              }}
+            />
+          </Form.Field>
+          <Form.Field required>
+            <label htmlFor="password">Password</label>
+            <Form.Input
+              fluid
+              placeholder="Password"
+              name="password"
+              type="password"
+              error={!password.valid}
+              onChange={this.changeHandler}
+              onBlur={this.validateHandler}
+              required
+              icon={{
+                name: 'check',
+                className: `icon-green ${password.value && password.valid ? '' : 'icon-hidden'}`
+              }}
+            />
+            <Label className="signup-pointing-label" pointing>
+              Password should be at least 8 characters including a number and a lowercase letter
+            </Label>
+          </Form.Field>
 
-                <Button type="submit" color="blue" fluid size="large" disabled={!formValid}>
-                  Sign Up for Depot
-                </Button>
-                <Message error content={error} />
-              </Segment>
-            </Form>
-          </Grid.Column>
-        </Grid>
-        <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} />
-      </Fragment>
-    ) : (
-      <Redirect to="/" />
+          <Button type="submit" color="green" fluid size="large" disabled={!formValid}>
+            Sign Up for Depot
+          </Button>
+          <Message error content={signupError} />
+        </Segment>
+      </Form>
     );
+  };
+
+  renderGoogleAuth = () => {
+    const serverLoginUrl = `${serverUrl}/auth/google`;
+    return <GoogleAuth text="Sign up with Google" link={serverLoginUrl} />;
+  };
+
+  renderSignup = () => {
+    return (
+      <Grid.Row columns={2}>
+        <Grid.Column style={{ maxWidth: 450 }}>{this.renderSignupForm()}</Grid.Column>
+        <Grid.Column style={{ maxWidth: 300 }}>{this.renderGoogleAuth()}</Grid.Column>
+      </Grid.Row>
+    );
+  };
+
+  renderForms = () => {
+    return (
+      <Grid textAlign="center" centered className="signup-grid">
+        <Header as="h2" color="black" textAlign="center">
+          Join Depot
+        </Header>
+        {this.renderSignup()}
+      </Grid>
+    );
+  };
+
+  render() {
+    const { isAuthorized } = this.props;
+    return isAuthorized ? <Redirect to="/" /> : this.renderForms();
   }
 }
 
 Signup.propTypes = {
-  isAuthorized: PropTypes.bool,
-  signupRoutine: PropTypes.func,
-  error: PropTypes.string,
-  loading: PropTypes.bool,
-  history: PropTypes.object
+  isAuthorized: PropTypes.bool.isRequired,
+  signupRoutine: PropTypes.func.isRequired,
+  signupError: PropTypes.string,
+  loading: PropTypes.bool.isRequired,
+  location: PropTypes.object.isRequired
 };
 
-const mapStateToProps = ({ profile: { isAuthorized, loading, error } }) => {
+const mapStateToProps = ({ profile: { isAuthorized, loading, signupError } }) => {
   return {
     isAuthorized,
     loading,
-    error
+    signupError
   };
 };
 
