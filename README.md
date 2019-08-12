@@ -28,6 +28,8 @@ GIT_PATH = '' # Has to be changed to path where you want to save repositories
 AWS_SES_ACCESS_KEY = AKIAWBOCxxxxxxx # has to be replaced with actual aws ses access key 
 AWS_SES_SECRET_KEY = EtKJdUrnWxxxxxxxxx # has to be replaced with actual aws ses secret key
 AWS_SES_REGION = us-east-1 # has to be replaced with actual aws region
+RABBITMQ_CONNECTION_URL = amqp://localhost:5672 # default. has to be changed if it is different
+RABBITMQ_QUEUE_NAME = emails # default. has to be changed if it is different
 ```
 
 ### Git Server
@@ -80,6 +82,14 @@ More info:
 
 [Guide on how to set up a Git server on EC2](https://www.freecodecamp.org/news/create-your-own-github-kinda-9b4581db675c/)
 
+### RabbitMQ
+1. Install RabbitMQ: [Tutorial](https://www.rabbitmq.com/download.html)
+2. Run it:
+  Windows. (starts after installation automatically, it running on localhost on standard port (5672))
+You can stop/reinstall/start the RabbitMQ service from the Start Menu.
+  Debian and Ubuntu. To start and stop the server, use the service tool. The service name is rabbitmq-server
+`sudo service rabbitmq-server stop`
+`sudo service rabbitmq-server start`
 ### Branches
 
 In this project we follow with [Pull Request process](https://help.github.com/en/articles/about-pull-requests). Two main branches are protected with a [Github branch protection rules](https://help.github.com/en/articles/defining-the-mergeability-of-pull-requests):

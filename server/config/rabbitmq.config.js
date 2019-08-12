@@ -1,5 +1,5 @@
-const connectionUrl = process.env.CONNECTION_URL;
-const queue = process.env.QUEUE_NAME;
+const connectionUrl = process.env.RABBITMQ_CONNECTION_URL;
+const queue = process.env.RABBITMQ_QUEUE_NAME;
 
 module.exports = {
   connectionUrl,
