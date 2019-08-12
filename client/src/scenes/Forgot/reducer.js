@@ -1,9 +1,9 @@
 import { types } from './types';
 
 const initialState = {
-    emailSend: false,
-    emailNotExist: false,
-    message: ''
+  emailSend: false,
+  emailNotExist: false,
+  message: ''
 };
 
 export const forgotReducer = (state = initialState, action) => {

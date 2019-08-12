@@ -1,9 +1,9 @@
 import { types } from './types';
 
 const initialState = {
-    passwordReset: false,
-    passwordNotReset: false,
-    message: ''
+  passwordReset: false,
+  passwordNotReset: false,
+  message: ''
 };
 
 export const resetReducer = (state = initialState, action) => {
