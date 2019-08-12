@@ -6,8 +6,8 @@ const gitPath = process.env.GIT_PATH;
 
 const createRepo = async ({ owner, repository }) => {
   let result = 'Repo was created';
-  const pathToRepo = path.resolve(`${gitPath}/${owner}/${repository}`);
-  await NodeGit.Repository.init(pathToRepo.replace(/\\/g, '/'), 1)
+  const pathToRepo = path.resolve(`${gitPath}/${owner}/${repository}`).replace(/\\/g, '/');
+  await NodeGit.Repository.init(pathToRepo, 1)
     .then(() => {
       result = {
         url: pathToRepo

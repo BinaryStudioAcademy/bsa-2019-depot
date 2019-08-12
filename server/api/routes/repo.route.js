@@ -1,6 +1,6 @@
 const { Router } = require('express');
 
-const { createRepo, getReposNames } = require('../services/repo.service');
+const { createRepo, getReposNames, checkName } = require('../services/repo.service');
 const { getCommits } = require('../services/commit.service');
 const { getBranches } = require('../services/branch.service');
 
@@ -9,6 +9,12 @@ const router = Router();
 router
   .post('/', (req, res) => {
     createRepo({ ...req.body }).then(data => res.send(data));
+  })
+  .get('/:owner/:repoName/check-name', (req, res, next) => {
+    const { owner, repoName } = req.params;
+    checkName({ user: owner, name: repoName })
+      .then(result => res.send({ exists: result }))
+      .catch(next);
   })
   .get('/:owner/repos', (req, res, next) => {
     const { owner } = req.params;

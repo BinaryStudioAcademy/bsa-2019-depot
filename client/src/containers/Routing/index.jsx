@@ -7,6 +7,7 @@ import Spinner from '../../components/Spinner';
 import { NotFound, Login, Forgot, Reset, MainPage, Signup, Dashboard } from '../../scenes';
 import { fetchCurrentUser } from '../../routines/routines';
 import RepositoryPage from '../../scenes/Repository';
+import { CreateRepository, EmptyRepositoryPage } from '../../scenes';
 
 class Routing extends React.Component {
   componentDidMount() {
@@ -20,6 +21,8 @@ class Routing extends React.Component {
       <Spinner />
     ) : (
       <Switch>
+        <Route exact path="/new" component={CreateRepository} />
+        <Route exact path="/:owner/:repository" component={EmptyRepositoryPage} />
         <Route exact path="/registration" component={Signup} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/forgot" component={Forgot} />
