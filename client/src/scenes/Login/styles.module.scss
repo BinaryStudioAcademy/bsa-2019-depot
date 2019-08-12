@@ -1,6 +1,12 @@
 :global(.ui.grid.login-grid) {
   height: 100vh;
-  margin-top: -50px;
+  /*margin-top: -50px;*/
+}
+:global(.has-error input) {
+  border-color: #ffcec6 !important;
+}
+:global(.no-error input) {
+  border-color: #bbd3bb !important;
 }
 :global(.ui.center.aligned.header.login-header) {
   position: relative;

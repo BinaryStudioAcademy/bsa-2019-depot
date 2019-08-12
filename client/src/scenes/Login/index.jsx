@@ -1,117 +1,105 @@
 import React, { Component } from 'react';
 import { Redirect, NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
-import createHandler from 'react-cached-handler';
 import PropTypes from 'prop-types';
-import validator from 'validator';
 import { Grid, Header, Form, Button, Segment, Message } from 'semantic-ui-react';
 import { authorizeUser } from '../../routines/routines';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 import './styles.module.scss';
 
+const validationSchema = Yup.object().shape({
+    email: Yup.string()
+        .email('Invalid email address!')
+        .required('Email address is required!')
+        .max(100),
+    password: Yup.string()
+        .matches(/^(?=.*\d[a-z]).{8,}|([a-zA-Z0-9]{15,})$/)
+        .required('Password is required')
+        .max(72)
+});
+
 class Login extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            email: '',
-            password: '',
-            isEmailValid: true,
-            isPasswordValid: true
-        };
+    constructor() {
+        super();
+        this.submit = this.submit.bind(this);
+        this.renderComponent = this.renderComponent.bind(this);
     }
 
-  validateEmail = () => {
-      const { email } = this.state;
-      const isEmailValid = !validator.isEmpty(email);
-      this.setState({ isEmailValid });
-      return isEmailValid;
-  };
+    submit(values) {
+        this.props.authorizeUser({ username: values.email, password: values.password });
+    }
 
-  validatePassword = () => {
-      const { password } = this.state;
-      const isPasswordValid = !validator.isEmpty(password);
-      this.setState({ isPasswordValid });
-      return isPasswordValid;
-  };
-
-  emailChangeHandler = createHandler(ev => {
-      this.emailChanged(ev.target.value);
-  });
-
-  passwordChangeHandler = createHandler(ev => {
-      this.passwordChanged(ev.target.value);
-  });
-
-  emailChanged = email => this.setState({ email, isEmailValid: true });
-
-  passwordChanged = password => this.setState({ password, isPasswordValid: true });
-
-  validateForm = () => [this.validateEmail(), this.validatePassword()].every(Boolean);
-
-  handleClickLogin = async () => {
-      const { email, password } = this.state;
-      const valid = this.validateForm();
-      if (!valid || this.props.loading) {
-          return;
-      }
-      this.props.authorizeUser({ username: email, password });
-  };
-
-  render() {
-      const { isEmailValid, isPasswordValid } = this.state;
-      const { loading } = this.props;
-
-      return !this.props.isAuthorized ? (
-          <Grid textAlign="center" verticalAlign="middle" className="login-grid">
-              <Grid.Column className="grid-column">
-                  <Header as="h2" color="black" textAlign="center" className="login-header">
+    renderComponent({ errors, touched, handleChange, handleBlur, handleSubmit, values }) {
+        return (
+            <Grid textAlign="center" verticalAlign="middle" className="login-grid">
+                <Grid.Column className="grid-column">
+                    <Header as="h2" color="black" textAlign="center" className="login-header">
             Sign in to Depot
-                  </Header>
-                  <Form name="loginForm" size="large" onSubmit={this.handleClickLogin}>
-                      <Segment>
-                          <Form.Input
-                              fluid
-                              label="Email"
-                              placeholder="Email"
-                              type="email"
-                              error={!isEmailValid}
-                              onChange={this.emailChangeHandler()}
-                              onBlur={this.validateEmail}
-                          />
-
-                          <Form.Field className="password-wrapper">
-                              <NavLink exact to="/forgot" className="forgot-link">
+                    </Header>
+                    <Form name="loginForm" size="large" onSubmit={handleSubmit}>
+                        <Segment>
+                            <Form.Input
+                                fluid
+                                name="email"
+                                label="Email"
+                                placeholder="Email"
+                                type="email"
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                value={values.email}
+                                className={`${errors.email && touched.email ? 'has-error' : 'no-error'}`}
+                            />
+                            <Form.Field className="password-wrapper">
+                                <NavLink exact to="/forgot" className="forgot-link">
                   forgot password?
-                              </NavLink>
-                              <Form.Input
-                                  fluid
-                                  name="password"
-                                  label="Password"
-                                  placeholder="Password"
-                                  type="password"
-                                  error={!isPasswordValid}
-                                  onChange={this.passwordChangeHandler()}
-                                  onBlur={this.validatePassword}
-                              />
-                          </Form.Field>
-                          <Button type="submit" color="green" fluid size="large" loading={loading}>
+                                </NavLink>
+                                <Form.Input
+                                    fluid
+                                    name="password"
+                                    label="Password"
+                                    placeholder="Password"
+                                    type="password"
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    value={values.password}
+                                    className={`${errors.password && touched.password ? 'has-error' : 'no-error'}`}
+                                />
+                            </Form.Field>
+                            <Button type="submit" color="green" fluid size="large">
                 Sign In
-                          </Button>
-                      </Segment>
-                  </Form>
-                  <Message>
+                            </Button>
+                        </Segment>
+                    </Form>
+                    <Message>
             New to Depot?{' '}
-                      <NavLink exact to="/registration">
+                        <NavLink exact to="/registration">
               Create an account
-                      </NavLink>
-                  </Message>
-              </Grid.Column>
-          </Grid>
-      ) : (
-          <Redirect to="/" />
-      );
-  }
+                        </NavLink>
+                    </Message>
+                </Grid.Column>
+            </Grid>
+        );
+    }
+
+    render() {
+        return !this.props.isAuthorized ? (
+            <Formik
+                initialValues={{
+                    email: '',
+                    password: ''
+                }}
+                validationSchema={validationSchema}
+                onSubmit={this.submit}
+                render={this.renderComponent}
+            />
+        ) : (
+            <Redirect to="/" />
+        );
+    }
 }
+
 Login.propTypes = {
     isAuthorized: PropTypes.bool.isRequired,
     loading: PropTypes.bool.isRequired,
