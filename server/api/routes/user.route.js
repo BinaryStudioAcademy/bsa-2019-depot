@@ -3,7 +3,6 @@ const { Router } = require('express');
 const {
   setUsername,
   checkUsernameExists,
-  checkEmailExists,
   sendForgetPasswordEmail,
   resetPassword,
   updateUserSettings
@@ -20,7 +19,7 @@ router.post('/username', (req, res, next) => {
 });
 
 router.get('/username-exists', (req, res, next) => {
-  checkUsernameExists({ ...req.body })
+  checkUsernameExists({ username: req.query.username })
     .then(data => res.send(data))
     .catch(next);
 });

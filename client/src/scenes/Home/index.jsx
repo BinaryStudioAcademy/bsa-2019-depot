@@ -5,11 +5,11 @@ import Routing from '../../containers/Routing';
 import { store } from '../../store';
 
 const Home = () => (
-    <Provider store={store}>
-        <Router>
-            <Routing />
-        </Router>
-    </Provider>
+  <Provider store={store}>
+    <Router>
+      <Routing />
+    </Router>
+  </Provider>
 );
 
 export default Home;
