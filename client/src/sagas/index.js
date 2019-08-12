@@ -7,6 +7,7 @@ import commitPageSagas from '../containers/CommitsPage/sagas';
 import profileSagas from '../containers/Profile/sagas';
 import { watchRepositories } from '../scenes/Dashboard/sagas';
 
+import repoSettingsSagas from '../containers/SettingsTab/sagas';
 export default function* rootSaga() {
   yield all([
     issuesSagas(),
@@ -14,6 +15,7 @@ export default function* rootSaga() {
     watchResetPassword(),
     commitPageSagas(),
     profileSagas(),
+    repoSettingsSagas(),
     watchRepositories()
   ]);
 }
