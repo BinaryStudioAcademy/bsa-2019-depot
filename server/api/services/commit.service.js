@@ -8,10 +8,10 @@ const getCommits = async ({ user, name, branch }) => {
   const allCommits = [];
   await NodeGit.Repository.open(pathToRepo)
     .then(repo => repo.getBranchCommit(branch))
-    .then((firstCommitOnMaster) => {
+    .then(firstCommitOnMaster => {
       const history = firstCommitOnMaster.history(NodeGit.Revwalk.SORT.TIME);
-      const commitPromise = new Promise((resolve) => {
-        history.on('commit', (commit) => {
+      const commitPromise = new Promise(resolve => {
+        history.on('commit', commit => {
           const commitObject = {
             sha: commit.sha(),
             author: commit.author().name(),
