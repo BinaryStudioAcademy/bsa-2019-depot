@@ -14,7 +14,8 @@ export default (state = initialState, action) => {
   case signupRoutine.TRIGGER:
     return {
       ...state,
-      loading: true
+      loading: true,
+      error: null
     };
   case authorizeUser.SUCCESS:
   case fetchCurrentUser.SUCCESS:

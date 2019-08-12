@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Redirect, NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import createHandler from 'react-cached-handler';
 import PropTypes from 'prop-types';
 import validator from 'validator';
 import { Grid, Header, Form, Button, Segment, Message } from 'semantic-ui-react';
+import { ToastContainer, toast } from 'react-toastify';
 import { authorizeUser } from '../../routines/routines';
 
 import './styles.module.scss';
@@ -18,6 +19,12 @@ class Login extends Component {
       isEmailValid: true,
       isPasswordValid: true
     };
+  }
+
+  componentDidMount() {
+    if (this.props.error) {
+      this.notify();
+    }
   }
 
   validateEmail = () => {
@@ -57,56 +64,61 @@ class Login extends Component {
     this.props.authorizeUser({ username: email, password });
   };
 
+  notify = () => toast(this.props.error, { type: toast.TYPE.ERROR, hideProgressBar: true });
+
   render() {
     const { isEmailValid, isPasswordValid } = this.state;
     const { loading } = this.props;
 
     return !this.props.isAuthorized ? (
-      <Grid textAlign="center" verticalAlign="middle" className="login-grid">
-        <Grid.Column className="grid-column">
-          <Header as="h2" color="black" textAlign="center" className="login-header">
-            Sign in to Depot
-          </Header>
-          <Form name="loginForm" size="large" onSubmit={this.handleClickLogin}>
-            <Segment>
-              <Form.Input
-                fluid
-                label="Email"
-                placeholder="Email"
-                type="email"
-                error={!isEmailValid}
-                onChange={this.emailChangeHandler()}
-                onBlur={this.validateEmail}
-              />
-
-              <Form.Field className="password-wrapper">
-                <NavLink exact to="/forgot" className="forgot-link">
-                  forgot password?
-                </NavLink>
+      <Fragment>
+        <Grid textAlign="center" verticalAlign="middle" className="login-grid">
+          <Grid.Column className="grid-column">
+            <Header as="h2" color="black" textAlign="center" className="login-header">
+              Sign in to Depot
+            </Header>
+            <Form name="loginForm" size="large" onSubmit={this.handleClickLogin}>
+              <Segment>
                 <Form.Input
                   fluid
-                  name="password"
-                  label="Password"
-                  placeholder="Password"
-                  type="password"
-                  error={!isPasswordValid}
-                  onChange={this.passwordChangeHandler()}
-                  onBlur={this.validatePassword}
+                  label="Email"
+                  placeholder="Email"
+                  type="email"
+                  error={!isEmailValid}
+                  onChange={this.emailChangeHandler()}
+                  onBlur={this.validateEmail}
                 />
-              </Form.Field>
-              <Button type="submit" color="green" fluid size="large" loading={loading}>
-                Sign In
-              </Button>
-            </Segment>
-          </Form>
-          <Message>
-            New to Depot?{' '}
-            <NavLink exact to="/registration">
-              Create an account
-            </NavLink>
-          </Message>
-        </Grid.Column>
-      </Grid>
+
+                <Form.Field className="password-wrapper">
+                  <NavLink exact to="/forgot" className="forgot-link">
+                    forgot password?
+                  </NavLink>
+                  <Form.Input
+                    fluid
+                    name="password"
+                    label="Password"
+                    placeholder="Password"
+                    type="password"
+                    error={!isPasswordValid}
+                    onChange={this.passwordChangeHandler()}
+                    onBlur={this.validatePassword}
+                  />
+                </Form.Field>
+                <Button type="submit" color="green" fluid size="large" loading={loading}>
+                  Sign In
+                </Button>
+              </Segment>
+            </Form>
+            <Message>
+              New to Depot?{' '}
+              <NavLink exact to="/registration">
+                Create an account
+              </NavLink>
+            </Message>
+          </Grid.Column>
+        </Grid>
+        <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} />
+      </Fragment>
     ) : (
       <Redirect to="/" />
     );
