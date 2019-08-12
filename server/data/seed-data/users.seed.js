@@ -1,4 +1,5 @@
-const cryptoHelper = require('../../helpers/crypto.helper');
+const cryptoHelper = require('../../helpers/crypro.helper');
+const usersSeedUpdate = require('./user.seed.update.json');
 
 const hash = password => cryptoHelper.encryptSync(password);
 
@@ -30,8 +31,9 @@ const usersSeed = [
     username: 'user3',
     password: hash('3333')
   }
-].map(user => ({
+].map((user, ind) => ({
   ...user,
+  ...usersSeedUpdate[ind],
   createdAt: now,
   updatedAt: now
 }));
