@@ -5,9 +5,7 @@ import {parseDiff, Diff, Hunk, Decoration} from 'react-diff-view';
 import styles from 'react-diff-view/style/index.css';
 const text = `
 diff --git a/client/package.json b/client/package.json
-index 142cb14..72d33f5 100644
---- a/client/package.json
-+++ b/client/package.json
+index a..b
 @@ -6,5 +6,6 @@
    "dependencies": {
 -    "dotenv": "^8.0.0",

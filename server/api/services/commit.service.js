@@ -32,37 +32,40 @@ const getCommits = async ({ user, name, branch }) => {
 
 const getCommitDiff = async ({ user, name, hash }) => {
   const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`).replace(/\\/g, '/');
-  let diffs;
+  let diffs = '';
   await NodeGit.Repository.open(pathToRepo)
     .then(repo => repo.getCommit(hash))
-    .then((commit) => {
-      console.warn(`commit ${commit.sha()}`);
-      console.warn('Author:', `${commit.author().name()} <${commit.author().email()}>`);
-      console.warn('Date:', commit.date());
-      console.warn(`\n    ${commit.message()}`);
-      console.warn(`\ngetDiff:    ${commit.getDiff('-U1')}`);
-      diffs = commit.getDiff('-U1');
-      return commit.getDiff('-U1');
-    })
-    .then((diffList) => {
-      diffList.forEach((diff) => {
-        diff.patches().then((patches) => {
-          patches.forEach((patch) => {
-            patch.hunks().then((hunks) => {
-              hunks.forEach((hunk) => {
-                hunk.lines().then((lines) => {
-                  console.warn('diff', patch.oldFile().path(), patch.newFile().path());
-                  console.warn(hunk.header().trim());
-                  lines.forEach((line) => {
-                    console.warn(String.fromCharCode(line.origin()) + line.content().trim());
-                  });
-                });
+    .then(commit => commit.getDiff())
+    .then(
+      diffListPromise => new Promise((resolve) => {
+        diffListPromise.forEach(async (diff) => {
+          console.warn(diff);
+          const patches = await diff.patches();
+          console.warn(patches);
+
+          patches.forEach(async (patch) => {
+            const hunks = await patch.hunks();
+
+            console.warn('hunks');
+            console.warn(hunks);
+            hunks.forEach(async (hunk) => {
+              const lines = await hunk.lines();
+              diffs += `diff  --git a/${patch.oldFile().path()}  b/${patch.newFile().path()}\n`;
+              diffs += 'index a..b\n';
+              diffs += `${hunk.header().trim()}\n`;
+              lines.forEach((line) => {
+                diffs += `${String.fromCharCode(line.origin())} ${line.content().trim()}\n`;
               });
+              resolve(diffs);
+              console.warn(diffs);
             });
           });
         });
-      });
-    });
+      })
+    );
+  console.warn('diffList');
+  // console.warn(diffList);
+
   return diffs;
 };
 

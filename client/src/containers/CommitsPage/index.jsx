@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Dimmer, Dropdown, Loader } from 'semantic-ui-react';
+import { Dropdown, Loader } from 'semantic-ui-react';
 import CommitsList from '../../components/CommitsList';
 import { fetchCommits, fetchBranches } from '../../routines/routines';
 
@@ -61,9 +61,7 @@ class CommitsPage extends React.Component {
         }
 
         return commitsData.loading || branchesData.loading ? (
-            <Dimmer active>
-                <Loader />
-            </Dimmer>
+            <Loader active />
         ) : (
             <div className={styles.commitsContainer}>
                 <div className={styles.branchSelectRow}>
