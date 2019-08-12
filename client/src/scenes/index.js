@@ -7,5 +7,19 @@ import MainPage from './MainPage/index';
 import Dashboard from './Dashboard/index';
 import Signup from './Signup/index';
 import CodeTab from './CodeTab/index';
+import CreateRepository from './CreateRepository';
+import EmptyRepositoryPage from './EmptyRepositoryPage';
 
-export { Login, Forgot, Reset, Home, NotFound, MainPage, Signup, Dashboard, CodeTab };
+export {
+  Login,
+  Forgot,
+  Reset,
+  Home,
+  NotFound,
+  MainPage,
+  Signup,
+  Dashboard,
+  CodeTab,
+  CreateRepository,
+  EmptyRepositoryPage
+};

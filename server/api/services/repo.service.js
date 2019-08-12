@@ -1,19 +1,31 @@
 const NodeGit = require('nodegit');
 const path = require('path');
-const { readdirSync } = require('fs');
+const fs = require('fs');
 
 const gitPath = process.env.GIT_PATH;
 
-const createRepo = async ({ user, name }) => {
+const createRepo = async ({ owner, repository }) => {
   let result = 'Repo was created';
-  const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`);
+  const pathToRepo = path.resolve(`${gitPath}/${owner}/${repository}`);
   await NodeGit.Repository.init(pathToRepo.replace(/\\/g, '/'), 1)
+    .then(() => {
+      result = {
+        url: pathToRepo
+      };
+    })
     .catch(() => {
       result = 'Error! Repos wasn`t created';
     });
   return result;
 };
 
+const checkName = async ({ user, name }) => {
+  const filePath = path.resolve(`${gitPath}/${user}/${name}`);
+  const exists = await fs.existsSync(filePath);
+  return exists;
+};
+
+const { readdirSync } = fs;
 const getReposNames = async ({ user, filter: { filterWord, limit } }) => {
   const pathToRepo = path.resolve(`${gitPath}/${user}`);
   const repos = readdirSync(pathToRepo, { withFileTypes: true })
@@ -23,4 +35,4 @@ const getReposNames = async ({ user, filter: { filterWord, limit } }) => {
   return limit ? repos.slice(0, limit) : repos;
 };
 
-module.exports = { createRepo, getReposNames };
+module.exports = { createRepo, getReposNames, checkName };
