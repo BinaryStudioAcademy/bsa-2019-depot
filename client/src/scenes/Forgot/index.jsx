@@ -12,24 +12,24 @@ import { forgotActions } from './actions';
 import './styles.module.scss';
 
 class Forgot extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            email: '',
-            isLoading: false,
-            isEmailValid: true
-        };
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: '',
+      isLoading: false,
+      isEmailValid: true
+    };
+  }
 
   validateEmail = () => {
-      const { email } = this.state;
-      const isEmailValid = !validator.isEmpty(email);
-      this.setState({ isEmailValid });
-      return isEmailValid;
+    const { email } = this.state;
+    const isEmailValid = !validator.isEmpty(email);
+    this.setState({ isEmailValid });
+    return isEmailValid;
   };
 
   emailChangeHandler = createHandler(ev => {
-      this.emailChanged(ev.target.value);
+    this.emailChanged(ev.target.value);
   });
 
   emailChanged = email => this.setState({ email, isEmailValid: true });
@@ -37,56 +37,56 @@ class Forgot extends Component {
   validateForm = () => [this.validateEmail()].every(Boolean);
 
   handleClickForgot = async () => {
-      const { isLoading, email } = this.state;
-      const { actions } = this.props;
-      const valid = this.validateForm();
-      if (!valid || isLoading) {
-          return;
-      }
-      this.setState({ isLoading: true });
-      try {
-          await actions.forgotAsync({ email });
-          this.setState({ isLoading: false });
-      } catch (error) {
-          this.setState({ isLoading: false });
-      }
+    const { isLoading, email } = this.state;
+    const { actions } = this.props;
+    const valid = this.validateForm();
+    if (!valid || isLoading) {
+      return;
+    }
+    this.setState({ isLoading: true });
+    try {
+      await actions.forgotAsync({ email });
+      this.setState({ isLoading: false });
+    } catch (error) {
+      this.setState({ isLoading: false });
+    }
   };
 
   render() {
-      const { isLoading, isEmailValid } = this.state;
-      const { isAuthorized, message, emailNotExist, emailSend } = this.props;
-      const succsessMessage = emailSend ? <Message color="teal">{message}</Message> : null;
-      const failureMessage = emailNotExist ? <Message color="red">{message}</Message> : null;
-      return !isAuthorized ? (
-          <Grid textAlign="center" verticalAlign="middle" className="forgot-grid fill">
-              <Grid.Column className="grid-column">
-                  <Header as="h2" color="black" textAlign="center" className="forgot-header">
+    const { isLoading, isEmailValid } = this.state;
+    const { isAuthorized, message, emailNotExist, emailSend } = this.props;
+    const succsessMessage = emailSend ? <Message color="teal">{message}</Message> : null;
+    const failureMessage = emailNotExist ? <Message color="red">{message}</Message> : null;
+    return !isAuthorized ? (
+      <Grid textAlign="center" verticalAlign="middle" className="forgot-grid fill">
+        <Grid.Column className="grid-column">
+          <Header as="h2" color="black" textAlign="center" className="forgot-header">
             Reset your password
-                  </Header>
-                  {succsessMessage}
-                  <Form name="forgotForm" size="large" onSubmit={this.handleClickForgot} disabled={emailSend}>
-                      <Segment>
-                          <Form.Input
-                              fluid
-                              label="Enter your email address and we will send you a link to reset your password."
-                              disabled={emailSend}
-                              placeholder="Enter your email address"
-                              type="email"
-                              error={!isEmailValid || emailNotExist}
-                              onChange={this.emailChangeHandler()}
-                              onBlur={this.validateEmail}
-                          />
-                          <Button type="submit" color="green" fluid size="large" loading={isLoading} disabled={emailSend}>
+          </Header>
+          {succsessMessage}
+          <Form name="forgotForm" size="large" onSubmit={this.handleClickForgot} disabled={emailSend}>
+            <Segment>
+              <Form.Input
+                fluid
+                label="Enter your email address and we will send you a link to reset your password."
+                disabled={emailSend}
+                placeholder="Enter your email address"
+                type="email"
+                error={!isEmailValid || emailNotExist}
+                onChange={this.emailChangeHandler()}
+                onBlur={this.validateEmail}
+              />
+              <Button type="submit" color="green" fluid size="large" loading={isLoading} disabled={emailSend}>
                 Send password reset email
-                          </Button>
-                      </Segment>
-                      {failureMessage}
-                  </Form>
-              </Grid.Column>
-          </Grid>
-      ) : (
-          <Redirect to="/" />
-      );
+              </Button>
+            </Segment>
+            {failureMessage}
+          </Form>
+        </Grid.Column>
+      </Grid>
+    ) : (
+      <Redirect to="/" />
+    );
   }
 }
 Forgot.propTypes = {
@@ -98,27 +98,27 @@ Forgot.propTypes = {
 };
 
 Forgot.defaultProps = {
-    isAuthorized: false,
-    isLoading: false,
-    message: '',
-    emailNotExist: false,
-    emailSend: false
+  isAuthorized: false,
+  isLoading: false,
+  message: '',
+  emailNotExist: false,
+  emailSend: false
 };
 
 const mapStateToProps = state => ({
-    isAuthorized: state.profile.isAuthorized,
-    message: state.forgot.message,
-    emailNotExist: state.forgot.emailNotExist,
-    emailSend: state.forgot.emailSend
+  isAuthorized: state.profile.isAuthorized,
+  message: state.forgot.message,
+  emailNotExist: state.forgot.emailNotExist,
+  emailSend: state.forgot.emailSend
 });
 
 const mapDispatchToProps = dispatch => {
-    return {
-        actions: bindActionCreators({ ...forgotActions }, dispatch)
-    };
+  return {
+    actions: bindActionCreators({ ...forgotActions }, dispatch)
+  };
 };
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(Forgot);

@@ -7,18 +7,20 @@ AWS.config.update({
   region: awsRegion
 });
 
-
 const sendTokenEmail = (email, token) => {
   const ses = new AWS.SES({ apiVersion: '2010-12-01' });
   const params = {
-    Destination: { /* required */
+    Destination: {
+      /* required */
       ToAddresses: [
-        email,
+        email
         /* more items */
       ]
     },
-    Message: { /* required */
-      Body: { /* required */
+    Message: {
+      /* required */
+      Body: {
+        /* required */
         Html: {
           Charset: 'UTF-8',
           Data: `<html><body> <p>We heard that you lost your Depot password. Sorry about that!</p>
@@ -39,7 +41,7 @@ const sendTokenEmail = (email, token) => {
         Data: 'Reset password Depot'
       }
     },
-    Source: 'andreoven@gmail.com', /* required */
+    Source: 'andreoven@gmail.com' /* required */
   };
   ses.sendEmail(params).promise();
 };
