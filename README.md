@@ -82,14 +82,19 @@ More info:
 
 [Guide on how to set up a Git server on EC2](https://www.freecodecamp.org/news/create-your-own-github-kinda-9b4581db675c/)
 
-### RabbitMQ
-1. Install RabbitMQ: [Tutorial](https://www.rabbitmq.com/download.html)
-2. Run it:
-  Windows. (starts after installation automatically, it running on localhost on standard port (5672))
+###  RabbitMQ
+
+ - Install RabbitMQ: [Tutorial](https://www.rabbitmq.com/download.html)
+
+ - Run it:
+ 
+**On Windows**. (starts after installation automatically, it running on localhost on standard port (5672))
 You can stop/reinstall/start the RabbitMQ service from the Start Menu.
-  Debian and Ubuntu. To start and stop the server, use the service tool. The service name is rabbitmq-server
+
+**On Debian and Ubuntu**. To start and stop the server, use the service tool. The service name is rabbitmq-server.
 `sudo service rabbitmq-server stop`
 `sudo service rabbitmq-server start`
+
 ### Branches
 
 In this project we follow with [Pull Request process](https://help.github.com/en/articles/about-pull-requests). Two main branches are protected with a [Github branch protection rules](https://help.github.com/en/articles/defining-the-mergeability-of-pull-requests):
