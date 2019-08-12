@@ -1,7 +1,6 @@
 const NodeGit = require('nodegit');
 const fs = require('fs-extra');
 const path = require('path');
-const fs = require('fs');
 
 const { readdirSync } = require('fs');
 
