@@ -20,6 +20,10 @@
     }
 
     .keyInfo {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
       margin-left: 15px;
 
       .keyTitle {
@@ -28,6 +32,10 @@
 
       .keyDescription {
         color: #515151;
+
+        .fingerprint {
+          font-size: 12px;
+        }
       }
     }
 

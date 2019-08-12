@@ -38,14 +38,13 @@ class KeysPage extends React.Component {
     const keys = [
       {
         title: 'work-windows',
-        additionDate: new Date('December 17, 2018 03:24:00'),
-        operation: 'Read/Write'
+        fingerprint: '32:d8:79:39:1c:96:3d:93:5a:4c:53:bd:e9:ca:12:e0',
+        additionDate: new Date('December 17, 2018 03:24:00')
       },
       {
         title: 'home-ubuntu',
-        additionDate: new Date('December 17, 2018 03:24:00'),
-        lastUsed: new Date('July 12, 2019 03:24:00'),
-        operation: 'Read/Write'
+        fingerprint: '32:d8:79:12:1c:96:3d:93:43:4c:53:bd:e2:ca:12:e0',
+        additionDate: new Date('December 17, 2018 03:24:00')
       }
     ];
 
@@ -76,22 +75,20 @@ class KeysPage extends React.Component {
         <div className={styles.section}>
           <p>This is a list of SSH keys associated with your account. Remove any keys that you do not recognize.</p>
           <ul className={styles.keyList}>
-            {keys.map(({ title, additionDate, lastUsed, operation }, index) => (
+            {keys.map(({ title, fingerprint, additionDate }, index) => (
               <li key={index} className={styles.keyListItem}>
                 <div className={styles.infoSection}>
                   <div className={styles.keyIcon}>
-                    <Icon
-                      color={lastUsed && this.getDaysDiff(lastUsed, Date.now()) <= 7 ? 'green' : 'black'}
-                      size="big"
-                      name="key"
-                    />
+                    <Icon color="black" size="big" name="key" />
                     <Label>SSH</Label>
                   </div>
                   <div className={styles.keyInfo}>
                     <div className={styles.keyTitle}>{title}</div>
                     <div className={styles.keyDescription}>
+                      <div className={styles.fingerprint}>
+                        <code>{fingerprint}</code>
+                      </div>
                       <div>Added on {moment(additionDate).format('MMM D, YYYY')}</div>
-                      <div>{lastUsed ? `Last used ${moment(lastUsed).fromNow()} - ${operation}` : 'Never used'}</div>
                     </div>
                   </div>
                 </div>
