@@ -1,15 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Button, Header, Icon, Label } from 'semantic-ui-react';
+import { Button, Header, Icon, Label, Modal } from 'semantic-ui-react';
 
 import styles from './styles.module.scss';
 
 class KeysPage extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      showDeleteModal: false
+    };
 
     this.handleNewKey = this.handleNewKey.bind(this);
+    this.toggleDeleteModal = this.toggleDeleteModal.bind(this);
   }
 
   getDaysDiff(dateA, dateB) {
@@ -18,12 +22,17 @@ class KeysPage extends React.Component {
     return Math.abs(a.diff(b, 'days'));
   }
 
+  toggleDeleteModal() {
+    this.setState(prevState => ({ showDeleteModal: !prevState.showDeleteModal }));
+  }
+
   handleNewKey() {
     this.props.history.push('/settings/keys/new');
   }
 
   render() {
     // const { keys } = this.props;
+    const { showDeleteModal } = this.state;
 
     // Mocks
     const keys = [
@@ -42,6 +51,22 @@ class KeysPage extends React.Component {
 
     return (
       <>
+        {showDeleteModal && (
+          <Modal size="tiny" open={showDeleteModal} onClose={this.toggleDeleteModal}>
+            <Modal.Header>Are you sure you want to delete this SSH key?</Modal.Header>
+            <Modal.Content>
+              <p>
+                This action CANNOT be undone. This will permanently delete the SSH key and if you’d like to use it in
+                the future, you will need to upload it again.
+              </p>
+            </Modal.Content>
+            <Modal.Actions>
+              <Button negative basic fluid>
+                I understand, please delete this SSH key
+              </Button>
+            </Modal.Actions>
+          </Modal>
+        )}
         <Header as="h2" dividing>
           <Header.Content>SSH keys</Header.Content>
           <Button color="green" size="small" onClick={this.handleNewKey} compact>
@@ -70,7 +95,7 @@ class KeysPage extends React.Component {
                     </div>
                   </div>
                 </div>
-                <Button basic color="red" compact>
+                <Button basic color="red" compact onClick={this.toggleDeleteModal}>
                   Delete
                 </Button>
               </li>

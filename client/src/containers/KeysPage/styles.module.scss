@@ -62,3 +62,9 @@
     border-bottom: 1px solid lightgrey;
   }
 }
+
+:global(.actions) {
+  :global(.ui.basic.fluid.negative.button) {
+    margin: 0;
+  }
+}
