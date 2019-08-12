@@ -82,7 +82,6 @@ class SettingsProfile extends Component {
   );
 
   render() {
-      //   const { currentUser: initialValues } = this.props;
       const {
           currentUser: initialValues,
           currentUser: { loading, imgUrl }
