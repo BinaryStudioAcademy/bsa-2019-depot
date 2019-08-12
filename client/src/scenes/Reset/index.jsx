@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import createHandler from 'react-cached-handler';
 import PropTypes from 'prop-types';
 import validator from 'validator';
+import { ToastContainer, toast } from 'react-toastify';
 
 import { Grid, Header, Form, Button, Segment, Message } from 'semantic-ui-react';
 import { resetActions } from './actions';
@@ -73,6 +74,7 @@ class Reset extends Component {
       await actions.resetAsync({ password: password, token: this.props.location.pathname.substring(7) });
       this.setState({ isLoading: false });
     } catch (error) {
+      this.notify(error);
       this.setState({ isLoading: false, password: '', repeatPassword: '' });
     }
   };
@@ -83,6 +85,8 @@ class Reset extends Component {
     }
   };
 
+  notify = error => toast(error, { type: toast.TYPE.ERROR, hideProgressBar: true });
+
   render() {
     const { isLoading, isPasswordValid, isRepeatPasswordValid, isConfirmedPassword } = this.state;
     const { isAuthorized, message, passwordNotReset, passwordReset } = this.props;
@@ -91,42 +95,45 @@ class Reset extends Component {
     this.renderRedirect(succsessMessage);
     if (this.state.redirect === true) return <Redirect to="/login" />;
     return !isAuthorized ? (
-      <Grid textAlign="center" verticalAlign="middle" className="reset-grid fill">
-        <Grid.Column className="grid-column">
-          <Header as="h2" color="black" textAlign="center" className="reset-header">
-            Reset password
-          </Header>
-          {succsessMessage}
-          <Form name="resetForm" size="large" onSubmit={this.handleClickReset}>
-            <Segment>
-              <Form.Input
-                fluid
-                label="New password"
-                disabled={passwordReset}
-                placeholder="New password"
-                type="password"
-                error={!isPasswordValid}
-                onChange={this.passwordChangeHandler()}
-                onBlur={this.validatePassword}
-              />
-              <Form.Input
-                fluid
-                label="Repeat password"
-                disabled={passwordReset}
-                placeholder="Repeat password"
-                type="password"
-                error={!isRepeatPasswordValid && !isConfirmedPassword}
-                onChange={this.repeatPasswordChangeHandler()}
-                onBlur={this.validateRepeatPassword}
-              />
-              <Button type="submit" color="green" fluid size="large" loading={isLoading} disabled={passwordReset}>
-                Set new password
-              </Button>
-            </Segment>
-            {failureMessage}
-          </Form>
-        </Grid.Column>
-      </Grid>
+      <Fragment>
+        <Grid textAlign="center" verticalAlign="middle" className="reset-grid fill">
+          <Grid.Column className="grid-column">
+            <Header as="h2" color="black" textAlign="center" className="reset-header">
+              Reset password
+            </Header>
+            {succsessMessage}
+            <Form name="resetForm" size="large" onSubmit={this.handleClickReset}>
+              <Segment>
+                <Form.Input
+                  fluid
+                  label="New password"
+                  disabled={passwordReset}
+                  placeholder="New password"
+                  type="password"
+                  error={!isPasswordValid}
+                  onChange={this.passwordChangeHandler()}
+                  onBlur={this.validatePassword}
+                />
+                <Form.Input
+                  fluid
+                  label="Repeat password"
+                  disabled={passwordReset}
+                  placeholder="Repeat password"
+                  type="password"
+                  error={!isRepeatPasswordValid && !isConfirmedPassword}
+                  onChange={this.repeatPasswordChangeHandler()}
+                  onBlur={this.validateRepeatPassword}
+                />
+                <Button type="submit" color="green" fluid size="large" loading={isLoading} disabled={passwordReset}>
+                  Set new password
+                </Button>
+              </Segment>
+              {failureMessage}
+            </Form>
+          </Grid.Column>
+        </Grid>
+        <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} />
+      </Fragment>
     ) : (
       <Redirect to="/" />
     );
