@@ -7,6 +7,7 @@ import commitPageSagas from '../containers/CommitsPage/sagas';
 import profileSagas from '../containers/Profile/sagas';
 import { watchRepositories } from '../scenes/Dashboard/sagas';
 import profileSettingsSagas from '../scenes/SettingsProfile/sagas';
+import forkRepoSagas from '../components/ForkButton/sagas';
 
 import repoSettingsSagas from '../containers/SettingsTab/sagas';
 export default function* rootSaga() {
@@ -18,6 +19,7 @@ export default function* rootSaga() {
     profileSagas(),
     repoSettingsSagas(),
     watchRepositories(),
-    profileSettingsSagas()
+    profileSettingsSagas(),
+    forkRepoSagas()
   ]);
 }
