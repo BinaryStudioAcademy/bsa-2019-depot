@@ -1,19 +1,21 @@
 require('dotenv').config();
 require('./config/passport.config');
 const express = require('express');
-const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
 const passport = require('passport');
 const routes = require('./api/routes/index');
+const routesWhiteList = require('./config/routes-white-list.config');
+const authorizationMiddleware = require('./api/middlewares/authorization.middleware');
 const errorHandlerMiddleware = require('./api/middlewares/error-handler.middleware');
 
 const app = express();
-app.use(cors());
 
 app.use(express.json());
 app.use(passport.initialize());
 app.use(express.urlencoded({ extended: true }));
+
+app.use('/api/', authorizationMiddleware(routesWhiteList));
 
 const staticPath = path.resolve(`${__dirname}/../client/build`);
 app.use(express.static(staticPath));
@@ -29,3 +31,4 @@ const port = process.env.APP_PORT || 3000;
 app.use(errorHandlerMiddleware);
 
 app.listen(port);
+console.warn(`Server listening at port ${port}`);

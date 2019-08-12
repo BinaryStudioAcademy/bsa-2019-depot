@@ -1,5 +1,6 @@
 const BaseRepository = require('./base.repository');
 const { UserModel } = require('../models/index');
+const cryptoHelper = require('../../helpers/crypto.helper');
 
 class UserRepository extends BaseRepository {
   addUser({ ...userData }) {
@@ -20,6 +21,11 @@ class UserRepository extends BaseRepository {
 
   getUserById(id) {
     return this.model.findOne({ where: { id } });
+  }
+
+  async setUserPassword(email, password) {
+    const user = await this.getByEmail(email);
+    return this.updateById(user.dataValues.id, { password: cryptoHelper.encryptSync(password) });
   }
 }
 

@@ -1,4 +1,4 @@
-const cryptoHelper = require('../../helpers/crypro.helper');
+const cryptoHelper = require('../../helpers/crypto.helper');
 
 const hash = password => cryptoHelper.encryptSync(password);
 

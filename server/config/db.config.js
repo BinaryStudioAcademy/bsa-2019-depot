@@ -1,3 +1,7 @@
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 const database = process.env.DB_NAME;
 const username = process.env.DB_USERNAME;
 const password = process.env.DB_PASSWORD;
@@ -11,7 +15,7 @@ module.exports = {
   username,
   password,
   host,
-  port,
   dialect,
+  port,
   logging
 };

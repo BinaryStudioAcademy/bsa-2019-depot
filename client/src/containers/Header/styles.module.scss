@@ -1,0 +1,254 @@
+$black-color: #24292e;
+
+:local(.headerWrp) {
+  background-color: $black-color;
+  padding: 20px 0;
+  ul {
+    display: flex;
+    align-items: center;
+    width: auto;
+    height: 100%;
+    li {
+      display: flex;
+      align-items: center;
+      &:not(:last-child) {
+        margin-right: 24px;
+      }
+      &:not(:first-child) {
+        @media screen and (max-width: 1200px) {
+          display: none;
+        }
+      }
+      svg,
+      .logo {
+        color: #fff;
+        fill: currentColor;
+      }
+      a,
+      p {
+        color: #fff;
+        font-size: 16px;
+        margin: 0;
+      }
+      p svg {
+        width: 18px;
+        margin-left: 5px;
+        stroke: hsla(0, 0%, 100%, 0.5);
+      }
+      .dropDown {
+        display: none !important;
+        position: absolute;
+        width: 300px !important;
+        top: 25px;
+        z-index: 999;
+        padding: 8px;
+        div {
+          color: #586069 !important;
+          font-size: 16px !important;
+          a {
+            color: #586069;
+          }
+        }
+      }
+      &:hover {
+        .dropDown {
+          display: block !important;
+        }
+      }
+    }
+  }
+}
+
+:local(.form) {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  @media screen and (max-width: 1200px) {
+    input,
+    a:nth-child(2) {
+      display: none !important;
+    }
+  }
+  input {
+    margin-right: 16px;
+    width: 200px;
+    padding: 10px;
+    border: none;
+    background-color: #404447;
+    border-radius: 3px;
+    &:focus {
+      background-color: #fff;
+      outline: none;
+    }
+    &::placeholder {
+      color: grey;
+    }
+  }
+  a {
+    font-size: 16px;
+    padding: 10px;
+    color: #fff;
+    &:not(:last-child) {
+      margin-right: 16px;
+    }
+    &:nth-child(3) {
+      border: 1px solid #fff;
+      border-radius: 3px;
+    }
+    &:hover {
+      color: #fff;
+    }
+  }
+}
+
+:local(.burger) {
+  fill: #fff;
+  @media screen and (min-width: 1200px) {
+    display: none !important;
+  }
+}
+
+:local(.sidebar) {
+  background-color: #fff !important;
+  font-size: 16px !important;
+  div {
+    text-align: left;
+    text-align-last: left;
+    color: #444d56 !important;
+    &::before {
+      background: grey !important;
+    }
+    a {
+      color: #444d56 !important;
+      font-size: 16px !important;
+    }
+    i {
+      float: right !important;
+    }
+  }
+  input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid gray;
+    border-radius: 3px;
+  }
+  .sidebarForm {
+    margin-top: 20px;
+    div {
+      display: flex;
+      justify-content: center;
+    }
+    a {
+      padding: 4px 8px;
+      &:last-child {
+        border: 1px solid gray;
+        border-radius: 3px;
+        margin-left: 10px;
+      }
+    }
+    &::before {
+      display: none;
+    }
+  }
+}
+
+:local(.headerWrpAuth) {
+  composes: headerWrp;
+  padding: 16px;
+  @media screen and (max-width: 1200px) {
+    padding: 16px 40px;
+    ul li {
+      margin: 0 !important;
+    }
+    div {
+      align-items: center !important;
+    }
+  }
+  a {
+    font-size: 14px !important;
+    font-weight: bold;
+  }
+  :global(.bell.icon),
+  :global(.plus.icon),
+  :global(.dropdown.icon) {
+    color: #fff;
+    margin: 0;
+  }
+  input {
+    width: 300px;
+    height: 28px;
+    padding: 0 5px;
+    border: none;
+    background-color: #404447;
+    border-radius: 3px;
+    &:focus {
+      background-color: #fff;
+      outline: none;
+    }
+    &::placeholder {
+      color: grey;
+    }
+  }
+  img {
+    width: 20px;
+    height: 20px;
+  }
+  ul li {
+    a {
+      display: flex;
+    }
+    div {
+      display: flex;
+      align-items: center;
+    }
+  }
+  .rightMenu {
+    justify-content: flex-end;
+  }
+  .statusItem {
+    border: 1px solid rgb(223, 226, 230);
+    border-radius: 5px;
+    padding: 10px;
+
+    :global(.black.smile.outline.icon) {
+      margin-right: 15px;
+    }
+  }
+  .burger {
+    display: flex;
+    align-items: center;
+  }
+  .sidebar {
+    background-color: #24292e !important;
+    input {
+      width: 100%;
+      height: 28px !important;
+      margin: 0;
+    }
+    div {
+      display: flex !important;
+      align-items: flex-start !important;
+      a {
+        color: #fff !important;
+        display: flex;
+        i,
+        img {
+          margin-right: 5px !important;
+        }
+      }
+    }
+  }
+}
+
+:local(.statusFormButtons) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  color: #fff;
+  fill: currentColor;
+}
