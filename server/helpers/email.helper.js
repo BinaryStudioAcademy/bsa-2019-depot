@@ -1,16 +1,4 @@
-const AWS = require('aws-sdk');
-const { accessKey, secretKey, awsRegion } = require('../config/aws.config');
-const publishToQueue = require('../rabbitmq/mqservice');
-
-AWS.config.update({
-  accessKeyId: accessKey,
-  secretAccessKey: secretKey,
-  region: awsRegion
-});
-
-
-const sendTokenEmail = (email, token) => {
-  const ses = new AWS.SES({ apiVersion: '2010-12-01' });
+const createTokenEmail = (email, token) => {
   const params = {
     Destination: { /* required */
       ToAddresses: [
@@ -42,13 +30,9 @@ const sendTokenEmail = (email, token) => {
     },
     Source: 'sandrk27@gmail.com', /* required */
   };
-  setTimeout(async () => {
-    await publishToQueue('emails', params);
-  }, 100);
-
-  // ses.sendEmail(params).promise();
+  return params;
 };
 
 module.exports = {
-  sendTokenEmail
+  createTokenEmail
 };
