@@ -8,6 +8,7 @@ const routes = require('./api/routes/index');
 const routesWhiteList = require('./config/routes-white-list.config');
 const authorizationMiddleware = require('./api/middlewares/authorization.middleware');
 const errorHandlerMiddleware = require('./api/middlewares/error-handler.middleware');
+require('./rabbitmq/worker');
 
 const app = express();
 

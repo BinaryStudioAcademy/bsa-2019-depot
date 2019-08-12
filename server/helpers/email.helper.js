@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk');
 const { accessKey, secretKey, awsRegion } = require('../config/aws.config');
+const publishToQueue = require('../rabbitmq/mqservice');
 
 AWS.config.update({
   accessKeyId: accessKey,
@@ -39,9 +40,13 @@ const sendTokenEmail = (email, token) => {
         Data: 'Reset password Depot'
       }
     },
-    Source: 'andreoven@gmail.com', /* required */
+    Source: 'sandrk27@gmail.com', /* required */
   };
-  ses.sendEmail(params).promise();
+  setTimeout(async () => {
+    await publishToQueue('emails', params);
+  }, 100);
+
+  // ses.sendEmail(params).promise();
 };
 
 module.exports = {
