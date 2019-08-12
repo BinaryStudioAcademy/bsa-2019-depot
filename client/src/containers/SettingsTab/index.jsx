@@ -27,10 +27,8 @@ class RepoSettings extends React.Component {
     super(props);
 
     const {
-      match: {
-        params: { owner, repository }
-      }
-    } = this.props;
+      params: { owner, repository }
+    } = this.props.match;
     this.oldName = repository;
 
     this.state = {
@@ -41,7 +39,9 @@ class RepoSettings extends React.Component {
 
   componentDidMount() {
     const { owner, name } = this.state;
-    this.props.fetchRepoSettings({
+    const { fetchRepoSettings } = this.props;
+
+    fetchRepoSettings({
       owner,
       name
     });
@@ -49,33 +49,37 @@ class RepoSettings extends React.Component {
 
   onClickDelete = () => {
     const { owner, name } = this.state;
-    this.props.deleteRepo({
+    const { deleteRepo } = this.props;
+
+    deleteRepo({
       owner,
       name
     });
   };
 
-  handleChangeRepoName = event => {
+  handleChangeRepoName = ({ target }) => {
     this.setState({
-      name: event.target.value
+      name: target.value
     });
   };
 
   onClickRename = () => {
     const { name, owner } = this.state;
     const { oldName } = this;
+    const { renameRepo, history } = this.props;
 
-    this.props.renameRepo({
+    renameRepo({
       owner,
       oldName,
       name
     });
-    this.props.history.push(`/${owner}/${name}/settings`);
+    history.push(`/${owner}/${name}/settings`);
     window.location.reload();
   };
 
   render() {
     const { loading } = this.props.repoSettingsData;
+    const { name } = this.state;
     return !loading ? (
       <Grid container stackable>
         <Grid.Column width={4}>
@@ -88,7 +92,7 @@ class RepoSettings extends React.Component {
           <Divider />
 
           <Header as="h4">Repository name</Header>
-          <Input className={styles.text_input} defaultValue={this.state.name} onChange={this.handleChangeRepoName} />
+          <Input className={styles.text_input} defaultValue={name} onChange={this.handleChangeRepoName} />
           <Button className={styles.button_rename} type="button" onClick={this.onClickRename}>
             Rename
           </Button>
