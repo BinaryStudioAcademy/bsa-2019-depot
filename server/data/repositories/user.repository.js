@@ -1,6 +1,6 @@
 const BaseRepository = require('./base.repository');
 const { UserModel } = require('../models/index');
-const cryptoHelper = require('../../helpers/crypro.helper');
+const cryptoHelper = require('../../helpers/crypto.helper');
 
 class UserRepository extends BaseRepository {
   addUser({ ...userData }) {

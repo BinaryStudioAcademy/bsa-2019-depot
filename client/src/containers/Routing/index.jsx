@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import PrivateRoute from '../PrivateRoute';
 import Spinner from '../../components/Spinner';
-import { NotFound, Login, Forgot, Reset, MainPage, Signup, Dashboard } from '../../scenes';
+import { NotFound, Login, Forgot, Reset, MainPage, Signup, GoogleCallback, Dashboard } from '../../scenes';
 import { fetchCurrentUser } from '../../routines/routines';
 import RepositoryPage from '../../scenes/Repository';
 
@@ -21,6 +21,7 @@ class Routing extends React.Component {
     ) : (
       <Switch>
         <Route exact path="/registration" component={Signup} />
+        {/* <Route exact path="/api/auth/google/callback" component={GoogleCallback} /> */}
         <Route exact path="/login" component={Login} />
         <Route exact path="/forgot" component={Forgot} />
         <Route exact path="/reset/:hash" component={Reset} />
