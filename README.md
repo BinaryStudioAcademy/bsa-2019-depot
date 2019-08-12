@@ -29,7 +29,7 @@ AWS_SES_ACCESS_KEY = AKIAWBOCxxxxxxx # has to be replaced with actual aws ses ac
 AWS_SES_SECRET_KEY = EtKJdUrnWxxxxxxxxx # has to be replaced with actual aws ses secret key
 AWS_SES_REGION = us-east-1 # has to be replaced with actual aws region
 RABBITMQ_CONNECTION_URL = amqp://localhost:5672 # default. has to be changed if it is different
-RABBITMQ_QUEUE_NAME = emails # default. has to be changed if it is different
+EMAIL_QUEUE_NAME = emails # default. has to be changed if it is different
 ```
 
 ### Git Server

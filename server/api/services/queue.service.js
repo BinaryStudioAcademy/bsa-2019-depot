@@ -1,5 +1,6 @@
 const amqp = require('amqplib/callback_api');
-const { connectionUrl, queue } = require('../../config/rabbitmq.config');
+const { connectionUrl, emailQueue } = require('../../config/rabbitmq.config');
+const { sendEmail } = require('./email.service');
 
 let ch = null;
 
@@ -12,13 +13,25 @@ amqp.connect(connectionUrl, (err, connection) => {
       throw err1;
     }
     ch = channel;
-    ch.assertQueue(queue, {
+    ch.assertQueue(emailQueue, {
       durable: true
     });
+    ch.consume(
+      emailQueue,
+      (msg) => {
+        const message = JSON.parse(msg.content);
+        sendEmail(message);
+      },
+      { noAck: true }
+    );
   });
 });
 
-module.exports = async (queueName, data) => {
+const sendToQueue = async (queueName, data) => {
   const message = JSON.stringify(data);
   ch.sendToQueue(queueName, Buffer.from(message), { persistent: true });
+};
+
+module.exports = {
+  sendToQueue
 };
