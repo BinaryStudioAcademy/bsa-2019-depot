@@ -8,11 +8,14 @@ const login = async ({ id, email }) => ({
 
 const googleLogin = async ({ id, email, username }) => {
   const usernameExists = Boolean(username);
-  const jwt = tokenHelper.createToken({ id, email });
+  const token = tokenHelper.createToken({ id, email });
 
   const data = {
     usernameExists,
-    jwt
+    token,
+    id,
+    email,
+    username
   };
 
   return { ...data };

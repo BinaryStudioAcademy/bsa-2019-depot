@@ -3,23 +3,23 @@ import * as issuesService from '../../services/issuesService';
 import { fetchIssues } from '../../routines/routines';
 
 function* issuesRequest({ payload: { filter } }) {
-    try {
-        yield put(fetchIssues.request());
+  try {
+    yield put(fetchIssues.request());
 
-        const response = yield call(issuesService.getIssues, filter);
+    const response = yield call(issuesService.getIssues, filter);
 
-        yield put(fetchIssues.success(response));
-    } catch (error) {
-        yield put(fetchIssues.failure(error.message));
-    } finally {
-        yield put(fetchIssues.fulfill());
-    }
+    yield put(fetchIssues.success(response));
+  } catch (error) {
+    yield put(fetchIssues.failure(error.message));
+  } finally {
+    yield put(fetchIssues.fulfill());
+  }
 }
 
 function* watchIssuesRequest() {
-    yield takeEvery(fetchIssues.TRIGGER, issuesRequest);
+  yield takeEvery(fetchIssues.TRIGGER, issuesRequest);
 }
 
 export default function* issuesSagas() {
-    yield all([watchIssuesRequest()]);
+  yield all([watchIssuesRequest()]);
 }

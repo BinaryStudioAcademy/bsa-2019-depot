@@ -6,6 +6,7 @@
   "dependencies": {
     "@primer/octicons-react": "^9.1.1",
     "dotenv": "^8.0.0",
+    "formik": "^1.5.8",
     "immutable": "^4.0.0-rc.12",
     "moment": "^2.24.0",
     "node-sass": "^4.12.0",
@@ -70,7 +71,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged",
+      "post-commit": "git update-index --again"
     }
   },
   "lint-staged": {
