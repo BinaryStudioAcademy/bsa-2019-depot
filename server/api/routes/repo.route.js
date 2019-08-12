@@ -45,7 +45,7 @@ router
       .then(result => res.send(result))
       .catch(next);
   })
-  .delete('/:owner/:repoName/settings/delete', (req, res, next) => {
+  .delete('/:owner/:repoName/settings', (req, res, next) => {
     const { repoName } = req.params;
     deleteRepo({ repoName, username: req.user.username })
       .then(result => res.send(result))
