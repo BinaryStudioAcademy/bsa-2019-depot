@@ -96,8 +96,8 @@ class Login extends Component {
   };
 
   renderGoogleAuth = () => {
-    const serverLoginURL = `${appConfig.SERVER_URL}/api/auth/google`;
-    return <GoogleAuth text="Sign in with Google" link={serverLoginURL} />;
+    const serverLoginUrl = `${appConfig.serverUrl}/api/auth/google`;
+    return <GoogleAuth text="Sign in with Google" link={serverLoginUrl} />;
   };
 
   validateUsername = value => {
