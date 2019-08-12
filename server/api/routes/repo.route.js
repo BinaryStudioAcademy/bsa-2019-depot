@@ -60,7 +60,7 @@ router
     } = req;
 
     forkRepo({ username, owner, repoName })
-      .then(() => res.send({ status: true }))
+      .then(result => res.send(result))
       .catch(next);
   });
 
