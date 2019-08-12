@@ -1,6 +1,9 @@
 const NodeGit = require('nodegit');
+const fs = require('fs-extra');
 const path = require('path');
 const fs = require('fs');
+
+const { readdirSync } = require('fs');
 
 const gitPath = process.env.GIT_PATH;
 
@@ -26,7 +29,27 @@ const checkName = async ({ user, name }) => {
   return exists;
 };
 
-const { readdirSync } = fs;
+const renameRepo = async ({ repoName, newName, username }) => {
+  try {
+    const oldDirectory = path.resolve(`${gitPath}/${username}/${repoName}`);
+    const newDirectory = path.resolve(`${gitPath}/${username}/${newName}`);
+    fs.renameSync(oldDirectory, newDirectory);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+const deleteRepo = async ({ repoName, username }) => {
+  try {
+    const directory = path.resolve(`${gitPath}/${username}/${repoName}`);
+    await fs.remove(directory);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
 const getReposNames = async ({ user, filter: { filterWord, limit } }) => {
   const pathToRepo = path.resolve(`${gitPath}/${user}`);
   const repos = readdirSync(pathToRepo, { withFileTypes: true })
@@ -36,4 +59,10 @@ const getReposNames = async ({ user, filter: { filterWord, limit } }) => {
   return limit ? repos.slice(0, limit) : repos;
 };
 
-module.exports = { createRepo, getReposNames, checkName };
+module.exports = {
+  createRepo,
+  renameRepo,
+  deleteRepo,
+  getReposNames,
+  checkName
+};

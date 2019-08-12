@@ -4,7 +4,8 @@ const {
   setUsername,
   checkUsernameExists,
   sendForgetPasswordEmail,
-  resetPassword
+  resetPassword,
+  updateUserSettings
 } = require('../services/user.service');
 
 const router = Router();
@@ -31,6 +32,12 @@ router.post('/forget-password', (req, res, next) => {
 
 router.post('/reset-password', (req, res, next) => {
   resetPassword({ ...req.body })
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.post('/settings', (req, res, next) => {
+  updateUserSettings({ ...req.body })
     .then(data => res.send(data))
     .catch(next);
 });

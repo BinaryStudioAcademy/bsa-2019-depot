@@ -7,6 +7,10 @@ class UserRepository extends BaseRepository {
     return this.create(userData);
   }
 
+  updateUserById(id, { ...userData }) {
+    return this.updateById(id, userData);
+  }
+
   setUsernameById(id, username) {
     return this.updateById(id, { username });
   }

@@ -4,7 +4,7 @@ const orm = require('../db/connection');
 const User = orm.import('./user');
 
 // associate({
-//   User
+//  User
 // });
 
 module.exports = {
