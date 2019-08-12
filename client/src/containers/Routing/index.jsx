@@ -9,6 +9,7 @@ import { fetchCurrentUser } from '../../routines/routines';
 import RepositoryPage from '../../scenes/Repository';
 
 import KeysPage from '../KeysPage';
+import NewKeyPage from '../NewKeyPage';
 
 class Routing extends React.Component {
   componentDidMount() {
@@ -22,7 +23,8 @@ class Routing extends React.Component {
       <Spinner />
     ) : (
       <Switch>
-        <Route exact path="/keys" component={KeysPage} />
+        <Route exact path="/settings/keys" component={KeysPage} />
+        <Route exact path="/settings/keys/new" component={NewKeyPage} />
         <Route exact path="/registration" component={Signup} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/forgot" component={Forgot} />

@@ -4,8 +4,9 @@
   "private": true,
   "proxy": "http://localhost:3000",
   "dependencies": {
-    "dotenv": "^8.0.0",
     "@primer/octicons-react": "^9.1.1",
+    "dotenv": "^8.0.0",
+    "formik": "^1.5.8",
     "immutable": "^4.0.0-rc.12",
     "moment": "^2.24.0",
     "node-sass": "^4.12.0",
