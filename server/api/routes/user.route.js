@@ -5,7 +5,10 @@ const {
   checkUsernameExists,
   sendForgetPasswordEmail,
   resetPassword,
-  updateUserSettings
+  updateUserSettings,
+  getKeysByUser,
+  createKey,
+  deleteKey
 } = require('../services/user.service');
 
 const router = Router();
@@ -38,6 +41,26 @@ router.post('/reset-password', (req, res, next) => {
 
 router.post('/settings', (req, res, next) => {
   updateUserSettings({ ...req.body })
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.get('/keys', (req, res, next) => {
+  getKeysByUser(req.user.id)
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.post('/keys', (req, res, next) => {
+  const { id } = req.user;
+  createKey({ id, ...req.body })
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.delete('/keys/:id', (req, res, next) => {
+  const { id } = req.params.id;
+  deleteKey(id)
     .then(data => res.send(data))
     .catch(next);
 });

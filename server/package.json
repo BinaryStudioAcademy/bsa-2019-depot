@@ -33,7 +33,8 @@
     "pg": "^7.12.0",
     "pg-hstore": "^2.3.3",
     "sequelize": "^5.12.3",
-    "sequelize-cli": "^5.5.0"
+    "sequelize-cli": "^5.5.0",
+    "ssh-fingerprint": "0.0.1"
   },
   "devDependencies": {
     "eslint": "5.16.0",
