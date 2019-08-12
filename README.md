@@ -2,11 +2,8 @@
 
 ![TravisCI](https://api.travis-ci.org/BinaryStudioAcademy/bsa-2019-depot.svg?branch=develop)
 
-<div style="display: block; width: 50%; margin: 0 auto">
-<img src="https://user-images.githubusercontent.com/28801003/62847518-5f0e1c80-bcdf-11e9-9621-a0aeb4265019.png" />
-<h4 style="text-align: center; margin: 0;">Powerful tool for team work with code, based on GIT version control system.</h4>
-</div>
-
+Powerful tool for team work with code, based on GIT version control system.
+![logo](https://user-images.githubusercontent.com/28801003/62847518-5f0e1c80-bcdf-11e9-9621-a0aeb4265019.png)
 
 ## About
 
