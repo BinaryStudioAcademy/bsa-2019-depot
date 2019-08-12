@@ -1,21 +1,21 @@
 import { takeEvery, put, call, all, apply } from 'redux-saga/effects';
 import * as authService from '../../services/authService';
 import * as signupService from '../../services/signupService';
-import { authorizeUser, fetchCurrentUser, signupRoutine } from '../../routines/routines';
+import {
+  authorizeUser,
+  fetchCurrentUser,
+  signupRoutine,
+  loginGoogleRoutine,
+  setUsernameRoutine
+} from '../../routines/routines';
 
 function* authorizationRequest({ payload }) {
   try {
     yield put(authorizeUser.request());
-
     const response = yield call(authService.login, payload);
-    const userData = yield apply(response, response.json);
-
-    if (response.status !== 200) {
-      throw new Error(response.message);
-    }
-
-    yield apply(localStorage, localStorage.setItem, ['token', userData.token]);
-    yield put(authorizeUser.success(userData.user));
+    yield apply(localStorage, localStorage.setItem, ['token', response.token]);
+    delete response.user.password;
+    yield put(authorizeUser.success(response.user));
   } catch (error) {
     yield put(authorizeUser.failure(error.message));
   } finally {
@@ -45,6 +45,26 @@ function* watchCurrentUserRequest() {
   yield takeEvery(fetchCurrentUser.TRIGGER, currentUserRequest);
 }
 
+function* loginGoogle({ payload: { user, history } }) {
+  try {
+    const { jwt } = user;
+    yield call(signupService.setToken, jwt);
+    const authorizedUser = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      token: jwt
+    };
+    yield put(loginGoogleRoutine.success(authorizedUser));
+  } catch (error) {
+    yield put(loginGoogleRoutine.failure(error.message));
+  }
+}
+
+function* watchLoginGoogleRequest() {
+  yield takeEvery(loginGoogleRoutine.REQUEST, loginGoogle);
+}
+
 function* signup({ payload: { user, history } }) {
   try {
     yield put(signupRoutine.request());
@@ -67,6 +87,31 @@ function* watchSignupRequest() {
   yield takeEvery(signupRoutine.TRIGGER, signup);
 }
 
+function* setUsername({ payload: { username, user, history } }) {
+  try {
+    const response = yield call(signupService.setUsername, username, user);
+    const { status } = response;
+    if (status) {
+      yield put(setUsernameRoutine.success(username));
+      yield call(history.push, '/');
+    }
+  } catch (error) {
+    yield put(setUsernameRoutine.failure(error.message));
+  } finally {
+    yield put(setUsernameRoutine.fulfill());
+  }
+}
+
+function* watchSetUsernameRequest() {
+  yield takeEvery(setUsernameRoutine.TRIGGER, setUsername);
+}
+
 export default function* profileSagas() {
-  yield all([watchAuthorizationRequest(), watchCurrentUserRequest(), watchSignupRequest()]);
+  yield all([
+    watchAuthorizationRequest(),
+    watchCurrentUserRequest(),
+    watchSignupRequest(),
+    watchLoginGoogleRequest(),
+    watchSetUsernameRequest()
+  ]);
 }

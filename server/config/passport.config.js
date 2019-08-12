@@ -5,7 +5,7 @@ const GoogleStrategy = require('passport-google-oauth2').Strategy;
 const userRepository = require('../data/repositories/user.repository');
 const { jwtOptions } = require('./jwt.config');
 const { clientID, clientSecret, callbackURL } = require('./google.config');
-const cryptoHelper = require('../helpers/crypro.helper');
+const cryptoHelper = require('../helpers/crypto.helper');
 
 passport.use(
   'login',
@@ -70,7 +70,7 @@ passport.use(
     async (req, accessToken, refreshToken, profile, done) => {
       const user = await userRepository.getByEmail(profile.email);
       if (!user) {
-        const newUser = userRepository.addUser({ email: profile.email });
+        const newUser = await userRepository.addUser({ email: profile.email });
         return done(null, newUser);
       }
       return done(null, user);
@@ -79,9 +79,9 @@ passport.use(
 );
 
 passport.use(
-  new JwtStrategy(jwtOptions, async ({ id }, done) => {
+  new JwtStrategy(jwtOptions, async (jwtPayload, done) => {
     try {
-      const user = await userRepository.getUserById(id);
+      const user = await userRepository.getUserById(jwtPayload.id);
       return user ? done(null, user) : done({ status: 401, message: 'Token is invalid.' }, null);
     } catch (err) {
       return done(err);

@@ -1,0 +1,89 @@
+$primary-color: #586069;
+$secondary-color: #d1d5da;
+
+:local(.repo_name) {
+  font-size: 20px;
+}
+
+:local(.repo_item) {
+  width: 100%;
+  min-height: 110px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 24px 0;
+  border-bottom: 1px solid $secondary-color;
+  border-radius: 3px;
+
+  & div {
+    display: flex;
+  }
+
+  & a {
+    flex: 1 1 auto;
+    color: #0366d6;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+:local(.repo_item_left),
+:local(.repo_item_right) {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+:local(.repo_item_left) {
+  color: #586069;
+}
+:local(.repo_item_right) {
+  align-items: flex-end;
+}
+
+:local(.repo_item_updated) {
+  /*margin: 8px 0 16px;*/
+  font-size: 12px;
+}
+
+:local(.repo_item_lang) {
+  font-size: 12px;
+  line-height: 1.5;
+  margin-right: 16px;
+
+  & span {
+    position: relative;
+    top: 2px;
+    width: 12px;
+    height: 12px;
+    margin-right: 4px;
+    display: inline-block;
+    border-radius: 50%;
+    background-color: #f1e05a;
+  }
+}
+
+:local(.repo_item_stars) {
+  display: inline-block;
+  font-size: 12px;
+  line-height: 20px;
+  padding: 3px 10px;
+  background-color: #eff3f6;
+  background-image: linear-gradient(-180deg, #fafbfc, #eff3f6 90%);
+  color: #24292e;
+  border: 1px solid rgba(27, 31, 35, 0.2);
+  border-radius: 0.25em;
+  cursor: pointer;
+  vertical-align: middle;
+  white-space: nowrap;
+
+  & .star_icon {
+    margin-right: 5px;
+  }
+}
+
+@media (max-width: 1024px) {
+  :global(.thirteen.wide.column):local(.contribution_years) {
+    width: 100%;
+  }
+}
