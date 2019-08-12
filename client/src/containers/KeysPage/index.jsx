@@ -39,12 +39,12 @@ class KeysPage extends React.Component {
       {
         title: 'work-windows',
         fingerprint: '32:d8:79:39:1c:96:3d:93:5a:4c:53:bd:e9:ca:12:e0',
-        additionDate: new Date('December 17, 2018 03:24:00')
+        createdAt: new Date('December 17, 2018 03:24:00')
       },
       {
         title: 'home-ubuntu',
         fingerprint: '32:d8:79:12:1c:96:3d:93:43:4c:53:bd:e2:ca:12:e0',
-        additionDate: new Date('December 17, 2018 03:24:00')
+        createdAt: new Date('December 17, 2018 03:24:00')
       }
     ];
 
@@ -75,7 +75,7 @@ class KeysPage extends React.Component {
         <div className={styles.section}>
           <p>This is a list of SSH keys associated with your account. Remove any keys that you do not recognize.</p>
           <ul className={styles.keyList}>
-            {keys.map(({ title, fingerprint, additionDate }, index) => (
+            {keys.map(({ title, fingerprint, createdAt }, index) => (
               <li key={index} className={styles.keyListItem}>
                 <div className={styles.infoSection}>
                   <div className={styles.keyIcon}>
@@ -88,7 +88,7 @@ class KeysPage extends React.Component {
                       <div className={styles.fingerprint}>
                         <code>{fingerprint}</code>
                       </div>
-                      <div>Added on {moment(additionDate).format('MMM D, YYYY')}</div>
+                      <div>Added on {moment(createdAt).format('MMM D, YYYY')}</div>
                     </div>
                   </div>
                 </div>
