@@ -1,6 +1,7 @@
 const { Router } = require('express');
-
-const { createRepo, getReposNames } = require('../services/repo.service');
+const {
+  createRepo, renameRepo, deleteRepo, getReposNames
+} = require('../services/repo.service');
 const { getCommits } = require('../services/commit.service');
 const { getBranches, getBranchTree, getLastCommitOnBranch } = require('../services/branch.service');
 
@@ -38,6 +39,28 @@ router
     const { owner, repoName, branchName } = req.params;
     getLastCommitOnBranch({ user: owner, name: repoName, branch: branchName })
       .then(commit => res.send(commit))
+      .catch(next);
+  })
+  .get('/:owner/:repoName/settings', (req, res /* , next */) => {
+    res.sendStatus(200);
+    /* Can be used in future to get settings data from DB
+    const { repoName } = req.params;
+    getSettings({ ownerID: req.user.id, repoName })
+      .then(settings => res.send(settings))
+      .catch(next);
+    */
+  })
+  .post('/:owner/:repoName/settings/rename', (req, res, next) => {
+    const { repoName } = req.params;
+    const { newName } = req.body;
+    renameRepo({ repoName, newName, username: req.user.username })
+      .then(result => res.send(result))
+      .catch(next);
+  })
+  .delete('/:owner/:repoName/settings', (req, res, next) => {
+    const { repoName } = req.params;
+    deleteRepo({ repoName, username: req.user.username })
+      .then(result => res.send(result))
       .catch(next);
   });
 

@@ -7,7 +7,9 @@ import commitPageSagas from '../containers/CommitsPage/sagas';
 import codeTabSagas from '../scenes/CodeTab/sagas';
 import profileSagas from '../containers/Profile/sagas';
 import { watchRepositories } from '../scenes/Dashboard/sagas';
+import profileSettingsSagas from '../scenes/SettingsProfile/sagas';
 
+import repoSettingsSagas from '../containers/SettingsTab/sagas';
 export default function* rootSaga() {
   yield all([
     issuesSagas(),
@@ -16,6 +18,8 @@ export default function* rootSaga() {
     commitPageSagas(),
     profileSagas(),
     watchRepositories(),
-    codeTabSagas()
+    codeTabSagas(),
+    repoSettingsSagas(),
+    profileSettingsSagas()
   ]);
 }
