@@ -13,7 +13,6 @@ import {
     Dropdown
 } from 'semantic-ui-react';
 import { Formik, Form, Field } from 'formik';
-import NOTES from './notes';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import PageHeader from '../../containers/Header';
@@ -104,22 +103,22 @@ class SettingsProfile extends Component {
                                       <Form className="ui form">
                                           <Header as="h4">Name</Header>
                                           <Field type="text" name="name" render={this.renderField} />
-                                          <div>{NOTES.name}</div>
+                                          <div>{this.NOTES.name}</div>
 
                                           <Header as="h4">Public email</Header>
                                           <Field type="email" name="email" render={this.renderDisabledField} />
-                                          <div>{NOTES.email}</div>
+                                          <div>{this.NOTES.email}</div>
 
                                           <Header as="h4">Bio</Header>
                                           <Field name="bio" render={this.renderTextArea} />
-                                          <div>{NOTES.bio}</div>
+                                          <div>{this.NOTES.bio}</div>
 
                                           <Header as="h4">URL</Header>
                                           <Field type="text" name="url" render={this.renderField} />
 
                                           <Header as="h4">Company</Header>
                                           <Field type="text" name="company" render={this.renderField} />
-                                          <div>{NOTES.company}</div>
+                                          <div>{this.NOTES.company}</div>
 
                                           <Divider />
 
@@ -127,7 +126,7 @@ class SettingsProfile extends Component {
                                           <Field type="text" name="location" render={this.renderField} />
 
                                           <Divider hidden />
-                                          <div>{NOTES.disclaimer}</div>
+                                          <div>{this.NOTES.disclaimer}</div>
                                           <Divider hidden />
 
                                           <Button color="green" type="submit" disabled={this.props.currentUser.loading}>
