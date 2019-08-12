@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Dropdown, Loader } from 'semantic-ui-react';
+import { ToastContainer, toast } from 'react-toastify';
 import CommitsList from '../../components/CommitsList';
 import { fetchCommits, fetchBranches } from '../../routines/routines';
 
@@ -19,17 +20,25 @@ class CommitsPage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fetchBranches({
+    const { commitsData, branchesData, fetchBranches, fetchCommits } = this.props;
+    fetchBranches({
       // Mock
       owner: 'TheSubliminal',
       repoName: 'depot-test'
     });
-    this.props.fetchCommits({
+    fetchCommits({
       // Mock
       owner: 'TheSubliminal',
       repoName: 'depot-test',
       branch: this.state.branch
     });
+
+    if (commitsData.error) {
+      this.notify(commitsData.error);
+    }
+    if (branchesData.error) {
+      this.notify(branchesData.error);
+    }
   }
 
   handleBranchChange(event, data) {
@@ -48,6 +57,8 @@ class CommitsPage extends React.Component {
     );
   }
 
+  notify = error => toast(error, { type: toast.TYPE.ERROR, hideProgressBar: true });
+
   render() {
     const { commitsData, branchesData } = this.props;
 
@@ -63,17 +74,20 @@ class CommitsPage extends React.Component {
     return commitsData.loading || branchesData.loading ? (
       <Loader active />
     ) : (
-      <div className={styles.commitsContainer}>
-        <div className={styles.branchSelectRow}>
-          <Dropdown
-            value={this.state.branch}
-            text="Branches"
-            options={branchOptions}
-            onChange={this.handleBranchChange}
-          />
+      <Fragment>
+        <div className={styles.commitsContainer}>
+          <div className={styles.branchSelectRow}>
+            <Dropdown
+              value={this.state.branch}
+              text="Branches"
+              options={branchOptions}
+              onChange={this.handleBranchChange}
+            />
+          </div>
+          <CommitsList commits={commitsData.commits} />
         </div>
-        <CommitsList commits={commitsData.commits} />
-      </div>
+        <ToastContainer position={toast.POSITION.BOTTOM_RIGHT} />
+      </Fragment>
     );
   }
 }
