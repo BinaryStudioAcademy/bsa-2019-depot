@@ -4,7 +4,17 @@ import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import PrivateRoute from '../PrivateRoute';
 import Spinner from '../../components/Spinner';
-import { NotFound, Login, Forgot, Reset, MainPage, Signup, GoogleCallback, Dashboard, SettingsProfile } from '../../scenes';
+import {
+  NotFound,
+  Login,
+  Forgot,
+  Reset,
+  MainPage,
+  Signup,
+  // GoogleCallback,
+  Dashboard,
+  SettingsProfile
+} from '../../scenes';
 import { fetchCurrentUser } from '../../routines/routines';
 import RepositoryPage from '../../scenes/Repository';
 
