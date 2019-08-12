@@ -8,14 +8,16 @@ import profileSagas from '../containers/Profile/sagas';
 import { watchRepositories } from '../scenes/Dashboard/sagas';
 import profileSettingsSagas from '../scenes/SettingsProfile/sagas';
 
+import repoSettingsSagas from '../containers/SettingsTab/sagas';
 export default function* rootSaga() {
-    yield all([
-        issuesSagas(),
-        call(watchForgotPassword),
-        watchResetPassword(),
-        commitPageSagas(),
-        profileSagas(),
-        watchRepositories(),
-        profileSettingsSagas()
-    ]);
+  yield all([
+    issuesSagas(),
+    call(watchForgotPassword),
+    watchResetPassword(),
+    commitPageSagas(),
+    profileSagas(),
+    repoSettingsSagas(),
+    watchRepositories(),
+    profileSettingsSagas()
+  ]);
 }
