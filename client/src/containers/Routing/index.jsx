@@ -8,6 +8,8 @@ import { NotFound, Login, Forgot, Reset, MainPage, Signup, Dashboard } from '../
 import { fetchCurrentUser } from '../../routines/routines';
 import RepositoryPage from '../../scenes/Repository';
 
+import KeysPage from '../KeysPage';
+
 class Routing extends React.Component {
   componentDidMount() {
     this.props.fetchCurrentUser();
@@ -20,6 +22,7 @@ class Routing extends React.Component {
       <Spinner />
     ) : (
       <Switch>
+        <Route exact path="/keys" component={KeysPage} />
         <Route exact path="/registration" component={Signup} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/forgot" component={Forgot} />

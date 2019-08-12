@@ -1,7 +1,10 @@
 const { Router } = require('express');
 
 const {
-  setUsername, checkUsernameExists, sendForgetPasswordEmail, resetPassword
+  setUsername,
+  checkUsernameExists,
+  sendForgetPasswordEmail,
+  resetPassword
 } = require('../services/user.service');
 
 const router = Router();
@@ -31,6 +34,5 @@ router.post('/reset-password', (req, res, next) => {
     .then(data => res.send(data))
     .catch(next);
 });
-
 
 module.exports = router;
