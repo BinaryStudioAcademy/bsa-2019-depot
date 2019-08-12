@@ -18,7 +18,7 @@ export default function* rootSaga() {
     commitPageSagas(),
     profileSagas(),
     watchRepositories(),
-    createRepositorySagas()
+    createRepositorySagas(),
     repoSettingsSagas(),
     watchRepositories(),
     profileSettingsSagas()

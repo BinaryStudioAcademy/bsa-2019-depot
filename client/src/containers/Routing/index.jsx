@@ -31,7 +31,7 @@ class Routing extends React.Component {
       <Spinner />
     ) : (
       <Switch>
-        <PrivatRoute exact path="/new" component={CreateRepository} />
+        <PrivateRoute exact path="/new" component={CreateRepository} />
         <Route exact path="/:owner/:repository" component={EmptyRepositoryPage} />
         <Route exact path="/registration" component={Signup} />
         {/* <Route exact path="/api/auth/google/callback" component={GoogleCallback} /> */}
