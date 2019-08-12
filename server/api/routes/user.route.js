@@ -1,6 +1,8 @@
 const { Router } = require('express');
 
-const { setUsername, checkUsernameExists, checkEmailExists, sendForgetPasswordEmail, resetPassword } = require('../services/user.service');
+const {
+  setUsername, checkUsernameExists, sendForgetPasswordEmail, resetPassword
+} = require('../services/user.service');
 
 const router = Router();
 

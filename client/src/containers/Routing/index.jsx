@@ -9,44 +9,44 @@ import { fetchCurrentUser } from '../../routines/routines';
 import RepositoryPage from '../../scenes/Repository';
 
 class Routing extends React.Component {
-    componentDidMount() {
-        this.props.fetchCurrentUser();
-    }
+  componentDidMount() {
+    this.props.fetchCurrentUser();
+  }
 
-    render() {
-        const { loading } = this.props;
+  render() {
+    const { loading } = this.props;
 
-        return loading ? (
-            <Spinner />
-        ) : (
-            <Switch>
-                <Route exact path="/registration" component={Signup} />
-                <Route exact path="/login" component={Login} />
-                <Route exact path="/forgot" component={Forgot} />
-                <Route exact path="/reset/:hash" component={Reset} />
-                <Route path="/:owner/:repository" component={RepositoryPage} />
-                <PrivateRoute exact path="/" component={MainPage} />
-                <PrivateRoute exact path="/dashboard" component={Dashboard} />
-                <Route exact path="*" component={NotFound} />
-            </Switch>
-        );
-    }
+    return loading ? (
+      <Spinner />
+    ) : (
+      <Switch>
+        <Route exact path="/registration" component={Signup} />
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/forgot" component={Forgot} />
+        <Route exact path="/reset/:hash" component={Reset} />
+        <Route path="/:owner/:repository" component={RepositoryPage} />
+        <PrivateRoute exact path="/" component={MainPage} />
+        <PrivateRoute exact path="/dashboard" component={Dashboard} />
+        <Route exact path="*" component={NotFound} />
+      </Switch>
+    );
+  }
 }
 
 Routing.propTypes = {
-    loading: PropTypes.bool.isRequired,
-    fetchCurrentUser: PropTypes.func.isRequired
+  loading: PropTypes.bool.isRequired,
+  fetchCurrentUser: PropTypes.func.isRequired
 };
 
 const mapStateToProps = ({ profile: { loading } }) => ({
-    loading
+  loading
 });
 
 const mapDispatchToProps = {
-    fetchCurrentUser
+  fetchCurrentUser
 };
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(Routing);
