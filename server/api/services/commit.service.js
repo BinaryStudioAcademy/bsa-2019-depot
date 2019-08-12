@@ -30,43 +30,52 @@ const getCommits = async ({ user, name, branch }) => {
   return allCommits;
 };
 
-const getCommitDiff = async ({ user, name, hash }) => {
+const getCommitDiff = async ({ user, name /* hash */ }) => {
   const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`).replace(/\\/g, '/');
-  let diffs = '';
-  await NodeGit.Repository.open(pathToRepo)
-    .then(repo => repo.getCommit(hash))
-    .then(commit => commit.getDiff())
-    .then(
-      diffListPromise => new Promise((resolve) => {
-        diffListPromise.forEach(async (diff) => {
-          console.warn(diff);
-          const patches = await diff.patches();
-          console.warn(patches);
+  // const diffs = '';
 
-          patches.forEach(async (patch) => {
-            const hunks = await patch.hunks();
+  NodeGit.Repository.open(pathToRepo)
+    .then(repo => repo.getCommit('197d311e41c1962953e541b843165d7c80e8f8fb'))
+    .then((commit) => {
+      console.warn(`commit ${commit.sha()}`);
+      console.warn('Author:', `${commit.author().name()} <${commit.author().email()}>`);
+      console.warn('Date:', commit.date());
+      console.warn(`\n    ${commit.message()}`);
 
-            console.warn('hunks');
-            console.warn(hunks);
-            hunks.forEach(async (hunk) => {
-              const lines = await hunk.lines();
-              diffs += `diff  --git a/${patch.oldFile().path()}  b/${patch.newFile().path()}\n`;
-              diffs += 'index a..b\n';
-              diffs += `${hunk.header().trim()}\n`;
-              lines.forEach((line) => {
-                diffs += `${String.fromCharCode(line.origin())} ${line.content().trim()}\n`;
+      return commit.getDiff();
+      // commit.getDiff().then(console.log);
+    })
+    .done((diffList) => {
+      console.warn(JSON.stringify(diffList));
+      diffList.forEach((diff) => {
+        diff.patches().then((patches) => {
+          patches.forEach((patch) => {
+            patch.hunks().then((hunks) => {
+              hunks.forEach((hunk) => {
+                hunk.lines().then((lines) => {
+                  console.warn('diff', patch.oldFile().path(), patch.newFile().path());
+                  console.warn(hunk.header().trim());
+                  lines.forEach((line) => {
+                    console.warn(String.fromCharCode(line.origin()) + line.content().trim());
+                  });
+                });
               });
-              resolve(diffs);
-              console.warn(diffs);
             });
           });
         });
-      })
-    );
-  console.warn('diffList');
-  // console.warn(diffList);
-
-  return diffs;
+      });
+    });
 };
+
+// const getPatches = (diffs) => {
+//   const diffPromises = diffs.map((diff) => {
+//     const promise = new Promise((resolve) => {
+//       console.warn('getPatches', diff);
+//       diff.patches().then(patches => resolve(patches));
+//     });
+//   });
+//
+//   return Promise.all(diffPromises);
+// };
 
 module.exports = { getCommits, getCommitDiff };

@@ -8,12 +8,12 @@ import profileSagas from '../containers/Profile/sagas';
 import { watchRepositories } from '../scenes/Dashboard/sagas';
 
 export default function* rootSaga() {
-    yield all([
-        issuesSagas(),
-        call(watchForgotPassword),
-        watchResetPassword(),
-        commitPageSagas(),
-        profileSagas(),
-        watchRepositories()
-    ]);
+  yield all([
+    issuesSagas(),
+    call(watchForgotPassword),
+    watchResetPassword(),
+    commitPageSagas(),
+    profileSagas(),
+    watchRepositories()
+  ]);
 }
