@@ -29,7 +29,7 @@ router
       .then(branches => res.send(branches))
       .catch(next);
   })
-  .get('/:owner/:repoName/settings', (req, res, next) => {
+  .get('/:owner/:repoName/settings', (req, res) => {
     res.sendStatus(200);
     /* Can be used in future to get settings data from DB
     const { repoName } = req.params;
