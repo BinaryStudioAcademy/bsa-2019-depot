@@ -5,6 +5,7 @@ import RepositoryHeader from '../../components/RepositoryHeader';
 import CodeTab from '../CodeTab/index';
 import IssuesTab from '../../containers/IssuesTab/index';
 import CommitsPage from '../../containers/CommitsPage/index';
+import RepoSettings from '../../containers/SettingsTab/index';
 
 import './styles.module.scss';
 
@@ -32,6 +33,7 @@ class RepositoryPage extends React.Component {
             <Route exact path={match.url} component={CodeTab} />
             <Route exact path={`${match.url}/issues`} component={IssuesTab} />
             <Route exact path={`${match.url}/commits`} component={CommitsPage} />
+            <Route exact path={`${match.url}/settings`} component={RepoSettings} />
           </Switch>
         </div>
       </>

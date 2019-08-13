@@ -26,13 +26,12 @@ class RepoSettings extends React.Component {
   constructor(props) {
     super(props);
 
-    const {
-      params: { owner, repository }
-    } = this.props.match;
-    this.oldName = repository;
+    const { url } = this.props.match;
+    const [owner, name] = url.split('/').slice(1, 3);
 
+    this.oldName = name;
     this.state = {
-      name: repository,
+      name,
       owner
     };
   }
@@ -82,12 +81,12 @@ class RepoSettings extends React.Component {
     const { name } = this.state;
     return !loading ? (
       <Grid container stackable>
-        <Grid.Column width={4}>
+        <Grid.Column width={4} className={styles.first_column}>
           <Menu vertical>
             <Menu.Item>Options</Menu.Item>
           </Menu>
         </Grid.Column>
-        <Grid.Column width={12}>
+        <Grid.Column width={12} className={styles.second_column}>
           <Header as="h2">Settings</Header>
           <Divider />
 
@@ -137,8 +136,9 @@ RepoSettings.propTypes = {
   deleteRepo: PropTypes.func.isRequired
 };
 
-const mapStateToProps = ({ repoSettingsData }) => ({
-  repoSettingsData
+const mapStateToProps = ({ repoSettingsData, profile }) => ({
+  repoSettingsData,
+  profile
 });
 
 const mapDispatchToProps = {
