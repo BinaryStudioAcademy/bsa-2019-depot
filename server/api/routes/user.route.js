@@ -6,10 +6,12 @@ const {
   sendForgetPasswordEmail,
   resetPassword,
   updateUserSettings,
+} = require('../services/user.service');
+const {
   getKeysByUser,
   createKey,
   deleteKey
-} = require('../services/user.service');
+} = require('../services/sshKey.service');
 
 const router = Router();
 

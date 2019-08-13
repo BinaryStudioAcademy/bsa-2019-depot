@@ -1,11 +1,9 @@
 const jwt = require('jsonwebtoken');
 
 const UserRepository = require('../../data/repositories/user.repository');
-const SshKeyRepository = require('../../data/repositories/sshKey.repository');
 
 const { sendTokenEmail } = require('../../helpers/email.helper');
 const tokenHelper = require('../../helpers/token.helper');
-const { generateFingerprint } = require('../../helpers/fingerprint.helper');
 
 const secret = process.env.SECRET_KEY;
 
@@ -68,14 +66,7 @@ const updateUserSettings = async ({ id, settings }) => {
   };
 };
 
-const createKey = async (keyData) => {
-  const fingerprint = await generateFingerprint();
-  return SshKeyRepository.create({ ...keyData, fingerprint });
-};
 
-const getKeysByUser = userId => SshKeyRepository.getByUser(userId);
-
-const deleteKey = keyId => SshKeyRepository.deleteById(keyId);
 
 module.exports = {
   getUserById,
@@ -84,8 +75,5 @@ module.exports = {
   checkEmailExists,
   sendForgetPasswordEmail,
   updateUserSettings,
-  resetPassword,
-  createKey,
-  getKeysByUser,
-  deleteKey
+  resetPassword
 };
