@@ -165,8 +165,8 @@ const SearchInp = () => {
   return <input placeholder="Search GitHub" onChange={onTextChange} value={text} type="text" />;
 };
 
-const signIn = <a href="/">Sign in</a>;
-const signUp = <a href="/">Sign up</a>;
+const signIn = <a href="/login">Sign in</a>;
+const signUp = <a href="/registration">Sign up</a>;
 const logo = (
   <a className={styles.logo} href="/">
     <LogoSVG width={32} height={32} />
