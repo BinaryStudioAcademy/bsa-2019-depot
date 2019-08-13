@@ -16,6 +16,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "amqplib": "^0.5.5",
     "aws-sdk": "^2.504.0",
     "bcrypt": "^3.0.6",
     "cors": "^2.8.5",
