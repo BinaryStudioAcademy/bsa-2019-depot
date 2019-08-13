@@ -3,13 +3,16 @@ const associate = require('../db/associations');
 
 const User = orm.import('./user');
 const SshKey = orm.import('./sshkey');
+const OrgUser = orm.import('./orguser');
 
 associate({
   User,
-  SshKey
+  SshKey,
+  OrgUser
 });
 
 module.exports = {
   UserModel: User,
-  SshKeyModel: SshKey
+  SshKeyModel: SshKey,
+  OrgUserModel: OrgUser
 };
