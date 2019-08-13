@@ -66,8 +66,6 @@ const updateUserSettings = async ({ id, settings }) => {
   };
 };
 
-
-
 module.exports = {
   getUserById,
   setUsername,

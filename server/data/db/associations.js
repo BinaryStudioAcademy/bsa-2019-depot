@@ -1,8 +1,5 @@
 module.exports = (models) => {
-  const {
-    User,
-    SshKey
-  } = models;
+  const { User, SshKey } = models;
 
   SshKey.belongsTo(User);
 

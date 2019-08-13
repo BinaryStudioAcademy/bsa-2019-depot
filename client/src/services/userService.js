@@ -45,9 +45,8 @@ export const addKey = async request => {
 };
 
 export const deleteKey = async keyId => {
-  const response = await callWebApi({
+  return callWebApi({
     endpoint: `/api/user/keys/${keyId}`,
     type: 'DELETE'
   });
-  return response.json();
 };

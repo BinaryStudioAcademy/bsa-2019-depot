@@ -5,13 +5,9 @@ const {
   checkUsernameExists,
   sendForgetPasswordEmail,
   resetPassword,
-  updateUserSettings,
+  updateUserSettings
 } = require('../services/user.service');
-const {
-  getKeysByUser,
-  createKey,
-  deleteKey
-} = require('../services/sshKey.service');
+const { getKeysByUser, createKey, deleteKey } = require('../services/sshKey.service');
 
 const router = Router();
 
