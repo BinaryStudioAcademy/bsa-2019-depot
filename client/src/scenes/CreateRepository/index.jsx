@@ -7,6 +7,7 @@ import { Formik, Field } from 'formik';
 import Octicon, { getIconByName } from '@primer/octicons-react';
 import { createRepository, checkName } from '../../services/repositoryService';
 import styles from './styles.module.scss';
+import RepositoryHeader from '../../components/RepositoryHeader';
 
 const gitingnoreOptions = [
   {
@@ -51,15 +52,6 @@ class CreateRepository extends React.Component {
     this.validateRepoName = this.validateRepoName.bind(this);
   }
 
-  componentDidMount() {
-    this.setState({
-      values: {
-        ...initialValues,
-        owner: this.props.username
-      }
-    });
-  }
-
   async validateRepoName(values) {
     if (!values.repository) {
       return 'Required';
@@ -71,14 +63,14 @@ class CreateRepository extends React.Component {
   }
 
 
-  onSubmit(values) {
-    createRepository({
-      ...values,
-      owner: this.props.username
+  async onSubmit(values) {
+    const result = await createRepository({
+      ...values
     });
-    const { repository } = this.state.values;
-    const owner = this.props.username;
-    this.props.history.push(`${owner}/${repository}`);
+    const { repository, owner } = values;
+    if (result.url) {
+      this.props.history.push(`${owner}/${repository}`);
+    }
   }
 
   renderPrivacyLabelPublic() {
@@ -190,7 +182,7 @@ class CreateRepository extends React.Component {
             <Divider />
           </div>
           <Form.Field>
-            <label name={readme}></label>
+            <label name='readme'></label>
             <Checkbox
               id='readme'
               label={<label name="readme">Initialize this repository with a README</label>}
@@ -232,7 +224,10 @@ class CreateRepository extends React.Component {
   render() {
     return (
       <Formik
-        initialValues={initialValues}
+        initialValues={{
+          ...initialValues,
+          owner: this.props.username
+        }}
         onSubmit={this.onSubmit}
         render={this.renderCreateRepository}
       />
@@ -245,10 +240,10 @@ CreateRepository.propTypes = {
   history: PropTypes.any
 };
 
-const mapStateToProps = (state) => {
-  return {
-    username: state.profile.username
-  };
-};
+const mapStateToProps = ({
+  profile: {
+    currentUser: { username }
+  }
+}) => ({ username });
 
 export default connect(mapStateToProps)(CreateRepository);
