@@ -21,12 +21,12 @@ class CommitsPage extends React.Component {
   componentDidMount() {
     this.props.fetchBranches({
       // Mock
-      owner: 'meowcat',
+      owner: this.props.username,
       repoName: 'new-repo'
     });
     this.props.fetchCommits({
       // Mock
-      owner: 'meowcat',
+      owner: this.props.username,
       repoName: 'new-repo',
       branch: this.state.branch
     });
@@ -40,7 +40,7 @@ class CommitsPage extends React.Component {
       () => {
         this.props.fetchCommits({
           // Mock
-          owner: 'meowcat',
+          owner: this.props.username,
           repoName: 'new-repo',
           branch: this.state.branch
         });
@@ -91,10 +91,17 @@ CommitsPage.propTypes = {
   }).isRequired,
   /*repoName: PropTypes.string.isRequired,*/
   fetchCommits: PropTypes.func.isRequired,
-  fetchBranches: PropTypes.func.isRequired
+  fetchBranches: PropTypes.func.isRequired,
+  username: PropTypes.string
 };
 
-const mapStateToProps = ({ commitsData, branchesData /*, repoName*/ }) => ({
+const mapStateToProps = ({
+  commitsData,
+  branchesData,
+  profile: {
+    currentUser: { username }
+  } /*, repoName*/
+}) => ({
   commitsData,
   branchesData /*,
     repoName*/
