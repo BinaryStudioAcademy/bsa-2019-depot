@@ -11,7 +11,7 @@ import './styles.module.scss';
 class RepositoryPage extends React.Component {
   render() {
     const { match, location } = this.props;
-    const { owner, repository } = match.params;
+    const { username, reponame } = match.params;
 
     // Mocks
     const issueCount = 14;
@@ -20,8 +20,8 @@ class RepositoryPage extends React.Component {
     return (
       <>
         <RepositoryHeader
-          owner={owner}
-          repoName={repository}
+          owner={username}
+          repoName={reponame}
           issueCount={issueCount}
           forkCount={forkCount}
           activePage={location.pathname.split('/')[3]}
