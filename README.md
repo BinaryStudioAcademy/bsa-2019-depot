@@ -99,6 +99,7 @@ GIT_PATH = '' # Has to be changed to path where you want to save repositories
 AWS_SES_ACCESS_KEY = AKIAWBOCxxxxxxx # has to be replaced with actual aws ses access key 
 AWS_SES_SECRET_KEY = EtKJdUrnWxxxxxxxxx # has to be replaced with actual aws ses secret key
 AWS_SES_REGION = us-east-1 # has to be replaced with actual aws region
+PUBLIC_KEY_PATH = /etc/ssh/ssh_host_rsa_key.pub # default for SSH server. Change to any public SSH key when running locally
 ```
 
 ### Branches
