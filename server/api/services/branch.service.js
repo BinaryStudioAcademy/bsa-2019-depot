@@ -26,15 +26,11 @@ const getLastModifiedCommit = async ({
   return history[history.length - 1].commit;
 };
 
-const getBranchTree = async ({ user, name, branch }) => {
+const traverseFileTree = async (user, name, branch, tree) => {
   const fileTree = {
     directories: [],
     files: []
   };
-  const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`);
-  const repo = await NodeGit.Repository.open(pathToRepo.replace(/\\/g, '/'));
-  const lastCommitOnBranch = await repo.getBranchCommit(branch);
-  const tree = await lastCommitOnBranch.getTree();
   // eslint-disable-next-line no-restricted-syntax
   for (const entry of tree.entries()) {
     try {
@@ -63,6 +59,33 @@ const getBranchTree = async ({ user, name, branch }) => {
     }
   }
   return fileTree;
+}
+
+const getBranchTree = async ({ user, name, branch, pathToDir }) => {
+  const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`);
+  const repo = await NodeGit.Repository.open(pathToRepo.replace(/\\/g, '/'));
+  const lastCommitOnBranch = await repo.getBranchCommit(branch);
+  const tree = await lastCommitOnBranch.getTree();
+
+  if (pathToDir) {
+    const entryAtPath = await tree.getEntry(pathToDir);
+    const folderBeneath = await entryAtPath.getTree();
+    const parent = folderBeneath.entry.dirtoparent;
+    const parentDir = parent === '.' ? '' : parent;
+    const currentPath = folderBeneath.path();
+    const fileTree = await traverseFileTree(user, name, branch, folderBeneath);
+    return {
+      ...fileTree,
+      parentDir,
+      currentPath
+    };
+  }
+  const fileTree = await traverseFileTree(user, name, branch, tree);
+  return {
+    ...fileTree,
+    parentDir: '',
+    currentPath: ''
+  };
 };
 
 const getLastCommitOnBranch = async ({ user, name, branch }) => {

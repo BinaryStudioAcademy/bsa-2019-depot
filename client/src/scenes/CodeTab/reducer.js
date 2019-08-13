@@ -14,7 +14,9 @@ const initialLastCommitState = {
 const initialFileTreeState = {
   tree: {
     directories: [],
-    files: []
+    files: [],
+    parentDir: '',
+    currentPath: ''
   },
   loading: false,
   error: null

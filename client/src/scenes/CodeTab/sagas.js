@@ -20,11 +20,11 @@ function* watchLastCommitRequest() {
   yield takeEvery(fetchLastCommitOnBranch.TRIGGER, lastCommitRequest);
 }
 
-function* fileTreeRequest({ payload: { owner, repoName, branch } }) {
+function* fileTreeRequest({ payload: { owner, repoName, branch, query } }) {
   try {
     yield put(fetchFileTree.request());
 
-    const response = yield call(branchesService.getFileTree, owner, repoName, branch);
+    const response = yield call(branchesService.getFileTree, owner, repoName, branch, query);
 
     yield put(fetchFileTree.success(response));
   } catch (error) {

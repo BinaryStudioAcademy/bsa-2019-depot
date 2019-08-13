@@ -16,10 +16,11 @@ export const getLastCommit = async (owner, repoName, branch) => {
   return response.json();
 };
 
-export const getFileTree = async (owner, repoName, branch) => {
+export const getFileTree = async (owner, repoName, branch, query) => {
   const response = await callWebApi({
     endpoint: `/api/repo/${owner}/${repoName}/${branch}/tree`,
-    type: 'GET'
+    type: 'GET',
+    query
   });
   return response.json();
 };
