@@ -6,7 +6,6 @@ import { watchResetPassword } from '../scenes/Reset/saga/watchers';
 import commitPageSagas from '../containers/CommitsPage/sagas';
 import profileSagas from '../containers/Profile/sagas';
 import { watchRepositories } from '../scenes/Dashboard/sagas';
-import createRepositorySagas from '../scenes/CreateRepository/sagas';
 import profileSettingsSagas from '../scenes/SettingsProfile/sagas';
 
 import repoSettingsSagas from '../containers/SettingsTab/sagas';
@@ -18,7 +17,6 @@ export default function* rootSaga() {
     commitPageSagas(),
     profileSagas(),
     watchRepositories(),
-    createRepositorySagas(),
     repoSettingsSagas(),
     watchRepositories(),
     profileSettingsSagas()
