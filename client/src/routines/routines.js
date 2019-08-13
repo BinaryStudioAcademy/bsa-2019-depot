@@ -13,4 +13,3 @@ export const fetchRepoSettings = createRoutine('REPO_SETTINGS');
 export const authorizeUser = createRoutine('AUTHORIZE_USER');
 export const updateUserSettings = createRoutine('UPDATE_USER_SETTINGS');
 export const fetchCurrentUser = createRoutine('CURRENT_USER');
-export const fetchSshKeys = createRoutine('SSH_KEYS');

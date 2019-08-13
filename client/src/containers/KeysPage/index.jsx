@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import moment from 'moment';
 import { Button, Header, Icon, Label, Loader, Modal } from 'semantic-ui-react';
-import { deleteSshKey } from './actions';
-import { fetchSshKeys } from '../../routines/routines';
 import DeleteKeyButton from '../../components/DeleteKeyButton';
+import { getKeys, deleteKey } from '../../services/userService';
 
 import styles from './styles.module.scss';
 
@@ -13,6 +11,9 @@ class KeysPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      keys: [],
+      loading: true,
+      deleting: false,
       showDeleteModal: false,
       deletingKeyId: ''
     };
@@ -24,7 +25,13 @@ class KeysPage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.fetchSshKeys();
+    this.getUserKeys();
+  }
+
+  getUserKeys() {
+    getKeys().then(keys => {
+      this.setState({ keys, loading: false });
+    });
   }
 
   toggleDeleteModal() {
@@ -41,17 +48,18 @@ class KeysPage extends React.Component {
   }
 
   handleDeleteKey() {
-    this.props.deleteSshKey(this.state.deletingKeyId);
-    this.toggleDeleteModal();
+    this.setState({ deleting: true });
+    deleteKey(this.state.deletingKeyId).then(() => {
+      this.setState({ loading: true, deleting: false });
+      this.toggleDeleteModal();
+      this.getUserKeys();
+    });
   }
 
   render() {
-    const { loading, sshKeys: keys } = this.props;
-    const { showDeleteModal } = this.state;
+    const { loading, deleting, showDeleteModal, keys } = this.state;
 
-    return loading ? (
-      <Loader />
-    ) : (
+    return (
       <>
         {showDeleteModal && (
           <Modal size="tiny" open={showDeleteModal} onClose={this.toggleDeleteModal}>
@@ -63,7 +71,7 @@ class KeysPage extends React.Component {
               </p>
             </Modal.Content>
             <Modal.Actions>
-              <Button negative basic fluid onClick={this.handleDeleteKey}>
+              <Button negative basic fluid loading={deleting} onClick={this.handleDeleteKey}>
                 I understand, please delete this SSH key
               </Button>
             </Modal.Actions>
@@ -77,28 +85,32 @@ class KeysPage extends React.Component {
         </Header>
         <div className={styles.section}>
           <p>This is a list of SSH keys associated with your account. Remove any keys that you do not recognize.</p>
-          <ul className={styles.keyList}>
-            {keys.map(({ id, title, fingerprint, createdAt }) => (
-              <li key={id} className={styles.keyListItem}>
-                <div className={styles.infoSection}>
-                  <div className={styles.keyIcon}>
-                    <Icon color="black" size="big" name="key" />
-                    <Label>SSH</Label>
-                  </div>
-                  <div className={styles.keyInfo}>
-                    <div className={styles.keyTitle}>{title}</div>
-                    <div className={styles.keyDescription}>
-                      <div className={styles.fingerprint}>
-                        <code>{fingerprint}</code>
+          {loading ? (
+            <Loader active />
+          ) : (
+            <ul className={styles.keyList}>
+              {keys.map(({ id, title, fingerprint, createdAt }) => (
+                <li key={id} className={styles.keyListItem}>
+                  <div className={styles.infoSection}>
+                    <div className={styles.keyIcon}>
+                      <Icon color="black" size="big" name="key" />
+                      <Label>SSH</Label>
+                    </div>
+                    <div className={styles.keyInfo}>
+                      <div className={styles.keyTitle}>{title}</div>
+                      <div className={styles.keyDescription}>
+                        <div className={styles.fingerprint}>
+                          <code>{fingerprint}</code>
+                        </div>
+                        <div>Added on {moment(createdAt).format('MMM D, YYYY')}</div>
                       </div>
-                      <div>Added on {moment(createdAt).format('MMM D, YYYY')}</div>
                     </div>
                   </div>
-                </div>
-                <DeleteKeyButton keyId={id} onClick={this.handleRequestDeleteKey} />
-              </li>
-            ))}
-          </ul>
+                  <DeleteKeyButton keyId={id} onClick={this.handleRequestDeleteKey} />
+                </li>
+              ))}
+            </ul>
+          )}
           <p>
             Check out our guide to
             <a href="https://help.github.com/en/articles/connecting-to-github-with-ssh"> generating SSH keys </a>
@@ -112,26 +124,7 @@ class KeysPage extends React.Component {
 }
 
 KeysPage.propTypes = {
-  sshKeys: PropTypes.array, // TODO: Define in details
-  loading: PropTypes.bool.isRequired,
-  error: PropTypes.object,
-  history: PropTypes.object.isRequired,
-  fetchSshKeys: PropTypes.func.isRequired,
-  deleteSshKey: PropTypes.func.isRequired
+  history: PropTypes.object.isRequired
 };
 
-const mapStateToProps = ({ sshKeysData: { sshKeys, loading, error } }) => ({
-  sshKeys,
-  loading,
-  error
-});
-
-const mapDispatchToProps = {
-  fetchSshKeys,
-  deleteSshKey
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(KeysPage);
+export default KeysPage;
