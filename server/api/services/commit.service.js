@@ -38,7 +38,7 @@ const getCommitDiff = async ({ user, name, hash }) => {
   const gitDiffCommand = `git diff ${hash}~ ${hash} -U`;
   const command = `${cdCommand} && ${gitDiffCommand}`;
   const cmd = await exec(command);
-
+  if (cmd.stderr) throw new Error(cmd.stderr);
   return { diffs: cmd.stdout };
 };
 

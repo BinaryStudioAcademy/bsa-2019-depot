@@ -9,8 +9,8 @@ import './styles.module.scss';
 class DiffCommitView extends Component {
   componentDidMount() {
     this.props.fetchDiffs({
-      // Mock
       owner: this.props.username,
+      // Mock
       repoName: 'new-repo',
       hash: this.props.location.pathname.substring(this.props.location.pathname.lastIndexOf('/') + 1)
     });
@@ -65,7 +65,6 @@ DiffCommitView.propTypes = {
     error: PropTypes.string,
     diffs: PropTypes.string
   }).isRequired,
-  /*repoName: PropTypes.string.isRequired,*/
   fetchDiffs: PropTypes.func.isRequired,
   location: PropTypes.object,
   username: PropTypes.string
@@ -75,11 +74,10 @@ const mapStateToProps = ({
   diffsData,
   profile: {
     currentUser: { username }
-  } /*, repoName*/
+  }
 }) => ({
   diffsData,
-  username /*,
-    repoName*/
+  username
 });
 
 const mapDispatchToProps = {
