@@ -4,9 +4,6 @@ import { Link } from 'react-router-dom';
 import RepoFileTree from '../../components/RepoFileTree/index';
 import RepoReadme from '../../components/RepoReadme/index';
 
-import CommitsPage from '../../containers/CommitsPage/index';
-import DiffCommitView from '../../components/DiffCommitView/index';
-
 import Octicon, { getIconByName } from '@primer/octicons-react';
 import { Container, Button, Header, Dropdown, Input, Popup, Segment, Menu } from 'semantic-ui-react';
 import styles from './styles.module.scss';
@@ -143,8 +140,6 @@ class CodeTab extends React.Component {
         </div>
         <RepoFileTree />
         <RepoReadme />
-        <CommitsPage />
-        <DiffCommitView />
       </Container>
     );
   }

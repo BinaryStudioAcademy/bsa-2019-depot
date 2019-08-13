@@ -1,54 +1,92 @@
-import React from 'react';
-import {flatMap} from 'lodash';
-import {parseDiff, Diff, Hunk, Decoration} from 'react-diff-view';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { parseDiff, Diff, Hunk, Decoration } from 'react-diff-view';
+import { fetchDiffs } from '../../routines/routines';
 
-import styles from 'react-diff-view/style/index.css';
-const text = `
-diff --git a/client/package.json b/client/package.json
-index a..b
-@@ -6,5 +6,6 @@
-   "dependencies": {
--    "dotenv": "^8.0.0",
-     "@primer/octicons-react": "^9.1.1",
-+    "dotenv": "^8.0.0",
-     "immutable": "^4.0.0-rc.12",
-+    "lodash": "^4.17.15",
-     "moment": "^2.24.0",
-@@ -16,2 +17,4 @@
-     "react-copy-to-clipboard": "^5.0.1",
-+    "react-diff-view": "^2.1.4",
-+    "react-diff-viewer": "^2.0.1",
-     "react-dom": "^16.8.6",`;
+import './styles.module.scss';
 
+class DiffCommitView extends Component {
+  componentDidMount() {
+    this.props.fetchDiffs({
+      // Mock
+      owner: 'meowcat',
+      repoName: 'new-repo',
+      hash: this.props.location.pathname.substring(this.props.location.pathname.lastIndexOf('/') + 1)
+    });
+  }
 
-const DiffCommitView = () => {
-  const files = parseDiff(text);
+  render() {
+    const { diffsData } = this.props;
+    let files = [];
 
-  const renderHunk =( newPath,hunk) => [
-    <Decoration key={ hunk.content}>
-      {newPath}
-    </Decoration>,
-    <Decoration key={'decoration-' + hunk.content}>
-      {hunk.content}
-    </Decoration>,
-    <Hunk key={ hunk.content} hunk={hunk} />
-      ];
-  const DiffFile = ({diffType, hunks}) => (
-    <Diff viewType="split" diffType={diffType}>
-      {flatMap(hunks, renderHunk)}
-    </Diff>
-  );
-  const renderFile = ({newPath, oldRevision, newRevision, type, hunks}) => (
-    <Diff key={oldRevision + '-' + newRevision} viewType="unified" diffType={type} hunks={hunks}>
-      {hunks => hunks.flatMap(h=>renderHunk(newPath, h ) )}
-    </Diff>
-  );
+    if (diffsData.diffs) {
+      files = parseDiff(diffsData.diffs);
+    }
 
-  return (
-    <div>
-      {files.map(renderFile)}
-    </div>
-  );
+    const error = diffsData.error ? <div>{diffsData.error}</div> : null;
+
+    const renderHunk = (newPath, hunk) => [
+      <Decoration key={hunk.content} className="diff-filename">
+        {newPath}
+      </Decoration>,
+      <Decoration key={'decoration-' + hunk.content}>{hunk.content}</Decoration>,
+      <Hunk key={hunk.content + Math.random()} hunk={hunk} />
+    ];
+    const renderFile = ({ newPath, oldRevision, newRevision, type, hunks }) =>
+      type === 'new' ? (
+        <div key={newPath} className="diff-content">
+          <p className="diff-filename">{`new empty file ${newPath}`}</p>
+        </div>
+      ) : (
+        <Diff
+          key={oldRevision + '-' + newRevision}
+          viewType="unified"
+          diffType={type}
+          hunks={hunks}
+          className="diff-content"
+        >
+          {hunks => hunks.flatMap(h => renderHunk(newPath, h))}
+        </Diff>
+      );
+
+    return (
+      <div>
+        {error}
+        {files.map(renderFile)}
+      </div>
+    );
+  }
+}
+
+DiffCommitView.propTypes = {
+  diffsData: PropTypes.exact({
+    loading: PropTypes.bool.isRequired,
+    error: PropTypes.string,
+    diffs: PropTypes.string
+  }).isRequired,
+  /*repoName: PropTypes.string.isRequired,*/
+  fetchDiffs: PropTypes.func.isRequired,
+  location: PropTypes.object,
+  username: PropTypes.string
 };
 
-export default DiffCommitView;
+const mapStateToProps = ({
+  diffsData,
+  profile: {
+    currentUser: { username }
+  } /*, repoName*/
+}) => ({
+  diffsData,
+  username /*,
+    repoName*/
+});
+
+const mapDispatchToProps = {
+  fetchDiffs
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DiffCommitView);
