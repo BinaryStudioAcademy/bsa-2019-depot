@@ -22,8 +22,8 @@ const createRepo = async ({ owner, repository }) => {
   return result;
 };
 
-const checkName = async ({ user, name }) => {
-  const filePath = path.resolve(`${gitPath}/${user}/${name}`);
+const checkName = async ({ owner, repository }) => {
+  const filePath = path.resolve(`${gitPath}/${owner}/${repository}`);
   const exists = await fs.existsSync(filePath);
   return exists;
 };

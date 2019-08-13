@@ -12,9 +12,9 @@ router
   .post('/', (req, res) => {
     createRepo({ ...req.body }).then(data => res.send(data));
   })
-  .get('/:owner/:repoName/check-name', (req, res, next) => {
-    const { owner, repoName } = req.params;
-    checkName({ user: owner, name: repoName })
+  .get('/:owner/:repository/check-name', (req, res, next) => {
+    const { owner, repository } = req.params;
+    checkName({ owner, repository })
       .then(result => res.send({ exists: result }))
       .catch(next);
   })
