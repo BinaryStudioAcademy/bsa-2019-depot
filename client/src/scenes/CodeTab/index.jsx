@@ -72,7 +72,7 @@ class CodeTab extends React.Component {
   };
 
   render() {
-    const { repoName, branch } = this.state;
+    const { owner, repoName, branch } = this.state;
     const { lastCommitData, branchesData, fileTreeData, history, fetchFileTree } = this.props;
 
     return (
@@ -217,6 +217,7 @@ class CodeTab extends React.Component {
         <RepoFileTree
           lastCommitData={lastCommitData}
           fileTreeData={fileTreeData}
+          owner={owner}
           repoName={repoName}
           branch={branch}
           history={history}

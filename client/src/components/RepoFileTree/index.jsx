@@ -16,10 +16,10 @@ class RepoFileTree extends React.Component {
 
   getFolderContent = e => {
     const { currentPath } = this.props.fileTreeData.tree;
-    const { repoName, branch, history, fetchFileTree } = this.props;
+    const { owner, repoName, branch, history, fetchFileTree } = this.props;
     e.preventDefault();
     fetchFileTree({
-      owner: 'pavel',
+      owner,
       repoName,
       branch,
       query: {
@@ -31,10 +31,10 @@ class RepoFileTree extends React.Component {
 
   getLevelUpFolderContent = e => {
     e.preventDefault();
-    const { branch, history, repoName, fetchFileTree } = this.props;
+    const { owner, repoName, branch, history, fetchFileTree } = this.props;
     const { parentDir } = this.props.fileTreeData.tree;
     fetchFileTree({
-      owner: 'pavel',
+      owner,
       repoName,
       branch,
       query: {
@@ -163,6 +163,7 @@ RepoFileTree.propTypes = {
     })
   }).isRequired,
   history: PropTypes.object.isRequired,
+  owner: PropTypes.string.isRequired,
   repoName: PropTypes.string.isRequired,
   branch: PropTypes.string.isRequired,
   fetchFileTree: PropTypes.func.isRequired
