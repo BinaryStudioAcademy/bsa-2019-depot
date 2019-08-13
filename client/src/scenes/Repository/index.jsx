@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
 import RepositoryHeader from '../../components/RepositoryHeader';
-import CodeTab from '../CodeTab/index';
 import IssuesTab from '../../containers/IssuesTab/index';
 import CommitsPage from '../../containers/CommitsPage/index';
+import RepositoryTab from '../../containers/RepositoryTab';
 
 import './styles.module.scss';
 
@@ -29,7 +29,7 @@ class RepositoryPage extends React.Component {
         />
         <div className="ui bottom attached active tab">
           <Switch>
-            <Route exact path={match.url} component={CodeTab} />
+            <Route exact path={match.url} component={RepositoryTab} />
             <Route exact path={`${match.url}/issues`} component={IssuesTab} />
             <Route exact path={`${match.url}/commits`} component={CommitsPage} />
           </Switch>
