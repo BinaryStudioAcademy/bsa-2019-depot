@@ -7,6 +7,7 @@ import { commitsData, branchesData } from '../containers/CommitsPage/reducer';
 import { repoSettingsData } from '../containers/SettingsTab/reducer';
 import profile from '../containers/Profile/reducer';
 import { repositoriesReducer } from '../scenes/Dashboard/reducer';
+import forkRepo from '../components/ForkButton/reducer';
 
 export default combineReducers({
   profile,
@@ -16,5 +17,6 @@ export default combineReducers({
   commitsData,
   branchesData,
   repoSettingsData,
-  repositories: repositoriesReducer
+  repositories: repositoriesReducer,
+  forkRepo
 });

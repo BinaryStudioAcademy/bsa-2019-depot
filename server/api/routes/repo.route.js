@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const {
-  createRepo, renameRepo, deleteRepo, getReposNames
+  createRepo, renameRepo, deleteRepo, getReposNames, forkRepo
 } = require('../services/repo.service');
 const { getCommits } = require('../services/commit.service');
 const { getBranches } = require('../services/branch.service');
@@ -48,6 +48,18 @@ router
   .delete('/:owner/:repoName/settings', (req, res, next) => {
     const { repoName } = req.params;
     deleteRepo({ repoName, username: req.user.username })
+      .then(result => res.send(result))
+      .catch(next);
+  })
+  .post('/:owner/:repoName', (req, res, next) => {
+    const {
+      params: { owner, repoName },
+      user: {
+        dataValues: { username }
+      }
+    } = req;
+
+    forkRepo({ username, owner, repoName })
       .then(result => res.send(result))
       .catch(next);
   });
