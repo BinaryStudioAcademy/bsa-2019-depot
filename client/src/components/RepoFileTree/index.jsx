@@ -7,22 +7,60 @@ import Octicon, { getIconByName } from '@primer/octicons-react';
 import styles from './styles.module.scss';
 import moment from 'moment';
 
-const RepoFileTree = (props) => {
-  const { sha, message, author, date } = props.lastCommitData.commit;
-  const { files, directories } = props.fileTreeData.tree;
-  return (props.lastCommitData.loading || props.fileTreeData.loading
-    ? (
+class RepoFileTree extends React.Component {
+  constructor(props) {
+    super(props);
+    this.getFolderContent = this.getFolderContent.bind(this);
+    this.getLevelUpFolderContent = this.getLevelUpFolderContent.bind(this);
+  }
+
+  getFolderContent = e => {
+    const { currentPath } = this.props.fileTreeData.tree;
+    const { repoName, branch, history, fetchFileTree } = this.props;
+    e.preventDefault();
+    fetchFileTree({
+      owner: 'pavel',
+      repoName,
+      branch,
+      query: {
+        pathToDir: currentPath ? `${currentPath}/${e.target.textContent}` : e.target.textContent
+      }
+    });
+    history.push(`${history.location.pathname}/${e.target.textContent}`);
+  };
+
+  getLevelUpFolderContent = e => {
+    e.preventDefault();
+    const { branch, history, repoName, fetchFileTree } = this.props;
+    const { parentDir } = this.props.fileTreeData.tree;
+    fetchFileTree({
+      owner: 'pavel',
+      repoName,
+      branch,
+      query: {
+        pathToDir: parentDir
+      }
+    });
+
+    const pathname = history.location.pathname.split('/');
+    const newPathName = pathname.slice(0, pathname.length - 1).join('/');
+    history.push(newPathName);
+  };
+
+  render() {
+    const { sha, message, author, date } = this.props.lastCommitData.commit;
+    const { files, directories, currentPath } = this.props.fileTreeData.tree;
+    return this.props.lastCommitData.loading || this.props.fileTreeData.loading ? (
       <div>
-        <Dimmer active >
+        <Dimmer active>
           <Loader />
         </Dimmer>
       </div>
-    )
-    : (
-      < div >
+    ) : (
+      <div>
         <Message attached="top" info>
           <div className={styles.commit}>
-                        latest commit{' '}
+            latest commit{' '}
             <Link className={styles.sha} to="">
               {sha.slice(0, 8)}{' '}
             </Link>
@@ -41,21 +79,26 @@ const RepoFileTree = (props) => {
           <Link className={styles.link} to="">
             {message}{' '}
           </Link>
-          {/* <Link className={styles.prNumber} to="">
-                    #2728
-                </Link>{' '}
-                <Link className={styles.link} to="">
-                    from new/patch-1{' '}
-                </Link> */}
         </Message>
         <Table attached="bottom" selectable singleLine unstackable>
           <Table.Body>
+            {currentPath ? (
+              <Table.Row>
+                <Table.Cell>
+                  <Link className={styles.link} to="" onClick={this.getLevelUpFolderContent}>
+                    ..
+                  </Link>
+                </Table.Cell>
+                <Table.Cell></Table.Cell>
+                <Table.Cell></Table.Cell>
+              </Table.Row>
+            ) : null}
             {directories.map((dir, index) => (
               <React.Fragment key={index}>
                 <Table.Row>
                   <Table.Cell singleLine width="five">
                     <Octicon className={styles.folderIcon} icon={getIconByName('file-directory')} />
-                    <Link className={styles.link} to="">
+                    <Link className={styles.link} to="" onClick={this.getFolderContent}>
                       {dir.name}
                     </Link>
                   </Table.Cell>
@@ -68,7 +111,7 @@ const RepoFileTree = (props) => {
                     {moment(dir.date).fromNow()}
                   </Table.Cell>
                 </Table.Row>
-              </React.Fragment>    
+              </React.Fragment>
             ))}
 
             {files.map((file, index) => (
@@ -89,16 +132,14 @@ const RepoFileTree = (props) => {
                     {moment(file.date).fromNow()}
                   </Table.Cell>
                 </Table.Row>
-              </React.Fragment>    
+              </React.Fragment>
             ))}
-
-              
           </Table.Body>
         </Table>
-      </div >
-    )
-  );
-};
+      </div>
+    );
+  }
+}
 
 RepoFileTree.propTypes = {
   lastCommitData: PropTypes.exact({
@@ -117,8 +158,14 @@ RepoFileTree.propTypes = {
     tree: PropTypes.exact({
       files: PropTypes.array.isRequired,
       directories: PropTypes.array.isRequired,
+      parentDir: PropTypes.string.isRequired,
+      currentPath: PropTypes.string.isRequired
     })
-  }).isRequired
+  }).isRequired,
+  history: PropTypes.object.isRequired,
+  repoName: PropTypes.string.isRequired,
+  branch: PropTypes.string.isRequired,
+  fetchFileTree: PropTypes.func.isRequired
 };
 
 export default RepoFileTree;

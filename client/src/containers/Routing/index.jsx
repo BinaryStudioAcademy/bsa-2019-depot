@@ -38,7 +38,7 @@ class Routing extends React.Component {
         <Route exact path="/settings/profile" component={SettingsProfile} />
         <Route path="/:owner/:repository" component={RepositoryPage} />
         <PrivateRoute exact path="/" component={MainPage} />
-        <PrivateRoute exact path="/code" component={CodeTab} />
+        <PrivateRoute path="/code" component={CodeTab} />
         <PrivateRoute exact path="/dashboard" component={Dashboard} />
         <Route exact path="*" component={NotFound} />
       </Switch>
