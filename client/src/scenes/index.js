@@ -8,7 +8,6 @@ import Signup from './Signup/index';
 import Dashboard from './Dashboard/index';
 import CodeTab from './CodeTab/index';
 import CreateRepository from './CreateRepository';
-import EmptyRepositoryPage from './EmptyRepositoryPage';
 import SettingsProfile from './SettingsProfile/index';
 
 export {
@@ -22,6 +21,5 @@ export {
   Dashboard,
   CodeTab,
   CreateRepository,
-  EmptyRepositoryPage,
   SettingsProfile
 };
