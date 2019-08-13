@@ -13,11 +13,12 @@ import {
   Signup,
   // GoogleCallback,
   Dashboard,
-  SettingsProfile
+  SettingsProfile,
+
 } from '../../scenes';
 import { fetchCurrentUser } from '../../routines/routines';
 import RepositoryPage from '../../scenes/Repository';
-import { CreateRepository, EmptyRepositoryPage } from '../../scenes';
+import { CreateRepository } from '../../scenes';
 
 class Routing extends React.Component {
   componentDidMount() {
@@ -32,7 +33,6 @@ class Routing extends React.Component {
     ) : (
       <Switch>
         <PrivateRoute exact path="/new" component={CreateRepository} />
-        <Route exact path="/:owner/:repository" component={EmptyRepositoryPage} />
         <Route exact path="/registration" component={Signup} />
         {/* <Route exact path="/api/auth/google/callback" component={GoogleCallback} /> */}
         <Route exact path="/login" component={Login} />
