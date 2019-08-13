@@ -1,5 +1,11 @@
 :global(.ui.grid.login-grid) {
-  margin-top: 80px;
+  height: 100vh;
+}
+:global(.has-error input) {
+  border-color: #ffcec6 !important;
+}
+:global(.no-error input) {
+  border-color: #bbd3bb !important;
 }
 
 :global(.check.icon.icon-green) {

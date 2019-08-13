@@ -8,6 +8,7 @@ import { lastCommitReducer, fileTreeReducer } from '../scenes/CodeTab/reducer';
 import { repoSettingsData } from '../containers/SettingsTab/reducer';
 import profile from '../containers/Profile/reducer';
 import { repositoriesReducer } from '../scenes/Dashboard/reducer';
+import forkRepo from '../components/ForkButton/reducer';
 
 export default combineReducers({
   profile,
@@ -19,5 +20,6 @@ export default combineReducers({
   lastCommitData: lastCommitReducer,
   fileTreeData: fileTreeReducer,
   repoSettingsData,
-  repositories: repositoriesReducer
+  repositories: repositoriesReducer,
+  forkRepo
 });

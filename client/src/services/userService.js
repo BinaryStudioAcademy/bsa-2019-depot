@@ -19,10 +19,10 @@ export const reset = async request => {
 };
 
 export const updateSettings = async request => {
-    const response = await callWebApi({
-        endpoint: '/api/user/settings',
-        type: 'POST',
-        request
-    });
-    return response.json();
+  const response = await callWebApi({
+    endpoint: '/api/user/settings',
+    type: 'POST',
+    request
+  });
+  return response.json();
 };
