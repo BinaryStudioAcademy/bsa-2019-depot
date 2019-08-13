@@ -8,3 +8,11 @@ export const getRepositories = async (owner, filter) => {
   });
   return response.json();
 };
+
+export const forkRepo = async ({ owner, repo }) => {
+  const response = await callWebApi({
+    endpoint: `/api/repo/${owner}/${repo}`,
+    type: 'POST'
+  });
+  return response.json();
+};
