@@ -1,7 +1,7 @@
 const { Router } = require('express');
 
 const {
-  createRepo, renameRepo, deleteRepo, getReposNames, checkName
+  createRepo, renameRepo, deleteRepo, getReposNames, checkName, isEmpty
 } = require('../services/repo.service');
 const { getCommits } = require('../services/commit.service');
 const { getBranches } = require('../services/branch.service');
@@ -16,6 +16,14 @@ router
     const { owner, repoName } = req.params;
     checkName({ user: owner, name: repoName })
       .then(result => res.send({ exists: result }))
+      .catch(next);
+  })
+  .get('/:owner/:repoName/is-empty', (req, res, next) => {
+    const { owner, repoName } = req.params;
+    isEmpty({ owner, repoName })
+      .then((result) => {
+        res.send(result);
+      })
       .catch(next);
   })
   .get('/:owner/repos', (req, res, next) => {
@@ -36,7 +44,7 @@ router
       .then(branches => res.send(branches))
       .catch(next);
   })
-  .get('/:owner/:repoName/settings', (req, res, next) => {
+  .get('/:owner/:repoName/settings', (req, res) => {
     res.sendStatus(200);
     /* Can be used in future to get settings data from DB
     const { repoName } = req.params;

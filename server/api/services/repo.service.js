@@ -28,6 +28,23 @@ const checkName = async ({ user, name }) => {
   return exists;
 };
 
+const isEmpty = async ({ owner, repoName }) => {
+  try {
+    let result;
+    const pathToRepo = path.resolve(`${gitPath}/${owner}/${repoName}`);
+    await NodeGit.Repository.open(pathToRepo).then((repo) => {
+      result = repo.isEmpty();
+    });
+    return {
+      isEmpty: Boolean(result),
+      url: pathToRepo
+    };
+  } catch (e) {
+    console.warn(e);
+    return e;
+  }
+};
+
 const renameRepo = async ({ repoName, newName, username }) => {
   try {
     const oldDirectory = path.resolve(`${gitPath}/${username}/${repoName}`);
@@ -63,5 +80,6 @@ module.exports = {
   renameRepo,
   deleteRepo,
   getReposNames,
-  checkName
+  checkName,
+  isEmpty
 };
