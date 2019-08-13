@@ -56,7 +56,9 @@ const RepositoryHeader = ({ owner, repoName, forkCount, issueCount, activePage, 
             </Link>
           </div>
           <div className={`${activeTab === 'settings' && 'active'} item`}>
-            <Link to={`${baseUrl}/settings`}>Settings</Link>
+            <Link to={`${baseUrl}/settings`}>
+              <Icon name="cog" /> Settings
+            </Link>
           </div>
         </div>
       </div>
