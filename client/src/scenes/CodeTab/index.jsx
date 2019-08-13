@@ -1,18 +1,79 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import RepoFileTree from '../../components/RepoFileTree/index';
 import RepoReadme from '../../components/RepoReadme/index';
+import { fetchLastCommitOnBranch, fetchBranches, fetchFileTree } from '../../routines/routines';
 
 import Octicon, { getIconByName } from '@primer/octicons-react';
-import { Container, Button, Header, Dropdown, Input, Popup, Segment, Menu } from 'semantic-ui-react';
+import { Container, Button, Header, Dropdown, Input, Popup, Segment, Menu, Dimmer, Loader } from 'semantic-ui-react';
 import styles from './styles.module.scss';
 
-const OnDropdownClick = e => e.stopPropagation();
-
 class CodeTab extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      owner: 'pavel',
+      repoName: 'test-repo.git',
+      branch: 'master'
+    };
+    this.onBranchChange = this.onBranchChange.bind(this);
+    this.onDropdownClick = this.onDropdownClick.bind(this);
+  }
+
+  componentDidMount() {
+    const { history } = this.props;
+    const { owner, repoName, branch } = this.state;
+    history.push(`/code/${repoName}/tree/${branch}`);
+    this.props.fetchLastCommitOnBranch({
+      owner,
+      repoName,
+      branch
+    });
+    this.props.fetchFileTree({
+      owner,
+      repoName,
+      branch
+    });
+  }
+
+  onDropdownClick = event => {
+    event.stopPropagation();
+    const { owner, repoName } = this.state;
+    this.props.fetchBranches({
+      owner,
+      repoName
+    });
+  };
+
+  onBranchChange = (event, data) => {
+    this.setState(
+      {
+        branch: data.value
+      },
+      () => {
+        const { owner, repoName, branch } = this.state;
+        const { history } = this.props;
+        history.push(`/code/${repoName}/tree/${data.value}`);
+
+        this.props.fetchLastCommitOnBranch({
+          owner,
+          repoName,
+          branch
+        });
+        this.props.fetchFileTree({
+          owner,
+          repoName,
+          branch
+        });
+      }
+    );
+  };
+
   render() {
-    const { match } = this.props;
+    const { owner, repoName, branch } = this.state;
+    const { lastCommitData, branchesData, fileTreeData, history, fetchFileTree } = this.props;
 
     return (
       <Container>
@@ -30,7 +91,7 @@ class CodeTab extends React.Component {
           <Menu borderless attached="top" widths={4}>
             <Menu.Item>
               <Octicon icon={getIconByName('history')} />
-              <Link className={styles.repoMetaDataLinks} to={`${match.url}/commits`}>
+              <Link className={styles.repoMetaDataLinks} to="">
                 <b>4,325 </b> commits
               </Link>
             </Menu.Item>
@@ -64,25 +125,40 @@ class CodeTab extends React.Component {
           <div>
             <Dropdown
               button
-              text="Branch: master"
+              text={`Branch: ${branch}`}
               floating
               width="seven"
               className={[styles.actionButton, styles.repoBranchesButton]}
               position="top left"
+              onClick={this.onDropdownClick}
             >
               <Dropdown.Menu className={styles.searchBranchList}>
-                <Dropdown.SearchInput
-                  type="text"
-                  className={styles.searchBranchInput}
-                  placeholder="Find or create a branch"
-                  onClick={OnDropdownClick}
-                />
-                <Dropdown.Divider />
-                <Dropdown.Header content="branch" as="h4" />
-                <Dropdown.Item className={styles.branchesMenuItem}>master</Dropdown.Item>
-                <Dropdown.Item className={styles.branchesMenuItem}>develop</Dropdown.Item>
-                <Dropdown.Item className={styles.branchesMenuItem}>hotfix</Dropdown.Item>
-                <Dropdown.Item className={styles.branchesMenuItem}>patch/add-new-feature</Dropdown.Item>
+                {branchesData.loading ? (
+                  <Dimmer active>
+                    <Loader inverted />
+                  </Dimmer>
+                ) : (
+                  <React.Fragment>
+                    <Dropdown.SearchInput
+                      type="text"
+                      className={styles.searchBranchInput}
+                      placeholder="Find or create a branch"
+                      onClick={this.OnDropdownClick}
+                    />
+                    <Dropdown.Divider />
+                    <Dropdown.Header content="branch" as="h4" />
+                    {branchesData.branches.map((branch, index) => (
+                      <Dropdown.Item
+                        key={index}
+                        onClick={this.onBranchChange}
+                        value={branch}
+                        className={styles.branchesMenuItem}
+                      >
+                        {branch}
+                      </Dropdown.Item>
+                    ))}
+                  </React.Fragment>
+                )}
               </Dropdown.Menu>
             </Dropdown>
             <Button className={styles.actionButton}>New pull request</Button>
@@ -119,7 +195,7 @@ class CodeTab extends React.Component {
                       <Octicon verticalAlign="middle" icon={getIconByName('clippy')} />
                     </Button>
                   }
-                  onClick={OnDropdownClick}
+                  onClick={this.OnDropdownClick}
                   actionPosition="right"
                   size="small"
                   className={styles.repoLinkInput}
@@ -138,20 +214,56 @@ class CodeTab extends React.Component {
             </Popup>
           </div>
         </div>
-        <RepoFileTree />
+        <RepoFileTree
+          lastCommitData={lastCommitData}
+          fileTreeData={fileTreeData}
+          owner={owner}
+          repoName={repoName}
+          branch={branch}
+          history={history}
+          fetchFileTree={fetchFileTree}
+        />
         <RepoReadme />
       </Container>
     );
   }
 }
 
-CodeTab.propTypes = {
-  match: PropTypes.exact({
-    params: PropTypes.object.isRequired,
-    isExact: PropTypes.bool.isRequired,
-    path: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired
-  }).isRequired
+const mapStateToProps = ({ lastCommitData, branchesData, fileTreeData }) => ({
+  lastCommitData,
+  branchesData,
+  fileTreeData
+});
+
+const mapDispatchToProps = {
+  fetchLastCommitOnBranch,
+  fetchBranches,
+  fetchFileTree
 };
 
-export default CodeTab;
+CodeTab.propTypes = {
+  branchesData: PropTypes.exact({
+    loading: PropTypes.bool.isRequired,
+    error: PropTypes.string,
+    branches: PropTypes.array
+  }).isRequired,
+  lastCommitData: PropTypes.exact({
+    loading: PropTypes.bool.isRequired,
+    error: PropTypes.string,
+    commit: PropTypes.object
+  }).isRequired,
+  fileTreeData: PropTypes.exact({
+    loading: PropTypes.bool.isRequired,
+    error: PropTypes.string,
+    tree: PropTypes.object
+  }).isRequired,
+  fetchLastCommitOnBranch: PropTypes.func.isRequired,
+  fetchBranches: PropTypes.func.isRequired,
+  fetchFileTree: PropTypes.func.isRequired,
+  history: PropTypes.object
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CodeTab);

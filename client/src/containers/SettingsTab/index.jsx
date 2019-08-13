@@ -136,9 +136,8 @@ RepoSettings.propTypes = {
   deleteRepo: PropTypes.func.isRequired
 };
 
-const mapStateToProps = ({ repoSettingsData, profile }) => ({
-  repoSettingsData,
-  profile
+const mapStateToProps = ({ repoSettingsData }) => ({
+  repoSettingsData
 });
 
 const mapDispatchToProps = {
