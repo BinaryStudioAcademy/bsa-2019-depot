@@ -1,10 +1,16 @@
 version: 0.0
 os: linux
 files:
-  - source: ./
+  - source: /
     destination: /home/ubuntu/bsa-2019-depot
+permissions:
+  - object: /
+    pattern: "**"
+    owner: ubuntu
+    group: ubuntu
 hooks:
-  AfterInstall:
-    - location: scripts/after-install.sh
+  BeforeInstall:
+    - location: scripts/before-install.sh
   ApplicationStart:
     - location: scripts/app-start.sh
+      runas: ubuntu

@@ -94,6 +94,7 @@
 
 :global(.ui.button):local(.repoBranchesButton) {
   margin-right: 6px;
+  text-overflow: ellipsis;
   &:active,
   &:focus {
     background-color: #e9ecef;
@@ -172,6 +173,7 @@
 }
 :global(.ui.floating.dropdown > .menu):local(.searchBranchList) {
   min-width: 300px;
+  min-height: 300px;
   padding: 0.833em 0.2em;
   background-color: #fff;
   border: 1px solid rgba(27, 31, 35, 0.15);

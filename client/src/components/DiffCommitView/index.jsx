@@ -10,7 +10,7 @@ class DiffCommitView extends Component {
   componentDidMount() {
     this.props.fetchDiffs({
       // Mock
-      owner: 'meowcat',
+      owner: this.props.username,
       repoName: 'new-repo',
       hash: this.props.location.pathname.substring(this.props.location.pathname.lastIndexOf('/') + 1)
     });

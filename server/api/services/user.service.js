@@ -1,10 +1,6 @@
-const jwt = require('jsonwebtoken');
 const UserRepository = require('../../data/repositories/user.repository');
 
-const { sendTokenEmail } = require('../../helpers/email.helper');
 const tokenHelper = require('../../helpers/token.helper');
-
-const secret = process.env.SECRET_KEY;
 
 const getUserById = userId => UserRepository.getUserById(userId);
 
@@ -22,24 +18,6 @@ const checkUsernameExists = async ({ username }) => {
   };
 };
 
-const checkEmailExists = async ({ email }) => {
-  const user = await UserRepository.getByEmail(email);
-  return {
-    emailExists: Boolean(user)
-  };
-};
-
-const sendForgetPasswordEmail = async ({ email }) => {
-  const isExist = await checkEmailExists({ email });
-  if (!isExist.emailExists) {
-    return { failure: 'Email is not exist' };
-  }
-  const user = await UserRepository.getByEmail(email);
-  const token = jwt.sign({ data: user.dataValues.email }, secret, { expiresIn: '1h' });
-  sendTokenEmail(email, token);
-  return { success: `Email with password reset link was sent to ${user.email}` };
-};
-
 const resetPassword = async ({ token, password }) => {
   let result = { success: 'Password updated' };
   const authorizedData = await tokenHelper.verifyToken(token);
@@ -48,11 +26,27 @@ const resetPassword = async ({ token, password }) => {
   return result;
 };
 
+const updateUserSettings = async ({ id, settings }) => {
+  const {
+    name, bio, url, company, location, imgUrl
+  } = settings;
+  const data = await UserRepository.updateUserById(id, {
+    name,
+    bio,
+    url,
+    company,
+    location,
+    imgUrl
+  });
+  return {
+    ...data
+  };
+};
+
 module.exports = {
   getUserById,
   setUsername,
   checkUsernameExists,
-  checkEmailExists,
-  sendForgetPasswordEmail,
+  updateUserSettings,
   resetPassword
 };
