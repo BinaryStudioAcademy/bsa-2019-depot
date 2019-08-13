@@ -1,3 +1,5 @@
+const { emailSender } = require('../config/aws.config');
+
 const createTokenEmail = (email, token, url) => {
   const params = {
     Destination: {
@@ -31,7 +33,7 @@ const createTokenEmail = (email, token, url) => {
         Data: 'Reset password Depot'
       }
     },
-    Source: 'sandrk27@gmail.com', /* required */
+    Source: emailSender, /* required */
   };
   return params;
 };

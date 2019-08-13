@@ -25,9 +25,11 @@ router.get('/username-exists', (req, res, next) => {
 });
 
 router.post('/forget-password', (req, res, next) => {
-  const { protocol, hostname, headers } = req;
+  const {
+    protocol, hostname, headers, body
+  } = req;
   const url = `${protocol}://${hostname}:${headers['x-forwarded-port']}`;
-  sendForgetPasswordEmail({ ...req.body, url })
+  sendForgetPasswordEmail({ ...body, url })
     .then(data => res.send(data))
     .catch(next);
 });
