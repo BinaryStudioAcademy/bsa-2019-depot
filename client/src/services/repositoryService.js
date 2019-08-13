@@ -25,3 +25,11 @@ export const checkName = async ({ owner, repository }) => {
   });
   return response.json();
 };
+
+export const checkIfEmpty = async ({ owner, repository }) => {
+  const response = await callWebApi({
+    endpoint: `/api/repo/${owner}/${repository}/is-empty`,
+    type: 'GET'
+  });
+  return response.json();
+};
