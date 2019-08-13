@@ -1,5 +1,6 @@
 const NodeGit = require('nodegit');
 const fs = require('fs-extra');
+const fse = require('fs-extra');
 const path = require('path');
 
 const { readdirSync } = require('fs');
@@ -32,7 +33,7 @@ const isEmpty = async ({ owner, repoName }) => {
   try {
     let result;
     const pathToRepo = path.resolve(`${gitPath}/${owner}/${repoName}`);
-    await NodeGit.Repository.open(pathToRepo).then((repo) => {
+    await NodeGit.Repository.open(pathToRepo).then(repo => {
       result = repo.isEmpty();
     });
     return {
@@ -75,11 +76,35 @@ const getReposNames = async ({ user, filter: { filterWord, limit } }) => {
   return limit ? repos.slice(0, limit) : repos;
 };
 
+const forkRepo = async ({ username, owner, repoName }) => {
+  try {
+    const source = path.resolve(`${gitPath}/${owner}/${repoName}`);
+    const target = path.resolve(`${gitPath}/${username}/${repoName}`);
+
+    if (!fs.existsSync(source)) {
+      return { status: false, error: 'repo to copy doesn`t exist' };
+    }
+
+    if (fs.existsSync(target)) {
+      return { status: false, error: 'such repo already exists' };
+    }
+
+    fs.mkdirSync(target);
+    return await fse
+      .copy(source, target, { preserveTimestamps: true })
+      .then(() => ({ status: true, path: target }))
+      .catch(err => ({ status: false, error: err.message }));
+  } catch (err) {
+    return { status: false, error: err.message };
+  }
+};
+
 module.exports = {
   createRepo,
   renameRepo,
   deleteRepo,
   getReposNames,
   checkName,
-  isEmpty
+  isEmpty,
+  forkRepo
 };

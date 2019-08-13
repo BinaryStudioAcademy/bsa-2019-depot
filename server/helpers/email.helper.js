@@ -1,14 +1,6 @@
-const AWS = require('aws-sdk');
-const { accessKey, secretKey, awsRegion } = require('../config/aws.config');
+const { emailSender } = require('../config/aws.config');
 
-AWS.config.update({
-  accessKeyId: accessKey,
-  secretAccessKey: secretKey,
-  region: awsRegion
-});
-
-const sendTokenEmail = (email, token) => {
-  const ses = new AWS.SES({ apiVersion: '2010-12-01' });
+const createTokenEmail = (email, token, url) => {
   const params = {
     Destination: {
       /* required */
@@ -25,7 +17,7 @@ const sendTokenEmail = (email, token) => {
           Charset: 'UTF-8',
           Data: `<html><body> <p>We heard that you lost your Depot password. Sorry about that!</p>
                     <p>But don’t worry! You can use the following link to reset your password: </p>
-                    <p>${token} </p>
+                    <p>${url}/reset/${token} </p>
                     <p>If you don’t use this link within 1 hour, it will expire.</p>
                     <p>Thanks,</p>
                     <p>Your friends at Depot</p>
@@ -41,11 +33,11 @@ const sendTokenEmail = (email, token) => {
         Data: 'Reset password Depot'
       }
     },
-    Source: 'andreoven@gmail.com' /* required */
+    Source: emailSender /* required */
   };
-  ses.sendEmail(params).promise();
+  return params;
 };
 
 module.exports = {
-  sendTokenEmail
+  createTokenEmail
 };

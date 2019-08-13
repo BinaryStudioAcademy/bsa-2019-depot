@@ -1,12 +1,8 @@
 const { Router } = require('express');
 
-const {
-  setUsername,
-  checkUsernameExists,
-  sendForgetPasswordEmail,
-  resetPassword,
-  updateUserSettings
-} = require('../services/user.service');
+const { sendForgetPasswordEmail } = require('../services/email.service');
+const { setUsername, checkUsernameExists, resetPassword, updateUserSettings } = require('../services/user.service');
+const { getKeysByUser, createKey, deleteKey } = require('../services/sshKey.service');
 
 const router = Router();
 
@@ -25,7 +21,9 @@ router.get('/username-exists', (req, res, next) => {
 });
 
 router.post('/forget-password', (req, res, next) => {
-  sendForgetPasswordEmail({ ...req.body })
+  const { protocol, hostname, headers, body } = req;
+  const url = `${protocol}://${hostname}:${headers['x-forwarded-port']}`;
+  sendForgetPasswordEmail({ ...body, url })
     .then(data => res.send(data))
     .catch(next);
 });
@@ -39,6 +37,26 @@ router.post('/reset-password', (req, res, next) => {
 router.post('/settings', (req, res, next) => {
   updateUserSettings({ ...req.body })
     .then(data => res.send(data))
+    .catch(next);
+});
+
+router.get('/keys', (req, res, next) => {
+  getKeysByUser(req.user.id)
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.post('/keys', (req, res, next) => {
+  const { id } = req.user;
+  createKey({ userId: id, ...req.body })
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.delete('/keys/:id', (req, res, next) => {
+  const { id } = req.params;
+  deleteKey(id)
+    .then(() => res.sendStatus(200))
     .catch(next);
 });
 
