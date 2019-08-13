@@ -19,6 +19,8 @@ export const createRepository = async request => {
 };
 
 export const checkName = async ({ owner, repository }) => {
+  if (!owner || !repository) return 'invalid data';
+
   const response = await callWebApi({
     endpoint: `/api/repo/${owner}/${repository}/check-name`,
     type: 'GET'
