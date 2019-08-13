@@ -26,3 +26,27 @@ export const updateSettings = async request => {
   });
   return response.json();
 };
+
+export const getKeys = async () => {
+  const response = await callWebApi({
+    endpoint: '/api/user/keys',
+    type: 'GET'
+  });
+  return response.json();
+};
+
+export const addKey = async request => {
+  const response = await callWebApi({
+    endpoint: '/api/user/keys',
+    type: 'POST',
+    request
+  });
+  return response.json();
+};
+
+export const deleteKey = async keyId => {
+  return callWebApi({
+    endpoint: `/api/user/keys/${keyId}`,
+    type: 'DELETE'
+  });
+};
