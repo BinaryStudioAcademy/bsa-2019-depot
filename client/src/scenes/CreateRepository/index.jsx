@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Container, Form, Dropdown, Input, Radio, Checkbox, Divider, Button, Icon } from 'semantic-ui-react';
+import { Container, Form, Dropdown, Input, Radio, Checkbox, Divider, Button, Label } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { createRepository, checkRepoName } from '../../routines/routines';
-import { statusOptions, checkNameOptions } from './reducer';
+import { Formik, Field } from 'formik';
+import Octicon, { getIconByName } from '@primer/octicons-react';
+import { createRepository, checkName } from '../../services/repositoryService';
+import styles from './styles.module.scss';
 
 const gitingnoreOptions = [
   {
@@ -32,7 +34,7 @@ const licenseOptions = [
   }
 ];
 
-const initiaValues = {
+const initialValues = {
   owner: '',
   repository: '',
   description: '',
@@ -43,98 +45,76 @@ const initiaValues = {
 class CreateRepository extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      status: statusOptions.createDisallowed,
-      values: initiaValues
-    };
 
-    this.onChange = this.onChange.bind(this);
-    this.onRadioChange = this.onRadioChange.bind(this);
-    this.onCheckboxChange = this.onCheckboxChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-    this.renderIcon = this.renderIcon.bind(this);
+    this.renderCreateRepository = this.renderCreateRepository.bind(this);
+    this.validateRepoName = this.validateRepoName.bind(this);
   }
 
   componentDidMount() {
     this.setState({
-      ...this.state,
       values: {
-        ...this.state.values,
+        ...initialValues,
         owner: this.props.username
       }
     });
   }
 
-  onChange(e) {
-    const { name, value } = e.target;
-
-    this.setState({
-      ...this.state,
-      values: {
-        ...this.state.values,
-        [name]: value
-      }
-    });
-
-    if (name === 'repository') {
-      this.props.checkRepoName(this.state.values);
+  async validateRepoName(values) {
+    if (!values.repository) {
+      return 'Required';
+    }
+    const { exists } = await checkName(values);
+    if (exists) {
+      return `The repository ${values.repository} already exists on this account`;
     }
   }
 
-  onRadioChange(e, { name, value }) {
-    this.setState({
-      ...this.state,
-      values: {
-        ...this.state.values,
-        [name]: value
-      }
-    });
-  }
 
-  onCheckboxChange(e, { name, checked }) {
-    this.setState({
-      ...this.state,
-      values: {
-        ...this.state.values,
-        [name]: checked
-      }
-    });
-  }
-
-
-  onSubmit() {
-    this.props.createRepository({
-      ...this.state.values,
+  onSubmit(values) {
+    createRepository({
+      ...values,
       owner: this.props.username
     });
     const { repository } = this.state.values;
     const owner = this.props.username;
     this.props.history.push(`${owner}/${repository}`);
-    this.setState({
-      status: '',
-      values: initiaValues
-    });
   }
 
-  renderIcon() {
-    const { isValid } = this.props;
-
-    switch (isValid) {
-      case checkNameOptions.checking:
-        return (<Icon loading name='spinner' />);
-      case checkNameOptions.error:
-        return (<Icon name='warning sign' color='red' />);
-      case checkNameOptions.checked:
-        return (<Icon name='check' color='green' className='' />);
-      default:
-        return null;
-    }
+  renderPrivacyLabelPublic() {
+    return (
+      <label name="public" className={styles.privacyLabel}>
+        <Octicon className={styles.privacyIcon} icon={getIconByName('repo')} />
+        <span>
+          Public
+          <small>Anyone can see this repository. You choose who can commit.</small>
+        </span>
+      </label>
+    );
   }
 
-  render() {
+  renderPrivacyLabelLock() {
+    return (
+      <label name="private" className={styles.privacyLabel}>
+        <Octicon className={styles.privacyIcon} icon={getIconByName('lock')} />
+        <span>
+          Private
+          <small>You choose who can see and commit to this repository.</small>
+        </span>
+      </label>
+    );
+  }
+
+  renderCreateRepository({
+    errors,
+    touched,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    values
+  }) {
     const { username } = this.props;
-    const { repository, description, readme, privacy } = this.state.values;
-    const { status } = this.props;
+    const { repository, description, readme, privacy } = values;
 
     return (
       <Container>
@@ -142,25 +122,39 @@ class CreateRepository extends React.Component {
         <p>A repository contains all project files, including the revision history. Already have a project repository elsewhere?</p>
         <Link to="/">Import a repository.</Link>
         <Divider section />
-        <Form onSubmit={this.onSubmit}>
+        <Form onSubmit={handleSubmit}>
           <Form.Group>
             <Form.Field>
               <label>Owner</label>
-              <Input value={username} />
-            </Form.Field>
-            <Form.Field required>
-              <label>Repository name</label>
               <Input
-                icon
+                name="owner"
+                value={username}
+                onChange={handleChange}
+              />
+            </Form.Field>
+            <span className={styles.slash}>/</span>
+            <Form.Field className={styles.formField}>
+              <label>Repository name</label>
+              <Field
                 name="repository"
                 value={repository}
-                onChange={this.onChange}
-              >
-                <input />
-                {this.renderIcon()}
-
-              </Input>
+                // eslint-disable-next-line react/jsx-no-bind
+                validate={() => this.validateRepoName(values)}
+                onChange={handleChange}
+              />
+              {(errors.repository && touched.repository &&
+                <span className={styles.label}>
+                  <Label
+                    basic
+                    color='red'
+                    pointing
+                  >
+                    {errors.repository}
+                  </Label>
+                </span>
+              )}
             </Form.Field>
+
           </Form.Group>
           <p>Great repository names are short and memorable. Need inspiration? How about psychic-eureka?</p>
           <Form.Field>
@@ -168,37 +162,41 @@ class CreateRepository extends React.Component {
             <Input
               name="description"
               value={description}
-              onChange={this.onChange}
+              onChange={handleChange}
             />
           </Form.Field>
           <Divider />
           <div>
             <Form.Field>
               <Radio
-                label='Public'
+                label={this.renderPrivacyLabelPublic()}
+                id='public'
                 name='privacy'
                 value='public'
                 checked={privacy === 'public'}
-                onChange={this.onRadioChange}
+                onChange={handleChange}
               />
             </Form.Field>
             <Form.Field>
               <Radio
-                label='Private'
+                label={this.renderPrivacyLabelLock()}
+                id='private'
                 name='privacy'
                 value='private'
                 checked={privacy === 'private'}
-                onChange={this.onRadioChange}
+                onChange={handleChange}
               />
             </Form.Field>
             <Divider />
           </div>
           <Form.Field>
+            <label name={readme}></label>
             <Checkbox
-              label={'Initialize this repository with a README'}
-              name={'readme'}
+              id='readme'
+              label={<label name="readme">Initialize this repository with a README</label>}
+              value={readme}
               checked={readme}
-              onChange={this.onCheckboxChange}
+              onChange={handleChange}
             />
           </Form.Field>
           <Form.Group>
@@ -221,7 +219,6 @@ class CreateRepository extends React.Component {
           </Form.Group>
           <Divider />
           <Button
-            disabled={status === statusOptions.createDisallowed}
             type='submit'
             color='green'
           >
@@ -231,28 +228,27 @@ class CreateRepository extends React.Component {
       </Container>
     );
   }
+
+  render() {
+    return (
+      <Formik
+        initialValues={initialValues}
+        onSubmit={this.onSubmit}
+        render={this.renderCreateRepository}
+      />
+    );
+  }
 }
 
 CreateRepository.propTypes = {
   username: PropTypes.string.isRequired,
-  createRepository: PropTypes.func,
-  checkRepoName: PropTypes.func,
-  status: PropTypes.string.isRequired,
-  isValid: PropTypes.string,
   history: PropTypes.any
 };
 
 const mapStateToProps = (state) => {
   return {
-    username: state.profile.username,
-    status: state.createRepository.status,
-    isValid: state.createRepository.isValid
+    username: state.profile.username
   };
 };
 
-const mapDispatchToProps = {
-  createRepository,
-  checkRepoName
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CreateRepository);
+export default connect(mapStateToProps)(CreateRepository);
