@@ -7,7 +7,6 @@ import { Formik, Field } from 'formik';
 import Octicon, { getIconByName } from '@primer/octicons-react';
 import { createRepository, checkName } from '../../services/repositoryService';
 import styles from './styles.module.scss';
-import RepositoryHeader from '../../components/RepositoryHeader';
 
 const gitingnoreOptions = [
   {
