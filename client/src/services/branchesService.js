@@ -10,7 +10,7 @@ export const getBranches = async (owner, repoName) => {
 
 export const getLastCommit = async (owner, repoName, branch) => {
   const response = await callWebApi({
-    endpoint: `/repo/${owner}/${repoName}/${branch}/last-commit`,
+    endpoint: `/api/repo/${owner}/${repoName}/${branch}/last-commit`,
     type: 'GET'
   });
   return response.json();
@@ -18,7 +18,7 @@ export const getLastCommit = async (owner, repoName, branch) => {
 
 export const getFileTree = async (owner, repoName, branch) => {
   const response = await callWebApi({
-    endpoint: `/repo/${owner}/${repoName}/${branch}/tree`,
+    endpoint: `/api/repo/${owner}/${repoName}/${branch}/tree`,
     type: 'GET'
   });
   return response.json();
