@@ -40,8 +40,6 @@ class RepositoryPage extends React.Component {
 }
 
 RepositoryPage.propTypes = {
-  owner: PropTypes.string.isRequired,
-  repoName: PropTypes.string.isRequired,
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
     isExact: PropTypes.bool.isRequired,
