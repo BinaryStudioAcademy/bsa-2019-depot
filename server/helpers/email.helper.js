@@ -1,13 +1,16 @@
 const createTokenEmail = (email, token, url) => {
   const params = {
-    Destination: { /* required */
+    Destination: {
+      /* required */
       ToAddresses: [
-        email,
+        email
         /* more items */
       ]
     },
-    Message: { /* required */
-      Body: { /* required */
+    Message: {
+      /* required */
+      Body: {
+        /* required */
         Html: {
           Charset: 'UTF-8',
           Data: `<html><body> <p>We heard that you lost your Depot password. Sorry about that!</p>

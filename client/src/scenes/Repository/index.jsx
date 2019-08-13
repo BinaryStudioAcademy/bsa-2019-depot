@@ -9,52 +9,50 @@ import CommitsPage from '../../containers/CommitsPage/index';
 import './styles.module.scss';
 
 class RepositoryPage extends React.Component {
-    render() {
-        const { match, location } = this.props;
-        const { owner, repository } = match.params;
+  render() {
+    const { match, location } = this.props;
+    const { owner, repository } = match.params;
 
-        // Mocks
-        const issueCount = 14;
-        const forkCount = 22;
+    // Mocks
+    const issueCount = 14;
+    const forkCount = 22;
 
-        return (
+    return (
       <>
         <RepositoryHeader
-            owner={owner}
-            repoName={repository}
-            issueCount={issueCount}
-            forkCount={forkCount}
-            activePage={location.pathname.split('/')[3]}
-            baseUrl={match.url}
+          owner={owner}
+          repoName={repository}
+          issueCount={issueCount}
+          forkCount={forkCount}
+          activePage={location.pathname.split('/')[3]}
+          baseUrl={match.url}
         />
         <div className="ui bottom attached active tab">
-            <Switch>
-                <Route exact path={match.url} component={CodeTab} />
-                <Route exact path={`${match.url}/issues`} component={IssuesTab} />
-                <Route exact path={`${match.url}/commits`} component={CommitsPage} />
-            </Switch>
+          <Switch>
+            <Route exact path={match.url} component={CodeTab} />
+            <Route exact path={`${match.url}/issues`} component={IssuesTab} />
+            <Route exact path={`${match.url}/commits`} component={CommitsPage} />
+          </Switch>
         </div>
       </>
-        );
-    }
+    );
+  }
 }
 
 RepositoryPage.propTypes = {
-    owner: PropTypes.string.isRequired,
-    repoName: PropTypes.string.isRequired,
-    match: PropTypes.exact({
-        params: PropTypes.object.isRequired,
-        isExact: PropTypes.bool.isRequired,
-        path: PropTypes.string.isRequired,
-        url: PropTypes.string.isRequired
-    }).isRequired,
-    location: PropTypes.exact({
-        key: PropTypes.string.isRequired,
-        pathname: PropTypes.string.isRequired,
-        search: PropTypes.string.isRequired,
-        hash: PropTypes.string.isRequired,
-        state: PropTypes.array
-    }).isRequired
+  match: PropTypes.exact({
+    params: PropTypes.object.isRequired,
+    isExact: PropTypes.bool.isRequired,
+    path: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired
+  }).isRequired,
+  location: PropTypes.exact({
+    key: PropTypes.string.isRequired,
+    pathname: PropTypes.string.isRequired,
+    search: PropTypes.string.isRequired,
+    hash: PropTypes.string.isRequired,
+    state: PropTypes.array
+  }).isRequired
 };
 
 export default RepositoryPage;

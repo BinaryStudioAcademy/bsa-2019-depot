@@ -1,7 +1,25 @@
 :global(.ui.grid.login-grid) {
   height: 100vh;
-  margin-top: -50px;
 }
+:global(.has-error input) {
+  border-color: #ffcec6 !important;
+}
+:global(.no-error input) {
+  border-color: #bbd3bb !important;
+}
+
+:global(.check.icon.icon-green) {
+  color: #60b044;
+}
+
+:global(.check.icon.icon-hidden) {
+  display: none;
+}
+
+:global(.ui.error.message) {
+  text-align: center;
+}
+
 :global(.ui.center.aligned.header.login-header) {
   position: relative;
   &:before {

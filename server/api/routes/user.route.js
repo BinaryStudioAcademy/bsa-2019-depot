@@ -1,7 +1,12 @@
 const { Router } = require('express');
 
-const { setUsername, checkUsernameExists, resetPassword } = require('../services/user.service');
 const { sendForgetPasswordEmail } = require('../services/email.service');
+const {
+  setUsername,
+  checkUsernameExists,
+  resetPassword,
+  updateUserSettings
+} = require('../services/user.service');
 
 const router = Router();
 
@@ -14,7 +19,7 @@ router.post('/username', (req, res, next) => {
 });
 
 router.get('/username-exists', (req, res, next) => {
-  checkUsernameExists({ ...req.body })
+  checkUsernameExists({ username: req.query.username })
     .then(data => res.send(data))
     .catch(next);
 });
@@ -33,5 +38,10 @@ router.post('/reset-password', (req, res, next) => {
     .catch(next);
 });
 
+router.post('/settings', (req, res, next) => {
+  updateUserSettings({ ...req.body })
+    .then(data => res.send(data))
+    .catch(next);
+});
 
 module.exports = router;
