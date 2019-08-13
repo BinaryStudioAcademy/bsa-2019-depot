@@ -125,13 +125,16 @@ class FileEditor extends React.Component {
           ))}
           <Breadcrumb.Section>
             <Input
+              className={styles.fileNameInput}
               value={filename}
               focus
               size="mini"
               placeholder="Name your file..."
               onChange={this.handleChangeFilename}
             />
-            <Button basic>Cancel</Button>
+            <Button className={styles.newButton} basic>
+              Cancel
+            </Button>
           </Breadcrumb.Section>
         </Breadcrumb>
         <Tab panes={panes} />
