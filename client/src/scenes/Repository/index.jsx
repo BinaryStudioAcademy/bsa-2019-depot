@@ -5,7 +5,7 @@ import RepositoryHeader from '../../components/RepositoryHeader';
 import CodeTab from '../CodeTab/index';
 import IssuesTab from '../../containers/IssuesTab/index';
 import CommitsPage from '../../containers/CommitsPage/index';
-import FileEditor from '../../components/FileEditor';
+import FileEditPage from '../../containers/FileEditPage';
 import PrivateRoute from '../../containers/PrivateRoute';
 
 import './styles.module.scss';
@@ -32,7 +32,7 @@ class RepositoryPage extends React.Component {
         <div className="ui bottom attached active tab">
           <Switch>
             <Route exact path={match.path} component={CodeTab} />
-            <PrivateRoute path={[`${match.path}/new`, `${match.path}/edit`]} component={FileEditor} />
+            <PrivateRoute path={[`${match.path}/new`, `${match.path}/edit`]} component={FileEditPage} />
             <Route exact path={`${match.path}/issues`} component={IssuesTab} />
             <Route exact path={`${match.path}/commits`} component={CommitsPage} />
           </Switch>

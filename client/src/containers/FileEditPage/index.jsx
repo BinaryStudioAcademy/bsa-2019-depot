@@ -1,9 +1,11 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import AceEditor from 'react-ace';
 import ReactMarkdown from 'react-markdown';
 import { Breadcrumb, Input, Button, Tab } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import CommitFileForm from '../../components/CommitFileForm';
 
 // Modes for code highlighting
 import 'brace/mode/javascript';
@@ -14,20 +16,36 @@ import 'brace/mode/python';
 import 'brace/mode/ruby';
 import 'brace/mode/markdown';
 
+import 'brace/theme/github';
+
 import styles from './styles.module.scss';
 
-class FileEditor extends React.Component {
+class FileEditPage extends React.Component {
   constructor(props) {
     super(props);
 
+    const { location, match } = props;
+
+    let filename = '';
+    if (match.path.split('/').pop() === 'edit') {
+      filename = location.pathname.split('/').slice(-1)[0];
+    }
+
     this.state = {
       content: '',
-      filename: props.filename || ''
+      filename: filename,
+      toEdit: !!filename
     };
 
     this.handleChangeFilename = this.handleChangeFilename.bind(this);
     this.handleContentChange = this.handleContentChange.bind(this);
     this.selectMode = this.selectMode.bind(this);
+  }
+
+  componentDidMount() {
+    if (this.state.toEdit) {
+      // Call server for contents
+    }
   }
 
   handleChangeFilename(event, { value }) {
@@ -53,23 +71,29 @@ class FileEditor extends React.Component {
     case 'rb':
       return 'ruby';
     case 'md':
-      return 'markdown';
     default:
-      return '';
+      return 'markdown';
     }
   }
 
   render() {
-    const { location, match } = this.props;
+    const { location, match, username, avatar } = this.props;
     const { filename, content } = this.state;
+    const { username: ownerUsername, reponame } = match.params;
 
-    const filepath = location.pathname
+    const baseUrlExtension = location.pathname
       .replace(match.url, '')
       .split('/')
-      .filter(dir => dir) // Remove empty strings
-      .slice(1); // Remove branch name
+      .filter(dir => dir); // Remove empty strings
+
+    const initialBranch = baseUrlExtension[1]; // Get branch name from /tree/branchName/...
+    const filepath = baseUrlExtension.slice(2); // Remove /tree/branchName
+
+    if (match.url.split('/').pop() === 'edit') filepath.pop();
 
     const fileExtension = filename.split('.').pop();
+
+    const editorStyles = { width: '100%', height: '400px' };
 
     const panes = [
       {
@@ -80,7 +104,7 @@ class FileEditor extends React.Component {
               theme="github"
               value={content}
               mode={this.selectMode(fileExtension)}
-              className={styles.textEditor}
+              style={editorStyles}
               onChange={this.handleContentChange}
             />
           </Tab.Pane>
@@ -90,7 +114,11 @@ class FileEditor extends React.Component {
         menuItem: 'Preview',
         render: () => {
           if (fileExtension === 'md') {
-            return <ReactMarkdown source={content} />;
+            return (
+              <Tab.Pane>
+                <ReactMarkdown className={styles.markdownContainer} source={content} />
+              </Tab.Pane>
+            );
           }
 
           return (
@@ -100,7 +128,7 @@ class FileEditor extends React.Component {
                 readOnly
                 value={content}
                 mode={this.selectMode(fileExtension)}
-                className={styles.textEditor}
+                style={editorStyles}
               />
             </Tab.Pane>
           );
@@ -112,13 +140,13 @@ class FileEditor extends React.Component {
       <>
         <Breadcrumb size="massive">
           <Breadcrumb.Section>
-            <Link to={`${match.url}`}>{match.params.reponame}</Link>
+            <Link to={`/${ownerUsername}/${reponame}`}>{match.params.reponame}</Link>
           </Breadcrumb.Section>
           <Breadcrumb.Divider />
-          {filepath.map((directory, index) => (
+          {filepath.map((directory, index, array) => (
             <Fragment key={index}>
               <Breadcrumb.Section>
-                <Link to={''}>{directory}</Link>
+                <Link to={`/${ownerUsername}/${reponame}/tree/${initialBranch}/${array.slice(0, index + 1).join('/')}`}>{directory}</Link>
               </Breadcrumb.Section>
               <Breadcrumb.Divider />
             </Fragment>
@@ -137,14 +165,16 @@ class FileEditor extends React.Component {
             </Button>
           </Breadcrumb.Section>
         </Breadcrumb>
-        <Tab panes={panes} />
+        <Tab className={styles.editorArea} panes={panes} />
+        <CommitFileForm username={username} avatar={avatar} initialBranch={initialBranch}/>
       </>
     );
   }
 }
 
-FileEditor.propTypes = {
-  filename: PropTypes.string,
+FileEditPage.propTypes = {
+  username: PropTypes.string.isRequired,
+  avatar: PropTypes.string,
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
     isExact: PropTypes.bool.isRequired,
@@ -160,4 +190,9 @@ FileEditor.propTypes = {
   }).isRequired
 };
 
-export default FileEditor;
+const mapStateToProps = ({ profile: { currentUser: { username, avatar } } }) => ({
+  username,
+  avatar
+});
+
+export default connect(mapStateToProps)(FileEditPage);

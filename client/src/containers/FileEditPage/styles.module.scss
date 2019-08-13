@@ -10,7 +10,10 @@
   margin-bottom: 10px;
 }
 
-.text-editor {
-  width: 100%;
-  height: 400px;
+.editorArea {
+  min-height: 400px;
+}
+
+.markdownContainer {
+  padding: 20px;
 }
