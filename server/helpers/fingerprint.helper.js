@@ -1,9 +1,14 @@
 const fs = require('fs');
 const fingerprintGenerator = require('ssh-fingerprint');
 
-const generateFingerprint = async () => {
-  const publicKey = await fs.readFile(process.env.PUBLIC_KEY_PATH);
-  return fingerprintGenerator(publicKey);
-};
+const generateFingerprint = async () => new Promise((resolve, reject) => {
+  fs.readFile(process.env.PUBLIC_KEY_PATH, 'utf-8', (error, data) => {
+    if (error) {
+      reject(error);
+    } else {
+      resolve(fingerprintGenerator(data));
+    }
+  });
+});
 
 module.exports = { generateFingerprint };

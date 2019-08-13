@@ -52,22 +52,20 @@
   }
 
   .keyListItem:last-child {
+    border-bottom: 1px solid lightgrey;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
   }
 
   .keyListItem:first-child {
+    border-top: 1px solid lightgrey;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
   }
 
-  .keyListItem:not(:last-child) {
-    border-top: 1px solid lightgrey;
-    border-bottom: 1px solid lightgrey;
-  }
-
+  .keyListItem:not(:last-child),
   .keyListItem:not(:first-child) {
-    border-bottom: 1px solid lightgrey;
+    border-top: 1px solid lightgrey;
   }
 }
 

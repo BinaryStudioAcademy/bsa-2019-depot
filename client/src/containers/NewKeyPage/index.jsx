@@ -1,14 +1,21 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Formik } from 'formik';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Breadcrumb, Button, Form, Header } from 'semantic-ui-react';
+import { addSshKey } from '../KeysPage/actions';
 
 class NewKeyPage extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      submitted: false
+    };
+
     this.validate = this.validate.bind(this);
-    this.handleSubmit = this.handleSubmit(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   validate({ title, key }) {
@@ -27,14 +34,22 @@ class NewKeyPage extends React.Component {
     return errors;
   }
 
-  handleSubmit() {}
+  handleSubmit({ title, key }) {
+    this.props.addSshKey({ title, value: key });
+    this.setState({ submitted: true });
+  }
 
   render() {
-    return (
+    const { loading } = this.props;
+    const { submitted } = this.state;
+
+    return submitted ? (
+      <Redirect to="/settings/keys" />
+    ) : (
       <>
         <Header as="h2" dividing>
           <Breadcrumb size="massive">
-            <Breadcrumb.Section link>
+            <Breadcrumb.Section>
               <Link to="/settings/keys">SSH keys</Link>
             </Breadcrumb.Section>
             <Breadcrumb.Divider />
@@ -52,6 +67,7 @@ class NewKeyPage extends React.Component {
                 error={errors.title && touched.title && { content: errors.title }}
                 onBlur={handleBlur}
                 onChange={handleChange}
+                disabled={loading}
               />
               <Form.TextArea
                 label="Title"
@@ -62,8 +78,14 @@ class NewKeyPage extends React.Component {
                 content={key}
                 onBlur={handleBlur}
                 onChange={handleChange}
+                disabled={loading}
               />
-              <Button type="submit" positive>
+              <Button
+                type="submit"
+                loading={loading}
+                disabled={!!errors.title || !!errors.key || !title || !key}
+                positive
+              >
                 Add SSH key
               </Button>
             </Form>
@@ -74,4 +96,22 @@ class NewKeyPage extends React.Component {
   }
 }
 
-export default NewKeyPage;
+NewKeyPage.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  error: PropTypes.object,
+  addSshKey: PropTypes.func.isRequired
+};
+
+const mapStateToProps = ({ sshKeysData: { loading, error } }) => ({
+  loading,
+  error
+});
+
+const mapDispatchToProps = {
+  addSshKey
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NewKeyPage);

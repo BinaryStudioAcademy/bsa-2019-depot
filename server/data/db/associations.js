@@ -1,4 +1,4 @@
-export default (models) => {
+module.exports = (models) => {
   const {
     User,
     SshKey
