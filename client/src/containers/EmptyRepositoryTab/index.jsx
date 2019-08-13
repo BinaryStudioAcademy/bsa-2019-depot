@@ -5,8 +5,6 @@ import styles from './styles.module.scss';
 import { Link } from 'react-router-dom';
 import CopyableTerminal from '../../components/CopyableTerminal';
 
-const url = 'https://github.com/NickNaumenko/test.git';
-
 function EmptyRepositoryPage({ url }) {
   const [protocol, setProtocol] = useState('HTTPS');
 

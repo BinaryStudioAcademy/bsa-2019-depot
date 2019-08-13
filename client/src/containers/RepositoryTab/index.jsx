@@ -1,10 +1,11 @@
 import React from 'react';
-import EmptyRepositoryPage from '../../containers/EmptyRepositoryPage';
+import EmptyRepositoryTab from '../../containers/EmptyRepositoryTab';
+import { CodeTab } from '../../scenes';
 import { checkIfEmpty } from '../../services/repositoryService';
 import Spinner from '../../components/Spinner';
 
 
-class RepositoryRoute extends React.Component {
+class RepositoryTab extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -34,13 +35,13 @@ class RepositoryRoute extends React.Component {
     return (
       isEmpty
         ? (
-          <EmptyRepositoryPage />
+          <EmptyRepositoryTab />
         )
         : (
-          <div>Repository page is here</div>
+          <CodeTab />
         )
     );
   }
 };
 
-export default RepositoryRoute;
+export default RepositoryTab;
