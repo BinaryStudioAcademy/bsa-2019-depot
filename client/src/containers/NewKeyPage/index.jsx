@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Formik } from 'formik';
+import * as Yup from 'yup';
 import { Link, Redirect } from 'react-router-dom';
 import { Breadcrumb, Button, Form, Header } from 'semantic-ui-react';
 import { addKey } from '../../services/userService';
@@ -8,21 +9,17 @@ const NewKeyPage = () => {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  function validate({ title, key }) {
-    const sshRegExp = /^(ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+/]+[=]{0,3}( [^@]+@[^@]+)?$/;
-    let errors = {};
-
-    if (!title) {
-      errors.title = 'Required';
-    }
-    if (!key) {
-      errors.key = 'Required';
-    } else if (!key.match(sshRegExp)) {
-      errors.key = 'Invalid SSH key provided';
-    }
-
-    return errors;
-  }
+  const validationSchema = Yup.object().shape({
+    title: Yup.string()
+      .required('Title is required')
+      .max(100),
+    key: Yup.string()
+      .matches(
+        /^(ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+/]+[=]{0,3}( [^@]+@[^@]+)?$/,
+        'Provided SSH key is invalid'
+      )
+      .required('SSH key is required')
+  });
 
   function handleSubmit({ title, key }) {
     setLoading(true);
@@ -45,7 +42,7 @@ const NewKeyPage = () => {
           <Breadcrumb.Section>Add new</Breadcrumb.Section>
         </Breadcrumb>
       </Header>
-      <Formik initialValues={{ title: '', key: '' }} validate={validate} onSubmit={handleSubmit}>
+      <Formik initialValues={{ title: '', key: '' }} validationSchema={validationSchema} onSubmit={handleSubmit}>
         {({ values: { title, key }, touched, errors, handleChange, handleBlur, handleSubmit }) => (
           <Form onSubmit={handleSubmit}>
             <Form.Input
