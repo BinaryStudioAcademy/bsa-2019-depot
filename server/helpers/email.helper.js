@@ -33,7 +33,7 @@ const createTokenEmail = (email, token, url) => {
         Data: 'Reset password Depot'
       }
     },
-    Source: emailSender, /* required */
+    Source: emailSender /* required */
   };
   return params;
 };

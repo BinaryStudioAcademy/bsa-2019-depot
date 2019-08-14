@@ -125,6 +125,7 @@ class Login extends Component {
               >
                 Sign In
               </Button>
+              <Grid.Row className="google-button">{this.renderGoogleAuth()}</Grid.Row>
             </Segment>
           </Form>
           <Message>
@@ -133,7 +134,6 @@ class Login extends Component {
               Create an account
             </NavLink>
           </Message>
-          <Grid.Row>{this.renderGoogleAuth()}</Grid.Row>
         </Grid.Column>
       </Grid>
     );
@@ -185,7 +185,7 @@ class Login extends Component {
   render() {
     const { currentUser, isAuthorized } = this.props;
     if (isAuthorized && currentUser.username) {
-      return <Redirect to="/" />;
+      return <Redirect to={`/${currentUser.username}`} />;
     }
     if (isAuthorized && !currentUser.username) {
       return (

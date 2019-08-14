@@ -50,3 +50,11 @@ $grey_border: #e1e4e8;
 :local(.text_input) {
   width: 250px !important;
 }
+
+:local(.first_column) {
+  min-width: 210px !important;
+}
+
+:local(.second_column) {
+  min-width: 660px !important;
+}

@@ -350,7 +350,7 @@ const SidebarAuth = (closeSidebar, sidebarOpened, userName, avatar) => (
     <Menu.Item as="div">{pullRequests}</Menu.Item>
     <Menu.Item as="div">{issues}</Menu.Item>
     <Menu.Item as="div">
-      <a href="/">
+      <a href={`/${userName}`}>
         {<img src={getUserImgLink(avatar)} alt="user" />}
         {userName}
       </a>
@@ -462,10 +462,10 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
                     </div>
                   </Dropdown.Item>
                   <Dropdown.Divider />
-                  <Dropdown.Item>Your profile</Dropdown.Item>
-                  <Dropdown.Item>Your repositories</Dropdown.Item>
+                  <Dropdown.Item href={`/${username}`}>Your profile</Dropdown.Item>
+                  <Dropdown.Item href="/dashboard?tab=repositories">Your repositories</Dropdown.Item>
                   <Dropdown.Divider />
-                  <Dropdown.Item>Settings</Dropdown.Item>
+                  <Dropdown.Item href="/settings/profile">Settings</Dropdown.Item>
                   <Dropdown.Item onClick={signOut}>Sign out</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
