@@ -1,53 +1,48 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Route, Switch } from 'react-router-dom';
+import { Switch, Link } from 'react-router-dom';
 import { Grid, Menu, Divider } from 'semantic-ui-react';
+import PrivateRoute from '../../containers/PrivateRoute';
+import PropTypes from 'prop-types';
 
 import { SettingsProfile } from '../../scenes';
-import { fetchCurrentUser } from '../../routines/routines';
+import KeysPage from '../../containers/KeysPage';
 
-class Routing extends React.Component {
-  componentDidMount() {
-    this.props.fetchCurrentUser();
-  }
-
-  render() {
-    return (
-      <>
-        <Divider hidden />
-        <Grid container>
-          <Grid.Column computer={4} tablet={8} mobile={16}>
-            <Menu vertical>
-              <Menu.Item header>Personal settings</Menu.Item>
-              <Menu.Item>Profile</Menu.Item>
-            </Menu>
-          </Grid.Column>
-          <Grid.Column computer={12} tablet={16} mobile={16}>
-            <Switch>
-              <Route exact path="/profile" component={SettingsProfile} />
-            </Switch>
-          </Grid.Column>
-        </Grid>
-      </>
-    );
-  }
-}
-
-Routing.propTypes = {
-  loading: PropTypes.bool.isRequired,
-  fetchCurrentUser: PropTypes.func.isRequired
+// const redirectToProfile = () => <Redirect push={true} to="/settings/profile" />;
+const Settings = ({ match }) => {
+  return (
+    <>
+      <Divider hidden />
+      <Grid container>
+        <Grid.Column computer={4} tablet={8} mobile={16}>
+          <Menu vertical>
+            <Menu.Item header>Personal settings</Menu.Item>
+            <Menu.Item>
+              <Link to={`${match.url}/profile`}>Profile</Link>
+            </Menu.Item>
+            <Menu.Item>
+              <Link to={`${match.url}/keys`}>SSH Keys</Link>
+            </Menu.Item>
+          </Menu>
+        </Grid.Column>
+        <Grid.Column computer={12} tablet={16} mobile={16}>
+          <Switch>
+            {/* <PrivateRoute exact path={`${match.path}`} render={() => <div>rh65h4n6</div>} /> */}
+            <PrivateRoute path={`${match.path}/profile`} component={SettingsProfile} />
+            <PrivateRoute path={`${match.path}/keys`} component={KeysPage} />
+          </Switch>
+        </Grid.Column>
+      </Grid>
+    </>
+  );
 };
 
-const mapStateToProps = ({ profile: { loading } }) => ({
-  loading
-});
-
-const mapDispatchToProps = {
-  fetchCurrentUser
+Settings.propTypes = {
+  match: PropTypes.exact({
+    params: PropTypes.object.isRequired,
+    isExact: PropTypes.bool.isRequired,
+    path: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired
+  }).isRequired
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Routing);
+export default Settings;
