@@ -126,7 +126,7 @@ class Signup extends React.Component {
   }
 
   renderGoogleAuth = () => {
-    const serverLoginUrl = `${serverUrl}/auth/google`;
+    const serverLoginUrl = `${serverUrl}/api/auth/google`;
     return <GoogleAuth text="Sign up with Google" link={serverLoginUrl} />;
   };
 
