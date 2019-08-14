@@ -11,7 +11,7 @@ export const signup = async request => {
 
 export const googleSignup = async () => {
   const response = await callWebApi({
-    endpoint: '/auth/google',
+    endpoint: '/api/auth/google',
     type: 'GET'
   });
   return response.json();
