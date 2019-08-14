@@ -32,7 +32,9 @@ router
   .get('/:owner/:repoName/:branchName/tree', (req, res, next) => {
     const { owner, repoName, branchName } = req.params;
     const { pathToDir } = req.query;
-    getBranchTree({ user: owner, name: repoName, branch: branchName, pathToDir })
+    getBranchTree({
+      user: owner, name: repoName, branch: branchName, pathToDir
+    })
       .then(tree => res.send(tree))
       .catch(next);
   })
