@@ -4,6 +4,7 @@ import { Switch, Route } from 'react-router-dom';
 import RepositoryHeader from '../../components/RepositoryHeader';
 import IssuesTab from '../../containers/IssuesTab/index';
 import CommitsPage from '../../containers/CommitsPage/index';
+import DiffCommitView from '../../components/DiffCommitView/index';
 import RepositoryTab from '../../containers/RepositoryTab';
 import RepoSettings from '../../containers/SettingsTab/index';
 
@@ -34,6 +35,7 @@ class RepositoryPage extends React.Component {
             <Route exact path={`${match.path}/issues`} component={IssuesTab} />
             <Route exact path={`${match.path}/commits`} component={CommitsPage} />
             <Route exact path={`${match.path}/settings`} component={RepoSettings} />
+            <Route path={`${match.path}/commits/:hash`} component={DiffCommitView} />
           </Switch>
         </div>
       </>

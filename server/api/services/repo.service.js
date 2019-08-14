@@ -33,7 +33,7 @@ const isEmpty = async ({ owner, repoName }) => {
   try {
     let result;
     const pathToRepo = path.resolve(`${gitPath}/${owner}/${repoName}`);
-    await NodeGit.Repository.open(pathToRepo).then(repo => {
+    await NodeGit.Repository.open(pathToRepo).then((repo) => {
       result = repo.isEmpty();
     });
     return {
