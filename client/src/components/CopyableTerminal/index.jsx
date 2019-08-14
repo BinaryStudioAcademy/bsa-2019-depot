@@ -4,33 +4,26 @@ import { Button } from 'semantic-ui-react';
 import styles from './styles.module.scss';
 
 const CopyableTerminal = ({ str }) => {
-    const copyToClipboard = (str) => navigator.clipboard.writeText(str);
+  const copyToClipboard = str => navigator.clipboard.writeText(str);
 
-    function onClick() {
-        copyToClipboard(str);
-    }
+  function onClick() {
+    copyToClipboard(str);
+  }
 
-    return (
-        <div className={styles.copyable}>
-            <pre>
-                {str}
-            </pre>
-            <Button
-                className={styles.clipboardButton}
-                icon="clipboard"
-                onClick={onClick}
-            >
-            </Button>
-        </div>
-    );
+  return (
+    <div className={styles.copyable}>
+      <pre>{str}</pre>
+      <Button className={styles.clipboardButton} icon="clipboard" onClick={onClick}></Button>
+    </div>
+  );
 };
 
 CopyableTerminal.propTypes = {
-    str: PropTypes.string
+  str: PropTypes.string
 };
 
 CopyableTerminal.defaultProps = {
-    str: ''
+  str: ''
 };
 
 export default CopyableTerminal;

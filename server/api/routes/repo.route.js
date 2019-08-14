@@ -9,7 +9,7 @@ const {
   isEmpty,
   forkRepo
 } = require('../services/repo.service');
-const { getCommits } = require('../services/commit.service');
+const { getCommits, getCommitDiff } = require('../services/commit.service');
 const { getBranches, getBranchTree, getLastCommitOnBranch } = require('../services/branch.service');
 
 const router = Router();
@@ -27,7 +27,7 @@ router
   .get('/:owner/:repoName/is-empty', (req, res, next) => {
     const { owner, repoName } = req.params;
     isEmpty({ owner, repoName })
-      .then(result => {
+      .then((result) => {
         res.send(result);
       })
       .catch(next);
@@ -50,11 +50,20 @@ router
       .then(branches => res.send(branches))
       .catch(next);
   })
+  .get('/:owner/:repoName/:hash/commit', (req, res, next) => {
+    const { owner, repoName, hash } = req.params;
+    getCommitDiff({ user: owner, name: repoName, hash })
+      .then(data => res.send(data))
+      .catch(next);
+  })
   .get('/:owner/:repoName/:branchName/tree', (req, res, next) => {
     const { owner, repoName, branchName } = req.params;
     const { pathToDir } = req.query;
     getBranchTree({
-      user: owner, name: repoName, branch: branchName, pathToDir
+      user: owner,
+      name: repoName,
+      branch: branchName,
+      pathToDir
     })
       .then(tree => res.send(tree))
       .catch(next);
