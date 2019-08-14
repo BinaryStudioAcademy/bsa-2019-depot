@@ -8,6 +8,7 @@ import RepositoryTab from '../../containers/RepositoryTab';
 import RepoSettings from '../../containers/SettingsTab/index';
 import PrivateRoute from '../../containers/PrivateRoute';
 import FileEditPage from '../../containers/FileEditPage';
+import FileViewPage from '../../containers/FileViewPage';
 
 import './styles.module.scss';
 
@@ -32,10 +33,11 @@ class RepositoryPage extends React.Component {
         />
         <div className="ui bottom attached active tab">
           <Switch>
-            <PrivateRoute path={[`${match.path}/new`, `${match.path}/edit`]} component={FileEditPage} />
             <Route exact path={`${match.path}/issues`} component={IssuesTab} />
             <Route exact path={`${match.path}/commits`} component={CommitsPage} />
             <Route exact path={`${match.path}/settings`} component={RepoSettings} />
+            <PrivateRoute path={[`${match.path}/new`, `${match.path}/edit`]} component={FileEditPage} />
+            <Route path={`${match.path}/blob`} component={FileViewPage} />
             <Route path={match.path} component={RepositoryTab} />
           </Switch>
         </div>

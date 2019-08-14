@@ -122,7 +122,7 @@ class RepoFileTree extends React.Component {
                 <Table.Row>
                   <Table.Cell singleLine width="five">
                     <Octicon className={styles.fileIcon} icon={getIconByName('file')} />
-                    <Link className={styles.link} to={`${location.pathname}/${file.name}`}>
+                    <Link className={styles.link} to={`${location.pathname.replace('tree', 'blob')}/${file.name}`}>
                       {file.name}
                     </Link>
                   </Table.Cell>

@@ -1,0 +1,24 @@
+:global(.ui.big.breadcrumb):local(.filePath) {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+:global(.ui.segments):local(.fileViewContainer) {
+  margin-top: 0;
+}
+
+:global(.ui.segment):local(.fileView) {
+  padding: 0;
+}
+
+:global(.ui.segment):local(.fileViewHeader) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.fileControls {
+  :global(.icon.pencil) {
+    margin-right: 10px;
+  }
+}

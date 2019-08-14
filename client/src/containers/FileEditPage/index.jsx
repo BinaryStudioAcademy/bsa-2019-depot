@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ReactMarkdown from 'react-markdown';
@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import ReactDiffViewer from 'react-diff-viewer';
 import CommitFileForm from '../../components/CommitFileForm';
 import FileViewer from '../../components/FileViewer';
+import FilePathBreadcrumbSections from '../../components/FilePathBreadcrumbSections';
 
 import styles from './styles.module.scss';
 
@@ -70,7 +71,7 @@ rails-dom-testing (~> 2.0)`;
 
     const fileExtension = filename.split('.').pop();
 
-    const editorStyles = { width: '100%', height: '400px' };
+    const editorStyles = { width: '100%' };
 
     const panes = [
       {
@@ -112,7 +113,7 @@ rails-dom-testing (~> 2.0)`;
 
           return (
             <Tab.Pane>
-              <FileViewer content={content} style={editorStyles} onChange={this.handleContentChange} readOnly />
+              <FileViewer content={content} style={editorStyles} readOnly />
             </Tab.Pane>
           );
         }
@@ -121,21 +122,17 @@ rails-dom-testing (~> 2.0)`;
 
     return (
       <>
-        <Breadcrumb size="massive">
+        <Breadcrumb size="big">
           <Breadcrumb.Section>
-            <Link to={`/${ownerUsername}/${reponame}`}>{match.params.reponame}</Link>
+            <Link to={`/${ownerUsername}/${reponame}`}>{reponame}</Link>
           </Breadcrumb.Section>
           <Breadcrumb.Divider />
-          {filepath.map((directory, index, array) => (
-            <Fragment key={index}>
-              <Breadcrumb.Section>
-                <Link to={`/${ownerUsername}/${reponame}/tree/${initialBranch}/${array.slice(0, index + 1).join('/')}`}>
-                  {directory}
-                </Link>
-              </Breadcrumb.Section>
-              <Breadcrumb.Divider />
-            </Fragment>
-          ))}
+          <FilePathBreadcrumbSections
+            owner={ownerUsername}
+            reponame={reponame}
+            branch={initialBranch}
+            filepath={filepath}
+          />
           <Breadcrumb.Section>
             <Input
               className={styles.fileNameInput}

@@ -50,7 +50,7 @@ FileViewer.propTypes = {
   content: PropTypes.string.isRequired,
   style: PropTypes.object,
   fileExtension: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
   readOnly: PropTypes.bool
 };
 
