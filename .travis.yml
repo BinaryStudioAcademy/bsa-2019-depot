@@ -7,8 +7,7 @@ branches:
 notifications:
   slack: binary-academy-2019:zu0JzpVwZUPF9GSv8vPwHcI1
 env:
-  - SKIP_PREFLIGHT_CHECK=true
-  - REACT_APP_SERVER_URL=/
+  - SKIP_PREFLIGHT_CHECK=true REACT_APP_SERVER_URL=/
 install:
   - . scripts/install.sh
 script:
