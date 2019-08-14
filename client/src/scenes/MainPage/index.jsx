@@ -110,7 +110,7 @@ const MainPage = () => {
                   Make Depot your Git sandbox with tutorials that bring you up to speed with Git and help you build
                   effective workflows.
                 </p>
-                <a className={styles.link} href="/">
+                <a className={styles.link} href="https://git-scm.com/">
                   Learn more
                   <svg
                     width="11px"
@@ -135,12 +135,12 @@ const MainPage = () => {
             <Grid.Column computer={7} tablet={16}>
               <div className={styles.newCard}>
                 <Image src="https://wac-cdn.atlassian.com/dam/jcr:81b15cde-be2e-4f4a-8af7-9436f4a1b431/Sourcetree-icon-blue.svg?cdnVersion=494" />
-                <h3>Download Sourcetree, our free Git GUI.</h3>
+                <h3>Download Sourcetree</h3>
                 <p>
                   Say goodbye to the command line - Sourcetree simplifies how you interact with your Git repositories so
                   you can focus on coding.
                 </p>
-                <a className={styles.link} href="/">
+                <a className={styles.link} href="https://www.sourcetreeapp.com/">
                   Learn more
                   <svg
                     width="11px"
