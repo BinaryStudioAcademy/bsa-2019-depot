@@ -48,16 +48,21 @@ class CreateRepository extends React.Component {
 
     this.onSubmit = this.onSubmit.bind(this);
     this.renderCreateRepository = this.renderCreateRepository.bind(this);
-    this.validateRepoName = this.validateRepoName.bind(this);
+    this.validate = this.validate.bind(this);
   }
 
-  async validateRepoName(values) {
+  async validate(values) {
+    let errors = {};
     if (!values.repository) {
-      return 'Required';
+      errors.repository = 'Required';
     }
     const { exists } = await checkName(values);
     if (exists) {
-      return `The repository ${values.repository} already exists on this account`;
+      errors.repository = `The repository ${values.repository} already exists on this account`;
+    }
+
+    if (Object.keys(errors).length) {
+      throw errors;
     }
   }
 
@@ -129,8 +134,6 @@ class CreateRepository extends React.Component {
               <Field
                 name="repository"
                 value={repository}
-                // eslint-disable-next-line react/jsx-no-bind
-                validate={() => this.validateRepoName(values)}
                 onChange={handleChange}
               />
               {(errors.repository && touched.repository &&
@@ -227,6 +230,7 @@ class CreateRepository extends React.Component {
           ...initialValues,
           owner: this.props.username
         }}
+        validate={this.validate}
         onSubmit={this.onSubmit}
         render={this.renderCreateRepository}
       />
