@@ -1,0 +1,18 @@
+:global(.main-wrapper) {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  > .content {
+    height: 100%;
+    grid-row-start: 1;
+  }
+  > :global(.ui.container) {
+    grid-row-start: 2;
+    grid-row-end: 3;
+    > :global(.ui.centered.grid) {
+      margin: 0;
+    }
+  }
+}

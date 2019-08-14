@@ -7,15 +7,6 @@
 }
 :global(.ui.center.aligned.header.reset-header) {
   position: relative;
-  &:before {
-    content: '';
-    display: block;
-    margin: 0 auto;
-    width: 150px;
-    height: 150px;
-    background: url('../../images/depot-logo-1.png') no-repeat;
-    background-size: cover;
-  }
 }
 :global(.ui.form .field) {
   > label {
