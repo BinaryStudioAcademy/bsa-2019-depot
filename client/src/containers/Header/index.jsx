@@ -462,8 +462,8 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
                     </div>
                   </Dropdown.Item>
                   <Dropdown.Divider />
-                  <Dropdown.Item href={`/${username}`}>Your profile</Dropdown.Item>
-                  <Dropdown.Item href="/dashboard?tab=repositories">Your repositories</Dropdown.Item>
+                  <Dropdown.Item href={`/${username}/dashboard`}>Your profile</Dropdown.Item>
+                  <Dropdown.Item href={`/${username}/dashboard/repositories`}>Your repositories</Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item href="/settings/profile">Settings</Dropdown.Item>
                   <Dropdown.Item onClick={signOut}>Sign out</Dropdown.Item>

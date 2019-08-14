@@ -48,7 +48,7 @@ class Dashboard extends React.Component {
       match: { path, url },
       location: { pathname }
     } = this.props;
-    let activePage = pathname.split('/')[2];
+    let activePage = pathname.split('/')[3];
     // For future tabs
     switch (activePage) {
     case 'repositories':

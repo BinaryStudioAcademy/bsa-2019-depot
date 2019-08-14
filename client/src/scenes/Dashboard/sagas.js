@@ -1,5 +1,5 @@
 // Core
-import { takeEvery, all, call, put, apply /*select*/ } from 'redux-saga/effects';
+import { takeEvery, all, call, put, apply, select } from 'redux-saga/effects';
 
 // Types
 import { types } from './types';
@@ -11,9 +11,9 @@ import * as repositoryService from '../../services/repositoryService';
 function* fetchRepositories({ payload: filter }) {
   try {
     // mock data
-    const username = 'user_1';
+    //const username = 'user_1';
     // replace it with next string
-    // const username = yield select(({ profile }) => profile.currentUser.username);
+    const username = yield select(({ profile }) => profile.currentUser.username);
     const repositories = yield apply(repositoryService, repositoryService.getRepositories, [username, filter]);
     yield put(repositoryActions.fillRepositories(repositories));
   } catch (error) {
