@@ -1,6 +1,13 @@
 const { Router } = require('express');
+
 const {
-  createRepo, renameRepo, deleteRepo, getReposNames, forkRepo
+  createRepo,
+  renameRepo,
+  deleteRepo,
+  getReposNames,
+  checkName,
+  isEmpty,
+  forkRepo
 } = require('../services/repo.service');
 const { getCommits, getCommitDiff } = require('../services/commit.service');
 const { getBranches, getBranchTree, getLastCommitOnBranch } = require('../services/branch.service');
@@ -10,6 +17,20 @@ const router = Router();
 router
   .post('/', (req, res) => {
     createRepo({ ...req.body }).then(data => res.send(data));
+  })
+  .get('/:owner/:repository/check-name', (req, res, next) => {
+    const { owner, repository } = req.params;
+    checkName({ owner, repository })
+      .then(result => res.send({ exists: result }))
+      .catch(next);
+  })
+  .get('/:owner/:repoName/is-empty', (req, res, next) => {
+    const { owner, repoName } = req.params;
+    isEmpty({ owner, repoName })
+      .then((result) => {
+        res.send(result);
+      })
+      .catch(next);
   })
   .get('/:owner/repos', (req, res, next) => {
     const { owner } = req.params;
