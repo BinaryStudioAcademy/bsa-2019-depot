@@ -19,6 +19,7 @@ import {
 import { fetchCurrentUser } from '../../routines/routines';
 import RepositoryPage from '../../scenes/Repository';
 import Header from '../Header';
+import Footer from '../../components/Footer';
 
 class Routing extends React.Component {
   componentDidMount() {
@@ -32,10 +33,7 @@ class Routing extends React.Component {
       <Spinner />
     ) : (
       <>
-        <Switch>
-          <Route exact path={['/registration', '/login']} render={null} />
-          <Route path="/" component={Header} />
-        </Switch>
+        <Header />
         <Switch>
           <Route exact path="/registration" component={Signup} />
           <Route exact path="/login" component={Login} />
@@ -48,6 +46,7 @@ class Routing extends React.Component {
           <PrivateRoute path="/:username/:reponame" component={RepositoryPage} />
           <Route exact path="*" component={NotFound} />
         </Switch>
+        <Footer />
       </>
     );
   }
