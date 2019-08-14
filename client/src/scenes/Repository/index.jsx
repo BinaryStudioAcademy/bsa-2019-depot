@@ -30,10 +30,10 @@ class RepositoryPage extends React.Component {
         />
         <div className="ui bottom attached active tab">
           <Switch>
-            <Route exact path={match.url} component={CodeTab} />
-            <Route exact path={`${match.url}/issues`} component={IssuesTab} />
-            <Route exact path={`${match.url}/commits`} component={CommitsPage} />
-            <Route exact path={`${match.url}/settings`} component={RepoSettings} />
+            <Route exact path={match.path} component={CodeTab} />
+            <Route exact path={`${match.path}/issues`} component={IssuesTab} />
+            <Route exact path={`${match.path}/commits`} component={CommitsPage} />
+            <Route exact path={`${match.path}/settings`} component={RepoSettings} />
           </Switch>
         </div>
       </>

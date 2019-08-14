@@ -26,13 +26,13 @@ class RepoSettings extends React.Component {
   constructor(props) {
     super(props);
 
-    const { url } = this.props.match;
-    const [owner, name] = url.split('/').slice(1, 3);
+    const { params } = this.props.match;
+    const { username, reponame } = params;
 
-    this.oldName = name;
+    this.oldName = reponame;
     this.state = {
-      name,
-      owner
+      name: reponame,
+      owner: username
     };
   }
 
@@ -47,12 +47,13 @@ class RepoSettings extends React.Component {
   }
 
   onClickDelete = () => {
-    const { owner, name } = this.state;
+    const { owner } = this.state;
     const { deleteRepo } = this.props;
+    const { oldName } = this;
 
     deleteRepo({
       owner,
-      name
+      name: oldName
     });
   };
 
