@@ -1,23 +1,12 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import AceEditor from 'react-ace';
 import ReactMarkdown from 'react-markdown';
 import { Breadcrumb, Input, Button, Tab } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import ReactDiffViewer from 'react-diff-viewer';
 import CommitFileForm from '../../components/CommitFileForm';
-
-// Modes for code highlighting
-import 'brace/mode/javascript';
-import 'brace/mode/typescript';
-import 'brace/mode/java';
-import 'brace/mode/csharp';
-import 'brace/mode/python';
-import 'brace/mode/ruby';
-import 'brace/mode/markdown';
-
-import 'brace/theme/github';
+import FileViewer from '../../components/FileViewer';
 
 import styles from './styles.module.scss';
 
@@ -40,7 +29,6 @@ class FileEditPage extends React.Component {
 
     this.handleChangeFilename = this.handleChangeFilename.bind(this);
     this.handleContentChange = this.handleContentChange.bind(this);
-    this.selectMode = this.selectMode.bind(this);
   }
 
   componentDidMount() {
@@ -63,26 +51,6 @@ rails-dom-testing (~> 2.0)`;
 
   handleContentChange(content) {
     this.setState({ content });
-  }
-
-  selectMode(extension) {
-    switch (extension) {
-    case 'js':
-      return 'javascript';
-    case 'ts':
-      return 'typescript';
-    case 'java':
-      return 'java';
-    case 'cs':
-      return 'csharp';
-    case 'py':
-      return 'python';
-    case 'rb':
-      return 'ruby';
-    case 'md':
-    default:
-      return 'markdown';
-    }
   }
 
   render() {
@@ -109,11 +77,10 @@ rails-dom-testing (~> 2.0)`;
         menuItem: 'Edit',
         render: () => (
           <Tab.Pane>
-            <AceEditor
-              theme="github"
-              value={content}
-              mode={this.selectMode(fileExtension)}
+            <FileViewer
+              content={content}
               style={editorStyles}
+              fileExtension={fileExtension}
               onChange={this.handleContentChange}
             />
           </Tab.Pane>
@@ -145,13 +112,7 @@ rails-dom-testing (~> 2.0)`;
 
           return (
             <Tab.Pane>
-              <AceEditor
-                theme="github"
-                readOnly
-                value={content}
-                mode={this.selectMode(fileExtension)}
-                style={editorStyles}
-              />
+              <FileViewer content={content} style={editorStyles} onChange={this.handleContentChange} readOnly />
             </Tab.Pane>
           );
         }
