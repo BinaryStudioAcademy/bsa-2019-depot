@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Breadcrumb, Button, Icon, Segment } from 'semantic-ui-react';
+import { Breadcrumb, Button, Icon, Loader, Segment } from 'semantic-ui-react';
 import FilePathBreadcrumbSections from '../../components/FilePathBreadcrumbSections';
 import FileViewer from '../../components/FileViewer';
 import { Link } from 'react-router-dom';
+import { getFileContent } from '../../services/branchesService';
 
 import styles from './styles.module.scss';
 
@@ -11,8 +12,21 @@ class FileViewPage extends React.Component {
   constructor(props) {
     super(props);
 
+    const { match, location } = this.props;
+    const urlExtension = location.pathname
+      .replace(match.url, '')
+      .split('/')
+      .filter(dir => dir);
+
+    this.filepath = urlExtension
+      .slice(1) // Remove branch name
+      .join('/');
+
+    this.branch = urlExtension[0];
+
     this.state = {
-      content: ''
+      fileData: {},
+      loading: true
     };
 
     this.handleCopyPath = this.handleCopyPath.bind(this);
@@ -20,28 +34,20 @@ class FileViewPage extends React.Component {
   }
 
   componentDidMount() {
-    // Fetch file content
-    // Mocks
-    const content = `actionmailer (5.0.0)
-actionpack (= 5.0.0)
-actionview (= 5.0.0)
-activejob (= 5.0.0)
-mail (~> 2.5, >= 2.5.4)
-rails-dom-testing (~> 2.0)`;
-    this.setState({ content });
+    const { username, reponame } = this.props.match.params;
+
+    getFileContent(username, reponame, this.branch, {
+      filepath: this.filepath
+    }).then(fileData =>
+      this.setState({
+        fileData,
+        loading: false
+      })
+    );
   }
 
   handleCopyPath() {
-    const { match, location } = this.props;
-
-    const filepath = location.pathname
-      .replace(match.url, '')
-      .split('/')
-      .filter(dir => dir)
-      .slice(1)
-      .join('/');
-
-    navigator.clipboard.writeText(filepath);
+    navigator.clipboard.writeText(this.filepath);
   }
 
   handleEditFile() {
@@ -52,22 +58,24 @@ rails-dom-testing (~> 2.0)`;
 
   render() {
     const { match, location } = this.props;
-    const { content } = this.state;
+    const {
+      fileData: { content },
+      loading
+    } = this.state;
     const { username: owner, reponame } = match.params;
     const editorStyles = { width: '100%' };
 
-    const baseUrlExtension = location.pathname
-      .replace(match.url, '')
-      .split('/')
-      .filter(dir => dir); // Remove empty strings
+    let filepathDirs, filename, fileExtension, lineCount;
+    if (!loading) {
+      filepathDirs = this.filepath.split('/').slice(0, -1); // Remove file name
+      filename = location.pathname.split('/').pop();
+      fileExtension = filename.split('.').pop();
+      lineCount = content.split('\n').length;
+    }
 
-    const branch = baseUrlExtension[0];
-    const filepath = baseUrlExtension.slice(1, -1); // Remove branch and file name
-    const filename = location.pathname.split('/').pop();
-    const fileExtension = filename.split('.').pop();
-    const lineCount = content.split('\n').length;
-
-    return (
+    return loading ? (
+      <Loader active inline="centered" />
+    ) : (
       <>
         <div className={styles.filePathRow}>
           <Breadcrumb size="big" className={styles.filePath}>
@@ -75,7 +83,12 @@ rails-dom-testing (~> 2.0)`;
               <Link to={`/${owner}/${reponame}`}>{reponame}</Link>
             </Breadcrumb.Section>
             <Breadcrumb.Divider />
-            <FilePathBreadcrumbSections owner={owner} reponame={reponame} branch={branch} filepath={filepath} />
+            <FilePathBreadcrumbSections
+              owner={owner}
+              reponame={reponame}
+              branch={this.branch}
+              filepath={filepathDirs}
+            />
             <Breadcrumb.Section>{filename}</Breadcrumb.Section>
           </Breadcrumb>
           <Button compact size="small" className={styles.copyButton} onClick={this.handleCopyPath}>

@@ -10,7 +10,9 @@ const {
   forkRepo
 } = require('../services/repo.service');
 const { getCommits } = require('../services/commit.service');
-const { getBranches, getBranchTree, getLastCommitOnBranch } = require('../services/branch.service');
+const {
+  getBranches, getBranchTree, getLastCommitOnBranch, getFileContent
+} = require('../services/branch.service');
 
 const router = Router();
 
@@ -27,7 +29,7 @@ router
   .get('/:owner/:repoName/is-empty', (req, res, next) => {
     const { owner, repoName } = req.params;
     isEmpty({ owner, repoName })
-      .then(result => {
+      .then((result) => {
         res.send(result);
       })
       .catch(next);
@@ -59,12 +61,22 @@ router
       .then(tree => res.send(tree))
       .catch(next);
   })
+  .get('/:owner/:repoName/:branchName/file', (req, res, next) => {
+    const { owner, repoName, branchName } = req.params;
+    const { filepath } = req.query;
+    getFileContent({
+      user: owner, name: repoName, branch: branchName, filepath
+    })
+      .then(data => res.send(data))
+      .catch(next);
+  })
   .get('/:owner/:repoName/:branchName/last-commit', (req, res, next) => {
     const { owner, repoName, branchName } = req.params;
     getLastCommitOnBranch({ user: owner, name: repoName, branch: branchName })
       .then(commit => res.send(commit))
       .catch(next);
   })
+
   .get('/:owner/:repoName/settings', (req, res) => {
     res.sendStatus(200);
     /* Can be used in future to get settings data from DB

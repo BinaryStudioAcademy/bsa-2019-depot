@@ -8,6 +8,7 @@ import ReactDiffViewer from 'react-diff-viewer';
 import CommitFileForm from '../../components/CommitFileForm';
 import FileViewer from '../../components/FileViewer';
 import FilePathBreadcrumbSections from '../../components/FilePathBreadcrumbSections';
+import { getFileContent } from '../../services/branchesService';
 
 import styles from './styles.module.scss';
 
@@ -22,8 +23,19 @@ class FileEditPage extends React.Component {
       filename = location.pathname.split('/').slice(-1)[0];
     }
 
+    const urlExtension = location.pathname
+      .replace(match.url, '')
+      .split('/')
+      .filter(dir => dir);
+
+    this.branch = urlExtension[1];
+    this.filepath = urlExtension
+      .slice(2) // Remove 'tree' and branch name
+      .join('/');
+
     this.state = {
-      content: '',
+      fileData: { content: '' },
+      oldContent: '',
       filename: filename,
       toEdit: !!filename
     };
@@ -34,15 +46,17 @@ class FileEditPage extends React.Component {
 
   componentDidMount() {
     if (this.state.toEdit) {
-      // Mocks
-      const content = `actionmailer (5.0.0)
-actionpack (= 5.0.0)
-actionview (= 5.0.0)
-activejob (= 5.0.0)
-mail (~> 2.5, >= 2.5.4)
-rails-dom-testing (~> 2.0)`;
-      this.setState({ content, oldContent: content });
-      // Call server for contents
+      const { username, reponame } = this.props.match.params;
+
+      getFileContent(username, reponame, this.branch, {
+        filepath: this.filepath
+      }).then(fileData =>
+        this.setState({
+          fileData,
+          oldContent: fileData.content,
+          loading: false
+        })
+      );
     }
   }
 
@@ -51,28 +65,25 @@ rails-dom-testing (~> 2.0)`;
   }
 
   handleContentChange(content) {
-    this.setState({ content });
+    this.setState({ fileData: { content } });
   }
 
   render() {
-    const { location, match, username, avatar } = this.props;
-    const { filename, oldContent, content, toEdit } = this.state;
+    const { match, username, avatar } = this.props;
+    const {
+      filename,
+      oldContent,
+      fileData: { content },
+      toEdit
+    } = this.state;
     const { username: ownerUsername, reponame } = match.params;
 
-    const baseUrlExtension = location.pathname
-      .replace(match.url, '')
-      .split('/')
-      .filter(dir => dir); // Remove empty strings
+    const filepathDirs = this.filepath.split('/');
 
-    const initialBranch = baseUrlExtension[1]; // Get branch name from /tree/branchName/...
-    const filepath = baseUrlExtension.slice(2); // Remove /tree/branchName
-
-    if (match.url.split('/').pop() === 'edit') filepath.pop();
-
+    if (match.url.split('/').pop() === 'edit') filepathDirs.pop();
     const fileExtension = filename.split('.').pop();
 
     const editorStyles = { width: '100%' };
-
     const panes = [
       {
         menuItem: 'Edit',
@@ -130,8 +141,8 @@ rails-dom-testing (~> 2.0)`;
           <FilePathBreadcrumbSections
             owner={ownerUsername}
             reponame={reponame}
-            branch={initialBranch}
-            filepath={filepath}
+            branch={this.branch}
+            filepath={filepathDirs}
           />
           <Breadcrumb.Section>
             <Input
@@ -148,7 +159,7 @@ rails-dom-testing (~> 2.0)`;
           </Breadcrumb.Section>
         </Breadcrumb>
         <Tab className={styles.editorArea} panes={panes} />
-        <CommitFileForm username={username} avatar={avatar} initialBranch={initialBranch} />
+        <CommitFileForm username={username} avatar={avatar} initialBranch={this.branch} />
       </>
     );
   }

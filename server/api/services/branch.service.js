@@ -12,7 +12,9 @@ const getBranches = async ({ user, repoName }) => {
   return refNames.map(refName => refName.slice(11));
 };
 
-const getLastModifiedCommit = async ({ user, name, branch, entry }) => {
+const getLastModifiedCommit = async ({
+  user, name, branch, entry
+}) => {
   const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`);
   const repo = await NodeGit.Repository.open(pathToRepo.replace(/\\/g, '/'));
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
@@ -49,7 +51,8 @@ const traverseFileTree = async (user, name, branch, tree) => {
         fileTree.files.push({
           name: entry.name(),
           time: lastModifiedCommit.date(),
-          commitMessage: lastModifiedCommit.message()
+          commitMessage: lastModifiedCommit.message(),
+          sha: lastModifiedCommit.sha()
         });
       }
     } catch (error) {
@@ -101,4 +104,21 @@ const getLastCommitOnBranch = async ({ user, name, branch }) => {
   };
 };
 
-module.exports = { getBranches, getBranchTree, getLastCommitOnBranch };
+const getFileContent = async ({
+  user, name, branch, filepath
+}) => {
+  const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`);
+  const repo = await NodeGit.Repository.open(pathToRepo.replace(/\\/g, '/'));
+  const lastCommitOnBranch = await repo.getBranchCommit(branch);
+  const entry = await lastCommitOnBranch.getEntry(filepath);
+  const blob = await entry.getBlob();
+
+  return {
+    content: blob.isBinary() ? blob.content() : blob.toString(),
+    size: blob.rawsize()
+  };
+};
+
+module.exports = {
+  getBranches, getBranchTree, getLastCommitOnBranch, getFileContent
+};

@@ -25,7 +25,7 @@ class CodeTab extends React.Component {
   componentDidMount() {
     const { history } = this.props;
     const { owner, repoName, branch } = this.state;
-    history.push(`/code/${repoName}/tree/${branch}`);
+    history.push(`/${owner}/${repoName}/tree/${branch}`);
     this.props.fetchLastCommitOnBranch({
       owner,
       repoName,
@@ -55,7 +55,7 @@ class CodeTab extends React.Component {
       () => {
         const { owner, repoName, branch } = this.state;
         const { history } = this.props;
-        history.push(`/code/${repoName}/tree/${data.value}`);
+        history.push(`/${owner}/${repoName}/tree/${data.value}`);
 
         this.props.fetchLastCommitOnBranch({
           owner,
