@@ -59,7 +59,9 @@ const traverseFileTree = async (user, name, branch, tree) => {
   return fileTree;
 };
 
-const getBranchTree = async ({ user, name, branch, pathToDir }) => {
+const getBranchTree = async ({
+  user, name, branch, pathToDir
+}) => {
   const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`);
   const repo = await NodeGit.Repository.open(pathToRepo.replace(/\\/g, '/'));
   const lastCommitOnBranch = await repo.getBranchCommit(branch);

@@ -19,6 +19,7 @@ import {
 import { fetchCurrentUser } from '../../routines/routines';
 import RepositoryPage from '../../scenes/Repository';
 import { CreateRepository } from '../../scenes';
+import Header from '../Header';
 
 class Routing extends React.Component {
   componentDidMount() {
@@ -31,18 +32,24 @@ class Routing extends React.Component {
     return loading ? (
       <Spinner />
     ) : (
-      <Switch>
-        <PrivateRoute exact path="/new" component={CreateRepository} />
-        <Route exact path="/registration" component={Signup} />
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/" component={MainPage} />
-        <Route exact path="/forgot" component={Forgot} />
-        <Route exact path="/reset/:hash" component={Reset} />
-        <PrivateRoute exact path="/:username" component={Dashboard} />
-        <PrivateRoute exact path="/settings/profile" component={SettingsProfile} />
-        <PrivateRoute path="/:username/:reponame" component={RepositoryPage} />
-        <Route exact path="*" component={NotFound} />
-      </Switch>
+      <>
+        <Switch>
+          <Route exact path={['/registration', '/login']} render={null} />
+          <Route path="/" component={Header} />
+        </Switch>
+        <Switch>
+          <Route exact path="/registration" component={Signup} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/" component={MainPage} />
+          <Route exact path="/forgot" component={Forgot} />
+          <Route exact path="/reset/:hash" component={Reset} />
+          <PrivateRoute exact path="/:username" component={Dashboard} />
+          <PrivateRoute exact path="/settings/profile" component={SettingsProfile} />
+          <PrivateRoute exact path="/new" component={CreateRepository} />
+          <PrivateRoute path="/:username/:reponame" component={RepositoryPage} />
+          <Route exact path="*" component={NotFound} />
+        </Switch>
+      </>
     );
   }
 }

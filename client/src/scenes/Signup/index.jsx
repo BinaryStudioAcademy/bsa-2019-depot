@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Grid, Header, Form, Button, Segment, Label, Message } from 'semantic-ui-react';
 import { signupRoutine } from '../../routines/routines';
@@ -119,8 +119,15 @@ class Signup extends React.Component {
           >
             Sign Up for Depot
           </Button>
+          <Grid.Column className="google-button">{this.renderGoogleAuth()}</Grid.Column>
           <Message error content={error} />
         </Segment>
+        <Message className="login-label">
+          Already have an account?{' '}
+          <NavLink exact to="/login">
+            Sign in
+          </NavLink>
+        </Message>
       </Form>
     );
   }
@@ -146,7 +153,6 @@ class Signup extends React.Component {
             render={this.renderSignupForm}
           />
         </Grid.Column>
-        <Grid.Column style={{ maxWidth: 300 }}>{this.renderGoogleAuth()}</Grid.Column>
       </Grid.Row>
     );
   };
