@@ -7,7 +7,7 @@ import { updateUserSettings } from '../../routines/routines';
 import { NavLink } from 'react-router-dom';
 
 import styles from './styles.module.scss';
-import avatarPlaceholder from './avatar-placeholder.svg';
+import { getUserImgLink } from '../../helpers/imageHelper';
 
 class SettingsProfile extends Component {
   NOTES = {
@@ -122,7 +122,7 @@ class SettingsProfile extends Component {
             <Grid.Column computer={5} tablet={8} mobile={16}>
               <Segment basic className={styles.no_padding}>
                 <Header as="h4">Profile picture</Header>
-                <Image src={imgUrl || avatarPlaceholder} fluid rounded></Image>
+                <Image src={getUserImgLink(imgUrl)} fluid rounded></Image>
                 <Dropdown trigger={this.imgEditBtn} pointing="top left" icon={null} className={styles.img_edit_btn}>
                   <Dropdown.Menu className={styles.dropdown}>
                     <Dropdown.Item onClick={this.onUploadPhoto}>Upload a photo...</Dropdown.Item>
@@ -143,11 +143,7 @@ SettingsProfile.propTypes = {
   updateUserSettings: PropTypes.func
 };
 
-const mapStateToProps = state => {
-  console.warn(state.profile);
-
-  return state.profile;
-};
+const mapStateToProps = state => state.profile;
 
 const mapDispatchToProps = { updateUserSettings };
 
