@@ -8,14 +8,10 @@ import './styles.module.scss';
 
 class DiffCommitView extends Component {
   componentDidMount() {
-    const getRepositoryName = path => {
-      const part = path.slice(0, path.lastIndexOf('/commits'));
-      return part.substring(part.lastIndexOf('/') + 1);
-    };
     this.props.fetchDiffs({
       owner: this.props.username,
-      repoName: getRepositoryName(this.props.location.pathname),
-      hash: this.props.location.pathname.substring(this.props.location.pathname.lastIndexOf('/') + 1)
+      repoName: this.props.match.params.reponame,
+      hash: this.props.match.params.hash
     });
   }
 
@@ -70,7 +66,8 @@ DiffCommitView.propTypes = {
   }).isRequired,
   fetchDiffs: PropTypes.func.isRequired,
   location: PropTypes.object,
-  username: PropTypes.string
+  username: PropTypes.string,
+  match: PropTypes.object
 };
 
 const mapStateToProps = ({
