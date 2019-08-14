@@ -8,7 +8,7 @@ import { SettingsProfile } from '../../scenes';
 import KeysPage from '../../containers/KeysPage';
 import NewKeysPage from '../../containers/NewKeyPage';
 
-const redirectToProfile = () => <Redirect push={true} to="/settings/profile" />;
+const redirectToProfile = () => <Redirect to="/settings/profile" />;
 
 const Settings = ({ match }) => {
   return (
