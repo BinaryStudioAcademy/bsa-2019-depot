@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Breadcrumb, Icon, Segment } from 'semantic-ui-react';
+import { Breadcrumb, Button, Icon, Segment } from 'semantic-ui-react';
 import FilePathBreadcrumbSections from '../../components/FilePathBreadcrumbSections';
 import FileViewer from '../../components/FileViewer';
 import { Link } from 'react-router-dom';
@@ -15,6 +15,7 @@ class FileViewPage extends React.Component {
       content: ''
     };
 
+    this.handleCopyPath = this.handleCopyPath.bind(this);
     this.handleEditFile = this.handleEditFile.bind(this);
   }
 
@@ -28,6 +29,19 @@ activejob (= 5.0.0)
 mail (~> 2.5, >= 2.5.4)
 rails-dom-testing (~> 2.0)`;
     this.setState({ content });
+  }
+
+  handleCopyPath() {
+    const { match, location } = this.props;
+
+    const filepath = location.pathname
+      .replace(match.url, '')
+      .split('/')
+      .filter(dir => dir)
+      .slice(1)
+      .join('/');
+
+    navigator.clipboard.writeText(filepath);
   }
 
   handleEditFile() {
@@ -55,14 +69,19 @@ rails-dom-testing (~> 2.0)`;
 
     return (
       <>
-        <Breadcrumb size="big" className={styles.filePath}>
-          <Breadcrumb.Section>
-            <Link to={`/${owner}/${reponame}`}>{reponame}</Link>
-          </Breadcrumb.Section>
-          <Breadcrumb.Divider />
-          <FilePathBreadcrumbSections owner={owner} reponame={reponame} branch={branch} filepath={filepath} />
-          <Breadcrumb.Section>{filename}</Breadcrumb.Section>
-        </Breadcrumb>
+        <div className={styles.filePathRow}>
+          <Breadcrumb size="big" className={styles.filePath}>
+            <Breadcrumb.Section>
+              <Link to={`/${owner}/${reponame}`}>{reponame}</Link>
+            </Breadcrumb.Section>
+            <Breadcrumb.Divider />
+            <FilePathBreadcrumbSections owner={owner} reponame={reponame} branch={branch} filepath={filepath} />
+            <Breadcrumb.Section>{filename}</Breadcrumb.Section>
+          </Breadcrumb>
+          <Button compact size="small" className={styles.copyButton} onClick={this.handleCopyPath}>
+            Copy path
+          </Button>
+        </div>
         <Segment.Group className={styles.fileViewContainer}>
           <Segment className={styles.fileViewHeader}>
             <div>

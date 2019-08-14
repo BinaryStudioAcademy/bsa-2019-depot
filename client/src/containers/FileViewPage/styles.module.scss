@@ -1,6 +1,5 @@
-:global(.ui.big.breadcrumb):local(.filePath) {
-  margin-top: 10px;
-  margin-bottom: 20px;
+:global(.ui.button):local(.copyButton) {
+  margin-right: 0;
 }
 
 :global(.ui.segments):local(.fileViewContainer) {
@@ -15,6 +14,17 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.filePathRow {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  :global(.ui.breadcrumb):local(.filePath) {
+    margin: 0;
+  }
 }
 
 .fileControls {
