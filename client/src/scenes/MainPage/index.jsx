@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Button, Grid, Image, Form, Select } from 'semantic-ui-react';
 
 import styles from './styles.module.scss';
-import Header from '../../containers/Header';
 
 const MainPage = () => {
   const [email, setEmail] = useState('');
@@ -19,7 +18,6 @@ const MainPage = () => {
 
   return (
     <div>
-      <Header />
       <section className={styles.main}>
         <Grid centered container columns={1}>
           <Grid.Column computer={13} mobile={16}>

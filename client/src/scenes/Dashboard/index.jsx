@@ -15,11 +15,21 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeIndex: -1
+      activeIndex: -1,
+      repoCount: 0
     };
   }
 
+  componentDidMount() {
+    const { actions } = this.props;
+    actions.fetchRepositories({
+      limit: '',
+      filterWord: ''
+    });
+  }
+
   render() {
+    const { repositoriesNames } = this.props;
     let params = new URLSearchParams(this.props.location.search);
     let tab = params.get('tab');
     return (
@@ -51,7 +61,7 @@ class Dashboard extends React.Component {
                     to={{ pathname: '/dashboard', search: '?tab=repositories' }}
                     className={tab === 'repositories' ? styles.active_link : undefined}
                   >
-                    Repositories<span>15</span>
+                    Repositories<span>{repositoriesNames.length}</span>
                   </Link>
                   <Link to="">
                     Projects<span>2</span>
@@ -67,14 +77,9 @@ class Dashboard extends React.Component {
                   </Link>
                 </nav>
               </Container>
-              {(function() {
-                switch (tab) {
-                case 'repositories':
-                  return <RepositoriesList />;
-                default:
-                  return <Overview />;
-                }
-              })()}
+              {(tab === 'repositories' && <RepositoriesList repositories={repositoriesNames} />) || (
+                <Overview repositories={repositoriesNames} />
+              )}
             </Grid.Column>
           </Grid.Row>
         </Grid>

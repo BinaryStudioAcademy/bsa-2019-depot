@@ -16,6 +16,9 @@ const RepositoryHeader = ({ owner, repoName, forkCount, issueCount, activePage, 
   case 'commits':
     activeTab = 'code';
     break;
+  case 'settings':
+    activeTab = 'settings';
+    break;
   default:
     activeTab = 'code';
   }
@@ -43,6 +46,11 @@ const RepositoryHeader = ({ owner, repoName, forkCount, issueCount, activePage, 
           <div className={`${activeTab === 'issues' && 'active'} item`}>
             <Link to={`${baseUrl}/issues`}>
               Issues<Label circular>{issueCount}</Label>
+            </Link>
+          </div>
+          <div className={`${activeTab === 'settings' && 'active'} item`}>
+            <Link to={`${baseUrl}/settings`}>
+              <Icon name="cog" /> Settings
             </Link>
           </div>
         </div>
