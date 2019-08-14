@@ -33,10 +33,7 @@ class Routing extends React.Component {
       <Spinner />
     ) : (
       <>
-        <Switch>
-          <Route exact path={['/registration', '/login']} render={null} />
-          <Route path="/" component={Header} />
-        </Switch>
+        <Header />
         <Switch>
           <Route exact path="/registration" component={Signup} />
           <Route exact path="/login" component={Login} />
@@ -49,10 +46,7 @@ class Routing extends React.Component {
           <PrivateRoute path="/:username/:reponame" component={RepositoryPage} />
           <Route exact path="*" component={NotFound} />
         </Switch>
-        <Switch>
-          <Route exact path={['/registration', '/login']} render={null} />
-          <Route path="/" component={Footer} />
-        </Switch>
+        <Footer />
       </>
     );
   }
