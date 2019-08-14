@@ -4,7 +4,4 @@ module.exports = (models) => {
   SshKey.belongsTo(User);
 
   User.hasMany(SshKey);
-
-  User.hasMany(OrgUser, { foreignKey: 'userId' });
-  User.hasMany(OrgUser, { foreignKey: 'orgId' });
 };
