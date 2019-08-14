@@ -4,7 +4,6 @@ import { CodeTab } from '../../scenes';
 import { checkIfEmpty } from '../../services/repositoryService';
 import Spinner from '../../components/Spinner';
 
-
 class RepositoryTab extends React.Component {
   constructor(props) {
     super(props);
@@ -14,7 +13,7 @@ class RepositoryTab extends React.Component {
   }
 
   async getData() {
-    const { isEmpty } = await checkIfEmpty({owner: 'Nick', repository: 'aa'});
+    const { isEmpty } = await checkIfEmpty({ owner: 'Nick', repository: 'aa' });
     this.setState({
       ...this.state,
       isEmpty,
@@ -29,19 +28,11 @@ class RepositoryTab extends React.Component {
   render() {
     const { isLoading, isEmpty } = this.state;
     if (isLoading) {
-      return (<Spinner />);
+      return <Spinner />;
     }
 
-    return (
-      isEmpty
-        ? (
-          <EmptyRepositoryTab />
-        )
-        : (
-          <CodeTab />
-        )
-    );
+    return isEmpty ? <EmptyRepositoryTab /> : <CodeTab />;
   }
-};
+}
 
 export default RepositoryTab;

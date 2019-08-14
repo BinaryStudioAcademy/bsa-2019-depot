@@ -17,12 +17,9 @@ function EmptyRepositoryPage({ url }) {
     'git push -u origin master'
   ];
 
-  const pushRepoSrt = [
-    `git remote add origin ${url}\n`,
-    'git push -u origin master'
-  ];
+  const pushRepoSrt = [`git remote add origin ${url}\n`, 'git push -u origin master'];
 
-  const getString = (stringsArray) => {
+  const getString = stringsArray => {
     return stringsArray.reduce((result, str, i, array) => {
       return i < array.length - 1 ? `${result}${str}\n` : `${result}${str}`;
     });
@@ -47,32 +44,21 @@ function EmptyRepositoryPage({ url }) {
           <h2>Quick setup — if you’ve done this kind of thing before</h2>
           <div className={styles.urlGroup}>
             <Button.Group>
-              <Button
-                active={protocol === 'HTTPS'}
-                onClick={setHttp}
-              >
+              <Button active={protocol === 'HTTPS'} onClick={setHttp}>
                 HTTPS
               </Button>
-              <Button
-                active={protocol === 'SSH'}
-                onClick={setSsh}
-              >
+              <Button active={protocol === 'SSH'} onClick={setSsh}>
                 SSH
               </Button>
             </Button.Group>
             <span className={styles.clipboardInput}>{url}</span>
-            <Button
-              icon="clipboard"
-              onClick={copyUrl}
-            ></Button>
+            <Button icon="clipboard" onClick={copyUrl}></Button>
           </div>
           <p>
             Get started
             {<Link> creating a new file</Link>} by or
-            {<Link> uploading an existing file</Link>}. We recommend every repository include a
-            {<Link> README</Link>},
-            {<Link> LICENSE</Link>},
-            and
+            {<Link> uploading an existing file</Link>}. We recommend every repository include a{<Link> README</Link>},
+            {<Link> LICENSE</Link>}, and
             {<Link> .gitignore</Link>}.
           </p>
         </section>
@@ -87,11 +73,11 @@ function EmptyRepositoryPage({ url }) {
         <section className={styles.boxSection}>
           <h2>…or import code from another repository</h2>
           <p>You can initialize this repository with code from a Subversion, Mercurial, or TFS project.</p>
-          <Button as='a'>Import code</Button>
+          <Button as="a">Import code</Button>
         </section>
       </div>
       <p className={styles.protip}>
-        <Icon name='idea' />
+        <Icon name="idea" />
         ProTip! Use the URL for this page when adding GitHub as a remote.
       </p>
     </Container>
