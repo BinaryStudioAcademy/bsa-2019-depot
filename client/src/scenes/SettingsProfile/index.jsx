@@ -108,22 +108,22 @@ class SettingsProfile extends Component {
                     <Form className="ui form">
                       <Header as="h4">Name</Header>
                       <Field type="text" name="name" render={this.renderField} />
-                      <div>{this.NOTES.name}</div>
+                      <div className={styles.note}>{this.NOTES.name}</div>
 
                       <Header as="h4">Public email</Header>
                       <Field type="email" name="email" render={this.renderDisabledField} />
-                      <div>{this.NOTES.email}</div>
+                      <div className={styles.note}>{this.NOTES.email}</div>
 
                       <Header as="h4">Bio</Header>
                       <Field name="bio" render={this.renderTextArea} />
-                      <div>{this.NOTES.bio}</div>
+                      <div className={styles.note}>{this.NOTES.bio}</div>
 
                       <Header as="h4">URL</Header>
                       <Field type="text" name="url" render={this.renderField} />
 
                       <Header as="h4">Company</Header>
                       <Field type="text" name="company" render={this.renderField} />
-                      <div>{this.NOTES.company}</div>
+                      <div className={styles.note}>{this.NOTES.company}</div>
 
                       <Divider />
 
@@ -131,7 +131,7 @@ class SettingsProfile extends Component {
                       <Field type="text" name="location" render={this.renderField} />
 
                       <Divider hidden />
-                      <div>{this.NOTES.disclaimer}</div>
+                      <div className={styles.note}>{this.NOTES.disclaimer}</div>
                       <Divider hidden />
 
                       <Button color="green" type="submit" disabled={loading}>
