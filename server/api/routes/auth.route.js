@@ -19,7 +19,7 @@ router.get('/google', googleMiddleware);
 
 router.get('/google/callback', googleCallbackMiddleware, (req, res, next) => {
   googleLogin(req.user)
-    .then(data => {
+    .then((data) => {
       const stringData = JSON.stringify(data);
       res.redirect(`${getReqUrl(req)}/login/?user=${stringData}`);
     })
