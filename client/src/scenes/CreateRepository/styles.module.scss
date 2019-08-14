@@ -8,9 +8,9 @@
     font-weight: bold;
   }
 
-  &[name="private"] {
+  &[name='private'] {
     .privacyIcon {
-      color: rgba(115,92,15,.5);
+      color: rgba(115, 92, 15, 0.5);
     }
   }
 }
@@ -21,7 +21,6 @@
   height: 32px;
   color: #959da5;
 }
-
 
 :local(.slash) {
   font-size: 21px;
