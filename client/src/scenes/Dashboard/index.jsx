@@ -1,4 +1,5 @@
 import React from 'react';
+import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
@@ -15,13 +16,43 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeIndex: -1
+      activeIndex: -1,
+      repoCount: 0
     };
+
+    this.overviewRouteRender = this.overviewRouteRender.bind(this);
+    this.repositoriesListRender = this.repositoriesListRender.bind(this);
   }
 
+  componentDidMount() {
+    const { actions } = this.props;
+    actions.fetchRepositories({
+      limit: '',
+      filterWord: ''
+    });
+  }
+
+  overviewRouteRender = (props) => {
+    const { repositoriesNames } = this.props;
+    return <Overview  {...props} repositories={repositoriesNames} />;
+  } 
+
+  repositoriesListRender = (props) => {
+    const { repositoriesNames } = this.props;
+    return <RepositoriesList {...props} repositories={repositoriesNames} />;
+  } 
+
   render() {
-    let params = new URLSearchParams(this.props.location.search);
-    let tab = params.get('tab');
+    const { repositoriesNames, match: { path, url }, location: { pathname } } = this.props;
+    let activePage = pathname.split('/')[2];
+    // For future tabs
+    switch (activePage) {
+    case 'repositories':
+      activePage = 'repositories';
+      break;
+    default:
+      activePage = '';
+    }
     return (
       <Container className={styles.wrapper}>
         <Grid>
@@ -44,14 +75,14 @@ class Dashboard extends React.Component {
             <Grid.Column mobile={16} tablet={12} computer={12}>
               <Container className={styles.navbar_wrapper}>
                 <nav className={styles.navbar}>
-                  <Link to="/dashboard" className={!tab ? styles.active_link : undefined}>
+                  <Link to={url} className={activePage === '' && styles.active_link}>
                     Overview
                   </Link>
                   <Link
-                    to={{ pathname: '/dashboard', search: '?tab=repositories' }}
-                    className={tab === 'repositories' ? styles.active_link : undefined}
+                    to={`${url}/repositories`}
+                    className={activePage === 'repositories' && styles.active_link}
                   >
-                    Repositories<span>15</span>
+                    Repositories<span>{repositoriesNames.length}</span>
                   </Link>
                   <Link to="">
                     Projects<span>2</span>
@@ -67,14 +98,10 @@ class Dashboard extends React.Component {
                   </Link>
                 </nav>
               </Container>
-              {(function() {
-                switch (tab) {
-                case 'repositories':
-                  return <RepositoriesList />;
-                default:
-                  return <Overview />;
-                }
-              })()}
+              <Switch>
+                <Route exact path={path} render={this.overviewRouteRender} />
+                <Route exact path={`${path}/repositories`} render={this.repositoriesListRender} />
+              </Switch>
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -88,6 +115,12 @@ Dashboard.defaultProps = {};
 Dashboard.propTypes = {
   actions: PropTypes.object.isRequired,
   repositoriesNames: PropTypes.array.isRequired,
+  match: PropTypes.exact({
+    params: PropTypes.object.isRequired,
+    isExact: PropTypes.bool.isRequired,
+    path: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired
+  }).isRequired,
   location: PropTypes.shape({
     pathname: PropTypes.string.isRequired,
     search: PropTypes.string.isRequired

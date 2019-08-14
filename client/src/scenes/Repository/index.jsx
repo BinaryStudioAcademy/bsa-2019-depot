@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
 import RepositoryHeader from '../../components/RepositoryHeader';
-import CodeTab from '../CodeTab/index';
 import IssuesTab from '../../containers/IssuesTab/index';
 import CommitsPage from '../../containers/CommitsPage/index';
+import DiffCommitView from '../../components/DiffCommitView/index';
+import RepositoryTab from '../../containers/RepositoryTab';
+import RepoSettings from '../../containers/SettingsTab/index';
 
 import './styles.module.scss';
 
@@ -29,9 +31,11 @@ class RepositoryPage extends React.Component {
         />
         <div className="ui bottom attached active tab">
           <Switch>
-            <Route exact path={match.url} component={CodeTab} />
-            <Route exact path={`${match.url}/issues`} component={IssuesTab} />
-            <Route exact path={`${match.url}/commits`} component={CommitsPage} />
+            <Route exact path={match.path} component={RepositoryTab} />
+            <Route exact path={`${match.path}/issues`} component={IssuesTab} />
+            <Route exact path={`${match.path}/commits`} component={CommitsPage} />
+            <Route exact path={`${match.path}/settings`} component={RepoSettings} />
+            <Route path={`${match.path}/commits/:hash`} component={DiffCommitView} />
           </Switch>
         </div>
       </>
