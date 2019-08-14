@@ -1,13 +1,15 @@
 import React from 'react';
-import { Switch, Link } from 'react-router-dom';
+import { Switch, Link, Route, Redirect } from 'react-router-dom';
 import { Grid, Menu, Divider } from 'semantic-ui-react';
 import PrivateRoute from '../../containers/PrivateRoute';
 import PropTypes from 'prop-types';
 
 import { SettingsProfile } from '../../scenes';
 import KeysPage from '../../containers/KeysPage';
+import NewKeysPage from '../../containers/NewKeyPage';
 
-// const redirectToProfile = () => <Redirect push={true} to="/settings/profile" />;
+const redirectToProfile = () => <Redirect push={true} to="/settings/profile" />;
+
 const Settings = ({ match }) => {
   return (
     <>
@@ -26,8 +28,9 @@ const Settings = ({ match }) => {
         </Grid.Column>
         <Grid.Column computer={12} tablet={16} mobile={16}>
           <Switch>
-            {/* <PrivateRoute exact path={`${match.path}`} render={() => <div>rh65h4n6</div>} /> */}
+            <Route exact path={`${match.path}`} render={redirectToProfile} />
             <PrivateRoute path={`${match.path}/profile`} component={SettingsProfile} />
+            <PrivateRoute path={`${match.path}/keys/new`} component={NewKeysPage} />
             <PrivateRoute path={`${match.path}/keys`} component={KeysPage} />
           </Switch>
         </Grid.Column>
