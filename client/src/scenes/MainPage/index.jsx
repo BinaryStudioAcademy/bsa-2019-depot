@@ -14,8 +14,6 @@ const MainPage = () => {
     setEmail('');
   }
 
-  const options = [{ text: 'English', value: 'english' }, { text: 'Deutsch', value: 'deutsch' }];
-
   return (
     <div>
       <section className={styles.main}>
@@ -221,43 +219,9 @@ const MainPage = () => {
       </section>
 
       <footer className={styles.footer}>
-        <Grid centered container columns={1}>
+        <Grid container columns={1}>
           <Grid.Row>
-            <Grid.Column computer={4} mobile={16}>
-              <h4>Depot</h4>
-              <ul>
-                <li>
-                  <a href="/">Blog</a>
-                </li>
-                <li>
-                  <a href="/">Depot writing program</a>
-                </li>
-                <li>
-                  <a href="/">API</a>
-                </li>
-                <li>
-                  <a href="/">Site status</a>
-                </li>
-              </ul>
-            </Grid.Column>
-            <Grid.Column computer={4} mobile={16}>
-              <h4>Resources</h4>
-              <ul>
-                <li>
-                  <a href="/">Technical support</a>
-                </li>
-                <li>
-                  <a href="/">Documentation</a>
-                </li>
-                <li>
-                  <a href="/">Plans & pricing</a>
-                </li>
-                <li>
-                  <a href="/">What is Version Control?</a>
-                </li>
-              </ul>
-            </Grid.Column>
-            <Grid.Column computer={8} mobile={16}>
+            <Grid.Column mobile={16} computer={8}>
               <h4>Connect with us</h4>
               <p>Sign up for Git articles and resources:</p>
               <Form className={styles.form} onSubmit={handleSubmit}>
@@ -266,25 +230,23 @@ const MainPage = () => {
                   <Form.Button content="Subscribe" />
                 </Form.Group>
               </Form>
+              <Grid.Column className={styles.social} mobile={16}>
+                <p>Connect with Depot</p>
+                <ul>
+                  <li>
+                    <a className={styles.fb} href="https://www.facebook.com/">
+                      fb
+                    </a>
+                  </li>
+                  <li>
+                    <a className={styles.tw} href="https://twitter.com/">
+                      tw
+                    </a>
+                  </li>
+                </ul>
+              </Grid.Column>
             </Grid.Column>
           </Grid.Row>
-        </Grid>
-        <Grid container>
-          <Grid.Column className={styles.social} mobile={16}>
-            <p>Connect with Depot</p>
-            <ul>
-              <li>
-                <a className={styles.fb} href="https://www.facebook.com/">
-                  fb
-                </a>
-              </li>
-              <li>
-                <a className={styles.tw} href="https://twitter.com/">
-                  tw
-                </a>
-              </li>
-            </ul>
-          </Grid.Column>
         </Grid>
         <Grid className={styles.foterLine} container>
           <Grid.Row computer={13} mobile={16}>
@@ -302,13 +264,6 @@ const MainPage = () => {
                 <p>Copyright © 2019</p>
               </li>
             </ul>
-          </Grid.Row>
-          <Grid.Row>
-            <Form>
-              <Form.Group widths="equal">
-                <Form.Field className={styles.selectLeng} control={Select} options={options} placeholder="Languages" />
-              </Form.Group>
-            </Form>
           </Grid.Row>
         </Grid>
       </footer>
