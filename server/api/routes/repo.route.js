@@ -17,7 +17,6 @@ const router = Router();
 router
   .post('/', (req, res) => {
     const { repository, ownerID } = req.body;
-    console.log(req.body);
     createRepo({ userId: ownerID, name: repository, ...req.body }).then(data => res.send(data));
   })
   .get('/:owner/:repository/check-name', (req, res, next) => {

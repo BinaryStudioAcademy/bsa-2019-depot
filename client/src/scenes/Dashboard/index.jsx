@@ -79,10 +79,13 @@ class Dashboard extends React.Component {
             <Grid.Column mobile={16} tablet={12} computer={12}>
               <Container className={styles.navbar_wrapper}>
                 <nav className={styles.navbar}>
-                  <Link to={url} className={activePage === '' && styles.active_link}>
+                  <Link to={url} className={activePage === '' ? styles.active_link : undefined}>
                     Overview
                   </Link>
-                  <Link to={`${url}/repositories`} className={activePage === 'repositories' && styles.active_link}>
+                  <Link
+                    to={`${url}/repositories`}
+                    className={activePage === 'repositories' ? styles.active_link : undefined}
+                  >
                     Repositories<span>{repositoriesNames.length}</span>
                   </Link>
                   <Link to="">
