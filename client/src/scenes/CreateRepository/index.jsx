@@ -66,7 +66,6 @@ class CreateRepository extends React.Component {
     }
   }
 
-
   async onSubmit(values) {
     const result = await createRepository({
       ...values
@@ -101,72 +100,53 @@ class CreateRepository extends React.Component {
     );
   }
 
-  renderCreateRepository({
-    errors,
-    touched,
-    handleChange,
-    handleBlur,
-    handleSubmit,
-    values
-  }) {
+  renderCreateRepository({ errors, touched, handleChange, handleBlur, handleSubmit, values }) {
     const { username } = this.props;
     const { repository, description, readme, privacy } = values;
 
     return (
       <Container>
         <h1>Create a new repository</h1>
-        <p>A repository contains all project files, including the revision history. Already have a project repository elsewhere?</p>
+        <p>
+          A repository contains all project files, including the revision history. Already have a project repository
+          elsewhere?
+        </p>
         <Link to="/">Import a repository.</Link>
         <Divider section />
         <Form onSubmit={handleSubmit}>
           <Form.Group>
             <Form.Field>
               <label>Owner</label>
-              <Input
-                name="owner"
-                value={username}
-                onChange={handleChange}
-              />
+              <Input name="owner" value={username} onChange={handleChange} />
             </Form.Field>
             <span className={styles.slash}>/</span>
             <Form.Field className={styles.formField}>
               <label>Repository name</label>
-              <Field
-                name="repository"
-                value={repository}
-                onChange={handleChange}
-              />
-              {(errors.repository && touched.repository &&
+              <Field name="repository" value={repository} onChange={handleChange} />
+              {errors.repository && touched.repository && (
                 <span className={styles.label}>
-                  <Label
-                    basic
-                    color='red'
-                    pointing
-                  >
+                  <Label basic color="red" pointing>
                     {errors.repository}
                   </Label>
                 </span>
               )}
             </Form.Field>
-
           </Form.Group>
           <p>Great repository names are short and memorable. Need inspiration? How about psychic-eureka?</p>
           <Form.Field>
-            <label>Description <small>(optional)</small></label>
-            <Input
-              name="description"
-              value={description}
-              onChange={handleChange}
-            />
+            <label>
+              Description <small>(optional)</small>
+            </label>
+            <Input name="description" value={description} onChange={handleChange} />
           </Form.Field>
           <Divider />
           <div>
             <Form.Field>
               <Radio
                 label={this.renderPrivacyLabelPublic()}
-                id='public'
-                name='privacy'
-                value='public'
+                id="public"
+                name="privacy"
+                value="public"
                 checked={privacy === 'public'}
                 onChange={handleChange}
               />
@@ -174,9 +154,9 @@ class CreateRepository extends React.Component {
             <Form.Field>
               <Radio
                 label={this.renderPrivacyLabelLock()}
-                id='private'
-                name='privacy'
-                value='private'
+                id="private"
+                name="privacy"
+                value="private"
                 checked={privacy === 'private'}
                 onChange={handleChange}
               />
@@ -184,9 +164,9 @@ class CreateRepository extends React.Component {
             <Divider />
           </div>
           <Form.Field>
-            <label name='readme'></label>
+            <label name="readme"></label>
             <Checkbox
-              id='readme'
+              id="readme"
               label={<label name="readme">Initialize this repository with a README</label>}
               value={readme}
               checked={readme}
@@ -196,26 +176,15 @@ class CreateRepository extends React.Component {
           <Form.Group>
             <Form.Field>
               <label>Add .gitignore:</label>
-              <Dropdown
-                selection
-                options={gitingnoreOptions}
-                defaultValue={gitingnoreOptions[0].value}
-              />
+              <Dropdown selection options={gitingnoreOptions} defaultValue={gitingnoreOptions[0].value} />
             </Form.Field>
             <Form.Field>
               <label>Add a license:</label>
-              <Dropdown
-                selection
-                options={licenseOptions}
-                defaultValue={licenseOptions[0].value}
-              />
+              <Dropdown selection options={licenseOptions} defaultValue={licenseOptions[0].value} />
             </Form.Field>
           </Form.Group>
           <Divider />
-          <Button
-            type='submit'
-            color='green'
-          >
+          <Button type="submit" color="green">
             Create repository
           </Button>
         </Form>

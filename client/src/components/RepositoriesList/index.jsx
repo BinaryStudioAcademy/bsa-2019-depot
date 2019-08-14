@@ -11,16 +11,8 @@ import { RepositoryItem } from '../RepositoryItem';
 import styles from './styles.module.scss';
 
 export class RepositoriesList extends React.Component {
-  componentDidMount() {
-    const { actions } = this.props;
-    actions.fetchRepositories({
-      limit: '',
-      filterWord: ''
-    });
-  }
-
   render() {
-    const { repositoriesNames } = this.props;
+    const { repositories } = this.props;
     //Mock
 
     const repoTypes = [
@@ -58,7 +50,7 @@ export class RepositoriesList extends React.Component {
             />
           </div>
           <div className={styles.new_repo_wrapper}>
-            <Link to="">
+            <Link to="/new">
               <Button className={styles.new_repo}>
                 <Octicon icon={Repo} />
                 New
@@ -66,7 +58,7 @@ export class RepositoriesList extends React.Component {
             </Link>
           </div>
         </Container>
-        {repositoriesNames.map(repo => {
+        {repositories.map(repo => {
           return <RepositoryItem repo={repo} key={repo} />;
         })}
       </Container>
@@ -81,7 +73,7 @@ RepositoriesList.defaultProps = {
 
 RepositoriesList.propTypes = {
   actions: PropTypes.object.isRequired,
-  repositoriesNames: PropTypes.array.isRequired
+  repositories: PropTypes.array.isRequired
 };
 
 const mapStateToProps = ({ repositories }) => ({

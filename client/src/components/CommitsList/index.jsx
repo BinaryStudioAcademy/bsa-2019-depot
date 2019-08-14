@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { NavLink } from 'react-router-dom';
 import { Button, Divider, Icon, Image, List } from 'semantic-ui-react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { getUserImgLink } from '../../helpers/imageHelper';
@@ -27,7 +28,9 @@ const CommitsList = ({ commits }) => {
                     </Button>
                   </CopyToClipboard>
                   <Button basic color="blue">
-                    {commit.sha.slice(0, 7)}
+                    <NavLink exact to={`commits/${commit.sha}`}>
+                      {commit.sha.slice(0, 7)}
+                    </NavLink>
                   </Button>
                 </Button.Group>
                 <Button basic color="blue" icon>

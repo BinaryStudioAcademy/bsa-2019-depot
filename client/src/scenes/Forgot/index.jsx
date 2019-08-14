@@ -33,6 +33,11 @@ class Forgot extends Component {
     }
   }
 
+  returnToSignIn = () => {
+    const { history } = this.props;
+    history.push('/login');
+  };
+
   renderComponent({ errors, touched, handleChange, handleBlur, handleSubmit, values }) {
     const { message, emailNotExist, emailSend } = this.props;
     const succsessMessage = emailSend ? <Message color="teal">{message}</Message> : null;
@@ -43,27 +48,37 @@ class Forgot extends Component {
           <Header as="h2" color="black" textAlign="center" className="forgot-header">
             Reset your password
           </Header>
-          {succsessMessage}
           <Form name="forgotForm" size="large" onSubmit={handleSubmit} disabled={emailSend}>
             <Segment>
-              <Form.Input
-                fluid
-                name="email"
-                label="Enter your email address and we will send you a link to reset your password."
-                disabled={emailSend}
-                placeholder="Enter your email address"
-                type="email"
-                error={emailNotExist}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.email}
-                className={`${errors.email && touched.email ? 'has-error' : 'no-error'}`}
-              />
-              <Button type="submit" color="green" fluid size="large" disabled={errors.email && touched.email}>
-                Send password reset email
-              </Button>
+              {!succsessMessage ? (
+                <div>
+                  <Form.Input
+                    fluid
+                    name="email"
+                    label="Enter your email address and we will send you a link to reset your password."
+                    disabled={emailSend}
+                    placeholder="Enter your email address"
+                    type="email"
+                    error={emailNotExist}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.email}
+                    className={`${errors.email && touched.email ? 'has-error' : 'no-error'}`}
+                  />
+                  <Button type="submit" color="green" fluid size="large" disabled={errors.email && touched.email}>
+                    Send password reset email
+                  </Button>
+                </div>
+              ) : (
+                <div>
+                  {succsessMessage}
+                  <Button type="button" color="green" fluid size="large" onClick={this.returnToSignIn}>
+                    Return to sign in
+                  </Button>
+                </div>
+              )}
+              {failureMessage}
             </Segment>
-            {failureMessage}
           </Form>
         </Grid.Column>
       </Grid>
@@ -87,6 +102,7 @@ class Forgot extends Component {
 }
 Forgot.propTypes = {
   isAuthorized: PropTypes.bool.isRequired,
+  history: PropTypes.object,
   message: PropTypes.string,
   emailNotExist: PropTypes.bool,
   emailSend: PropTypes.bool,
