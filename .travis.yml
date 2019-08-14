@@ -6,6 +6,7 @@ branches:
   - develop
 notifications:
   slack: binary-academy-2019:zu0JzpVwZUPF9GSv8vPwHcI1
+  on_start: always
 install:
   - cd client/
   - npm install
