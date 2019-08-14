@@ -39,3 +39,11 @@
     right: 0;
   }
 }
+:global(div.google-button) {
+  margin-top: 10px;
+  > a {
+    > button {
+      width: 100%;
+    }
+  }
+}
