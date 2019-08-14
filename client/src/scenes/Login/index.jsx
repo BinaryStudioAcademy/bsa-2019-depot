@@ -3,11 +3,12 @@ import { Redirect, NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import * as queryString from 'query-string';
-import { Grid, Header, Form, Button, Segment, Message, Label } from 'semantic-ui-react';
+import { Grid, Header, Form, Button, Segment, Message } from 'semantic-ui-react';
 import GoogleAuth from '../../components/GoogleAuth';
+import { InputError } from '../../components/InputError';
 import { serverUrl } from '../../app.config';
 import { authorizeUser, loginGoogleRoutine, setUsernameRoutine } from '../../routines/routines';
-import { Formik } from 'formik';
+import { Formik, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
 import './styles.module.scss';
@@ -15,10 +16,17 @@ import './styles.module.scss';
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email('Invalid email address!')
+    .matches(
+      /^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))@(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      'Invalid email address!'
+    )
     .required('Email address is required!')
     .max(100),
   password: Yup.string()
-    .matches(/^(?=.*\d[a-z]).{8,}|([a-zA-Z0-9]{15,})$/)
+    .matches(
+      /^(?:(?=\D*\d)(?=[^a-z]*[a-z]).{8,}|[a-zA-Z0-9]{15,})$/,
+      'Minimum length - 8 characters, if it includes a number and a lowercase letter OR 15 characters with any combination of characters'
+    )
     .required('Password is required')
     .max(72)
 });
@@ -100,6 +108,9 @@ class Login extends Component {
                 value={values.email}
                 className={`${errors.email && touched.email ? 'has-error' : 'no-error'}`}
               />
+              <InputError>
+                <ErrorMessage name="email" />
+              </InputError>
               <Form.Field className="password-wrapper">
                 <NavLink exact to="/forgot" className="forgot-link">
                   forgot password?
@@ -115,6 +126,9 @@ class Login extends Component {
                   value={values.password}
                   className={`${errors.password && touched.password ? 'has-error' : 'no-error'}`}
                 />
+                <InputError>
+                  <ErrorMessage name="password" />
+                </InputError>
               </Form.Field>
               <Button
                 type="submit"
@@ -164,11 +178,9 @@ class Login extends Component {
                     required
                     className={`${errors.username && touched.username ? 'has-error' : 'no-error'}`}
                   />
-                  {errors.username && touched.username && (
-                    <Label className="signup-pointing-label" pointing>
-                      Username can contain alphanumeric characters and single hyphens, cannot begin or end with a hyphen
-                    </Label>
-                  )}
+                  <InputError>
+                    <ErrorMessage name="username" />
+                  </InputError>
                 </Form.Field>
                 <Button type="submit" color="green" fluid size="large" disabled={errors.username && touched.username}>
                   Set Username

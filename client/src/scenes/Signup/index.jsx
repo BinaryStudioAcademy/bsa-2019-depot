@@ -2,11 +2,12 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Redirect, NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Grid, Header, Form, Button, Segment, Label, Message } from 'semantic-ui-react';
+import { Grid, Header, Form, Button, Segment, Message } from 'semantic-ui-react';
 import { signupRoutine } from '../../routines/routines';
 import GoogleAuth from '../../components/GoogleAuth';
+import { InputError } from '../../components/InputError';
 import { serverUrl } from '../../app.config';
-import { Formik } from 'formik';
+import { Formik, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
 import './styles.module.scss';
@@ -14,12 +15,22 @@ import './styles.module.scss';
 const validationSchema = Yup.object().shape({
   username: Yup.string()
     .required('Username address is required!')
-    .matches(/^(([a-z0-9]+-)*[a-z0-9]+){1,39}$/),
+    .matches(
+      /^(([a-z0-9]+-)*[a-z0-9]+){1,39}$/,
+      'Username contains of only alphanumeric characters or single hyphens. Cannot begin or end with a hyphen. Cannot have multiple consecutive hyphens'
+    ),
   email: Yup.string()
     .email('Invalid email address!')
+    .matches(
+      /^(([^<>()\[\\.,;:\s@"]+(\.[^<>()\[\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      'Invalid email address!'
+    )
     .required('Email address is required!'),
   password: Yup.string()
-    .matches(/^(?=.*\d[a-z]).{8,}|([a-zA-Z0-9]{15,})$/)
+    .matches(
+      /^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))@(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      'Invalid email address!'
+    )
     .required('Password is required')
     .max(72)
 });
@@ -60,11 +71,9 @@ class Signup extends React.Component {
               required
               className={`${errors.username && touched.username ? 'has-error' : 'no-error'}`}
             />
-            {errors.username && touched.username && (
-              <Label className="signup-pointing-label" pointing>
-                Username can contain alphanumeric characters and single hyphens, cannot begin or end with a hyphen
-              </Label>
-            )}
+            <InputError>
+              <ErrorMessage name="username" />
+            </InputError>
           </Form.Field>
           <Form.Field required>
             <label htmlFor="email">Email</label>
@@ -79,11 +88,9 @@ class Signup extends React.Component {
               required
               className={`${errors.email && touched.email ? 'has-error' : 'no-error'}`}
             />
-            {errors.email && touched.email && (
-              <Label className="signup-pointing-label" pointing>
-                Invalid email address
-              </Label>
-            )}
+            <InputError>
+              <ErrorMessage name="email" />
+            </InputError>
           </Form.Field>
           <Form.Field required>
             <label htmlFor="password">Password</label>
@@ -98,12 +105,9 @@ class Signup extends React.Component {
               required
               className={`${errors.password && touched.password ? 'has-error' : 'no-error'}`}
             />
-            {errors.password && touched.password && (
-              <Label className="signup-pointing-label" pointing>
-                Password should be at least 8 characters, if it includes a number and a lowercase letter or 15
-                characters with any combination of characters
-              </Label>
-            )}
+            <InputError>
+              <ErrorMessage name="password" />
+            </InputError>
           </Form.Field>
 
           <Button

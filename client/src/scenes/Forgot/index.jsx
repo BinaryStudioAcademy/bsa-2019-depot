@@ -3,7 +3,8 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { Formik } from 'formik';
+import { InputError } from '../../components/InputError';
+import { Formik, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
 import { Grid, Header, Form, Button, Segment, Message } from 'semantic-ui-react';
@@ -14,6 +15,10 @@ import './styles.module.scss';
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email('Invalid email address!')
+    .matches(
+      /^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))@(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      'Invalid email address!'
+    )
     .required('Email address is required!')
 });
 
@@ -43,7 +48,7 @@ class Forgot extends Component {
     const succsessMessage = emailSend ? <Message color="teal">{message}</Message> : null;
     const failureMessage = emailNotExist ? <Message color="red">{message}</Message> : null;
     return (
-      <Grid textAlign="center" verticalAlign="middle" className="forgot-grid fill">
+      <Grid textAlign="center" className="forgot-grid fill">
         <Grid.Column className="grid-column">
           <Header as="h2" color="black" textAlign="center" className="forgot-header">
             Reset your password
@@ -65,6 +70,9 @@ class Forgot extends Component {
                     value={values.email}
                     className={`${errors.email && touched.email ? 'has-error' : 'no-error'}`}
                   />
+                  <InputError>
+                    <ErrorMessage name="email" />
+                  </InputError>
                   <Button type="submit" color="green" fluid size="large" disabled={errors.email && touched.email}>
                     Send password reset email
                   </Button>
