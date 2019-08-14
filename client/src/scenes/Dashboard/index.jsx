@@ -28,10 +28,6 @@ class Dashboard extends React.Component {
     });
   }
 
-  getRepoCount = repositoriesNames => {
-    return repositoriesNames.length;
-  };
-
   render() {
     const { repositoriesNames } = this.props;
     let params = new URLSearchParams(this.props.location.search);
@@ -65,7 +61,7 @@ class Dashboard extends React.Component {
                     to={{ pathname: '/dashboard', search: '?tab=repositories' }}
                     className={tab === 'repositories' ? styles.active_link : undefined}
                   >
-                    Repositories<span>{this.getRepoCount(repositoriesNames)}</span>
+                    Repositories<span>{repositoriesNames.length}</span>
                   </Link>
                   <Link to="">
                     Projects<span>2</span>
