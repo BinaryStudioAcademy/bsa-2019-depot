@@ -20,6 +20,7 @@ class CodeTab extends React.Component {
     };
     this.onBranchChange = this.onBranchChange.bind(this);
     this.onDropdownClick = this.onDropdownClick.bind(this);
+    this.onCreateFile = this.onCreateFile.bind(this);
   }
 
   componentDidMount() {
@@ -70,6 +71,18 @@ class CodeTab extends React.Component {
       }
     );
   };
+
+  onCreateFile() {
+    const { owner, repoName, branch } = this.state;
+    const {
+      history,
+      fileTreeData: {
+        tree: { currentPath }
+      }
+    } = this.props;
+
+    history.push(`/${owner}/${repoName}/new/tree/${branch}/${currentPath}`);
+  }
 
   render() {
     const { owner, repoName, branch } = this.state;
@@ -165,7 +178,9 @@ class CodeTab extends React.Component {
           </div>
           <div>
             <Button.Group className={styles.repoActions}>
-              <Button className={styles.actionButton}>Create New File</Button>
+              <Button className={styles.actionButton} onClick={this.onCreateFile}>
+                Create New File
+              </Button>
               <Button className={styles.actionButton}>Upload files</Button>
               <Button className={styles.actionButton}>Find file</Button>
             </Button.Group>

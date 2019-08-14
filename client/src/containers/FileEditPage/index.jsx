@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ReactMarkdown from 'react-markdown';
-import { Breadcrumb, Input, Button, Tab } from 'semantic-ui-react';
+import { Breadcrumb, Input, Button, Tab, Loader } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import ReactDiffViewer from 'react-diff-viewer';
 import CommitFileForm from '../../components/CommitFileForm';
@@ -37,11 +37,13 @@ class FileEditPage extends React.Component {
       fileData: { content: '' },
       oldContent: '',
       filename: filename,
-      toEdit: !!filename
+      toEdit: !!filename,
+      loading: !!filename
     };
 
     this.handleChangeFilename = this.handleChangeFilename.bind(this);
     this.handleContentChange = this.handleContentChange.bind(this);
+    this.handleCancel = this.handleCancel.bind(this);
   }
 
   componentDidMount() {
@@ -68,17 +70,35 @@ class FileEditPage extends React.Component {
     this.setState({ fileData: { content } });
   }
 
+  handleCancel() {
+    const {
+      history,
+      location: { pathname }
+    } = this.props;
+
+    const folderUrl = pathname
+      .replace('/edit', '')
+      .replace('/new', '')
+      .split('/')
+      .filter(dir => dir)
+      .slice(0, -1)
+      .join('/');
+
+    history.push(`/${folderUrl}`);
+  }
+
   render() {
     const { match, username, avatar } = this.props;
     const {
-      filename,
-      oldContent,
       fileData: { content },
-      toEdit
+      oldContent,
+      filename,
+      toEdit,
+      loading
     } = this.state;
     const { username: ownerUsername, reponame } = match.params;
 
-    const filepathDirs = this.filepath.split('/');
+    const filepathDirs = this.filepath.split('/').filter(dir => dir);
 
     if (match.url.split('/').pop() === 'edit') filepathDirs.pop();
     const fileExtension = filename.split('.').pop();
@@ -131,7 +151,9 @@ class FileEditPage extends React.Component {
       }
     ];
 
-    return (
+    return loading ? (
+      <Loader active inline="centered" />
+    ) : (
       <>
         <Breadcrumb size="big">
           <Breadcrumb.Section>
@@ -153,7 +175,7 @@ class FileEditPage extends React.Component {
               placeholder="Name your file..."
               onChange={this.handleChangeFilename}
             />
-            <Button className={styles.newButton} basic>
+            <Button className={styles.newButton} basic onClick={this.handleCancel}>
               Cancel
             </Button>
           </Breadcrumb.Section>
@@ -168,6 +190,7 @@ class FileEditPage extends React.Component {
 FileEditPage.propTypes = {
   username: PropTypes.string.isRequired,
   avatar: PropTypes.string,
+  history: PropTypes.object.isRequired,
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
     isExact: PropTypes.bool.isRequired,
