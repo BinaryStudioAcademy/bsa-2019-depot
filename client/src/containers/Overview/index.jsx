@@ -18,14 +18,6 @@ export class Overview extends React.Component {
     };
   }
 
-  componentDidMount() {
-    const { actions } = this.props;
-    actions.fetchRepositories({
-      limit: '4',
-      filterWord: ''
-    });
-  }
-
   handleActivityState = (e, titleProps) => {
     const { index } = titleProps;
     const { activeIndex } = this.state;
@@ -96,7 +88,7 @@ export class Overview extends React.Component {
 
   render() {
     const { activeIndex } = this.state;
-    const { repositoriesNames } = this.props;
+    const { repositories } = this.props;
 
     return (
       <div>
@@ -105,7 +97,7 @@ export class Overview extends React.Component {
           <Link to="">Customize your pins</Link>
         </Container>
         <Container className={styles.favorite_repos_wrapper}>
-          {repositoriesNames.map(repo => {
+          {repositories.map(repo => {
             return (
               <div key={repo} className={styles.pinned_item}>
                 <div>
@@ -272,9 +264,9 @@ Overview.defaultProps = {
 
 Overview.propTypes = {
   actions: PropTypes.object.isRequired,
-  repositoriesNames: PropTypes.array.isRequired,
-  username: PropTypes.string.isRequired,
-  userActivity: PropTypes.array.isRequired
+  repositories: PropTypes.array.isRequired,
+  username: PropTypes.string,
+  userActivity: PropTypes.array
 };
 
 const mapStateToProps = ({ repositories }) => ({
