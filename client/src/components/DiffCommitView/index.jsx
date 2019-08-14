@@ -8,10 +8,13 @@ import './styles.module.scss';
 
 class DiffCommitView extends Component {
   componentDidMount() {
+    const getRepositoryName = path => {
+      const part = path.slice(0, path.lastIndexOf('/commits'));
+      return part.substring(part.lastIndexOf('/') + 1);
+    };
     this.props.fetchDiffs({
       owner: this.props.username,
-      // Mock
-      repoName: 'new-repo',
+      repoName: getRepositoryName(this.props.location.pathname),
       hash: this.props.location.pathname.substring(this.props.location.pathname.lastIndexOf('/') + 1)
     });
   }
