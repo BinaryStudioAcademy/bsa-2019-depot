@@ -21,6 +21,7 @@ const CommitFileForm = ({ avatar, initialBranch, handleSubmit }) => {
                   name="branch"
                   id="initial-branch"
                   value={initialBranch}
+                  checked={branch === initialBranch}
                   onChange={handleChange}
                 />
               </Form.Field>
@@ -29,7 +30,7 @@ const CommitFileForm = ({ avatar, initialBranch, handleSubmit }) => {
                   label="Create a new branch for this commit."
                   name="branch"
                   id="new-branch"
-                  value={branch}
+                  checked={branch !== initialBranch}
                   onChange={handleChange}
                 />
                 {branch !== initialBranch && (
@@ -37,7 +38,7 @@ const CommitFileForm = ({ avatar, initialBranch, handleSubmit }) => {
                     icon="code branch"
                     iconPosition="left"
                     name="branch"
-                    value={branch}
+                    value={branch === initialBranch ? '' : branch}
                     width={4}
                     className={styles.branchInput}
                     placeholder="Enter new branch name"
