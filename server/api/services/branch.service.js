@@ -12,9 +12,7 @@ const getBranches = async ({ user, repoName }) => {
   return refNames.map(refName => refName.slice(11));
 };
 
-const getLastModifiedCommit = async ({
-  user, name, branch, entry
-}) => {
+const getLastModifiedCommit = async ({ user, name, branch, entry }) => {
   const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`);
   const repo = await NodeGit.Repository.open(pathToRepo.replace(/\\/g, '/'));
   const lastCommitOnBranch = await repo.getBranchCommit(branch);

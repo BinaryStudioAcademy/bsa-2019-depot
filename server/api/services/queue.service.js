@@ -18,7 +18,7 @@ amqp.connect(connectionUrl, (err, connection) => {
     });
     ch.consume(
       emailQueue,
-      (msg) => {
+      msg => {
         const message = JSON.parse(msg.content);
         sendEmail(message);
       },

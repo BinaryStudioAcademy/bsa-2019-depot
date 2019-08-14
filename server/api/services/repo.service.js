@@ -7,13 +7,43 @@ const { readdirSync } = require('fs');
 
 const gitPath = process.env.GIT_PATH;
 
-const createRepo = async ({ user, name }) => {
+const createRepo = async ({ owner, repository }) => {
   let result = 'Repo was created';
-  const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`);
-  await NodeGit.Repository.init(pathToRepo.replace(/\\/g, '/'), 1).catch(() => {
-    result = 'Error! Repos wasn`t created';
-  });
+  const pathToRepo = path.resolve(`${gitPath}/${owner}/${repository}`).replace(/\\/g, '/');
+  await NodeGit.Repository.init(pathToRepo, 1)
+    .then(() => {
+      result = {
+        url: pathToRepo
+      };
+    })
+    .catch(() => {
+      result = 'Error! Repos wasn`t created';
+    });
+
   return result;
+};
+
+const checkName = async ({ owner, repository }) => {
+  const filePath = path.resolve(`${gitPath}/${owner}/${repository}`);
+  const exists = await fs.existsSync(filePath);
+  return exists;
+};
+
+const isEmpty = async ({ owner, repoName }) => {
+  try {
+    let result;
+    const pathToRepo = path.resolve(`${gitPath}/${owner}/${repoName}`);
+    await NodeGit.Repository.open(pathToRepo).then(repo => {
+      result = repo.isEmpty();
+    });
+    return {
+      isEmpty: Boolean(result),
+      url: pathToRepo
+    };
+  } catch (e) {
+    console.warn(e);
+    return e;
+  }
 };
 
 const renameRepo = async ({ repoName, newName, username }) => {
@@ -74,5 +104,7 @@ module.exports = {
   renameRepo,
   deleteRepo,
   getReposNames,
+  checkName,
+  isEmpty,
   forkRepo
 };
