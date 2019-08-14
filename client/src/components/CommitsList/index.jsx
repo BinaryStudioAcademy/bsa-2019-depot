@@ -28,7 +28,7 @@ const CommitsList = ({ commits }) => {
                     </Button>
                   </CopyToClipboard>
                   <Button basic color="blue">
-                    <NavLink exact to={'commits/' + commit.sha}>
+                    <NavLink exact to={`commits/${commit.sha}`}>
                       {commit.sha.slice(0, 7)}
                     </NavLink>
                   </Button>

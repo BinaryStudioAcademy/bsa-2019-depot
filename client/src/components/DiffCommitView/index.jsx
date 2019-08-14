@@ -33,7 +33,7 @@ class DiffCommitView extends Component {
       <Decoration key={hunk.content} className="diff-filename">
         {newPath}
       </Decoration>,
-      <Decoration key={'decoration-' + hunk.content}>{hunk.content}</Decoration>,
+      <Decoration key={`decoration-${hunk.content}`}>{hunk.content}</Decoration>,
       <Hunk key={hunk.content + Math.random()} hunk={hunk} />
     ];
     const renderFile = ({ newPath, oldRevision, newRevision, type, hunks }) =>
@@ -43,7 +43,7 @@ class DiffCommitView extends Component {
         </div>
       ) : (
         <Diff
-          key={oldRevision + '-' + newRevision}
+          key={`${oldRevision}-${newRevision}`}
           viewType="unified"
           diffType={type}
           hunks={hunks}
