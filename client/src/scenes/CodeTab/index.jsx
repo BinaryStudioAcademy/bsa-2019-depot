@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import RepoFileTree from '../../components/RepoFileTree/index';
 import RepoReadme from '../../components/RepoReadme/index';
 import { fetchLastCommitOnBranch, fetchBranches, fetchFileTree } from '../../routines/routines';
@@ -14,8 +14,8 @@ class CodeTab extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      owner: 'pavel',
-      repoName: 'test-repo.git',
+      owner: 'TheSubliminal',
+      repoName: 'depot-test',
       branch: 'master'
     };
     this.onBranchChange = this.onBranchChange.bind(this);
@@ -73,7 +73,7 @@ class CodeTab extends React.Component {
 
   render() {
     const { owner, repoName, branch } = this.state;
-    const { lastCommitData, branchesData, fileTreeData, history, fetchFileTree } = this.props;
+    const { lastCommitData, branchesData, fileTreeData, fetchFileTree } = this.props;
 
     return (
       <Container>
@@ -220,7 +220,6 @@ class CodeTab extends React.Component {
           owner={owner}
           repoName={repoName}
           branch={branch}
-          history={history}
           fetchFileTree={fetchFileTree}
         />
         <RepoReadme />
@@ -266,4 +265,4 @@ CodeTab.propTypes = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CodeTab);
+)(withRouter(CodeTab));

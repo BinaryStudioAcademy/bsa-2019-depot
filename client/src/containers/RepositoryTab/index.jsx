@@ -13,7 +13,7 @@ class RepositoryTab extends React.Component {
   }
 
   async getData() {
-    const { isEmpty } = await checkIfEmpty({ owner: 'Nick', repository: 'aa' });
+    const { isEmpty } = await checkIfEmpty({ owner: 'TheSubliminal', repository: 'depot-test' });
     this.setState({
       ...this.state,
       isEmpty,

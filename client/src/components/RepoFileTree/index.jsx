@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import { Table, Image, Message, Dimmer, Loader } from 'semantic-ui-react';
 import Octicon, { getIconByName } from '@primer/octicons-react';
@@ -48,8 +49,10 @@ class RepoFileTree extends React.Component {
   };
 
   render() {
+    const { location } = this.props;
     const { sha, message, author, date } = this.props.lastCommitData.commit;
     const { files, directories, currentPath } = this.props.fileTreeData.tree;
+
     return this.props.lastCommitData.loading || this.props.fileTreeData.loading ? (
       <div>
         <Dimmer active>
@@ -119,7 +122,7 @@ class RepoFileTree extends React.Component {
                 <Table.Row>
                   <Table.Cell singleLine width="five">
                     <Octicon className={styles.fileIcon} icon={getIconByName('file')} />
-                    <Link className={styles.link} to="">
+                    <Link className={styles.link} to={`${location.pathname}/${file.name}`}>
                       {file.name}
                     </Link>
                   </Table.Cell>
@@ -163,10 +166,11 @@ RepoFileTree.propTypes = {
     })
   }).isRequired,
   history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
   owner: PropTypes.string.isRequired,
   repoName: PropTypes.string.isRequired,
   branch: PropTypes.string.isRequired,
   fetchFileTree: PropTypes.func.isRequired
 };
 
-export default RepoFileTree;
+export default withRouter(RepoFileTree);
