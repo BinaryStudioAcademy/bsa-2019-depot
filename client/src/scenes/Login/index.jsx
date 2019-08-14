@@ -125,6 +125,7 @@ class Login extends Component {
               >
                 Sign In
               </Button>
+              <Grid.Row className="google-button">{this.renderGoogleAuth()}</Grid.Row>
             </Segment>
           </Form>
           <Message>
@@ -133,7 +134,6 @@ class Login extends Component {
               Create an account
             </NavLink>
           </Message>
-          <Grid.Row>{this.renderGoogleAuth()}</Grid.Row>
         </Grid.Column>
       </Grid>
     );
