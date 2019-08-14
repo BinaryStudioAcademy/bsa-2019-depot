@@ -14,6 +14,7 @@ install:
   - cd ..
 script:
   - export SKIP_PREFLIGHT_CHECK=true
+  - export REACT_APP_SERVER_URL=/
   - cd client/
   - npm run build
   - cd ..
