@@ -43,7 +43,9 @@ class RepositoryTab extends React.Component {
       return <Spinner />;
     }
 
-    return isEmpty ? <EmptyRepositoryTab /> : <CodeTab history={history} username={username} reponame={reponame} />;
+    return isEmpty
+      ? <EmptyRepositoryTab />
+      : <CodeTab history={history} username={username} reponame={reponame} />;
   }
 }
 

@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Container, Button, Icon } from 'semantic-ui-react';
+import { Container, Button, Icon, Divider } from 'semantic-ui-react';
 import styles from './styles.module.scss';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import CopyableTerminal from '../../components/CopyableTerminal';
 
-function EmptyRepositoryTab({ url }) {
+function EmptyRepositoryTab(props) {
+  const { match: { params: { username, reponame } } } = props;
   const [protocol, setProtocol] = useState('HTTPS');
+
+  const getUrl = ({protocol, username, reponame}) => {
+    return protocol === 'HTTPS'
+      ? `https://${window.location.host}/${username}/${reponame}.git`
+      : `git@${window.location.host}:${username}/${reponame}.git`;
+  };
+
+  const url = getUrl({protocol, username, reponame});
 
   const createRepoStr = [
     'echo "# test" >> README.md\n',
@@ -30,15 +39,17 @@ function EmptyRepositoryTab({ url }) {
   }
 
   function setHttp() {
-    setProtocol('HTTP');
+    setProtocol('HTTPS');
   }
 
   function setSsh() {
     setProtocol('SSH');
   }
 
+
   return (
     <Container>
+      <Divider hidden />
       <div className={styles.box}>
         <section className={styles.boxSectionHeader}>
           <h2>Quick setup — if you’ve done this kind of thing before</h2>
@@ -56,10 +67,10 @@ function EmptyRepositoryTab({ url }) {
           </div>
           <p>
             Get started
-            {<Link> creating a new file</Link>} by or
-            {<Link> uploading an existing file</Link>}. We recommend every repository include a{<Link> README</Link>},
-            {<Link> LICENSE</Link>}, and
-            {<Link> .gitignore</Link>}.
+            {<Link to="/"> creating a new file</Link>} by or
+            {<Link to="/"> uploading an existing file</Link>}. We recommend every repository include a{<Link to="/"> README</Link>},
+            {<Link to="/"> LICENSE</Link>}, and
+            {<Link to="/"> .gitignore</Link>}.
           </p>
         </section>
         <section className={styles.boxSection}>
@@ -85,6 +96,11 @@ function EmptyRepositoryTab({ url }) {
 }
 
 EmptyRepositoryTab.propTypes = {
-  url: PropTypes.string.isRequired
+  match: {
+    params: {
+      username: PropTypes.string.isRequired,
+      reponame: PropTypes.string.isRequired
+    }
+  }
 };
-export default EmptyRepositoryTab;
+export default withRouter(EmptyRepositoryTab);
