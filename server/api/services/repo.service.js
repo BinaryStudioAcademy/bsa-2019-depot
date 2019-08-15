@@ -68,15 +68,15 @@ const deleteRepo = async ({ repoName, username }) => {
 const getReposNames = async ({ user, filter, limit }) => {
   const pathToRepo = path.resolve(`${gitPath}/${user}`);
   const doesDirExists = fs.existsSync(pathToRepo);
-  if(doesDirExists) {
-    const repos = fs.readdirSync(pathToRepo, { withFileTypes: true })
+  if (doesDirExists) {
+    const repos = fs
+      .readdirSync(pathToRepo, { withFileTypes: true })
       .filter(dir => dir.isDirectory())
       .map(dir => dir.name);
     const filteredRepos = filter ? repos.filter(repo => repo.includes(filter)) : repos;
     return limit ? filteredRepos.slice(0, limit) : repos;
-  } else {
-    return [];
   }
+  return [];
 };
 
 const forkRepo = async ({ username, owner, repoName }) => {
