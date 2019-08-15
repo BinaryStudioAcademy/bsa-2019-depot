@@ -20,11 +20,13 @@ export class RepositoryItem extends React.Component {
       { name: 'commit8', uv: 3490, commitDate: 0, amt: 2100 }
     ];
 
+    const pathToRepo = `${this.props.owner}/${this.props.repo}`;
+
     return (
       <div className={styles.repo_item}>
         <div className={styles.repo_item_left}>
           <div>
-            <Link to="" className={styles.repo_name}>
+            <Link to={pathToRepo} className={styles.repo_name}>
               {this.props.repo}
             </Link>
           </div>
@@ -56,5 +58,6 @@ RepositoryItem.defaultProps = {
 };
 
 RepositoryItem.propTypes = {
-  repo: PropTypes.string
+  repo: PropTypes.string,
+  owner: PropTypes.string.isRequired
 };

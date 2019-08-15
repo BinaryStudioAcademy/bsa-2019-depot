@@ -12,7 +12,7 @@ import styles from './styles.module.scss';
 
 export class RepositoriesList extends React.Component {
   render() {
-    const { repositories } = this.props;
+    const { repositories, username } = this.props;
     //Mock
 
     const repoTypes = [
@@ -59,7 +59,7 @@ export class RepositoriesList extends React.Component {
           </div>
         </Container>
         {repositories.map(repo => {
-          return <RepositoryItem repo={repo} key={repo} />;
+          return <RepositoryItem repo={repo} key={repo} owner={username} />;
         })}
       </Container>
     );
@@ -73,11 +73,18 @@ RepositoriesList.defaultProps = {
 
 RepositoriesList.propTypes = {
   actions: PropTypes.object.isRequired,
-  repositories: PropTypes.array.isRequired
+  repositories: PropTypes.array.isRequired,
+  username: PropTypes.string.isRequired
 };
 
-const mapStateToProps = ({ userStats: { repositoriesNames } }) => ({
-  repositoriesNames
+const mapStateToProps = ({
+  userStats: { repositoriesNames },
+  profile: {
+    currentUser: { username }
+  }
+}) => ({
+  repositoriesNames,
+  username
 });
 
 const mapDispatchToProps = dispatch => {
