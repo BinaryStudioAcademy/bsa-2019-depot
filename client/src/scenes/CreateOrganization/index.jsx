@@ -1,17 +1,39 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { Grid, Header, Divider, Step, Icon, Button, Input } from 'semantic-ui-react';
 import { Formik, Form, Field } from 'formik';
 import { Link } from 'react-router-dom';
 import styles from './styles.module.scss';
+import { createOrg } from '../../routines/routines';
+import * as Yup from 'yup';
+import PropTypes from 'prop-types';
 
 class CreateOrganization extends Component {
   renderField = ({ field }) => <Input fluid {...field} />;
 
+  newOrgSchema = Yup.object().shape({
+    username: Yup.string()
+      .min(2, 'Too Short!')
+      .max(50, 'Too Long!')
+      .required('Required'),
+    email: Yup.string()
+      .email('Invalid email')
+      .required('Required')
+  });
+
+  onSubmit = (values, { setSubmitting }) => {
+    this.props.createOrg(values);
+  };
+
   render() {
     const initialValues = { username: '', email: '' };
     const loading = false;
+    const { company } = this.props;
 
-    return (
+    return company ? (
+      <Redirect to={`/${this.props.company}`} />
+    ) : (
       <Grid container centered>
         <Grid.Column computer={12} tablet={16} mobile={16}>
           <Divider hidden />
@@ -27,8 +49,8 @@ class CreateOrganization extends Component {
           </Step.Group>
           <Divider hidden />
 
-          <Formik initialValues={initialValues} onSubmit={this.onSubmit}>
-            {({ isSubmitting }) => (
+          <Formik initialValues={initialValues} onSubmit={this.onSubmit} validationSchema={this.newOrgSchema}>
+            {({ isSubmitting, errors, touched }) => (
               <Form className="ui form">
                 <Header as="h3">
                   Set up the organization
@@ -44,7 +66,11 @@ class CreateOrganization extends Component {
                 <Grid>
                   <Grid.Column computer={8} tablet={12} mobile={16}>
                     <Field type="text" name="username" render={this.renderField} />
-                    <div className={styles.note}>This will be your organization name on https://depothub.xyz/.</div>
+                    {errors.username && touched.username ? (
+                      <div className={styles.error}>{errors.username}</div>
+                    ) : (
+                      <div className={styles.note}>This will be your organization name on https://depothub.xyz/.</div>
+                    )}
                   </Grid.Column>
                 </Grid>
                 <Header as="h4" className={styles.field_title}>
@@ -54,7 +80,11 @@ class CreateOrganization extends Component {
                 <Grid>
                   <Grid.Column computer={8} tablet={12} mobile={16}>
                     <Field type="email" name="email" render={this.renderDisabledField} />
-                    <div className={styles.note}>We’ll send receipts to this inbox.</div>
+                    {errors.email && touched.email ? (
+                      <div className={styles.error}>{errors.email}</div>
+                    ) : (
+                      <div className={styles.note}>We’ll send receipts to this inbox.</div>
+                    )}
                   </Grid.Column>
                 </Grid>
 
@@ -77,4 +107,19 @@ class CreateOrganization extends Component {
     );
   }
 }
-export default CreateOrganization;
+
+CreateOrganization.propTypes = {
+  createOrg: PropTypes.func,
+  success: PropTypes.bool,
+  username: PropTypes.string,
+  company: PropTypes.string
+};
+
+const mapStateToProps = state => ({ ...state.createOrg });
+
+const mapDispatchToProps = { createOrg };
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CreateOrganization);

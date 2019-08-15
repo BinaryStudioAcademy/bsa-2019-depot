@@ -1,6 +1,11 @@
 :local(.note) {
-  font-size: 0.85rem;
+  font-size: 85%;
   color: rgba(0, 0, 0, 0.7);
+}
+
+:local(.error) {
+  font-size: 85%;
+  color: rgba(255, 0, 0, 0.7);
 }
 
 :local(.field_title) {
