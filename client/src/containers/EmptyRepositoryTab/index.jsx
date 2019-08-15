@@ -5,7 +5,7 @@ import styles from './styles.module.scss';
 import { Link } from 'react-router-dom';
 import CopyableTerminal from '../../components/CopyableTerminal';
 
-function EmptyRepositoryPage({ url }) {
+function EmptyRepositoryTab({ url }) {
   const [protocol, setProtocol] = useState('HTTPS');
 
   const createRepoStr = [
@@ -84,7 +84,7 @@ function EmptyRepositoryPage({ url }) {
   );
 }
 
-EmptyRepositoryPage.propTypes = {
+EmptyRepositoryTab.propTypes = {
   url: PropTypes.string.isRequired
 };
-export default EmptyRepositoryPage;
+export default EmptyRepositoryTab;
