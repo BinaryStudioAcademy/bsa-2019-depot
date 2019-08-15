@@ -171,12 +171,12 @@ const MainPage = ({ currentUser: { username }, isAuthorized }) => {
                 <p>Connect with Depot</p>
                 <ul>
                   <li>
-                    <a className={styles.fb} href="https://www.facebook.com/">
+                    <a className={styles.fb} href="/">
                       fb
                     </a>
                   </li>
                   <li>
-                    <a className={styles.tw} href="https://twitter.com/">
+                    <a className={styles.tw} href="/">
                       tw
                     </a>
                   </li>
