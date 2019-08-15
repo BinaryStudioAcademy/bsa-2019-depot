@@ -55,7 +55,7 @@ class Dashboard extends React.Component {
       following
     } = this.props;
     const repoCount = repositoriesNames.length;
-    let activePage = pathname.split('/')[2];
+    let activePage = pathname.split('/')[3];
     // For future tabs
     switch (activePage) {
     case 'repositories':

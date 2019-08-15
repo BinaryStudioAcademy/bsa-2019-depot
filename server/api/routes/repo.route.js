@@ -16,7 +16,8 @@ const router = Router();
 
 router
   .post('/', (req, res) => {
-    createRepo({ ...req.body }).then(data => res.send(data));
+    const { repository, ownerID } = req.body;
+    createRepo({ userId: ownerID, name: repository, ...req.body }).then(data => res.send(data));
   })
   .get('/:owner/:repository/check-name', (req, res, next) => {
     const { owner, repository } = req.params;
