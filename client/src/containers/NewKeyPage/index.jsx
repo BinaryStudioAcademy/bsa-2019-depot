@@ -44,14 +44,13 @@ const NewKeyPage = () => {
         </Breadcrumb>
       </Header>
       <Formik initialValues={{ title: '', key: '' }} validationSchema={validationSchema} onSubmit={handleSubmit}>
-        {({ values: { title, key }, touched, errors, handleChange, handleBlur, handleSubmit }) => (
+        {({ values: { title, key }, errors, handleChange, handleBlur, handleSubmit }) => (
           <Form onSubmit={handleSubmit}>
             <Form.Input
               label="Title"
               name="title"
               value={title}
               width="5"
-              error={errors.title && touched.title && { content: errors.title }}
               onBlur={handleBlur}
               onChange={handleChange}
               disabled={loading}
@@ -62,7 +61,6 @@ const NewKeyPage = () => {
               name="key"
               rows="8"
               placeholder="Begins with 'ssh-rsa', 'ssh-dss', 'ssh-ed25519', 'ecdsa-sha2-nistp256', 'ecdsa-sha2-nistp384', or 'ecdsa-sha2-nistp521'"
-              error={errors.key && touched.key && { content: errors.key }}
               content={key}
               onBlur={handleBlur}
               onChange={handleChange}
