@@ -7,3 +7,11 @@ export const getCommits = async (owner, repoName, branch) => {
   });
   return response.json();
 };
+
+export const getAllUserCommits = async owner => {
+  const response = await callWebApi({
+    endpoint: `/api/commit/${owner}/commits`,
+    type: 'GET'
+  });
+  return response.json();
+};

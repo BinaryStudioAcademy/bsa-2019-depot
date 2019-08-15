@@ -84,8 +84,8 @@ RepositoriesList.propTypes = {
   repositoriesNames: PropTypes.array.isRequired
 };
 
-const mapStateToProps = ({ repositories }) => ({
-  repositoriesNames: repositories.repositoriesNames
+const mapStateToProps = ({ userStats: { repositoriesNames } }) => ({
+  repositoriesNames
 });
 
 const mapDispatchToProps = dispatch => {
