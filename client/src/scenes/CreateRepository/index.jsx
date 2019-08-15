@@ -36,6 +36,7 @@ const licenseOptions = [
 
 const initialValues = {
   owner: '',
+  ownerID: '',
   repository: '',
   description: '',
   privacy: 'public',
@@ -199,7 +200,8 @@ class CreateRepository extends React.Component {
       <Formik
         initialValues={{
           ...initialValues,
-          owner: this.props.username
+          owner: this.props.username,
+          ownerID: this.props.id
         }}
         validate={this.validate}
         onSubmit={this.onSubmit}
@@ -211,13 +213,14 @@ class CreateRepository extends React.Component {
 
 CreateRepository.propTypes = {
   username: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
   history: PropTypes.any
 };
 
 const mapStateToProps = ({
   profile: {
-    currentUser: { username }
+    currentUser: { username, id }
   }
-}) => ({ username });
+}) => ({ username, id });
 
 export default connect(mapStateToProps)(CreateRepository);

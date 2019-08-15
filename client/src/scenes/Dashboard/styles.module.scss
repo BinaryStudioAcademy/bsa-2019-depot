@@ -9,7 +9,7 @@ $secondary-color: #d1d5da;
 :local(.wrapper) {
   margin: 0 auto;
   max-width: 1200px;
-  padding: 0 16px;
+  padding: 1em;
 }
 
 :global(.ui.grid > .row > .column):local(.userinfo_wrapper) {

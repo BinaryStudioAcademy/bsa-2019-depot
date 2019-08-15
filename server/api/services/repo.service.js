@@ -3,14 +3,19 @@ const fs = require('fs-extra');
 const fse = require('fs-extra');
 const path = require('path');
 
+const repoRepository = require('../../data/repositories/repository.repository');
+
 const gitPath = process.env.GIT_PATH;
 
-const createRepo = async ({ owner, repository }) => {
+const createRepo = async ({
+  owner, repository, name, userId
+}) => {
   let result = 'Repo was created';
   const pathToRepo = path.resolve(`${gitPath}/${owner}/${repository}`).replace(/\\/g, '/');
   await NodeGit.Repository.init(pathToRepo, 1)
     .then(() => {
       result = {
+        msg: 'Repo created',
         url: pathToRepo
       };
     })
@@ -18,6 +23,11 @@ const createRepo = async ({ owner, repository }) => {
       result = 'Error! Repos wasn`t created';
     });
 
+  repoRepository.create({
+    userId,
+    repository,
+    name
+  });
   return result;
 };
 
