@@ -9,7 +9,7 @@ import './styles.module.scss';
 class DiffCommitView extends Component {
   componentDidMount() {
     this.props.fetchDiffs({
-      owner: this.props.username,
+      owner: this.props.match.params.username,
       repoName: this.props.match.params.reponame,
       hash: this.props.match.params.hash
     });
