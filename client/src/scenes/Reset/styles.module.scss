@@ -1,6 +1,6 @@
 :global(.ui.grid.reset-grid) {
-  height: 100vh;
-  margin-top: -50px;
+  height: 100%;
+  margin: 0;
 }
 :global(.column.grid-column) {
   max-width: 400px;

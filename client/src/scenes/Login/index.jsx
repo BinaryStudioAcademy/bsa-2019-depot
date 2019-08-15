@@ -83,58 +83,60 @@ class Login extends Component {
   renderComponent({ errors, touched, handleChange, handleBlur, handleSubmit, values }) {
     return (
       <Grid textAlign="center" verticalAlign="middle" className="login-grid">
-        <Grid.Column className="grid-column">
-          <Header as="h2" color="black" textAlign="center" className="login-header">
-            Sign in to Depot
-          </Header>
-          <Form name="loginForm" size="large" onSubmit={handleSubmit}>
-            <Segment>
-              <Form.Input
-                fluid
-                name="email"
-                label="Email"
-                placeholder="Email"
-                type="email"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.email}
-                className={`${errors.email && touched.email ? 'has-error' : 'no-error'}`}
-              />
-              <Form.Field className="password-wrapper">
-                <NavLink exact to="/forgot" className="forgot-link">
-                  forgot password?
-                </NavLink>
+        <Grid.Row>
+          <Grid.Column className="grid-column">
+            <Header as="h2" color="black" textAlign="center" className="login-header">
+              Sign in to Depot
+            </Header>
+            <Form name="loginForm" size="large" onSubmit={handleSubmit}>
+              <Segment>
                 <Form.Input
                   fluid
-                  name="password"
-                  label="Password"
-                  placeholder="Password"
-                  type="password"
+                  name="email"
+                  label="Email"
+                  placeholder="Email"
+                  type="email"
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  value={values.password}
-                  className={`${errors.password && touched.password ? 'has-error' : 'no-error'}`}
+                  value={values.email}
+                  className={`${errors.email && touched.email ? 'has-error' : 'no-error'}`}
                 />
-              </Form.Field>
-              <Button
-                type="submit"
-                color="green"
-                fluid
-                size="large"
-                disabled={(errors.password && touched.password) || (errors.email && touched.email)}
-              >
-                Sign In
-              </Button>
-              <Grid.Row className="google-button">{this.renderGoogleAuth()}</Grid.Row>
-            </Segment>
-          </Form>
-          <Message>
-            New to Depot?{' '}
-            <NavLink exact to="/registration">
-              Create an account
-            </NavLink>
-          </Message>
-        </Grid.Column>
+                <Form.Field className="password-wrapper">
+                  <NavLink exact to="/forgot" className="forgot-link">
+                    forgot password?
+                  </NavLink>
+                  <Form.Input
+                    fluid
+                    name="password"
+                    label="Password"
+                    placeholder="Password"
+                    type="password"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.password}
+                    className={`${errors.password && touched.password ? 'has-error' : 'no-error'}`}
+                  />
+                </Form.Field>
+                <Button
+                  type="submit"
+                  color="green"
+                  fluid
+                  size="large"
+                  disabled={(errors.password && touched.password) || (errors.email && touched.email)}
+                >
+                  Sign In
+                </Button>
+                <Grid.Row className="google-button">{this.renderGoogleAuth()}</Grid.Row>
+              </Segment>
+            </Form>
+            <Message>
+              New to Depot?{' '}
+              <NavLink exact to="/registration">
+                Create an account
+              </NavLink>
+            </Message>
+          </Grid.Column>
+        </Grid.Row>
       </Grid>
     );
   }

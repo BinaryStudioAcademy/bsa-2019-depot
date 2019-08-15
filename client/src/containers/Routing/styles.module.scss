@@ -4,13 +4,16 @@
   min-height: 100%;
   display: grid;
   grid-template-rows: 1fr auto;
-  > .content {
+  > :global(.content) {
     height: 100%;
     grid-row-start: 1;
+    display: flex;
+    flex-direction: column;
   }
   > :global(.ui.container) {
     grid-row-start: 2;
     grid-row-end: 3;
+
     > :global(.ui.centered.grid) {
       margin: 0;
     }
