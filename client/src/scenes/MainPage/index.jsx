@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Grid, Image, Form, Select } from 'semantic-ui-react';
+import { Button, Grid, Image, Form } from 'semantic-ui-react';
 
 import styles from './styles.module.scss';
 
