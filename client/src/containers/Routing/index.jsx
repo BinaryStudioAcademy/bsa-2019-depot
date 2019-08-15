@@ -45,7 +45,7 @@ class Routing extends React.Component {
             <Route exact path="/reset/:hash" component={Reset} />
             <PrivateRoute path="/settings" component={Settings} />
             <PrivateRoute exact path="/new" component={CreateRepository} />
-            <PrivateRoute exact path="/:username" component={Dashboard} />
+            <PrivateRoute path="/:username/dashboard" component={Dashboard} />
             <PrivateRoute path="/:username/:reponame" component={RepositoryPage} />
             <Route exact path="*" component={NotFound} />
           </Switch>
