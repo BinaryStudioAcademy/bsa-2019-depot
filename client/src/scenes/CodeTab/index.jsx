@@ -7,19 +7,7 @@ import RepoReadme from '../../components/RepoReadme/index';
 import { fetchLastCommitOnBranch, fetchBranches, fetchFileTree } from '../../routines/routines';
 
 import Octicon, { getIconByName } from '@primer/octicons-react';
-import {
-  Container,
-  Button,
-  Header,
-  Dropdown,
-  Input,
-  Popup,
-  Segment,
-  Menu,
-  Dimmer,
-  Loader,
-  Divider
-} from 'semantic-ui-react';
+import { Container, Button, Header, Dropdown, Input, Popup, Segment, Menu, Loader, Divider } from 'semantic-ui-react';
 import styles from './styles.module.scss';
 
 class CodeTab extends React.Component {
@@ -85,7 +73,11 @@ class CodeTab extends React.Component {
     const { branch } = this.state;
     const { username, reponame, lastCommitData, branchesData, fileTreeData, history, fetchFileTree } = this.props;
 
-    return (
+    return this.props.lastCommitData.loading || this.props.fileTreeData.loading ? (
+      <div>
+        <Loader active />
+      </div>
+    ) : (
       <Container>
         <Divider hidden />
         <div className={styles.repoDescription}>
@@ -140,14 +132,12 @@ class CodeTab extends React.Component {
               floating
               width="seven"
               className={[styles.actionButton, styles.repoBranchesButton]}
-              position="top left"
+              position="bottom left"
               onClick={this.onDropdownClick}
             >
               <Dropdown.Menu className={styles.searchBranchList}>
                 {branchesData.loading ? (
-                  <Dimmer active>
-                    <Loader inverted />
-                  </Dimmer>
+                  <Loader active />
                 ) : (
                   <React.Fragment>
                     <Dropdown.SearchInput
