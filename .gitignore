@@ -85,3 +85,6 @@ package-lock.json
 yarn.lock
 
 .idea/
+
+#repositories
+./repositories
