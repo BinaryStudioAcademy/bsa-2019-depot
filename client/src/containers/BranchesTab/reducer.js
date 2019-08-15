@@ -1,29 +1,29 @@
-import { fetchIssues } from '../../routines/routines';
+import { fetchBranches } from '../../routines/routines';
 
 const initialState = {
-  issues: [],
+  branches: [],
   loading: false,
   error: null
 };
 
-export default (state = initialState, action) => {
+export const branchesData = (state = initialState, action) => {
   switch (action.type) {
-  case fetchIssues.TRIGGER:
+  case fetchBranches.TRIGGER:
     return {
       ...state,
       loading: true
     };
-  case fetchIssues.SUCCESS:
+  case fetchBranches.SUCCESS:
     return {
       ...state,
-      issues: action.payload
+      branches: action.payload
     };
-  case fetchIssues.FAILURE:
+  case fetchBranches.FAILURE:
     return {
       ...state,
       error: action.payload
     };
-  case fetchIssues.FULFILL:
+  case fetchBranches.FULFILL:
     return {
       ...state,
       loading: false

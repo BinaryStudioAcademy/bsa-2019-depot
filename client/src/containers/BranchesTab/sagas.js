@@ -1,25 +1,23 @@
 import { takeEvery, put, call, all } from 'redux-saga/effects';
-import * as issuesService from '../../services/issuesService';
-import { fetchIssues } from '../../routines/routines';
+import * as branchesService from '../../services/branchesService';
+import { fetchBranches } from '../../routines/routines';
 
-function* issuesRequest({ payload: { filter } }) {
+function* branchesRequest({ payload: { owner, repoName, filter } }) {
   try {
-    yield put(fetchIssues.request());
-
-    const response = yield call(issuesService.getIssues, filter);
-
-    yield put(fetchIssues.success(response));
+    yield put(fetchBranches.request());
+    const response = yield call(branchesService.getBranches, owner, repoName, filter);
+    yield put(fetchBranches.success(response));
   } catch (error) {
-    yield put(fetchIssues.failure(error.message));
+    yield put(fetchBranches.failure(error.message));
   } finally {
-    yield put(fetchIssues.fulfill());
+    yield put(fetchBranches.fulfill());
   }
 }
 
-function* watchIssuesRequest() {
-  yield takeEvery(fetchIssues.TRIGGER, issuesRequest);
+function* watchBranchesRequest() {
+  yield takeEvery(fetchBranches.TRIGGER, branchesRequest);
 }
 
-export default function* issuesSagas() {
-  yield all([watchIssuesRequest()]);
+export default function* branchesSagas() {
+  yield all([watchBranchesRequest()]);
 }

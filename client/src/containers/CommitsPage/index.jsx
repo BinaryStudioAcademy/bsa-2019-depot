@@ -22,7 +22,8 @@ class CommitsPage extends React.Component {
     this.props.fetchBranches({
       // Mock
       owner: this.props.username,
-      repoName: this.props.match.params.reponame
+      repoName: this.props.match.params.reponame,
+      filter: {}
     });
     this.props.fetchCommits({
       // Mock
@@ -41,7 +42,7 @@ class CommitsPage extends React.Component {
         this.props.fetchCommits({
           // Mock
           owner: this.props.username,
-          repoName: 'new-repo',
+          repoName: this.props.match.params.reponame,
           branch: this.state.branch
         });
       }
