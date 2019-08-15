@@ -27,11 +27,6 @@ const checkEmailExists = async ({ email }) => {
   };
 };
 
-module.exports = {
-  sendForgetPasswordEmail,
-  sendEmail
-};
-
 const { sendToQueue } = require('./queue.service.js');
 
 async function sendForgetPasswordEmail({ email, url }) {
@@ -43,5 +38,13 @@ async function sendForgetPasswordEmail({ email, url }) {
   const token = jwt.sign({ data: user.dataValues.email }, secret, { expiresIn: '1h' });
   const message = createTokenEmail(email, token, url);
   await sendToQueue(emailQueue, message);
-  return { success: `Email with password reset link was sent to ${user.email}` };
+  return {
+    success:
+      'Check your email for a link to reset your password. If it doesn`t appear within a few minutes, check your spam folder.'
+  };
 }
+
+module.exports = {
+  sendForgetPasswordEmail,
+  sendEmail
+};

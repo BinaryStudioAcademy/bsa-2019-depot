@@ -2,12 +2,10 @@ const { Router } = require('express');
 
 const { sendForgetPasswordEmail } = require('../services/email.service');
 const {
-  setUsername,
-  checkUsernameExists,
-  resetPassword,
-  updateUserSettings
+  setUsername, checkUsernameExists, resetPassword, updateUserSettings
 } = require('../services/user.service');
 const { getKeysByUser, createKey, deleteKey } = require('../services/sshKey.service');
+const { getReqUrl } = require('../../helpers/req.helper');
 
 const router = Router();
 
@@ -26,11 +24,8 @@ router.get('/username-exists', (req, res, next) => {
 });
 
 router.post('/forget-password', (req, res, next) => {
-  const {
-    protocol, hostname, headers, body
-  } = req;
-  const url = `${protocol}://${hostname}:${headers['x-forwarded-port']}`;
-  sendForgetPasswordEmail({ ...body, url })
+  const { body } = req;
+  sendForgetPasswordEmail({ ...body, url: getReqUrl(req) })
     .then(data => res.send(data))
     .catch(next);
 });

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
@@ -15,16 +16,54 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeIndex: -1
+      activeIndex: -1,
+      repoCount: 0
     };
+
+    this.overviewRouteRender = this.overviewRouteRender.bind(this);
+    this.repositoriesListRender = this.repositoriesListRender.bind(this);
   }
 
-  render() {
-    let params = new URLSearchParams(this.props.location.search);
-    let tab = params.get('tab');
-    const { username, imgUrl, repositoriesNames, projects, stars, followers, following } = this.props;
-    const repoCount = repositoriesNames.length;
+  componentDidMount() {
+    const { actions } = this.props;
+    actions.fetchRepositories({
+      limit: '',
+      filterWord: ''
+    });
+  }
 
+  overviewRouteRender = props => {
+    const { repositoriesNames } = this.props;
+    return <Overview {...props} repositories={repositoriesNames} />;
+  };
+
+  repositoriesListRender = props => {
+    const { repositoriesNames } = this.props;
+    return <RepositoriesList {...props} repositories={repositoriesNames} />;
+  };
+
+  render() {
+    const {
+      match: { path, url },
+      location: { pathname },
+      username,
+      imgUrl,
+      repositoriesNames,
+      projects,
+      stars,
+      followers,
+      following
+    } = this.props;
+    const repoCount = repositoriesNames.length;
+    let activePage = pathname.split('/')[2];
+    // For future tabs
+    switch (activePage) {
+    case 'repositories':
+      activePage = 'repositories';
+      break;
+    default:
+      activePage = '';
+    }
     return (
       <Container className={styles.wrapper}>
         <Grid>
@@ -49,13 +88,10 @@ class Dashboard extends React.Component {
             <Grid.Column mobile={16} tablet={12} computer={12}>
               <Container className={styles.navbar_wrapper}>
                 <nav className={styles.navbar}>
-                  <Link to="/dashboard" className={!tab ? styles.active_link : undefined}>
+                  <Link to={url} className={activePage === '' && styles.active_link}>
                     Overview
                   </Link>
-                  <Link
-                    to={{ pathname: '/dashboard', search: '?tab=repositories' }}
-                    className={tab === 'repositories' ? styles.active_link : undefined}
-                  >
+                  <Link to={`${url}/repositories`} className={activePage === 'repositories' && styles.active_link}>
                     Repositories{repoCount ? <span>{repoCount}</span> : null}
                   </Link>
                   <Link to="">Projects{projects ? <span>{projects}</span> : null}</Link>
@@ -64,14 +100,10 @@ class Dashboard extends React.Component {
                   <Link to="">Following{following ? <span>{following}</span> : null}</Link>
                 </nav>
               </Container>
-              {(function() {
-                switch (tab) {
-                case 'repositories':
-                  return <RepositoriesList />;
-                default:
-                  return <Overview username={username} repositoriesNames={repositoriesNames} />;
-                }
-              })()}
+              <Switch>
+                <Route exact path={path} render={this.overviewRouteRender} />
+                <Route exact path={`${path}/repositories`} render={this.repositoriesListRender} />
+              </Switch>
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -98,6 +130,12 @@ Dashboard.propTypes = {
   stars: PropTypes.number.isRequired,
   followers: PropTypes.number.isRequired,
   following: PropTypes.number.isRequired,
+  match: PropTypes.exact({
+    params: PropTypes.object.isRequired,
+    isExact: PropTypes.bool.isRequired,
+    path: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired
+  }).isRequired,
   location: PropTypes.shape({
     pathname: PropTypes.string.isRequired,
     search: PropTypes.string.isRequired
