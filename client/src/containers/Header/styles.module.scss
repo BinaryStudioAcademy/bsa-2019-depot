@@ -106,7 +106,7 @@ $black-color: #24292e;
     display: none !important;
   }
 }
-:local(.ui.wide.right.sidebar) {
+:global(.ui.visible.right.overlay.sidebar) {
   max-width: 320px;
   width: 100%;
 }
