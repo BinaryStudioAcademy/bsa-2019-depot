@@ -9,5 +9,5 @@ module.exports = (app) => {
   app.use('/api/user', userRoutes);
   app.use('/api/commit', commitRoutes);
   app.use('/api/repo', repoRoutes);
-  app.use('/api/organization', organizationRoutes);
+  app.use('/api/organizations', organizationRoutes);
 };

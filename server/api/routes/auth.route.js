@@ -21,7 +21,7 @@ router.get('/google/callback', googleCallbackMiddleware, (req, res, next) => {
   googleLogin(req.user)
     .then((data) => {
       const stringData = JSON.stringify(data);
-      res.redirect(`${getReqUrl(req)}/login/?user=${stringData}`);
+      res.redirect(`http://localhost:3001/login/?user=${stringData}`);
     })
     .catch(next);
 });
