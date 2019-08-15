@@ -35,6 +35,10 @@
   align-items: center;
 
   :local(.repoName) {
+    :global(.octicon) {
+      margin-right: 0;
+    }
+
     :local(.repoPath) {
       margin-left: 10px;
       font-size: 125%;
