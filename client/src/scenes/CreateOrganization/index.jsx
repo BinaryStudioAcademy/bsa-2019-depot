@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import styles from './styles.module.scss';
 import { createOrg } from '../../routines/routines';
 import * as Yup from 'yup';
+
 import PropTypes from 'prop-types';
 
 class CreateOrganization extends Component {
@@ -28,8 +29,7 @@ class CreateOrganization extends Component {
 
   render() {
     const initialValues = { username: '', email: '' };
-    const loading = false;
-    const { company } = this.props;
+    const { company, loading, error: serverError } = this.props;
 
     return company ? (
       <Redirect to={`/${this.props.company}`} />
@@ -68,6 +68,8 @@ class CreateOrganization extends Component {
                     <Field type="text" name="username" render={this.renderField} />
                     {errors.username && touched.username ? (
                       <div className={styles.error}>{errors.username}</div>
+                    ) : serverError ? (
+                      <div className={styles.error}>{serverError}</div>
                     ) : (
                       <div className={styles.note}>This will be your organization name on https://depothub.xyz/.</div>
                     )}
@@ -110,9 +112,10 @@ class CreateOrganization extends Component {
 
 CreateOrganization.propTypes = {
   createOrg: PropTypes.func,
-  success: PropTypes.bool,
+  loading: PropTypes.bool,
   username: PropTypes.string,
-  company: PropTypes.string
+  company: PropTypes.string,
+  error: PropTypes.string
 };
 
 const mapStateToProps = state => ({ ...state.createOrg });

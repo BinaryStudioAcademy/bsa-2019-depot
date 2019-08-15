@@ -1,22 +1,17 @@
 import { takeEvery, put, all, call } from 'redux-saga/effects';
 import { createOrg } from '../../routines/routines';
-
-const mock = payload => {
-  alert(JSON.stringify(payload, null, 2));
-  return { status: true, username: 'facebook' };
-};
+import * as orgService from '../../services/orgService';
 
 function* createOrganization({ payload }) {
   try {
     yield put(createOrg.request());
 
-    // const response = yield call(userService.updateSettings, payload);
-    const response = yield call(mock, payload);
-    const { username: company } = response;
+    const response = yield call(orgService.create, payload);
+
     if (response.status) {
-      yield put(createOrg.success(company));
+      yield put(createOrg.success(response.profile.username));
     } else {
-      yield put(createOrg.failure(response.error.message));
+      yield put(createOrg.failure(response.error));
     }
   } catch (error) {
     yield put(createOrg.failure(error.message));
