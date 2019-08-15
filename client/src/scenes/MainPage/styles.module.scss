@@ -232,7 +232,8 @@ $gray-color: #f4f5f7;
       }
 
       &.featured {
-        background: url('https://bitbucket.org/dam/jcr:743645da-cea8-4466-879b-0c0f99aee501/check-mark-adg3-blue.svg') no-repeat;
+        background: url('https://bitbucket.org/dam/jcr:743645da-cea8-4466-879b-0c0f99aee501/check-mark-adg3-blue.svg')
+          no-repeat;
         background-size: 24px 24px;
       }
 
@@ -397,7 +398,8 @@ $gray-color: #f4f5f7;
   }
 
   .fb {
-    background: url(https://wac-cdn.atlassian.com/assets/img/icons/social-icons/facebook-badge.svg) center center no-repeat;
+    background: url(https://wac-cdn.atlassian.com/assets/img/icons/social-icons/facebook-badge.svg) center center
+      no-repeat;
   }
 
   .tw {

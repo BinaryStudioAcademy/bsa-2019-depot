@@ -32,18 +32,22 @@ class Dashboard extends React.Component {
     });
   }
 
-  overviewRouteRender = (props) => {
+  overviewRouteRender = props => {
     const { repositoriesNames } = this.props;
-    return <Overview  {...props} repositories={repositoriesNames} />;
-  } 
+    return <Overview {...props} repositories={repositoriesNames} />;
+  };
 
-  repositoriesListRender = (props) => {
+  repositoriesListRender = props => {
     const { repositoriesNames } = this.props;
     return <RepositoriesList {...props} repositories={repositoriesNames} />;
-  } 
+  };
 
   render() {
-    const { repositoriesNames, match: { path, url }, location: { pathname } } = this.props;
+    const {
+      repositoriesNames,
+      match: { path, url },
+      location: { pathname }
+    } = this.props;
     let activePage = pathname.split('/')[2];
     // For future tabs
     switch (activePage) {
@@ -78,10 +82,7 @@ class Dashboard extends React.Component {
                   <Link to={url} className={activePage === '' && styles.active_link}>
                     Overview
                   </Link>
-                  <Link
-                    to={`${url}/repositories`}
-                    className={activePage === 'repositories' && styles.active_link}
-                  >
+                  <Link to={`${url}/repositories`} className={activePage === 'repositories' && styles.active_link}>
                     Repositories<span>{repositoriesNames.length}</span>
                   </Link>
                   <Link to="">
