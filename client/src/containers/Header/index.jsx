@@ -268,7 +268,7 @@ HeaderDesktopAuth.propTypes = {
   closeSidebar: PropTypes.func.isRequired,
   sidebarOpened: PropTypes.bool.isRequired,
   options: PropTypes.exact({
-    username: PropTypes.string.isRequired,
+    username: PropTypes.string,
     avatar: PropTypes.string
   })
 };
