@@ -193,7 +193,7 @@ class Login extends Component {
   render() {
     const { currentUser, isAuthorized } = this.props;
     if (isAuthorized && currentUser.username) {
-      return <Redirect to={`/${currentUser.username}/dashboard`} />;
+      return <Redirect to={`/${currentUser.username}`} />;
     }
     if (isAuthorized && !currentUser.username) {
       return (
