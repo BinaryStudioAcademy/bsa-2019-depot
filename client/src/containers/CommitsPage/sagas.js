@@ -2,7 +2,7 @@ import { takeEvery, put, call, all } from 'redux-saga/effects';
 import * as commitsService from '../../services/commitsService';
 import { fetchCommits } from '../../routines/routines';
 
-function* commitsRequest({ payload: { owner, repoName, branch } }) {
+function* commitsRequest({ payload: { username: owner, reponame: repoName, branch } }) {
   try {
     yield put(fetchCommits.request());
     const response = yield call(commitsService.getCommits, owner, repoName, branch);
