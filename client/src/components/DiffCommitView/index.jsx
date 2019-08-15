@@ -65,19 +65,11 @@ DiffCommitView.propTypes = {
     diffs: PropTypes.string
   }).isRequired,
   fetchDiffs: PropTypes.func.isRequired,
-  location: PropTypes.object,
-  username: PropTypes.string,
   match: PropTypes.object
 };
 
-const mapStateToProps = ({
-  diffsData,
-  profile: {
-    currentUser: { username }
-  }
-}) => ({
-  diffsData,
-  username
+const mapStateToProps = ({ diffsData }) => ({
+  diffsData
 });
 
 const mapDispatchToProps = {
