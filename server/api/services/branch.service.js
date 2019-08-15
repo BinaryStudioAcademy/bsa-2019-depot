@@ -1,10 +1,9 @@
 const NodeGit = require('nodegit');
-const path = require('path');
-
-const gitPath = process.env.GIT_PATH;
+const repoHelper = require('../../helpers/repo.helper');
 
 const getBranches = async ({ user, repoName }) => {
-  const pathToRepo = path.resolve(`${gitPath}/${user}/${repoName}`);
+  // const pathToRepo = path.resolve(`${gitPath}/${user}/${repoName}`);
+  const pathToRepo = repoHelper.getPathToRepo(user, repoName);
   const repo = await NodeGit.Repository.open(pathToRepo.replace(/\\/g, '/'));
   const refNames = await repo.getReferenceNames(NodeGit.Reference.TYPE.LISTALL);
 
@@ -15,7 +14,8 @@ const getBranches = async ({ user, repoName }) => {
 const getLastModifiedCommit = async ({
   user, name, branch, entry
 }) => {
-  const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`);
+  // const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`);
+  const pathToRepo = repoHelper.getPathToRepo(user, name);
   const repo = await NodeGit.Repository.open(pathToRepo.replace(/\\/g, '/'));
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
   const walker = repo.createRevWalk();
@@ -64,7 +64,8 @@ const traverseFileTree = async (user, name, branch, tree) => {
 const getBranchTree = async ({
   user, name, branch, pathToDir
 }) => {
-  const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`);
+  // const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`);
+  const pathToRepo = repoHelper.getPathToRepo(user, name);
   const repo = await NodeGit.Repository.open(pathToRepo.replace(/\\/g, '/'));
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
   const tree = await lastCommitOnBranch.getTree();
@@ -91,7 +92,8 @@ const getBranchTree = async ({
 };
 
 const getLastCommitOnBranch = async ({ user, name, branch }) => {
-  const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`);
+  // const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`);
+  const pathToRepo = repoHelper.getPathToRepo(user, name);
   const repo = await NodeGit.Repository.open(pathToRepo.replace(/\\/g, '/'));
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
 
