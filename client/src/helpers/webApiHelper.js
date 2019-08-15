@@ -1,4 +1,5 @@
 import * as queryString from 'query-string';
+import { toast } from 'react-toastify';
 
 function getFetchUrl(args) {
   return args.endpoint + (args.query ? `?${queryString.stringify(args.query)}` : '');
@@ -40,7 +41,8 @@ export async function throwIfResponseFailed(res) {
   if (!res.ok) {
     let parsedException = 'Something went wrong with request!';
     try {
-      parsedException = await res.json();
+      let response = await res.json();
+      parsedException = response.message;
     } catch (err) {
       //
     }
@@ -54,6 +56,7 @@ export default async function callWebApi(args) {
     await throwIfResponseFailed(res);
     return res;
   } catch (err) {
+    toast.error(err);
     throw err;
   }
 }
