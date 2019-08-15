@@ -1,6 +1,10 @@
-:global(.octicon) {
-  color: rgba(3, 47, 98, 0.55);
-  margin-right: 5px;
+.actionButton,
+:global(.ui.selectable.single.line.unstackable.bottom.attached.table),
+:global(.ui.borderless.top.attached.four.item.menu) {
+  :global(.octicon) {
+    color: rgba(3, 47, 98, 0.55);
+    margin-right: 5px;
+  }
 }
 
 :global(.ui.button):local(.actionButton) {
