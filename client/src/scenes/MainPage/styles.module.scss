@@ -394,8 +394,12 @@ $gray-color: #f4f5f7;
 
   .foterLine {
     border-top: 2px solid #dfe1e5;
-    padding-top: 25px;
-    justify-content: space-between;
+    padding-top: 1.5em !important;
+    padding-bottom: 2em !important;
+
+    a {
+      font-size: inherit !important;
+    }
 
     ul {
       display: flex;
