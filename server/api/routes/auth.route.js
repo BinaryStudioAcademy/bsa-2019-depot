@@ -5,7 +5,6 @@ const { googleMiddleware, googleCallbackMiddleware } = require('../middlewares/g
 const registrationMiddleware = require('../middlewares/registration.middleware');
 const { login, register, googleLogin } = require('../services/auth.service');
 const { getUserById } = require('../services/user.service');
-// const { getReqUrl } = require('../../helpers/req.helper');
 
 const router = Router();
 
