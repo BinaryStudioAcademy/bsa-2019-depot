@@ -83,10 +83,10 @@ const HeaderDesktopUnauth = ({ openSidebar, closeSidebar, sidebarOpened }) => (
   <div className={styles.headerWrp}>
     <Grid centered container>
       <Grid.Row>
-        <Grid.Column computer={10} mobile={8}>
+        <Grid.Column computer={10} tablet={8} mobile={6}>
           {MenuDesktop()}
         </Grid.Column>
-        <Grid.Column computer={6} mobile={8}>
+        <Grid.Column computer={6} tablet={8} mobile={10}>
           <div className={styles.form}>
             {SearchInp()}
             {signIn}
@@ -197,7 +197,7 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
         <Grid.Column computer={5}>
           <Responsive maxWidth={1200}>{logo}</Responsive>
         </Grid.Column>
-        <Grid.Column computer={4} floated="right">
+        <Grid.Column computer={4} tablet={5} mobile={5} floated="right">
           <ul className={styles.rightMenu}>
             <li>
               <a href="/">
