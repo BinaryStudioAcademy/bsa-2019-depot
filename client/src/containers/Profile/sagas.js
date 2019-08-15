@@ -93,7 +93,9 @@ function* setUsername({ payload: { username, user, history } }) {
     const { status } = response;
     if (status) {
       yield put(setUsernameRoutine.success(username));
-      yield call(history.push, '/');
+      yield call(history.push, '/dashboard');
+    } else {
+      yield put(setUsernameRoutine.failure(response.errorMessage));
     }
   } catch (error) {
     yield put(setUsernameRoutine.failure(error.message));

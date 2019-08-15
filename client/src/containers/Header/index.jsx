@@ -44,7 +44,6 @@ const SidebarUnauth = (closeSidebar, sidebarOpened) => {
       width="wide"
       direction="right"
       className={styles.sidebar}
-
     >
       <Menu.Item onClick={closeSidebar} as="a">
         <Icon name="close" color="grey" />
@@ -269,7 +268,7 @@ HeaderDesktopAuth.propTypes = {
   closeSidebar: PropTypes.func.isRequired,
   sidebarOpened: PropTypes.bool.isRequired,
   options: PropTypes.exact({
-    username: PropTypes.string.isRequired,
+    username: PropTypes.string,
     avatar: PropTypes.string
   })
 };
