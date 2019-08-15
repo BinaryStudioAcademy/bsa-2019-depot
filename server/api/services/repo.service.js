@@ -1,23 +1,99 @@
 const NodeGit = require('nodegit');
 const fs = require('fs-extra');
 const fse = require('fs-extra');
-
+const path = require('path');
 const repoHelper = require('../../helpers/repo.helper');
 const repoRepository = require('../../data/repositories/repository.repository');
 
-const createRepo = async ({ owner, name, userId }) => {
+const createRepo = async ({
+  owner, name, userId, readme
+}) => {
+  let repo;
   let result = 'Repo was created';
+  let oid;
   const pathToRepo = repoHelper.getPathToRepo(owner, name);
   await NodeGit.Repository.init(pathToRepo, 1)
-    .then(() => {
+    .then((repoResult) => {
       result = {
         msg: 'Repo created',
         url: pathToRepo
       };
+      repo = repoResult;
+      console.log('f1f');
+      return repo.getHeadCommit()
+        .then(commit => repo.createBranch(
+          'master',
+          commit,
+          12320
+        ));
     })
-    .catch(() => {
-      result = 'Error! Repos wasn`t created';
-    });
+    .then(() => repo.refreshIndex())
+    .then((indexResult) => {
+      console.log('ff');
+      repoHelper.createReadme(owner, name);
+      index = indexResult;
+
+      // this file is in the root of the directory and doesn't need a full path
+      index.addByPath('README.md');
+
+      // this will write files to the index
+      index.write();
+      console.log('ff');
+      return index.writeTree();
+    })
+    .then((oidResult) => {
+      oid = oidResult;
+
+      return NodeGit.Reference.nameToId(repo, 'HEAD');
+    })
+    .then(head => repo.getCommit(head))
+    .then((parent) => {
+      author = NodeGit.Signature.now('Author Name', 'author@email.com');
+      committer = NodeGit.Signature.now('Commiter Name', 'commiter@email.com');
+
+      return repo.createCommit('HEAD', author, committer, 'Added the Readme file for theme builder', oid, [parent]);
+    })
+    .then(commitId => console.log('New Commit: ', commitId));
+
+  if (readme) {
+    // repoHelper.createReadme(owner, name);
+    let repo;
+    let index;
+    let oid;
+    const fileToStage = 'README.md';
+    const fileContent = `# ${name}`;
+    const directoryName = '/test';
+    console.log(pathToRepo);
+    await NodeGit.Repository.open(pathToRepo)
+      .then((repoResult) => {
+        repo = repoResult;
+        return repoResult.openIndex();
+      })
+      .then((indexResult) => {
+        index = indexResult;
+
+        // this file is in the root of the directory and doesn't need a full path
+        index.addByPath(fileToStage);
+
+        // this will write files to the index
+        index.write();
+
+        return index.writeTree();
+      })
+      .then((oidResult) => {
+        oid = oidResult;
+
+        return NodeGit.Reference.nameToId(repo, 'HEAD');
+      })
+      .then(head => repo.getCommit(head))
+      .then((parent) => {
+        author = NodeGit.Signature.now('Author Name', 'author@email.com');
+        committer = NodeGit.Signature.now('Commiter Name', 'commiter@email.com');
+
+        return repo.createCommit('HEAD', author, committer, 'Added the Readme file for theme builder', oid, [parent]);
+      })
+      .then(commitId => console.log('New Commit: ', commitId));
+  }
 
   repoRepository.create({
     userId,
@@ -36,7 +112,9 @@ const isEmpty = async ({ owner, reponame }) => {
   try {
     let result;
     const pathToRepo = repoHelper.getPathToRepo(owner, reponame);
+    console.log(pathToRepo);
     await NodeGit.Repository.open(pathToRepo).then((repo) => {
+      console.dir(repo.getStatus());
       result = repo.isEmpty();
     });
     return {
