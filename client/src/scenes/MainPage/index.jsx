@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+
+import { Button, Grid, Image, Form, Divider } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import { Button, Grid, Image, Form } from 'semantic-ui-react';
 
 import styles from './styles.module.scss';
 import { ReactComponent as FirstSVG } from '../../styles/assets/landing-images/first-pic.svg';
@@ -184,25 +185,8 @@ const MainPage = ({ currentUser: { username }, isAuthorized }) => {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-        <Grid className={styles.foterLine} container>
-          <Grid.Row computer={13} mobile={16}>
-            <ul>
-              <li>
-                <a href="/">Privacy policy </a>
-              </li>
-              <li>
-                <a href="/">Terms of use</a>
-              </li>
-              <li>
-                <a href="/">Trust & security</a>
-              </li>
-              <li>
-                <p>Copyright © 2019</p>
-              </li>
-            </ul>
-          </Grid.Row>
-        </Grid>
       </footer>
+      <Divider hidden />
     </div>
   );
 };
