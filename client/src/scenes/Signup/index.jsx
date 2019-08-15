@@ -106,7 +106,7 @@ class Signup extends React.Component {
 
           <Button
             type="submit"
-            color="blue"
+            color="green"
             fluid
             size="large"
             disabled={
@@ -137,7 +137,7 @@ class Signup extends React.Component {
 
   renderSignup = () => {
     return (
-      <Grid.Row columns={2}>
+      <Grid.Row>
         <Grid.Column className="grid-column">
           <Header as="h2" color="black" textAlign="center">
             Join Depot
