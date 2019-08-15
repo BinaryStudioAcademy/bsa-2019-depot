@@ -13,9 +13,9 @@ import {
   Signup,
   // GoogleCallback,
   Dashboard,
-  SettingsProfile,
   CreateRepository
 } from '../../scenes';
+import Settings from '../../scenes/Settings';
 import { fetchCurrentUser } from '../../routines/routines';
 import RepositoryPage from '../../scenes/Repository';
 import Header from '../Header';
@@ -43,9 +43,9 @@ class Routing extends React.Component {
             <Route exact path="/" component={MainPage} />
             <Route exact path="/forgot" component={Forgot} />
             <Route exact path="/reset/:hash" component={Reset} />
+            <PrivateRoute path="/settings" component={Settings} />
             <PrivateRoute exact path="/new" component={CreateRepository} />
-            <PrivateRoute path="/:username" component={Dashboard} />
-            <PrivateRoute exact path="/settings/profile" component={SettingsProfile} />
+            <PrivateRoute exact path="/:username" component={Dashboard} />
             <PrivateRoute path="/:username/:reponame" component={RepositoryPage} />
             <Route exact path="*" component={NotFound} />
           </Switch>

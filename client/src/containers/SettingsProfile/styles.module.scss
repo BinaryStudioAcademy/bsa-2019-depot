@@ -18,3 +18,8 @@
   min-height: 75px;
   max-height: 200px;
 }
+
+:local(.note) {
+  font-size: 0.85rem;
+  color: rgba(0, 0, 0, 0.7);
+}

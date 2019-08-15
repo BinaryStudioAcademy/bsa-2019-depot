@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import { Link, Redirect } from 'react-router-dom';
 import { Breadcrumb, Button, Form, Header } from 'semantic-ui-react';
 import { addKey } from '../../services/userService';
+import { InputError } from '../../components/InputError';
 
 const NewKeyPage = () => {
   const [loading, setLoading] = useState(false);
@@ -55,6 +56,7 @@ const NewKeyPage = () => {
               onChange={handleChange}
               disabled={loading}
             />
+            <InputError name="title" />
             <Form.TextArea
               label="Title"
               name="key"
@@ -66,6 +68,7 @@ const NewKeyPage = () => {
               onChange={handleChange}
               disabled={loading}
             />
+            <InputError name="key" />
             <Button
               type="submit"
               loading={loading}
