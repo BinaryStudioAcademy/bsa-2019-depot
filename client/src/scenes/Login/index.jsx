@@ -3,8 +3,9 @@ import { Redirect, NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import * as queryString from 'query-string';
-import { Grid, Header, Form, Button, Segment, Message, Label } from 'semantic-ui-react';
+import { Grid, Header, Form, Button, Segment, Message } from 'semantic-ui-react';
 import GoogleAuth from '../../components/GoogleAuth';
+import { InputError } from '../../components/InputError';
 import { serverUrl } from '../../app.config';
 import { authorizeUser, loginGoogleRoutine, setUsernameRoutine } from '../../routines/routines';
 import { Formik } from 'formik';
@@ -15,10 +16,17 @@ import './styles.module.scss';
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email('Invalid email address!')
+    .matches(
+      /^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))@(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      'Invalid email address!'
+    )
     .required('Email address is required!')
     .max(100),
   password: Yup.string()
-    .matches(/^(?=.*\d[a-z]).{8,}|([a-zA-Z0-9]{15,})$/)
+    .matches(
+      /^(?:(?=\D*\d)(?=[^a-z]*[a-z]).{8,}|[a-zA-Z0-9]{15,})$/,
+      'Minimum length - 8 characters, if it includes a number and a lowercase letter OR 15 characters with any combination of characters'
+    )
     .required('Password is required')
     .max(72)
 });
@@ -83,58 +91,62 @@ class Login extends Component {
   renderComponent({ errors, touched, handleChange, handleBlur, handleSubmit, values }) {
     return (
       <Grid textAlign="center" verticalAlign="middle" className="login-grid">
-        <Grid.Column className="grid-column">
-          <Header as="h2" color="black" textAlign="center" className="login-header">
-            Sign in to Depot
-          </Header>
-          <Form name="loginForm" size="large" onSubmit={handleSubmit}>
-            <Segment>
-              <Form.Input
-                fluid
-                name="email"
-                label="Email"
-                placeholder="Email"
-                type="email"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.email}
-                className={`${errors.email && touched.email ? 'has-error' : 'no-error'}`}
-              />
-              <Form.Field className="password-wrapper">
-                <NavLink exact to="/forgot" className="forgot-link">
-                  forgot password?
-                </NavLink>
+        <Grid.Row>
+          <Grid.Column className="grid-column">
+            <Header as="h2" color="black" textAlign="center" className="login-header">
+              Sign in to Depot
+            </Header>
+            <Form name="loginForm" size="large" onSubmit={handleSubmit}>
+              <Segment>
                 <Form.Input
                   fluid
-                  name="password"
-                  label="Password"
-                  placeholder="Password"
-                  type="password"
+                  name="email"
+                  label="Email"
+                  placeholder="Email"
+                  type="email"
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  value={values.password}
-                  className={`${errors.password && touched.password ? 'has-error' : 'no-error'}`}
+                  value={values.email}
+                  className={`${errors.email && touched.email ? 'has-error' : 'no-error'}`}
                 />
-              </Form.Field>
-              <Button
-                type="submit"
-                color="green"
-                fluid
-                size="large"
-                disabled={(errors.password && touched.password) || (errors.email && touched.email)}
-              >
-                Sign In
-              </Button>
-              <Grid.Row className="google-button">{this.renderGoogleAuth()}</Grid.Row>
-            </Segment>
-          </Form>
-          <Message>
-            New to Depot?{' '}
-            <NavLink exact to="/registration">
-              Create an account
-            </NavLink>
-          </Message>
-        </Grid.Column>
+                <InputError name="email" />
+                <Form.Field className="password-wrapper">
+                  <NavLink exact to="/forgot" className="forgot-link">
+                    forgot password?
+                  </NavLink>
+                  <Form.Input
+                    fluid
+                    name="password"
+                    label="Password"
+                    placeholder="Password"
+                    type="password"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.password}
+                    className={`${errors.password && touched.password ? 'has-error' : 'no-error'}`}
+                  />
+                  <InputError name="password" />
+                </Form.Field>
+                <Button
+                  type="submit"
+                  color="green"
+                  fluid
+                  size="large"
+                  disabled={(errors.password && touched.password) || (errors.email && touched.email)}
+                >
+                  Sign In
+                </Button>
+                <Grid.Row className="google-button">{this.renderGoogleAuth()}</Grid.Row>
+              </Segment>
+            </Form>
+            <Message>
+              New to Depot?{' '}
+              <NavLink exact to="/registration">
+                Create an account
+              </NavLink>
+            </Message>
+          </Grid.Column>
+        </Grid.Row>
       </Grid>
     );
   }
@@ -147,7 +159,7 @@ class Login extends Component {
           Join Depot
         </Header>
         <Grid.Row columns={1}>
-          <Grid.Column style={{ maxWidth: 450 }}>
+          <Grid.Column className="grid-column">
             <Form name="setusernameForm" size="large" onSubmit={handleSubmit} loading={loading} error={Boolean(error)}>
               <Segment textAlign="left">
                 <p>Please set your Depot username</p>
@@ -164,11 +176,7 @@ class Login extends Component {
                     required
                     className={`${errors.username && touched.username ? 'has-error' : 'no-error'}`}
                   />
-                  {errors.username && touched.username && (
-                    <Label className="signup-pointing-label" pointing>
-                      Username can contain alphanumeric characters and single hyphens, cannot begin or end with a hyphen
-                    </Label>
-                  )}
+                  <InputError name="username" />
                 </Form.Field>
                 <Button type="submit" color="green" fluid size="large" disabled={errors.username && touched.username}>
                   Set Username

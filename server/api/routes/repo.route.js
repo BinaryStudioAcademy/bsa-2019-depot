@@ -9,10 +9,8 @@ const {
   isEmpty,
   forkRepo
 } = require('../services/repo.service');
-const { getCommits } = require('../services/commit.service');
-const {
-  getBranches, getBranchTree, getLastCommitOnBranch, getFileContent
-} = require('../services/branch.service');
+const { getCommits, getCommitDiff } = require('../services/commit.service');
+const { getBranches, getBranchTree, getLastCommitOnBranch } = require('../services/branch.service');
 
 const router = Router();
 
@@ -35,8 +33,9 @@ router
       .catch(next);
   })
   .get('/:owner/repos', (req, res, next) => {
+    const { filterWord, limit } = req.body;
     const { owner } = req.params;
-    getReposNames({ user: owner, filter: req.query })
+    getReposNames({ user: owner, filter: filterWord, limit })
       .then(repos => res.send(repos))
       .catch(next);
   })
@@ -52,22 +51,22 @@ router
       .then(branches => res.send(branches))
       .catch(next);
   })
+  .get('/:owner/:repoName/:hash/commit', (req, res, next) => {
+    const { owner, repoName, hash } = req.params;
+    getCommitDiff({ user: owner, name: repoName, hash })
+      .then(data => res.send(data))
+      .catch(next);
+  })
   .get('/:owner/:repoName/:branchName/tree', (req, res, next) => {
     const { owner, repoName, branchName } = req.params;
     const { pathToDir } = req.query;
     getBranchTree({
-      user: owner, name: repoName, branch: branchName, pathToDir
+      user: owner,
+      name: repoName,
+      branch: branchName,
+      pathToDir
     })
       .then(tree => res.send(tree))
-      .catch(next);
-  })
-  .get('/:owner/:repoName/:branchName/file', (req, res, next) => {
-    const { owner, repoName, branchName } = req.params;
-    const { filepath } = req.query;
-    getFileContent({
-      user: owner, name: repoName, branch: branchName, filepath
-    })
-      .then(data => res.send(data))
       .catch(next);
   })
   .get('/:owner/:repoName/:branchName/last-commit', (req, res, next) => {
@@ -76,7 +75,6 @@ router
       .then(commit => res.send(commit))
       .catch(next);
   })
-
   .get('/:owner/:repoName/settings', (req, res) => {
     res.sendStatus(200);
     /* Can be used in future to get settings data from DB

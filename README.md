@@ -89,13 +89,15 @@ Directory purposes:
 
 _/client/.env_
 ```
-SKIP_PREFLIGHT_CHECK=true
-PORT=3001
+SKIP_PREFLIGHT_CHECK = true
+PORT = 3001  # default. has to be changed if it is different
+REACT_APP_SERVER_URL = "http://localhost:3000"  # default. has to be changed if it is different
 ```
 
 _/server/.env_
 ```
 APP_PORT = 3000
+CLIENT_HOST = http://localhost:3001
 
 DB_NAME = depot # default. has to be changed to local DB name if it is different
 DB_USERNAME = postgres # default. has to be changed to local PostgreSQL username if it is different
@@ -103,17 +105,27 @@ DB_PASSWORD = postgres # default. has to be changed to local PostgreSQL password
 DB_HOST = localhost # default. has to be changed to local used host if it is different
 DB_PORT = 5432 # default. has to be changed to local used port if it is different
 DB_DIALECT = postgres # default. do not change
+
 GOOGLE_CLIENT_ID = 97XXXXXXXX05-sgfxxxxxxxxxxxxxxxxxxxxxxxxxxxcmj0.apps.googleusercontent.com # has to be replaced with actual google client secret
 GOOGLE_CLIENT_SECRET = ygyxxxXXXXxxxxxxxXXXXXxxxi # has to be replaced with actual google client secret
 GOOGLE_CALLBACK_URL = http://localhost:3000/auth/google/callback # default. has to be changed to google callback uri if it is different
 GOOGLE_SCOPE = https://www.googleapis.com/auth/userinfo.email # default. has to be changed to google scope if it is different
+
 GIT_PATH = '' # Has to be changed to path where you want to save repositories
+
 AWS_SES_ACCESS_KEY = AKIAWBOCxxxxxxx # has to be replaced with actual aws ses access key 
 AWS_SES_SECRET_KEY = EtKJdUrnWxxxxxxxxx # has to be replaced with actual aws ses secret key
 AWS_SES_REGION = us-east-1 # has to be replaced with actual aws region
+AWS_SES_SENDER = "Depotdepot.noreply@gmail.com" # default. has to be changed if it is different
+
 PUBLIC_KEY_PATH = /etc/ssh/ssh_host_rsa_key.pub # default for SSH server. Change to any public SSH key when running locally
+
 RABBITMQ_CONNECTION_URL = amqp://localhost:5672 # default. has to be changed if it is different
 EMAIL_QUEUE_NAME = emails # default. has to be changed if it is different
+
+SECRET_KEY = secretkey # has to be changed to own random secret key
+
+SSH_KEYS = .ssh/authorized_keys # default path to 'authorized_keys' file to store SSH keys in
 ```
 
 ### Branches

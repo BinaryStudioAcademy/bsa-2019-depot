@@ -4,6 +4,7 @@ import * as Yup from 'yup';
 import { Link, Redirect } from 'react-router-dom';
 import { Breadcrumb, Button, Form, Header } from 'semantic-ui-react';
 import { addKey } from '../../services/userService';
+import { InputError } from '../../components/InputError';
 
 const NewKeyPage = () => {
   const [loading, setLoading] = useState(false);
@@ -43,29 +44,29 @@ const NewKeyPage = () => {
         </Breadcrumb>
       </Header>
       <Formik initialValues={{ title: '', key: '' }} validationSchema={validationSchema} onSubmit={handleSubmit}>
-        {({ values: { title, key }, touched, errors, handleChange, handleBlur, handleSubmit }) => (
+        {({ values: { title, key }, errors, handleChange, handleBlur, handleSubmit }) => (
           <Form onSubmit={handleSubmit}>
             <Form.Input
               label="Title"
               name="title"
               value={title}
               width="5"
-              error={errors.title && touched.title && { content: errors.title }}
               onBlur={handleBlur}
               onChange={handleChange}
               disabled={loading}
             />
+            <InputError name="title" />
             <Form.TextArea
               label="Title"
               name="key"
               rows="8"
               placeholder="Begins with 'ssh-rsa', 'ssh-dss', 'ssh-ed25519', 'ecdsa-sha2-nistp256', 'ecdsa-sha2-nistp384', or 'ecdsa-sha2-nistp521'"
-              error={errors.key && touched.key && { content: errors.key }}
               content={key}
               onBlur={handleBlur}
               onChange={handleChange}
               disabled={loading}
             />
+            <InputError name="key" />
             <Button
               type="submit"
               loading={loading}

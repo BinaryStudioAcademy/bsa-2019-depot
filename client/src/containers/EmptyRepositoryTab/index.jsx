@@ -9,7 +9,7 @@ function EmptyRepositoryPage({ url }) {
   const [protocol, setProtocol] = useState('HTTPS');
 
   const createRepoStr = [
-    'echo "# test" >> README.md',
+    'echo "# test" >> README.md\n',
     'git init',
     'git add README.md',
     'git commit -m "first commit"',

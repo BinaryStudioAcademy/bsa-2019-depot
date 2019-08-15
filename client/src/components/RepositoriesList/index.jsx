@@ -50,7 +50,7 @@ export class RepositoriesList extends React.Component {
             />
           </div>
           <div className={styles.new_repo_wrapper}>
-            <Link to="">
+            <Link to="/new">
               <Button className={styles.new_repo}>
                 <Octicon icon={Repo} />
                 New
@@ -76,8 +76,8 @@ RepositoriesList.propTypes = {
   repositories: PropTypes.array.isRequired
 };
 
-const mapStateToProps = ({ repositories }) => ({
-  repositoriesNames: repositories.repositoriesNames
+const mapStateToProps = ({ userStats: { repositoriesNames } }) => ({
+  repositoriesNames
 });
 
 const mapDispatchToProps = dispatch => {

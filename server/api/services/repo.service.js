@@ -3,8 +3,6 @@ const fs = require('fs-extra');
 const fse = require('fs-extra');
 const path = require('path');
 
-const { readdirSync } = require('fs');
-
 const gitPath = process.env.GIT_PATH;
 
 const createRepo = async ({ owner, repository }) => {
@@ -33,7 +31,7 @@ const isEmpty = async ({ owner, repoName }) => {
   try {
     let result;
     const pathToRepo = path.resolve(`${gitPath}/${owner}/${repoName}`);
-    await NodeGit.Repository.open(pathToRepo).then(repo => {
+    await NodeGit.Repository.open(pathToRepo).then((repo) => {
       result = repo.isEmpty();
     });
     return {
@@ -67,13 +65,18 @@ const deleteRepo = async ({ repoName, username }) => {
   }
 };
 
-const getReposNames = async ({ user, filter: { filterWord, limit } }) => {
+const getReposNames = async ({ user, filter, limit }) => {
   const pathToRepo = path.resolve(`${gitPath}/${user}`);
-  const repos = readdirSync(pathToRepo, { withFileTypes: true })
-    .filter(dir => dir.isDirectory())
-    .map(dir => dir.name)
-    .filter(name => name.includes(filterWord));
-  return limit ? repos.slice(0, limit) : repos;
+  const doesDirExists = fs.existsSync(pathToRepo);
+  if (doesDirExists) {
+    const repos = fs
+      .readdirSync(pathToRepo, { withFileTypes: true })
+      .filter(dir => dir.isDirectory())
+      .map(dir => dir.name);
+    const filteredRepos = filter ? repos.filter(repo => repo.includes(filter)) : repos;
+    return limit ? filteredRepos.slice(0, limit) : repos;
+  }
+  return [];
 };
 
 const forkRepo = async ({ username, owner, repoName }) => {

@@ -4,11 +4,12 @@ import { Switch, Route } from 'react-router-dom';
 import RepositoryHeader from '../../components/RepositoryHeader';
 import IssuesTab from '../../containers/IssuesTab/index';
 import CommitsPage from '../../containers/CommitsPage/index';
+import DiffCommitView from '../../components/DiffCommitView/index';
 import RepositoryTab from '../../containers/RepositoryTab';
 import RepoSettings from '../../containers/SettingsTab/index';
-import PrivateRoute from '../../containers/PrivateRoute';
-import FileEditPage from '../../containers/FileEditPage';
 import FileViewPage from '../../containers/FileViewPage';
+import FileEditPage from '../../containers/FileEditPage';
+import PrivateRoute from '../../containers/PrivateRoute';
 
 import './styles.module.scss';
 
@@ -33,9 +34,11 @@ class RepositoryPage extends React.Component {
         />
         <div className="ui bottom attached active tab">
           <Switch>
+            <Route exact path={match.path} component={RepositoryTab} />
             <Route exact path={`${match.path}/issues`} component={IssuesTab} />
             <Route exact path={`${match.path}/commits`} component={CommitsPage} />
             <Route exact path={`${match.path}/settings`} component={RepoSettings} />
+            <Route path={`${match.path}/commits/:hash`} component={DiffCommitView} />
             <PrivateRoute path={[`${match.path}/new`, `${match.path}/edit`]} component={FileEditPage} />
             <Route path={`${match.path}/blob`} component={FileViewPage} />
             <Route path={match.path} component={RepositoryTab} />
