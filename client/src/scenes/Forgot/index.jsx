@@ -49,47 +49,50 @@ class Forgot extends Component {
     const failureMessage = emailNotExist ? <Message color="red">{message}</Message> : null;
     return (
       <Grid textAlign="center" className="forgot-grid fill">
-        <Grid.Column className="grid-column">
-          <Header as="h2" color="black" textAlign="center" className="forgot-header">
-            Reset your password
-          </Header>
-          <Form name="forgotForm" size="large" onSubmit={handleSubmit} disabled={emailSend}>
-            <Segment>
-              {!succsessMessage ? (
-                <div>
-                  <Form.Input
-                    fluid
-                    name="email"
-                    label="Enter your email address and we will send you a link to reset your password."
-                    disabled={emailSend}
-                    placeholder="Enter your email address"
-                    type="email"
-                    error={emailNotExist}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.email}
-                    className={`${errors.email && touched.email ? 'has-error' : 'no-error'}`}
-                  />
-                  <InputError name="email" />
-                  <Button type="submit" color="green" fluid size="large" disabled={errors.email && touched.email}>
-                    Send password reset email
-                  </Button>
-                </div>
-              ) : (
-                <div>
-                  {succsessMessage}
-                  <Button type="button" color="green" fluid size="large" onClick={this.returnToSignIn}>
-                    Return to sign in
-                  </Button>
-                </div>
-              )}
-              {failureMessage}
-            </Segment>
-          </Form>
-        </Grid.Column>
+        <Grid.Row>
+          <Grid.Column className="grid-column">
+            <Header as="h2" color="black" textAlign="center" className="forgot-header">
+              Reset your password
+            </Header>
+            <Form name="forgotForm" size="large" onSubmit={handleSubmit} disabled={emailSend}>
+              <Segment>
+                {!succsessMessage ? (
+                  <div>
+                    <Form.Input
+                      fluid
+                      name="email"
+                      label="Enter your email address and we will send you a link to reset your password."
+                      disabled={emailSend}
+                      placeholder="Enter your email address"
+                      type="email"
+                      error={emailNotExist}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.email}
+                      className={`${errors.email && touched.email ? 'has-error' : 'no-error'}`}
+                    />
+                    <InputError name="email" />
+                    <Button type="submit" color="green" fluid size="large" disabled={errors.email && touched.email}>
+                      Send password reset email
+                    </Button>
+                  </div>
+                ) : (
+                  <div>
+                    {succsessMessage}
+                    <Button type="button" color="green" fluid size="large" onClick={this.returnToSignIn}>
+                      Return to sign in
+                    </Button>
+                  </div>
+                )}
+                {failureMessage}
+              </Segment>
+            </Form>
+          </Grid.Column>
+        </Grid.Row>
       </Grid>
     );
   }
+
   render() {
     const { isAuthorized } = this.props;
     return !isAuthorized ? (
@@ -106,6 +109,7 @@ class Forgot extends Component {
     );
   }
 }
+
 Forgot.propTypes = {
   isAuthorized: PropTypes.bool.isRequired,
   history: PropTypes.object,

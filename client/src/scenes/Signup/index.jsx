@@ -138,8 +138,10 @@ class Signup extends React.Component {
   renderSignup = () => {
     return (
       <Grid.Row columns={2}>
-        <Grid.Column style={{ maxWidth: 450 }}>
-          {' '}
+        <Grid.Column className="grid-column">
+          <Header as="h2" color="black" textAlign="center">
+            Join Depot
+          </Header>
           <Formik
             initialValues={{
               username: '',
@@ -158,9 +160,6 @@ class Signup extends React.Component {
   renderForms = () => {
     return (
       <Grid textAlign="center" centered className="signup-grid">
-        <Header as="h2" color="black" textAlign="center">
-          Join Depot
-        </Header>
         {this.renderSignup()}
       </Grid>
     );

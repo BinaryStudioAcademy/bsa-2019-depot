@@ -44,7 +44,7 @@ const getCommitsByDate = async (data) => {
       walker.pushGlob('refs/heads/*');
       walker.sorting(NodeGit.Revwalk.SORT.TIME);
       return walker
-        .getCommitsUntil(commit => true)
+        .getCommitsUntil(commit => commit)
         .then((commits) => {
           const repoCommits = commits.map(commit => ({
             sha: commit.sha(),
@@ -61,7 +61,7 @@ const getCommitsByDate = async (data) => {
   const allCommits = await Promise.all(promises).then(() => Promise.resolve(globalCommits));
   const userActivitybyDate = {};
   const monthActivity = {};
-  allCommits.forEach(({ date, repo }) => {
+  allCommits.forEach(({ date }) => {
     const stringifiedDate = JSON.stringify(date);
     const fullDate = stringifiedDate.slice(1, 11);
     const monthAndYear = stringifiedDate.slice(1, 8);

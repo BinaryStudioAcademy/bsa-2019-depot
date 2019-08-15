@@ -1,6 +1,8 @@
 :global(.ui.grid.reset-grid) {
-  height: 100vh;
-  margin-top: 100px;
+  height: 100%;
+  margin: 0;
+  display: flex;
+  align-items: center;
 }
 :global(.column.grid-column) {
   max-width: 400px;
