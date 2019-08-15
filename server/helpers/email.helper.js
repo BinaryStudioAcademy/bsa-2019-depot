@@ -1,4 +1,14 @@
+const AWS = require('aws-sdk');
+const { accessKey, secretKey, awsRegion } = require('../config/aws.config');
 const { emailSender } = require('../config/aws.config');
+
+AWS.config.update({
+  accessKeyId: accessKey,
+  secretAccessKey: secretKey,
+  region: awsRegion
+});
+
+const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 
 const createTokenEmail = (email, token, url) => {
   const params = {
@@ -38,6 +48,9 @@ const createTokenEmail = (email, token, url) => {
   return params;
 };
 
+const sendEmail = message => ses.sendEmail(message).promise();
+
 module.exports = {
-  createTokenEmail
+  createTokenEmail,
+  sendEmail
 };
