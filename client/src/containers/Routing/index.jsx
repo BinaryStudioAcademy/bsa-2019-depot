@@ -16,6 +16,7 @@ import {
   SettingsProfile,
   CreateRepository
 } from '../../scenes';
+import CreateOrganization from '../../scenes/CreateOrganization';
 import { fetchCurrentUser } from '../../routines/routines';
 import RepositoryPage from '../../scenes/Repository';
 import Header from '../Header';
@@ -41,8 +42,9 @@ class Routing extends React.Component {
           <Route exact path="/forgot" component={Forgot} />
           <Route exact path="/reset/:hash" component={Reset} />
           <PrivateRoute exact path="/new" component={CreateRepository} />
-          <PrivateRoute path="/:username" component={Dashboard} />
           <PrivateRoute exact path="/settings/profile" component={SettingsProfile} />
+          <PrivateRoute exact path="/organizations/new" component={CreateOrganization} />
+          <PrivateRoute path="/:username" component={Dashboard} />
           <PrivateRoute path="/:username/:reponame" component={RepositoryPage} />
           <Route exact path="*" component={NotFound} />
         </Switch>
