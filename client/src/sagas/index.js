@@ -10,6 +10,7 @@ import profileSagas from '../containers/Profile/sagas';
 import { watchRepositories } from '../scenes/Dashboard/sagas';
 import profileSettingsSagas from '../scenes/SettingsProfile/sagas';
 import forkRepoSagas from '../components/ForkButton/sagas';
+import createOrganizationSagas from '../scenes/CreateOrganization/sagas';
 
 import repoSettingsSagas from '../containers/SettingsTab/sagas';
 export default function* rootSaga() {
@@ -24,6 +25,7 @@ export default function* rootSaga() {
     codeTabSagas(),
     repoSettingsSagas(),
     profileSettingsSagas(),
-    forkRepoSagas()
+    forkRepoSagas(),
+    createOrganizationSagas()
   ]);
 }

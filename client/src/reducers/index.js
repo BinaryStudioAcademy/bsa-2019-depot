@@ -10,6 +10,7 @@ import { repoSettingsData } from '../containers/SettingsTab/reducer';
 import profile from '../containers/Profile/reducer';
 import { repositoriesReducer } from '../scenes/Dashboard/reducer';
 import forkRepo from '../components/ForkButton/reducer';
+import createOrg from '../scenes/CreateOrganization/reducer';
 
 export default combineReducers({
   profile,
@@ -23,5 +24,6 @@ export default combineReducers({
   fileTreeData: fileTreeReducer,
   repoSettingsData,
   repositories: repositoriesReducer,
-  forkRepo
+  forkRepo,
+  createOrg
 });
