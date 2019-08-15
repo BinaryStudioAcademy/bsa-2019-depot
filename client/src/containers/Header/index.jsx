@@ -20,7 +20,7 @@ const SearchInp = () => {
     setText(target.value);
   }
 
-  return <input placeholder="Search GitHub" onChange={onTextChange} value={text} type="text" />;
+  return <input placeholder="Search Depot" onChange={onTextChange} value={text} type="text" />;
 };
 
 const signIn = <a href="/login">Sign in</a>;
