@@ -5,9 +5,7 @@ const fse = require('fs-extra');
 const repoHelper = require('../../helpers/repo.helper');
 const repoRepository = require('../../data/repositories/repository.repository');
 
-const createRepo = async ({
-  owner, repository, name, userId
-}) => {
+const createRepo = async ({ owner, name, userId }) => {
   let result = 'Repo was created';
   const pathToRepo = repoHelper.getPathToRepo(owner, name);
   await NodeGit.Repository.init(pathToRepo, 1)
@@ -23,22 +21,21 @@ const createRepo = async ({
 
   repoRepository.create({
     userId,
-    repository,
     name
   });
   return result;
 };
 
-const checkName = async ({ owner, repository }) => {
-  const filePath = repoHelper.getPathToRepo(owner, repository);
+const checkName = async ({ owner, reponame }) => {
+  const filePath = repoHelper.getPathToRepo(owner, reponame);
   const exists = await fs.existsSync(filePath);
   return exists;
 };
 
-const isEmpty = async ({ owner, repoName }) => {
+const isEmpty = async ({ owner, reponame }) => {
   try {
     let result;
-    const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
+    const pathToRepo = repoHelper.getPathToRepo(owner, reponame);
     await NodeGit.Repository.open(pathToRepo).then((repo) => {
       result = repo.isEmpty();
     });

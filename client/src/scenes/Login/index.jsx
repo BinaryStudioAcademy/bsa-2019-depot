@@ -155,7 +155,7 @@ class Login extends Component {
     const { loading, error } = this.props;
     return (
       <Grid textAlign="center" centered className="signup-grid">
-        <Grid.Row columns={1}>
+        <Grid.Row>
           <Grid.Column className="grid-column">
             <Header as="h2" color="black" textAlign="center">
               Join Depot
