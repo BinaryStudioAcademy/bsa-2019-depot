@@ -37,7 +37,7 @@ const licenseOptions = [
 const initialValues = {
   owner: '',
   ownerID: '',
-  repository: '',
+  reponame: '',
   description: '',
   privacy: 'public',
   readme: false
@@ -54,12 +54,12 @@ class CreateRepository extends React.Component {
 
   async validate(values) {
     let errors = {};
-    if (!values.repository) {
-      errors.repository = 'Required';
+    if (!values.reponame) {
+      errors.reponame = 'Required';
     }
     const { exists } = await checkName(values);
     if (exists) {
-      errors.repository = `The repository ${values.repository} already exists on this account`;
+      errors.reponame = `The repository ${values.reponame} already exists on this account`;
     }
 
     if (Object.keys(errors).length) {
@@ -71,9 +71,9 @@ class CreateRepository extends React.Component {
     const result = await createRepository({
       ...values
     });
-    const { repository, owner } = values;
+    const { reponame, owner } = values;
     if (result.url) {
-      this.props.history.push(`${owner}/${repository}`);
+      this.props.history.push(`${owner}/${reponame}`);
     }
   }
 
@@ -103,7 +103,7 @@ class CreateRepository extends React.Component {
 
   renderCreateRepository({ errors, touched, handleChange, handleBlur, handleSubmit, values }) {
     const { username } = this.props;
-    const { repository, description, readme, privacy } = values;
+    const { reponame, description, readme, privacy } = values;
 
     return (
       <Container>
@@ -123,11 +123,11 @@ class CreateRepository extends React.Component {
             <span className={styles.slash}>/</span>
             <Form.Field className={styles.formField}>
               <label>Repository name</label>
-              <Field name="repository" value={repository} onChange={handleChange} />
-              {errors.repository && touched.repository && (
+              <Field name="reponame" value={reponame} onChange={handleChange} />
+              {errors.reponame && touched.reponame && (
                 <span className={styles.label}>
                   <Label basic color="red" pointing>
-                    {errors.repository}
+                    {errors.reponame}
                   </Label>
                 </span>
               )}

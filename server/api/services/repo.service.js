@@ -7,11 +7,9 @@ const repoRepository = require('../../data/repositories/repository.repository');
 
 const gitPath = process.env.GIT_PATH;
 
-const createRepo = async ({
-  owner, repository, name, userId
-}) => {
+const createRepo = async ({ owner, name, userId }) => {
   let result = 'Repo was created';
-  const pathToRepo = path.resolve(`${gitPath}/${owner}/${repository}`).replace(/\\/g, '/');
+  const pathToRepo = path.resolve(`${gitPath}/${owner}/${name}`).replace(/\\/g, '/');
   await NodeGit.Repository.init(pathToRepo, 1)
     .then(() => {
       result = {
@@ -25,22 +23,21 @@ const createRepo = async ({
 
   repoRepository.create({
     userId,
-    repository,
     name
   });
   return result;
 };
 
-const checkName = async ({ owner, repository }) => {
-  const filePath = path.resolve(`${gitPath}/${owner}/${repository}`);
+const checkName = async ({ owner, reponame }) => {
+  const filePath = path.resolve(`${gitPath}/${owner}/${reponame}`);
   const exists = await fs.existsSync(filePath);
   return exists;
 };
 
-const isEmpty = async ({ owner, repoName }) => {
+const isEmpty = async ({ owner, reponame }) => {
   try {
     let result;
-    const pathToRepo = path.resolve(`${gitPath}/${owner}/${repoName}`);
+    const pathToRepo = path.resolve(`${gitPath}/${owner}/${reponame}`);
     await NodeGit.Repository.open(pathToRepo).then((repo) => {
       result = repo.isEmpty();
     });
