@@ -1,0 +1,14 @@
+:local(.note) {
+  font-size: 0.85rem;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+:local(.field_title) {
+  margin-bottom: 0.4rem !important;
+
+  &::after {
+    content: '*';
+    color: #cb2431;
+    margin-left: 0.35rem;
+  }
+}
