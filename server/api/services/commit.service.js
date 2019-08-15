@@ -1,13 +1,11 @@
 const NodeGit = require('nodegit');
-const path = require('path');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const { getReposNames } = require('./repo.service');
-
-const gitPath = process.env.GIT_PATH;
+const repoHelper = require('../../helpers/repo.helper');
 
 const getCommits = async ({ user, name, branch }) => {
-  const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`).replace(/\\/g, '/');
+  const pathToRepo = repoHelper.getPathToRepo(user, name);
   const allCommits = [];
   await NodeGit.Repository.open(pathToRepo)
     .then(repo => repo.getBranchCommit(branch))
@@ -38,7 +36,7 @@ const getCommitsByDate = async (data) => {
   const repoList = await getReposNames(data);
   let globalCommits = [];
   const promises = repoList.map((repoName) => {
-    const pathToRepo = path.resolve(`${gitPath}/${user}/${repoName}`);
+    const pathToRepo = repoHelper.getPathToRepo(user, repoName);
     return NodeGit.Repository.open(pathToRepo).then((repo) => {
       const walker = NodeGit.Revwalk.create(repo);
       walker.pushGlob('refs/heads/*');
@@ -80,7 +78,7 @@ const getCommitsByDate = async (data) => {
 };
 
 const getCommitDiff = async ({ user, name, hash }) => {
-  const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`).replace(/\\/g, '/');
+  const pathToRepo = repoHelper.getPathToRepo(user, name);
   const cdCommand = `cd  ${pathToRepo} `;
   const gitDiffCommand = `git diff ${hash}~ ${hash} -U`;
   const command = `${cdCommand} && ${gitDiffCommand}`;
@@ -92,7 +90,7 @@ const getCommitDiff = async ({ user, name, hash }) => {
 const commitFile = async ({
   owner, repoName, author, email, branch, message, filename, fileData
 }) => {
-  const pathToRepo = path.resolve(`${gitPath}/${owner}/${repoName}`);
+  const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
   const repo = await NodeGit.Repository.open(pathToRepo.replace(/\\/g, '/'));
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
   const lastCommitTree = await lastCommitOnBranch.getTree();

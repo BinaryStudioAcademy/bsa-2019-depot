@@ -7,44 +7,43 @@ import RepoReadme from '../../components/RepoReadme/index';
 import { fetchLastCommitOnBranch, fetchBranches, fetchFileTree } from '../../routines/routines';
 
 import Octicon, { getIconByName } from '@primer/octicons-react';
-import { Container, Button, Header, Dropdown, Input, Popup, Segment, Menu, Dimmer, Loader } from 'semantic-ui-react';
+import { Container, Button, Header, Dropdown, Input, Popup, Segment, Menu, Loader, Divider } from 'semantic-ui-react';
 import styles from './styles.module.scss';
 
 class CodeTab extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      owner: 'TheSubliminal',
-      repoName: 'depot-test',
       branch: 'master'
     };
     this.onBranchChange = this.onBranchChange.bind(this);
     this.onDropdownClick = this.onDropdownClick.bind(this);
-    this.onCreateFile = this.onCreateFile.bind(this);
   }
 
   componentDidMount() {
-    const { history } = this.props;
-    const { owner, repoName, branch } = this.state;
-    history.push(`/${owner}/${repoName}/tree/${branch}`);
+    const { match, history } = this.props;
+    const { username, reponame } = match.params;
+    const { branch } = this.state;
+    history.push(`/${username}/${reponame}/tree/${branch}`);
     this.props.fetchLastCommitOnBranch({
-      owner,
-      repoName,
+      username,
+      reponame,
       branch
     });
     this.props.fetchFileTree({
-      owner,
-      repoName,
+      username,
+      reponame,
       branch
     });
   }
 
   onDropdownClick = event => {
     event.stopPropagation();
-    const { owner, repoName } = this.state;
+    const { match } = this.props;
+    const { username, reponame } = match.params;
     this.props.fetchBranches({
-      owner,
-      repoName
+      username,
+      reponame
     });
   };
 
@@ -54,42 +53,37 @@ class CodeTab extends React.Component {
         branch: data.value
       },
       () => {
-        const { owner, repoName, branch } = this.state;
-        const { history } = this.props;
-        history.push(`/${owner}/${repoName}/tree/${data.value}`);
+        const { match, history } = this.props;
+        const { username, reponame } = match.params;
+        const { branch } = this.state;
+        history.push(`/${username}/${reponame}/tree/${data.value}`);
 
         this.props.fetchLastCommitOnBranch({
-          owner,
-          repoName,
+          username,
+          reponame,
           branch
         });
         this.props.fetchFileTree({
-          owner,
-          repoName,
+          username,
+          reponame,
           branch
         });
       }
     );
   };
 
-  onCreateFile() {
-    const { owner, repoName, branch } = this.state;
-    const {
-      history,
-      fileTreeData: {
-        tree: { currentPath }
-      }
-    } = this.props;
-
-    history.push(`/${owner}/${repoName}/new/tree/${branch}/${currentPath}`);
-  }
-
   render() {
-    const { owner, repoName, branch } = this.state;
-    const { lastCommitData, branchesData, fileTreeData, fetchFileTree } = this.props;
+    const { branch } = this.state;
+    const { match, lastCommitData, branchesData, fileTreeData, history, fetchFileTree } = this.props;
+    const { username, reponame } = match.params;
 
-    return (
+    return this.props.lastCommitData.loading || this.props.fileTreeData.loading ? (
+      <div>
+        <Loader active />
+      </div>
+    ) : (
       <Container>
+        <Divider hidden />
         <div className={styles.repoDescription}>
           <div className={styles.repoDescriptionText}>
             Semantic is a UI component framework based around useful principles from natural language.{' '}
@@ -104,7 +98,7 @@ class CodeTab extends React.Component {
           <Menu borderless attached="top" widths={4}>
             <Menu.Item>
               <Octicon icon={getIconByName('history')} />
-              <Link className={styles.repoMetaDataLinks} to="">
+              <Link className={styles.repoMetaDataLinks} to={`/${username}/${reponame}/commits/${branch}`}>
                 <b>4,325 </b> commits
               </Link>
             </Menu.Item>
@@ -142,14 +136,12 @@ class CodeTab extends React.Component {
               floating
               width="seven"
               className={[styles.actionButton, styles.repoBranchesButton]}
-              position="top left"
+              position="bottom left"
               onClick={this.onDropdownClick}
             >
               <Dropdown.Menu className={styles.searchBranchList}>
                 {branchesData.loading ? (
-                  <Dimmer active>
-                    <Loader inverted />
-                  </Dimmer>
+                  <Loader active />
                 ) : (
                   <React.Fragment>
                     <Dropdown.SearchInput
@@ -178,9 +170,7 @@ class CodeTab extends React.Component {
           </div>
           <div>
             <Button.Group className={styles.repoActions}>
-              <Button className={styles.actionButton} onClick={this.onCreateFile}>
-                Create New File
-              </Button>
+              <Button className={styles.actionButton}>Create New File</Button>
               <Button className={styles.actionButton}>Upload files</Button>
               <Button className={styles.actionButton}>Find file</Button>
             </Button.Group>
@@ -232,9 +222,10 @@ class CodeTab extends React.Component {
         <RepoFileTree
           lastCommitData={lastCommitData}
           fileTreeData={fileTreeData}
-          owner={owner}
-          repoName={repoName}
+          username={username}
+          reponame={reponame}
           branch={branch}
+          history={history}
           fetchFileTree={fetchFileTree}
         />
         <RepoReadme />
@@ -274,7 +265,10 @@ CodeTab.propTypes = {
   fetchLastCommitOnBranch: PropTypes.func.isRequired,
   fetchBranches: PropTypes.func.isRequired,
   fetchFileTree: PropTypes.func.isRequired,
-  history: PropTypes.object
+  history: PropTypes.object,
+  match: PropTypes.object.isRequired,
+  username: PropTypes.any,
+  reponame: PropTypes.any
 };
 
 export default connect(

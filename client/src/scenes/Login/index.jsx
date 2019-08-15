@@ -155,11 +155,11 @@ class Login extends Component {
     const { loading, error } = this.props;
     return (
       <Grid textAlign="center" centered className="signup-grid">
-        <Header as="h2" color="black" textAlign="center">
-          Join Depot
-        </Header>
-        <Grid.Row columns={1}>
+        <Grid.Row>
           <Grid.Column className="grid-column">
+            <Header as="h2" color="black" textAlign="center">
+              Join Depot
+            </Header>
             <Form name="setusernameForm" size="large" onSubmit={handleSubmit} loading={loading} error={Boolean(error)}>
               <Segment textAlign="left">
                 <p>Please set your Depot username</p>

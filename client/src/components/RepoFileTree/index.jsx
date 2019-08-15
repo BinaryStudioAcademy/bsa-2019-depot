@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
-import { Table, Image, Message, Dimmer, Loader } from 'semantic-ui-react';
+import { Table, Image, Message } from 'semantic-ui-react';
 import Octicon, { getIconByName } from '@primer/octicons-react';
 import styles from './styles.module.scss';
 import moment from 'moment';
@@ -52,14 +51,7 @@ class RepoFileTree extends React.Component {
     const { location } = this.props;
     const { sha, message, author, date } = this.props.lastCommitData.commit;
     const { files, directories, currentPath } = this.props.fileTreeData.tree;
-
-    return this.props.lastCommitData.loading || this.props.fileTreeData.loading ? (
-      <div>
-        <Dimmer active>
-          <Loader />
-        </Dimmer>
-      </div>
-    ) : (
+    return (
       <div>
         <Message attached="top" info>
           <div className={styles.commit}>

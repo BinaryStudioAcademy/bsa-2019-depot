@@ -1,3 +1,3 @@
 #!/bin/bash
-cd /home/ubuntu/
+cd /home/git/
 rm -rf bsa-2019-depot

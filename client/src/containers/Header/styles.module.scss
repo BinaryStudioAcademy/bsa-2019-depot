@@ -106,7 +106,10 @@ $black-color: #24292e;
     display: none !important;
   }
 }
-
+:global(.ui.visible.right.overlay.sidebar) {
+  max-width: 320px;
+  width: 100%;
+}
 :local(.sidebar) {
   background-color: #fff !important;
   font-size: 100% !important;
@@ -139,7 +142,7 @@ $black-color: #24292e;
       justify-content: center;
     }
     a {
-      padding: 4px 8px;
+      padding: 8px 10px;
       &:last-child {
         border: 1px solid gray;
         border-radius: 3px;
@@ -162,6 +165,7 @@ $black-color: #24292e;
     }
     div {
       align-items: center !important;
+      text-align: center;
     }
   }
   a {
@@ -195,11 +199,14 @@ $black-color: #24292e;
   }
   ul li {
     a {
-      display: flex;
+      display: inline-block;
+      vertical-align: middle;
     }
     div {
-      display: flex;
-      align-items: center;
+      vertical-align: middle;
+    }
+    i {
+      height: inherit !important;
     }
   }
   .rightMenu {
