@@ -27,7 +27,6 @@ $black-color: #24292e;
       a,
       p {
         color: #fff;
-        font-size: 100%;
         margin: 0;
       }
       p svg {
@@ -86,7 +85,6 @@ $black-color: #24292e;
     }
   }
   a {
-    font-size: 100%;
     padding: 10px;
     color: #fff;
     &:not(:last-child) {

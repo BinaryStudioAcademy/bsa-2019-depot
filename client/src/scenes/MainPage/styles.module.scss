@@ -43,10 +43,6 @@ $gray-color: #f4f5f7;
   text-align: center;
 }
 
-:local(.mainHost) {
-  font-size: 100%;
-}
-
 :local(.button) {
   margin: 24px 0 !important;
   background-color: $blue-color !important;
@@ -72,7 +68,6 @@ $gray-color: #f4f5f7;
   }
 
   p {
-    font-size: 100%;
     text-align: center;
     line-height: 24px;
   }
@@ -102,7 +97,6 @@ $gray-color: #f4f5f7;
   }
 
   a {
-    font-size: 100%;
     color: $blue-color;
   }
 }
@@ -139,7 +133,6 @@ $gray-color: #f4f5f7;
   }
 
   p {
-    font-size: 100%;
     line-height: 24px;
   }
 }
@@ -205,8 +198,6 @@ $gray-color: #f4f5f7;
     }
 
     p {
-      font-size: 100%;
-
       &:last-child {
         font-size: 125%;
       }
@@ -224,7 +215,6 @@ $gray-color: #f4f5f7;
 
     li {
       padding-left: 32px;
-      font-size: 100%;
       line-height: 24px;
 
       &:not(:last-child) {
@@ -247,8 +237,6 @@ $gray-color: #f4f5f7;
     padding: 40px;
 
     li {
-      font-size: 100%;
-
       &:not(:last-child) {
         margin-bottom: 12px;
       }
@@ -281,7 +269,6 @@ $gray-color: #f4f5f7;
     }
 
     p {
-      font-size: 100%;
       line-height: 24px;
     }
   }
@@ -336,7 +323,6 @@ $gray-color: #f4f5f7;
   }
 
   p {
-    font-size: 100%;
     margin: 26px 0;
   }
 
