@@ -1,14 +1,15 @@
 import React from 'react';
-import { Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Container, Grid, Button } from 'semantic-ui-react';
 import Octicon, { Smiley } from '@primer/octicons-react';
+import { parse } from 'query-string';
 import { repositoryActions } from './actions';
 import Overview from '../../containers/Overview';
 import RepositoriesList from '../../components/RepositoriesList';
+import { getUserImgLink } from '../../helpers/imageHelper';
 
 import styles from './styles.module.scss';
 
@@ -19,9 +20,6 @@ class Dashboard extends React.Component {
       activeIndex: -1,
       repoCount: 0
     };
-
-    this.overviewRouteRender = this.overviewRouteRender.bind(this);
-    this.repositoriesListRender = this.repositoriesListRender.bind(this);
   }
 
   componentDidMount() {
@@ -32,20 +30,10 @@ class Dashboard extends React.Component {
     });
   }
 
-  overviewRouteRender = props => {
-    const { repositoriesNames } = this.props;
-    return <Overview {...props} repositories={repositoriesNames} />;
-  };
-
-  repositoriesListRender = props => {
-    const { repositoriesNames } = this.props;
-    return <RepositoriesList {...props} repositories={repositoriesNames} />;
-  };
-
   render() {
     const {
-      match: { path, url },
-      location: { pathname },
+      match: { url },
+      location: { search },
       username,
       imgUrl,
       repositoriesNames,
@@ -55,15 +43,8 @@ class Dashboard extends React.Component {
       following
     } = this.props;
     const repoCount = repositoriesNames.length;
-    let activePage = pathname.split('/')[2];
-    // For future tabs
-    switch (activePage) {
-    case 'repositories':
-      activePage = 'repositories';
-      break;
-    default:
-      activePage = '';
-    }
+    const { tab } = parse(search);
+
     return (
       <Container className={styles.wrapper}>
         <Grid>
@@ -71,7 +52,7 @@ class Dashboard extends React.Component {
             <Grid.Column className={styles.userinfo_wrapper} mobile={16} tablet={4} computer={4}>
               <div className={styles.avatar_wrapper}>
                 <Link to="">
-                  <img src={imgUrl} alt="user_avatar" />
+                  <img src={getUserImgLink(imgUrl)} alt="user_avatar" />
                 </Link>
                 <Link to="" className={styles.set_status}>
                   <Octicon icon={Smiley} />
@@ -88,10 +69,10 @@ class Dashboard extends React.Component {
             <Grid.Column mobile={16} tablet={12} computer={12}>
               <Container className={styles.navbar_wrapper}>
                 <nav className={styles.navbar}>
-                  <Link to={url} className={activePage === '' && styles.active_link}>
+                  <Link to={url} className={!tab && styles.active_link}>
                     Overview
                   </Link>
-                  <Link to={`${url}/repositories`} className={activePage === 'repositories' && styles.active_link}>
+                  <Link to={`${url}?tab=repositories`} className={tab === 'repositories' && styles.active_link}>
                     Repositories{repoCount ? <span>{repoCount}</span> : null}
                   </Link>
                   <Link to="">Projects{projects ? <span>{projects}</span> : null}</Link>
@@ -100,10 +81,8 @@ class Dashboard extends React.Component {
                   <Link to="">Following{following ? <span>{following}</span> : null}</Link>
                 </nav>
               </Container>
-              <Switch>
-                <Route exact path={path} render={this.overviewRouteRender} />
-                <Route exact path={`${path}/repositories`} render={this.repositoriesListRender} />
-              </Switch>
+              {!tab && <Overview repositories={repositoriesNames} />}
+              {tab === 'repositories' && <RepositoriesList repositories={repositoriesNames} />}
             </Grid.Column>
           </Grid.Row>
         </Grid>

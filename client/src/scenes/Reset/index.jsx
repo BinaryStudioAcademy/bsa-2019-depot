@@ -54,52 +54,54 @@ class Reset extends Component {
     this.renderRedirect(succsessMessage);
     return (
       <Grid textAlign="center" className="reset-grid fill">
-        <Grid.Column className="grid-column">
-          <Header as="h2" color="black" textAlign="center" className="reset-header">
-            Reset password
-          </Header>
-          {succsessMessage}
-          <Form name="resetForm" size="large" onSubmit={handleSubmit}>
-            <Segment>
-              <Form.Input
-                fluid
-                name="newPassword"
-                value={values.newPassword}
-                label="New password"
-                disabled={passwordReset}
-                placeholder="New password"
-                type="password"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={`${errors.newPassword && touched.newPassword ? 'has-error' : 'no-error'}`}
-              />
-              <InputError name="newPassword" />
-              <Form.Input
-                fluid
-                name="repeatPassword"
-                value={values.repeatPassword}
-                label="Repeat password"
-                disabled={passwordReset}
-                placeholder="Repeat password"
-                type="password"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className={`${errors.repeatPassword && touched.repeatPassword ? 'has-error' : 'no-error'}`}
-              />
-              <InputError name="repeatPassword" />
-              <Button
-                type="submit"
-                color="green"
-                fluid
-                size="large"
-                disabled={errors.repeatPassword && touched.repeatPassword}
-              >
-                Set new password
-              </Button>
-            </Segment>
-            {failureMessage}
-          </Form>
-        </Grid.Column>
+        <Grid.Row>
+          <Grid.Column className="grid-column">
+            <Header as="h2" color="black" textAlign="center" className="reset-header">
+              Reset password
+            </Header>
+            {succsessMessage}
+            <Form name="resetForm" size="large" onSubmit={handleSubmit}>
+              <Segment>
+                <Form.Input
+                  fluid
+                  name="newPassword"
+                  value={values.newPassword}
+                  label="New password"
+                  disabled={passwordReset}
+                  placeholder="New password"
+                  type="password"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={`${errors.newPassword && touched.newPassword ? 'has-error' : 'no-error'}`}
+                />
+                <InputError name="newPassword" />
+                <Form.Input
+                  fluid
+                  name="repeatPassword"
+                  value={values.repeatPassword}
+                  label="Repeat password"
+                  disabled={passwordReset}
+                  placeholder="Repeat password"
+                  type="password"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={`${errors.repeatPassword && touched.repeatPassword ? 'has-error' : 'no-error'}`}
+                />
+                <InputError name="repeatPassword" />
+                <Button
+                  type="submit"
+                  color="green"
+                  fluid
+                  size="large"
+                  disabled={errors.repeatPassword && touched.repeatPassword}
+                >
+                  Set new password
+                </Button>
+              </Segment>
+              {failureMessage}
+            </Form>
+          </Grid.Column>
+        </Grid.Row>
       </Grid>
     );
   }
@@ -128,6 +130,7 @@ class Reset extends Component {
     );
   }
 }
+
 Reset.propTypes = {
   isAuthorized: PropTypes.bool,
   actions: PropTypes.object,

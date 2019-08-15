@@ -71,28 +71,29 @@ export class Overview extends React.Component {
           <Link to="">Customize your pins</Link>
         </Container>
         <Container className={styles.favorite_repos_wrapper}>
-          {repositoriesNames.map(repo => {
-            return (
-              <div key={repo} className={styles.pinned_item}>
-                <div>
-                  <Octicon className={styles.card_icon} icon={Repo} />
-                  <Link to="">{repo}</Link>
-                  <Octicon className={styles.card_icon_grab} icon={Grabber} />
+          {repositoriesNames &&
+            repositoriesNames.map(repo => {
+              return (
+                <div key={repo} className={styles.pinned_item}>
+                  <div>
+                    <Octicon className={styles.card_icon} icon={Repo} />
+                    <Link to="">{repo}</Link>
+                    <Octicon className={styles.card_icon_grab} icon={Grabber} />
+                  </div>
+                  <p className={styles.pinned_item_desc}> </p>
+                  <p className={styles.pinned_item_lang}>
+                    <span></span>Javascript
+                  </p>
                 </div>
-                <p className={styles.pinned_item_desc}> </p>
-                <p className={styles.pinned_item_lang}>
-                  <span></span>Javascript
-                </p>
-              </div>
-            );
-          })}
+              );
+            })}
         </Container>
         <Grid>
           <Grid.Row columns={2}>
             <Grid.Column mobile={16} computer={13}>
               <Container className={styles.pinned_header}>
                 <h2>
-                  {currentYearContribution} contributions in {currentYear}
+                  {currentYearContribution || 'No'} contributions in {currentYear}
                 </h2>
                 <Dropdown className={styles.dropdown_header} text="Contribution settings">
                   <Dropdown.Menu>
@@ -113,7 +114,7 @@ export class Overview extends React.Component {
                 <h2>Contribution activity</h2>
               </Container>
 
-              {Object.entries(monthCommitsActivity).length &&
+              {Object.entries(monthCommitsActivity).length > 0 &&
                 Object.entries(monthCommitsActivity).map(([date, commitCount]) => {
                   const monthAndYear = moment(date).format('MMMM YYYY');
                   return (

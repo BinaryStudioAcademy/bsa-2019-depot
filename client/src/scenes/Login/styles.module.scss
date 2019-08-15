@@ -1,5 +1,9 @@
 :global(.ui.grid.login-grid) {
-  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin: 0;
 }
 :global(.has-error input) {
   border-color: #d0a89c !important;
@@ -22,15 +26,6 @@
 
 :global(.ui.center.aligned.header.login-header) {
   position: relative;
-  &:before {
-    content: '';
-    display: block;
-    margin: 0 auto;
-    width: 150px;
-    height: 150px;
-    background: url('../../images/depot-logo-1.png') no-repeat;
-    background-size: cover;
-  }
 }
 :global(.ui.form .field.password-wrapper) {
   position: relative;
