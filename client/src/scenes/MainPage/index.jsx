@@ -204,7 +204,6 @@ const MainPage = ({ currentUser: { username }, isAuthorized }) => {
           </Grid.Row>
         </Grid>
       </footer>
-      <Divider hidden />
     </div>
   );
 };
