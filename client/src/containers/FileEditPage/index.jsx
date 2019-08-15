@@ -38,6 +38,7 @@ class FileEditPage extends React.Component {
       fileData: { content: '' },
       oldContent: '',
       filename: filename,
+      oldFilename: filename,
       toEdit: !!filename,
       loading: !!filename
     };
@@ -92,16 +93,21 @@ class FileEditPage extends React.Component {
   handleCommitFile({ message, branch }) {
     const { username: ownerUsername, reponame } = this.props.match.params;
     const {
+      filename,
       fileData: { content }
     } = this.state;
     const { email, username } = this.props;
+    const filepathArr = this.filepath.split('/');
+    filepathArr.splice(-1, 1, filename);
+    const newFilepath = filepathArr.join('/');
 
     this.setState({ loading: true });
     commitFile(ownerUsername, reponame, branch, {
       author: username,
       email,
       message,
-      filepath: this.filepath,
+      oldFilepath: this.filepath,
+      filepath: newFilepath,
       fileData: content
     }).then(() => {
       this.handleCancel();
@@ -114,6 +120,7 @@ class FileEditPage extends React.Component {
       fileData: { content },
       oldContent,
       filename,
+      oldFilename,
       toEdit,
       loading
     } = this.state;
@@ -205,7 +212,7 @@ class FileEditPage extends React.Component {
         <CommitFileForm
           avatar={avatar}
           initialBranch={this.branch}
-          disabled={!filename || (content === oldContent && toEdit)}
+          disabled={!filename || (content === oldContent && filename === oldFilename && toEdit)}
           onSubmit={this.handleCommitFile}
           onCancel={this.handleCancel}
         />
