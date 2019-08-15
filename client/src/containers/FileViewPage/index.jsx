@@ -56,10 +56,23 @@ class FileViewPage extends React.Component {
     history.push(location.pathname.replace('/blob', '/edit/tree'));
   }
 
+  formatBytes(bytes, decimals = 2) {
+    if (bytes === 0) return '0 Bytes';
+    if (bytes === 1) return '1 Byte';
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  }
+
   render() {
     const { match, location } = this.props;
     const {
-      fileData: { content },
+      fileData: { content, size },
       loading
     } = this.state;
     const { username: owner, reponame } = match.params;
@@ -97,8 +110,9 @@ class FileViewPage extends React.Component {
         </div>
         <Segment.Group className={styles.fileViewContainer}>
           <Segment className={styles.fileViewHeader}>
-            <div>
-              <code>{lineCount} lines</code>
+            <div className={styles.fileInfo}>
+              <code className={styles.lineCount}>{lineCount} lines</code>
+              <code>{this.formatBytes(size)}</code>
             </div>
             <div className={styles.fileControls}>
               <Icon link name="pencil" onClick={this.handleEditFile} />

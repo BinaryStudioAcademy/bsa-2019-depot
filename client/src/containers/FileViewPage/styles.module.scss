@@ -27,6 +27,14 @@
   }
 }
 
+.fileInfo {
+  display: flex;
+
+  .lineCount {
+    margin-right: 15px;
+  }
+}
+
 .fileControls {
   :global(.icon.pencil) {
     margin-right: 10px;
