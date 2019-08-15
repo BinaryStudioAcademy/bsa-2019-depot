@@ -92,7 +92,6 @@ class FileEditPage extends React.Component {
   handleCommitFile({ message, branch }) {
     const { username: ownerUsername, reponame } = this.props.match.params;
     const {
-      filename,
       fileData: { content }
     } = this.state;
     const { email, username } = this.props;
@@ -102,7 +101,7 @@ class FileEditPage extends React.Component {
       author: username,
       email,
       message,
-      filename,
+      filepath: this.filepath,
       fileData: content
     }).then(() => {
       this.handleCancel();

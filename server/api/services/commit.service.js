@@ -88,7 +88,7 @@ const getCommitDiff = async ({ user, name, hash }) => {
 };
 
 const commitFile = async ({
-  owner, repoName, author, email, branch, message, filename, fileData
+  owner, repoName, author, email, branch, message, filepath, fileData
 }) => {
   const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
   const repo = await NodeGit.Repository.open(pathToRepo.replace(/\\/g, '/'));
@@ -102,7 +102,7 @@ const commitFile = async ({
 
   const oid = await NodeGit.Blob.createFromBuffer(repo, fileBuffer, fileBuffer.length);
 
-  treeBuilder.insert(filename, oid, 33188); // https://www.nodegit.org/api/treebuilder/#insert
+  treeBuilder.insert(filepath, oid, 33188);
 
   const newCommitTree = await treeBuilder.write();
   const commitId = await repo.createCommit(

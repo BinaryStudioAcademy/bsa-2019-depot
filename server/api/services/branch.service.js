@@ -22,7 +22,7 @@ const getLastModifiedCommit = async ({
   walker.sorting(NodeGit.Revwalk.SORT.Time);
 
   const history = await walker.fileHistoryWalk(entry.path(), 500);
-  return history[history.length - 1].commit;
+  return history[0].commit;
 };
 
 const traverseFileTree = async (user, name, branch, tree) => {
