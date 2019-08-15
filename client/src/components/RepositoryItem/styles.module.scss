@@ -2,7 +2,7 @@ $primary-color: #586069;
 $secondary-color: #d1d5da;
 
 :local(.repo_name) {
-  font-size: 20px;
+  font-size: 125%;
 }
 
 :local(.repo_item) {
@@ -43,11 +43,11 @@ $secondary-color: #d1d5da;
 
 :local(.repo_item_updated) {
   /*margin: 8px 0 16px;*/
-  font-size: 12px;
+  font-size: 75%;
 }
 
 :local(.repo_item_lang) {
-  font-size: 12px;
+  font-size: 75%;
   line-height: 1.5;
   margin-right: 16px;
 
@@ -65,7 +65,7 @@ $secondary-color: #d1d5da;
 
 :local(.repo_item_stars) {
   display: inline-block;
-  font-size: 12px;
+  font-size: 75%;
   line-height: 20px;
   padding: 3px 10px;
   background-color: #eff3f6;
