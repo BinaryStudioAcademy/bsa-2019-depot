@@ -39,12 +39,14 @@ function getFetchArgs(args) {
 
 export async function throwIfResponseFailed(res) {
   if (!res.ok) {
-    let parsedException = 'Something went wrong with request!';
+    let parsedException;
     try {
-      let response = await res.json();
-      parsedException = response.message;
+      const response = await res.json();
+      if (response.message) parsedException = response.message;
+      if (response.status === 404) parsedException = 'Not found';
+      if (response.status === 500) parsedException = 'Server is currently unable to handle this request';
     } catch (err) {
-      //
+      parsedException = 'Something went wrong with request!';
     }
     throw parsedException;
   }
