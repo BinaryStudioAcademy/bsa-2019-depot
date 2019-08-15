@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { InputError } from '../../components/InputError';
-import { Formik, ErrorMessage } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import { Grid, Header, Form, Button, Segment, Message } from 'semantic-ui-react';
@@ -70,9 +70,7 @@ class Forgot extends Component {
                     value={values.email}
                     className={`${errors.email && touched.email ? 'has-error' : 'no-error'}`}
                   />
-                  <InputError>
-                    <ErrorMessage name="email" />
-                  </InputError>
+                  <InputError name="email" />
                   <Button type="submit" color="green" fluid size="large" disabled={errors.email && touched.email}>
                     Send password reset email
                   </Button>

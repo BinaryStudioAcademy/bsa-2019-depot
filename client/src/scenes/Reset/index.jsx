@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { InputError } from '../../components/InputError';
-import { Formik, ErrorMessage } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import { Grid, Header, Form, Button, Segment, Message } from 'semantic-ui-react';
@@ -73,9 +73,7 @@ class Reset extends Component {
                 onBlur={handleBlur}
                 className={`${errors.newPassword && touched.newPassword ? 'has-error' : 'no-error'}`}
               />
-              <InputError>
-                <ErrorMessage name="newPassword" />
-              </InputError>
+              <InputError name="newPassword" />
               <Form.Input
                 fluid
                 name="repeatPassword"
@@ -88,9 +86,7 @@ class Reset extends Component {
                 onBlur={handleBlur}
                 className={`${errors.repeatPassword && touched.repeatPassword ? 'has-error' : 'no-error'}`}
               />
-              <InputError>
-                <ErrorMessage name="repeatPassword" />
-              </InputError>
+              <InputError name="repeatPassword" />
               <Button
                 type="submit"
                 color="green"

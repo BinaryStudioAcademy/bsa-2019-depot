@@ -7,7 +7,7 @@ import { signupRoutine } from '../../routines/routines';
 import GoogleAuth from '../../components/GoogleAuth';
 import { InputError } from '../../components/InputError';
 import { serverUrl } from '../../app.config';
-import { Formik, ErrorMessage } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import './styles.module.scss';
@@ -22,7 +22,7 @@ const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email('Invalid email address!')
     .matches(
-      /^(([^<>()\[\\.,;:\s@"]+(\.[^<>()\[\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      /^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))@(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
       'Invalid email address!'
     )
     .required('Email address is required!'),
@@ -71,9 +71,7 @@ class Signup extends React.Component {
               required
               className={`${errors.username && touched.username ? 'has-error' : 'no-error'}`}
             />
-            <InputError>
-              <ErrorMessage name="username" />
-            </InputError>
+            <InputError name="username" />
           </Form.Field>
           <Form.Field required>
             <label htmlFor="email">Email</label>
@@ -88,9 +86,7 @@ class Signup extends React.Component {
               required
               className={`${errors.email && touched.email ? 'has-error' : 'no-error'}`}
             />
-            <InputError>
-              <ErrorMessage name="email" />
-            </InputError>
+            <InputError name="email" />
           </Form.Field>
           <Form.Field required>
             <label htmlFor="password">Password</label>
@@ -105,9 +101,7 @@ class Signup extends React.Component {
               required
               className={`${errors.password && touched.password ? 'has-error' : 'no-error'}`}
             />
-            <InputError>
-              <ErrorMessage name="password" />
-            </InputError>
+            <InputError name="password" />
           </Form.Field>
 
           <Button

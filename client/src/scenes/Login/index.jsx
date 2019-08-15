@@ -8,7 +8,7 @@ import GoogleAuth from '../../components/GoogleAuth';
 import { InputError } from '../../components/InputError';
 import { serverUrl } from '../../app.config';
 import { authorizeUser, loginGoogleRoutine, setUsernameRoutine } from '../../routines/routines';
-import { Formik, ErrorMessage } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import './styles.module.scss';
@@ -108,9 +108,7 @@ class Login extends Component {
                 value={values.email}
                 className={`${errors.email && touched.email ? 'has-error' : 'no-error'}`}
               />
-              <InputError>
-                <ErrorMessage name="email" />
-              </InputError>
+              <InputError name="email" />
               <Form.Field className="password-wrapper">
                 <NavLink exact to="/forgot" className="forgot-link">
                   forgot password?
@@ -126,9 +124,7 @@ class Login extends Component {
                   value={values.password}
                   className={`${errors.password && touched.password ? 'has-error' : 'no-error'}`}
                 />
-                <InputError>
-                  <ErrorMessage name="password" />
-                </InputError>
+                <InputError name="password" />
               </Form.Field>
               <Button
                 type="submit"
@@ -178,9 +174,7 @@ class Login extends Component {
                     required
                     className={`${errors.username && touched.username ? 'has-error' : 'no-error'}`}
                   />
-                  <InputError>
-                    <ErrorMessage name="username" />
-                  </InputError>
+                  <InputError name="username" />
                 </Form.Field>
                 <Button type="submit" color="green" fluid size="large" disabled={errors.username && touched.username}>
                   Set Username
