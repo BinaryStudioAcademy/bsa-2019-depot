@@ -1,3 +1,6 @@
+* {
+  box-sizing: border-box;
+}
 html,
 body,
 div,
@@ -106,6 +109,9 @@ body {
     'Segoe UI Emoji', 'Segoe UI Symbol' !important;
   line-height: 1;
   font-size: 16px !important;
+  > div {
+    height: 100%;
+  }
 }
 
 ol,

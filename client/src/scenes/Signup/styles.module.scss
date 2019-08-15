@@ -1,5 +1,9 @@
 :global(.ui.grid.signup-grid) {
-  margin-top: 80px;
+  height: 100%;
+  margin: 0;
+  :global(.ui.center.aligned.header) {
+    margin-top: 1em;
+  }
 }
 
 :global(.ui.pointing.label.signup-pointing-label) {
