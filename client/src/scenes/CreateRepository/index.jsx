@@ -107,7 +107,8 @@ class CreateRepository extends React.Component {
 
     return (
       <Container>
-        <h1>Create a new repository</h1>
+        <Divider hidden />
+        <h1 className={styles.title}>Create a new repository</h1>
         <p>
           A repository contains all project files, including the revision history. Already have a project repository
           elsewhere?
@@ -189,6 +190,7 @@ class CreateRepository extends React.Component {
             Create repository
           </Button>
         </Form>
+        <Divider hidden />
       </Container>
     );
   }

@@ -199,11 +199,14 @@ $black-color: #24292e;
   }
   ul li {
     a {
-      display: flex;
+      display: inline-block;
+      vertical-align: middle;
     }
     div {
-      display: flex;
-      align-items: center;
+      vertical-align: middle;
+    }
+    i {
+      height: inherit !important;
     }
   }
   .rightMenu {
