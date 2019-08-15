@@ -21,8 +21,8 @@ const MainPage = () => {
           <Grid.Column computer={13} mobile={16}>
             <h1 className={styles.headerCentered}>Built for professional teams</h1>
             <p className={styles.mainText}>
-              Depot is more than just Git code management. Depot gives teams one place to plan projects,
-              collaborate on code, test, and deploy.
+              Depot is more than just Git code management. Depot gives teams one place to plan projects, collaborate on
+              code, test, and deploy.
             </p>
           </Grid.Column>
         </Grid>
@@ -71,8 +71,6 @@ const MainPage = () => {
           ></path>
         </svg>
         <Grid centered container>
-
-
           <Grid.Row>
             <Grid.Column computer={10} tablet={16}>
               <div className={styles.advantageImg}>
@@ -181,9 +179,7 @@ const MainPage = () => {
         </svg>
         <Grid centered container columns={1}>
           <Grid.Column computer={12} mobile={16}>
-            <h2 className={styles.headerCentered}>
-              More than 1 million teams and 10 million developers love Depot
-            </h2>
+            <h2 className={styles.headerCentered}>More than 1 million teams and 10 million developers love Depot</h2>
           </Grid.Column>
 
           <Grid.Column>
