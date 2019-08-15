@@ -174,8 +174,8 @@ class CodeTab extends React.Component {
             </Dropdown>
             <Button className={styles.actionButton}>New pull request</Button>
           </div>
-          <div>
-            <Button.Group className={styles.repoActions}>
+          <div className={styles.repoActions}>
+            <Button.Group>
               <Button className={styles.actionButton}>Create New File</Button>
               <Button className={styles.actionButton}>Upload files</Button>
               <Button className={styles.actionButton}>Find file</Button>
