@@ -19,29 +19,31 @@ class CommitsPage extends React.Component {
   }
 
   componentDidMount() {
+    const { username, reponame } = this.props.match.params;
+    const { branch } = this.state;
+
     this.props.fetchBranches({
-      // Mock
-      owner: this.props.username,
-      repoName: this.props.match.params.reponame
+      owner: username,
+      repoName: reponame
     });
     this.props.fetchCommits({
-      // Mock
-      owner: this.props.username,
-      repoName: this.props.match.params.reponame,
-      branch: this.state.branch
+      owner: username,
+      repoName: reponame,
+      branch
     });
   }
 
   handleBranchChange(event, data) {
+    const { username, reponame } = this.props.match.params;
+
     this.setState(
       {
         branch: data.value
       },
       () => {
         this.props.fetchCommits({
-          // Mock
-          owner: this.props.username,
-          repoName: 'new-repo',
+          owner: username,
+          repoName: reponame,
           branch: this.state.branch
         });
       }
@@ -89,23 +91,15 @@ CommitsPage.propTypes = {
     error: PropTypes.string,
     branches: PropTypes.array
   }).isRequired,
-  /*repoName: PropTypes.string.isRequired,*/
   fetchCommits: PropTypes.func.isRequired,
   fetchBranches: PropTypes.func.isRequired,
   username: PropTypes.string,
   match: PropTypes.object
 };
 
-const mapStateToProps = ({
+const mapStateToProps = ({ commitsData, branchesData }) => ({
   commitsData,
-  branchesData,
-  profile: {
-    currentUser: { username }
-  } /*, repoName*/
-}) => ({
-  commitsData,
-  branchesData /*,
-    repoName*/
+  branchesData
 });
 
 const mapDispatchToProps = {

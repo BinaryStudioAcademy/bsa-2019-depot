@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import RepoFileTree from '../../components/RepoFileTree/index';
 import RepoReadme from '../../components/RepoReadme/index';
 import { fetchLastCommitOnBranch, fetchBranches, fetchFileTree } from '../../routines/routines';
@@ -25,9 +25,11 @@ import styles from './styles.module.scss';
 class CodeTab extends React.Component {
   constructor(props) {
     super(props);
+
+    const { username, reponame } = this.props.match.params;
     this.state = {
-      owner: 'pavel',
-      repoName: 'test-repo.git',
+      owner: username,
+      repoName: reponame,
       branch: 'master'
     };
     this.onBranchChange = this.onBranchChange.bind(this);
@@ -37,7 +39,7 @@ class CodeTab extends React.Component {
   componentDidMount() {
     const { history } = this.props;
     const { owner, repoName, branch } = this.state;
-    history.push(`/code/${repoName}/tree/${branch}`);
+    history.push(`/${owner}/${repoName}/tree/${branch}`);
     this.props.fetchLastCommitOnBranch({
       owner,
       repoName,
@@ -67,7 +69,7 @@ class CodeTab extends React.Component {
       () => {
         const { owner, repoName, branch } = this.state;
         const { history } = this.props;
-        history.push(`/code/${repoName}/tree/${data.value}`);
+        history.push(`/${owner}/${repoName}/tree/${data.value}`);
 
         this.props.fetchLastCommitOnBranch({
           owner,
@@ -104,7 +106,7 @@ class CodeTab extends React.Component {
           <Menu borderless attached="top" widths={4}>
             <Menu.Item>
               <Octicon icon={getIconByName('history')} />
-              <Link className={styles.repoMetaDataLinks} to="">
+              <Link className={styles.repoMetaDataLinks} to={`/${owner}/${repoName}/commits`}>
                 <b>4,325 </b> commits
               </Link>
             </Menu.Item>
@@ -273,10 +275,11 @@ CodeTab.propTypes = {
   fetchLastCommitOnBranch: PropTypes.func.isRequired,
   fetchBranches: PropTypes.func.isRequired,
   fetchFileTree: PropTypes.func.isRequired,
-  history: PropTypes.object
+  history: PropTypes.object,
+  match: PropTypes.object
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CodeTab);
+)(withRouter(CodeTab));
