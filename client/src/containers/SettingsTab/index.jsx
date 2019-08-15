@@ -81,7 +81,7 @@ class RepoSettings extends React.Component {
     const { loading } = this.props.repoSettingsData;
     const { name } = this.state;
     return !loading ? (
-      <Grid container stackable>
+      <Grid container stackable className={styles.box}>
         <Grid.Column width={4} className={styles.first_column}>
           <Menu vertical>
             <Menu.Item>Options</Menu.Item>

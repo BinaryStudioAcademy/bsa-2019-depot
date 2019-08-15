@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Container, Grid, Button } from 'semantic-ui-react';
+import { Container, Grid, Button, Divider } from 'semantic-ui-react';
 import Octicon, { Smiley } from '@primer/octicons-react';
 import { repositoryActions } from './actions';
 import Overview from '../../containers/Overview';
@@ -67,6 +67,7 @@ class Dashboard extends React.Component {
     }
     return (
       <Container className={styles.wrapper}>
+        <Divider hidden />
         <Grid>
           <Grid.Row columns={2}>
             <Grid.Column className={styles.userinfo_wrapper} mobile={16} tablet={4} computer={4}>
