@@ -28,8 +28,8 @@ const validationSchema = Yup.object().shape({
     .required('Email address is required!'),
   password: Yup.string()
     .matches(
-      /^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))@(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      'Invalid email address!'
+      /^(?:(?=\D*\d)(?=[^a-z]*[a-z]).{8,}|[a-zA-Z0-9]{15,})$/,
+      'Minimum length - 8 characters, if it includes a number and a lowercase letter OR 15 characters with any combination of characters'
     )
     .required('Password is required')
     .max(72)
