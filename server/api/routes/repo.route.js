@@ -16,18 +16,18 @@ const router = Router();
 
 router
   .post('/', (req, res) => {
-    const { repository, ownerID } = req.body;
-    createRepo({ userId: ownerID, name: repository, ...req.body }).then(data => res.send(data));
+    const { reponame, ownerID } = req.body;
+    createRepo({ userId: ownerID, name: reponame, ...req.body }).then(data => res.send(data));
   })
-  .get('/:owner/:repository/check-name', (req, res, next) => {
-    const { owner, repository } = req.params;
-    checkName({ owner, repository })
+  .get('/:owner/:reponame/check-name', (req, res, next) => {
+    const { owner, reponame } = req.params;
+    checkName({ owner, reponame })
       .then(result => res.send({ exists: result }))
       .catch(next);
   })
-  .get('/:owner/:repoName/is-empty', (req, res, next) => {
-    const { owner, repoName } = req.params;
-    isEmpty({ owner, repoName })
+  .get('/:owner/:reponame/is-empty', (req, res, next) => {
+    const { owner, reponame } = req.params;
+    isEmpty({ owner, reponame })
       .then((result) => {
         res.send(result);
       })
