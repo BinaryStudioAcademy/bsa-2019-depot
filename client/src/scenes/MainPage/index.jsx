@@ -27,7 +27,7 @@ const MainPage = () => {
           </Grid.Column>
         </Grid>
         <Button className={styles.button}>Get started for free</Button>
-        <p className={styles.mainHost}>
+        <p>
           Or host it yourself with&nbsp;
           <a className={styles.link} href="/">
             Depot Enterprise

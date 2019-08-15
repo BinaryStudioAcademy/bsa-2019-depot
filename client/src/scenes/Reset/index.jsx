@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import { InputError } from '../../components/InputError';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -13,7 +14,10 @@ import './styles.module.scss';
 
 const validationSchema = Yup.object().shape({
   newPassword: Yup.string()
-    .matches(/^(?=.*\d[a-z]).{8,}|([a-zA-Z0-9]{15,})$/)
+    .matches(
+      /^(?:(?=\D*\d)(?=[^a-z]*[a-z]).{8,}|[a-zA-Z0-9]{15,})$/,
+      'Minimum length - 8 characters, if it includes a number and a lowercase letter OR 15 characters with any combination of characters'
+    )
     .required('Password is required')
     .max(72),
   repeatPassword: Yup.string()
@@ -49,7 +53,7 @@ class Reset extends Component {
     const failureMessage = passwordNotReset ? <Message color="red">{message}</Message> : null;
     this.renderRedirect(succsessMessage);
     return (
-      <Grid textAlign="center" verticalAlign="middle" className="reset-grid fill">
+      <Grid textAlign="center" className="reset-grid fill">
         <Grid.Column className="grid-column">
           <Header as="h2" color="black" textAlign="center" className="reset-header">
             Reset password
@@ -69,6 +73,7 @@ class Reset extends Component {
                 onBlur={handleBlur}
                 className={`${errors.newPassword && touched.newPassword ? 'has-error' : 'no-error'}`}
               />
+              <InputError name="newPassword" />
               <Form.Input
                 fluid
                 name="repeatPassword"
@@ -81,6 +86,7 @@ class Reset extends Component {
                 onBlur={handleBlur}
                 className={`${errors.repeatPassword && touched.repeatPassword ? 'has-error' : 'no-error'}`}
               />
+              <InputError name="repeatPassword" />
               <Button
                 type="submit"
                 color="green"
