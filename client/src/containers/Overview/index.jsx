@@ -71,21 +71,22 @@ export class Overview extends React.Component {
           <Link to="">Customize your pins</Link>
         </Container>
         <Container className={styles.favorite_repos_wrapper}>
-          {repositoriesNames.map(repo => {
-            return (
-              <div key={repo} className={styles.pinned_item}>
-                <div>
-                  <Octicon className={styles.card_icon} icon={Repo} />
-                  <Link to="">{repo}</Link>
-                  <Octicon className={styles.card_icon_grab} icon={Grabber} />
+          {repositoriesNames &&
+            repositoriesNames.map(repo => {
+              return (
+                <div key={repo} className={styles.pinned_item}>
+                  <div>
+                    <Octicon className={styles.card_icon} icon={Repo} />
+                    <Link to="">{repo}</Link>
+                    <Octicon className={styles.card_icon_grab} icon={Grabber} />
+                  </div>
+                  <p className={styles.pinned_item_desc}> </p>
+                  <p className={styles.pinned_item_lang}>
+                    <span></span>Javascript
+                  </p>
                 </div>
-                <p className={styles.pinned_item_desc}> </p>
-                <p className={styles.pinned_item_lang}>
-                  <span></span>Javascript
-                </p>
-              </div>
-            );
-          })}
+              );
+            })}
         </Container>
         <Grid>
           <Grid.Row columns={2}>
