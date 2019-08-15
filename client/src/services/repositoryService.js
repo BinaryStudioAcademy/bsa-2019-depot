@@ -18,19 +18,19 @@ export const createRepository = async request => {
   return response.json();
 };
 
-export const checkName = async ({ owner, repository }) => {
-  if (!owner || !repository) return 'invalid data';
+export const checkName = async ({ owner, reponame }) => {
+  if (!owner || !reponame) return 'invalid data';
 
   const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/${repository}/check-name`,
+    endpoint: `/api/repo/${owner}/${reponame}/check-name`,
     type: 'GET'
   });
   return response.json();
 };
 
-export const checkIfEmpty = async ({ owner, repository }) => {
+export const checkIfEmpty = async ({ owner, reponame }) => {
   const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/${repository}/is-empty`,
+    endpoint: `/api/repo/${owner}/${reponame}/is-empty`,
     type: 'GET'
   });
   return response.json();

@@ -49,7 +49,7 @@ class Routing extends React.Component {
             <PrivateRoute exact path="/new" component={CreateRepository} />
             <PrivateRoute exact path="/:username" component={Dashboard} />
             <PrivateRoute path="/:username/:reponame" component={RepositoryPage} />
-            <Route exact path="*" component={NotFound} />
+            <Route path="*" component={NotFound} />
           </Switch>
         </div>
         <Footer />

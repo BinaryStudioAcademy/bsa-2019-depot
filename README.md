@@ -124,6 +124,8 @@ RABBITMQ_CONNECTION_URL = amqp://localhost:5672 # default. has to be changed if 
 EMAIL_QUEUE_NAME = emails # default. has to be changed if it is different
 
 SECRET_KEY = secretkey # has to be changed to own random secret key
+
+SSH_KEYS = .ssh/authorized_keys # default path to 'authorized_keys' file to store SSH keys in
 ```
 
 ### Branches

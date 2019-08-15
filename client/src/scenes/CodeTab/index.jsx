@@ -7,7 +7,19 @@ import RepoReadme from '../../components/RepoReadme/index';
 import { fetchLastCommitOnBranch, fetchBranches, fetchFileTree } from '../../routines/routines';
 
 import Octicon, { getIconByName } from '@primer/octicons-react';
-import { Container, Button, Header, Dropdown, Input, Popup, Segment, Menu, Dimmer, Loader } from 'semantic-ui-react';
+import {
+  Container,
+  Button,
+  Header,
+  Dropdown,
+  Input,
+  Popup,
+  Segment,
+  Menu,
+  Dimmer,
+  Loader,
+  Divider
+} from 'semantic-ui-react';
 import styles from './styles.module.scss';
 
 class CodeTab extends React.Component {
@@ -77,6 +89,7 @@ class CodeTab extends React.Component {
 
     return (
       <Container>
+        <Divider hidden />
         <div className={styles.repoDescription}>
           <div className={styles.repoDescriptionText}>
             Semantic is a UI component framework based around useful principles from natural language.{' '}

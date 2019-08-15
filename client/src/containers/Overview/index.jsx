@@ -93,7 +93,7 @@ export class Overview extends React.Component {
             <Grid.Column mobile={16} computer={13}>
               <Container className={styles.pinned_header}>
                 <h2>
-                  {currentYearContribution} contributions in {currentYear}
+                  {currentYearContribution || 'No'} contributions in {currentYear}
                 </h2>
                 <Dropdown className={styles.dropdown_header} text="Contribution settings">
                   <Dropdown.Menu>
@@ -114,7 +114,7 @@ export class Overview extends React.Component {
                 <h2>Contribution activity</h2>
               </Container>
 
-              {Object.entries(monthCommitsActivity).length &&
+              {Object.entries(monthCommitsActivity).length > 0 &&
                 Object.entries(monthCommitsActivity).map(([date, commitCount]) => {
                   const monthAndYear = moment(date).format('MMMM YYYY');
                   return (

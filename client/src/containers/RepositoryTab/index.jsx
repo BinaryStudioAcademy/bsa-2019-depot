@@ -14,8 +14,8 @@ class RepositoryTab extends React.Component {
   }
 
   async getData() {
-    const { username, repository } = this.props.match;
-    const { isEmpty } = await checkIfEmpty({ owner: username, repository });
+    const { username, reponame } = this.props.match.params;
+    const { isEmpty } = await checkIfEmpty({ owner: username, reponame });
     this.setState({
       ...this.state,
       isEmpty,
@@ -40,7 +40,7 @@ class RepositoryTab extends React.Component {
 RepositoryTab.propTypes = {
   match: {
     username: PropTypes.string.isRequired,
-    repository: PropTypes.string.isRequired
+    reponame: PropTypes.string.isRequired
   }
 };
 
