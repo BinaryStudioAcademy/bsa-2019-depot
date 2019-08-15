@@ -14,9 +14,8 @@ const getBranches = async ({ user, repoName }) => {
 const getLastModifiedCommit = async ({
   user, name, branch, entry
 }) => {
-  // const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`);
   const pathToRepo = repoHelper.getPathToRepo(user, name);
-  const repo = await NodeGit.Repository.open(pathToRepo.replace(/\\/g, '/'));
+  const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
   const walker = repo.createRevWalk();
   walker.push(lastCommitOnBranch.sha());
@@ -64,9 +63,8 @@ const traverseFileTree = async (user, name, branch, tree) => {
 const getBranchTree = async ({
   user, name, branch, pathToDir
 }) => {
-  // const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`);
   const pathToRepo = repoHelper.getPathToRepo(user, name);
-  const repo = await NodeGit.Repository.open(pathToRepo.replace(/\\/g, '/'));
+  const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
   const tree = await lastCommitOnBranch.getTree();
 
@@ -92,9 +90,8 @@ const getBranchTree = async ({
 };
 
 const getLastCommitOnBranch = async ({ user, name, branch }) => {
-  // const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`);
   const pathToRepo = repoHelper.getPathToRepo(user, name);
-  const repo = await NodeGit.Repository.open(pathToRepo.replace(/\\/g, '/'));
+  const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
 
   return {

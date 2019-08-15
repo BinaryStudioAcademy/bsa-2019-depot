@@ -5,7 +5,6 @@ const { getReposNames } = require('./repo.service');
 const repoHelper = require('../../helpers/repo.helper');
 
 const getCommits = async ({ user, name, branch }) => {
-  // const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`).replace(/\\/g, '/');
   const pathToRepo = repoHelper.getPathToRepo(user, name);
   const allCommits = [];
   await NodeGit.Repository.open(pathToRepo)
@@ -37,7 +36,6 @@ const getCommitsByDate = async (data) => {
   const repoList = await getReposNames(data);
   let globalCommits = [];
   const promises = repoList.map((repoName) => {
-    // const pathToRepo = path.resolve(`${gitPath}/${user}/${repoName}`);
     const pathToRepo = repoHelper.getPathToRepo(user, repoName);
     return NodeGit.Repository.open(pathToRepo).then((repo) => {
       const walker = NodeGit.Revwalk.create(repo);
@@ -80,7 +78,6 @@ const getCommitsByDate = async (data) => {
 };
 
 const getCommitDiff = async ({ user, name, hash }) => {
-  // const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`).replace(/\\/g, '/');
   const pathToRepo = repoHelper.getPathToRepo(user, name);
   const cdCommand = `cd  ${pathToRepo} `;
   const gitDiffCommand = `git diff ${hash}~ ${hash} -U`;

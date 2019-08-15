@@ -3,7 +3,7 @@ import * as commitsService from '../../services/commitsService';
 import * as branchesService from '../../services/branchesService';
 import { fetchCommits, fetchBranches } from '../../routines/routines';
 
-function* commitsRequest({ payload: { owner, repoName, branch } }) {
+function* commitsRequest({ payload: { username: owner, reponame: repoName, branch } }) {
   try {
     yield put(fetchCommits.request());
 
@@ -21,7 +21,7 @@ function* watchCommitsRequest() {
   yield takeEvery(fetchCommits.TRIGGER, commitsRequest);
 }
 
-function* branchesRequest({ payload: { owner, repoName } }) {
+function* branchesRequest({ payload: { username: owner, reponame: repoName } }) {
   try {
     yield put(fetchBranches.request());
 
