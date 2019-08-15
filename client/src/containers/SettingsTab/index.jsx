@@ -26,14 +26,13 @@ class RepoSettings extends React.Component {
   constructor(props) {
     super(props);
 
-    const {
-      params: { owner, repository }
-    } = this.props.match;
-    this.oldName = repository;
+    const { params } = this.props.match;
+    const { username, reponame } = params;
 
+    this.oldName = reponame;
     this.state = {
-      name: repository,
-      owner
+      name: reponame,
+      owner: username
     };
   }
 
@@ -48,12 +47,13 @@ class RepoSettings extends React.Component {
   }
 
   onClickDelete = () => {
-    const { owner, name } = this.state;
+    const { owner } = this.state;
     const { deleteRepo } = this.props;
+    const { oldName } = this;
 
     deleteRepo({
       owner,
-      name
+      name: oldName
     });
   };
 
@@ -81,13 +81,13 @@ class RepoSettings extends React.Component {
     const { loading } = this.props.repoSettingsData;
     const { name } = this.state;
     return !loading ? (
-      <Grid container stackable>
-        <Grid.Column width={4}>
+      <Grid container stackable className={styles.box}>
+        <Grid.Column width={4} className={styles.first_column}>
           <Menu vertical>
             <Menu.Item>Options</Menu.Item>
           </Menu>
         </Grid.Column>
-        <Grid.Column width={12}>
+        <Grid.Column width={12} className={styles.second_column}>
           <Header as="h2">Settings</Header>
           <Divider />
 

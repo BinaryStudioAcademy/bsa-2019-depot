@@ -1,4 +1,7 @@
 #!/bin/bash
-cd /home/ubuntu/bsa-2019-depot/server/
-pm2 delete Depot
-pm2 start npm --name "Depot" -- start
+cd /home/git/
+. setEnv.sh
+cd /home/git/bsa-2019-depot/server/
+pm2 delete all
+npx sequelize-cli db:migrate
+pm2 start server.js --name Depot

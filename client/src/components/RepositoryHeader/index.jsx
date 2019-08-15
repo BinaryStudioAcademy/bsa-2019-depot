@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Octicon, { Repo } from '@primer/octicons-react';
-import { Button, Icon, Label } from 'semantic-ui-react';
+import { Icon, Label } from 'semantic-ui-react';
+import ForkButton from '../ForkButton';
 
 import styles from './styles.module.scss';
 
@@ -14,6 +15,9 @@ const RepositoryHeader = ({ owner, repoName, forkCount, issueCount, activePage, 
     break;
   case 'commits':
     activeTab = 'code';
+    break;
+  case 'settings':
+    activeTab = 'settings';
     break;
   default:
     activeTab = 'code';
@@ -31,15 +35,7 @@ const RepositoryHeader = ({ owner, repoName, forkCount, issueCount, activePage, 
               <Link to={baseUrl}>{repoName}</Link>
             </span>
           </div>
-          <Button size="small" as="div" compact labelPosition="right">
-            <Button size="small" compact>
-              <Icon name="fork" />
-              Fork
-            </Button>
-            <Label as="a" basic pointing="left">
-              {forkCount}
-            </Label>
-          </Button>
+          <ForkButton owner={owner} repoName={repoName} forkCount={forkCount} />
         </div>
         <div className="ui top attached tabular menu">
           <div className={`${activeTab === 'code' && 'active'} item`}>
@@ -50,6 +46,11 @@ const RepositoryHeader = ({ owner, repoName, forkCount, issueCount, activePage, 
           <div className={`${activeTab === 'issues' && 'active'} item`}>
             <Link to={`${baseUrl}/issues`}>
               Issues<Label circular>{issueCount}</Label>
+            </Link>
+          </div>
+          <div className={`${activeTab === 'settings' && 'active'} item`}>
+            <Link to={`${baseUrl}/settings`}>
+              <Icon name="cog" /> Settings
             </Link>
           </div>
         </div>

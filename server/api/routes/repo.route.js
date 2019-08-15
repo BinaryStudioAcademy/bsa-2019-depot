@@ -1,19 +1,42 @@
 const { Router } = require('express');
+
 const {
-  createRepo, renameRepo, deleteRepo, getReposNames
+  createRepo,
+  renameRepo,
+  deleteRepo,
+  getReposNames,
+  checkName,
+  isEmpty,
+  forkRepo
 } = require('../services/repo.service');
-const { getCommits } = require('../services/commit.service');
-const { getBranches } = require('../services/branch.service');
+const { getCommits, getCommitDiff } = require('../services/commit.service');
+const { getBranches, getBranchTree, getLastCommitOnBranch } = require('../services/branch.service');
 
 const router = Router();
 
 router
   .post('/', (req, res) => {
-    createRepo({ ...req.body }).then(data => res.send(data));
+    const { reponame, ownerID } = req.body;
+    createRepo({ userId: ownerID, name: reponame, ...req.body }).then(data => res.send(data));
+  })
+  .get('/:owner/:reponame/check-name', (req, res, next) => {
+    const { owner, reponame } = req.params;
+    checkName({ owner, reponame })
+      .then(result => res.send({ exists: result }))
+      .catch(next);
+  })
+  .get('/:owner/:reponame/is-empty', (req, res, next) => {
+    const { owner, reponame } = req.params;
+    isEmpty({ owner, reponame })
+      .then((result) => {
+        res.send(result);
+      })
+      .catch(next);
   })
   .get('/:owner/repos', (req, res, next) => {
+    const { filterWord, limit } = req.body;
     const { owner } = req.params;
-    getReposNames({ user: owner, filter: req.query })
+    getReposNames({ user: owner, filter: filterWord, limit })
       .then(repos => res.send(repos))
       .catch(next);
   })
@@ -29,7 +52,31 @@ router
       .then(branches => res.send(branches))
       .catch(next);
   })
-  .get('/:owner/:repoName/settings', (req, res, next) => {
+  .get('/:owner/:repoName/:hash/commit', (req, res, next) => {
+    const { owner, repoName, hash } = req.params;
+    getCommitDiff({ user: owner, name: repoName, hash })
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .get('/:owner/:repoName/:branchName/tree', (req, res, next) => {
+    const { owner, repoName, branchName } = req.params;
+    const { pathToDir } = req.query;
+    getBranchTree({
+      user: owner,
+      name: repoName,
+      branch: branchName,
+      pathToDir
+    })
+      .then(tree => res.send(tree))
+      .catch(next);
+  })
+  .get('/:owner/:repoName/:branchName/last-commit', (req, res, next) => {
+    const { owner, repoName, branchName } = req.params;
+    getLastCommitOnBranch({ user: owner, name: repoName, branch: branchName })
+      .then(commit => res.send(commit))
+      .catch(next);
+  })
+  .get('/:owner/:repoName/settings', (req, res) => {
     res.sendStatus(200);
     /* Can be used in future to get settings data from DB
     const { repoName } = req.params;
@@ -48,6 +95,18 @@ router
   .delete('/:owner/:repoName/settings', (req, res, next) => {
     const { repoName } = req.params;
     deleteRepo({ repoName, username: req.user.username })
+      .then(result => res.send(result))
+      .catch(next);
+  })
+  .post('/:owner/:repoName', (req, res, next) => {
+    const {
+      params: { owner, repoName },
+      user: {
+        dataValues: { username }
+      }
+    } = req;
+
+    forkRepo({ username, owner, repoName })
       .then(result => res.send(result))
       .catch(next);
   });

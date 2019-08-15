@@ -2,7 +2,7 @@ $black-color: #24292e;
 
 :local(.headerWrp) {
   background-color: $black-color;
-  padding: 20px 0;
+  padding: 8px 0;
   ul {
     display: flex;
     align-items: center;
@@ -27,7 +27,6 @@ $black-color: #24292e;
       a,
       p {
         color: #fff;
-        font-size: 16px;
         margin: 0;
       }
       p svg {
@@ -44,7 +43,7 @@ $black-color: #24292e;
         padding: 8px;
         div {
           color: #586069 !important;
-          font-size: 16px !important;
+          font-size: 100% !important;
           a {
             color: #586069;
           }
@@ -86,7 +85,6 @@ $black-color: #24292e;
     }
   }
   a {
-    font-size: 16px;
     padding: 10px;
     color: #fff;
     &:not(:last-child) {
@@ -108,10 +106,13 @@ $black-color: #24292e;
     display: none !important;
   }
 }
-
+:global(.ui.visible.right.overlay.sidebar) {
+  max-width: 320px;
+  width: 100%;
+}
 :local(.sidebar) {
   background-color: #fff !important;
-  font-size: 16px !important;
+  font-size: 100% !important;
   div {
     text-align: left;
     text-align-last: left;
@@ -121,7 +122,7 @@ $black-color: #24292e;
     }
     a {
       color: #444d56 !important;
-      font-size: 16px !important;
+      font-size: 100% !important;
     }
     i {
       float: right !important;
@@ -141,7 +142,7 @@ $black-color: #24292e;
       justify-content: center;
     }
     a {
-      padding: 4px 8px;
+      padding: 8px 10px;
       &:last-child {
         border: 1px solid gray;
         border-radius: 3px;
@@ -164,10 +165,11 @@ $black-color: #24292e;
     }
     div {
       align-items: center !important;
+      text-align: center;
     }
   }
   a {
-    font-size: 14px !important;
+    font-size: 87.5% !important;
     font-weight: bold;
   }
   :global(.bell.icon),
@@ -197,11 +199,14 @@ $black-color: #24292e;
   }
   ul li {
     a {
-      display: flex;
+      display: inline-block;
+      vertical-align: middle;
     }
     div {
-      display: flex;
-      align-items: center;
+      vertical-align: middle;
+    }
+    i {
+      height: inherit !important;
     }
   }
   .rightMenu {

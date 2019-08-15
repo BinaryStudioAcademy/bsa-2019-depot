@@ -11,21 +11,23 @@ $gray-color: #f4f5f7;
 
 :local(.header) {
   color: $header-color;
-  font-size: 44px;
+  font-size: 275%;
+
   @media screen and (max-width: 768px) {
-    font-size: 30px !important;
+    font-size: 187% !important;
   }
 }
 
 :local(.link) {
-  // display: block;
   color: $blue-color !important;
+
   &:hover {
     svg {
       transform: translate3d(5px, 0, 0);
       transition: transform 250ms;
     }
   }
+
   svg {
     margin-left: 5px;
   }
@@ -37,12 +39,8 @@ $gray-color: #f4f5f7;
 }
 
 :local(.mainText) {
-  font-size: 20px;
+  font-size: 125%;
   text-align: center;
-}
-
-:local(.mainHost) {
-  font-size: 16px;
 }
 
 :local(.button) {
@@ -57,17 +55,19 @@ $gray-color: #f4f5f7;
 
 :local(.advantageSmall) {
   margin-top: 50px;
+
   img {
     height: 140px;
     margin: 0 auto;
   }
+
   h3 {
-    font-size: 24px;
+    font-size: 150%;
     color: $header-color;
     text-align: center;
   }
+
   p {
-    font-size: 16px;
     text-align: center;
     line-height: 24px;
   }
@@ -79,21 +79,24 @@ $gray-color: #f4f5f7;
 
 :local(.advantageText) {
   margin-top: 60px;
+
   h5 {
     text-transform: uppercase;
-    font-size: 12px;
+    font-size: 75%;
     padding-top: 15px;
   }
+
   h2 {
-    font-size: 36px;
+    font-size: 225%;
     color: $header-color;
     margin-bottom: 24px;
   }
+
   p {
-    font-size: 20px;
+    font-size: 125%;
   }
+
   a {
-    font-size: 16px;
     color: $blue-color;
   }
 }
@@ -120,14 +123,16 @@ $gray-color: #f4f5f7;
   padding: 40px;
   margin-top: 20px;
   background-color: #fff;
+
   img {
     height: 90px;
   }
+
   h3 {
-    font-size: 24px;
+    font-size: 150%;
   }
+
   p {
-    font-size: 16px;
     line-height: 24px;
   }
 }
@@ -140,10 +145,12 @@ $gray-color: #f4f5f7;
 :local(.integrationsBlock) {
   composes: advantageSmall;
   margin: 20px 0;
+
   img {
     height: 90px;
     margin: 0;
   }
+
   h3,
   p {
     text-align: left;
@@ -154,6 +161,7 @@ $gray-color: #f4f5f7;
   .header {
     padding-top: 80px;
   }
+
   img {
     margin: 30px 0 50px;
   }
@@ -161,9 +169,11 @@ $gray-color: #f4f5f7;
 
 :local(.plans) {
   padding-bottom: 80px;
+
   .header {
     padding-top: 50px;
   }
+
   p {
     text-align: center;
   }
@@ -171,56 +181,66 @@ $gray-color: #f4f5f7;
 
 :local(.plan) {
   box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.1);
+
   hr {
     background-color: #dfe1e5 !important;
     border: none;
     height: 2px;
   }
+
   .planHeader {
     text-align: center;
     padding: 40px;
     background-color: $gray-color;
+
     h4 {
-      font-size: 20px;
+      font-size: 125%;
     }
+
     p {
-      font-size: 16px;
       &:last-child {
-        font-size: 20px;
+        font-size: 125%;
       }
     }
+
     h2 {
-      font-size: 72px;
+      font-size: 450%;
       color: $blue-color;
       font-weight: bold;
     }
   }
+
   .planBody {
     padding: 40px;
+
     li {
       padding-left: 32px;
-      font-size: 16px;
       line-height: 24px;
+
       &:not(:last-child) {
         margin-bottom: 12px;
       }
+
       &.featured {
         background: url('https://bitbucket.org/dam/jcr:743645da-cea8-4466-879b-0c0f99aee501/check-mark-adg3-blue.svg')
           no-repeat;
         background-size: 24px 24px;
       }
+
       &.deemphasized {
         opacity: 0.15;
       }
     }
   }
+
   .planFooter {
     padding: 40px;
+
     li {
-      font-size: 16px;
       &:not(:last-child) {
         margin-bottom: 12px;
       }
+
       i {
         font-style: italic;
       }
@@ -237,16 +257,18 @@ $gray-color: #f4f5f7;
   .block {
     padding: 40px;
     background-color: $gray-color;
+
     img {
       width: 90px;
     }
+
     h2 {
       color: $header-color;
-      font-size: 44px;
+      font-size: 275%;
       margin-bottom: 24px;
     }
+
     p {
-      font-size: 16px;
       line-height: 24px;
     }
   }
@@ -260,9 +282,11 @@ $gray-color: #f4f5f7;
   background-position: bottom left, bottom right;
   background-repeat: no-repeat, no-repeat;
   background-size: 600px 300px, 600px 300px;
+
   button {
     margin-top: 0 !important;
   }
+
   @media screen and (max-width: 992px) {
     background: none;
   }
@@ -272,70 +296,84 @@ $gray-color: #f4f5f7;
   padding-top: 60px;
   background-color: $gray-color;
   color: $text-color;
+
   h4 {
-    font-size: 20px;
+    font-size: 125%;
     color: $header-color;
+
     &:not(:last-child) {
       @media screen and (max-width: 992px) {
         margin-top: 50px;
       }
     }
   }
+
   li:not(:last-child) {
     margin-bottom: 8px;
   }
+
   a {
     color: $text-color;
-    font-size: 14px;
+    font-size: 87.5%;
+
     &:hover {
       color: $text-color;
       text-decoration: underline;
     }
   }
+
   p {
-    font-size: 16px;
     margin: 26px 0;
   }
+
   .form {
     div {
       justify-content: space-between;
+
       div:first-child {
-        width: 100%;
-        @media screen and (max-width: 992px) {
-          width: auto;
-        }
+        flex-grow: 1 !important;
       }
+
       @media screen and (max-width: 992px) {
         justify-content: flex-start;
       }
     }
+
     button {
       background: $gray-color;
       border: 1px solid $blue-color;
       color: $blue-color;
+
       &:hover {
         color: $blue-color;
         background-color: darken($gray-color, $amount: 1);
       }
     }
   }
+
   .social {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-end !important;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 30px 0;
+
     p {
       display: inline-block;
       margin: 0 30px 0 0;
     }
+
     ul {
       display: inline-flex;
+
       li {
         margin: 0;
+
         &:not(:last-child) {
           margin-right: 12px;
         }
       }
     }
+
     a {
       display: block;
       height: 32px;
@@ -344,34 +382,41 @@ $gray-color: #f4f5f7;
       color: transparent;
     }
   }
+
   .fb {
     background: url(https://wac-cdn.atlassian.com/assets/img/icons/social-icons/facebook-badge.svg) center center
       no-repeat;
   }
+
   .tw {
     background: url(https://wac-cdn.atlassian.com/assets/img/icons/social-icons/twitter.svg) center center no-repeat;
   }
+
   .foterLine {
     border-top: 2px solid #dfe1e5;
     padding-top: 25px;
     justify-content: space-between;
+
     ul {
-      display: inline-flex;
+      display: flex;
       align-items: center;
+
       li {
         margin: 0;
+
         &:not(:last-child) {
           margin-right: 30px;
         }
+
         img {
           width: 120px !important;
         }
       }
+
+      @media screen and (max-width: 768px) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
-  }
-  .selectLeng div {
-    background: $gray-color !important;
-    border: none !important;
-    color: $text-color !important;
   }
 }

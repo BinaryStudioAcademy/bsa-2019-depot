@@ -11,7 +11,7 @@ export const signup = async request => {
 
 export const googleSignup = async () => {
   const response = await callWebApi({
-    endpoint: '/auth/google',
+    endpoint: '/api/auth/google',
     type: 'GET'
   });
   return response.json();
@@ -26,9 +26,8 @@ export const setUsername = async (username, profile) => {
     username,
     profile
   };
-  debugger;
   const response = await callWebApi({
-    endpoint: '/user/username',
+    endpoint: '/api/user/username',
     type: 'POST',
     request
   });
@@ -37,7 +36,7 @@ export const setUsername = async (username, profile) => {
 
 export const checkUsername = async username => {
   const response = await callWebApi({
-    endpoint: '/user/username-exists',
+    endpoint: '/api/user/username-exists',
     type: 'GET',
     query: {
       username

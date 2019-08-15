@@ -1,5 +1,15 @@
 :global(.ui.grid.login-grid) {
-  margin-top: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin: 0;
+}
+:global(.has-error input) {
+  border-color: #d0a89c !important;
+}
+:global(.no-error input) {
+  border-color: #bbd3bb !important;
 }
 
 :global(.check.icon.icon-green) {
@@ -16,20 +26,19 @@
 
 :global(.ui.center.aligned.header.login-header) {
   position: relative;
-  &:before {
-    content: '';
-    display: block;
-    margin: 0 auto;
-    width: 150px;
-    height: 150px;
-    background: url('../../images/depot-logo-1.png') no-repeat;
-    background-size: cover;
-  }
 }
 :global(.ui.form .field.password-wrapper) {
   position: relative;
   > a {
     position: absolute;
     right: 0;
+  }
+}
+:global(div.google-button) {
+  margin-top: 10px;
+  > a {
+    > button {
+      width: 100%;
+    }
   }
 }

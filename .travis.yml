@@ -3,9 +3,15 @@ node_js:
 - "10.16.0"
 branches:
   only:
-  - master
-# notifications:
-#   slack: binary-academy-2019:VopRXnH9k7BZE3O1kYxc127T
+  - develop
+notifications:
+  slack: binary-academy-2019:zu0JzpVwZUPF9GSv8vPwHcI1
+env:
+  - SKIP_PREFLIGHT_CHECK=true
+install:
+  - . scripts/install.sh
+script:
+  - . scripts/script.sh
 deploy:
 - provider: s3
   access_key_id: $AWS_ACCESS_KEY
@@ -14,6 +20,7 @@ deploy:
   skip_cleanup: true
   on: &2
     repo: BinaryStudioAcademy/bsa-2019-depot
+    branch: develop
   bucket: depotbucket
   region: eu-central-1
 - provider: codedeploy
@@ -26,7 +33,3 @@ deploy:
   deployment_group: depot-deploy-app-group
   region: eu-central-1
   on: *2
-script:
-  - zip -r latest *
-  - mkdir -p dpl_cd_upload
-  - mv latest.zip dpl_cd_upload/latest.zip

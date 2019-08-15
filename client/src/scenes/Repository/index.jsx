@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
 import RepositoryHeader from '../../components/RepositoryHeader';
-import CodeTab from '../CodeTab/index';
 import IssuesTab from '../../containers/IssuesTab/index';
 import CommitsPage from '../../containers/CommitsPage/index';
+import DiffCommitView from '../../components/DiffCommitView/index';
+import RepositoryTab from '../../containers/RepositoryTab';
+import RepoSettings from '../../containers/SettingsTab/index';
 import BranchesTab from '../../containers/BranchesTab/index';
 
 import './styles.module.scss';
@@ -12,7 +14,7 @@ import './styles.module.scss';
 class RepositoryPage extends React.Component {
   render() {
     const { match, location } = this.props;
-    const { owner, repository } = match.params;
+    const { username, reponame } = match.params;
 
     // Mocks
     const issueCount = 14;
@@ -21,8 +23,8 @@ class RepositoryPage extends React.Component {
     return (
       <>
         <RepositoryHeader
-          owner={owner}
-          repoName={repository}
+          owner={username}
+          repoName={reponame}
           issueCount={issueCount}
           forkCount={forkCount}
           activePage={location.pathname.split('/')[3]}
@@ -30,10 +32,13 @@ class RepositoryPage extends React.Component {
         />
         <div className="ui bottom attached active tab">
           <Switch>
-            <Route exact path={match.url} component={CodeTab} />
-            <Route exact path={`${match.url}/issues`} component={IssuesTab} />
-            <Route exact path={`${match.url}/commits`} component={CommitsPage} />
-            <Route exact path={`${match.url}/branches`} component={BranchesTab} />
+            <Route exact path={`${match.path}/`} component={RepositoryTab} />
+            <Route path={`${match.path}/tree/:branch`} component={RepositoryTab} />
+            <Route exact path={`${match.path}/commits/:branch`} component={CommitsPage} />
+            <Route exact path={`${match.path}/commit/:hash`} component={DiffCommitView} />
+            <Route exact path={`${match.path}/issues`} component={IssuesTab} />
+            <Route exact path={`${match.path}/settings`} component={RepoSettings} />
+            <Route exact path={`${match.path}/branches`} component={BranchesTab} />
           </Switch>
         </div>
       </>
@@ -42,8 +47,6 @@ class RepositoryPage extends React.Component {
 }
 
 RepositoryPage.propTypes = {
-  owner: PropTypes.string.isRequired,
-  repoName: PropTypes.string.isRequired,
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
     isExact: PropTypes.bool.isRequired,

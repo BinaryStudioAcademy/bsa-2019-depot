@@ -39,7 +39,7 @@ $grey_border: #e1e4e8;
   color: $red_text !important;
   border: 1px solid $dark_border !important;
   padding: 11px 5px 11px 5px !important;
-  font-size: 13px !important;
+  font-size: 81.25% !important;
   &:hover {
     background-image: $red_linear_gradient;
     border-color: $dark_border_hover !important;
@@ -49,4 +49,15 @@ $grey_border: #e1e4e8;
 
 :local(.text_input) {
   width: 250px !important;
+}
+
+:local(.first_column) {
+  min-width: 210px !important;
+}
+
+:local(.second_column) {
+  min-width: 660px !important;
+}
+:local(.box) {
+  padding-top: 20px !important;
 }

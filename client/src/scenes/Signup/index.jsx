@@ -1,137 +1,62 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import validator from 'validator';
-import { Grid, Header, Form, Button, Segment, Label, Message } from 'semantic-ui-react';
+import { Grid, Header, Form, Button, Segment, Message } from 'semantic-ui-react';
 import { signupRoutine } from '../../routines/routines';
 import GoogleAuth from '../../components/GoogleAuth';
+import { InputError } from '../../components/InputError';
 import { serverUrl } from '../../app.config';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 import './styles.module.scss';
 
+const validationSchema = Yup.object().shape({
+  username: Yup.string()
+    .required('Username address is required!')
+    .matches(
+      /^(([a-zA-Z0-9]+-)*[a-zA-Z0-9]+){1,39}$/,
+      'Username contains of only alphanumeric characters or single hyphens. Cannot begin or end with a hyphen. Cannot have multiple consecutive hyphens'
+    ),
+  email: Yup.string()
+    .email('Invalid email address!')
+    .matches(
+      /^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))@(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      'Invalid email address!'
+    )
+    .required('Email address is required!'),
+  password: Yup.string()
+    .matches(
+      /^(?:(?=\D*\d)(?=[^a-z]*[a-z]).{8,}|[a-zA-Z0-9]{15,})$/,
+      'Minimum length - 8 characters, if it includes a number and a lowercase letter OR 15 characters with any combination of characters'
+    )
+    .required('Password is required')
+    .max(72)
+});
+
 class Signup extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      username: {
-        value: '',
-        valid: true
-      },
-      email: {
-        value: '',
-        valid: true
-      },
-      password: {
-        value: '',
-        valid: true
-      }
-    };
+  constructor() {
+    super();
+    this.submit = this.submit.bind(this);
+    this.renderSignupForm = this.renderSignupForm.bind(this);
   }
 
-  componentDidMount = () => {
-    this.setState({
-      username: {
-        value: '',
-        valid: true
-      },
-      email: {
-        value: '',
-        valid: true
-      },
-      password: {
-        value: '',
-        valid: true
-      }
-    });
-  };
-
-  validateField = (field, value) => {
-    switch (field) {
-    case 'username': {
-      return (
-        !validator.isEmpty(value) &&
-          validator.matches(value, '(^[\\d\\w]*(?:[a-zA-Z0-9]|-(?!-))*[\\d\\w]$)|(^[\\d\\w]$)', 'ig')
-      );
-    }
-
-    case 'email': {
-      return validator.isEmail(value);
-    }
-
-    case 'password': {
-      return (
-        !validator.isEmpty(value) &&
-          validator.matches(value, '\\d', 'ig') &&
-          validator.matches(value, '[a-z]', 'g') &&
-          validator.matches(value, '.{8,}', 'ig')
-      );
-    }
-
-    default:
-      return false;
-    }
-  };
-
-  validateHandler = evt => {
-    const field = evt.target.name;
-    const { value } = this.state[field];
-    const valid = this.validateField(field, value);
-    this.setState({
-      ...this.state,
-      [field]: {
-        value,
-        valid
-      }
-    });
-  };
-
-  changeHandler = evt => {
-    const field = evt.target.name;
-    const { value } = evt.target;
-    const valid = this.validateField(field, value);
-    this.setState({
-      ...this.state,
-      [field]: {
-        value,
-        valid
-      }
-    });
-  };
-
-  handleClickSignup = () => {
-    const { username, email, password } = this.state;
-    const { loading } = this.props;
-    if (loading) {
-      return;
-    }
-
+  submit(values) {
     const user = {
-      username: username.value,
-      email: email.value,
-      password: password.value
+      username: values.username,
+      email: values.email,
+      password: values.password
     };
-
     this.props.signupRoutine({
       user
     });
-  };
+  }
 
-  renderSignupForm = () => {
-    const { username, email, password } = this.state;
-    const { loading, signupError } = this.props;
-    const formValid = ['username', 'email', 'password'].every(
-      field => this.state[field].valid && this.state[field].value
-    );
-
+  renderSignupForm({ errors, touched, handleChange, handleBlur, handleSubmit, values }) {
+    const { loading, error } = this.props;
     return (
-      <Form
-        name="signupForm"
-        size="large"
-        onSubmit={this.handleClickSignup}
-        loading={loading}
-        error={Boolean(signupError)}
-      >
+      <Form name="signupForm" size="large" onSubmit={handleSubmit} loading={loading} error={!!error}>
         <Segment textAlign="left">
           <Form.Field required>
             <label htmlFor="username">Username</label>
@@ -140,18 +65,13 @@ class Signup extends React.Component {
               placeholder="Username"
               name="username"
               type="text"
-              error={!username.valid}
-              onChange={this.changeHandler}
-              onBlur={this.validateHandler}
+              value={values.username}
+              onChange={handleChange}
+              onBlur={handleBlur}
               required
-              icon={{
-                name: 'check',
-                className: `icon-green ${username.value && username.valid ? '' : 'icon-hidden'}`
-              }}
+              className={`${errors.username && touched.username ? 'has-error' : 'no-error'}`}
             />
-            <Label className="signup-pointing-label" pointing>
-              Username can contain alphanumeric characters and single hyphens, cannot begin or end with a hyphen
-            </Label>
+            <InputError name="username" />
           </Form.Field>
           <Form.Field required>
             <label htmlFor="email">Email</label>
@@ -160,15 +80,13 @@ class Signup extends React.Component {
               placeholder="Email"
               name="email"
               type="email"
-              error={!email.valid}
-              onChange={this.changeHandler}
-              onBlur={this.validateHandler}
+              value={values.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
               required
-              icon={{
-                name: 'check',
-                className: `icon-green ${email.value && email.valid ? '' : 'icon-hidden'}`
-              }}
+              className={`${errors.email && touched.email ? 'has-error' : 'no-error'}`}
             />
+            <InputError name="email" />
           </Form.Field>
           <Form.Field required>
             <label htmlFor="password">Password</label>
@@ -177,39 +95,64 @@ class Signup extends React.Component {
               placeholder="Password"
               name="password"
               type="password"
-              error={!password.valid}
-              onChange={this.changeHandler}
-              onBlur={this.validateHandler}
+              value={values.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
               required
-              icon={{
-                name: 'check',
-                className: `icon-green ${password.value && password.valid ? '' : 'icon-hidden'}`
-              }}
+              className={`${errors.password && touched.password ? 'has-error' : 'no-error'}`}
             />
-            <Label className="signup-pointing-label" pointing>
-              Password should be at least 8 characters including a number and a lowercase letter
-            </Label>
+            <InputError name="password" />
           </Form.Field>
 
-          <Button type="submit" color="green" fluid size="large" disabled={!formValid}>
+          <Button
+            type="submit"
+            color="green"
+            fluid
+            size="large"
+            disabled={
+              (errors.password && touched.password) ||
+              (errors.email && touched.email) ||
+              (errors.username && touched.username)
+            }
+          >
             Sign Up for Depot
           </Button>
-          <Message error content={signupError} />
+          <Grid.Column className="google-button">{this.renderGoogleAuth()}</Grid.Column>
+          <Message error content={error} />
         </Segment>
+        <Message className="login-label">
+          Already have an account?{' '}
+          <NavLink exact to="/login">
+            Sign in
+          </NavLink>
+        </Message>
       </Form>
     );
-  };
+  }
 
   renderGoogleAuth = () => {
-    const serverLoginUrl = `${serverUrl}/auth/google`;
+    const serverLoginUrl = `${serverUrl}/api/auth/google`;
     return <GoogleAuth text="Sign up with Google" link={serverLoginUrl} />;
   };
 
   renderSignup = () => {
     return (
-      <Grid.Row columns={2}>
-        <Grid.Column style={{ maxWidth: 450 }}>{this.renderSignupForm()}</Grid.Column>
-        <Grid.Column style={{ maxWidth: 300 }}>{this.renderGoogleAuth()}</Grid.Column>
+      <Grid.Row>
+        <Grid.Column className="grid-column">
+          <Header as="h2" color="black" textAlign="center">
+            Join Depot
+          </Header>
+          <Formik
+            initialValues={{
+              username: '',
+              email: '',
+              password: ''
+            }}
+            validationSchema={validationSchema}
+            onSubmit={this.submit}
+            render={this.renderSignupForm}
+          />
+        </Grid.Column>
       </Grid.Row>
     );
   };
@@ -217,9 +160,6 @@ class Signup extends React.Component {
   renderForms = () => {
     return (
       <Grid textAlign="center" centered className="signup-grid">
-        <Header as="h2" color="black" textAlign="center">
-          Join Depot
-        </Header>
         {this.renderSignup()}
       </Grid>
     );
@@ -236,7 +176,8 @@ Signup.propTypes = {
   signupRoutine: PropTypes.func.isRequired,
   signupError: PropTypes.string,
   loading: PropTypes.bool.isRequired,
-  location: PropTypes.object.isRequired
+  location: PropTypes.object.isRequired,
+  error: PropTypes.string
 };
 
 const mapStateToProps = ({ profile: { isAuthorized, loading, signupError } }) => {
