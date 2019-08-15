@@ -13,14 +13,16 @@ import {
   Signup,
   // GoogleCallback,
   Dashboard,
-  SettingsProfile,
   CreateRepository
 } from '../../scenes';
+import Settings from '../../scenes/Settings';
 import CreateOrganization from '../../scenes/CreateOrganization';
 import { fetchCurrentUser } from '../../routines/routines';
 import RepositoryPage from '../../scenes/Repository';
 import Header from '../Header';
 import Footer from '../../components/Footer';
+
+import './styles.module.scss';
 
 class Routing extends React.Component {
   componentDidMount() {
@@ -33,23 +35,25 @@ class Routing extends React.Component {
     return loading ? (
       <Spinner />
     ) : (
-      <>
-        <Header />
-        <Switch>
-          <Route exact path="/registration" component={Signup} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/" component={MainPage} />
-          <Route exact path="/forgot" component={Forgot} />
-          <Route exact path="/reset/:hash" component={Reset} />
-          <PrivateRoute exact path="/new" component={CreateRepository} />
-          <PrivateRoute exact path="/settings/profile" component={SettingsProfile} />
-          <PrivateRoute exact path="/organizations/new" component={CreateOrganization} />
-          <PrivateRoute path="/:username" component={Dashboard} />
-          <PrivateRoute path="/:username/:reponame" component={RepositoryPage} />
-          <Route exact path="*" component={NotFound} />
-        </Switch>
+      <section className="main-wrapper">
+        <div className="content">
+          <Header />
+          <Switch>
+            <Route exact path="/registration" component={Signup} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/" component={MainPage} />
+            <Route exact path="/forgot" component={Forgot} />
+            <Route exact path="/reset/:hash" component={Reset} />
+            <PrivateRoute path="/settings" component={Settings} />
+            <PrivateRoute exact path="/organizations/new" component={CreateOrganization} />
+            <PrivateRoute exact path="/new" component={CreateRepository} />
+            <PrivateRoute exact path="/:username" component={Dashboard} />
+            <PrivateRoute path="/:username/:reponame" component={RepositoryPage} />
+            <Route exact path="*" component={NotFound} />
+          </Switch>
+        </div>
         <Footer />
-      </>
+      </section>
     );
   }
 }

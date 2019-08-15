@@ -8,7 +8,7 @@ import diffsSagas from '../components/DiffCommitView/sagas';
 import codeTabSagas from '../scenes/CodeTab/sagas';
 import profileSagas from '../containers/Profile/sagas';
 import { watchRepositories } from '../scenes/Dashboard/sagas';
-import profileSettingsSagas from '../scenes/SettingsProfile/sagas';
+import profileSettingsSagas from '../containers/SettingsProfile/sagas';
 import forkRepoSagas from '../components/ForkButton/sagas';
 import createOrganizationSagas from '../scenes/CreateOrganization/sagas';
 

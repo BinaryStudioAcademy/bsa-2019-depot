@@ -8,7 +8,7 @@ import Signup from './Signup/index';
 import Dashboard from './Dashboard/index';
 import CodeTab from './CodeTab/index';
 import CreateRepository from './CreateRepository';
-import SettingsProfile from './SettingsProfile/index';
+import SettingsProfile from '../containers/SettingsProfile/index';
 
 export {
   Login,

@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import { InputError } from '../../components/InputError';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -14,6 +15,10 @@ import './styles.module.scss';
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email('Invalid email address!')
+    .matches(
+      /^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))@(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      'Invalid email address!'
+    )
     .required('Email address is required!')
 });
 
@@ -43,47 +48,51 @@ class Forgot extends Component {
     const succsessMessage = emailSend ? <Message color="teal">{message}</Message> : null;
     const failureMessage = emailNotExist ? <Message color="red">{message}</Message> : null;
     return (
-      <Grid textAlign="center" verticalAlign="middle" className="forgot-grid fill">
-        <Grid.Column className="grid-column">
-          <Header as="h2" color="black" textAlign="center" className="forgot-header">
-            Reset your password
-          </Header>
-          <Form name="forgotForm" size="large" onSubmit={handleSubmit} disabled={emailSend}>
-            <Segment>
-              {!succsessMessage ? (
-                <div>
-                  <Form.Input
-                    fluid
-                    name="email"
-                    label="Enter your email address and we will send you a link to reset your password."
-                    disabled={emailSend}
-                    placeholder="Enter your email address"
-                    type="email"
-                    error={emailNotExist}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    value={values.email}
-                    className={`${errors.email && touched.email ? 'has-error' : 'no-error'}`}
-                  />
-                  <Button type="submit" color="green" fluid size="large" disabled={errors.email && touched.email}>
-                    Send password reset email
-                  </Button>
-                </div>
-              ) : (
-                <div>
-                  {succsessMessage}
-                  <Button type="button" color="green" fluid size="large" onClick={this.returnToSignIn}>
-                    Return to sign in
-                  </Button>
-                </div>
-              )}
-              {failureMessage}
-            </Segment>
-          </Form>
-        </Grid.Column>
+      <Grid textAlign="center" className="forgot-grid fill">
+        <Grid.Row>
+          <Grid.Column className="grid-column">
+            <Header as="h2" color="black" textAlign="center" className="forgot-header">
+              Reset your password
+            </Header>
+            <Form name="forgotForm" size="large" onSubmit={handleSubmit} disabled={emailSend}>
+              <Segment>
+                {!succsessMessage ? (
+                  <div>
+                    <Form.Input
+                      fluid
+                      name="email"
+                      label="Enter your email address and we will send you a link to reset your password."
+                      disabled={emailSend}
+                      placeholder="Enter your email address"
+                      type="email"
+                      error={emailNotExist}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.email}
+                      className={`${errors.email && touched.email ? 'has-error' : 'no-error'}`}
+                    />
+                    <InputError name="email" />
+                    <Button type="submit" color="green" fluid size="large" disabled={errors.email && touched.email}>
+                      Send password reset email
+                    </Button>
+                  </div>
+                ) : (
+                  <div>
+                    {succsessMessage}
+                    <Button type="button" color="green" fluid size="large" onClick={this.returnToSignIn}>
+                      Return to sign in
+                    </Button>
+                  </div>
+                )}
+                {failureMessage}
+              </Segment>
+            </Form>
+          </Grid.Column>
+        </Grid.Row>
       </Grid>
     );
   }
+
   render() {
     const { isAuthorized } = this.props;
     return !isAuthorized ? (
@@ -100,6 +109,7 @@ class Forgot extends Component {
     );
   }
 }
+
 Forgot.propTypes = {
   isAuthorized: PropTypes.bool.isRequired,
   history: PropTypes.object,

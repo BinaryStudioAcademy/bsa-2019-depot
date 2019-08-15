@@ -1,11 +1,12 @@
 import React from 'react';
+import moment from 'moment';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import Calendar from 'react-github-contribution-calendar';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Container, Grid, Dropdown, Accordion } from 'semantic-ui-react';
-import Octicon, { Repo, Grabber, Fold, Unfold, RepoPush, GitPullRequest } from '@primer/octicons-react';
+import Octicon, { Repo, Grabber, Fold, Unfold, RepoPush } from '@primer/octicons-react';
 import { repositoryActions } from '../../scenes/Dashboard/actions';
 
 import styles from './styles.module.scss';
@@ -14,8 +15,18 @@ export class Overview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeIndex: -1
+      activeIndex: -1,
+      currentYear: moment().year()
     };
+  }
+
+  componentDidMount() {
+    const { actions } = this.props;
+    actions.fetchRepositories({
+      limit: '4',
+      filterWord: ''
+    });
+    actions.fetchActivity();
   }
 
   handleActivityState = (e, titleProps) => {
@@ -33,62 +44,25 @@ export class Overview extends React.Component {
     styles.activity_lvl5
   ];
 
-  contributionValues = {
-    // mock, must be replaced with real data
-    '2019-07-23': 1,
-    '2019-07-26': 2,
-    '2019-07-27': 3,
-    '2019-07-28': 4,
-    '2019-07-29': 4
-  };
-
-  username = 'octocat';
-
-  userActivity = [
-    // mock, must be replaced with real data
-    {
-      year: 2019,
-      month: 'August',
-      commitCount: 25,
-      commitRepoCount: 1,
-      commitRepoNames: {
-        myFirstFavoriteRepo: 25
-      },
-      createdRepoCount: 1,
-      createdRepoNames: ['my_third_favorite_repo'],
-      requestCount: 5,
-      requestRepoNames: {
-        myFirstFavoriteRepo: 5
-      }
-    },
-    {
-      year: 2019,
-      month: 'July',
-      commitCount: 6,
-      commitRepoCount: 3,
-      commitRepoNames: {
-        mySecondFavoriteRepo: 1,
-        myFirstFavoriteRepo: 4,
-        myThirdFavoriteRepo: 1
-      }
-    },
-    {
-      year: 2019,
-      month: 'June',
-      commitCount: 3,
-      commitRepoCount: 2,
-      commitRepoNames: {
-        myFirstFavoriteRepo: 1,
-        mySecondFavoriteRepo: 2
+  currentYearContribution = () => {
+    const { monthCommitsActivity } = this.props;
+    const { currentYear } = this.state;
+    let counter = 0;
+    for (const [date, commitCount] of Object.entries(monthCommitsActivity)) {
+      const year = date.slice(0, 4);
+      if (+year === currentYear) {
+        counter += commitCount;
       }
     }
-  ];
+    return counter;
+  };
 
   until = new Date().toISOString().slice(0, 10);
 
   render() {
-    const { activeIndex } = this.state;
-    const { repositories } = this.props;
+    const { repositoriesNames, userActivityByDate, monthCommitsActivity } = this.props;
+    const { activeIndex, currentYear } = this.state;
+    const currentYearContribution = this.currentYearContribution();
 
     return (
       <div>
@@ -97,27 +71,30 @@ export class Overview extends React.Component {
           <Link to="">Customize your pins</Link>
         </Container>
         <Container className={styles.favorite_repos_wrapper}>
-          {repositories.map(repo => {
-            return (
-              <div key={repo} className={styles.pinned_item}>
-                <div>
-                  <Octicon className={styles.card_icon} icon={Repo} />
-                  <Link to="">{repo}</Link>
-                  <Octicon className={styles.card_icon_grab} icon={Grabber} />
+          {repositoriesNames &&
+            repositoriesNames.map(repo => {
+              return (
+                <div key={repo} className={styles.pinned_item}>
+                  <div>
+                    <Octicon className={styles.card_icon} icon={Repo} />
+                    <Link to="">{repo}</Link>
+                    <Octicon className={styles.card_icon_grab} icon={Grabber} />
+                  </div>
+                  <p className={styles.pinned_item_desc}> </p>
+                  <p className={styles.pinned_item_lang}>
+                    <span></span>Javascript
+                  </p>
                 </div>
-                <p className={styles.pinned_item_desc}>Some kind of description</p>
-                <p className={styles.pinned_item_lang}>
-                  <span></span>Javascript
-                </p>
-              </div>
-            );
-          })}
+              );
+            })}
         </Container>
         <Grid>
           <Grid.Row columns={2}>
             <Grid.Column mobile={16} computer={13}>
               <Container className={styles.pinned_header}>
-                <h2>275 contributions in 2019</h2>
+                <h2>
+                  {currentYearContribution} contributions in {currentYear}
+                </h2>
                 <Dropdown className={styles.dropdown_header} text="Contribution settings">
                   <Dropdown.Menu>
                     <Dropdown.Item text="Private contributions" />
@@ -126,7 +103,7 @@ export class Overview extends React.Component {
                 </Dropdown>
               </Container>
               <Calendar
-                values={this.contributionValues}
+                values={userActivityByDate}
                 until={this.until}
                 weekNames={this.weekNames}
                 monthNames={this.monthNames}
@@ -137,99 +114,35 @@ export class Overview extends React.Component {
                 <h2>Contribution activity</h2>
               </Container>
 
-              {this.userActivity.map(
-                (
-                  {
-                    year,
-                    month,
-                    commitCount,
-                    commitRepoCount,
-                    commitRepoNames,
-                    createdRepoCount,
-                    createdRepoNames,
-                    requestCount,
-                    requestRepoNames
-                  },
-                  idx
-                ) => (
-                  <Container key={month} className={styles.contribution_activity}>
-                    <h3>{`${month} ${year}`}</h3>
-                    {commitCount && (
+              {Object.entries(monthCommitsActivity).length &&
+                Object.entries(monthCommitsActivity).map(([date, commitCount]) => {
+                  const monthAndYear = moment(date).format('MMMM YYYY');
+                  return (
+                    <Container key={monthAndYear} className={styles.contribution_activity}>
+                      <h3>{monthAndYear}</h3>
                       <div className={styles.contribution_activity_desc}>
                         <span className={styles.contribution_activity_icon}>
                           <Octicon icon={RepoPush} />
                         </span>
                         <Accordion>
                           <Accordion.Title
-                            active={activeIndex === `commit-${idx}`}
-                            index={`commit-${idx}`}
+                            active={activeIndex === `commit-${monthAndYear}`}
+                            index={`commit-${monthAndYear}`}
                             onClick={this.handleActivityState}
                           >
-                            <p>
-                              Created {commitCount} commits in {commitRepoCount} repository
-                            </p>
-                            <Octicon icon={activeIndex === `commit-${idx}` ? Fold : Unfold} />
+                            <p>Created {commitCount} commits</p>
+                            <Octicon icon={activeIndex === `commit-${monthAndYear}` ? Fold : Unfold} />
                           </Accordion.Title>
-                          <Accordion.Content active={activeIndex === `commit-${idx}`}>
-                            {Object.entries(commitRepoNames).map(([repoName, numOfCommits], i) => (
-                              <Link to="" key={`commit-${i}`} className={styles.activity_link}>
-                                {this.username}/{repoName} {numOfCommits} commits
-                              </Link>
-                            ))}
-                          </Accordion.Content>
+                          <Accordion.Content active={activeIndex === `commit-${monthAndYear}`}></Accordion.Content>
                         </Accordion>
                       </div>
-                    )}
-                    {createdRepoCount && (
-                      <div className={styles.contribution_activity_desc}>
-                        <span className={styles.contribution_activity_icon}>
-                          <Octicon icon={Repo} />
-                        </span>
-                        <Accordion>
-                          <Accordion.Title
-                            active={activeIndex === `repo-${idx}`}
-                            index={`repo-${idx}`}
-                            onClick={this.handleActivityState}
-                          >
-                            <p>Created {createdRepoCount} repository</p>
-                            <Octicon icon={activeIndex === `repo-${idx}` ? Fold : Unfold} />
-                          </Accordion.Title>
-                          <Accordion.Content active={activeIndex === `repo-${idx}`}>
-                            {createdRepoNames.map((repoName, i) => (
-                              <Link to="" key={`repo-${i}`} className={styles.activity_link}>
-                                {this.username}/{repoName}
-                              </Link>
-                            ))}
-                          </Accordion.Content>
-                        </Accordion>
-                      </div>
-                    )}
-                    {requestCount && (
-                      <div className={styles.contribution_activity_desc}>
-                        <span className={styles.contribution_activity_icon}>
-                          <Octicon icon={GitPullRequest} />
-                        </span>
-                        <Accordion>
-                          <Accordion.Title active={activeIndex === idx} index={idx} onClick={this.handleActivityState}>
-                            <p>Opened {requestCount} pull requests</p>
-                            <Octicon icon={activeIndex === idx ? Fold : Unfold} />
-                          </Accordion.Title>
-                          <Accordion.Content active={activeIndex === idx}>
-                            {Object.entries(requestRepoNames).map(([repoName, numOfRequests], i) => (
-                              <Link to="" key={`request-${i}`} className={styles.activity_link}>
-                                {this.username}/{repoName} {numOfRequests} requests
-                              </Link>
-                            ))}
-                          </Accordion.Content>
-                        </Accordion>
-                      </div>
-                    )}
-                  </Container>
-                )
-              )}
-              <Link to="" className={styles.load_more_activity}>
+                    </Container>
+                  );
+                })}
+
+              {/* <Link to="" className={styles.load_more_activity}>
                 Show more activity
-              </Link>
+              </Link> */}
             </Grid.Column>
             <Grid.Column width={3} only="computer">
               <ul className={styles.contribution_year_list}>
@@ -264,13 +177,15 @@ Overview.defaultProps = {
 
 Overview.propTypes = {
   actions: PropTypes.object.isRequired,
-  repositories: PropTypes.array.isRequired,
-  username: PropTypes.string,
-  userActivity: PropTypes.array
+  username: PropTypes.string.isRequired,
+  userActivityByDate: PropTypes.object.isRequired,
+  monthCommitsActivity: PropTypes.object.isRequired,
+  repositoriesNames: PropTypes.array.isRequired
 };
 
-const mapStateToProps = ({ repositories }) => ({
-  repositoriesNames: repositories.repositoriesNames
+const mapStateToProps = ({ userStats: { userActivityByDate, monthCommitsActivity } }) => ({
+  userActivityByDate,
+  monthCommitsActivity
 });
 
 const mapDispatchToProps = dispatch => {
