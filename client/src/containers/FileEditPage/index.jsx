@@ -9,6 +9,7 @@ import CommitFileForm from '../../components/CommitFileForm';
 import FileViewer from '../../components/FileViewer';
 import FilePathBreadcrumbSections from '../../components/FilePathBreadcrumbSections';
 import { getFileContent } from '../../services/branchesService';
+import { commitFile } from '../../services/commitsService';
 
 import styles from './styles.module.scss';
 
@@ -44,6 +45,7 @@ class FileEditPage extends React.Component {
     this.handleChangeFilename = this.handleChangeFilename.bind(this);
     this.handleContentChange = this.handleContentChange.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
+    this.handleCommitFile = this.handleCommitFile.bind(this);
   }
 
   componentDidMount() {
@@ -87,8 +89,28 @@ class FileEditPage extends React.Component {
     history.push(`/${folderUrl}`);
   }
 
+  handleCommitFile({ message, branch }) {
+    const { username: ownerUsername, reponame } = this.props.match.params;
+    const {
+      filename,
+      fileData: { content }
+    } = this.state;
+    const { email, username } = this.props;
+
+    this.setState({ loading: true });
+    commitFile(ownerUsername, reponame, branch, {
+      author: username,
+      email,
+      message,
+      filename,
+      fileData: content
+    }).then(() => {
+      this.handleCancel();
+    });
+  }
+
   render() {
-    const { match, username, avatar } = this.props;
+    const { match, avatar } = this.props;
     const {
       fileData: { content },
       oldContent,
@@ -181,7 +203,13 @@ class FileEditPage extends React.Component {
           </Breadcrumb.Section>
         </Breadcrumb>
         <Tab className={styles.editorArea} panes={panes} />
-        <CommitFileForm username={username} avatar={avatar} initialBranch={this.branch} />
+        <CommitFileForm
+          avatar={avatar}
+          initialBranch={this.branch}
+          disabled={!filename || (content === oldContent && toEdit)}
+          onSubmit={this.handleCommitFile}
+          onCancel={this.handleCancel}
+        />
       </>
     );
   }
@@ -190,6 +218,7 @@ class FileEditPage extends React.Component {
 FileEditPage.propTypes = {
   username: PropTypes.string.isRequired,
   avatar: PropTypes.string,
+  email: PropTypes.string.isRequired,
   history: PropTypes.object.isRequired,
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
@@ -208,11 +237,12 @@ FileEditPage.propTypes = {
 
 const mapStateToProps = ({
   profile: {
-    currentUser: { username, avatar }
+    currentUser: { username, avatar, email }
   }
 }) => ({
   username,
-  avatar
+  avatar,
+  email
 });
 
 export default connect(mapStateToProps)(FileEditPage);

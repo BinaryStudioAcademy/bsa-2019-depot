@@ -1,6 +1,6 @@
 const { Router } = require('express');
 
-const { getCommits, getCommitsByDate } = require('../services/commit.service');
+const { getCommits, getCommitsByDate, commitFile } = require('../services/commit.service');
 
 const router = Router();
 
@@ -12,6 +12,14 @@ router
     const { owner } = req.params;
     getCommitsByDate({ user: owner })
       .then(commits => res.send(commits))
+      .catch(next);
+  })
+  .post('/:owner/:repoName/:branchName', (req, res, next) => {
+    const { owner, repoName, branchName: branch } = req.params;
+    commitFile({
+      ...req.body, owner, repoName, branch
+    })
+      .then(newCommit => res.send({ sha: newCommit.sha() }))
       .catch(next);
   });
 

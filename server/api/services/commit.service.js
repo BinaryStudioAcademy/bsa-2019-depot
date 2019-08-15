@@ -89,4 +89,36 @@ const getCommitDiff = async ({ user, name, hash }) => {
   return { diffs: cmd.stdout };
 };
 
-module.exports = { getCommits, getCommitDiff, getCommitsByDate };
+const commitFile = async ({
+  owner, repoName, author, email, branch, message, filename, fileData
+}) => {
+  const pathToRepo = path.resolve(`${gitPath}/${owner}/${repoName}`);
+  const repo = await NodeGit.Repository.open(pathToRepo.replace(/\\/g, '/'));
+  const lastCommitOnBranch = await repo.getBranchCommit(branch);
+  const lastCommitTree = await lastCommitOnBranch.getTree();
+  const treeBuilder = await NodeGit.Treebuilder.create(repo, lastCommitTree);
+  const authorSignature = NodeGit.Signature.now(author, email);
+  const branchRef = `refs/heads/${branch}`;
+
+  const fileBuffer = Buffer.from(fileData);
+
+  const oid = await NodeGit.Blob.createFromBuffer(repo, fileBuffer, fileBuffer.length);
+
+  treeBuilder.insert(filename, oid, 33188); // https://www.nodegit.org/api/treebuilder/#insert
+
+  const newCommitTree = await treeBuilder.write();
+  const commitId = await repo.createCommit(
+    branchRef,
+    authorSignature,
+    authorSignature,
+    message,
+    newCommitTree,
+    [lastCommitOnBranch]
+  );
+
+  return repo.getCommit(commitId);
+};
+
+module.exports = {
+  getCommits, getCommitDiff, getCommitsByDate, commitFile
+};
