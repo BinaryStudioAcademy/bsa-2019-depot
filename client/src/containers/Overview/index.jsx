@@ -60,7 +60,7 @@ export class Overview extends React.Component {
   until = new Date().toISOString().slice(0, 10);
 
   render() {
-    const { repositoriesNames, userActivityByDate, monthCommitsActivity } = this.props;
+    const { repositoriesNames, userActivityByDate, monthCommitsActivity, username } = this.props;
     const { activeIndex, currentYear } = this.state;
     const currentYearContribution = this.currentYearContribution();
 
@@ -77,7 +77,7 @@ export class Overview extends React.Component {
                 <div key={repo} className={styles.pinned_item}>
                   <div>
                     <Octicon className={styles.card_icon} icon={Repo} />
-                    <Link to="">{repo}</Link>
+                    <Link to={`${username}/${repo}`}>{repo}</Link>
                     <Octicon className={styles.card_icon_grab} icon={Grabber} />
                   </div>
                   <p className={styles.pinned_item_desc}> </p>
@@ -183,9 +183,15 @@ Overview.propTypes = {
   repositoriesNames: PropTypes.array.isRequired
 };
 
-const mapStateToProps = ({ userStats: { userActivityByDate, monthCommitsActivity } }) => ({
+const mapStateToProps = ({
+  userStats: { userActivityByDate, monthCommitsActivity },
+  profile: {
+    currentUser: { username }
+  }
+}) => ({
   userActivityByDate,
-  monthCommitsActivity
+  monthCommitsActivity,
+  username
 });
 
 const mapDispatchToProps = dispatch => {
