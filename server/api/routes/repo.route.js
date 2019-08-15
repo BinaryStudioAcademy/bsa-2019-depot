@@ -33,8 +33,9 @@ router
       .catch(next);
   })
   .get('/:owner/repos', (req, res, next) => {
+    const { filterWord, limit } = req.body;
     const { owner } = req.params;
-    getReposNames({ user: owner, filter: req.query })
+    getReposNames({ user: owner, filter: filterWord, limit })
       .then(repos => res.send(repos))
       .catch(next);
   })

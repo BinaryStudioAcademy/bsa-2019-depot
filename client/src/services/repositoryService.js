@@ -4,7 +4,7 @@ export const getRepositories = async (owner, filter) => {
   const response = await callWebApi({
     endpoint: `/api/repo/${owner}/repos`,
     type: 'GET',
-    query: filter
+    body: filter
   });
   return response.json();
 };
