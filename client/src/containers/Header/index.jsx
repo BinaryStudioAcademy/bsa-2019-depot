@@ -44,7 +44,6 @@ const SidebarUnauth = (closeSidebar, sidebarOpened) => {
       width="wide"
       direction="right"
       className={styles.sidebar}
-
     >
       <Menu.Item onClick={closeSidebar} as="a">
         <Icon name="close" color="grey" />
