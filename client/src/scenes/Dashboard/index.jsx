@@ -9,6 +9,7 @@ import Octicon, { Smiley } from '@primer/octicons-react';
 import { repositoryActions } from './actions';
 import Overview from '../../containers/Overview';
 import RepositoriesList from '../../components/RepositoriesList';
+import { getUserImgLink } from '../../helpers/imageHelper';
 
 import styles from './styles.module.scss';
 
@@ -71,7 +72,7 @@ class Dashboard extends React.Component {
             <Grid.Column className={styles.userinfo_wrapper} mobile={16} tablet={4} computer={4}>
               <div className={styles.avatar_wrapper}>
                 <Link to="">
-                  <img src={imgUrl} alt="user_avatar" />
+                  <img src={getUserImgLink(imgUrl)} alt="user_avatar" />
                 </Link>
                 <Link to="" className={styles.set_status}>
                   <Octicon icon={Smiley} />
