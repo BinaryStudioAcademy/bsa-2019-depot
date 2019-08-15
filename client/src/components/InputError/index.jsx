@@ -7,7 +7,7 @@ import styles from './styles.module.scss';
 export class InputError extends React.Component {
   render() {
     return (
-      <div className={styles.userinfo_wrapper}>
+      <div className={styles.error_wrapper}>
         <ErrorMessage name={this.props.name} />
       </div>
     );
