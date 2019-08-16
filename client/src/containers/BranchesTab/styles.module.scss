@@ -1,0 +1,30 @@
+:global(div.ui.bottom.attached.active.tab) {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+:local(div.branchMenu):global(.menu:first-child) {
+  margin-top: 1em;
+}
+
+:global(.ui.menu) {
+  :local(.branchMenuItem) {
+    padding: 5px 15px;
+    width: 7em;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+:global(.ui.bottom.attached.active) {
+  :local(.branchesListContainer) {
+    padding: 0;
+  }
+}
+
+:local(.branchMenu) {
+  :global(.active.item) {
+    background-color: #0366d6 !important;
+    color: #fff !important;
+  }
+}

@@ -8,6 +8,7 @@ import CommitsPage from '../../containers/CommitsPage/index';
 import DiffCommitView from '../../components/DiffCommitView/index';
 import RepositoryTab from '../../containers/RepositoryTab';
 import RepoSettings from '../../containers/SettingsTab/index';
+import BranchesTab from '../../containers/BranchesTab/index';
 
 import styles from './styles.module.scss';
 
@@ -39,6 +40,7 @@ class RepositoryPage extends React.Component {
               <Route exact path={`${match.path}/commit/:hash`} component={DiffCommitView} />
               <Route exact path={`${match.path}/issues`} component={IssuesTab} />
               <Route exact path={`${match.path}/settings`} component={RepoSettings} />
+              <Route exact path={`${match.path}/branches`} component={BranchesTab} />
             </Switch>
           </div>
         </Container>

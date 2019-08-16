@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import RepoFileTree from '../../components/RepoFileTree/index';
 import RepoReadme from '../../components/RepoReadme/index';
-import { fetchLastCommitOnBranch, fetchBranches, fetchFileTree } from '../../routines/routines';
+import { fetchBranches, fetchFileTree, fetchLastCommitOnBranch } from '../../routines/routines';
 
 import Octicon, { getIconByName } from '@primer/octicons-react';
 import { Container, Button, Header, Dropdown, Input, Popup, Segment, Menu, Loader, Divider } from 'semantic-ui-react';
@@ -17,33 +17,27 @@ class CodeTab extends React.Component {
       branch: 'master'
     };
     this.onBranchChange = this.onBranchChange.bind(this);
-    this.onDropdownClick = this.onDropdownClick.bind(this);
   }
 
   componentDidMount() {
-    const { username, reponame, history } = this.props;
-    const { branch } = this.state;
-    history.push(`/${username}/${reponame}/tree/${branch}`);
+    const { username, reponame, branch, history } = this.props;
+    this.props.fetchBranches({ owner: username, repoName: reponame });
+    let actualBranch = branch || this.state.branch;
+    this.setState({
+      branch: actualBranch
+    });
+    history.push(`/${username}/${reponame}/tree/${actualBranch}`);
     this.props.fetchLastCommitOnBranch({
       username,
       reponame,
-      branch
+      branch: actualBranch
     });
     this.props.fetchFileTree({
       username,
       reponame,
-      branch
+      branch: actualBranch
     });
   }
-
-  onDropdownClick = event => {
-    event.stopPropagation();
-    const { username, reponame } = this.props;
-    this.props.fetchBranches({
-      username,
-      reponame
-    });
-  };
 
   onBranchChange = (event, data) => {
     this.setState(
@@ -72,8 +66,10 @@ class CodeTab extends React.Component {
   render() {
     const { branch } = this.state;
     const { username, reponame, lastCommitData, branchesData, fileTreeData, history, fetchFileTree } = this.props;
+    const { branches } = branchesData;
+    const branchesCount = branches ? branches.length : 0;
 
-    return this.props.lastCommitData.loading || this.props.fileTreeData.loading ? (
+    return lastCommitData.loading || fileTreeData.loading || branchesData.loading ? (
       <div>
         <Loader active />
       </div>
@@ -100,8 +96,8 @@ class CodeTab extends React.Component {
             </Menu.Item>
             <Menu.Item>
               <Octicon icon={getIconByName('git-branch')} />
-              <Link className={styles.repoMetaDataLinks} to="">
-                <b>7 </b> branches
+              <Link className={styles.repoMetaDataLinks} to={`/${username}/${reponame}/branches`}>
+                <b>{branchesCount} </b> branches
               </Link>
             </Menu.Item>
             <Menu.Item>
@@ -133,7 +129,6 @@ class CodeTab extends React.Component {
               width="seven"
               className={[styles.actionButton, styles.repoBranchesButton]}
               position="bottom left"
-              onClick={this.onDropdownClick}
             >
               <Dropdown.Menu className={styles.searchBranchList}>
                 {branchesData.loading ? (
@@ -144,7 +139,6 @@ class CodeTab extends React.Component {
                       type="text"
                       className={styles.searchBranchInput}
                       placeholder="Find or create a branch"
-                      onClick={this.OnDropdownClick}
                     />
                     <Dropdown.Divider />
                     <Dropdown.Header content="branch" as="h4" />
@@ -196,7 +190,6 @@ class CodeTab extends React.Component {
                       <Octicon verticalAlign="middle" icon={getIconByName('clippy')} />
                     </Button>
                   }
-                  onClick={this.OnDropdownClick}
                   actionPosition="right"
                   size="small"
                   className={styles.repoLinkInput}
@@ -246,7 +239,8 @@ CodeTab.propTypes = {
   branchesData: PropTypes.exact({
     loading: PropTypes.bool.isRequired,
     error: PropTypes.string,
-    branches: PropTypes.array
+    branches: PropTypes.array,
+    lastCommits: PropTypes.object
   }).isRequired,
   lastCommitData: PropTypes.exact({
     loading: PropTypes.bool.isRequired,
@@ -262,8 +256,9 @@ CodeTab.propTypes = {
   fetchBranches: PropTypes.func.isRequired,
   fetchFileTree: PropTypes.func.isRequired,
   history: PropTypes.object,
-  username: PropTypes.any,
-  reponame: PropTypes.any
+  username: PropTypes.string.isRequired,
+  reponame: PropTypes.string.isRequired,
+  branch: PropTypes.string
 };
 
 export default connect(
