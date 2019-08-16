@@ -33,7 +33,7 @@ const validationSchema = Yup.object().shape({
 
 const usernameValidationSchema = Yup.object().shape({
   username: Yup.string()
-    .required('Username address is required!')
+    .required('Username is required!')
     .matches(/^(([a-zA-Z0-9]+-)*[a-zA-Z0-9]+){1,39}$/)
 });
 
