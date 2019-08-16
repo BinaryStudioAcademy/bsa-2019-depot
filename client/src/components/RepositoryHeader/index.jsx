@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Octicon, { Repo } from '@primer/octicons-react';
-import { Icon, Label } from 'semantic-ui-react';
+import { Icon, Label, Container } from 'semantic-ui-react';
 import ForkButton from '../ForkButton';
 
 import styles from './styles.module.scss';
@@ -24,37 +24,40 @@ const RepositoryHeader = ({ owner, repoName, forkCount, issueCount, activePage, 
   }
 
   return (
+
     <header className={styles.repoHeader}>
-      <div className={styles.repoHeaderContainer}>
-        <div className={styles.repoNameRow}>
-          <div className={styles.repoName}>
-            <Octicon icon={Repo} />
-            <span className={styles.repoPath}>
-              <Link to="">{owner}</Link>
-              <span className={styles.pathDivider}>/</span>
-              <Link to={baseUrl}>{repoName}</Link>
-            </span>
+      <Container>
+        <div className={styles.repoHeaderContainer}>
+          <div className={styles.repoNameRow}>
+            <div className={styles.repoName}>
+              <Octicon icon={Repo} />
+              <span className={styles.repoPath}>
+                <Link to="">{owner}</Link>
+                <span className={styles.pathDivider}>/</span>
+                <Link to={baseUrl}>{repoName}</Link>
+              </span>
+            </div>
+            <ForkButton owner={owner} repoName={repoName} forkCount={forkCount} />
           </div>
-          <ForkButton owner={owner} repoName={repoName} forkCount={forkCount} />
+          <div className="ui top attached tabular menu">
+            <div className={`${activeTab === 'code' && 'active'} item`}>
+              <Link to={baseUrl}>
+                <Icon name="code" /> Code
+              </Link>
+            </div>
+            <div className={`${activeTab === 'issues' && 'active'} item`}>
+              <Link to={`${baseUrl}/issues`}>
+                Issues<Label circular>{issueCount}</Label>
+              </Link>
+            </div>
+            <div className={`${activeTab === 'settings' && 'active'} item`}>
+              <Link to={`${baseUrl}/settings`}>
+                <Icon name="cog" /> Settings
+              </Link>
+            </div>
+          </div>
         </div>
-        <div className="ui top attached tabular menu">
-          <div className={`${activeTab === 'code' && 'active'} item`}>
-            <Link to={baseUrl}>
-              <Icon name="code" /> Code
-            </Link>
-          </div>
-          <div className={`${activeTab === 'issues' && 'active'} item`}>
-            <Link to={`${baseUrl}/issues`}>
-              Issues<Label circular>{issueCount}</Label>
-            </Link>
-          </div>
-          <div className={`${activeTab === 'settings' && 'active'} item`}>
-            <Link to={`${baseUrl}/settings`}>
-              <Icon name="cog" /> Settings
-            </Link>
-          </div>
-        </div>
-      </div>
+      </Container>
     </header>
   );
 };

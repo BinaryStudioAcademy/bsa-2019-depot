@@ -158,7 +158,7 @@ const MainPage = ({ currentUser: { username }, isAuthorized }) => {
       <footer className={styles.footer}>
         <Grid container columns={1}>
           <Grid.Row>
-            <Grid.Column mobile={16} computer={8}>
+            <Grid.Column mobile={16} computer={8} floated="right">
               <h4>Connect with us</h4>
               <p>Sign up for Git articles and resources:</p>
               <Form className={styles.form} onSubmit={handleSubmit}>
@@ -171,12 +171,12 @@ const MainPage = ({ currentUser: { username }, isAuthorized }) => {
                 <p>Connect with Depot</p>
                 <ul>
                   <li>
-                    <a className={styles.fb} href="https://www.facebook.com/">
+                    <a className={styles.fb} href="/">
                       fb
                     </a>
                   </li>
                   <li>
-                    <a className={styles.tw} href="https://twitter.com/">
+                    <a className={styles.tw} href="/">
                       tw
                     </a>
                   </li>
@@ -185,8 +185,25 @@ const MainPage = ({ currentUser: { username }, isAuthorized }) => {
             </Grid.Column>
           </Grid.Row>
         </Grid>
+        <Grid className={styles.foterLine} container>
+          <Grid.Row computer={13} mobile={16}>
+            <ul>
+              <li>
+                <a href="/">Privacy policy </a>
+              </li>
+              <li>
+                <a href="/">Terms of use</a>
+              </li>
+              <li>
+                <a href="/">Trust & security</a>
+              </li>
+              <li>
+                <p>Copyright © 2019</p>
+              </li>
+            </ul>
+          </Grid.Row>
+        </Grid>
       </footer>
-      <Divider hidden />
     </div>
   );
 };
