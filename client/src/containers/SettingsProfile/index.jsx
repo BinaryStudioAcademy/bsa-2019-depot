@@ -39,13 +39,19 @@ class SettingsProfile extends Component {
     )
   };
 
-  renderField = ({ field }) => <Input fluid {...field} />;
+  renderField = ({ field }) => {
+    if (field.value === null) field.value = '';
+    return <Input fluid {...field} />;
+  };
 
   renderDisabledField = ({ field }) => <Input disabled fluid {...field} />;
 
-  renderTextArea = ({ field }) => (
-    <TextArea {...field} rows="3" placeholder="Tell us a little bit about yourself" className={styles.textarea} />
-  );
+  renderTextArea = ({ field }) => {
+    if (field.value === null) field.value = '';
+    return (
+      <TextArea {...field} rows="3" placeholder="Tell us a little bit about yourself" className={styles.textarea} />
+    );
+  };
 
   onSubmit = (values, { setSubmitting }) => {
     const { id, bio, company, location, name, imgUrl, url } = values;

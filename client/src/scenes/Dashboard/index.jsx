@@ -73,7 +73,10 @@ class Dashboard extends React.Component {
                   <Link to={url} className={!tab && styles.active_link}>
                     Overview
                   </Link>
-                  <Link to={`${url}?tab=repositories`} className={tab === 'repositories' && styles.active_link}>
+                  <Link
+                    to={`${url}?tab=repositories`}
+                    className={tab === 'repositories' ? styles.active_link : undefined}
+                  >
                     Repositories{repoCount ? <span>{repoCount}</span> : null}
                   </Link>
                   <Link to="">Projects{projects ? <span>{projects}</span> : null}</Link>

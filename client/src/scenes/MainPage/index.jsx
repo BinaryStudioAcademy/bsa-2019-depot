@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Button, Grid, Image, Form, Divider } from 'semantic-ui-react';
+import { Button, Grid, Image, Form } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
