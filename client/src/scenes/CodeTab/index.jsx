@@ -40,7 +40,6 @@ class CodeTab extends React.Component {
   }
 
   onBranchChange = (event, data) => {
-    debugger;
     this.setState(
       {
         branch: data.value
