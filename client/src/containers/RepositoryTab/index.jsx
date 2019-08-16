@@ -46,7 +46,7 @@ class RepositoryTab extends React.Component {
     return isEmpty ? (
       <EmptyRepositoryTab />
     ) : (
-      <CodeTab history={history} username={username} reponame={reponame} branch={branch} />
+      <CodeTab history={history} username={username} reponame={reponame} branch={branch || null} />
     );
   }
 }
