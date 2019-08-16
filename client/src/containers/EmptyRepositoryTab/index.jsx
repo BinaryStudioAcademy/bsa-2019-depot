@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Container, Button, Icon, Divider } from 'semantic-ui-react';
+import Octicon, { Clippy } from '@primer/octicons-react';
 import styles from './styles.module.scss';
 import { Link, withRouter } from 'react-router-dom';
 import CopyableTerminal from '../../components/CopyableTerminal';
@@ -55,18 +56,31 @@ function EmptyRepositoryTab(props) {
       <Divider hidden />
       <div className={styles.box}>
         <section className={styles.boxSectionHeader}>
-          <h2>Quick setup — if you’ve done this kind of thing before</h2>
+          <h3>Quick setup — if you’ve done this kind of thing before</h3>
           <div className={styles.urlGroup}>
-            <Button.Group>
-              <Button active={protocol === 'HTTPS'} onClick={setHttp}>
-                HTTPS
-              </Button>
-              <Button active={protocol === 'SSH'} onClick={setSsh}>
-                SSH
-              </Button>
-            </Button.Group>
+            <Button
+              className={[styles.protocolButton, styles.buttonUnshaded]}
+              active={protocol === 'HTTPS'}
+              attached="left"
+              onClick={setHttp}
+            >
+              HTTPS
+            </Button>
+            <Button
+              className={[styles.protocolButton, styles.buttonUnshaded]}
+              active={protocol === 'SSH'}
+              attached={true}
+              onClick={setSsh}
+            >
+              SSH
+            </Button>
             <span className={styles.clipboardInput}>{url}</span>
-            <Button icon="clipboard" onClick={copyUrl}></Button>
+            <Button
+              className={[styles.protocolButton, styles.buttonUnshaded]}
+              icon={<Octicon icon={Clippy} />}
+              attached="right"
+              onClick={copyUrl}
+            ></Button>
           </div>
           <p>
             Get started
@@ -77,15 +91,15 @@ function EmptyRepositoryTab(props) {
           </p>
         </section>
         <section className={styles.boxSection}>
-          <h2>…or create a new repository on the command line</h2>
+          <h3>…or create a new repository on the command line</h3>
           <CopyableTerminal str={getString(createRepoStr)} />
         </section>
         <section className={styles.boxSection}>
-          <h2>…or push an existing repository from the command line</h2>
+          <h3>…or push an existing repository from the command line</h3>
           <CopyableTerminal str={getString(pushRepoSrt)} />
         </section>
         <section className={styles.boxSection}>
-          <h2>…or import code from another repository</h2>
+          <h3>…or import code from another repository</h3>
           <p>You can initialize this repository with code from a Subversion, Mercurial, or TFS project.</p>
           <Button as="a">Import code</Button>
         </section>

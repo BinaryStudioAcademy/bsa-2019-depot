@@ -140,6 +140,7 @@
 
 :global(.ui.popup):local(.repoPopup) {
   padding: 0;
+  height: initial;
   :local(.repoPopupBody) {
     padding: 0.833em 1em;
   }

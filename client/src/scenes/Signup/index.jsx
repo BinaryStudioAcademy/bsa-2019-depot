@@ -14,7 +14,7 @@ import './styles.module.scss';
 
 const validationSchema = Yup.object().shape({
   username: Yup.string()
-    .required('Username address is required!')
+    .required('Username is required!')
     .matches(
       /^(([a-zA-Z0-9]+-)*[a-zA-Z0-9]+){1,39}$/,
       'Username contains of only alphanumeric characters or single hyphens. Cannot begin or end with a hyphen. Cannot have multiple consecutive hyphens'

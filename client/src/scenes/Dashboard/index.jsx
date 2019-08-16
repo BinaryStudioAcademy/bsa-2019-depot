@@ -35,6 +35,7 @@ class Dashboard extends React.Component {
       match: { url },
       location: { search },
       username,
+      name,
       imgUrl,
       repositoriesNames,
       projects,
@@ -60,7 +61,10 @@ class Dashboard extends React.Component {
                   Set status
                 </Link>
               </div>
-              <h1 className={styles.username}>{username}</h1>
+              <div className={styles.namesContainer}>
+                {name ? <h1 className={styles.name}>{name}</h1> : null}
+                <h1 className={styles.username}>{username}</h1>
+              </div>
               <Link to="/settings/profile">
                 <Button fluid basic className={styles.edit_profile}>
                   Edit profile
@@ -108,6 +112,7 @@ Dashboard.propTypes = {
   actions: PropTypes.object.isRequired,
   repositoriesNames: PropTypes.array.isRequired,
   username: PropTypes.string.isRequired,
+  name: PropTypes.string,
   imgUrl: PropTypes.string,
   projects: PropTypes.number.isRequired,
   stars: PropTypes.number.isRequired,
@@ -126,6 +131,7 @@ Dashboard.propTypes = {
 };
 
 const mapStateToProps = ({ userStats: { repositoriesNames }, profile: { currentUser } }) => ({
+  name: currentUser.name,
   username: currentUser.username,
   imgUrl: currentUser.imgUrl,
   repositoriesNames
