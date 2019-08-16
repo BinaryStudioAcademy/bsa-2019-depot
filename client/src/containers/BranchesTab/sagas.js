@@ -1,11 +1,10 @@
-import { takeEvery, put, call, all, delay } from 'redux-saga/effects';
+import { takeEvery, put, call, all } from 'redux-saga/effects';
 import * as branchesService from '../../services/branchesService';
 import { fetchBranches } from '../../routines/routines';
 
 function* branchesRequest({ payload: { owner, repoName } }) {
   try {
     yield put(fetchBranches.request());
-    yield delay(1000);
     const branches = yield call(branchesService.getBranches, owner, repoName);
     let lastCommits = {};
     let lastCommitList = [];

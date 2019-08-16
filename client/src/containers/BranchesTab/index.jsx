@@ -20,6 +20,19 @@ class BranchesTab extends React.Component {
     };
   }
 
+  componentDidMount() {
+    const {
+      branchesData: { branches },
+      username,
+      match: {
+        params: { reponame }
+      }
+    } = this.props;
+    if (!(branches && branches.length)) {
+      this.props.fetchBranches({ owner: username, repoName: reponame });
+    }
+  }
+
   getBranchStatus = dateString => {
     const branchDate = moment(dateString);
     const now = moment();
@@ -101,7 +114,9 @@ BranchesTab.propTypes = {
     lastCommits: PropTypes.object.isRequired
   }).isRequired,
   fetchBranches: PropTypes.func.isRequired,
-  match: PropTypes.object,
+  match: {
+    reponame: PropTypes.string.isRequired
+  },
   username: PropTypes.string
 };
 

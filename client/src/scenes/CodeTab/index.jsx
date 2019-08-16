@@ -22,10 +22,6 @@ class CodeTab extends React.Component {
   componentDidMount() {
     const { username, reponame, history } = this.props;
     this.props.fetchBranches({ owner: username, repoName: reponame });
-    // if (!branches.length) {
-    //   history.push(`/${username}/${reponame}`);
-    //   return;
-    // }
     const { branch } = this.state;
     history.push(`/${username}/${reponame}/tree/${branch}`);
     this.props.fetchLastCommitOnBranch({
@@ -39,15 +35,6 @@ class CodeTab extends React.Component {
       branch
     });
   }
-
-  // onDropdownClick = event => {
-  //   event.stopPropagation();
-  //   const { username, reponame } = this.props;
-  //   this.props.fetchBranches({
-  //     username,
-  //     reponame
-  //   });
-  // };
 
   onBranchChange = (event, data) => {
     this.setState(
@@ -139,7 +126,6 @@ class CodeTab extends React.Component {
               width="seven"
               className={[styles.actionButton, styles.repoBranchesButton]}
               position="bottom left"
-              // onClick={this.onDropdownClick}
             >
               <Dropdown.Menu className={styles.searchBranchList}>
                 {branchesData.loading ? (
@@ -150,7 +136,6 @@ class CodeTab extends React.Component {
                       type="text"
                       className={styles.searchBranchInput}
                       placeholder="Find or create a branch"
-                      // onClick={this.OnDropdownClick}
                     />
                     <Dropdown.Divider />
                     <Dropdown.Header content="branch" as="h4" />
@@ -269,8 +254,8 @@ CodeTab.propTypes = {
   fetchBranches: PropTypes.func.isRequired,
   fetchFileTree: PropTypes.func.isRequired,
   history: PropTypes.object,
-  username: PropTypes.any,
-  reponame: PropTypes.any
+  username: PropTypes.string,
+  reponame: PropTypes.string
 };
 
 export default connect(
