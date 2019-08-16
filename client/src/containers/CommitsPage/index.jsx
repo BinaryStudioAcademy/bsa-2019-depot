@@ -22,8 +22,8 @@ class CommitsPage extends React.Component {
     const { username, reponame } = this.props.match.params;
     const { branch } = this.state;
     this.props.fetchBranches({
-      username,
-      reponame
+      owner: username,
+      repoName: reponame
     });
     this.props.fetchCommits({
       username,
@@ -89,9 +89,9 @@ CommitsPage.propTypes = {
   branchesData: PropTypes.exact({
     loading: PropTypes.bool.isRequired,
     error: PropTypes.string,
-    branches: PropTypes.array
+    branches: PropTypes.array,
+    lastCommits: PropTypes.object
   }).isRequired,
-  /*repoName: PropTypes.string.isRequired,*/
   fetchCommits: PropTypes.func.isRequired,
   fetchBranches: PropTypes.func.isRequired,
   username: PropTypes.string,
