@@ -35,6 +35,7 @@ class Dashboard extends React.Component {
       match: { url },
       location: { search },
       username,
+      name,
       imgUrl,
       repositoriesNames,
       projects,
@@ -60,7 +61,10 @@ class Dashboard extends React.Component {
                   Set status
                 </Link>
               </div>
-              <h1 className={styles.username}>{username}</h1>
+              <div className={styles.namesContainer}>
+                {name ? <h1 className={styles.name}>{name}</h1> : null}
+                <h1 className={styles.username}>{username}</h1>
+              </div>
               <Link to="/settings/profile">
                 <Button fluid basic className={styles.edit_profile}>
                   Edit profile
@@ -70,10 +74,13 @@ class Dashboard extends React.Component {
             <Grid.Column mobile={16} tablet={12} computer={12}>
               <Container className={styles.navbar_wrapper}>
                 <nav className={styles.navbar}>
-                  <Link to={url} className={!tab && styles.active_link}>
+                  <Link to={url} className={!tab ? styles.active_link : undefined}>
                     Overview
                   </Link>
-                  <Link to={`${url}?tab=repositories`} className={tab === 'repositories' && styles.active_link}>
+                  <Link
+                    to={`${url}?tab=repositories`}
+                    className={tab === 'repositories' ? styles.active_link : undefined}
+                  >
                     Repositories{repoCount ? <span>{repoCount}</span> : null}
                   </Link>
                   <Link to="">Projects{projects ? <span>{projects}</span> : null}</Link>
@@ -105,7 +112,8 @@ Dashboard.propTypes = {
   actions: PropTypes.object.isRequired,
   repositoriesNames: PropTypes.array.isRequired,
   username: PropTypes.string.isRequired,
-  imgUrl: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  imgUrl: PropTypes.string,
   projects: PropTypes.number.isRequired,
   stars: PropTypes.number.isRequired,
   followers: PropTypes.number.isRequired,
@@ -123,6 +131,7 @@ Dashboard.propTypes = {
 };
 
 const mapStateToProps = ({ userStats: { repositoriesNames }, profile: { currentUser } }) => ({
+  name: currentUser.name,
   username: currentUser.username,
   imgUrl: currentUser.imgUrl,
   repositoriesNames

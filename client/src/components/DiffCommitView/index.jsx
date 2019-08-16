@@ -9,7 +9,7 @@ import './styles.module.scss';
 class DiffCommitView extends Component {
   componentDidMount() {
     this.props.fetchDiffs({
-      owner: this.props.username,
+      owner: this.props.match.params.username,
       repoName: this.props.match.params.reponame,
       hash: this.props.match.params.hash
     });
@@ -65,19 +65,11 @@ DiffCommitView.propTypes = {
     diffs: PropTypes.string
   }).isRequired,
   fetchDiffs: PropTypes.func.isRequired,
-  location: PropTypes.object,
-  username: PropTypes.string,
   match: PropTypes.object
 };
 
-const mapStateToProps = ({
-  diffsData,
-  profile: {
-    currentUser: { username }
-  }
-}) => ({
-  diffsData,
-  username
+const mapStateToProps = ({ diffsData }) => ({
+  diffsData
 });
 
 const mapDispatchToProps = {

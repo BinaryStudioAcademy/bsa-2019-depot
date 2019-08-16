@@ -3,6 +3,7 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const { getReposNames } = require('./repo.service');
 const repoHelper = require('../../helpers/repo.helper');
+const { isEmpty } = require('./repo.service');
 
 const getCommits = async ({ user, name, branch }) => {
   const pathToRepo = repoHelper.getPathToRepo(user, name);
@@ -38,6 +39,7 @@ const getCommitsByDate = async (data) => {
   const promises = repoList.map((repoName) => {
     const pathToRepo = repoHelper.getPathToRepo(user, repoName);
     return NodeGit.Repository.open(pathToRepo).then((repo) => {
+      isEmpty({ owner: user, reponame: repo });
       const walker = NodeGit.Revwalk.create(repo);
       walker.pushGlob('refs/heads/*');
       walker.sorting(NodeGit.Revwalk.SORT.TIME);
@@ -69,9 +71,19 @@ const getCommitsByDate = async (data) => {
       userActivitybyDate[fullDate] = 1;
     }
     if (!(monthAndYear in monthActivity)) {
-      monthActivity[monthAndYear] = 1;
+      monthActivity[monthAndYear] = {};
+    }
+    if (!(monthAndYear in monthActivity)) {
+      monthActivity[monthAndYear] = {};
+    }
+  });
+  allCommits.forEach(({ date, repo }) => {
+    const stringifiedDate = JSON.stringify(date);
+    const monthAndYear = stringifiedDate.slice(1, 8);
+    if (monthActivity[monthAndYear][repo]) {
+      monthActivity[monthAndYear][repo] += 1;
     } else {
-      monthActivity[monthAndYear] += 1;
+      monthActivity[monthAndYear][repo] = 1;
     }
   });
   return { userActivitybyDate, monthActivity };

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import RepoFileTree from '../../components/RepoFileTree/index';
 import RepoReadme from '../../components/RepoReadme/index';
-import { fetchLastCommitOnBranch, fetchBranches, fetchFileTree } from '../../routines/routines';
+import { fetchBranches, fetchFileTree, fetchLastCommitOnBranch } from '../../routines/routines';
 
 import Octicon, { getIconByName } from '@primer/octicons-react';
 import { Container, Button, Header, Dropdown, Input, Popup, Segment, Menu, Loader, Divider } from 'semantic-ui-react';
@@ -17,35 +17,27 @@ class CodeTab extends React.Component {
       branch: 'master'
     };
     this.onBranchChange = this.onBranchChange.bind(this);
-    this.onDropdownClick = this.onDropdownClick.bind(this);
   }
 
   componentDidMount() {
-    const { match, history } = this.props;
-    const { username, reponame } = match.params;
-    const { branch } = this.state;
-    history.push(`/${username}/${reponame}/tree/${branch}`);
+    const { username, reponame, branch, history } = this.props;
+    this.props.fetchBranches({ owner: username, repoName: reponame });
+    let actualBranch = branch || this.state.branch;
+    this.setState({
+      branch: actualBranch
+    });
+    history.push(`/${username}/${reponame}/tree/${actualBranch}`);
     this.props.fetchLastCommitOnBranch({
       username,
       reponame,
-      branch
+      branch: actualBranch
     });
     this.props.fetchFileTree({
       username,
       reponame,
-      branch
+      branch: actualBranch
     });
   }
-
-  onDropdownClick = event => {
-    event.stopPropagation();
-    const { match } = this.props;
-    const { username, reponame } = match.params;
-    this.props.fetchBranches({
-      username,
-      reponame
-    });
-  };
 
   onBranchChange = (event, data) => {
     this.setState(
@@ -72,12 +64,15 @@ class CodeTab extends React.Component {
     );
   };
 
+  onCreateFile = () => {};
+
   render() {
     const { branch } = this.state;
-    const { match, lastCommitData, branchesData, fileTreeData, history, fetchFileTree } = this.props;
-    const { username, reponame } = match.params;
+    const { username, reponame, lastCommitData, branchesData, fileTreeData, history, fetchFileTree } = this.props;
+    const { branches } = branchesData;
+    const branchesCount = branches ? branches.length : 0;
 
-    return this.props.lastCommitData.loading || this.props.fileTreeData.loading ? (
+    return lastCommitData.loading || fileTreeData.loading || branchesData.loading ? (
       <div>
         <Loader active />
       </div>
@@ -104,8 +99,8 @@ class CodeTab extends React.Component {
             </Menu.Item>
             <Menu.Item>
               <Octicon icon={getIconByName('git-branch')} />
-              <Link className={styles.repoMetaDataLinks} to="">
-                <b>7 </b> branches
+              <Link className={styles.repoMetaDataLinks} to={`/${username}/${reponame}/branches`}>
+                <b>{branchesCount} </b> branches
               </Link>
             </Menu.Item>
             <Menu.Item>
@@ -135,9 +130,8 @@ class CodeTab extends React.Component {
               text={`Branch: ${branch}`}
               floating
               width="seven"
-              className={[styles.actionButton, styles.repoBranchesButton]}
+              className={[styles.actionButton, styles.repoBranchesButton].join(' ')}
               position="bottom left"
-              onClick={this.onDropdownClick}
             >
               <Dropdown.Menu className={styles.searchBranchList}>
                 {branchesData.loading ? (
@@ -148,7 +142,6 @@ class CodeTab extends React.Component {
                       type="text"
                       className={styles.searchBranchInput}
                       placeholder="Find or create a branch"
-                      onClick={this.OnDropdownClick}
                     />
                     <Dropdown.Divider />
                     <Dropdown.Header content="branch" as="h4" />
@@ -168,15 +161,21 @@ class CodeTab extends React.Component {
             </Dropdown>
             <Button className={styles.actionButton}>New pull request</Button>
           </div>
-          <div>
-            <Button.Group className={styles.repoActions}>
-              <Button className={styles.actionButton}>Create New File</Button>
+          <div className={styles.repoActions}>
+            <Button.Group>
+              <Button className={styles.actionButton} onClick={this.onCo}>
+                Create New File
+              </Button>
               <Button className={styles.actionButton}>Upload files</Button>
               <Button className={styles.actionButton}>Find file</Button>
             </Button.Group>
             <Popup
               trigger={
-                <Dropdown button text="Clone or download" className={[styles.actionButton, styles.cloneRepoButton]} />
+                <Dropdown
+                  button
+                  text="Clone or download"
+                  className={[styles.actionButton, styles.cloneRepoButton].join(' ')}
+                />
               }
               flowing
               on="click"
@@ -201,7 +200,6 @@ class CodeTab extends React.Component {
                     </Button>
                   }
                   onClick={this.OnDropdownClick}
-                  actionPosition="right"
                   size="small"
                   className={styles.repoLinkInput}
                   defaultValue="https://github.com/BinaryStudioAcademy/bsa-2019-depot.git"
@@ -250,7 +248,8 @@ CodeTab.propTypes = {
   branchesData: PropTypes.exact({
     loading: PropTypes.bool.isRequired,
     error: PropTypes.string,
-    branches: PropTypes.array
+    branches: PropTypes.array,
+    lastCommits: PropTypes.object
   }).isRequired,
   lastCommitData: PropTypes.exact({
     loading: PropTypes.bool.isRequired,
@@ -266,9 +265,10 @@ CodeTab.propTypes = {
   fetchBranches: PropTypes.func.isRequired,
   fetchFileTree: PropTypes.func.isRequired,
   history: PropTypes.object,
-  match: PropTypes.object.isRequired,
-  username: PropTypes.any,
-  reponame: PropTypes.any
+  match: PropTypes.object,
+  username: PropTypes.string.isRequired,
+  reponame: PropTypes.string.isRequired,
+  branch: PropTypes.string
 };
 
 export default connect(

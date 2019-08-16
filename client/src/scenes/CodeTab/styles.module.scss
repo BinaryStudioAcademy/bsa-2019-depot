@@ -29,9 +29,15 @@
   }
 }
 
-:global(.ui.buttons, .ui.button):local(.actionButton) {
-  border-left: 1px solid rgba(27, 31, 35, 0.2);
-  font-size: 75%;
+.repoActions {
+  :global(.ui.buttons) {
+    font-size: 75%;
+
+    :global(.ui.button):local(.actionButton) {
+      border-left: 1px solid rgba(27, 31, 35, 0.2);
+      font-size: 100%;
+    }
+  }
 }
 
 :global(a):local(.link) {
@@ -109,6 +115,7 @@
 
 :global(.ui.button):local(.cloneRepoButton) {
   margin-left: 6px;
+  margin-right: 0;
   background-color: #28a745;
   background-image: linear-gradient(-180deg, #34d058, #28a745 90%);
   color: #fff;
@@ -133,6 +140,7 @@
 
 :global(.ui.popup):local(.repoPopup) {
   padding: 0;
+  height: initial;
   :local(.repoPopupBody) {
     padding: 0.833em 1em;
   }
@@ -184,4 +192,11 @@
   box-shadow: 0 3px 12px rgba(27, 31, 35, 0.15);
   color: #586069;
   font-size: 75%;
+}
+
+.repoActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
 }
