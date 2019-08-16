@@ -186,12 +186,6 @@ $secondary-color: #d1d5da;
       text-align: center;
       width: 32px;
     }
-
-    :global(.content) {
-      :local(.activity_link) {
-        // display: block;
-      }
-    }
   }
 }
 
