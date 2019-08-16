@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Breadcrumb, Button, Icon, Loader, Segment } from 'semantic-ui-react';
+import ReactMarkdown from 'react-markdown';
 import FilePathBreadcrumbSections from '../../components/FilePathBreadcrumbSections';
 import FileViewer from '../../components/FileViewer';
 import { Link } from 'react-router-dom';
@@ -120,7 +121,11 @@ class FileViewPage extends React.Component {
             </div>
           </Segment>
           <Segment className={styles.fileView}>
-            <FileViewer content={content} style={editorStyles} fileExtension={fileExtension} readOnly />
+            {fileExtension === 'md' ? (
+              <ReactMarkdown className={styles.markdownContainer} source={content} />
+            ) : (
+              <FileViewer content={content} style={editorStyles} fileExtension={fileExtension} readOnly />
+            )}
           </Segment>
         </Segment.Group>
       </>
