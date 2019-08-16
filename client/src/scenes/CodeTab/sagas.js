@@ -2,11 +2,11 @@ import { takeEvery, put, call, all } from 'redux-saga/effects';
 import * as branchesService from '../../services/branchesService';
 import { fetchLastCommitOnBranch, fetchFileTree } from '../../routines/routines';
 
-function* lastCommitRequest({ payload: { owner, repoName, branch } }) {
+function* lastCommitRequest({ payload: { username, reponame, branch } }) {
   try {
     yield put(fetchLastCommitOnBranch.request());
 
-    const response = yield call(branchesService.getLastCommit, owner, repoName, branch);
+    const response = yield call(branchesService.getLastCommit, username, reponame, branch);
 
     yield put(fetchLastCommitOnBranch.success(response));
   } catch (error) {
@@ -20,11 +20,11 @@ function* watchLastCommitRequest() {
   yield takeEvery(fetchLastCommitOnBranch.TRIGGER, lastCommitRequest);
 }
 
-function* fileTreeRequest({ payload: { owner, repoName, branch, query } }) {
+function* fileTreeRequest({ payload: { username, reponame, branch, query } }) {
   try {
     yield put(fetchFileTree.request());
 
-    const response = yield call(branchesService.getFileTree, owner, repoName, branch, query);
+    const response = yield call(branchesService.getFileTree, username, reponame, branch, query);
 
     yield put(fetchFileTree.success(response));
   } catch (error) {

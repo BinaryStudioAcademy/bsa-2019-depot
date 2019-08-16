@@ -1,14 +1,16 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { NavLink } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import { Button, Divider, Icon, Image, List } from 'semantic-ui-react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { getUserImgLink } from '../../helpers/imageHelper';
 
 import './styles.module.scss';
 
-const CommitsList = ({ commits }) => {
+const CommitsList = ({ commits, match: { params } }) => {
+  const { username, reponame } = params;
+
   return (
     <List divided verticalAlign="middle">
       {commits.map((commit, index, array) => {
@@ -28,7 +30,7 @@ const CommitsList = ({ commits }) => {
                     </Button>
                   </CopyToClipboard>
                   <Button basic color="blue">
-                    <NavLink exact to={`commits/${commit.sha}`}>
+                    <NavLink exact to={`/${username}/${reponame}/commit/${commit.sha}`}>
                       {commit.sha.slice(0, 7)}
                     </NavLink>
                   </Button>
@@ -60,7 +62,8 @@ CommitsList.propTypes = {
       date: PropTypes.string.isRequired,
       message: PropTypes.string.isRequired
     })
-  ).isRequired
+  ).isRequired,
+  match: PropTypes.object.isRequired
 };
 
-export default CommitsList;
+export default withRouter(CommitsList);

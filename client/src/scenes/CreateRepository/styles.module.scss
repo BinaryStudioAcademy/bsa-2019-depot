@@ -15,6 +15,10 @@
   }
 }
 
+:local(.reponameInput) {
+  margin-bottom: 10px !important;
+}
+
 :local(.privacyIcon) {
   position: absolute;
   width: 24px;
@@ -36,4 +40,8 @@
 
 :local(.formField) {
   position: relative;
+}
+
+:local(.title) {
+  margin-top: 0;
 }

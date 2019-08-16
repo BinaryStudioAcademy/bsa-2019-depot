@@ -9,9 +9,17 @@ $secondary-color: #d1d5da;
   activity_lvl5: #1e6823;
 }
 
-:global(svg.octicon) {
+:global(.octicon):local(.card_icon),
+:global(.octicon):local(.card_icon_grab) {
   margin-right: 0;
   color: $primary-color;
+}
+
+.contribution_activity_desc {
+  :global(.octicon) {
+    margin-right: 0;
+    color: $primary-color;
+  }
 }
 
 :global(.ui.container):local(.pinned_header) {
@@ -177,12 +185,6 @@ $secondary-color: #d1d5da;
       margin-left: -40px;
       text-align: center;
       width: 32px;
-    }
-
-    :global(.content) {
-      :local(.activity_link) {
-        display: block;
-      }
     }
   }
 }

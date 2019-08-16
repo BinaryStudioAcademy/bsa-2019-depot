@@ -11,45 +11,48 @@ class CommitsPage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      branch: 'master'
-    };
-
     this.handleBranchChange = this.handleBranchChange.bind(this);
   }
 
   componentDidMount() {
+    const { username, reponame, branch } = this.props.match.params;
+
     this.props.fetchBranches({
-      // Mock
-      owner: this.props.username,
-      repoName: this.props.match.params.reponame
+      owner: username,
+      repoName: reponame
     });
     this.props.fetchCommits({
-      // Mock
-      owner: this.props.username,
-      repoName: this.props.match.params.reponame,
-      branch: this.state.branch
+      username,
+      reponame,
+      branch
     });
   }
 
   handleBranchChange(event, data) {
-    this.setState(
-      {
-        branch: data.value
-      },
-      () => {
-        this.props.fetchCommits({
-          // Mock
-          owner: this.props.username,
-          repoName: 'new-repo',
-          branch: this.state.branch
-        });
-      }
-    );
+    const { match, history } = this.props;
+    const { username, reponame } = match.params;
+
+    history.push(`/${username}/${reponame}/commits/${data.value}`);
+
+    this.props.fetchBranches({
+      username,
+      reponame
+    });
+    this.props.fetchCommits({
+      username,
+      reponame,
+      branch: data.value
+    });
   }
 
   render() {
-    const { commitsData, branchesData } = this.props;
+    const {
+      commitsData,
+      branchesData,
+      match: {
+        params: { branch }
+      }
+    } = this.props;
 
     let branchOptions;
     if (!branchesData.loading) {
@@ -58,6 +61,7 @@ class CommitsPage extends React.Component {
         text: branch,
         value: branch
       }));
+      branchOptions.sort(({ text: textA }, { text: textB }) => (textA > textB ? 1 : -1));
     }
 
     return commitsData.loading || branchesData.loading ? (
@@ -65,12 +69,7 @@ class CommitsPage extends React.Component {
     ) : (
       <div className={styles.commitsContainer}>
         <div className={styles.branchSelectRow}>
-          <Dropdown
-            value={this.state.branch}
-            text="Branches"
-            options={branchOptions}
-            onChange={this.handleBranchChange}
-          />
+          <Dropdown value={branch} text="Branches" options={branchOptions} onChange={this.handleBranchChange} />
         </div>
         <CommitsList commits={commitsData.commits} />
       </div>
@@ -87,25 +86,19 @@ CommitsPage.propTypes = {
   branchesData: PropTypes.exact({
     loading: PropTypes.bool.isRequired,
     error: PropTypes.string,
-    branches: PropTypes.array
+    branches: PropTypes.array,
+    lastCommits: PropTypes.object
   }).isRequired,
-  /*repoName: PropTypes.string.isRequired,*/
   fetchCommits: PropTypes.func.isRequired,
   fetchBranches: PropTypes.func.isRequired,
   username: PropTypes.string,
-  match: PropTypes.object
+  match: PropTypes.object,
+  history: PropTypes.object
 };
 
-const mapStateToProps = ({
+const mapStateToProps = ({ commitsData, branchesData }) => ({
   commitsData,
-  branchesData,
-  profile: {
-    currentUser: { username }
-  } /*, repoName*/
-}) => ({
-  commitsData,
-  branchesData /*,
-    repoName*/
+  branchesData
 });
 
 const mapDispatchToProps = {

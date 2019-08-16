@@ -14,9 +14,9 @@ import './styles.module.scss';
 
 const validationSchema = Yup.object().shape({
   username: Yup.string()
-    .required('Username address is required!')
+    .required('Username is required!')
     .matches(
-      /^(([a-z0-9]+-)*[a-z0-9]+){1,39}$/,
+      /^(([a-zA-Z0-9]+-)*[a-zA-Z0-9]+){1,39}$/,
       'Username contains of only alphanumeric characters or single hyphens. Cannot begin or end with a hyphen. Cannot have multiple consecutive hyphens'
     ),
   email: Yup.string()
@@ -106,7 +106,7 @@ class Signup extends React.Component {
 
           <Button
             type="submit"
-            color="blue"
+            color="green"
             fluid
             size="large"
             disabled={
@@ -137,9 +137,11 @@ class Signup extends React.Component {
 
   renderSignup = () => {
     return (
-      <Grid.Row columns={2}>
-        <Grid.Column style={{ maxWidth: 450 }}>
-          {' '}
+      <Grid.Row>
+        <Grid.Column className="grid-column">
+          <Header as="h2" color="black" textAlign="center">
+            Join Depot
+          </Header>
           <Formik
             initialValues={{
               username: '',
@@ -158,9 +160,6 @@ class Signup extends React.Component {
   renderForms = () => {
     return (
       <Grid textAlign="center" centered className="signup-grid">
-        <Header as="h2" color="black" textAlign="center">
-          Join Depot
-        </Header>
         {this.renderSignup()}
       </Grid>
     );

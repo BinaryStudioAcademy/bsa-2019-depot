@@ -1,16 +1,17 @@
 const NodeGit = require('nodegit');
 const fs = require('fs-extra');
 const fse = require('fs-extra');
-const path = require('path');
 
-const gitPath = process.env.GIT_PATH;
+const repoHelper = require('../../helpers/repo.helper');
+const repoRepository = require('../../data/repositories/repository.repository');
 
-const createRepo = async ({ owner, repository }) => {
+const createRepo = async ({ owner, name, userId }) => {
   let result = 'Repo was created';
-  const pathToRepo = path.resolve(`${gitPath}/${owner}/${repository}`).replace(/\\/g, '/');
+  const pathToRepo = repoHelper.getPathToRepo(owner, name);
   await NodeGit.Repository.init(pathToRepo, 1)
     .then(() => {
       result = {
+        msg: 'Repo created',
         url: pathToRepo
       };
     })
@@ -18,19 +19,23 @@ const createRepo = async ({ owner, repository }) => {
       result = 'Error! Repos wasn`t created';
     });
 
+  repoRepository.create({
+    userId,
+    name
+  });
   return result;
 };
 
-const checkName = async ({ owner, repository }) => {
-  const filePath = path.resolve(`${gitPath}/${owner}/${repository}`);
+const checkName = async ({ owner, reponame }) => {
+  const filePath = repoHelper.getPathToRepo(owner, reponame);
   const exists = await fs.existsSync(filePath);
   return exists;
 };
 
-const isEmpty = async ({ owner, repoName }) => {
+const isEmpty = async ({ owner, reponame }) => {
   try {
     let result;
-    const pathToRepo = path.resolve(`${gitPath}/${owner}/${repoName}`);
+    const pathToRepo = repoHelper.getPathToRepo(owner, reponame);
     await NodeGit.Repository.open(pathToRepo).then((repo) => {
       result = repo.isEmpty();
     });
@@ -46,8 +51,8 @@ const isEmpty = async ({ owner, repoName }) => {
 
 const renameRepo = async ({ repoName, newName, username }) => {
   try {
-    const oldDirectory = path.resolve(`${gitPath}/${username}/${repoName}`);
-    const newDirectory = path.resolve(`${gitPath}/${username}/${newName}`);
+    const oldDirectory = repoHelper.getPathToRepo(username, repoName);
+    const newDirectory = repoHelper.getPathToRepo(username, newName);
     fs.renameSync(oldDirectory, newDirectory);
     return true;
   } catch (e) {
@@ -57,7 +62,7 @@ const renameRepo = async ({ repoName, newName, username }) => {
 
 const deleteRepo = async ({ repoName, username }) => {
   try {
-    const directory = path.resolve(`${gitPath}/${username}/${repoName}`);
+    const directory = repoHelper.getPathToRepo(username, repoName);
     await fs.remove(directory);
     return true;
   } catch (e) {
@@ -66,23 +71,23 @@ const deleteRepo = async ({ repoName, username }) => {
 };
 
 const getReposNames = async ({ user, filter, limit }) => {
-  const pathToRepo = path.resolve(`${gitPath}/${user}`);
+  const pathToRepo = repoHelper.getPathToRepos(user);
   const doesDirExists = fs.existsSync(pathToRepo);
-  if(doesDirExists) {
-    const repos = fs.readdirSync(pathToRepo, { withFileTypes: true })
+  if (doesDirExists) {
+    const repos = fs
+      .readdirSync(pathToRepo, { withFileTypes: true })
       .filter(dir => dir.isDirectory())
-      .map(dir => dir.name);
+      .map(dir => dir.name.slice(0, -4));
     const filteredRepos = filter ? repos.filter(repo => repo.includes(filter)) : repos;
     return limit ? filteredRepos.slice(0, limit) : repos;
-  } else {
-    return [];
   }
+  return [];
 };
 
 const forkRepo = async ({ username, owner, repoName }) => {
   try {
-    const source = path.resolve(`${gitPath}/${owner}/${repoName}`);
-    const target = path.resolve(`${gitPath}/${username}/${repoName}`);
+    const source = repoHelper.getPathToRepo(owner, repoName);
+    const target = repoHelper.getPathToRepo(username, repoName);
 
     if (!fs.existsSync(source)) {
       return { status: false, error: 'repo to copy doesn`t exist' };

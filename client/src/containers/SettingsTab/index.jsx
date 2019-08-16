@@ -48,13 +48,14 @@ class RepoSettings extends React.Component {
 
   onClickDelete = () => {
     const { owner } = this.state;
-    const { deleteRepo } = this.props;
+    const { deleteRepo, history } = this.props;
     const { oldName } = this;
 
     deleteRepo({
       owner,
       name: oldName
     });
+    history.push('/dashboard');
   };
 
   handleChangeRepoName = ({ target }) => {
@@ -81,7 +82,7 @@ class RepoSettings extends React.Component {
     const { loading } = this.props.repoSettingsData;
     const { name } = this.state;
     return !loading ? (
-      <Grid container stackable>
+      <Grid container stackable className={styles.box}>
         <Grid.Column width={4} className={styles.first_column}>
           <Menu vertical>
             <Menu.Item>Options</Menu.Item>

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import { Table, Image, Message, Dimmer, Loader } from 'semantic-ui-react';
+import { Table, Image, Message } from 'semantic-ui-react';
 import Octicon, { getIconByName } from '@primer/octicons-react';
 import styles from './styles.module.scss';
 import moment from 'moment';
@@ -16,11 +16,11 @@ class RepoFileTree extends React.Component {
 
   getFolderContent = e => {
     const { currentPath } = this.props.fileTreeData.tree;
-    const { owner, repoName, branch, history, fetchFileTree } = this.props;
+    const { username, reponame, branch, history, fetchFileTree } = this.props;
     e.preventDefault();
     fetchFileTree({
-      owner,
-      repoName,
+      username,
+      reponame,
       branch,
       query: {
         pathToDir: currentPath ? `${currentPath}/${e.target.textContent}` : e.target.textContent
@@ -31,11 +31,11 @@ class RepoFileTree extends React.Component {
 
   getLevelUpFolderContent = e => {
     e.preventDefault();
-    const { owner, repoName, branch, history, fetchFileTree } = this.props;
+    const { username, reponame, branch, history, fetchFileTree } = this.props;
     const { parentDir } = this.props.fileTreeData.tree;
     fetchFileTree({
-      owner,
-      repoName,
+      username,
+      reponame,
       branch,
       query: {
         pathToDir: parentDir
@@ -48,37 +48,42 @@ class RepoFileTree extends React.Component {
   };
 
   render() {
-    const { sha, message, author, date } = this.props.lastCommitData.commit;
-    const { files, directories, currentPath } = this.props.fileTreeData.tree;
-    return this.props.lastCommitData.loading || this.props.fileTreeData.loading ? (
-      <div>
-        <Dimmer active>
-          <Loader />
-        </Dimmer>
-      </div>
-    ) : (
+    const {
+      lastCommitData: {
+        commit: { sha, message, author, date }
+      },
+      fileTreeData: {
+        tree: { files, directories, currentPath }
+      },
+      reponame,
+      username
+    } = this.props;
+
+    const lastCommitLink = `/${username}/${reponame}/commit/${sha}`;
+
+    return (
       <div>
         <Message attached="top" info>
+          <Link className={styles.commitAuthor} to={`/${username}`}>
+            <Image
+              width="20"
+              height="20"
+              src="https://avatars1.githubusercontent.com/u/43038168?s=60&v=4"
+              spaced="right"
+              rounded
+            />
+            {author}
+          </Link>
+          <Link className={styles.link} to={lastCommitLink}>
+            {message}
+          </Link>
           <div className={styles.commit}>
-            latest commit{' '}
-            <Link className={styles.sha} to="">
-              {sha.slice(0, 8)}{' '}
+            latest commit
+            <Link className={styles.sha} to={lastCommitLink}>
+              {sha.slice(0, 8)}
             </Link>
             {moment(date).fromNow()}
           </div>
-          <Image
-            width="20"
-            height="20"
-            src="https://avatars1.githubusercontent.com/u/43038168?s=60&v=4"
-            spaced="right"
-            rounded
-          />
-          <Link className={styles.commitAuthor} to="">
-            {author}{' '}
-          </Link>
-          <Link className={styles.link} to="">
-            {message}{' '}
-          </Link>
         </Message>
         <Table attached="bottom" selectable singleLine unstackable>
           <Table.Body>
@@ -108,7 +113,7 @@ class RepoFileTree extends React.Component {
                     </Link>
                   </Table.Cell>
                   <Table.Cell textAlign="right" collapsing>
-                    {moment(dir.date).fromNow()}
+                    {moment(dir.time).fromNow()}
                   </Table.Cell>
                 </Table.Row>
               </React.Fragment>
@@ -124,12 +129,12 @@ class RepoFileTree extends React.Component {
                     </Link>
                   </Table.Cell>
                   <Table.Cell>
-                    <Link className={styles.link} to="">
+                    <Link className={styles.link} to={`/${username}/${reponame}/commit/${file.sha}`}>
                       {file.commitMessage}
                     </Link>
                   </Table.Cell>
                   <Table.Cell textAlign="right" collapsing>
-                    {moment(file.date).fromNow()}
+                    {moment(file.time).fromNow()}
                   </Table.Cell>
                 </Table.Row>
               </React.Fragment>
@@ -163,8 +168,8 @@ RepoFileTree.propTypes = {
     })
   }).isRequired,
   history: PropTypes.object.isRequired,
-  owner: PropTypes.string.isRequired,
-  repoName: PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
+  reponame: PropTypes.string.isRequired,
   branch: PropTypes.string.isRequired,
   fetchFileTree: PropTypes.func.isRequired
 };

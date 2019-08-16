@@ -4,8 +4,8 @@ const { sendForgetPasswordEmail } = require('../services/email.service');
 const {
   setUsername, checkUsernameExists, resetPassword, updateUserSettings
 } = require('../services/user.service');
-const { getKeysByUser, createKey, deleteKey } = require('../services/sshKey.service');
-const { getReqUrl } = require('../../helpers/req.helper');
+const { getKeysByUser, createKey, deleteKey } = require('../services/ssh-key.service');
+const { clientUrl } = require('../../config/common.config');
 
 const router = Router();
 
@@ -25,7 +25,7 @@ router.get('/username-exists', (req, res, next) => {
 
 router.post('/forget-password', (req, res, next) => {
   const { body } = req;
-  sendForgetPasswordEmail({ ...body, url: getReqUrl(req) })
+  sendForgetPasswordEmail({ ...body, url: clientUrl })
     .then(data => res.send(data))
     .catch(next);
 });
