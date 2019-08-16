@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import moment from 'moment';
 import { Loader, Input, Button, Dropdown } from 'semantic-ui-react';
 import { fetchBranches } from '../../routines/routines';
 // import BranchesList from '../../components/BranchesList';
@@ -19,28 +20,30 @@ class BranchesTab extends React.Component {
     };
   }
 
-  componentDidMount() {
-    this.props.fetchBranches({
-      owner: this.props.username,
-      repoName: this.props.match.params.reponame,
-      filter: this.state.filter
-    });
-  }
+  getBranchStatus = dateString => {
+    const branchDate = moment(dateString);
+    const now = moment();
+    const diff = moment.duration(now.diff(branchDate)).asMonths();
+    return diff >= 3 ? 'Stale' : 'Active';
+  };
 
   render() {
     const {
-      branchesData: { loading, branches }
+      branchesData: { loading, branches, lastCommits },
+      username
     } = this.props;
 
-    // generate mock PR status
     const displayBranches = branches.map((branch, idx) => ({
       name: branch,
+      // generate mock PR status
       merged:
         idx % 2
           ? null
           : {
             number: idx * 3
-          }
+          },
+      status: this.getBranchStatus(lastCommits[branch].date),
+      ownedByCurrentUser: username === lastCommits[branch].author
     }));
 
     const tabFilters = [
@@ -94,7 +97,8 @@ BranchesTab.propTypes = {
   branchesData: PropTypes.exact({
     loading: PropTypes.bool.isRequired,
     error: PropTypes.string,
-    branches: PropTypes.array
+    branches: PropTypes.array,
+    lastCommits: PropTypes.object.isRequired
   }).isRequired,
   fetchBranches: PropTypes.func.isRequired,
   match: PropTypes.object,
