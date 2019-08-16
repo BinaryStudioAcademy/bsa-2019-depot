@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { Loader, Input, Button, Dropdown } from 'semantic-ui-react';
+import { Loader, Input, Menu, Segment } from 'semantic-ui-react';
 import { fetchBranches } from '../../routines/routines';
-// import BranchesList from '../../components/BranchesList';
+import BranchesList from '../../components/BranchesList';
 
 import styles from './styles.module.scss';
 
@@ -14,10 +14,13 @@ class BranchesTab extends React.Component {
 
     this.state = {
       filter: {
-        type: '',
+        type: 'Overview',
         text: ''
       }
     };
+
+    this.filterBranches = this.filterBranches.bind(this);
+    this.searchBranches = this.searchBranches.bind(this);
   }
 
   componentDidMount() {
@@ -40,10 +43,91 @@ class BranchesTab extends React.Component {
     return diff >= 3 ? 'Stale' : 'Active';
   };
 
+  filterBranches(evt, { name }) {
+    this.setState({
+      ...this.state,
+      filter: {
+        ...this.state.filter,
+        type: name
+      }
+    });
+  }
+
+  searchBranches(evt) {
+    this.setState({
+      ...this.state,
+      filter: {
+        ...this.state.filter,
+        text: evt.target.value
+      }
+    });
+  }
+
+  getFilteredBranches = (branches, filter) => {
+    const { type, text } = filter;
+    let filteredBranches = branches;
+    if (text) {
+      filteredBranches = branches.filter(branch => branch.name.includes(text));
+    }
+    switch (type) {
+    case 'Active':
+    case 'Stale':
+      return filteredBranches.filter(branch => branch.status === type);
+    case 'Yours':
+      return filteredBranches.filter(branch => branch.ownedByCurrentUser);
+    case 'Overview':
+    default:
+      return filteredBranches;
+    }
+  };
+
+  renderMenuItems = () => {
+    const { filter } = this.state;
+    const tabFilters = [
+      {
+        key: 1,
+        text: 'Overview',
+        value: 'Overview'
+      },
+      {
+        key: 2,
+        text: 'Yours',
+        value: 'Yours'
+      },
+      {
+        key: 3,
+        text: 'Active',
+        value: 'Active'
+      },
+      {
+        key: 4,
+        text: 'Stale',
+        value: 'Stale'
+      }
+    ];
+
+    return (
+      <>
+        {tabFilters.map(tabFilter => (
+          <Menu.Item
+            className={styles.branchMenuItem}
+            key={tabFilter.id}
+            name={tabFilter.text}
+            active={filter.type === tabFilter.value}
+            onClick={this.filterBranches}
+          />
+        ))}
+      </>
+    );
+  };
+
   render() {
     const {
       branchesData: { loading, branches, lastCommits },
-      username
+      username,
+      match: {
+        params: { reponame }
+      }
     } = this.props;
 
     const displayBranches = branches.map((branch, idx) => ({
@@ -56,51 +140,31 @@ class BranchesTab extends React.Component {
             number: idx * 3
           },
       status: this.getBranchStatus(lastCommits[branch].date),
-      ownedByCurrentUser: username === lastCommits[branch].author
+      ownedByCurrentUser: username === lastCommits[branch].author,
+      author: lastCommits[branch].author,
+      date: lastCommits[branch].date
     }));
 
-    const tabFilters = [
-      {
-        key: 0,
-        text: 'Overview',
-        value: 'Overview'
-      },
-      {
-        key: 1,
-        text: 'Yours',
-        value: 'Yours'
-      },
-      {
-        key: 2,
-        text: 'Active',
-        value: 'Active'
-      },
-      {
-        key: 3,
-        text: 'Stale',
-        value: 'Stale'
-      }
-    ];
+    const { filter } = this.state;
+
+    const renderedBranches = this.getFilteredBranches(displayBranches, filter);
 
     return loading ? (
       <Loader active />
     ) : (
       <>
-        <div className={styles.filterRow}>
-          <Input
-            label={<Dropdown text="Filters" options={tabFilters} />}
-            labelPosition="left"
-            placeholder="Filter by title"
-          />
-          <Button content="New Issue" primary />
-        </div>
-        <div>
-          {displayBranches.map((branch, idx) => (
-            <p key={idx}>
-              {branch.name} {branch.merged && branch.merged.number}
-            </p>
-          ))}
-        </div>
+        <Menu className={styles.branchMenu}>
+          {this.renderMenuItems()}
+          <Menu.Menu position="right">
+            <Menu.Item key="0">
+              <Input icon="search" placeholder="Search branches..." onChange={this.searchBranches} />
+            </Menu.Item>
+          </Menu.Menu>
+        </Menu>
+
+        <Segment>
+          <BranchesList branches={renderedBranches} username={username} reponame={reponame} />
+        </Segment>
       </>
     );
   }
