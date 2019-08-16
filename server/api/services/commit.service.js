@@ -62,7 +62,6 @@ const getCommitsByDate = async (data) => {
   const userActivitybyDate = {};
   const monthActivity = {};
   allCommits.forEach(({ date, repo }) => {
-    console.log('repo: ', repo);
     const stringifiedDate = JSON.stringify(date);
     const fullDate = stringifiedDate.slice(1, 11);
     const monthAndYear = stringifiedDate.slice(1, 8);
