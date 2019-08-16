@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Container, Button, Icon, Divider } from 'semantic-ui-react';
+import Octicon, { Clippy } from '@primer/octicons-react';
 import styles from './styles.module.scss';
 import { Link, withRouter } from 'react-router-dom';
 import CopyableTerminal from '../../components/CopyableTerminal';
@@ -63,7 +64,7 @@ function EmptyRepositoryTab(props) {
               </Button>
             </Button.Group>
             <span className={styles.clipboardInput}>{url}</span>
-            <Button icon="clipboard" onClick={copyUrl}></Button>
+            <Button icon={<Octicon icon={Clippy} />} onClick={copyUrl}></Button>
           </div>
           <p>
             Get started
