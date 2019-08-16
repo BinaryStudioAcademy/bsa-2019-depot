@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import { Table, Image, Message} from 'semantic-ui-react';
+import { Table, Image, Message } from 'semantic-ui-react';
 import Octicon, { getIconByName } from '@primer/octicons-react';
 import styles from './styles.module.scss';
 import moment from 'moment';
