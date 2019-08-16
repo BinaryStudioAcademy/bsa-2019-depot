@@ -131,7 +131,7 @@ class CodeTab extends React.Component {
               text={`Branch: ${branch}`}
               floating
               width="seven"
-              className={[styles.actionButton, styles.repoBranchesButton]}
+              className={[styles.actionButton, styles.repoBranchesButton].join(' ')}
               position="bottom left"
               onClick={this.onDropdownClick}
             >
@@ -172,7 +172,11 @@ class CodeTab extends React.Component {
             </Button.Group>
             <Popup
               trigger={
-                <Dropdown button text="Clone or download" className={[styles.actionButton, styles.cloneRepoButton]} />
+                <Dropdown
+                  button
+                  text="Clone or download"
+                  className={[styles.actionButton, styles.cloneRepoButton].join(' ')}
+                />
               }
               flowing
               on="click"
@@ -197,7 +201,6 @@ class CodeTab extends React.Component {
                     </Button>
                   }
                   onClick={this.OnDropdownClick}
-                  actionPosition="right"
                   size="small"
                   className={styles.repoLinkInput}
                   defaultValue="https://github.com/BinaryStudioAcademy/bsa-2019-depot.git"
