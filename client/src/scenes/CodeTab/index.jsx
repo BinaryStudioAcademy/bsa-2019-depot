@@ -14,15 +14,17 @@ class CodeTab extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      branch: 'master'
+      branch: ''
     };
     this.onBranchChange = this.onBranchChange.bind(this);
   }
 
   componentDidMount() {
-    const { username, reponame, history } = this.props;
+    const { username, reponame, branch, history } = this.props;
     this.props.fetchBranches({ owner: username, repoName: reponame });
-    const { branch } = this.state;
+    this.setState({
+      branch: branch || 'master'
+    });
     history.push(`/${username}/${reponame}/tree/${branch}`);
     this.props.fetchLastCommitOnBranch({
       username,
@@ -253,8 +255,9 @@ CodeTab.propTypes = {
   fetchBranches: PropTypes.func.isRequired,
   fetchFileTree: PropTypes.func.isRequired,
   history: PropTypes.object,
-  username: PropTypes.string,
-  reponame: PropTypes.string
+  username: PropTypes.string.isRequired,
+  reponame: PropTypes.string.isRequired,
+  branch: PropTypes.string
 };
 
 export default connect(
