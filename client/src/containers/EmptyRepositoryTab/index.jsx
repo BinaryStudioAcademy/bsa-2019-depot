@@ -6,16 +6,20 @@ import { Link, withRouter } from 'react-router-dom';
 import CopyableTerminal from '../../components/CopyableTerminal';
 
 function EmptyRepositoryTab(props) {
-  const { match: { params: { username, reponame } } } = props;
+  const {
+    match: {
+      params: { username, reponame }
+    }
+  } = props;
   const [protocol, setProtocol] = useState('HTTPS');
 
-  const getUrl = ({protocol, username, reponame}) => {
+  const getUrl = ({ protocol, username, reponame }) => {
     return protocol === 'HTTPS'
       ? `https://${window.location.host}/${username}/${reponame}.git`
       : `git@${window.location.host}:${username}/${reponame}.git`;
   };
 
-  const url = getUrl({protocol, username, reponame});
+  const url = getUrl({ protocol, username, reponame });
 
   const createRepoStr = [
     'echo "# test" >> README.md\n',
@@ -46,7 +50,6 @@ function EmptyRepositoryTab(props) {
     setProtocol('SSH');
   }
 
-
   return (
     <Container>
       <Divider hidden />
@@ -68,8 +71,8 @@ function EmptyRepositoryTab(props) {
           <p>
             Get started
             {<Link to="/"> creating a new file</Link>} by or
-            {<Link to="/"> uploading an existing file</Link>}. We recommend every repository include a{<Link to="/"> README</Link>},
-            {<Link to="/"> LICENSE</Link>}, and
+            {<Link to="/"> uploading an existing file</Link>}. We recommend every repository include a
+            {<Link to="/"> README</Link>},{<Link to="/"> LICENSE</Link>}, and
             {<Link to="/"> .gitignore</Link>}.
           </p>
         </section>
@@ -96,11 +99,11 @@ function EmptyRepositoryTab(props) {
 }
 
 EmptyRepositoryTab.propTypes = {
-  match: {
-    params: {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
       username: PropTypes.string.isRequired,
       reponame: PropTypes.string.isRequired
-    }
-  }
+    })
+  })
 };
 export default withRouter(EmptyRepositoryTab);
