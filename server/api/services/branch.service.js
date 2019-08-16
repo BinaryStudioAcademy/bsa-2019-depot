@@ -48,6 +48,7 @@ const traverseFileTree = async (user, name, branch, tree) => {
         });
       } else {
         fileTree.files.push({
+          sha: entry.sha(),
           name: entry.name(),
           time: lastModifiedCommit.date(),
           commitMessage: lastModifiedCommit.message()
