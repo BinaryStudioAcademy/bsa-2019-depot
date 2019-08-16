@@ -53,11 +53,13 @@ class RepositoryTab extends React.Component {
 
 RepositoryTab.propTypes = {
   history: PropTypes.any,
-  match: {
-    username: PropTypes.string.isRequired,
-    reponame: PropTypes.string.isRequired,
-    branch: PropTypes.string
-  }
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      username: PropTypes.string.isRequired,
+      reponame: PropTypes.string.isRequired,
+      branch: PropTypes.string
+    })
+  })
 };
 
 export default RepositoryTab;

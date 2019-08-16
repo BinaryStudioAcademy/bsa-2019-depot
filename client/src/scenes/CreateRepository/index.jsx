@@ -165,7 +165,6 @@ class CreateRepository extends React.Component {
             <Checkbox
               id="readme"
               label={<label name="readme">Initialize this repository with a README</label>}
-              value={readme}
               checked={readme}
               onChange={handleChange}
             />

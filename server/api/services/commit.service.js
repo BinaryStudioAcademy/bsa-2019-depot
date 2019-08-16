@@ -61,7 +61,7 @@ const getCommitsByDate = async (data) => {
   const allCommits = await Promise.all(promises).then(() => Promise.resolve(globalCommits));
   const userActivitybyDate = {};
   const monthActivity = {};
-  allCommits.forEach(({ date, repo }) => {
+  allCommits.forEach(({ date }) => {
     const stringifiedDate = JSON.stringify(date);
     const fullDate = stringifiedDate.slice(1, 11);
     const monthAndYear = stringifiedDate.slice(1, 8);
@@ -71,8 +71,8 @@ const getCommitsByDate = async (data) => {
       userActivitybyDate[fullDate] = 1;
     }
     if (!(monthAndYear in monthActivity)) {
-      monthActivity[monthAndYear] = {}
-    } 
+      monthActivity[monthAndYear] = {};
+    }
     if (!(monthAndYear in monthActivity)) {
       monthActivity[monthAndYear] = {};
     }
@@ -80,12 +80,12 @@ const getCommitsByDate = async (data) => {
   allCommits.forEach(({ date, repo }) => {
     const stringifiedDate = JSON.stringify(date);
     const monthAndYear = stringifiedDate.slice(1, 8);
-    if(monthActivity[monthAndYear][repo]) {
+    if (monthActivity[monthAndYear][repo]) {
       monthActivity[monthAndYear][repo] += 1;
     } else {
       monthActivity[monthAndYear][repo] = 1;
     }
-  })
+  });
   return { userActivitybyDate, monthActivity };
 };
 

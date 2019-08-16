@@ -14,12 +14,7 @@ const CopyableTerminal = ({ str }) => {
   return (
     <div className={styles.copyable}>
       <pre>{str}</pre>
-      <Button
-        className={styles.clipboardButton}
-        icon={<Octicon icon={Clippy} />}
-        onClick={onClick}
-      >
-      </Button>
+      <Button className={styles.clipboardButton} icon={<Octicon icon={Clippy} />} onClick={onClick}></Button>
     </div>
   );
 };

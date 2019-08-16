@@ -74,10 +74,13 @@ class Dashboard extends React.Component {
             <Grid.Column mobile={16} tablet={12} computer={12}>
               <Container className={styles.navbar_wrapper}>
                 <nav className={styles.navbar}>
-                  <Link to={url} className={!tab && styles.active_link}>
+                  <Link to={url} className={!tab ? styles.active_link : undefined}>
                     Overview
                   </Link>
-                  <Link to={`${url}?tab=repositories`} className={tab === 'repositories' && styles.active_link}>
+                  <Link
+                    to={`${url}?tab=repositories`}
+                    className={tab === 'repositories' ? styles.active_link : undefined}
+                  >
                     Repositories{repoCount ? <span>{repoCount}</span> : null}
                   </Link>
                   <Link to="">Projects{projects ? <span>{projects}</span> : null}</Link>
@@ -110,7 +113,7 @@ Dashboard.propTypes = {
   repositoriesNames: PropTypes.array.isRequired,
   username: PropTypes.string.isRequired,
   name: PropTypes.string,
-  imgUrl: PropTypes.string.isRequired,
+  imgUrl: PropTypes.string,
   projects: PropTypes.number.isRequired,
   stars: PropTypes.number.isRequired,
   followers: PropTypes.number.isRequired,
