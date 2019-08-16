@@ -24,7 +24,6 @@ const RepositoryHeader = ({ owner, repoName, forkCount, issueCount, activePage, 
   }
 
   return (
-
     <header className={styles.repoHeader}>
       <Container>
         <div className={styles.repoHeaderContainer}>
