@@ -22,7 +22,7 @@ const BranchesList = ({ branches, username, reponame }) => {
   return (
     <List divided className={styles.branchesList} verticalAlign="middle">
       {branches.map((branch, idx) => {
-        const pathToBranch = `/${username}/${reponame}/${branch.name}`;
+        const pathToBranch = `/${username}/${reponame}/tree/${branch.name}`;
         const updatedOn = moment(branch.date).format('MMM D, YYYY');
         return (
           <List.Item key={idx} className={styles.listItem}>
