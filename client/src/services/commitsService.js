@@ -24,7 +24,7 @@ export const getCommitDiffs = async (owner, repoName, hash) => {
   return response.json();
 };
 
-export const commitFile = async (owner, repoName, branch, request) => {
+export const modifyFile = async (owner, repoName, branch, request) => {
   const response = await callWebApi({
     endpoint: `/api/commit/${owner}/${repoName}/${branch}/`,
     type: 'POST',

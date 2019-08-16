@@ -2,9 +2,8 @@ const NodeGit = require('nodegit');
 const repoHelper = require('../../helpers/repo.helper');
 
 const getBranches = async ({ user, repoName }) => {
-  // const pathToRepo = path.resolve(`${gitPath}/${user}/${repoName}`);
   const pathToRepo = repoHelper.getPathToRepo(user, repoName);
-  const repo = await NodeGit.Repository.open(pathToRepo.replace(/\\/g, '/'));
+  const repo = await NodeGit.Repository.open(pathToRepo);
   const refNames = await repo.getReferenceNames(NodeGit.Reference.TYPE.LISTALL);
 
   // Cut the 'refs/heads/' from the reference name

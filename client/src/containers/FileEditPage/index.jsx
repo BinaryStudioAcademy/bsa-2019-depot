@@ -9,7 +9,7 @@ import CommitFileForm from '../../components/CommitFileForm';
 import FileViewer from '../../components/FileViewer';
 import FilePathBreadcrumbSections from '../../components/FilePathBreadcrumbSections';
 import { getFileContent } from '../../services/branchesService';
-import { commitFile } from '../../services/commitsService';
+import { modifyFile } from '../../services/commitsService';
 
 import styles from './styles.module.scss';
 
@@ -79,18 +79,12 @@ class FileEditPage extends React.Component {
       location: { pathname }
     } = this.props;
 
-    const folderUrl = pathname
-      .replace('/edit', '')
-      .replace('/new', '')
-      .split('/')
-      .filter(dir => dir)
-      .slice(0, -1)
-      .join('/');
+    const folderUrl = pathname.replace('/edit', '').replace('/new', '');
 
-    history.push(`/${folderUrl}`);
+    history.push(`${folderUrl}`);
   }
 
-  handleCommitFile({ message, branch }) {
+  handleCommitFile({ message, commitBranch }) {
     const { username: ownerUsername, reponame } = this.props.match.params;
     const {
       filename,
@@ -98,14 +92,15 @@ class FileEditPage extends React.Component {
     } = this.state;
     const { email, username } = this.props;
     const filepathArr = this.filepath.split('/');
-    filepathArr.splice(-1, 1, filename);
+    filepathArr.splice(-1, 1, filename.trim());
     const newFilepath = filepathArr.join('/');
 
     this.setState({ loading: true });
-    commitFile(ownerUsername, reponame, branch, {
+    modifyFile(ownerUsername, reponame, this.branch, {
       author: username,
       email,
       message,
+      commitBranch,
       oldFilepath: this.filepath,
       filepath: newFilepath,
       fileData: content

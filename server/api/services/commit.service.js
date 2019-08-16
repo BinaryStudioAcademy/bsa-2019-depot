@@ -119,27 +119,33 @@ const initialCommit = async ({
   return NodeGit.Branch.create(repo, 'master', commit, 1);
 };
 
-const commitFile = async ({
+const modifyFile = async ({
   owner,
   repoName,
   author,
   email,
-  branch,
+  baseBranch,
+  commitBranch,
   message,
   oldFilepath,
   filepath,
   fileData
 }) => {
+  console.log(owner, repoName, author, email, baseBranch, commitBranch, message, oldFilepath, filepath, fileData);
   const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
   const repo = await NodeGit.Repository.open(pathToRepo);
-  const lastCommitOnBranch = await repo.getBranchCommit(branch);
+  const lastCommitOnBranch = await repo.getBranchCommit(baseBranch);
   const lastCommitTree = await lastCommitOnBranch.getTree();
   const treeBuilder = await NodeGit.Treebuilder.create(repo, lastCommitTree);
   const authorSignature = NodeGit.Signature.now(author, email);
-  const branchRef = `refs/heads/${branch}`;
+
+  if (baseBranch !== commitBranch) {
+    await NodeGit.Branch.create(repo, commitBranch, lastCommitOnBranch, 1);
+  }
+
+  const branchRef = `refs/heads/${commitBranch}`;
 
   const fileBuffer = Buffer.from(fileData);
-
   const oid = await NodeGit.Blob.createFromBuffer(repo, fileBuffer, fileBuffer.length);
 
   if (oldFilepath !== filepath) treeBuilder.remove(oldFilepath);
@@ -158,6 +164,32 @@ const commitFile = async ({
   return repo.getCommit(commitId);
 };
 
+const deleteFile = async ({
+  owner, repoName, branch, author, email, filepath
+}) => {
+  const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
+  const repo = await NodeGit.Repository.open(pathToRepo);
+  const lastCommitOnBranch = await repo.getBranchCommit(branch);
+  const lastCommitTree = await lastCommitOnBranch.getTree();
+  const treeBuilder = await NodeGit.Treebuilder.create(repo, lastCommitTree);
+  const authorSignature = NodeGit.Signature.now(author, email);
+  const branchRef = `refs/heads/${branch}`;
+
+  treeBuilder.remove(filepath);
+
+  const newCommitTree = await treeBuilder.write();
+  const commitId = await repo.createCommit(
+    branchRef,
+    authorSignature,
+    authorSignature,
+    `Deleted ${filepath}`,
+    newCommitTree,
+    [lastCommitOnBranch]
+  );
+
+  return repo.getCommit(commitId);
+};
+
 module.exports = {
-  getCommits, getCommitDiff, getCommitsByDate, commitFile, initialCommit
+  getCommits, getCommitDiff, getCommitsByDate, modifyFile, deleteFile, initialCommit
 };

@@ -10,8 +10,8 @@ const CommitFileForm = ({ avatar, initialBranch, disabled, onSubmit, onCancel })
   return (
     <div className={styles.commitFormContainer}>
       <Image src={getUserImgLink(avatar)} avatar />
-      <Formik initialValues={{ message: '', branch: initialBranch }} onSubmit={onSubmit}>
-        {({ values: { message, branch }, handleChange, handleSubmit }) => (
+      <Formik initialValues={{ message: '', commitBranch: initialBranch }} onSubmit={onSubmit}>
+        {({ values: { message, commitBranch }, handleChange, handleSubmit }) => (
           <Segment>
             <Form onSubmit={handleSubmit}>
               <Form.Input
@@ -25,10 +25,10 @@ const CommitFileForm = ({ avatar, initialBranch, disabled, onSubmit, onCancel })
               <Form.Field>
                 <Radio
                   label={`Commit directly to the ${initialBranch} branch.`}
-                  name="branch"
+                  name="commitBranch"
                   id="initial-branch"
                   value={initialBranch}
-                  checked={branch === initialBranch}
+                  checked={commitBranch === initialBranch}
                   disabled={disabled}
                   onChange={handleChange}
                 />
@@ -36,18 +36,18 @@ const CommitFileForm = ({ avatar, initialBranch, disabled, onSubmit, onCancel })
               <Form.Field>
                 <Radio
                   label="Create a new branch for this commit."
-                  name="branch"
+                  name="commitBranch"
                   id="new-branch"
-                  checked={branch !== initialBranch}
+                  checked={commitBranch !== initialBranch}
                   disabled={disabled}
                   onChange={handleChange}
                 />
-                {branch !== initialBranch && (
+                {commitBranch !== initialBranch && (
                   <Form.Input
                     icon="code branch"
                     iconPosition="left"
-                    name="branch"
-                    value={branch === initialBranch ? '' : branch}
+                    name="commitBranch"
+                    value={commitBranch === initialBranch ? '' : commitBranch}
                     width={4}
                     className={styles.branchInput}
                     placeholder="Enter new branch name"

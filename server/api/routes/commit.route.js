@@ -1,6 +1,6 @@
 const { Router } = require('express');
 
-const { getCommits, getCommitsByDate, commitFile } = require('../services/commit.service');
+const { getCommits, getCommitsByDate, modifyFile, deleteFile } = require('../services/commit.service');
 
 const router = Router();
 
@@ -16,11 +16,20 @@ router
   })
   .post('/:owner/:repoName/:branchName', (req, res, next) => {
     const { owner, repoName, branchName: branch } = req.params;
-    commitFile({
-      ...req.body, owner, repoName, branch
-    })
-      .then(newCommit => res.send({ sha: newCommit.sha() }))
-      .catch(next);
+    const { toDelete, ...commitArgs } = req.body;
+    if (toDelete) {
+      deleteFile({
+        ...commitArgs, owner, repoName, branch
+      })
+        .then(newCommit => res.send({ sha: newCommit.sha() }))
+        .catch(next);
+    } else {
+      modifyFile({
+        ...commitArgs, owner, repoName, baseBranch: branch
+      })
+        .then(newCommit => res.send({ sha: newCommit.sha() }))
+        .catch(next);
+    }
   });
 
 module.exports = router;

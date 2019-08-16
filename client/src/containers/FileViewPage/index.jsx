@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Breadcrumb, Button, Icon, Loader, Segment } from 'semantic-ui-react';
 import ReactMarkdown from 'react-markdown';
 import FilePathBreadcrumbSections from '../../components/FilePathBreadcrumbSections';
 import FileViewer from '../../components/FileViewer';
 import { Link } from 'react-router-dom';
 import { getFileContent } from '../../services/branchesService';
+import { modifyFile } from '../../services/commitsService';
 
 import styles from './styles.module.scss';
 
@@ -27,16 +29,17 @@ class FileViewPage extends React.Component {
 
     this.state = {
       fileData: {},
-      loading: true
+      loading: true,
+      deleting: false
     };
 
     this.handleCopyPath = this.handleCopyPath.bind(this);
     this.handleEditFile = this.handleEditFile.bind(this);
+    this.handleDeleteFile = this.handleDeleteFile.bind(this);
   }
 
   componentDidMount() {
     const { username, reponame } = this.props.match.params;
-
     getFileContent(username, reponame, this.branch, {
       filepath: this.filepath
     }).then(fileData =>
@@ -57,6 +60,27 @@ class FileViewPage extends React.Component {
     history.push(location.pathname.replace('/blob', '/edit/tree'));
   }
 
+  handleDeleteFile() {
+    const { history, match, username: author, email } = this.props;
+    const { username: owner, reponame: repoName } = match.params;
+
+    this.setState({ deleting: true });
+    modifyFile(owner, repoName, this.branch, {
+      author,
+      email,
+      filepath: this.filepath,
+      toDelete: true
+    }).then(() => {
+      this.setState({ deleting: false });
+      history.push(
+        `/${owner}/${repoName}/tree/${this.branch}/${this.filepath
+          .split('/')
+          .slice(0, -1)
+          .join('/')}`
+      );
+    });
+  }
+
   formatBytes(bytes, decimals = 2) {
     if (bytes === 0) return '0 Bytes';
     if (bytes === 1) return '1 Byte';
@@ -74,7 +98,8 @@ class FileViewPage extends React.Component {
     const { match, location } = this.props;
     const {
       fileData: { content, size },
-      loading
+      loading,
+      deleting
     } = this.state;
     const { username: owner, reponame } = match.params;
     const editorStyles = { width: '100%' };
@@ -87,7 +112,7 @@ class FileViewPage extends React.Component {
       lineCount = content.split('\n').length;
     }
 
-    return loading ? (
+    return loading || deleting ? (
       <Loader active inline="centered" />
     ) : (
       <>
@@ -117,7 +142,7 @@ class FileViewPage extends React.Component {
             </div>
             <div className={styles.fileControls}>
               <Icon link name="pencil" onClick={this.handleEditFile} />
-              <Icon link name="trash alternate" />
+              <Icon link name="trash alternate" onClick={this.handleDeleteFile} />
             </div>
           </Segment>
           <Segment className={styles.fileView}>
@@ -134,6 +159,8 @@ class FileViewPage extends React.Component {
 }
 
 FileViewPage.propTypes = {
+  username: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
   history: PropTypes.object.isRequired,
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
@@ -150,4 +177,13 @@ FileViewPage.propTypes = {
   }).isRequired
 };
 
-export default FileViewPage;
+const mapStateToProps = ({
+  profile: {
+    currentUser: { username, email }
+  }
+}) => ({
+  username,
+  email
+});
+
+export default connect(mapStateToProps)(FileViewPage);
