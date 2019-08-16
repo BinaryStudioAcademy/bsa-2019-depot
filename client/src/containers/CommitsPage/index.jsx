@@ -19,30 +19,32 @@ class CommitsPage extends React.Component {
   }
 
   componentDidMount() {
+    const { username, reponame } = this.props.match.params;
+    const { branch } = this.state;
     this.props.fetchBranches({
-      // Mock
-      owner: this.props.username,
-      repoName: this.props.match.params.reponame
+      username,
+      reponame
     });
     this.props.fetchCommits({
-      // Mock
-      owner: this.props.username,
-      repoName: this.props.match.params.reponame,
-      branch: this.state.branch
+      username,
+      reponame,
+      branch
     });
   }
 
   handleBranchChange(event, data) {
+    const { username, reponame } = this.props.match.params;
+    const { branch } = this.state;
+
     this.setState(
       {
         branch: data.value
       },
       () => {
         this.props.fetchCommits({
-          // Mock
-          owner: this.props.username,
-          repoName: 'new-repo',
-          branch: this.state.branch
+          username,
+          reponame,
+          branch
         });
       }
     );
@@ -96,16 +98,9 @@ CommitsPage.propTypes = {
   match: PropTypes.object
 };
 
-const mapStateToProps = ({
+const mapStateToProps = ({ commitsData, branchesData }) => ({
   commitsData,
-  branchesData,
-  profile: {
-    currentUser: { username }
-  } /*, repoName*/
-}) => ({
-  commitsData,
-  branchesData /*,
-    repoName*/
+  branchesData
 });
 
 const mapDispatchToProps = {

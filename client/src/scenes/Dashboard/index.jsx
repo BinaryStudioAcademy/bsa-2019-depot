@@ -82,7 +82,7 @@ class Dashboard extends React.Component {
                   <Link to="">Following{following ? <span>{following}</span> : null}</Link>
                 </nav>
               </Container>
-              {!tab && <Overview repositories={repositoriesNames} />}
+              {!tab && <Overview repositoriesNames={repositoriesNames} />}
               {tab === 'repositories' && <RepositoriesList repositories={repositoriesNames} />}
             </Grid.Column>
           </Grid.Row>
