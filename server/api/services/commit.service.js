@@ -3,6 +3,7 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const { getReposNames } = require('./repo.service');
 const repoHelper = require('../../helpers/repo.helper');
+const { isEmpty } = require('./repo.service');
 
 const getCommits = async ({ user, name, branch }) => {
   const pathToRepo = repoHelper.getPathToRepo(user, name);
@@ -38,6 +39,7 @@ const getCommitsByDate = async (data) => {
   const promises = repoList.map((repoName) => {
     const pathToRepo = repoHelper.getPathToRepo(user, repoName);
     return NodeGit.Repository.open(pathToRepo).then((repo) => {
+      isEmpty({ owner: user, reponame: repo });
       const walker = NodeGit.Revwalk.create(repo);
       walker.pushGlob('refs/heads/*');
       walker.sorting(NodeGit.Revwalk.SORT.TIME);
