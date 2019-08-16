@@ -113,9 +113,8 @@ class Reset extends Component {
   };
 
   render() {
-    const { isAuthorized } = this.props;
     if (this.state.redirect === true) return <Redirect to="/login" />;
-    return !isAuthorized ? (
+    return (
       <Formik
         initialValues={{
           newPassword: '',
@@ -125,14 +124,11 @@ class Reset extends Component {
         onSubmit={this.submit}
         render={this.renderComponent}
       />
-    ) : (
-      <Redirect to="/" />
     );
   }
 }
 
 Reset.propTypes = {
-  isAuthorized: PropTypes.bool,
   actions: PropTypes.object,
   isLoading: PropTypes.bool,
   message: PropTypes.string,
@@ -142,7 +138,6 @@ Reset.propTypes = {
 };
 
 Reset.defaultProps = {
-  isAuthorized: false,
   isLoading: false,
   message: '',
   passwordNotReset: false,
@@ -150,7 +145,6 @@ Reset.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  isAuthorized: state.profile.isAuthorized,
   message: state.reset.message,
   passwordNotReset: state.reset.passwordNotReset,
   passwordReset: state.reset.passwordReset
