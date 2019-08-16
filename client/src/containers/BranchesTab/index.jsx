@@ -137,7 +137,8 @@ class BranchesTab extends React.Component {
         idx % 2
           ? null
           : {
-            number: idx * 3
+            number: idx * 3,
+            status: idx % 4 === 1 ? 'Merged' : 'Open'
           },
       status: this.getBranchStatus(lastCommits[branch].date),
       ownedByCurrentUser: username === lastCommits[branch].author,
@@ -162,7 +163,7 @@ class BranchesTab extends React.Component {
           </Menu.Menu>
         </Menu>
 
-        <Segment>
+        <Segment className={styles.branchesListContainer}>
           <BranchesList branches={renderedBranches} username={username} reponame={reponame} />
         </Segment>
       </>
@@ -178,9 +179,7 @@ BranchesTab.propTypes = {
     lastCommits: PropTypes.object.isRequired
   }).isRequired,
   fetchBranches: PropTypes.func.isRequired,
-  match: {
-    reponame: PropTypes.string.isRequired
-  },
+  match: PropTypes.object.isRequired,
   username: PropTypes.string
 };
 

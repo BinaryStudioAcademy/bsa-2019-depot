@@ -1,16 +1,6 @@
 :global(.ui.divided.middle.aligned.list) {
   margin-top: 0;
 
-  // :global(.item) {
-  //   padding: 10px;
-
-  //   &:last-child {
-  //     border-radius: 0 0 5px 5px;
-  //   }
-  // }
-}
-
-:global(.ui.divided.middle.aligned.list) {
   :local(.branchesList div.listItem) {
     padding-top: 0;
   }
@@ -22,4 +12,16 @@
   padding: 0.25em 0.75em;
   margin: 0.25em 0.5em;
   border-radius: 0.4em;
+}
+
+:local(.PRIcon) {
+  width: 0.75em;
+}
+
+:local(.pullRequestNumber) {
+  margin-right: 0.75em;
+}
+
+:local(.listItemGroup) {
+  padding-top: 0.5em;
 }

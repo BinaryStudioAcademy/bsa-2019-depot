@@ -7,11 +7,19 @@
   margin-top: 1em;
 }
 
-:local(.branchMenuItem) {
-  padding: 5px 15px;
-  width: 7em;
-  text-align: center;
-  justify-content: center;
+:global(.ui.menu) {
+  :local(.branchMenuItem) {
+    padding: 5px 15px;
+    width: 7em;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+:global(.ui.bottom.attached.active) {
+  :local(.branchesListContainer) {
+    padding: 0;
+  }
 }
 
 // :local(.ui.bottom.attached a.item) {
