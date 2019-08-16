@@ -48,13 +48,14 @@ class RepoSettings extends React.Component {
 
   onClickDelete = () => {
     const { owner } = this.state;
-    const { deleteRepo } = this.props;
+    const { deleteRepo, history } = this.props;
     const { oldName } = this;
 
     deleteRepo({
       owner,
       name: oldName
     });
+    history.push('/dashboard');
   };
 
   handleChangeRepoName = ({ target }) => {
