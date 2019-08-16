@@ -143,7 +143,6 @@ const modifyFile = async ({
   filepath,
   fileData
 }) => {
-  console.log(owner, repoName, author, email, baseBranch, commitBranch, message, oldFilepath, filepath, fileData);
   const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
   const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(baseBranch);

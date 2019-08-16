@@ -6,8 +6,8 @@
   margin-right: 10px;
 }
 
-:global(.ui.big.breadcrumb) {
-  margin-bottom: 10px;
+:global(.ui.big.breadcrumb):local(.filePath) {
+  margin: 10px 0;
 }
 
 .markdownContainer {

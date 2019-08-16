@@ -178,7 +178,7 @@ class FileEditPage extends React.Component {
       <Loader active inline="centered" />
     ) : (
       <>
-        <Breadcrumb size="big">
+        <Breadcrumb size="big" className={styles.filePath}>
           <Breadcrumb.Section>
             <Link to={`/${ownerUsername}/${reponame}`}>{reponame}</Link>
           </Breadcrumb.Section>
