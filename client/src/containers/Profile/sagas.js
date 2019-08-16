@@ -31,9 +31,11 @@ function* currentUserRequest() {
   try {
     yield put(fetchCurrentUser.request());
 
-    const response = yield call(authService.getCurrentUser);
+    if (localStorage.getItem('token')) {
+      const response = yield call(authService.getCurrentUser);
 
-    yield put(fetchCurrentUser.success(response));
+      yield put(fetchCurrentUser.success(response));
+    }
   } catch (error) {
     yield put(fetchCurrentUser.failure(error.message));
   } finally {
