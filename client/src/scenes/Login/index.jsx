@@ -34,7 +34,7 @@ const validationSchema = Yup.object().shape({
 const usernameValidationSchema = Yup.object().shape({
   username: Yup.string()
     .required('Username address is required!')
-    .matches(/^(([a-z0-9]+-)*[a-z0-9]+){1,39}$/)
+    .matches(/^(([a-zA-Z0-9]+-)*[a-zA-Z0-9]+){1,39}$/)
 });
 
 class Login extends Component {
