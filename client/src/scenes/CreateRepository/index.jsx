@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Container, Form, Dropdown, Input, Radio, Checkbox, Divider, Button, Label } from 'semantic-ui-react';
+import { Container, Form, Dropdown, Input, Radio, Checkbox, Divider, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { Formik, Field } from 'formik';
 import Octicon, { getIconByName } from '@primer/octicons-react';
+import { InputError } from '../../components/InputError';
 import { createRepository, checkName } from '../../services/repositoryService';
 import styles from './styles.module.scss';
 
@@ -124,14 +125,8 @@ class CreateRepository extends React.Component {
             <span className={styles.slash}>/</span>
             <Form.Field className={styles.formField}>
               <label>Repository name</label>
-              <Field name="reponame" value={reponame} onChange={handleChange} />
-              {errors.reponame && touched.reponame && (
-                <span className={styles.label}>
-                  <Label basic color="red" pointing>
-                    {errors.reponame}
-                  </Label>
-                </span>
-              )}
+              <Field name="reponame" value={reponame} onChange={handleChange} className={styles.reponameInput} />
+              <InputError name="reponame" />
             </Form.Field>
           </Form.Group>
           <p>Great repository names are short and memorable. Need inspiration? How about psychic-eureka?</p>
@@ -186,7 +181,7 @@ class CreateRepository extends React.Component {
             </Form.Field>
           </Form.Group>
           <Divider />
-          <Button type="submit" color="green">
+          <Button type="submit" color="green" disabled={errors.reponame && touched.reponame}>
             Create repository
           </Button>
         </Form>
