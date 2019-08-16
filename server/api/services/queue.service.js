@@ -1,6 +1,6 @@
 const amqp = require('amqplib/callback_api');
 const { connectionUrl, emailQueue } = require('../../config/rabbitmq.config');
-const { sendEmail } = require('../../helpers/email.helper');
+const { sendEmail } = require('./email.service');
 
 let ch = null;
 
