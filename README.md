@@ -175,7 +175,7 @@ Example:
 `fix: Add error handling` 👍  
 ~~`fixed error handling.`~~ 👎
 
-### Response format and error handling
+## Response format and error handling
 All error and success notifications should be in this format:
 ```js 
 { status: 401, message: 'Wrong password' }
