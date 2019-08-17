@@ -41,7 +41,9 @@ const initialValues = {
   reponame: '',
   description: '',
   privacy: 'public',
-  readme: false
+  readme: false,
+  gitignore: false,
+  license: false
 };
 
 class CreateRepository extends React.Component {
@@ -78,6 +80,11 @@ class CreateRepository extends React.Component {
     }
   }
 
+  handleChangeDropdown = handleChange => (e, data) => {
+    e.target.value = data.value;
+    handleChange(e);
+  };
+
   renderPrivacyLabelPublic() {
     return (
       <label name="public" className={styles.privacyLabel}>
@@ -104,7 +111,17 @@ class CreateRepository extends React.Component {
 
   renderCreateRepository({ errors, touched, handleChange, handleBlur, handleSubmit, values }) {
     const { username } = this.props;
-    const { reponame, description, readme, privacy } = values;
+    const { reponame, description, privacy, readme } = values;
+    const handleChangeDropdown = this.handleChangeDropdown(handleChange);
+
+    const ignores = gitingnoreOptions.map(option => {
+      option.id = 'gitignore';
+      return option;
+    });
+    const licenses = licenseOptions.map(option => {
+      option.id = 'license';
+      return option;
+    });
 
     return (
       <Container>
@@ -172,11 +189,11 @@ class CreateRepository extends React.Component {
           <Form.Group>
             <Form.Field>
               <label>Add .gitignore:</label>
-              <Dropdown selection options={gitingnoreOptions} defaultValue={gitingnoreOptions[0].value} />
+              <Dropdown selection options={ignores} defaultValue={ignores[0].value} onChange={handleChangeDropdown} />
             </Form.Field>
             <Form.Field>
               <label>Add a license:</label>
-              <Dropdown selection options={licenseOptions} defaultValue={licenseOptions[0].value} />
+              <Dropdown selection options={licenses} defaultValue={licenses[0].value} onChange={handleChangeDropdown} />
             </Form.Field>
           </Form.Group>
           <Divider />
@@ -195,6 +212,7 @@ class CreateRepository extends React.Component {
         initialValues={{
           ...initialValues,
           owner: this.props.username,
+          email: this.props.email,
           ownerID: this.props.id
         }}
         validate={this.validate}
@@ -207,14 +225,15 @@ class CreateRepository extends React.Component {
 
 CreateRepository.propTypes = {
   username: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   history: PropTypes.any
 };
 
 const mapStateToProps = ({
   profile: {
-    currentUser: { username, id }
+    currentUser: { username, id, email }
   }
-}) => ({ username, id });
+}) => ({ username, id, email });
 
 export default connect(mapStateToProps)(CreateRepository);

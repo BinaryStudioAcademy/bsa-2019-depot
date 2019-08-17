@@ -1,9 +1,9 @@
 const NodeGit = require('nodegit');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
-const { getReposNames } = require('./repo.service');
+// const { getReposNames } = require('./repo.service');
 const repoHelper = require('../../helpers/repo.helper');
-const { isEmpty } = require('./repo.service');
+// const { isEmpty } = require('./repo.service');
 
 const getCommits = async ({ user, name, branch }) => {
   const pathToRepo = repoHelper.getPathToRepo(user, name);
@@ -100,18 +100,19 @@ const getCommitDiff = async ({ user, name, hash }) => {
 };
 
 const initialCommit = async ({
-  owner, email, repoName, files
+ owner, email, repoName, files 
 }) => {
   const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
   const repo = await NodeGit.Repository.open(pathToRepo);
   const treeBuilder = await NodeGit.Treebuilder.create(repo, null);
   const authorSignature = NodeGit.Signature.now(owner, email);
 
-  const fileBlobOids = await Promise.all(files.map(({ content, filename }) => {
-    const fileBuffer = Buffer.from(content);
-    return NodeGit.Blob.createFromBuffer(repo, fileBuffer, fileBuffer.length)
-      .then(oid => ({ oid, filename }));
-  }));
+  const fileBlobOids = await Promise.all(
+    files.map(({ content, filename }) => {
+      const fileBuffer = Buffer.from(content);
+      return NodeGit.Blob.createFromBuffer(repo, fileBuffer, fileBuffer.length).then(oid => ({ oid, filename }));
+    })
+  );
 
   fileBlobOids.forEach(({ oid, filename }) => {
     treeBuilder.insert(filename, oid, 33188);
@@ -163,20 +164,15 @@ const modifyFile = async ({
   treeBuilder.insert(filepath, oid, 33188);
 
   const newCommitTree = await treeBuilder.write();
-  const commitId = await repo.createCommit(
-    branchRef,
-    authorSignature,
-    authorSignature,
-    message,
-    newCommitTree,
-    [lastCommitOnBranch]
-  );
+  const commitId = await repo.createCommit(branchRef, authorSignature, authorSignature, message, newCommitTree, [
+    lastCommitOnBranch
+  ]);
 
   return repo.getCommit(commitId);
 };
 
 const deleteFile = async ({
-  owner, repoName, branch, author, email, filepath
+ owner, repoName, branch, author, email, filepath 
 }) => {
   const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
   const repo = await NodeGit.Repository.open(pathToRepo);
@@ -202,5 +198,10 @@ const deleteFile = async ({
 };
 
 module.exports = {
-  getCommits, getCommitDiff, getCommitsByDate, modifyFile, deleteFile, initialCommit
+  getCommits,
+  getCommitDiff,
+  getCommitsByDate,
+  modifyFile,
+  deleteFile,
+  initialCommit
 };

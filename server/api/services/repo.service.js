@@ -1,41 +1,31 @@
 const NodeGit = require('nodegit');
 const fs = require('fs-extra');
 const fse = require('fs-extra');
-const path = require('path');
 const repoHelper = require('../../helpers/repo.helper');
 const repoRepository = require('../../data/repositories/repository.repository');
 const { initialCommit } = require('./commit.service');
 
-const createRepo = async ({
-  owner, name, userId, initialData
-}) => {
+const createRepo = async (repoData) => {
+  const { owner, name, userId } = repoData;
+  console.log(repoData.gitignore);
+  console.log(repoData.license);
   let result = 'Repo was created';
-  let oid;
   const pathToRepo = repoHelper.getPathToRepo(owner, name);
-  await NodeGit.Repository.init(pathToRepo, 1)
-    .then((repoResult) => {
-      result = {
-        msg: 'Repo created',
-        url: pathToRepo
-      };
-      repo = repoResult;
-      console.log('f1f');
-      return repo.getHeadCommit()
-        .then(commit => repo.createBranch(
-          'master',
-          commit,
-          12320
-        ));
-    })
-    .then(() => repo.refreshIndex())
-    .then((indexResult) => {
-      console.log('ff');
-      repoHelper.createReadme(owner, name);
-      index = indexResult;
+  await NodeGit.Repository.init(pathToRepo, 1).then(() => {
+    result = {
+      msg: 'Repo created',
+      url: pathToRepo
+    };
+  });
 
+  const initialData = repoHelper.generateInitialData({ ...repoData });
   // Initial data has to contain 'email' (of user) and 'files' in form of [ { filename, content }, {... ]
-  if (initialData) {
-    await initialCommit({ owner, repoName: name, ...initialData });
+  if (initialData.files[0]) {
+    await initialCommit({
+      owner,
+      repoName: name,
+      ...initialData
+    });
   }
 
   repoRepository.create({
