@@ -1,13 +1,13 @@
 module.exports = (sequelize, DataTypes) => {
-  const Commits = sequelize.define(
-    'commits',
+  const Commit = sequelize.define(
+    'commit',
     {
       sha: DataTypes.STRING
     },
     {}
   );
-  Commits.associate = function (/* models */) {
+  Commit.associate = function (/* models */) {
     // associations can be defined here
   };
-  return Commits;
+  return Commit;
 };
