@@ -11,7 +11,9 @@ class RepositoryRepository extends BaseRepository {
   }
 
   getRepositoryIssues(repoId) {
-    return this.model.findAll({ where: { repoId } });
+    return this.model.findAll({ where: { 
+      "$issues.repositoryId$": `${repoId}`
+    }});
   }
 }
 

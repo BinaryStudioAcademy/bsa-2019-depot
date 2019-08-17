@@ -13,6 +13,12 @@ class IssueRepository extends BaseRepository {
   updateIssueById(id, { ...issueData }) {
     return this.updateById(id, issueData);
   }
+
+  getIssueComments(issueId) {
+    return this.model.findAll({ where: { 
+      "$issueComments.issueId$": `${issueId}` 
+    }});
+  }
 }
 
 module.exports = new IssueRepository(IssueModel);

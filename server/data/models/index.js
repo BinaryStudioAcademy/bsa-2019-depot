@@ -5,17 +5,20 @@ const User = orm.import('./user');
 const SshKey = orm.import('./sshkey');
 const Repository = orm.import('./repository');
 const Issue = orm.import('./issue');
+const IssueComment = orm.import('./issueComment');
 
 associate({
   User,
   SshKey,
   Repository,
-  Issue
+  Issue,
+  IssueComment
 });
 
 module.exports = {
   UserModel: User,
   SshKeyModel: SshKey,
   RepositoryModel: Repository,
-  IssueModel: Issue
+  IssueModel: Issue,
+  IssueCommentModel: IssueComment
 };
