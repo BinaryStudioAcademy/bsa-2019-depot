@@ -107,11 +107,12 @@ const initialCommit = async ({
   const treeBuilder = await NodeGit.Treebuilder.create(repo, null);
   const authorSignature = NodeGit.Signature.now(owner, email);
 
-  const fileBlobOids = await Promise.all(files.map(({ content, filename }) => {
-    const fileBuffer = Buffer.from(content);
-    return NodeGit.Blob.createFromBuffer(repo, fileBuffer, fileBuffer.length)
-      .then(oid => ({ oid, filename }));
-  }));
+  const fileBlobOids = await Promise.all(
+    files.map(({ content, filename }) => {
+      const fileBuffer = Buffer.from(content);
+      return NodeGit.Blob.createFromBuffer(repo, fileBuffer, fileBuffer.length).then(oid => ({ oid, filename }));
+    })
+  );
 
   fileBlobOids.forEach(({ oid, filename }) => {
     treeBuilder.insert(filename, oid, NodeGit.TreeEntry.FILEMODE.BLOB);
@@ -155,7 +156,6 @@ const modifyFile = async ({
   }
   const branchRef = `refs/heads/${commitBranch}`;
 
-
   const fileBuffer = Buffer.from(fileData);
   const oid = await NodeGit.Blob.createFromBuffer(repo, fileBuffer, fileBuffer.length);
 
@@ -171,14 +171,9 @@ const modifyFile = async ({
   await index.add(indexEntry);
   const newCommitTree = await index.writeTree();
 
-  const commitId = await repo.createCommit(
-    branchRef,
-    authorSignature,
-    authorSignature,
-    message,
-    newCommitTree,
-    [lastCommitOnBranch]
-  );
+  const commitId = await repo.createCommit(branchRef, authorSignature, authorSignature, message, newCommitTree, [
+    lastCommitOnBranch
+  ]);
 
   return repo.getCommit(commitId);
 };
@@ -211,5 +206,10 @@ const deleteFile = async ({
 };
 
 module.exports = {
-  getCommits, getCommitDiff, getCommitsByDate, modifyFile, deleteFile, initialCommit
+  getCommits,
+  getCommitDiff,
+  getCommitsByDate,
+  modifyFile,
+  deleteFile,
+  initialCommit
 };

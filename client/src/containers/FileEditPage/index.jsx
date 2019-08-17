@@ -92,7 +92,7 @@ class FileEditPage extends React.Component {
       newFilePath = `${this.filepath ? this.filepath + '/' : ''}${filename.trim()}`;
     } else {
       const filePathDirs = this.filepath.split('/');
-      filePathDirs.splice(-1, 1, filename);
+      filePathDirs.splice(-1, 1, filename); // Replace old filename with new
       newFilePath = filePathDirs.join('/');
     }
 
@@ -100,9 +100,9 @@ class FileEditPage extends React.Component {
     modifyFile(ownerUsername, reponame, branch, {
       author: username,
       email,
-      message,
+      message: message.trim(),
       commitBranch,
-      oldFilepath: toEdit ? this.filepath : newFilePath,
+      oldFilepath: toEdit ? this.filepath : newFilePath, // Otherwise our old filepath would be path to folder
       filepath: newFilePath,
       fileData: content
     }).then(() => {

@@ -51,7 +51,6 @@ const traverseFileTree = async (user, name, branch, tree) => {
           name: entry.name(),
           time: lastModifiedCommit.date(),
           commitMessage: lastModifiedCommit.message(),
-          sha: lastModifiedCommit.sha()
         });
       }
     } catch (error) {
@@ -119,5 +118,8 @@ const getFileContent = async ({
 };
 
 module.exports = {
-  getBranches, getBranchTree, getLastCommitOnBranch, getFileContent
+  getBranches,
+  getBranchTree,
+  getLastCommitOnBranch,
+  getFileContent
 };
