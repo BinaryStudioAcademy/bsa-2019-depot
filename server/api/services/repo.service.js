@@ -7,8 +7,6 @@ const { initialCommit } = require('./commit.service');
 
 const createRepo = async (repoData) => {
   const { owner, name, userId } = repoData;
-  console.log(repoData.gitignore);
-  console.log(repoData.license);
   let result = 'Repo was created';
   const pathToRepo = repoHelper.getPathToRepo(owner, name);
   await NodeGit.Repository.init(pathToRepo, 1)
@@ -18,13 +16,11 @@ const createRepo = async (repoData) => {
         url: pathToRepo
       };
     })
-    .catch(() => {
-      return Promise.reject({status: 404, message: 'Error! Repos wasn`t created'});
-    });
+    .catch(() => Promise.reject({ status: 404, message: 'Error! Repos wasn`t created' }));
 
   const initialData = repoHelper.generateInitialData({ ...repoData });
   // Initial data has to contain 'email' (of user) and 'files' in form of [ { filename, content }, {... ]
-  if (initialData.files[0]) {
+  if (initialData) {
     await initialCommit({
       owner,
       repoName: name,
@@ -49,9 +45,7 @@ const isEmpty = async ({ owner, reponame }) => {
   try {
     let result;
     const pathToRepo = repoHelper.getPathToRepo(owner, reponame);
-    console.log(pathToRepo);
     await NodeGit.Repository.open(pathToRepo).then((repo) => {
-      console.dir(repo.getStatus());
       result = repo.isEmpty();
     });
     return {

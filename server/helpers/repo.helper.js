@@ -1,46 +1,45 @@
 const path = require('path');
 const fs = require('fs');
-const { gitPath, gitignores, licenses } = require('../config/git.config.js');
+const { gitPath } = require('../config/git.config.js');
 
 const getPathToRepo = (username, reponame) => path.resolve(`${gitPath}/${username}/${reponame}.git`).replace(/\\/g, '/');
 const getPathToRepos = username => path.resolve(`${gitPath}/${username}`).replace(/\\/g, '/');
 
-const createReadme = (username, reponame) => {
-  const pathToReadme = `${getPathToRepo(username, reponame)}/README.md`;
-  fs.writeFileSync(pathToReadme, `# ${reponame}`);
-};
+const getGitignore = gitignore => fs.readFileSync(path.resolve(`../server/data/initial-files/gitignores/${gitignore}`));
+const getLicense = license => fs.readFileSync(path.resolve(`../server/data/initial-files/licenses/${license}`));
 
 const generateInitialData = ({
   name, email, readme, gitignore, license
 }) => {
-  const initialData = {
-    files: [],
-    email
-  };
+  const files = [];
   if (readme) {
-    initialData.files.push({
+    files.push({
       filename: 'README.md',
       content: `# ${name}`
     });
   }
   if (gitignore) {
-    initialData.files.push({
+    files.push({
       filename: '.gitignore',
-      content: gitignores[gitignore]
+      content: getGitignore(gitignore)
     });
   }
   if (license) {
-    initialData.files.push({
+    files.push({
       filename: 'LICENSE',
-      content: licenses[license]
+      content: getLicense(license)
     });
   }
-  return initialData;
+  return files.length !== 0
+    ? {
+      files,
+      email
+    }
+    : null;
 };
 
 module.exports = {
   getPathToRepo,
   getPathToRepos,
-  createReadme,
   generateInitialData
 };

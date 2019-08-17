@@ -81,7 +81,9 @@ class CreateRepository extends React.Component {
   }
 
   handleChangeDropdown = handleChange => (e, data) => {
-    e.target.value = data.value;
+    const { value, options } = data;
+    e.target.value = value;
+    e.target.id = options[0].id;
     handleChange(e);
   };
 
@@ -109,7 +111,7 @@ class CreateRepository extends React.Component {
     );
   }
 
-  renderCreateRepository({ errors, touched, handleChange, handleBlur, handleSubmit, values }) {
+  renderCreateRepository({ errors, touched, handleChange, handleSubmit, values }) {
     const { username } = this.props;
     const { reponame, description, privacy, readme } = values;
     const handleChangeDropdown = this.handleChangeDropdown(handleChange);
