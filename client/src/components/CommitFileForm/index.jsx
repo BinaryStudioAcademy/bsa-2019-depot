@@ -91,7 +91,6 @@ const CommitFileForm = ({ avatar, initialBranch, disabled, onSubmit, onCancel })
             </Form>
           </Segment>
         )}
-        }
       </Formik>
     </div>
   );
