@@ -5,7 +5,7 @@ const { googleMiddleware, googleCallbackMiddleware } = require('../middlewares/g
 const registrationMiddleware = require('../middlewares/registration.middleware');
 const { login, register, googleLogin } = require('../services/auth.service');
 const { getUserById } = require('../services/user.service');
-const { getReqUrl } = require('../../helpers/req.helper');
+const { clientUrl } = require('../../config/common.config');
 
 const router = Router();
 
@@ -21,7 +21,7 @@ router.get('/google/callback', googleCallbackMiddleware, (req, res, next) => {
   googleLogin(req.user)
     .then((data) => {
       const stringData = JSON.stringify(data);
-      res.redirect(`http://localhost:3001/login/?user=${stringData}`);
+      res.redirect(`${clientUrl}/login/?user=${stringData}`);
     })
     .catch(next);
 });

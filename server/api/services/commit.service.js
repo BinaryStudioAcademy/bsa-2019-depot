@@ -71,9 +71,19 @@ const getCommitsByDate = async (data) => {
       userActivitybyDate[fullDate] = 1;
     }
     if (!(monthAndYear in monthActivity)) {
-      monthActivity[monthAndYear] = 1;
+      monthActivity[monthAndYear] = {};
+    }
+    if (!(monthAndYear in monthActivity)) {
+      monthActivity[monthAndYear] = {};
+    }
+  });
+  allCommits.forEach(({ date, repo }) => {
+    const stringifiedDate = JSON.stringify(date);
+    const monthAndYear = stringifiedDate.slice(1, 8);
+    if (monthActivity[monthAndYear][repo]) {
+      monthActivity[monthAndYear][repo] += 1;
     } else {
-      monthActivity[monthAndYear] += 1;
+      monthActivity[monthAndYear][repo] = 1;
     }
   });
   return { userActivitybyDate, monthActivity };

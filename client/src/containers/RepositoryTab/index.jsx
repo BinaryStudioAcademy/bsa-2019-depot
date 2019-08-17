@@ -35,7 +35,7 @@ class RepositoryTab extends React.Component {
     const {
       history,
       match: {
-        params: { username, reponame }
+        params: { username, reponame, branch }
       }
     } = this.props;
     const { isLoading, isEmpty } = this.state;
@@ -43,18 +43,23 @@ class RepositoryTab extends React.Component {
       return <Spinner />;
     }
 
-    return isEmpty
-      ? <EmptyRepositoryTab />
-      : <CodeTab history={history} username={username} reponame={reponame} />;
+    return isEmpty ? (
+      <EmptyRepositoryTab />
+    ) : (
+      <CodeTab history={history} username={username} reponame={reponame} branch={branch || null} />
+    );
   }
 }
 
 RepositoryTab.propTypes = {
   history: PropTypes.any,
-  match: {
-    username: PropTypes.string.isRequired,
-    reponame: PropTypes.string.isRequired
-  }
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      username: PropTypes.string.isRequired,
+      reponame: PropTypes.string.isRequired,
+      branch: PropTypes.string
+    })
+  })
 };
 
 export default RepositoryTab;

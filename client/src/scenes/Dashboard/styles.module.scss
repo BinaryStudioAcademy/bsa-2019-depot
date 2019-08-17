@@ -54,14 +54,26 @@ $secondary-color: #d1d5da;
   }
 }
 
+:local(.namesContainer) {
+  padding: 16px 0 16px 0;
+  @media (max-width: 768px) {
+    padding: 0;
+    grid-area: username;
+  }
+}
+
 :local(.username) {
-  margin: 16px 0;
+  margin: 0;
   color: #666;
   font-size: 125%;
   font-weight: 300;
-  @media (max-width: 768px) {
-    grid-area: username;
-  }
+}
+
+:local(.name) {
+  margin: 0;
+  color: #24292e;
+  font-size: 162%;
+  font-weight: 600;
 }
 
 :local(.navbar_wrapper) {

@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 
 const renderComponent = ({ Component, ...rest }) => <Component {...rest} />;
 
-const PrivateRoute = ({ isAuthorized, location, ...props }) =>
-  isAuthorized ? (
+const PrivateRoute = ({ isAuthorized, hasUsername, location, ...props }) =>
+  isAuthorized && hasUsername ? (
     <Route {...props} render={renderComponent} />
   ) : (
     <Redirect to={{ pathname: '/login', state: { from: location } }} />
@@ -14,6 +14,7 @@ const PrivateRoute = ({ isAuthorized, location, ...props }) =>
 
 PrivateRoute.propTypes = {
   isAuthorized: PropTypes.bool,
+  hasUsername: PropTypes.bool,
   location: PropTypes.any
 };
 
@@ -25,9 +26,10 @@ PrivateRoute.defaultProps = {
   location: undefined
 };
 
-const mapStateToProps = rootState => {
+const mapStateToProps = ({ profile }) => {
   return {
-    isAuthorized: rootState.profile.isAuthorized
+    isAuthorized: profile.isAuthorized,
+    hasUsername: Boolean(profile.currentUser.username)
   };
 };
 
