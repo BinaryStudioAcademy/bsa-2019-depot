@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import styles from './styles.module.scss';
 import { createOrg } from '../../routines/routines';
 import * as Yup from 'yup';
+import { InputError } from '../../components/InputError';
 
 import PropTypes from 'prop-types';
 
@@ -29,7 +30,7 @@ class CreateOrganization extends Component {
 
   render() {
     const initialValues = { username: '', email: '' };
-    const { company, loading, error: serverError } = this.props;
+    const { company, loading } = this.props;
 
     return company ? (
       <Redirect to={`/${this.props.company}`} />
@@ -65,14 +66,13 @@ class CreateOrganization extends Component {
                 </Header>
                 <Grid>
                   <Grid.Column computer={8} tablet={12} mobile={16}>
-                    <Field type="text" name="username" render={this.renderField} />
-                    {errors.username && touched.username ? (
-                      <div className={styles.error}>{errors.username}</div>
-                    ) : serverError ? (
-                      <div className={styles.error}>{serverError}</div>
-                    ) : (
-                      <div className={styles.note}>This will be your organization name on https://depothub.xyz/.</div>
-                    )}
+                    <Field
+                      type="text"
+                      name="username"
+                      placeholder="This will be your organization name on https://depothub.xyz/"
+                      render={this.renderField}
+                    />
+                    <InputError name="username" />
                   </Grid.Column>
                 </Grid>
                 <Header as="h4" className={styles.field_title}>
@@ -81,12 +81,13 @@ class CreateOrganization extends Component {
 
                 <Grid>
                   <Grid.Column computer={8} tablet={12} mobile={16}>
-                    <Field type="email" name="email" render={this.renderDisabledField} />
-                    {errors.email && touched.email ? (
-                      <div className={styles.error}>{errors.email}</div>
-                    ) : (
-                      <div className={styles.note}>We’ll send receipts to this inbox.</div>
-                    )}
+                    <Field
+                      type="email"
+                      name="email"
+                      placeholder="We’ll send receipts to this inbox"
+                      render={this.renderDisabledField}
+                    />
+                    <InputError name="email" />
                   </Grid.Column>
                 </Grid>
 
