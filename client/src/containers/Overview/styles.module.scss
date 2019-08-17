@@ -22,11 +22,15 @@ $secondary-color: #d1d5da;
   }
 }
 
-:global(.ui.container):local(.pinned_header) {
-  margin-top: 20px;
+.section {
+  margin-bottom: 10px;
+}
+
+:global(.ui.container):local(.section_header) {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 10px;
 
   h2 {
     margin: 0;
@@ -34,8 +38,15 @@ $secondary-color: #d1d5da;
     font-weight: 400;
   }
 
-  a {
+  .header_actions {
+    font-size: 75%;
     color: $primary-color;
+
+    :global(.menu.transition.visible) {
+      :global(.item) {
+        font-size: 100%;
+      }
+    }
   }
 }
 
@@ -50,16 +61,18 @@ $secondary-color: #d1d5da;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    margin-bottom: 20px;
     padding: 16px;
     border: 1px solid $secondary-color;
     border-radius: 3px;
 
     & div {
       display: flex;
+      align-items: center;
     }
 
     :local(.card_icon) {
+      position: relative;
+      top: 2px;
       margin-right: 5px;
     }
 
@@ -105,25 +118,21 @@ $secondary-color: #d1d5da;
 }
 
 :global(.calendar) {
-  position: relative;
-  width: 107%;
-  left: -18px;
+  width: 100%;
 }
 
 :global(.calendar-wrapper) {
-  margin-top: 10px;
-  padding: 16px;
   border: 1px solid $secondary-color;
   border-radius: 3px 3px 0 0;
 
   :global(.calendar) {
     :global(.month) {
       font-size: 62.5%;
-      color: #767676;
+      fill: #767676;
     }
     :global(.week) {
       font-size: 62.5%;
-      color: #767676;
+      fill: #767676;
     }
   }
 }
