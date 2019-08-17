@@ -11,7 +11,6 @@ module.exports = (models) => {
   Repository.belongsTo(User);
 
   Repository.hasMany(Commit);
-
   Commit.belongsTo(Repository);
 
   Commit.hasMany(CommitComment);
@@ -19,6 +18,5 @@ module.exports = (models) => {
 
   Repository.hasMany(CommitComment);
   CommitComment.belongsTo(Repository);
-
   // Repository.hasOne(DefaultBranch);
 };
