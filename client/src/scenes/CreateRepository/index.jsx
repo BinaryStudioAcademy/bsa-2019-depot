@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Container, Form, Dropdown, Input, Radio, Checkbox, Divider, Button, Label } from 'semantic-ui-react';
+import { Container, Form, Dropdown, Input, Radio, Checkbox, Divider, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { Formik, Field } from 'formik';
 import Octicon, { getIconByName } from '@primer/octicons-react';
+import { InputError } from '../../components/InputError';
 import { createRepository, checkName } from '../../services/repositoryService';
 import styles from './styles.module.scss';
 
@@ -36,7 +37,8 @@ const licenseOptions = [
 
 const initialValues = {
   owner: '',
-  repository: '',
+  ownerID: '',
+  reponame: '',
   description: '',
   privacy: 'public',
   readme: false
@@ -53,12 +55,12 @@ class CreateRepository extends React.Component {
 
   async validate(values) {
     let errors = {};
-    if (!values.repository) {
-      errors.repository = 'Required';
+    if (!values.reponame) {
+      errors.reponame = 'Required';
     }
     const { exists } = await checkName(values);
     if (exists) {
-      errors.repository = `The repository ${values.repository} already exists on this account`;
+      errors.reponame = `The repository ${values.reponame} already exists on this account`;
     }
 
     if (Object.keys(errors).length) {
@@ -70,9 +72,9 @@ class CreateRepository extends React.Component {
     const result = await createRepository({
       ...values
     });
-    const { repository, owner } = values;
+    const { reponame, owner } = values;
     if (result.url) {
-      this.props.history.push(`${owner}/${repository}`);
+      this.props.history.push(`${owner}/${reponame}`);
     }
   }
 
@@ -102,11 +104,12 @@ class CreateRepository extends React.Component {
 
   renderCreateRepository({ errors, touched, handleChange, handleBlur, handleSubmit, values }) {
     const { username } = this.props;
-    const { repository, description, readme, privacy } = values;
+    const { reponame, description, readme, privacy } = values;
 
     return (
       <Container>
-        <h1>Create a new repository</h1>
+        <Divider hidden />
+        <h1 className={styles.title}>Create a new repository</h1>
         <p>
           A repository contains all project files, including the revision history. Already have a project repository
           elsewhere?
@@ -122,14 +125,8 @@ class CreateRepository extends React.Component {
             <span className={styles.slash}>/</span>
             <Form.Field className={styles.formField}>
               <label>Repository name</label>
-              <Field name="repository" value={repository} onChange={handleChange} />
-              {errors.repository && touched.repository && (
-                <span className={styles.label}>
-                  <Label basic color="red" pointing>
-                    {errors.repository}
-                  </Label>
-                </span>
-              )}
+              <Field name="reponame" value={reponame} onChange={handleChange} className={styles.reponameInput} />
+              <InputError name="reponame" />
             </Form.Field>
           </Form.Group>
           <p>Great repository names are short and memorable. Need inspiration? How about psychic-eureka?</p>
@@ -168,7 +165,6 @@ class CreateRepository extends React.Component {
             <Checkbox
               id="readme"
               label={<label name="readme">Initialize this repository with a README</label>}
-              value={readme}
               checked={readme}
               onChange={handleChange}
             />
@@ -184,10 +180,11 @@ class CreateRepository extends React.Component {
             </Form.Field>
           </Form.Group>
           <Divider />
-          <Button type="submit" color="green">
+          <Button type="submit" color="green" disabled={errors.reponame && touched.reponame}>
             Create repository
           </Button>
         </Form>
+        <Divider hidden />
       </Container>
     );
   }
@@ -197,7 +194,8 @@ class CreateRepository extends React.Component {
       <Formik
         initialValues={{
           ...initialValues,
-          owner: this.props.username
+          owner: this.props.username,
+          ownerID: this.props.id
         }}
         validate={this.validate}
         onSubmit={this.onSubmit}
@@ -209,13 +207,14 @@ class CreateRepository extends React.Component {
 
 CreateRepository.propTypes = {
   username: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
   history: PropTypes.any
 };
 
 const mapStateToProps = ({
   profile: {
-    currentUser: { username }
+    currentUser: { username, id }
   }
-}) => ({ username });
+}) => ({ username, id });
 
 export default connect(mapStateToProps)(CreateRepository);

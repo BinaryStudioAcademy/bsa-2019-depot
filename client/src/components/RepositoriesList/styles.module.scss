@@ -1,9 +1,11 @@
 $primary-color: #586069;
 $secondary-color: #d1d5da;
 
-:global(svg.octicon) {
-  margin-right: 0;
-  color: $primary-color;
+.new_repo {
+  :global(svg.octicon) {
+    margin-right: 0;
+    color: $primary-color;
+  }
 }
 
 :local(.wrapper) {
@@ -20,7 +22,6 @@ $secondary-color: #d1d5da;
 
   h2 {
     margin: 0;
-    font-size: 16px;
     font-weight: 400;
   }
 
@@ -35,7 +36,7 @@ $secondary-color: #d1d5da;
   justify-content: space-between;
   :local(.repos_search_input) {
     width: 55%;
-    font-size: 14px;
+    font-size: 87.5%;
     min-height: 34px;
     padding: 16px 0;
 

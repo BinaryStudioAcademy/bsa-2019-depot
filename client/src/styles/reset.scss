@@ -1,3 +1,6 @@
+* {
+  box-sizing: border-box;
+}
 html,
 body,
 div,
@@ -82,8 +85,6 @@ video {
   margin: 0;
   padding: 0;
   border: 0;
-  font-size: 100%;
-  font: inherit;
   vertical-align: baseline;
 }
 
@@ -104,8 +105,12 @@ section {
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol';
+    'Segoe UI Emoji', 'Segoe UI Symbol' !important;
   line-height: 1;
+  font-size: 16px !important;
+  > div {
+    height: 100%;
+  }
 }
 
 ol,

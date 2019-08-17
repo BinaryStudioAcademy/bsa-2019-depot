@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
-import { Button, Grid, Image, Form, Select } from 'semantic-ui-react';
+
+import { Button, Grid, Image, Form } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 
 import styles from './styles.module.scss';
+import { ReactComponent as FirstSVG } from '../../styles/assets/landing-images/first-pic.svg';
+import { ReactComponent as SecondSVG } from '../../styles/assets/landing-images/second-pic.svg';
+import { ReactComponent as ThirdSVG } from '../../styles/assets/landing-images/third-pic.svg';
+import { ReactComponent as FourthSVG } from '../../styles/assets/landing-images/fourth-pic.svg';
+import { ReactComponent as FifthSVG } from '../../styles/assets/landing-images/fifth-pic.svg';
 
-const MainPage = () => {
+const MainPage = ({ currentUser: { username }, isAuthorized }) => {
   const [email, setEmail] = useState('');
 
   function handleChange({ target }) {
@@ -14,40 +23,26 @@ const MainPage = () => {
     setEmail('');
   }
 
-  return (
+  return isAuthorized && username ? (
+    <Redirect to={`/${username}`} />
+  ) : (
     <div>
       <section className={styles.main}>
         <Grid centered container columns={1}>
           <Grid.Column computer={13} mobile={16}>
             <h1 className={styles.headerCentered}>Built for professional teams</h1>
             <p className={styles.mainText}>
-              Depot is more than just Git code management. Depot gives teams one place to plan projects,
-              collaborate on code, test, and deploy.
+              Depot is more than just Git code management. Depot gives teams one place to plan projects, collaborate on
+              code, test, and deploy.
             </p>
           </Grid.Column>
         </Grid>
         <Button className={styles.button}>Get started for free</Button>
-        <p className={styles.mainHost}>
+        <p>
           Or host it yourself with&nbsp;
           <a className={styles.link} href="/">
             Depot Enterprise
-            <svg
-              width="11px"
-              height="8px"
-              viewBox="0 0 11 8"
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlnsXlink="http://www.w3.org/1999/xlink"
-            >
-              <g stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
-                <g className="group-path" transform="translate(-138.000000, -586.000000)" fill="#0052CC">
-                  <path
-                    d="M145.2803,586.507862 L144.2193,587.568863 L145.9393,589.287862 L138.7503,589.287862 C138.3363,589.287862 138.0003,589.623862 138.0003,590.037862 C138.0003,590.451862 138.3363,590.787862 138.7503,590.787862 L145.9393,590.787862 L144.2193,592.507862 L145.2803,593.568863 L148.8103,590.037862 L145.2803,586.507862 Z"
-                    id="Fill-1"
-                  />
-                </g>
-              </g>
-            </svg>
+            <FirstSVG />
           </a>
         </p>
         <Grid centered container columns={1}>
@@ -58,21 +53,8 @@ const MainPage = () => {
       </section>
 
       <section className={styles.advantage}>
-        <svg
-          className={styles.wave}
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1440 68"
-          enableBackground="new 0 0 1440 68"
-        >
-          <path
-            d="m1622.3 1937.7c0 0-410.7 169.1-913.4 75.5-502.7-93.6-977.7 56.3-977.7 56.3v440h1891.1v-571.8"
-            fill="#F4F5F7"
-            transform="translate(0-1977)"
-          ></path>
-        </svg>
+        <SecondSVG className={styles.wave} />
         <Grid centered container>
-
-
           <Grid.Row>
             <Grid.Column computer={10} tablet={16}>
               <div className={styles.advantageImg}>
@@ -112,23 +94,7 @@ const MainPage = () => {
                 </p>
                 <a className={styles.link} href="https://git-scm.com/">
                   Learn more
-                  <svg
-                    width="11px"
-                    height="8px"
-                    viewBox="0 0 11 8"
-                    version="1.1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlnsXlink="http://www.w3.org/1999/xlink"
-                  >
-                    <g stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
-                      <g className="group-path" transform="translate(-138.000000, -586.000000)" fill="#0052CC">
-                        <path
-                          d="M145.2803,586.507862 L144.2193,587.568863 L145.9393,589.287862 L138.7503,589.287862 C138.3363,589.287862 138.0003,589.623862 138.0003,590.037862 C138.0003,590.451862 138.3363,590.787862 138.7503,590.787862 L145.9393,590.787862 L144.2193,592.507862 L145.2803,593.568863 L148.8103,590.037862 L145.2803,586.507862 Z"
-                          id="Fill-1"
-                        />
-                      </g>
-                    </g>
-                  </svg>
+                  <ThirdSVG />
                 </a>
               </div>
             </Grid.Column>
@@ -142,23 +108,7 @@ const MainPage = () => {
                 </p>
                 <a className={styles.link} href="https://www.sourcetreeapp.com/">
                   Learn more
-                  <svg
-                    width="11px"
-                    height="8px"
-                    viewBox="0 0 11 8"
-                    version="1.1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlnsXlink="http://www.w3.org/1999/xlink"
-                  >
-                    <g stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
-                      <g className="group-path" transform="translate(-138.000000, -586.000000)" fill="#0052CC">
-                        <path
-                          d="M145.2803,586.507862 L144.2193,587.568863 L145.9393,589.287862 L138.7503,589.287862 C138.3363,589.287862 138.0003,589.623862 138.0003,590.037862 C138.0003,590.451862 138.3363,590.787862 138.7503,590.787862 L145.9393,590.787862 L144.2193,592.507862 L145.2803,593.568863 L148.8103,590.037862 L145.2803,586.507862 Z"
-                          id="Fill-1"
-                        />
-                      </g>
-                    </g>
-                  </svg>
+                  <FourthSVG />
                 </a>
               </div>
             </Grid.Column>
@@ -167,23 +117,10 @@ const MainPage = () => {
       </section>
 
       <section className={styles.clients}>
-        <svg
-          className={styles.wave}
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1440 68"
-          enableBackground="new 0 0 1440 68"
-        >
-          <path
-            d="m1622.3 1937.7c0 0-410.7 169.1-913.4 75.5-502.7-93.6-977.7 56.3-977.7 56.3v440h1891.1v-571.8"
-            fill="#F4F5F7"
-            transform="translate(0-1977)"
-          ></path>
-        </svg>
+        <FifthSVG className={styles.wave} />
         <Grid centered container columns={1}>
           <Grid.Column computer={12} mobile={16}>
-            <h2 className={styles.headerCentered}>
-              More than 1 million teams and 10 million developers love Depot
-            </h2>
+            <h2 className={styles.headerCentered}>More than 1 million teams and 10 million developers love Depot</h2>
           </Grid.Column>
 
           <Grid.Column>
@@ -221,7 +158,7 @@ const MainPage = () => {
       <footer className={styles.footer}>
         <Grid container columns={1}>
           <Grid.Row>
-            <Grid.Column mobile={16} computer={8}>
+            <Grid.Column mobile={16} computer={8} floated="right">
               <h4>Connect with us</h4>
               <p>Sign up for Git articles and resources:</p>
               <Form className={styles.form} onSubmit={handleSubmit}>
@@ -234,12 +171,12 @@ const MainPage = () => {
                 <p>Connect with Depot</p>
                 <ul>
                   <li>
-                    <a className={styles.fb} href="https://www.facebook.com/">
+                    <a className={styles.fb} href="/">
                       fb
                     </a>
                   </li>
                   <li>
-                    <a className={styles.tw} href="https://twitter.com/">
+                    <a className={styles.tw} href="/">
                       tw
                     </a>
                   </li>
@@ -271,4 +208,14 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+MainPage.propTypes = {
+  isAuthorized: PropTypes.bool.isRequired,
+  currentUser: PropTypes.object
+};
+
+const mapStateToProps = ({ profile: { isAuthorized, currentUser } }) => ({
+  isAuthorized,
+  currentUser
+});
+
+export default connect(mapStateToProps)(MainPage);

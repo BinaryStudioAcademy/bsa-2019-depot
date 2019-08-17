@@ -31,9 +31,11 @@ function* currentUserRequest() {
   try {
     yield put(fetchCurrentUser.request());
 
-    const response = yield call(authService.getCurrentUser);
+    if (localStorage.getItem('token')) {
+      const response = yield call(authService.getCurrentUser);
 
-    yield put(fetchCurrentUser.success(response));
+      yield put(fetchCurrentUser.success(response));
+    }
   } catch (error) {
     yield put(fetchCurrentUser.failure(error.message));
   } finally {
@@ -93,7 +95,9 @@ function* setUsername({ payload: { username, user, history } }) {
     const { status } = response;
     if (status) {
       yield put(setUsernameRoutine.success(username));
-      yield call(history.push, '/');
+      yield call(history.push, `/${username}?tab=repositories`);
+    } else {
+      yield put(setUsernameRoutine.failure(response.errorMessage));
     }
   } catch (error) {
     yield put(setUsernameRoutine.failure(error.message));

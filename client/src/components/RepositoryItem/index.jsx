@@ -9,6 +9,7 @@ import styles from './styles.module.scss';
 export class RepositoryItem extends React.Component {
   render() {
     //Mock
+    const { repo, username } = this.props;
     const data = [
       { name: 'commit1', uv: 4000, commitDate: 0, amt: 2400 },
       { name: 'commit2', uv: 3000, commitDate: 0, amt: 2210 },
@@ -24,8 +25,8 @@ export class RepositoryItem extends React.Component {
       <div className={styles.repo_item}>
         <div className={styles.repo_item_left}>
           <div>
-            <Link to="" className={styles.repo_name}>
-              {this.props.repo}
+            <Link to={`${username}/${repo}`} className={styles.repo_name}>
+              {repo}
             </Link>
           </div>
           <div className="repo-info">
@@ -52,9 +53,10 @@ export class RepositoryItem extends React.Component {
 }
 
 RepositoryItem.defaultProps = {
-  data: PropTypes.array.isRequired
+  data: []
 };
 
 RepositoryItem.propTypes = {
-  repo: PropTypes.string
+  repo: PropTypes.string,
+  username: PropTypes.string.isRequired
 };

@@ -1,12 +1,13 @@
 module.exports = (sequelize, DataTypes) => {
-  const OrgUser = sequelize.define(
-    'orgUser',
+  const Repository = sequelize.define(
+    'repository',
     {
+      name: DataTypes.STRING,
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE
     },
     {}
   );
 
-  return OrgUser;
+  return Repository;
 };

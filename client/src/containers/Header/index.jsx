@@ -20,7 +20,7 @@ const SearchInp = () => {
     setText(target.value);
   }
 
-  return <input placeholder="Search GitHub" onChange={onTextChange} value={text} type="text" />;
+  return <input placeholder="Search Depot" onChange={onTextChange} value={text} type="text" />;
 };
 
 const signIn = <a href="/login">Sign in</a>;
@@ -44,7 +44,6 @@ const SidebarUnauth = (closeSidebar, sidebarOpened) => {
       width="wide"
       direction="right"
       className={styles.sidebar}
-
     >
       <Menu.Item onClick={closeSidebar} as="a">
         <Icon name="close" color="grey" />
@@ -84,10 +83,10 @@ const HeaderDesktopUnauth = ({ openSidebar, closeSidebar, sidebarOpened }) => (
   <div className={styles.headerWrp}>
     <Grid centered container>
       <Grid.Row>
-        <Grid.Column computer={10} mobile={8}>
+        <Grid.Column computer={10} tablet={8} mobile={6}>
           {MenuDesktop()}
         </Grid.Column>
-        <Grid.Column computer={6} mobile={8}>
+        <Grid.Column computer={6} tablet={8} mobile={10}>
           <div className={styles.form}>
             {SearchInp()}
             {signIn}
@@ -181,7 +180,7 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
   return (
     <div className={styles.headerWrpAuth}>
       <Grid>
-        <Grid.Column computer={7} floated="left">
+        <Grid.Column computer={7} tablet={6} mobile={6} floated="left">
           <Responsive minWidth={1200}>
             <ul>
               <li>{logo}</li>
@@ -195,10 +194,10 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
           </Responsive>
         </Grid.Column>
 
-        <Grid.Column computer={5}>
+        <Grid.Column computer={4} tablet={4} mobile={4}>
           <Responsive maxWidth={1200}>{logo}</Responsive>
         </Grid.Column>
-        <Grid.Column computer={4} floated="right">
+        <Grid.Column computer={4} tablet={6} mobile={6} floated="right">
           <ul className={styles.rightMenu}>
             <li>
               <a href="/">
@@ -269,7 +268,7 @@ HeaderDesktopAuth.propTypes = {
   closeSidebar: PropTypes.func.isRequired,
   sidebarOpened: PropTypes.bool.isRequired,
   options: PropTypes.exact({
-    username: PropTypes.string.isRequired,
+    username: PropTypes.string,
     avatar: PropTypes.string
   })
 };

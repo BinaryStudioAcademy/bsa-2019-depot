@@ -1,15 +1,17 @@
 $primary-color: #586069;
 $secondary-color: #d1d5da;
 
-:global(svg.octicon) {
-  margin-right: 0;
-  color: $primary-color;
+.set_status {
+  :global(svg.octicon) {
+    margin-right: 0;
+    color: $primary-color;
+  }
 }
 
 :local(.wrapper) {
   margin: 0 auto;
   max-width: 1200px;
-  padding: 0 16px;
+  padding: 1em;
 }
 
 :global(.ui.grid > .row > .column):local(.userinfo_wrapper) {
@@ -52,14 +54,26 @@ $secondary-color: #d1d5da;
   }
 }
 
-:local(.username) {
-  margin: 16px 0;
-  color: #666;
-  font-size: 20px;
-  font-weight: 300;
+:local(.namesContainer) {
+  padding: 16px 0 16px 0;
   @media (max-width: 768px) {
+    padding: 0;
     grid-area: username;
   }
+}
+
+:local(.username) {
+  margin: 0;
+  color: #666;
+  font-size: 125%;
+  font-weight: 300;
+}
+
+:local(.name) {
+  margin: 0;
+  color: #24292e;
+  font-size: 162%;
+  font-weight: 600;
 }
 
 :local(.navbar_wrapper) {
@@ -102,7 +116,7 @@ $secondary-color: #d1d5da;
       border-radius: 20px;
       color: $primary-color;
       display: inline-block;
-      font-size: 12px;
+      font-size: 75%;
       font-weight: 600;
 
       @media (max-width: 1024px) {
@@ -120,7 +134,6 @@ $secondary-color: #d1d5da;
 
   h2 {
     margin: 0;
-    font-size: 16px;
     font-weight: 400;
   }
 

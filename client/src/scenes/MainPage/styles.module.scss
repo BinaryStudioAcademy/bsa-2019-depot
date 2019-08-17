@@ -11,10 +11,10 @@ $gray-color: #f4f5f7;
 
 :local(.header) {
   color: $header-color;
-  font-size: 44px;
+  font-size: 275%;
 
   @media screen and (max-width: 768px) {
-    font-size: 30px !important;
+    font-size: 187% !important;
   }
 }
 
@@ -39,12 +39,8 @@ $gray-color: #f4f5f7;
 }
 
 :local(.mainText) {
-  font-size: 20px;
+  font-size: 125%;
   text-align: center;
-}
-
-:local(.mainHost) {
-  font-size: 16px;
 }
 
 :local(.button) {
@@ -66,13 +62,12 @@ $gray-color: #f4f5f7;
   }
 
   h3 {
-    font-size: 24px;
+    font-size: 150%;
     color: $header-color;
     text-align: center;
   }
 
   p {
-    font-size: 16px;
     text-align: center;
     line-height: 24px;
   }
@@ -87,22 +82,21 @@ $gray-color: #f4f5f7;
 
   h5 {
     text-transform: uppercase;
-    font-size: 12px;
+    font-size: 75%;
     padding-top: 15px;
   }
 
   h2 {
-    font-size: 36px;
+    font-size: 225%;
     color: $header-color;
     margin-bottom: 24px;
   }
 
   p {
-    font-size: 20px;
+    font-size: 125%;
   }
 
   a {
-    font-size: 16px;
     color: $blue-color;
   }
 }
@@ -135,11 +129,10 @@ $gray-color: #f4f5f7;
   }
 
   h3 {
-    font-size: 24px;
+    font-size: 150%;
   }
 
   p {
-    font-size: 16px;
     line-height: 24px;
   }
 }
@@ -201,19 +194,17 @@ $gray-color: #f4f5f7;
     background-color: $gray-color;
 
     h4 {
-      font-size: 20px;
+      font-size: 125%;
     }
 
     p {
-      font-size: 16px;
-
       &:last-child {
-        font-size: 20px;
+        font-size: 125%;
       }
     }
 
     h2 {
-      font-size: 72px;
+      font-size: 450%;
       color: $blue-color;
       font-weight: bold;
     }
@@ -224,7 +215,6 @@ $gray-color: #f4f5f7;
 
     li {
       padding-left: 32px;
-      font-size: 16px;
       line-height: 24px;
 
       &:not(:last-child) {
@@ -232,7 +222,8 @@ $gray-color: #f4f5f7;
       }
 
       &.featured {
-        background: url('https://bitbucket.org/dam/jcr:743645da-cea8-4466-879b-0c0f99aee501/check-mark-adg3-blue.svg') no-repeat;
+        background: url('https://bitbucket.org/dam/jcr:743645da-cea8-4466-879b-0c0f99aee501/check-mark-adg3-blue.svg')
+          no-repeat;
         background-size: 24px 24px;
       }
 
@@ -246,8 +237,6 @@ $gray-color: #f4f5f7;
     padding: 40px;
 
     li {
-      font-size: 16px;
-
       &:not(:last-child) {
         margin-bottom: 12px;
       }
@@ -275,12 +264,11 @@ $gray-color: #f4f5f7;
 
     h2 {
       color: $header-color;
-      font-size: 44px;
+      font-size: 275%;
       margin-bottom: 24px;
     }
 
     p {
-      font-size: 16px;
       line-height: 24px;
     }
   }
@@ -310,7 +298,7 @@ $gray-color: #f4f5f7;
   color: $text-color;
 
   h4 {
-    font-size: 20px;
+    font-size: 125%;
     color: $header-color;
 
     &:not(:last-child) {
@@ -326,7 +314,7 @@ $gray-color: #f4f5f7;
 
   a {
     color: $text-color;
-    font-size: 14px;
+    font-size: 87.5%;
 
     &:hover {
       color: $text-color;
@@ -335,7 +323,6 @@ $gray-color: #f4f5f7;
   }
 
   p {
-    font-size: 16px;
     margin: 26px 0;
   }
 
@@ -397,7 +384,8 @@ $gray-color: #f4f5f7;
   }
 
   .fb {
-    background: url(https://wac-cdn.atlassian.com/assets/img/icons/social-icons/facebook-badge.svg) center center no-repeat;
+    background: url(https://wac-cdn.atlassian.com/assets/img/icons/social-icons/facebook-badge.svg) center center
+      no-repeat;
   }
 
   .tw {
@@ -406,8 +394,12 @@ $gray-color: #f4f5f7;
 
   .foterLine {
     border-top: 2px solid #dfe1e5;
-    padding-top: 25px;
-    justify-content: space-between;
+    padding-top: 1.5em !important;
+    padding-bottom: 2em !important;
+
+    a {
+      font-size: inherit !important;
+    }
 
     ul {
       display: flex;

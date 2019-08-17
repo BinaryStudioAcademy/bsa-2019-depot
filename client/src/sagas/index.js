@@ -8,10 +8,12 @@ import diffsSagas from '../components/DiffCommitView/sagas';
 import codeTabSagas from '../scenes/CodeTab/sagas';
 import profileSagas from '../containers/Profile/sagas';
 import { watchRepositories } from '../scenes/Dashboard/sagas';
-import profileSettingsSagas from '../scenes/SettingsProfile/sagas';
+import profileSettingsSagas from '../containers/SettingsProfile/sagas';
 import forkRepoSagas from '../components/ForkButton/sagas';
-
 import repoSettingsSagas from '../containers/SettingsTab/sagas';
+import branchesSagas from '../containers/BranchesTab/sagas';
+import createOrganizationSagas from '../scenes/CreateOrganization/sagas';
+
 export default function* rootSaga() {
   yield all([
     issuesSagas(),
@@ -24,6 +26,8 @@ export default function* rootSaga() {
     codeTabSagas(),
     repoSettingsSagas(),
     profileSettingsSagas(),
-    forkRepoSagas()
+    forkRepoSagas(),
+    branchesSagas(),
+    createOrganizationSagas()
   ]);
 }

@@ -15,6 +15,10 @@
   }
 }
 
+:local(.reponameInput) {
+  margin-bottom: 10px !important;
+}
+
 :local(.privacyIcon) {
   position: absolute;
   width: 24px;
@@ -23,9 +27,8 @@
 }
 
 :local(.slash) {
-  font-size: 21px;
+  font-size: 131.25%;
   color: #586069;
-  font-size: 21px;
   padding-top: 32px;
 }
 
@@ -37,4 +40,8 @@
 
 :local(.formField) {
   position: relative;
+}
+
+:local(.title) {
+  margin-top: 0;
 }

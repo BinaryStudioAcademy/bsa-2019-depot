@@ -9,9 +9,17 @@ $secondary-color: #d1d5da;
   activity_lvl5: #1e6823;
 }
 
-:global(svg.octicon) {
+:global(.octicon):local(.card_icon),
+:global(.octicon):local(.card_icon_grab) {
   margin-right: 0;
   color: $primary-color;
+}
+
+.contribution_activity_desc {
+  :global(.octicon) {
+    margin-right: 0;
+    color: $primary-color;
+  }
 }
 
 :global(.ui.container):local(.pinned_header) {
@@ -110,11 +118,11 @@ $secondary-color: #d1d5da;
 
   :global(.calendar) {
     :global(.month) {
-      font-size: 10px;
+      font-size: 62.5%;
       color: #767676;
     }
     :global(.week) {
-      font-size: 10px;
+      font-size: 62.5%;
       color: #767676;
     }
   }
@@ -149,7 +157,7 @@ $secondary-color: #d1d5da;
   h3 {
     display: inline-block;
     padding: 4px 8px 4px;
-    font-size: 12px;
+    font-size: 75%;
     background-color: #fff;
   }
 
@@ -178,12 +186,6 @@ $secondary-color: #d1d5da;
       text-align: center;
       width: 32px;
     }
-
-    :global(.content) {
-      :local(.activity_link) {
-        display: block;
-      }
-    }
   }
 }
 
@@ -192,7 +194,7 @@ $secondary-color: #d1d5da;
   display: inline-block;
   padding: 12px;
   color: #0366d6;
-  font-size: 12px;
+  font-size: 75%;
   font-weight: 600;
   background-color: #fff;
   border: 1px solid $secondary-color;
@@ -211,7 +213,7 @@ $secondary-color: #d1d5da;
     margin-bottom: 5px;
     padding: 8px 16px;
     color: $primary-color;
-    font-size: 12px;
+    font-size: 75%;
     border-radius: 3px;
 
     &:hover {
@@ -225,7 +227,7 @@ $secondary-color: #d1d5da;
     padding: 8px 16px;
     color: #fff;
     background-color: #0366d6;
-    font-size: 12px;
+    font-size: 75%;
     border-radius: 3px;
   }
 
@@ -240,7 +242,7 @@ $secondary-color: #d1d5da;
       padding: 8px 16px;
       color: #fff;
       background-color: #0366d6;
-      font-size: 12px;
+      font-size: 75%;
       border-radius: 3px;
     }
   }
