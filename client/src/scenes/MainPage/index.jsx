@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 
 import { Button, Grid, Image, Form } from 'semantic-ui-react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
 
 import styles from './styles.module.scss';
 import { ReactComponent as FirstSVG } from '../../styles/assets/landing-images/first-pic.svg';
@@ -12,7 +9,7 @@ import { ReactComponent as ThirdSVG } from '../../styles/assets/landing-images/t
 import { ReactComponent as FourthSVG } from '../../styles/assets/landing-images/fourth-pic.svg';
 import { ReactComponent as FifthSVG } from '../../styles/assets/landing-images/fifth-pic.svg';
 
-const MainPage = ({ currentUser: { username }, isAuthorized }) => {
+const MainPage = () => {
   const [email, setEmail] = useState('');
 
   function handleChange({ target }) {
@@ -23,9 +20,7 @@ const MainPage = ({ currentUser: { username }, isAuthorized }) => {
     setEmail('');
   }
 
-  return isAuthorized && username ? (
-    <Redirect to={`/${username}`} />
-  ) : (
+  return (
     <div>
       <section className={styles.main}>
         <Grid centered container columns={1}>
@@ -208,14 +203,4 @@ const MainPage = ({ currentUser: { username }, isAuthorized }) => {
   );
 };
 
-MainPage.propTypes = {
-  isAuthorized: PropTypes.bool.isRequired,
-  currentUser: PropTypes.object
-};
-
-const mapStateToProps = ({ profile: { isAuthorized, currentUser } }) => ({
-  isAuthorized,
-  currentUser
-});
-
-export default connect(mapStateToProps)(MainPage);
+export default MainPage;

@@ -11,12 +11,16 @@ const createRepo = async (repoData) => {
   console.log(repoData.license);
   let result = 'Repo was created';
   const pathToRepo = repoHelper.getPathToRepo(owner, name);
-  await NodeGit.Repository.init(pathToRepo, 1).then(() => {
-    result = {
-      msg: 'Repo created',
-      url: pathToRepo
-    };
-  });
+  await NodeGit.Repository.init(pathToRepo, 1)
+    .then(() => {
+      result = {
+        msg: 'Repo created',
+        url: pathToRepo
+      };
+    })
+    .catch(() => {
+      return Promise.reject({status: 404, message: 'Error! Repos wasn`t created'});
+    });
 
   const initialData = repoHelper.generateInitialData({ ...repoData });
   // Initial data has to contain 'email' (of user) and 'files' in form of [ { filename, content }, {... ]

@@ -51,11 +51,10 @@ const traverseFileTree = async (user, name, branch, tree) => {
           name: entry.name(),
           time: lastModifiedCommit.date(),
           commitMessage: lastModifiedCommit.message(),
-          sha: lastModifiedCommit.sha()
         });
       }
     } catch (error) {
-      console.error(error);
+      return Promise.reject({status: 401, message: error});
     }
   }
   return fileTree;
@@ -107,7 +106,7 @@ const getFileContent = async ({
   user, name, branch, filepath
 }) => {
   const pathToRepo = repoHelper.getPathToRepo(user, name);
-  const repo = await NodeGit.Repository.open(pathToRepo.replace(/\\/g, '/'));
+  const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
   const entry = await lastCommitOnBranch.getEntry(filepath);
   const blob = await entry.getBlob();
@@ -119,5 +118,8 @@ const getFileContent = async ({
 };
 
 module.exports = {
-  getBranches, getBranchTree, getLastCommitOnBranch, getFileContent
+  getBranches,
+  getBranchTree,
+  getLastCommitOnBranch,
+  getFileContent
 };

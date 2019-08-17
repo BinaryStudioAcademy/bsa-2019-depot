@@ -16,17 +16,8 @@ class FileViewPage extends React.Component {
     super(props);
 
     const { match, location } = this.props;
-    const urlExtension = location.pathname
-      .replace(match.url, '')
-      .split('/')
-      .filter(dir => dir);
 
-    this.filepath = urlExtension
-      .slice(1) // Remove branch name
-      .join('/');
-
-    this.branch = urlExtension[0];
-
+    this.filepath = location.pathname.replace(`${match.url}/`, '');
     this.state = {
       fileData: {},
       loading: true,
@@ -39,8 +30,8 @@ class FileViewPage extends React.Component {
   }
 
   componentDidMount() {
-    const { username, reponame } = this.props.match.params;
-    getFileContent(username, reponame, this.branch, {
+    const { username, reponame, branch } = this.props.match.params;
+    getFileContent(username, reponame, branch, {
       filepath: this.filepath
     }).then(fileData =>
       this.setState({
@@ -57,15 +48,15 @@ class FileViewPage extends React.Component {
   handleEditFile() {
     const { history, location } = this.props;
 
-    history.push(location.pathname.replace('/blob', '/edit/tree'));
+    history.push(location.pathname.replace('/blob', '/edit'));
   }
 
   handleDeleteFile() {
     const { history, match, username: author, email } = this.props;
-    const { username: owner, reponame: repoName } = match.params;
+    const { username: owner, reponame: repoName, branch } = match.params;
 
     this.setState({ deleting: true });
-    modifyFile(owner, repoName, this.branch, {
+    modifyFile(owner, repoName, branch, {
       author,
       email,
       filepath: this.filepath,
@@ -73,7 +64,7 @@ class FileViewPage extends React.Component {
     }).then(() => {
       this.setState({ deleting: false });
       history.push(
-        `/${owner}/${repoName}/tree/${this.branch}/${this.filepath
+        `/${owner}/${repoName}/tree/${branch}/${this.filepath
           .split('/')
           .slice(0, -1)
           .join('/')}`
@@ -101,7 +92,7 @@ class FileViewPage extends React.Component {
       loading,
       deleting
     } = this.state;
-    const { username: owner, reponame } = match.params;
+    const { username: owner, reponame, branch } = match.params;
     const editorStyles = { width: '100%' };
 
     let filepathDirs, filename, fileExtension, lineCount;
@@ -122,12 +113,7 @@ class FileViewPage extends React.Component {
               <Link to={`/${owner}/${reponame}`}>{reponame}</Link>
             </Breadcrumb.Section>
             <Breadcrumb.Divider />
-            <FilePathBreadcrumbSections
-              owner={owner}
-              reponame={reponame}
-              branch={this.branch}
-              filepath={filepathDirs}
-            />
+            <FilePathBreadcrumbSections owner={owner} reponame={reponame} branch={branch} filepath={filepathDirs} />
             <Breadcrumb.Section>{filename}</Breadcrumb.Section>
           </Breadcrumb>
           <Button compact size="small" className={styles.copyButton} onClick={this.handleCopyPath}>

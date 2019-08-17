@@ -115,7 +115,7 @@ const initialCommit = async ({
   );
 
   fileBlobOids.forEach(({ oid, filename }) => {
-    treeBuilder.insert(filename, oid, 33188);
+    treeBuilder.insert(filename, oid, NodeGit.TreeEntry.FILEMODE.BLOB);
   });
 
   const newCommitTree = await treeBuilder.write();
@@ -148,22 +148,29 @@ const modifyFile = async ({
   const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(baseBranch);
   const lastCommitTree = await lastCommitOnBranch.getTree();
-  const treeBuilder = await NodeGit.Treebuilder.create(repo, lastCommitTree);
   const authorSignature = NodeGit.Signature.now(author, email);
+  const index = await repo.index();
 
   if (baseBranch !== commitBranch) {
     await NodeGit.Branch.create(repo, commitBranch, lastCommitOnBranch, 1);
   }
-
   const branchRef = `refs/heads/${commitBranch}`;
 
   const fileBuffer = Buffer.from(fileData);
   const oid = await NodeGit.Blob.createFromBuffer(repo, fileBuffer, fileBuffer.length);
 
-  if (oldFilepath !== filepath) treeBuilder.remove(oldFilepath);
-  treeBuilder.insert(filepath, oid, 33188);
+  const indexEntry = new NodeGit.IndexEntry();
+  indexEntry.path = filepath;
+  indexEntry.id = oid;
+  indexEntry.mode = NodeGit.TreeEntry.FILEMODE.BLOB;
 
-  const newCommitTree = await treeBuilder.write();
+  await index.readTree(lastCommitTree);
+  if (oldFilepath !== filepath) {
+    index.remove(oldFilepath, 0); // 0 === NodeGit.Index.STAGE.NORMAL, but this Enum doesn't work for some reason
+  }
+  await index.add(indexEntry);
+  const newCommitTree = await index.writeTree();
+
   const commitId = await repo.createCommit(branchRef, authorSignature, authorSignature, message, newCommitTree, [
     lastCommitOnBranch
   ]);
@@ -178,13 +185,14 @@ const deleteFile = async ({
   const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
   const lastCommitTree = await lastCommitOnBranch.getTree();
-  const treeBuilder = await NodeGit.Treebuilder.create(repo, lastCommitTree);
   const authorSignature = NodeGit.Signature.now(author, email);
   const branchRef = `refs/heads/${branch}`;
+  const index = await repo.index();
 
-  treeBuilder.remove(filepath);
+  await index.readTree(lastCommitTree);
+  index.remove(filepath, 0); // 0 === NodeGit.Index.STAGE.NORMAL, but this Enum doesn't work for some reason
+  const newCommitTree = await index.writeTree();
 
-  const newCommitTree = await treeBuilder.write();
   const commitId = await repo.createCommit(
     branchRef,
     authorSignature,

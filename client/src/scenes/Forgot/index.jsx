@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
@@ -94,8 +93,7 @@ class Forgot extends Component {
   }
 
   render() {
-    const { isAuthorized } = this.props;
-    return !isAuthorized ? (
+    return (
       <Formik
         initialValues={{
           email: ''
@@ -104,14 +102,11 @@ class Forgot extends Component {
         onSubmit={this.submit}
         render={this.renderComponent}
       />
-    ) : (
-      <Redirect to="/" />
     );
   }
 }
 
 Forgot.propTypes = {
-  isAuthorized: PropTypes.bool.isRequired,
   history: PropTypes.object,
   message: PropTypes.string,
   emailNotExist: PropTypes.bool,
@@ -120,7 +115,6 @@ Forgot.propTypes = {
 };
 
 Forgot.defaultProps = {
-  isAuthorized: false,
   isLoading: false,
   message: '',
   emailNotExist: false,
@@ -128,7 +122,6 @@ Forgot.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  isAuthorized: state.profile.isAuthorized,
   message: state.forgot.message,
   emailNotExist: state.forgot.emailNotExist,
   emailSend: state.forgot.emailSend
