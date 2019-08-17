@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import * as queryString from 'query-string';
@@ -192,9 +192,6 @@ class Login extends Component {
 
   render() {
     const { currentUser, isAuthorized } = this.props;
-    if (isAuthorized && currentUser.username) {
-      return <Redirect to={`/${currentUser.username}`} />;
-    }
     if (isAuthorized && !currentUser.username) {
       return (
         <Formik
