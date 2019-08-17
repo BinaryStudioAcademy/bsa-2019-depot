@@ -18,21 +18,16 @@ class FileEditPage extends React.Component {
     super(props);
 
     const { location, match } = props;
+    this.filepath = location.pathname
+      .replace(`${match.url}`, '')
+      .split('/')
+      .filter(dir => dir)
+      .join('/');
 
     let filename = '';
-    if (match.path.split('/').pop() === 'edit') {
-      filename = location.pathname.split('/').slice(-1)[0];
+    if (match.url.includes('edit')) {
+      filename = location.pathname.split('/').pop();
     }
-
-    const urlExtension = location.pathname
-      .replace(match.url, '')
-      .split('/')
-      .filter(dir => dir);
-
-    this.branch = urlExtension[1];
-    this.filepath = urlExtension
-      .slice(2) // Remove 'tree' and branch name
-      .join('/');
 
     this.state = {
       fileData: { content: '' },
@@ -51,9 +46,9 @@ class FileEditPage extends React.Component {
 
   componentDidMount() {
     if (this.state.toEdit) {
-      const { username, reponame } = this.props.match.params;
+      const { username, reponame, branch } = this.props.match.params;
 
-      getFileContent(username, reponame, this.branch, {
+      getFileContent(username, reponame, branch, {
         filepath: this.filepath
       }).then(fileData =>
         this.setState({
@@ -79,30 +74,36 @@ class FileEditPage extends React.Component {
       location: { pathname }
     } = this.props;
 
-    const folderUrl = pathname.replace('/edit', '').replace('/new', '');
+    const folderUrl = pathname.replace('/edit', '/tree').replace('/new', '/tree');
 
     history.push(`${folderUrl}`);
   }
 
   handleCommitFile({ message, commitBranch }) {
-    const { username: ownerUsername, reponame } = this.props.match.params;
+    const { username: ownerUsername, reponame, branch } = this.props.match.params;
     const {
       filename,
+      toEdit,
       fileData: { content }
     } = this.state;
     const { email, username } = this.props;
-    const filepathArr = this.filepath.split('/');
-    filepathArr.splice(-1, 1, filename.trim());
-    const newFilepath = filepathArr.join('/');
+    let newFilePath;
+    if (!toEdit) {
+      newFilePath = `${this.filepath ? this.filepath + '/' : ''}${filename.trim()}`;
+    } else {
+      const filePathDirs = this.filepath.split('/');
+      filePathDirs.splice(-1, 1, filename);
+      newFilePath = filePathDirs.join('/');
+    }
 
     this.setState({ loading: true });
-    modifyFile(ownerUsername, reponame, this.branch, {
+    modifyFile(ownerUsername, reponame, branch, {
       author: username,
       email,
       message,
       commitBranch,
-      oldFilepath: this.filepath,
-      filepath: newFilepath,
+      oldFilepath: toEdit ? this.filepath : newFilePath,
+      filepath: newFilePath,
       fileData: content
     }).then(() => {
       this.handleCancel();
@@ -119,11 +120,11 @@ class FileEditPage extends React.Component {
       toEdit,
       loading
     } = this.state;
-    const { username: ownerUsername, reponame } = match.params;
+    const { username: ownerUsername, reponame, branch } = match.params;
 
     const filepathDirs = this.filepath.split('/').filter(dir => dir);
 
-    if (match.url.split('/').pop() === 'edit') filepathDirs.pop();
+    if (match.url.includes('edit')) filepathDirs.pop();
     const fileExtension = filename.split('.').pop();
 
     const editorStyles = { width: '100%' };
@@ -186,7 +187,7 @@ class FileEditPage extends React.Component {
           <FilePathBreadcrumbSections
             owner={ownerUsername}
             reponame={reponame}
-            branch={this.branch}
+            branch={branch}
             filepath={filepathDirs}
           />
           <Breadcrumb.Section>
@@ -206,7 +207,7 @@ class FileEditPage extends React.Component {
         <Tab className={styles.editorArea} panes={panes} />
         <CommitFileForm
           avatar={avatar}
-          initialBranch={this.branch}
+          initialBranch={branch}
           disabled={!filename || (content === oldContent && filename === oldFilename && toEdit)}
           onSubmit={this.handleCommitFile}
           onCancel={this.handleCancel}

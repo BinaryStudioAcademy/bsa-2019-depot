@@ -64,7 +64,10 @@ class CodeTab extends React.Component {
     );
   };
 
-  onCreateFile = () => {};
+  onCreateFile = () => {
+    const { location, history } = this.props;
+    history.push(location.pathname.replace('/tree', '/new'));
+  };
 
   render() {
     const { branch } = this.state;
@@ -163,7 +166,7 @@ class CodeTab extends React.Component {
           </div>
           <div className={styles.repoActions}>
             <Button.Group>
-              <Button className={styles.actionButton} onClick={this.onCo}>
+              <Button className={styles.actionButton} onClick={this.onCreateFile}>
                 Create New File
               </Button>
               <Button className={styles.actionButton}>Upload files</Button>
@@ -265,6 +268,7 @@ CodeTab.propTypes = {
   fetchBranches: PropTypes.func.isRequired,
   fetchFileTree: PropTypes.func.isRequired,
   history: PropTypes.object,
+  location: PropTypes.object.isRequired,
   match: PropTypes.object,
   username: PropTypes.string.isRequired,
   reponame: PropTypes.string.isRequired,

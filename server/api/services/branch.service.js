@@ -107,7 +107,7 @@ const getFileContent = async ({
   user, name, branch, filepath
 }) => {
   const pathToRepo = repoHelper.getPathToRepo(user, name);
-  const repo = await NodeGit.Repository.open(pathToRepo.replace(/\\/g, '/'));
+  const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
   const entry = await lastCommitOnBranch.getEntry(filepath);
   const blob = await entry.getBlob();
