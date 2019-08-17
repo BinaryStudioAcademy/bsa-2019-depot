@@ -20,7 +20,7 @@ module.exports = {
       }
     },
     repositoryId: {
-      type: Sequelize.UUID,
+      type: Sequelize.INTEGER,
       references: {
         model: 'repositories',
         key: 'id'

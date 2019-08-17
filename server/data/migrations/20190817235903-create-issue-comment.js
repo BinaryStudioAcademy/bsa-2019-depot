@@ -17,7 +17,7 @@ module.exports = {
       }
     },
     issueId: {
-      type: Sequelize.UUID,
+      type: Sequelize.INTEGER,
       references: {
         model: 'issues',
         key: 'id'
