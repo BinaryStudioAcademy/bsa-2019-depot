@@ -19,7 +19,7 @@ const createRepo = async ({
       };
     })
     .catch(() => {
-      result = 'Error! Repos wasn`t created';
+      return Promise.reject({status: 404, message: 'Error! Repos wasn`t created'});
     });
 
   // Initial data has to contain 'email' (of user) and 'files' in form of [ { filename, content }, {... ]
