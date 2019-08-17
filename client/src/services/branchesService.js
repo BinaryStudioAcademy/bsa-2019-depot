@@ -24,3 +24,12 @@ export const getFileTree = async (owner, repoName, branch, query) => {
   });
   return response.json();
 };
+
+export const getFileContent = async (owner, repoName, branch, query) => {
+  const response = await callWebApi({
+    endpoint: `/api/repo/${owner}/${repoName}/${branch}/file`,
+    type: 'GET',
+    query
+  });
+  return response.json();
+};

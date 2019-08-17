@@ -1,14 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
+import { Container } from 'semantic-ui-react';
 import RepositoryHeader from '../../components/RepositoryHeader';
 import IssuesTab from '../../containers/IssuesTab/index';
 import CommitsPage from '../../containers/CommitsPage/index';
 import DiffCommitView from '../../components/DiffCommitView/index';
 import RepositoryTab from '../../containers/RepositoryTab';
 import RepoSettings from '../../containers/SettingsTab/index';
+import FileViewPage from '../../containers/FileViewPage';
+import FileEditPage from '../../containers/FileEditPage';
+import PrivateRoute from '../../containers/PrivateRoute';
+import BranchesTab from '../../containers/BranchesTab/index';
 
-import './styles.module.scss';
+import styles from './styles.module.scss';
 
 class RepositoryPage extends React.Component {
   render() {
@@ -29,15 +34,21 @@ class RepositoryPage extends React.Component {
           activePage={location.pathname.split('/')[3]}
           baseUrl={match.url}
         />
-        <div className="ui bottom attached active tab">
-          <Switch>
-            <Route exact path={match.path} component={RepositoryTab} />
-            <Route exact path={`${match.path}/issues`} component={IssuesTab} />
-            <Route exact path={`${match.path}/commits`} component={CommitsPage} />
-            <Route exact path={`${match.path}/settings`} component={RepoSettings} />
-            <Route path={`${match.path}/commits/:hash`} component={DiffCommitView} />
-          </Switch>
-        </div>
+        <Container>
+          <div className={styles.repoContentContainer}>
+            <Switch>
+              <Route exact path={`${match.path}/`} component={RepositoryTab} />
+              <Route path={`${match.path}/tree/:branch`} component={RepositoryTab} />
+              <Route exact path={`${match.path}/commits/:branch`} component={CommitsPage} />
+              <Route exact path={`${match.path}/commit/:hash`} component={DiffCommitView} />
+              <Route exact path={`${match.path}/issues`} component={IssuesTab} />
+              <Route exact path={`${match.path}/settings`} component={RepoSettings} />
+              <Route exact path={`${match.path}/branches`} component={BranchesTab} />
+              <PrivateRoute path={[`${match.path}/new`, `${match.path}/edit`]} component={FileEditPage} />
+              <Route path={`${match.path}/blob`} component={FileViewPage} />
+            </Switch>
+          </div>
+        </Container>
       </>
     );
   }

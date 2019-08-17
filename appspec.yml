@@ -2,15 +2,15 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ubuntu/bsa-2019-depot
+    destination: /home/git/bsa-2019-depot
 permissions:
   - object: /
     pattern: "**"
-    owner: ubuntu
-    group: ubuntu
+    owner: git
+    group: git
 hooks:
   BeforeInstall:
     - location: scripts/before-install.sh
   ApplicationStart:
     - location: scripts/app-start.sh
-      runas: ubuntu
+      runas: git

@@ -1,13 +1,12 @@
 const NodeGit = require('nodegit');
-const path = require('path');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const { getReposNames } = require('./repo.service');
-
-const gitPath = process.env.GIT_PATH;
+const repoHelper = require('../../helpers/repo.helper');
+const { isEmpty } = require('./repo.service');
 
 const getCommits = async ({ user, name, branch }) => {
-  const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`).replace(/\\/g, '/');
+  const pathToRepo = repoHelper.getPathToRepo(user, name);
   const allCommits = [];
   await NodeGit.Repository.open(pathToRepo)
     .then(repo => repo.getBranchCommit(branch))
@@ -38,8 +37,9 @@ const getCommitsByDate = async (data) => {
   const repoList = await getReposNames(data);
   let globalCommits = [];
   const promises = repoList.map((repoName) => {
-    const pathToRepo = path.resolve(`${gitPath}/${user}/${repoName}`);
+    const pathToRepo = repoHelper.getPathToRepo(user, repoName);
     return NodeGit.Repository.open(pathToRepo).then((repo) => {
+      isEmpty({ owner: user, reponame: repo });
       const walker = NodeGit.Revwalk.create(repo);
       walker.pushGlob('refs/heads/*');
       walker.sorting(NodeGit.Revwalk.SORT.TIME);
@@ -71,16 +71,26 @@ const getCommitsByDate = async (data) => {
       userActivitybyDate[fullDate] = 1;
     }
     if (!(monthAndYear in monthActivity)) {
-      monthActivity[monthAndYear] = 1;
+      monthActivity[monthAndYear] = {};
+    }
+    if (!(monthAndYear in monthActivity)) {
+      monthActivity[monthAndYear] = {};
+    }
+  });
+  allCommits.forEach(({ date, repo }) => {
+    const stringifiedDate = JSON.stringify(date);
+    const monthAndYear = stringifiedDate.slice(1, 8);
+    if (monthActivity[monthAndYear][repo]) {
+      monthActivity[monthAndYear][repo] += 1;
     } else {
-      monthActivity[monthAndYear] += 1;
+      monthActivity[monthAndYear][repo] = 1;
     }
   });
   return { userActivitybyDate, monthActivity };
 };
 
 const getCommitDiff = async ({ user, name, hash }) => {
-  const pathToRepo = path.resolve(`${gitPath}/${user}/${name}`).replace(/\\/g, '/');
+  const pathToRepo = repoHelper.getPathToRepo(user, name);
   const cdCommand = `cd  ${pathToRepo} `;
   const gitDiffCommand = `git diff ${hash}~ ${hash} -U`;
   const command = `${cdCommand} && ${gitDiffCommand}`;
@@ -89,4 +99,108 @@ const getCommitDiff = async ({ user, name, hash }) => {
   return { diffs: cmd.stdout };
 };
 
-module.exports = { getCommits, getCommitDiff, getCommitsByDate };
+const initialCommit = async ({
+  owner, email, repoName, files
+}) => {
+  const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
+  const repo = await NodeGit.Repository.open(pathToRepo);
+  const treeBuilder = await NodeGit.Treebuilder.create(repo, null);
+  const authorSignature = NodeGit.Signature.now(owner, email);
+
+  const fileBlobOids = await Promise.all(files.map(({ content, filename }) => {
+    const fileBuffer = Buffer.from(content);
+    return NodeGit.Blob.createFromBuffer(repo, fileBuffer, fileBuffer.length)
+      .then(oid => ({ oid, filename }));
+  }));
+
+  fileBlobOids.forEach(({ oid, filename }) => {
+    treeBuilder.insert(filename, oid, 33188);
+  });
+
+  const newCommitTree = await treeBuilder.write();
+  const commitId = await repo.createCommit(
+    'HEAD',
+    authorSignature,
+    authorSignature,
+    'Initial commit',
+    newCommitTree,
+    []
+  );
+
+  const commit = await repo.getCommit(commitId);
+  return NodeGit.Branch.create(repo, 'master', commit, 1);
+};
+
+const modifyFile = async ({
+  owner,
+  repoName,
+  author,
+  email,
+  baseBranch,
+  commitBranch,
+  message,
+  oldFilepath,
+  filepath,
+  fileData
+}) => {
+  const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
+  const repo = await NodeGit.Repository.open(pathToRepo);
+  const lastCommitOnBranch = await repo.getBranchCommit(baseBranch);
+  const lastCommitTree = await lastCommitOnBranch.getTree();
+  const treeBuilder = await NodeGit.Treebuilder.create(repo, lastCommitTree);
+  const authorSignature = NodeGit.Signature.now(author, email);
+
+  if (baseBranch !== commitBranch) {
+    await NodeGit.Branch.create(repo, commitBranch, lastCommitOnBranch, 1);
+  }
+
+  const branchRef = `refs/heads/${commitBranch}`;
+
+  const fileBuffer = Buffer.from(fileData);
+  const oid = await NodeGit.Blob.createFromBuffer(repo, fileBuffer, fileBuffer.length);
+
+  if (oldFilepath !== filepath) treeBuilder.remove(oldFilepath);
+  treeBuilder.insert(filepath, oid, 33188);
+
+  const newCommitTree = await treeBuilder.write();
+  const commitId = await repo.createCommit(
+    branchRef,
+    authorSignature,
+    authorSignature,
+    message,
+    newCommitTree,
+    [lastCommitOnBranch]
+  );
+
+  return repo.getCommit(commitId);
+};
+
+const deleteFile = async ({
+  owner, repoName, branch, author, email, filepath
+}) => {
+  const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
+  const repo = await NodeGit.Repository.open(pathToRepo);
+  const lastCommitOnBranch = await repo.getBranchCommit(branch);
+  const lastCommitTree = await lastCommitOnBranch.getTree();
+  const treeBuilder = await NodeGit.Treebuilder.create(repo, lastCommitTree);
+  const authorSignature = NodeGit.Signature.now(author, email);
+  const branchRef = `refs/heads/${branch}`;
+
+  treeBuilder.remove(filepath);
+
+  const newCommitTree = await treeBuilder.write();
+  const commitId = await repo.createCommit(
+    branchRef,
+    authorSignature,
+    authorSignature,
+    `Deleted ${filepath}`,
+    newCommitTree,
+    [lastCommitOnBranch]
+  );
+
+  return repo.getCommit(commitId);
+};
+
+module.exports = {
+  getCommits, getCommitDiff, getCommitsByDate, modifyFile, deleteFile, initialCommit
+};

@@ -4,17 +4,7 @@ import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import PrivateRoute from '../PrivateRoute';
 import Spinner from '../../components/Spinner';
-import {
-  NotFound,
-  Login,
-  Forgot,
-  Reset,
-  MainPage,
-  Signup,
-  // GoogleCallback,
-  Dashboard,
-  CreateRepository
-} from '../../scenes';
+import { NotFound, Login, Forgot, Reset, MainPage, Signup, Dashboard, CreateRepository } from '../../scenes';
 import Settings from '../../scenes/Settings';
 import { fetchCurrentUser } from '../../routines/routines';
 import RepositoryPage from '../../scenes/Repository';

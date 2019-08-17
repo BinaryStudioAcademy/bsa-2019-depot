@@ -4,11 +4,11 @@ const fse = require('fs-extra');
 const path = require('path');
 const repoHelper = require('../../helpers/repo.helper');
 const repoRepository = require('../../data/repositories/repository.repository');
+const { initialCommit } = require('./commit.service');
 
 const createRepo = async ({
-  owner, name, userId, readme
+  owner, name, userId, initialData
 }) => {
-  let repo;
   let result = 'Repo was created';
   let oid;
   const pathToRepo = repoHelper.getPathToRepo(owner, name);
@@ -33,66 +33,9 @@ const createRepo = async ({
       repoHelper.createReadme(owner, name);
       index = indexResult;
 
-      // this file is in the root of the directory and doesn't need a full path
-      index.addByPath('README.md');
-
-      // this will write files to the index
-      index.write();
-      console.log('ff');
-      return index.writeTree();
-    })
-    .then((oidResult) => {
-      oid = oidResult;
-
-      return NodeGit.Reference.nameToId(repo, 'HEAD');
-    })
-    .then(head => repo.getCommit(head))
-    .then((parent) => {
-      author = NodeGit.Signature.now('Author Name', 'author@email.com');
-      committer = NodeGit.Signature.now('Commiter Name', 'commiter@email.com');
-
-      return repo.createCommit('HEAD', author, committer, 'Added the Readme file for theme builder', oid, [parent]);
-    })
-    .then(commitId => console.log('New Commit: ', commitId));
-
-  if (readme) {
-    // repoHelper.createReadme(owner, name);
-    let repo;
-    let index;
-    let oid;
-    const fileToStage = 'README.md';
-    const fileContent = `# ${name}`;
-    const directoryName = '/test';
-    console.log(pathToRepo);
-    await NodeGit.Repository.open(pathToRepo)
-      .then((repoResult) => {
-        repo = repoResult;
-        return repoResult.openIndex();
-      })
-      .then((indexResult) => {
-        index = indexResult;
-
-        // this file is in the root of the directory and doesn't need a full path
-        index.addByPath(fileToStage);
-
-        // this will write files to the index
-        index.write();
-
-        return index.writeTree();
-      })
-      .then((oidResult) => {
-        oid = oidResult;
-
-        return NodeGit.Reference.nameToId(repo, 'HEAD');
-      })
-      .then(head => repo.getCommit(head))
-      .then((parent) => {
-        author = NodeGit.Signature.now('Author Name', 'author@email.com');
-        committer = NodeGit.Signature.now('Commiter Name', 'commiter@email.com');
-
-        return repo.createCommit('HEAD', author, committer, 'Added the Readme file for theme builder', oid, [parent]);
-      })
-      .then(commitId => console.log('New Commit: ', commitId));
+  // Initial data has to contain 'email' (of user) and 'files' in form of [ { filename, content }, {... ]
+  if (initialData) {
+    await initialCommit({ owner, repoName: name, ...initialData });
   }
 
   repoRepository.create({

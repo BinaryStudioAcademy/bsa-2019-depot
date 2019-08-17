@@ -14,7 +14,11 @@ class RepositoryTab extends React.Component {
   }
 
   async getData() {
-    const { username, reponame } = this.props.match.params;
+    const {
+      match: {
+        params: { username, reponame }
+      }
+    } = this.props;
     const { isEmpty } = await checkIfEmpty({ owner: username, reponame });
     this.setState({
       ...this.state,
@@ -28,20 +32,34 @@ class RepositoryTab extends React.Component {
   }
 
   render() {
+    const {
+      history,
+      match: {
+        params: { username, reponame, branch }
+      }
+    } = this.props;
     const { isLoading, isEmpty } = this.state;
     if (isLoading) {
       return <Spinner />;
     }
 
-    return isEmpty ? <EmptyRepositoryTab /> : <CodeTab />;
+    return isEmpty ? (
+      <EmptyRepositoryTab />
+    ) : (
+      <CodeTab history={history} username={username} reponame={reponame} branch={branch || null} />
+    );
   }
 }
 
 RepositoryTab.propTypes = {
-  match: {
-    username: PropTypes.string.isRequired,
-    reponame: PropTypes.string.isRequired
-  }
+  history: PropTypes.any,
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      username: PropTypes.string.isRequired,
+      reponame: PropTypes.string.isRequired,
+      branch: PropTypes.string
+    })
+  })
 };
 
 export default RepositoryTab;

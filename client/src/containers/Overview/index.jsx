@@ -45,10 +45,10 @@ export class Overview extends React.Component {
   ];
 
   currentYearContribution = () => {
-    const { monthCommitsActivity } = this.props;
+    const { userActivityByDate } = this.props;
     const { currentYear } = this.state;
     let counter = 0;
-    for (const [date, commitCount] of Object.entries(monthCommitsActivity)) {
+    for (const [date, commitCount] of Object.entries(userActivityByDate)) {
       const year = date.slice(0, 4);
       if (+year === currentYear) {
         counter += commitCount;
@@ -57,12 +57,25 @@ export class Overview extends React.Component {
     return counter;
   };
 
+  getYearList = () => {
+    const { userActivityByDate } = this.props;
+    let years = [];
+    for (const date of Object.keys(userActivityByDate)) {
+      const year = date.slice(0, 4);
+      if (!years.includes(year)) {
+        years.push(year);
+      }
+    }
+    return years;
+  };
+
   until = new Date().toISOString().slice(0, 10);
 
   render() {
-    const { repositoriesNames, userActivityByDate, monthCommitsActivity } = this.props;
+    const { repositoriesNames, userActivityByDate, monthCommitsActivity, username } = this.props;
     const { activeIndex, currentYear } = this.state;
     const currentYearContribution = this.currentYearContribution();
+    const yearList = this.getYearList();
 
     return (
       <div>
@@ -77,7 +90,7 @@ export class Overview extends React.Component {
                 <div key={repo} className={styles.pinned_item}>
                   <div>
                     <Octicon className={styles.card_icon} icon={Repo} />
-                    <Link to="">{repo}</Link>
+                    <Link to={`${username}/${repo}`}>{repo}</Link>
                     <Octicon className={styles.card_icon_grab} icon={Grabber} />
                   </div>
                   <p className={styles.pinned_item_desc}> </p>
@@ -93,7 +106,7 @@ export class Overview extends React.Component {
             <Grid.Column mobile={16} computer={13}>
               <Container className={styles.pinned_header}>
                 <h2>
-                  {currentYearContribution || 'No'} contributions in {currentYear}
+                  {currentYearContribution || 'No'} contributions in {currentYear} year
                 </h2>
                 <Dropdown className={styles.dropdown_header} text="Contribution settings">
                   <Dropdown.Menu>
@@ -115,8 +128,12 @@ export class Overview extends React.Component {
               </Container>
 
               {Object.entries(monthCommitsActivity).length > 0 &&
-                Object.entries(monthCommitsActivity).map(([date, commitCount]) => {
+                Object.entries(monthCommitsActivity).map(([date, monthActivityObject]) => {
                   const monthAndYear = moment(date).format('MMMM YYYY');
+                  const commitCount = Object.keys(monthActivityObject).reduce(
+                    (acc, key) => acc + monthActivityObject[key],
+                    0
+                  );
                   return (
                     <Container key={monthAndYear} className={styles.contribution_activity}>
                       <h3>{monthAndYear}</h3>
@@ -133,7 +150,19 @@ export class Overview extends React.Component {
                             <p>Created {commitCount} commits</p>
                             <Octicon icon={activeIndex === `commit-${monthAndYear}` ? Fold : Unfold} />
                           </Accordion.Title>
-                          <Accordion.Content active={activeIndex === `commit-${monthAndYear}`}></Accordion.Content>
+                          <Accordion.Content active={activeIndex === `commit-${monthAndYear}`}>
+                            {Object.entries(monthActivityObject).map(([repoName, repoCommits]) => {
+                              const link = `${username}/${repoName}`;
+                              return (
+                                <div key={repoName}>
+                                  <Link to={link} className={styles.activity_link}>
+                                    {username}/{repoName}
+                                  </Link>{' '}
+                                  <span>{repoCommits} commits</span>
+                                </div>
+                              );
+                            })}
+                          </Accordion.Content>
                         </Accordion>
                       </div>
                     </Container>
@@ -146,21 +175,13 @@ export class Overview extends React.Component {
             </Grid.Column>
             <Grid.Column width={3} only="computer">
               <ul className={styles.contribution_year_list}>
-                <li>
-                  <Link to="" className={styles.contribution_year__active}>
-                    2019
-                  </Link>
-                </li>
-                <li>
-                  <Link to="" className={styles.contribution_year}>
-                    2018
-                  </Link>
-                </li>
-                <li>
-                  <Link to="" className={styles.contribution_year}>
-                    2017
-                  </Link>
-                </li>
+                {yearList.map(year => (
+                  <li key={year}>
+                    <Link to="" className={styles.contribution_year__active}>
+                      {year}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </Grid.Column>
           </Grid.Row>
@@ -183,9 +204,15 @@ Overview.propTypes = {
   repositoriesNames: PropTypes.array.isRequired
 };
 
-const mapStateToProps = ({ userStats: { userActivityByDate, monthCommitsActivity } }) => ({
+const mapStateToProps = ({
+  userStats: { userActivityByDate, monthCommitsActivity },
+  profile: {
+    currentUser: { username }
+  }
+}) => ({
   userActivityByDate,
-  monthCommitsActivity
+  monthCommitsActivity,
+  username
 });
 
 const mapDispatchToProps = dispatch => {
