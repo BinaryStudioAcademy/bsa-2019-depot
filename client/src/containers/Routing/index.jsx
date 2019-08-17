@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import PrivateRoute from '../PrivateRoute';
+import PublicRoute from '../PublicRoute';
 import Spinner from '../../components/Spinner';
 import { NotFound, Login, Forgot, Reset, MainPage, Signup, Dashboard, CreateRepository } from '../../scenes';
 import Settings from '../../scenes/Settings';
@@ -29,11 +30,11 @@ class Routing extends React.Component {
         <div className="content">
           <Header />
           <Switch>
-            <Route exact path="/registration" component={Signup} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/" component={MainPage} />
-            <Route exact path="/forgot" component={Forgot} />
-            <Route exact path="/reset/:hash" component={Reset} />
+            <PublicRoute exact path="/registration" component={Signup} />
+            <PublicRoute exact path="/login" component={Login} />
+            <PublicRoute exact path="/" component={MainPage} />
+            <PublicRoute exact path="/forgot" component={Forgot} />
+            <PublicRoute exact path="/reset/:hash" component={Reset} />
             <PrivateRoute path="/settings" component={Settings} />
             <PrivateRoute exact path="/organizations/new" component={CreateOrganization} />
             <PrivateRoute exact path="/new" component={CreateRepository} />
