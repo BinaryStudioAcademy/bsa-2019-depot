@@ -4,15 +4,18 @@ const associate = require('../db/associations');
 const User = orm.import('./user');
 const SshKey = orm.import('./sshkey');
 const Repository = orm.import('./repository');
+const Issue = orm.import('./issue');
 
 associate({
   User,
   SshKey,
-  Repository
+  Repository,
+  Issue
 });
 
 module.exports = {
   UserModel: User,
   SshKeyModel: SshKey,
-  RepositoryModel: Repository
+  RepositoryModel: Repository,
+  IssueModel: Issue
 };
