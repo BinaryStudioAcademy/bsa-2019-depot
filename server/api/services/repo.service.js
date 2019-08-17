@@ -16,7 +16,7 @@ const createRepo = async ({ owner, name, userId }) => {
       };
     })
     .catch(() => {
-      result = 'Error! Repos wasn`t created';
+      return Promise.reject({status: 404, message: 'Error! Repos wasn`t created'});
     });
 
   repoRepository.create({

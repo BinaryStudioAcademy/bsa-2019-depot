@@ -39,15 +39,10 @@ function getFetchArgs(args) {
 
 export async function throwIfResponseFailed(res) {
   if (!res.ok) {
-    let parsedException;
+    let parsedException = { status: 500, message: 'Something went wrong with request!' };
     try {
-      const response = await res.json();
-      if (response.message) parsedException = response.message;
-      if (response.status === 404) parsedException = 'Not found';
-      if (response.status === 500) parsedException = 'Server is currently unable to handle this request';
-    } catch (err) {
-      parsedException = 'Something went wrong with request!';
-    }
+      parsedException = await res.json();
+    } catch (err) {}
     throw parsedException;
   }
 }
@@ -58,7 +53,6 @@ export default async function callWebApi(args) {
     await throwIfResponseFailed(res);
     return res;
   } catch (err) {
-    toast.error(err);
-    throw err;
+    toast.error(`Status: ${err.status}. ${err.message}`);
   }
 }
