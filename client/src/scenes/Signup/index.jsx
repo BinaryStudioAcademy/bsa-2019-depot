@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Redirect, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Grid, Header, Form, Button, Segment, Message } from 'semantic-ui-react';
 import { signupRoutine } from '../../routines/routines';
@@ -166,13 +166,11 @@ class Signup extends React.Component {
   };
 
   render() {
-    const { isAuthorized } = this.props;
-    return isAuthorized ? <Redirect to="/" /> : this.renderForms();
+    return this.renderForms();
   }
 }
 
 Signup.propTypes = {
-  isAuthorized: PropTypes.bool.isRequired,
   signupRoutine: PropTypes.func.isRequired,
   signupError: PropTypes.string,
   loading: PropTypes.bool.isRequired,
@@ -180,9 +178,8 @@ Signup.propTypes = {
   error: PropTypes.string
 };
 
-const mapStateToProps = ({ profile: { isAuthorized, loading, signupError } }) => {
+const mapStateToProps = ({ profile: { loading, signupError } }) => {
   return {
-    isAuthorized,
     loading,
     signupError
   };

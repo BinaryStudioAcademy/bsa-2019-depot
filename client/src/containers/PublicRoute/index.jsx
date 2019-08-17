@@ -5,32 +5,36 @@ import { connect } from 'react-redux';
 
 const renderComponent = ({ Component, ...rest }) => <Component {...rest} />;
 
-const PrivateRoute = ({ isAuthorized, hasUsername, location, ...props }) =>
-  isAuthorized && hasUsername ? (
+const PublicRoute = ({ isAuthorized, hasUsername, username, location, ...props }) =>
+  !isAuthorized && !hasUsername ? (
     <Route {...props} render={renderComponent} />
-  ) : (
+  ) : isAuthorized && !hasUsername ? (
     <Redirect to={{ pathname: '/login', state: { from: location } }} />
+  ) : (
+    <Redirect to={{ pathname: `/${username}`, state: { from: location } }} />
   );
 
-PrivateRoute.propTypes = {
+PublicRoute.propTypes = {
   isAuthorized: PropTypes.bool,
   hasUsername: PropTypes.bool,
-  location: PropTypes.any
+  location: PropTypes.any,
+  username: PropTypes.string
 };
 
 renderComponent.propTypes = {
   Component: PropTypes.any
 };
 
-PrivateRoute.defaultProps = {
+PublicRoute.defaultProps = {
   location: undefined
 };
 
 const mapStateToProps = ({ profile }) => {
   return {
     isAuthorized: profile.isAuthorized,
-    hasUsername: Boolean(profile.currentUser.username)
+    hasUsername: Boolean(profile.currentUser.username),
+    username: profile.currentUser.username
   };
 };
 
-export default connect(mapStateToProps)(PrivateRoute);
+export default connect(mapStateToProps)(PublicRoute);
