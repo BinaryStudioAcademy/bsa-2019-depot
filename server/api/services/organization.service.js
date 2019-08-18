@@ -1,18 +1,24 @@
 const userRepository = require('../../data/repositories/user.repository');
 const OrgUserRepository = require('../../data/repositories/org-user.repository');
+const RoleRepository = require('../../data/repositories/role.repository');
 
 const createOrganization = async (data) => {
   const { username, userID } = data;
   const found = await userRepository.getByUsername(username);
-  const ownerID = 1;
 
   if (found) {
     return { status: false, error: 'such profile name already exists' };
   }
 
+  const {
+    dataValues: { id: ownerRoleId }
+  } = await RoleRepository.getByName('OWNER');
+  const profile = await userRepository.addUser({ ...data, type: 'ORG', fake: false });
+  const orgUser = await OrgUserRepository.create({ roleId: ownerRoleId, userId: userID, orgId: profile.id });
+
   return {
-    org_user: await OrgUserRepository.create({ roleId: ownerID, userId: userID, orgId: userID }),
-    profile: await userRepository.addUser({ ...data, type: 'ORG', fake: false }),
+    orgUser,
+    profile,
     status: true
   };
 };
