@@ -12,6 +12,7 @@ import FileViewPage from '../../containers/FileViewPage';
 import FileEditPage from '../../containers/FileEditPage';
 import PrivateRoute from '../../containers/PrivateRoute';
 import BranchesTab from '../../containers/BranchesTab/index';
+import CreateIssuePage from '../../containers/CreateIssue';
 
 import styles from './styles.module.scss';
 
@@ -42,6 +43,7 @@ class RepositoryPage extends React.Component {
               <Route exact path={`${match.path}/commits/:branch`} component={CommitsPage} />
               <Route exact path={`${match.path}/commit/:hash`} component={DiffCommitView} />
               <Route exact path={`${match.path}/issues`} component={IssuesTab} />
+              <Route exact path={`${match.path}/issues/new`} component={CreateIssuePage} />
               <Route exact path={`${match.path}/settings`} component={RepoSettings} />
               <Route exact path={`${match.path}/branches`} component={BranchesTab} />
               <PrivateRoute

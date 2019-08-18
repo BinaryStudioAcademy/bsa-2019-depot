@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { Loader, Icon, Input, Dropdown, Button } from 'semantic-ui-react';
 import { fetchIssues } from '../../routines/routines';
 import IssuesList from '../../components/IssuesList';
@@ -29,7 +30,8 @@ class IssuesTab extends React.Component {
 
   render() {
     const {
-      issuesData: { loading, issues }
+      issuesData: { loading, issues },
+      match
     } = this.props;
 
     // Mock data
@@ -67,7 +69,9 @@ class IssuesTab extends React.Component {
             labelPosition="left"
             placeholder="Filter by title"
           />
-          <Button content="New Issue" primary />
+          <Link to={`${match.url}/new`}>
+            <Button content="New Issue" primary />
+          </Link>
         </div>
         <div className={styles.issuesContainer}>
           <div className={styles.issuesHeader}>
@@ -126,6 +130,12 @@ IssuesTab.propTypes = {
     loading: PropTypes.bool.isRequired,
     error: PropTypes.string,
     issues: PropTypes.array
+  }).isRequired,
+  match: PropTypes.exact({
+    params: PropTypes.object.isRequired,
+    isExact: PropTypes.bool.isRequired,
+    path: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired
   }).isRequired,
   fetchIssues: PropTypes.func.isRequired
 };
