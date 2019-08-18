@@ -34,7 +34,7 @@ const getCommits = async ({ user, name, branch }) => {
 
 const getCommitCount = async ({ user, name, branch }) => {
   const commitListForBranch = await getCommits({ user, name, branch });
-  return commitListForBranch.length;
+  return { count: commitListForBranch.length };
 };
 
 const getCommitsByDate = async (data) => {

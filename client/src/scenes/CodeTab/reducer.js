@@ -1,4 +1,4 @@
-import { fetchLastCommitOnBranch, fetchFileTree } from '../../routines/routines';
+import { fetchLastCommitOnBranch, fetchFileTree, fetchCommitCount } from '../../routines/routines';
 
 const initialLastCommitState = {
   commit: {
@@ -18,6 +18,12 @@ const initialFileTreeState = {
     parentDir: '',
     currentPath: ''
   },
+  loading: false,
+  error: null
+};
+
+const initialCommitCountState = {
+  count: {},
   loading: false,
   error: null
 };
@@ -67,6 +73,33 @@ export const fileTreeReducer = (state = initialFileTreeState, action) => {
       error: action.payload
     };
   case fetchFileTree.FULFILL:
+    return {
+      ...state,
+      loading: false
+    };
+  default:
+    return state;
+  }
+};
+
+export const commitCountReducer = (state = initialCommitCountState, action) => {
+  switch (action.type) {
+  case fetchCommitCount.TRIGGER:
+    return {
+      ...state,
+      loading: true
+    };
+  case fetchCommitCount.SUCCESS:
+    return {
+      ...state,
+      count: action.payload
+    };
+  case fetchCommitCount.FAILURE:
+    return {
+      ...state,
+      error: action.payload
+    };
+  case fetchCommitCount.FULFILL:
     return {
       ...state,
       loading: false
