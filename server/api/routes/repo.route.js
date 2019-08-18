@@ -7,7 +7,8 @@ const {
   checkName,
   isEmpty,
   forkRepo,
-  getReposData
+  getReposData,
+  setStar
 } = require('../services/repo.service');
 const { getCommits, getCommitDiff } = require('../services/commit.service');
 const { getBranches, getBranchTree, getLastCommitOnBranch } = require('../services/branch.service');
@@ -114,6 +115,12 @@ router
 
     forkRepo({ username, owner, repoName })
       .then(result => res.send(result))
+      .catch(next);
+  })
+  .put('/star', (req, res, next) => {
+    const { userId, repositoryId } = req.body;
+    setStar(userId, repositoryId)
+      .then(star => res.send(star))
       .catch(next);
   });
 

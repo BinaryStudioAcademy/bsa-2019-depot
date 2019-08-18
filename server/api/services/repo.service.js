@@ -4,6 +4,7 @@ const fse = require('fs-extra');
 
 const repoHelper = require('../../helpers/repo.helper');
 const repoRepository = require('../../data/repositories/repository.repository');
+const starRepository = require('../../data/repositories/star.repository');
 
 const createRepo = async ({ owner, name, userId }) => {
   let result = 'Repo was created';
@@ -109,6 +110,16 @@ const forkRepo = async ({ username, owner, repoName }) => {
   }
 };
 
+const setStar = async (userId, repositoryId) => {
+  const star = await starRepository.getStar(userId, repositoryId);
+
+  const result = star
+    ? await starRepository.deleteById(star.id)
+    : await starRepository.create({ userId, repositoryId });
+
+  return Number.isInteger(result) ? {} : starRepository.getStar(userId, repositoryId);
+};
+
 module.exports = {
   createRepo,
   renameRepo,
@@ -117,5 +128,6 @@ module.exports = {
   checkName,
   isEmpty,
   forkRepo,
-  getReposData
+  getReposData,
+  setStar
 };
