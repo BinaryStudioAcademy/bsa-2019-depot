@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import RepoFileTree from '../../components/RepoFileTree/index';
+import * as commitsService from '../../services/commitsService';
 import RepoReadme from '../../components/RepoReadme/index';
-import { fetchBranches, fetchFileTree, fetchLastCommitOnBranch, fetchCommitCount } from '../../routines/routines';
+import { fetchBranches, fetchFileTree, fetchLastCommitOnBranch } from '../../routines/routines';
 
 import Octicon, { getIconByName } from '@primer/octicons-react';
 import { Container, Button, Header, Dropdown, Input, Popup, Segment, Menu, Loader, Divider } from 'semantic-ui-react';
@@ -14,7 +15,8 @@ class CodeTab extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      branch: 'master'
+      branch: 'master',
+      commitCount: 0
     };
     this.onBranchChange = this.onBranchChange.bind(this);
   }
@@ -27,11 +29,8 @@ class CodeTab extends React.Component {
       branch: actualBranch
     });
     history.push(`/${username}/${reponame}/tree/${actualBranch}`);
-    this.props.fetchCommitCount({
-      username,
-      reponame,
-      branch: actualBranch
-    });
+    commitsService.getCommitCount(username, reponame, actualBranch)
+      .then(count => this.setState({ commitCount: count.count }));
     this.props.fetchLastCommitOnBranch({
       username,
       reponame,
@@ -55,11 +54,8 @@ class CodeTab extends React.Component {
         const { branch } = this.state;
         history.push(`/${username}/${reponame}/tree/${data.value}`);
 
-        this.props.fetchCommitCount({
-          username,
-          reponame,
-          branch
-        });
+        commitsService.getCommitCount(username, reponame, branch)
+          .then(count => this.setState({ commitCount: count.count }));
         this.props.fetchLastCommitOnBranch({
           username,
           reponame,
@@ -80,8 +76,8 @@ class CodeTab extends React.Component {
   };
 
   render() {
-    const { branch } = this.state;
-    const { username, reponame, lastCommitData, branchesData, fileTreeData, history, fetchFileTree, commitCountData: { count: { count } } } = this.props;
+    const { branch, commitCount } = this.state;
+    const { username, reponame, lastCommitData, branchesData, fileTreeData, history, fetchFileTree } = this.props;
     const { branches } = branchesData;
     const branchesCount = branches ? branches.length : 0;
 
@@ -107,7 +103,7 @@ class CodeTab extends React.Component {
             <Menu.Item>
               <Octicon icon={getIconByName('history')} />
               <Link className={styles.repoMetaDataLinks} to={`/${username}/${reponame}/commits/${branch}`}>
-                <b>{count} </b> commits
+                <b>{commitCount} </b> commits
               </Link>
             </Menu.Item>
             <Menu.Item>
@@ -248,15 +244,13 @@ class CodeTab extends React.Component {
 const mapStateToProps = ({ lastCommitData, branchesData, fileTreeData, commitCountData }) => ({
   lastCommitData,
   branchesData,
-  fileTreeData,
-  commitCountData
+  fileTreeData
 });
 
 const mapDispatchToProps = {
   fetchLastCommitOnBranch,
   fetchBranches,
-  fetchFileTree,
-  fetchCommitCount
+  fetchFileTree
 };
 
 CodeTab.propTypes = {
@@ -276,15 +270,9 @@ CodeTab.propTypes = {
     error: PropTypes.string,
     tree: PropTypes.object
   }).isRequired,
-  commitCountData: PropTypes.exact({
-    loading: PropTypes.bool.isRequired,
-    error: PropTypes.string,
-    count: PropTypes.object.isRequired
-  }).isRequired,
   fetchLastCommitOnBranch: PropTypes.func.isRequired,
   fetchBranches: PropTypes.func.isRequired,
   fetchFileTree: PropTypes.func.isRequired,
-  fetchCommitCount: PropTypes.func.isRequired,
   history: PropTypes.object,
   location: PropTypes.object.isRequired,
   match: PropTypes.object,

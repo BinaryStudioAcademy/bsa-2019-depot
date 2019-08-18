@@ -5,7 +5,7 @@ import { forgotReducer as forgot } from '../scenes/Forgot/reducer';
 import { resetReducer as reset } from '../scenes/Reset/reducer';
 import { commitsData } from '../containers/CommitsPage/reducer';
 import { diffsData } from '../components/DiffCommitView/reducer';
-import { lastCommitReducer, fileTreeReducer, commitCountReducer } from '../scenes/CodeTab/reducer';
+import { lastCommitReducer, fileTreeReducer } from '../scenes/CodeTab/reducer';
 import { repoSettingsData } from '../containers/SettingsTab/reducer';
 import profile from '../containers/Profile/reducer';
 import { userStatsReducer } from '../scenes/Dashboard/reducer';
@@ -24,6 +24,5 @@ export default combineReducers({
   fileTreeData: fileTreeReducer,
   repoSettingsData,
   userStats: userStatsReducer,
-  forkRepo,
-  commitCountData: commitCountReducer
+  forkRepo
 });

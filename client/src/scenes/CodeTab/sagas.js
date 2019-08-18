@@ -1,7 +1,6 @@
 import { takeEvery, put, call, all } from 'redux-saga/effects';
 import * as branchesService from '../../services/branchesService';
-import * as commitsService from '../../services/commitsService';
-import { fetchLastCommitOnBranch, fetchFileTree, fetchCommitCount } from '../../routines/routines';
+import { fetchLastCommitOnBranch, fetchFileTree } from '../../routines/routines';
 
 function* lastCommitRequest({ payload: { username, reponame, branch } }) {
   try {
@@ -39,24 +38,6 @@ function* watchFileTreeRequest() {
   yield takeEvery(fetchFileTree.TRIGGER, fileTreeRequest);
 }
 
-function* commitCountRequest({ payload: { username, reponame, branch } }) {
-  try {
-    yield put(fetchCommitCount.request());
-
-    const response = yield call(commitsService.getCommitCount, username, reponame, branch);
-
-    yield put(fetchCommitCount.success(response));
-  } catch (error) {
-    yield put(fetchCommitCount.failure(error.message));
-  } finally {
-    yield put(fetchCommitCount.fulfill());
-  }
-}
-
-function* watchCommitCountRequest() {
-  yield takeEvery(fetchCommitCount.TRIGGER, commitCountRequest);
-}
-
 export default function* codeTabSagas() {
-  yield all([watchLastCommitRequest(), watchFileTreeRequest(), watchCommitCountRequest()]);
+  yield all([watchLastCommitRequest(), watchFileTreeRequest()]);
 }
