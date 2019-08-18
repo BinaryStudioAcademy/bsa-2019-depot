@@ -7,7 +7,19 @@ import RepoReadme from '../../components/RepoReadme/index';
 import { fetchBranches, fetchFileTree, fetchLastCommitOnBranch } from '../../routines/routines';
 
 import Octicon, { getIconByName } from '@primer/octicons-react';
-import { Container, Button, Header, Dropdown, Input, Popup, Segment, Menu, Loader, Divider } from 'semantic-ui-react';
+import {
+  Container,
+  Button,
+  Header,
+  Dropdown,
+  Input,
+  Popup,
+  Segment,
+  Menu,
+  Loader,
+  Divider,
+  Message
+} from 'semantic-ui-react';
 import styles from './styles.module.scss';
 
 class CodeTab extends React.Component {
@@ -69,11 +81,55 @@ class CodeTab extends React.Component {
     history.push(location.pathname.replace('/tree', '/new'));
   };
 
+  onReadmeEdit = () => {
+    const {
+      history,
+      match,
+      fileTreeData: {
+        tree: { currentPath }
+      }
+    } = this.props;
+    const { username, reponame, branch } = match.params;
+
+    history.push(`/${username}/${reponame}/edit/${branch}/${currentPath}/README.md`);
+  };
+
   render() {
     const { branch } = this.state;
-    const { username, reponame, lastCommitData, branchesData, fileTreeData, history, fetchFileTree } = this.props;
+    const {
+      username,
+      currentUser,
+      reponame,
+      lastCommitData,
+      branchesData,
+      fileTreeData,
+      history,
+      fetchFileTree
+    } = this.props;
     const { branches } = branchesData;
+    const { files, currentPath } = fileTreeData.tree;
+    const readme = files && files.find(file => file.name === 'README.md');
     const branchesCount = branches ? branches.length : 0;
+
+    let readmeSection;
+    if (readme) {
+      readmeSection = (
+        <RepoReadme
+          content={readme.content}
+          showEdit={currentUser && currentUser === username}
+          onReadmeEdit={this.onReadmeEdit}
+        />
+      );
+    } else if (!currentPath) {
+      readmeSection = (
+        <Message color="blue" className={styles.readmeTip}>
+          Help people interested in this repository understand your project by adding a README.
+          <Button className={styles.addReadme} size="small" compact positive>
+            Add a README
+          </Button>
+        </Message>
+      );
+    }
 
     return lastCommitData.loading || fileTreeData.loading || branchesData.loading ? (
       <div>
@@ -229,16 +285,17 @@ class CodeTab extends React.Component {
           history={history}
           fetchFileTree={fetchFileTree}
         />
-        <RepoReadme />
+        {readmeSection}
       </Container>
     );
   }
 }
 
-const mapStateToProps = ({ lastCommitData, branchesData, fileTreeData }) => ({
+const mapStateToProps = ({ lastCommitData, branchesData, fileTreeData, profile }) => ({
   lastCommitData,
   branchesData,
-  fileTreeData
+  fileTreeData,
+  currentUser: profile.currentUser.username
 });
 
 const mapDispatchToProps = {
@@ -270,6 +327,7 @@ CodeTab.propTypes = {
   history: PropTypes.object,
   location: PropTypes.object.isRequired,
   match: PropTypes.object,
+  currentUser: PropTypes.string,
   username: PropTypes.string.isRequired,
   reponame: PropTypes.string.isRequired,
   branch: PropTypes.string

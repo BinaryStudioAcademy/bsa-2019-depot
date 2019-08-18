@@ -46,11 +46,17 @@ const traverseFileTree = async (user, name, branch, tree) => {
           commitMessage: lastModifiedCommit.message()
         });
       } else {
+        let readmeContent;
+        if (entry.name() === 'README.md') {
+          // eslint-disable-next-line no-await-in-loop
+          readmeContent = (await entry.getBlob()).toString();
+        }
         fileTree.files.push({
           sha: entry.sha(),
           name: entry.name(),
           time: lastModifiedCommit.date(),
           commitMessage: lastModifiedCommit.message(),
+          ...(readmeContent ? { content: readmeContent } : {})
         });
       }
     } catch (error) {
