@@ -24,11 +24,12 @@ class CreateOrganization extends Component {
   });
 
   onSubmit = (values, { setSubmitting }) => {
-    this.props.createOrg(values);
+    this.props.createOrg({ ...values });
   };
 
   render() {
     const initialValues = { username: '', email: '' };
+    const userID = this.props.currentUser.id;
     const { company, loading, error: serverError } = this.props;
 
     return company ? (
@@ -49,7 +50,11 @@ class CreateOrganization extends Component {
           </Step.Group>
           <Divider hidden />
 
-          <Formik initialValues={initialValues} onSubmit={this.onSubmit} validationSchema={this.newOrgSchema}>
+          <Formik
+            initialValues={{ ...initialValues, userID: userID }}
+            onSubmit={this.onSubmit}
+            validationSchema={this.newOrgSchema}
+          >
             {({ isSubmitting, errors, touched }) => (
               <Form className="ui form">
                 <Header as="h3">
@@ -115,10 +120,11 @@ CreateOrganization.propTypes = {
   loading: PropTypes.bool,
   username: PropTypes.string,
   company: PropTypes.string,
-  error: PropTypes.string
+  error: PropTypes.string,
+  currentUser: PropTypes.object
 };
 
-const mapStateToProps = state => ({ ...state.createOrg });
+const mapStateToProps = state => ({ ...state.createOrg, ...state.profile });
 
 const mapDispatchToProps = { createOrg };
 
