@@ -109,7 +109,7 @@ export class Overview extends React.Component {
         <Grid>
           <Grid.Row columns={2}>
             <Grid.Column mobile={16} computer={13}>
-              <div className={styles.section}>
+              <Container className={styles.section}>
                 <Container className={styles.section_header}>
                   <h2>
                     {currentYearContribution || 'No'} contributions in {currentYear} year
@@ -121,14 +121,16 @@ export class Overview extends React.Component {
                     </Dropdown.Menu>
                   </Dropdown>
                 </Container>
-                <Calendar
-                  values={userActivityByDate}
-                  until={this.until}
-                  weekNames={this.weekNames}
-                  monthNames={this.monthNames}
-                  panelColors={this.panelColors}
-                />
-              </div>
+                <div className={styles.calendarContainer}>
+                  <Calendar
+                    values={userActivityByDate}
+                    until={this.until}
+                    weekNames={this.weekNames}
+                    monthNames={this.monthNames}
+                    panelColors={this.panelColors}
+                  />
+                </div>
+              </Container>
 
               <Container className={styles.section_header}>
                 <h2>Contribution activity</h2>
@@ -184,7 +186,7 @@ export class Overview extends React.Component {
               <ul className={styles.contribution_year_list}>
                 {yearList.map(year => (
                   <li key={year}>
-                    <Link to="" className={styles.contribution_year__active}>
+                    <Link to="" className={[styles.contribution_year, styles.active].join(' ')}>
                       {year}
                     </Link>
                   </li>
