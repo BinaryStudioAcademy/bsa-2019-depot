@@ -11,6 +11,7 @@ import { fetchCurrentUser } from '../../routines/routines';
 import RepositoryPage from '../../scenes/Repository';
 import Header from '../Header';
 import Footer from '../../components/Footer';
+import InviteMembersTab from '../InviteMembersTab';
 
 import './styles.module.scss';
 
@@ -29,6 +30,7 @@ class Routing extends React.Component {
         <div className="content">
           <Header />
           <Switch>
+            <PrivateRoute exact path="/orgs/:name/invite" component={InviteMembersTab} />
             <PublicRoute exact path="/registration" component={Signup} />
             <PublicRoute exact path="/login" component={Login} />
             <PublicRoute exact path="/" component={MainPage} />
