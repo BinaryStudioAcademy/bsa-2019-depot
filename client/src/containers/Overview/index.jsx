@@ -79,51 +79,60 @@ export class Overview extends React.Component {
 
     return (
       <div>
-        <Container className={styles.pinned_header}>
-          <h2>Pinned</h2>
-          <Link to="">Customize your pins</Link>
-        </Container>
-        <Container className={styles.favorite_repos_wrapper}>
-          {repositoriesNames &&
-            repositoriesNames.map(repo => {
-              return (
-                <div key={repo} className={styles.pinned_item}>
-                  <div>
-                    <Octicon className={styles.card_icon} icon={Repo} />
-                    <Link to={`${username}/${repo}`}>{repo}</Link>
-                    <Octicon className={styles.card_icon_grab} icon={Grabber} />
+        <div className={styles.section}>
+          <Container className={styles.section_header}>
+            <h2>Pinned</h2>
+            <Link to="" className={styles.header_actions}>
+              Customize your pins
+            </Link>
+          </Container>
+          <Container className={styles.favorite_repos_wrapper}>
+            {repositoriesNames &&
+              repositoriesNames.map(repo => {
+                return (
+                  <div key={repo} className={styles.pinned_item}>
+                    <div>
+                      <Octicon className={styles.card_icon} icon={Repo} />
+                      <Link to={`${username}/${repo}`}>{repo}</Link>
+                      <Octicon className={styles.card_icon_grab} icon={Grabber} />
+                    </div>
+                    <p className={styles.pinned_item_desc}> </p>
+                    <p className={styles.pinned_item_lang}>
+                      <span></span>Javascript
+                    </p>
                   </div>
-                  <p className={styles.pinned_item_desc}> </p>
-                  <p className={styles.pinned_item_lang}>
-                    <span></span>Javascript
-                  </p>
-                </div>
-              );
-            })}
-        </Container>
+                );
+              })}
+          </Container>
+        </div>
+
         <Grid>
           <Grid.Row columns={2}>
             <Grid.Column mobile={16} computer={13}>
-              <Container className={styles.pinned_header}>
-                <h2>
-                  {currentYearContribution || 'No'} contributions in {currentYear} year
-                </h2>
-                <Dropdown className={styles.dropdown_header} text="Contribution settings">
-                  <Dropdown.Menu>
-                    <Dropdown.Item text="Private contributions" />
-                    <Dropdown.Item text="Activity overview" />
-                  </Dropdown.Menu>
-                </Dropdown>
+              <Container className={styles.section}>
+                <Container className={styles.section_header}>
+                  <h2>
+                    {currentYearContribution || 'No'} contributions in {currentYear} year
+                  </h2>
+                  <Dropdown className={styles.header_actions} text="Contribution settings">
+                    <Dropdown.Menu>
+                      <Dropdown.Item text="Private contributions" />
+                      <Dropdown.Item text="Activity overview" />
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </Container>
+                <div className={styles.calendarContainer}>
+                  <Calendar
+                    values={userActivityByDate}
+                    until={this.until}
+                    weekNames={this.weekNames}
+                    monthNames={this.monthNames}
+                    panelColors={this.panelColors}
+                  />
+                </div>
               </Container>
-              <Calendar
-                values={userActivityByDate}
-                until={this.until}
-                weekNames={this.weekNames}
-                monthNames={this.monthNames}
-                panelColors={this.panelColors}
-              />
 
-              <Container className={styles.pinned_header}>
+              <Container className={styles.section_header}>
                 <h2>Contribution activity</h2>
               </Container>
 
@@ -177,7 +186,7 @@ export class Overview extends React.Component {
               <ul className={styles.contribution_year_list}>
                 {yearList.map(year => (
                   <li key={year}>
-                    <Link to="" className={styles.contribution_year__active}>
+                    <Link to="" className={[styles.contribution_year, styles.active].join(' ')}>
                       {year}
                     </Link>
                   </li>
