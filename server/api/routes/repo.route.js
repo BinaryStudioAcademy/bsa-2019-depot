@@ -13,6 +13,7 @@ const { getCommits, getCommitDiff } = require('../services/commit.service');
 const {
   getBranches, getBranchTree, getLastCommitOnBranch, getFileContent
 } = require('../services/branch.service');
+const ownerOnlyMiddleware = require('../middlewares/owner-only.middleware');
 
 const router = Router();
 
@@ -90,7 +91,7 @@ router
       .then(commit => res.send(commit))
       .catch(next);
   })
-  .get('/:owner/:repoName/settings', (req, res) => {
+  .get('/:owner/:repoName/settings', ownerOnlyMiddleware, (req, res) => {
     res.sendStatus(200);
     /* Can be used in future to get settings data from DB
     const { repoName } = req.params;
@@ -99,14 +100,14 @@ router
       .catch(next);
     */
   })
-  .post('/:owner/:repoName/settings/rename', (req, res, next) => {
+  .post('/:owner/:repoName/settings/rename', ownerOnlyMiddleware, (req, res, next) => {
     const { repoName } = req.params;
     const { newName } = req.body;
     renameRepo({ repoName, newName, username: req.user.username })
       .then(result => res.send(result))
       .catch(next);
   })
-  .delete('/:owner/:repoName/settings', (req, res, next) => {
+  .delete('/:owner/:repoName/settings', ownerOnlyMiddleware, (req, res, next) => {
     const { repoName } = req.params;
     deleteRepo({ repoName, username: req.user.username })
       .then(result => res.send(result))
