@@ -1,7 +1,5 @@
 module.exports = (sequelize) => {
-  const Star = sequelize.define('star', {
-    timestamps: false
-  });
+  const Star = sequelize.define('star', {});
 
   return Star;
 };

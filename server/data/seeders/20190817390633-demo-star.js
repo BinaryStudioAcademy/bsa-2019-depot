@@ -15,7 +15,8 @@ module.exports = {
       const repositoriesQuery = 'SELECT id FROM "repositories"';
       const repositories = await queryInterface.sequelize.query(repositoriesQuery, options);
 
-      const starsMappedSeed = starsSeed.map(() => ({
+      const starsMappedSeed = starsSeed.map(star => ({
+        ...star,
         userId: users[randomIndex(users.length)].id,
         repositoryId: repositories[randomIndex(repositories.length)].id
       }));
