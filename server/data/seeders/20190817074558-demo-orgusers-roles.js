@@ -38,7 +38,7 @@ module.exports = {
       ...organizations.map(org => rndIndSet(users).map((id, ind) => ({
         userId: users[id].id,
         orgId: org.id,
-        roleId: ind ? ownerRoleId : memberRoleId,
+        roleId: ind ? memberRoleId : ownerRoleId,
         createdAt: now,
         updatedAt: now
       })))
