@@ -1,5 +1,6 @@
 const BaseRepository = require('./base.repository');
-const { RepositoryModel } = require('../models/index');
+const { RepositoryModel, UserModel } = require('../models/index');
+const sequelize = require('../db/connection');
 
 class RepositoryRepository extends BaseRepository {
   getByUser(userId) {
@@ -8,6 +9,29 @@ class RepositoryRepository extends BaseRepository {
 
   addRepository({ ...repositoryData }) {
     return this.create(repositoryData);
+  }
+
+  getByUsername(username) {
+    return this.model.findAll({
+      attributes: {
+        include: [
+          [
+            sequelize.literal(`
+            (SELECT COUNT(*)
+            FROM "stars"
+            WHERE "repository"."id" = "stars"."repositoryId")`),
+            'starsCount'
+          ]
+        ]
+      },
+      include: [
+        {
+          model: UserModel,
+          attributes: [],
+          where: { username }
+        }
+      ]
+    });
   }
 }
 
