@@ -32,6 +32,11 @@ const getCommits = async ({ user, name, branch }) => {
   return allCommits;
 };
 
+const getCommitCount = async ({ user, name, branch }) => {
+  const commitListForBranch = await getCommits({ user, name, branch });
+  return commitListForBranch.length;
+};
+
 const getCommitsByDate = async (data) => {
   const { user } = data;
   const repoList = await getReposNames(data);
@@ -211,5 +216,6 @@ module.exports = {
   getCommitsByDate,
   modifyFile,
   deleteFile,
-  initialCommit
+  initialCommit,
+  getCommitCount
 };
