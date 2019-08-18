@@ -11,7 +11,7 @@ const createOrganization = async (data) => {
   }
 
   return {
-    org_user: await OrgUserRepository.create({ roleId: ownerID, userId: userID }),
+    org_user: await OrgUserRepository.create({ roleId: ownerID, userId: userID, orgId: userID }),
     profile: await userRepository.addUser({ ...data, type: 'ORG', fake: false }),
     status: true
   };
