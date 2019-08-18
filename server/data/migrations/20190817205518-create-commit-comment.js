@@ -28,6 +28,14 @@ module.exports = {
         key: 'sha'
       }
     },
+    userId: {
+      allowNull: false,
+      type: Sequelize.UUID,
+      references: {
+        model: 'users',
+        key: 'id'
+      }
+    },
     createdAt: {
       allowNull: false,
       type: Sequelize.DATE

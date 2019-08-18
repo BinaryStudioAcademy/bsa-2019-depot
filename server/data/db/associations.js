@@ -18,5 +18,8 @@ module.exports = (models) => {
 
   Repository.hasMany(CommitComment);
   CommitComment.belongsTo(Repository);
+
+  User.hasMany(CommitComment);
+  CommitComment.belongsTo(User);
   // Repository.hasOne(DefaultBranch);
 };
