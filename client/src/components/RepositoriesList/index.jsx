@@ -59,7 +59,7 @@ export class RepositoriesList extends React.Component {
           </div>
         </Container>
         {repositories.map(repo => {
-          return <RepositoryItem repo={repo.name} username={username} key={repo.name} />;
+          return <RepositoryItem repo={repo} username={username} key={repo.name} />;
         })}
       </Container>
     );
