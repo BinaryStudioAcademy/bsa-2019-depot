@@ -4,10 +4,10 @@ const {
   createRepo,
   renameRepo,
   deleteRepo,
-  getReposNames,
   checkName,
   isEmpty,
-  forkRepo
+  forkRepo,
+  getReposData
 } = require('../services/repo.service');
 const { getCommits, getCommitDiff } = require('../services/commit.service');
 const { getBranches, getBranchTree, getLastCommitOnBranch } = require('../services/branch.service');
@@ -33,10 +33,16 @@ router
       })
       .catch(next);
   })
+  // .get('/:owner/repos', (req, res, next) => {
+  //   const { filterWord, limit } = req.body;
+  //   const { owner } = req.params;
+  //   getReposNames({ user: owner, filter: filterWord, limit })
+  //     .then(repos => res.send(repos))
+  //     .catch(next);
+  // })
   .get('/:owner/repos', (req, res, next) => {
-    const { filterWord, limit } = req.body;
     const { owner } = req.params;
-    getReposNames({ user: owner, filter: filterWord, limit })
+    getReposData({ username: owner })
       .then(repos => res.send(repos))
       .catch(next);
   })
