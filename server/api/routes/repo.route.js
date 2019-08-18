@@ -10,7 +10,9 @@ const {
   forkRepo
 } = require('../services/repo.service');
 const { getCommits, getCommitDiff } = require('../services/commit.service');
-const { getBranches, getBranchTree, getLastCommitOnBranch } = require('../services/branch.service');
+const {
+  getBranches, getBranchTree, getLastCommitOnBranch, getFileContent
+} = require('../services/branch.service');
 
 const router = Router();
 
@@ -68,6 +70,18 @@ router
       pathToDir
     })
       .then(tree => res.send(tree))
+      .catch(next);
+  })
+  .get('/:owner/:repoName/:branchName/file', (req, res, next) => {
+    const { owner, repoName, branchName } = req.params;
+    const { filepath } = req.query;
+    getFileContent({
+      user: owner,
+      name: repoName,
+      branch: branchName,
+      filepath
+    })
+      .then(fileData => res.send(fileData))
       .catch(next);
   })
   .get('/:owner/:repoName/:branchName/last-commit', (req, res, next) => {

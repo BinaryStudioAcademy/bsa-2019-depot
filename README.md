@@ -175,6 +175,19 @@ Example:
 `fix: Add error handling` 👍  
 ~~`fixed error handling.`~~ 👎
 
+## Response format and error handling
+All error and success notifications should be in this format:
+```js 
+{ status: 401, message: 'Wrong password' }
+```
+Where status is a status code(200,401,404,500).
+And message is a string we want to show user.
+
+To make an error notification, do this: 
+```js
+return Promise.reject({ status: 401, message: 'Wrong password' });
+````
+
 ## Code linting and formatting
 
 For good team coding experience we are using two tools [eslint](https://www.npmjs.com/package/eslint) and [prettier](https://www.npmjs.com/package/prettier). They are checking created/modified code on `git commit` command by [husky](https://www.npmjs.com/package/husky) + [lint-staged](https://www.npmjs.com/package/lint-staged).

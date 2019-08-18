@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import RepoFileTree from '../../components/RepoFileTree/index';
 import RepoReadme from '../../components/RepoReadme/index';
 import { fetchBranches, fetchFileTree, fetchLastCommitOnBranch } from '../../routines/routines';
@@ -45,7 +45,8 @@ class CodeTab extends React.Component {
         branch: data.value
       },
       () => {
-        const { username, reponame, history } = this.props;
+        const { match, history } = this.props;
+        const { username, reponame } = match.params;
         const { branch } = this.state;
         history.push(`/${username}/${reponame}/tree/${data.value}`);
 
@@ -61,6 +62,11 @@ class CodeTab extends React.Component {
         });
       }
     );
+  };
+
+  onCreateFile = () => {
+    const { location, history } = this.props;
+    history.push(location.pathname.replace('/tree', '/new'));
   };
 
   render() {
@@ -160,7 +166,9 @@ class CodeTab extends React.Component {
           </div>
           <div className={styles.repoActions}>
             <Button.Group>
-              <Button className={styles.actionButton}>Create New File</Button>
+              <Button className={styles.actionButton} onClick={this.onCreateFile}>
+                Create New File
+              </Button>
               <Button className={styles.actionButton}>Upload files</Button>
               <Button className={styles.actionButton}>Find file</Button>
             </Button.Group>
@@ -260,6 +268,8 @@ CodeTab.propTypes = {
   fetchBranches: PropTypes.func.isRequired,
   fetchFileTree: PropTypes.func.isRequired,
   history: PropTypes.object,
+  location: PropTypes.object.isRequired,
+  match: PropTypes.object,
   username: PropTypes.string.isRequired,
   reponame: PropTypes.string.isRequired,
   branch: PropTypes.string
@@ -268,4 +278,4 @@ CodeTab.propTypes = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CodeTab);
+)(withRouter(CodeTab));
