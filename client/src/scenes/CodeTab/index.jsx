@@ -71,7 +71,16 @@ class CodeTab extends React.Component {
 
   render() {
     const { branch } = this.state;
-    const { username, reponame, lastCommitData, branchesData, fileTreeData, history, fetchFileTree } = this.props;
+    const {
+      username,
+      currentUser,
+      reponame,
+      lastCommitData,
+      branchesData,
+      fileTreeData,
+      history,
+      fetchFileTree
+    } = this.props;
     const { branches } = branchesData;
     const branchesCount = branches ? branches.length : 0;
 
@@ -166,10 +175,14 @@ class CodeTab extends React.Component {
           </div>
           <div className={styles.repoActions}>
             <Button.Group>
-              <Button className={styles.actionButton} onClick={this.onCreateFile}>
-                Create New File
-              </Button>
-              <Button className={styles.actionButton}>Upload files</Button>
+              {currentUser && currentUser === username && (
+                <>
+                  <Button className={styles.actionButton} onClick={this.onCreateFile}>
+                    Create New File
+                  </Button>
+                  <Button className={styles.actionButton}>Upload files</Button>
+                </>
+              )}
               <Button className={styles.actionButton}>Find file</Button>
             </Button.Group>
             <Popup
@@ -235,10 +248,11 @@ class CodeTab extends React.Component {
   }
 }
 
-const mapStateToProps = ({ lastCommitData, branchesData, fileTreeData }) => ({
+const mapStateToProps = ({ lastCommitData, branchesData, fileTreeData, profile }) => ({
   lastCommitData,
   branchesData,
-  fileTreeData
+  fileTreeData,
+  currentUser: profile.currentUser.username
 });
 
 const mapDispatchToProps = {
@@ -270,6 +284,7 @@ CodeTab.propTypes = {
   history: PropTypes.object,
   location: PropTypes.object.isRequired,
   match: PropTypes.object,
+  currentUser: PropTypes.string,
   username: PropTypes.string.isRequired,
   reponame: PropTypes.string.isRequired,
   branch: PropTypes.string
