@@ -77,6 +77,7 @@ $secondary-color: #d1d5da;
 }
 
 :local(.navbar_wrapper) {
+  margin-bottom: 10px;
   position: sticky;
   top: 0;
   background-color: #fff;
@@ -123,21 +124,5 @@ $secondary-color: #d1d5da;
         display: none;
       }
     }
-  }
-}
-
-:global(.ui.container):local(.pinned_header) {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  h2 {
-    margin: 0;
-    font-weight: 400;
-  }
-
-  a {
-    color: $primary-color;
   }
 }

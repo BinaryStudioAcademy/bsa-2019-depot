@@ -1,0 +1,19 @@
+:global(.ui.bottom.attached.segment.active.tab) {
+  padding: 0;
+}
+
+.editorArea {
+  margin-bottom: 20px;
+}
+
+.fileNameInput {
+  margin-right: 10px;
+}
+
+:global(.ui.big.breadcrumb):local(.filePath) {
+  margin: 10px 0;
+}
+
+.markdownContainer {
+  padding: 20px;
+}
