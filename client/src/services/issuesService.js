@@ -1,3 +1,5 @@
+import callWebApi from '../helpers/webApiHelper';
+
 const issues = [
   // Mocks
   {
@@ -157,4 +159,13 @@ export const getIssues = ({ author, title, assignees, opened }) => {
       resolve(filteredIssues);
     }, 500);
   });
+};
+
+export const createIssue = async ({ owner, repoName, ...request }) => {
+  const response = await callWebApi({
+    endpoint: `/api/repo/${owner}/${repoName}/issues`,
+    type: 'POST',
+    request
+  });
+  return response.json();
 };

@@ -1,8 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import EmptyRepositoryTab from '../../containers/EmptyRepositoryTab';
 import PropTypes from 'prop-types';
 import { CodeTab } from '../../scenes';
 import { checkIfEmpty } from '../../services/repositoryService';
+import { fetchCurrentRepoId } from '../../routines/routines';
 import Spinner from '../../components/Spinner';
 
 class RepositoryTab extends React.Component {
@@ -13,8 +15,10 @@ class RepositoryTab extends React.Component {
     };
   }
 
-  async getData() {
+  async componentDidMount() {
     const {
+      userId,
+      fetchCurrentRepoId,
       match: {
         params: { username, reponame }
       }
@@ -25,10 +29,12 @@ class RepositoryTab extends React.Component {
       isEmpty,
       isLoading: false
     });
-  }
 
-  componentDidMount() {
-    this.getData();
+    fetchCurrentRepoId({
+      userId,
+      username,
+      reponame
+    });
   }
 
   render() {
@@ -52,6 +58,8 @@ class RepositoryTab extends React.Component {
 }
 
 RepositoryTab.propTypes = {
+  userId: PropTypes.string.isRequired,
+  fetchCurrentRepoId: PropTypes.func.isRequired,
   history: PropTypes.any,
   match: PropTypes.shape({
     params: PropTypes.shape({
@@ -62,4 +70,19 @@ RepositoryTab.propTypes = {
   })
 };
 
-export default RepositoryTab;
+const mapStateToProps = ({
+  profile: {
+    currentUser: { id }
+  }
+}) => ({
+  userId: id
+});
+
+const mapDispatchToProps = {
+  fetchCurrentRepoId
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(RepositoryTab);

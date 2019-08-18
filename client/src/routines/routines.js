@@ -15,3 +15,5 @@ export const authorizeUser = createRoutine('AUTHORIZE_USER');
 export const fetchDiffs = createRoutine('DIFFS');
 export const updateUserSettings = createRoutine('UPDATE_USER_SETTINGS');
 export const forkRepo = createRoutine('FORK_REPO');
+export const createIssue = createRoutine('CREATE_ISSUE');
+export const fetchCurrentRepoId = createRoutine('CURRENT_REPO_ID');

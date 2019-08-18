@@ -12,6 +12,8 @@ import profileSettingsSagas from '../containers/SettingsProfile/sagas';
 import forkRepoSagas from '../components/ForkButton/sagas';
 import repoSettingsSagas from '../containers/SettingsTab/sagas';
 import branchesSagas from '../containers/BranchesTab/sagas';
+import createIssueSagas from '../containers/CreateIssue/sagas';
+import repositoryTabSagas from '../containers/RepositoryTab/sagas';
 
 export default function* rootSaga() {
   yield all([
@@ -26,6 +28,8 @@ export default function* rootSaga() {
     repoSettingsSagas(),
     profileSettingsSagas(),
     forkRepoSagas(),
-    branchesSagas()
+    branchesSagas(),
+    createIssueSagas(),
+    repositoryTabSagas()
   ]);
 }
