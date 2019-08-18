@@ -52,7 +52,7 @@ class CreateOrganization extends Component {
           <Divider hidden />
 
           <Formik
-            initialValues={{ ...initialValues, userID: userID }}
+            initialValues={{ ...initialValues, userID }}
             onSubmit={this.onSubmit}
             validationSchema={this.newOrgSchema}
           >
