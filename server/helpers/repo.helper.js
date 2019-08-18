@@ -5,8 +5,8 @@ const { gitPath } = require('../config/git.config.js');
 const getPathToRepo = (username, reponame) => path.resolve(`${gitPath}/${username}/${reponame}.git`).replace(/\\/g, '/');
 const getPathToRepos = username => path.resolve(`${gitPath}/${username}`).replace(/\\/g, '/');
 
-const getGitignore = gitignore => fs.readFileSync(path.resolve(`../server/data/initial-files/gitignores/${gitignore}`));
-const getLicense = license => fs.readFileSync(path.resolve(`../server/data/initial-files/licenses/${license}`));
+const getGitignore = gitignore => fs.readFileSync(path.resolve(`${__dirname}/../data/initial-files/gitignores/${gitignore}`));
+const getLicense = license => fs.readFileSync(path.resolve(`${__dirname}/../data/initial-files/licenses/${license}`));
 
 const generateInitialData = ({
   name, email, readme, gitignore, license
