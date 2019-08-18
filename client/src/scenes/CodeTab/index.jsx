@@ -241,7 +241,7 @@ class CodeTab extends React.Component {
   }
 }
 
-const mapStateToProps = ({ lastCommitData, branchesData, fileTreeData, commitCountData }) => ({
+const mapStateToProps = ({ lastCommitData, branchesData, fileTreeData }) => ({
   lastCommitData,
   branchesData,
   fileTreeData
