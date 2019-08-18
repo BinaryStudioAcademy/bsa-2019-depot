@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { getUserImgLink } from '../../helpers/imageHelper';
 import { List, Icon, Image, Popup } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 
 import './styles.module.scss';
 
-const IssuesList = ({ issues }) => {
+const IssuesList = props => {
   return (
     <List divided verticalAlign="middle">
-      {issues.map(issue => (
+      {props.issues.map(issue => (
         <List.Item key={issue.id}>
           <List.Content floated="right">
             <Icon name="comments outline" /> {issue.commentCount}
@@ -29,9 +30,10 @@ const IssuesList = ({ issues }) => {
           <Icon name={issue.opened ? 'info' : 'check'} color={issue.opened ? 'green' : 'red'} />
           <List.Content>
             <List.Header>{issue.text}</List.Header>
-            <List.Description>{`#${issue.id} opened ${moment(issue.createdAt).fromNow()} by ${
-              issue.author.username
-            }`}</List.Description>
+            <List.Description>
+              {`#${issue.id}`} <Link to={`${props.match.url}/${issue.id}`}>{issue.title}</Link>{' '}
+              {`opened ${moment(issue.createdAt).fromNow()} by ${issue.user.username}`}
+            </List.Description>
           </List.Content>
         </List.Item>
       ))}
@@ -65,7 +67,13 @@ IssuesList.propTypes = {
       commentCount: PropTypes.number,
       createdAt: PropTypes.string.isRequired
     })
-  ).isRequired
+  ).isRequired,
+  match: PropTypes.exact({
+    params: PropTypes.object.isRequired,
+    isExact: PropTypes.bool.isRequired,
+    path: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired
+  }).isRequired
 };
 
 export default IssuesList;

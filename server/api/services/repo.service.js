@@ -92,8 +92,6 @@ const getReposNames = async ({ user, filter, limit }) => {
   return [];
 };
 
-const getCurrentRepoId = repoData => repoRepository.getCurrentRepoId(repoData);
-
 const forkRepo = async ({ username, owner, repoName }) => {
   try {
     const source = repoHelper.getPathToRepo(owner, repoName);
@@ -116,6 +114,8 @@ const forkRepo = async ({ username, owner, repoName }) => {
     return { status: false, error: err.message };
   }
 };
+
+const getCurrentRepoId = repoData => repoRepository.getCurrentRepoId(repoData);
 
 module.exports = {
   createRepo,

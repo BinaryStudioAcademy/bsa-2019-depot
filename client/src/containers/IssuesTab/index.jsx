@@ -23,7 +23,11 @@ class IssuesTab extends React.Component {
   }
 
   componentDidMount() {
+    const { username, repoName, repositoryId } = this.props;
     this.props.fetchIssues({
+      username,
+      repoName,
+      repositoryId,
       filter: this.state.filter
     });
   }
@@ -89,7 +93,7 @@ class IssuesTab extends React.Component {
                   <Input icon="search" iconPosition="left" className="search" placeholder="Filter authors" />
                   <Dropdown.Menu scrolling>
                     {issues
-                      .map(issue => issue.author)
+                      .map(issue => issue.user)
                       .map((author, index) => (
                         <Dropdown.Item key={index} text={author.username} value={author.username} />
                       ))}
@@ -99,14 +103,14 @@ class IssuesTab extends React.Component {
               <Dropdown text="Assignee" icon="filter">
                 <Dropdown.Menu>
                   <Input icon="search" iconPosition="left" className="search" placeholder="Filter assignees" />
-                  <Dropdown.Menu scrolling>
+                  {/* <Dropdown.Menu scrolling>
                     {issues
                       .map(issue => issue.assignees)
                       .flat()
                       .map(assignee => (
                         <Dropdown.Item key={assignee.username} text={assignee.username} value={assignee.username} />
                       ))}
-                  </Dropdown.Menu>
+                  </Dropdown.Menu> */}
                 </Dropdown.Menu>
               </Dropdown>
               <Dropdown text="Sort" icon="filter">
@@ -126,6 +130,9 @@ class IssuesTab extends React.Component {
 }
 
 IssuesTab.propTypes = {
+  username: PropTypes.string.isRequired,
+  repoName: PropTypes.string.isRequired,
+  repositoryId: PropTypes.string.isRequired,
   issuesData: PropTypes.exact({
     loading: PropTypes.bool.isRequired,
     error: PropTypes.string,
@@ -140,8 +147,19 @@ IssuesTab.propTypes = {
   fetchIssues: PropTypes.func.isRequired
 };
 
-const mapStateToProps = ({ issuesData }) => ({
-  issuesData
+const mapStateToProps = ({
+  issuesData,
+  currentRepo: {
+    currentRepoInfo: { repoId, repoName }
+  },
+  profile: {
+    currentUser: { username }
+  }
+}) => ({
+  username,
+  repoName,
+  issuesData,
+  repositoryId: repoId
 });
 
 const mapDispatchToProps = {

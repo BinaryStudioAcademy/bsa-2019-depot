@@ -1,12 +1,12 @@
 import { fetchCurrentRepoId } from '../../routines/routines';
 
 const initialCurrentRepoIdState = {
-  currentRepoId: '',
+  currentRepoInfo: {},
   loading: false,
   error: null
 };
 
-export const currentRepoIdReducer = (state = initialCurrentRepoIdState, action) => {
+export const currentRepoReducer = (state = initialCurrentRepoIdState, action) => {
   switch (action.type) {
   case fetchCurrentRepoId.TRIGGER:
     return {
@@ -16,7 +16,10 @@ export const currentRepoIdReducer = (state = initialCurrentRepoIdState, action) 
   case fetchCurrentRepoId.SUCCESS:
     return {
       ...state,
-      currentRepoId: action.payload.id
+      currentRepoInfo: {
+        repoId: action.payload.id,
+        repoName: action.payload.name
+      }
     };
   case fetchCurrentRepoId.FAILURE:
     return {

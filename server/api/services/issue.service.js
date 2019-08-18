@@ -5,6 +5,8 @@ const addIssue = issueData => issueRepository.addIssue(issueData);
 
 const updateIssueById = ({id, ...issueData}) => issueRepository.updateIssueById(id, {issueData});
 
+const getAllRepoIssues = repoId => issueRepository.getRepositoryIssues(repoId);
+
 const getIssueComments = issueId => issueRepository.getIssueComments(issueId);
 
 const addIssueComment = issueCommentData => issueCommentRepository.addIssueComment(issueCommentData);
@@ -16,6 +18,7 @@ const deleteIssueCommentById = issueCommentId => issueCommentRepository.deleteIs
 module.exports = {
   addIssue,
   updateIssueById,
+  getAllRepoIssues,
   getIssueComments,
   addIssueComment,
   updateIssueCommentById,

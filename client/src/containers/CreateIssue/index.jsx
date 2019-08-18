@@ -1,8 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import ReactMde from 'react-mde';
 import ReactMarkdown from 'react-markdown';
 import 'react-mde/lib/styles/css/react-mde-all.css';
-
+import { createIssue } from '../../routines/routines';
 import { Container, Grid, Form, Button, Dropdown, Popup, Image } from 'semantic-ui-react';
 import styles from './styles.module.scss';
 
@@ -56,7 +58,19 @@ class CreateIssuePage extends React.Component {
     return Promise.resolve(<ReactMarkdown source={markdown} />);
   }
 
-  onSubmit() {}
+  onSubmit() {
+    const { title, body } = this.state;
+    const { createIssue, username, repoName, repositoryId, userId } = this.props;
+
+    createIssue({
+      title,
+      body,
+      username,
+      repoName,
+      userId,
+      repositoryId
+    });
+  }
 
   renderLabel = label => ({
     color: label.color,
@@ -122,4 +136,39 @@ class CreateIssuePage extends React.Component {
   }
 }
 
-export default CreateIssuePage;
+CreateIssuePage.propTypes = {
+  username: PropTypes.string.isRequired,
+  repoName: PropTypes.string.isRequired,
+  repositoryId: PropTypes.string.isRequired,
+  userId: PropTypes.string.isRequired,
+  createIssue: PropTypes.func.isRequired,
+  match: PropTypes.exact({
+    params: PropTypes.object.isRequired,
+    isExact: PropTypes.bool.isRequired,
+    path: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired
+  }).isRequired
+};
+
+const mapStateToProps = ({
+  profile: {
+    currentUser: { id, username }
+  },
+  currentRepo: {
+    currentRepoInfo: { repoId, repoName }
+  }
+}) => ({
+  userId: id,
+  username,
+  repoName,
+  repositoryId: repoId
+});
+
+const mapDispatchToProps = {
+  createIssue
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CreateIssuePage);

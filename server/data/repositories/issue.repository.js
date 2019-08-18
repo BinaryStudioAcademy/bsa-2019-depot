@@ -1,5 +1,5 @@
 const BaseRepository = require('./base.repository');
-const { IssueModel } = require('../models/index');
+const { IssueModel, UserModel } = require('../models/index');
 
 class IssueRepository extends BaseRepository {
   addIssue({ ...issueData }) {
@@ -12,6 +12,17 @@ class IssueRepository extends BaseRepository {
 
   updateIssueById(id, { ...issueData }) {
     return this.updateById(id, issueData);
+  }
+
+  getRepositoryIssues({repositoryId}) {
+    console.log('repositoryId: ', repositoryId);
+    return this.model.findAll({ 
+      where: { repositoryId },
+      include: [{
+        model: UserModel,
+        attributes: ['username'],
+      }]
+    })
   }
 
   getIssueComments(issueId) {

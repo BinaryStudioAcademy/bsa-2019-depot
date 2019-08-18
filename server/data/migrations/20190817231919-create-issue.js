@@ -12,6 +12,14 @@ module.exports = {
     body: {
       type: Sequelize.TEXT
     },
+    isOpened: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: true
+    },
+    assignees: {
+      type: Sequelize.ARRAY(Sequelize.TEXT),
+      defaultValue: []
+    },
     userId: {
       type: Sequelize.UUID,
       references: {

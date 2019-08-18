@@ -42,7 +42,7 @@ class RepositoryPage extends React.Component {
               <Route path={`${match.path}/tree/:branch`} component={RepositoryTab} />
               <Route exact path={`${match.path}/commits/:branch`} component={CommitsPage} />
               <Route exact path={`${match.path}/commit/:hash`} component={DiffCommitView} />
-              <Route exact path={`${match.path}/issues`} component={IssuesTab} />
+              <Route exact path={`${match.path}/issues/:number`} component={IssuesTab} />
               <Route exact path={`${match.path}/issues/new`} component={CreateIssuePage} />
               <Route exact path={`${match.path}/settings`} component={RepoSettings} />
               <Route exact path={`${match.path}/branches`} component={BranchesTab} />

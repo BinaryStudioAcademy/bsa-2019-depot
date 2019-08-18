@@ -13,12 +13,6 @@ class RepositoryRepository extends BaseRepository {
   addRepository({ ...repositoryData }) {
     return this.create(repositoryData);
   }
-
-  getRepositoryIssues(repoId) {
-    return this.model.findAll({ where: { 
-      "$issues.repositoryId$": `${repoId}`
-    }});
-  }
 }
 
 module.exports = new RepositoryRepository(RepositoryModel);

@@ -14,7 +14,7 @@ const { getCommits, getCommitDiff } = require('../services/commit.service');
 const {
   getBranches, getBranchTree, getLastCommitOnBranch, getFileContent
 } = require('../services/branch.service');
-const { addIssue } = require('../services/issue.service');
+const { addIssue, getAllRepoIssues } = require('../services/issue.service');
 
 const router = Router();
 
@@ -130,15 +130,21 @@ router
     const { userId } = req.query;
     getCurrentRepoId({ userId, name: req.params.repoName })
       .then(result => res.send(result))
-      .then(result => console.log('result: ',result))
       .catch(next);
   })
   .post('/:owner/:repoName/issues', (req, res, next) => {
-    const { userId, title, body } = req.body;
-    addIssue({ userId, title, body })
-      .then(result => res.send({
+    const { userId, repositoryId, title, body } = req.body;
+    addIssue({ userId, repositoryId, title, body })
+      .then(() => res.send({
         status: true
       }))
+      .catch(next);
+  })
+  .get('/:owner/:repoName/issues', (req, res, next) => {
+    const { repositoryId } = req.query;
+    console.log('repositoryId: ', repositoryId);
+    getAllRepoIssues({ repositoryId })
+      .then(result => res.send(result))
       .catch(next);
   });
 
