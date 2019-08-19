@@ -70,6 +70,7 @@ class IssueComments extends React.Component {
       issueNumber,
       userId
     });
+    this.setState({ comment: '' });
   }
 
   render() {
@@ -207,7 +208,7 @@ IssueComments.propTypes = {
   fetchIssueComments: PropTypes.func.isRequired,
   repoName: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
-  userId: PropTypes.number.isRequired,
+  userId: PropTypes.string.isRequired,
   issues: PropTypes.array.isRequired,
   issueComments: PropTypes.array.isRequired,
   createIssueComment: PropTypes.func.isRequired

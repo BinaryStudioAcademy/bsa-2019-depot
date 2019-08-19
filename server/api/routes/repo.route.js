@@ -14,7 +14,7 @@ const { getCommits, getCommitDiff } = require('../services/commit.service');
 const {
   getBranches, getBranchTree, getLastCommitOnBranch, getFileContent
 } = require('../services/branch.service');
-const { addIssue, getAllRepoIssues, getAllIssueComments } = require('../services/issue.service');
+const { addIssue, addIssueComment, getAllRepoIssues, getAllIssueComments } = require('../services/issue.service');
 
 const router = Router();
 
@@ -146,10 +146,19 @@ router
       .then(result => res.send(result))
       .catch(next);
   })
-  .get('/:owner/:repoName/issues/:issueNumber/comments', (req, res, next) => {
-    const { issueNumber: issueId } = req.params;
+  .get('/:owner/:repoName/issues/:issueId/comments', (req, res, next) => {
+    const { issueId } = req.params;
     getAllIssueComments({ issueId })
       .then(result => res.send(result))
+      .catch(next);
+  })
+  .post('/:owner/:repoName/issues/:issueId/comments', (req, res, next) => {
+    const { issueId } = req.params;
+    const { userId, comment: body } = req.body;
+    addIssueComment({ userId, issueId, body })
+      .then(() => res.send({
+        status: true
+      }))
       .catch(next);
   });
 

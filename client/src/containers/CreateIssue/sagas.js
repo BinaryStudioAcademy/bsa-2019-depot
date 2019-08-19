@@ -7,8 +7,8 @@ function* createIssueRequest({ payload }) {
     yield put(createIssue.request());
 
     const response = yield call(issuesService.createIssue, payload);
-    const { repositoryId } = payload;
     if (response.status) {
+      const { repositoryId } = payload;
       yield put(createIssue.success());
       yield put(fetchIssues.trigger({ repositoryId, filter: '' }));
     } else {

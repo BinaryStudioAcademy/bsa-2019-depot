@@ -132,7 +132,7 @@ class IssuesTab extends React.Component {
 IssuesTab.propTypes = {
   username: PropTypes.string.isRequired,
   repoName: PropTypes.string.isRequired,
-  repositoryId: PropTypes.string.isRequired,
+  repositoryId: PropTypes.number.isRequired,
   issuesData: PropTypes.exact({
     loading: PropTypes.bool.isRequired,
     error: PropTypes.string,
