@@ -2,9 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 import RepoFileTree from '../../components/RepoFileTree/index';
 import RepoReadme from '../../components/RepoReadme/index';
+import { InputError } from '../../components/InputError';
 import { fetchBranches, fetchFileTree, fetchLastCommitOnBranch } from '../../routines/routines';
+import * as repositoryService from '../../services/repositoryService';
 
 import Octicon, { getIconByName } from '@primer/octicons-react';
 import {
@@ -12,6 +16,7 @@ import {
   Button,
   Header,
   Dropdown,
+  Form,
   Input,
   Popup,
   Segment,
@@ -26,7 +31,11 @@ class CodeTab extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      branch: 'master'
+      branch: 'master',
+      description: '',
+      website: '',
+      editingInfo: false,
+      infoLoading: true
     };
     this.onBranchChange = this.onBranchChange.bind(this);
   }
@@ -49,7 +58,17 @@ class CodeTab extends React.Component {
       reponame,
       branch: actualBranch
     });
+    repositoryService.getRepositoryByOwnerAndName(username, reponame).then(({ description, website }) => {
+      this.setState({ description, website, infoLoading: false });
+    });
   }
+
+  infoValidationSchema = Yup.object().shape({
+    description: Yup.string(),
+    website: Yup.string()
+      .url('Invalid URL')
+      .max(255)
+  });
 
   onBranchChange = (event, data) => {
     this.setState(
@@ -94,8 +113,34 @@ class CodeTab extends React.Component {
     history.push(`/${username}/${reponame}/edit/${branch}/${currentPath}/README.md`);
   };
 
+  onAddReadme = () => {
+    const {
+      history,
+      match,
+      fileTreeData: {
+        tree: { currentPath }
+      }
+    } = this.props;
+    const { username, reponame, branch } = match.params;
+
+    history.push(`/${username}/${reponame}/new/${branch}/${currentPath}`);
+  };
+
+  onSubmitInfo = ({ description, website }) => {
+    const { username: owner, reponame } = this.props.match.params;
+
+    this.setState({ infoLoading: true, editingInfo: false });
+    repositoryService
+      .updateRepositoryByOwnerAndName({ owner, reponame, request: { description, website } })
+      .then(() => this.setState({ infoLoading: false, description, website }));
+  };
+
+  toggleEditingDescription = () => {
+    this.setState(prevState => ({ editingInfo: !prevState.editingInfo }));
+  };
+
   render() {
-    const { branch } = this.state;
+    const { branch, description, website, infoLoading, editingInfo } = this.state;
     const {
       username,
       currentUser,
@@ -124,14 +169,36 @@ class CodeTab extends React.Component {
       readmeSection = (
         <Message color="blue" className={styles.readmeTip}>
           Help people interested in this repository understand your project by adding a README.
-          <Button className={styles.addReadme} size="small" compact positive>
+          <Button className={styles.addReadme} size="small" compact positive onClick={this.onAddReadme}>
             Add a README
           </Button>
         </Message>
       );
     }
 
-    return lastCommitData.loading || fileTreeData.loading || branchesData.loading ? (
+    let infoContent, descriptionContent, websiteContent;
+    if (!(description || website)) {
+      infoContent = <i>No description or website provided</i>;
+    } else {
+      if (description) {
+        descriptionContent = description;
+      }
+      if (website) {
+        websiteContent = (
+          <a className={styles.link} href={website}>
+            {website}
+          </a>
+        );
+      }
+      infoContent = (
+        <>
+          {descriptionContent}
+          {websiteContent}
+        </>
+      );
+    }
+
+    return lastCommitData.loading || fileTreeData.loading || branchesData.loading || infoLoading ? (
       <div>
         <Loader active />
       </div>
@@ -139,14 +206,58 @@ class CodeTab extends React.Component {
       <Container>
         <Divider hidden />
         <div className={styles.repoDescription}>
-          <div className={styles.repoDescriptionText}>
-            Semantic is a UI component framework based around useful principles from natural language.{' '}
-            <Link className={styles.link} to="http://www.semantic-ui.com">
-              {' '}
-              http://www.semantic-ui.com
-            </Link>
-          </div>
-          <Button className={styles.actionButton}>Edit</Button>
+          {editingInfo ? (
+            <Formik
+              initialValues={{
+                description: description || '',
+                website: website || ''
+              }}
+              validationSchema={this.infoValidationSchema}
+              onSubmit={this.onSubmitInfo}
+            >
+              {({ values, errors, handleChange, handleBlur, handleSubmit }) => (
+                <Form onSubmit={handleSubmit}>
+                  <Form.Input
+                    name="description"
+                    placeholder="Short description"
+                    label="Description"
+                    error={!!errors.description}
+                    value={values.description}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                  />
+                  <InputError name="description" />
+                  <Form.Input
+                    name="website"
+                    placeholder="Website"
+                    label="Website"
+                    width={7}
+                    error={!!errors.website}
+                    value={values.website}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                  />
+                  <InputError name="website" />
+                  <Button type="submit" disabled={errors.description || errors.website} className={styles.actionButton}>
+                    Save
+                  </Button>
+                  <Button onClick={this.toggleEditingDescription} className={styles.actionButton}>
+                    Cancel
+                  </Button>
+                </Form>
+              )}
+            </Formik>
+          ) : (
+            <>
+              <div className={styles.repoDescriptionText}>{infoContent}</div>
+              <Button
+                className={[styles.actionButton, styles.editButton].join(' ')}
+                onClick={this.toggleEditingDescription}
+              >
+                Edit
+              </Button>
+            </>
+          )}
         </div>
         <div>
           <Menu borderless attached="top" widths={4}>

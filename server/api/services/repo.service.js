@@ -9,7 +9,7 @@ const { initialCommit } = require('./commit.service');
 const starRepository = require('../../data/repositories/star.repository');
 
 const createRepo = async ({
-  owner, name, userId, initialData
+  owner, name, userId, description, initialData
 }) => {
   let result = 'Repo was created';
   const pathToRepo = repoHelper.getPathToRepo(owner, name);
@@ -29,7 +29,8 @@ const createRepo = async ({
 
   repoRepository.create({
     userId,
-    name
+    name,
+    description
   });
   return result;
 };
