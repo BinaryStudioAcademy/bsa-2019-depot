@@ -21,8 +21,9 @@ class RepositoryItem extends React.Component {
 
   render() {
     //Mock
-    const { repo: { name }, username } = this.props;
+    const { repo: { name, stars }, username, currentUserId } = this.props;
     const starsCount = Number(this.props.repo.starsCount);
+    const isStar = stars.find(({ userId }) => currentUserId === userId);
     const data = [
       { name: 'commit1', uv: 4000, commitDate: 0, amt: 2400 },
       { name: 'commit2', uv: 3000, commitDate: 0, amt: 2210 },
@@ -63,7 +64,7 @@ class RepositoryItem extends React.Component {
           <div>
             <button className={styles.repo_item_stars} onClick={this.starClickHandler}>
               <Octicon className={styles.star_icon} icon={Star} />
-              Star
+              {isStar ? 'Unstar' : 'Star'}
             </button>
           </div>
           <LineChart width={155} height={25} data={data}>
@@ -80,8 +81,10 @@ RepositoryItem.defaultProps = {
 };
 
 RepositoryItem.propTypes = {
-  repo: PropTypes.string,
-  username: PropTypes.string.isRequired
+  repo: PropTypes.object,
+  username: PropTypes.string.isRequired,
+  onStar: PropTypes.func,
+  currentUserId: PropTypes.string.isRequired
 };
 
 export default RepositoryItem;

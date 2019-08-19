@@ -12,7 +12,7 @@ import styles from './styles.module.scss';
 
 export class RepositoriesList extends React.Component {
   render() {
-    const { repositories, username, actions: { setStar } } = this.props;
+    const { repositories, username, id, actions: { setStar } } = this.props;
     //Mock
 
     const repoTypes = [
@@ -65,6 +65,7 @@ export class RepositoriesList extends React.Component {
               username={username}
               key={repo.name}
               onStar={setStar}
+              currentUserId={id}
             />
           );
         })}
@@ -87,12 +88,13 @@ RepositoriesList.propTypes = {
 
 const mapStateToProps = ({
   profile: {
-    currentUser: { username }
+    currentUser: { username, id }
   },
   userStats: { repositories }
 }) => ({
   repositories,
-  username
+  username,
+  id
 });
 
 const mapDispatchToProps = dispatch => {
