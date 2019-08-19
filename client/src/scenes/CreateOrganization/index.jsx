@@ -30,8 +30,7 @@ class CreateOrganization extends Component {
 
   render() {
     const initialValues = { username: '', email: '' };
-    const userID = this.props.currentUser.id;
-    const { company, loading } = this.props;
+    const { company, loading, userID } = this.props;
 
     return company ? (
       <Redirect to={`/${this.props.company}`} />
@@ -90,7 +89,7 @@ class CreateOrganization extends Component {
                       type="email"
                       name="email"
                       placeholder="We’ll send receipts to this inbox"
-                      render={this.renderDisabledField}
+                      render={this.renderField}
                     />
                     <InputError name="email" />
                   </Grid.Column>
@@ -122,10 +121,11 @@ CreateOrganization.propTypes = {
   username: PropTypes.string,
   company: PropTypes.string,
   error: PropTypes.string,
+  userID: PropTypes.string,
   currentUser: PropTypes.object
 };
 
-const mapStateToProps = state => ({ ...state.createOrg, ...state.profile });
+const mapStateToProps = state => ({ ...state.createOrg, userID: state.profile.currentUser.id });
 
 const mapDispatchToProps = { createOrg };
 
