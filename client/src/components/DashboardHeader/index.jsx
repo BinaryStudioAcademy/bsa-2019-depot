@@ -6,10 +6,10 @@ import styles from './styles.module.scss';
 
 const DashboardHeader = ({
   repoCount,
-  projects,
+  projectsCount,
   starsCount,
-  followers,
-  following,
+  followersCount,
+  followingCount,
   baseUrl
 }) => (
   <nav className={styles.navbar}>
@@ -26,7 +26,7 @@ const DashboardHeader = ({
       </li>
       <li>
         <NavLink to={`${baseUrl}?tab=projects`} className={styles.link} activeClassName="selected">
-          Projects{projects && <span>{projects}</span>}
+          Projects{projectsCount && <span>{projectsCount}</span>}
         </NavLink>
       </li>
       <li>
@@ -36,12 +36,12 @@ const DashboardHeader = ({
       </li>
       <li>
         <NavLink to={`${baseUrl}?tab=followers`} className={styles.link} activeClassName="selected">
-          Followers{followers && <span>{followers}</span>}
+          Followers{followersCount && <span>{followersCount}</span>}
         </NavLink>
       </li>
       <li>
         <NavLink to={`${baseUrl}?tab=following`} className={styles.link} activeClassName="selected">
-          Following{following && <span>{following}</span>}
+          Following{followingCount && <span>{followingCount}</span>}
         </NavLink>
       </li>
     </ul>
@@ -50,10 +50,10 @@ const DashboardHeader = ({
 
 DashboardHeader.propTypes = {
   repoCount: PropTypes.array,
-  projects: PropTypes.number,
+  projectsCount: PropTypes.number,
   starsCount: PropTypes.number,
-  followers: PropTypes.number,
-  following: PropTypes.number,
+  followersCount: PropTypes.number,
+  followingCount: PropTypes.number,
   baseUrl: PropTypes.string
 };
 
