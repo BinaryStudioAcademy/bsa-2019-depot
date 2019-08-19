@@ -9,7 +9,7 @@ const {
   isEmpty,
   forkRepo
 } = require('../services/repo.service');
-const { getCommits, getCommitDiff } = require('../services/commit.service');
+const { getCommits, getCommitDiff, getCommitCount } = require('../services/commit.service');
 const {
   getBranches, getBranchTree, getLastCommitOnBranch, getFileContent
 } = require('../services/branch.service');
@@ -47,6 +47,12 @@ router
     const { owner, repoName, branchName } = req.params;
     getCommits({ user: owner, name: repoName, branch: branchName })
       .then(commits => res.send(commits))
+      .catch(next);
+  })
+  .get('/:owner/:repoName/:branchName/count', (req, res, next) => {
+    const { owner, repoName, branchName } = req.params;
+    getCommitCount({ user: owner, name: repoName, branch: branchName })
+      .then(count => res.send(count))
       .catch(next);
   })
   .get('/:owner/:repoName/branches', (req, res, next) => {
