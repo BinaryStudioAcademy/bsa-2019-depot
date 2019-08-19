@@ -110,13 +110,13 @@ class IssueComments extends React.Component {
         </div>
 
         <div className={styles.issue_comment_wrapper}>
-          <div className={styles.comment_author}>
+          <div className={styles.comment_author_avatar}>
             <Image src={getUserImgLink(currentIssue.user.avatar)} />
           </div>
 
           <div className={styles.issue_comment_container}>
             <div className={styles.issue_comment_header}>
-              <span className={styles.comment_author}>
+              <span className={styles.comment_author_name}>
                 {`${currentIssue.user.username} `}
                 <span>{`commented ${moment(currentIssue.createdAt).fromNow()}`}</span>
               </span>
