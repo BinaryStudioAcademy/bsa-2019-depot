@@ -1,16 +1,14 @@
 const jwt = require('jsonwebtoken');
 const { secret, expiresIn } = require('../config/jwt.config');
 
-const verifyToken = async (token) => {
-  let result;
-  await jwt.verify(token, secret, (err, authorizedData) => {
+const verifyToken = token => new Promise((resolve, reject) => {
+  jwt.verify(token, secret, (err, authorizedData) => {
     if (err) {
-      return err;
+      reject(err);
     }
-    result = authorizedData;
+    resolve(authorizedData);
   });
-  return result;
-};
+});
 
 module.exports = {
   createToken: data => jwt.sign(data, secret, { expiresIn }),
