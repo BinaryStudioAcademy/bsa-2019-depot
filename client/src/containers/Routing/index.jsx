@@ -12,6 +12,7 @@ import RepositoryPage from '../../scenes/Repository';
 import Header from '../Header';
 import Footer from '../../components/Footer';
 import InviteMembersTab from '../InviteMembersTab';
+import Invitation from '../../scenes/Invitation';
 
 import './styles.module.scss';
 
@@ -31,6 +32,7 @@ class Routing extends React.Component {
           <Header />
           <Switch>
             <PrivateRoute exact path="/orgs/:name/invite" component={InviteMembersTab} />
+            <PrivateRoute exact path="/orgs/:name/invitation" component={Invitation} />
             <PublicRoute exact path="/registration" component={Signup} />
             <PublicRoute exact path="/login" component={Login} />
             <PublicRoute exact path="/" component={MainPage} />
