@@ -5,6 +5,7 @@ const fse = require('fs-extra');
 const repoHelper = require('../../helpers/repo.helper');
 const repoRepository = require('../../data/repositories/repository.repository');
 const { initialCommit } = require('./commit.service');
+const starRepository = require('../../data/repositories/star.repository');
 
 const createRepo = async ({
   owner, name, userId, initialData
@@ -92,6 +93,8 @@ const getReposNames = async ({ user, filter, limit }) => {
   return [];
 };
 
+const getReposData = async ({ username }) => repoRepository.getByUsername(username);
+
 const forkRepo = async ({ username, owner, repoName }) => {
   try {
     const source = repoHelper.getPathToRepo(owner, repoName);
@@ -115,6 +118,16 @@ const forkRepo = async ({ username, owner, repoName }) => {
   }
 };
 
+const setStar = async (userId, repositoryId) => {
+  const star = await starRepository.getStar(userId, repositoryId);
+
+  const result = star
+    ? await starRepository.deleteById(star.id)
+    : await starRepository.create({ userId, repositoryId });
+
+  return Number.isInteger(result) ? {} : starRepository.getStar(userId, repositoryId);
+};
+
 module.exports = {
   createRepo,
   renameRepo,
@@ -122,5 +135,7 @@ module.exports = {
   getReposNames,
   checkName,
   isEmpty,
-  forkRepo
+  forkRepo,
+  getReposData,
+  setStar
 };
