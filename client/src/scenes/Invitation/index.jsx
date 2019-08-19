@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { Container, Button, Icon } from 'semantic-ui-react';
+import { isInvited, acceptInvitation, cancelInvitation } from '../../services/inviteMemberService';
 
 import styles from './styles.module.scss';
 
@@ -12,6 +15,45 @@ class Invitation extends React.Component {
       invited: false
     };
   }
+
+  async componentDidMount() {
+    const { id } = this.props;
+    const { name } = this.props.match.params;
+
+    const { result } = await isInvited({
+      userId: id,
+      orgName: name
+    });
+    if (result) {
+      this.setState({
+        invited: Boolean(result)
+      });
+      const { isActivated } = result;
+      this.setState({
+        isActivated
+      });
+    }
+  }
+
+  OnClickJoin = async () => {
+    const { id } = this.props;
+    const { name } = this.props.match.params;
+
+    await acceptInvitation({
+      userId: id,
+      orgName: name
+    });
+  };
+
+  onClickDecline = async () => {
+    const { id } = this.props;
+    const { name } = this.props.match.params;
+
+    await cancelInvitation({
+      userId: id,
+      orgName: name
+    });
+  };
 
   goToProfileOrg = () => {
     //const { name } = this.props.match.params;
@@ -25,10 +67,12 @@ class Invitation extends React.Component {
         <p className={styles.title}>
           You’ve been invited to the <a href={`/orgs/${name}`}>{name}</a> organization!
         </p>
-        <Button type="button" positive>
+        <Button type="button" positive onClick={this.OnClickJoin}>
           Join {name}
         </Button>
-        <Button type="button">Decline</Button>
+        <Button type="button" onClick={this.onClickDecline}>
+          Decline
+        </Button>
       </Container>
     );
   };
@@ -48,12 +92,21 @@ class Invitation extends React.Component {
   };
 
   render() {
-    return this.state.invited ? this.renderHaveInviteComponent() : this.renderNotInviteComponent();
+    if (this.state.invited && this.state.isActivated) return <Redirect to={`/orgs/${this.props.match.params.name}`} />;
+    if (!this.state.invited) return this.renderNotInviteComponent();
+    if (!this.state.isActivated) return this.renderHaveInviteComponent();
   }
 }
 
 Invitation.propTypes = {
-  match: PropTypes.object
+  match: PropTypes.object,
+  id: PropTypes.string
 };
 
-export default Invitation;
+const mapStateToProps = ({
+  profile: {
+    currentUser: { id }
+  }
+}) => ({ id });
+
+export default connect(mapStateToProps)(Invitation);

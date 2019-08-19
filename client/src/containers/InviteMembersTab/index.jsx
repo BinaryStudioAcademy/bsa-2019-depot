@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Formik } from 'formik';
 import { InputError } from '../../components/InputError';
 import { Icon, Container, Input, Button, Form, Divider, Checkbox } from 'semantic-ui-react';
+import { invite } from '../../services/inviteMemberService';
 import * as Yup from 'yup';
 
 import styles from './styles.module.scss';
@@ -34,7 +36,15 @@ class InviteMembersTab extends React.Component {
   };
 
   submitInvite = values => {
-    //console.log(values.role);
+    const { name } = this.props.match.params;
+    const { username } = this.state;
+    const { role } = values;
+
+    invite({
+      orgName: name,
+      username,
+      role
+    });
   };
 
   handleChangeRadio = handleChange => (e, data) => {
@@ -99,8 +109,8 @@ class InviteMembersTab extends React.Component {
               radio
               name="role"
               label="Member"
-              value="Member"
-              checked={role === 'Member'}
+              value="MEMBER"
+              checked={role === 'MEMBER'}
               onChange={handleChangeRadio}
             />
             <p className={styles.note}>
@@ -113,8 +123,8 @@ class InviteMembersTab extends React.Component {
               radio
               name="role"
               label="Owner"
-              value="Owner"
-              checked={role === 'Owner'}
+              value="OWNER"
+              checked={role === 'OWNER'}
               onChange={handleChangeRadio}
             />
             <p className={styles.note}>
@@ -158,7 +168,13 @@ class InviteMembersTab extends React.Component {
 
 InviteMembersTab.propTypes = {
   match: PropTypes.object,
-  currentUser: PropTypes.object
+  id: PropTypes.string
 };
 
-export default InviteMembersTab;
+const mapStateToProps = ({
+  profile: {
+    currentUser: { id }
+  }
+}) => ({ id });
+
+export default connect(mapStateToProps)(InviteMembersTab);
