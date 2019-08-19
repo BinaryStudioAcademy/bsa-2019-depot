@@ -7,6 +7,7 @@ import { Formik, Field } from 'formik';
 import Octicon, { getIconByName } from '@primer/octicons-react';
 import { InputError } from '../../components/InputError';
 import { createRepository, checkName } from '../../services/repositoryService';
+import * as Yup from 'yup';
 import styles from './styles.module.scss';
 
 const gitingnoreOptions = [
@@ -46,6 +47,16 @@ const initialValues = {
   license: false
 };
 
+const validationSchema = Yup.object().shape({
+  reponame: Yup.string()
+    .matches(
+      /^[a-zA-Z0-9_.-]*$/,
+      'Invalid repository name!'
+    )
+    .required('Repository name is required!')
+    .max(255, 'Maximum length - 255 characters')
+});
+
 class CreateRepository extends React.Component {
   constructor(props) {
     super(props);
@@ -57,9 +68,7 @@ class CreateRepository extends React.Component {
 
   async validate(values) {
     let errors = {};
-    if (!values.reponame) {
-      errors.reponame = 'Required';
-    }
+
     const { exists } = await checkName(values);
     if (exists) {
       errors.reponame = `The repository ${values.reponame} already exists on this account`;
@@ -218,6 +227,7 @@ class CreateRepository extends React.Component {
           ownerID: this.props.id
         }}
         validate={this.validate}
+        validationSchema={validationSchema}
         onSubmit={this.onSubmit}
         render={this.renderCreateRepository}
       />
