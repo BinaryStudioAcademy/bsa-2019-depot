@@ -9,6 +9,7 @@ import RepoReadme from '../../components/RepoReadme/index';
 import { InputError } from '../../components/InputError';
 import { fetchBranches, fetchFileTree, fetchLastCommitOnBranch } from '../../routines/routines';
 import * as repositoryService from '../../services/repositoryService';
+import { newFile } from './actions';
 
 import Octicon, { getIconByName } from '@primer/octicons-react';
 import {
@@ -121,8 +122,10 @@ class CodeTab extends React.Component {
         tree: { currentPath }
       }
     } = this.props;
+    const { description } = this.state;
     const { username, reponame, branch } = match.params;
 
+    this.props.newFile({ filename: 'README.md', content: `# ${reponame}\n\n${description}` });
     history.push(`/${username}/${reponame}/new/${branch}/${currentPath}`);
   };
 
@@ -412,7 +415,8 @@ const mapStateToProps = ({ lastCommitData, branchesData, fileTreeData, profile }
 const mapDispatchToProps = {
   fetchLastCommitOnBranch,
   fetchBranches,
-  fetchFileTree
+  fetchFileTree,
+  newFile
 };
 
 CodeTab.propTypes = {
@@ -435,6 +439,7 @@ CodeTab.propTypes = {
   fetchLastCommitOnBranch: PropTypes.func.isRequired,
   fetchBranches: PropTypes.func.isRequired,
   fetchFileTree: PropTypes.func.isRequired,
+  newFile: PropTypes.func.isRequired,
   history: PropTypes.object,
   location: PropTypes.object.isRequired,
   match: PropTypes.object,
