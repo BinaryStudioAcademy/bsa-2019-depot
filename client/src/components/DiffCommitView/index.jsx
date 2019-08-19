@@ -1,12 +1,54 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import ReactMde from 'react-mde';
+import ReactMarkdown from 'react-markdown';
+import { CommitCommentItem } from '../CommitCommentItem';
+import { Container, Grid, Form, Button, Message, Item } from 'semantic-ui-react';
+import 'react-mde/lib/styles/css/react-mde-all.css';
 import { connect } from 'react-redux';
 import { parseDiff, Diff, Hunk, Decoration } from 'react-diff-view';
 import { fetchDiffs } from '../../routines/routines';
+import { getUserImgLink } from '../../helpers/imageHelper';
 
 import './styles.module.scss';
 
+//Mock
+const commentsMock = [
+  {
+    id: 1,
+    body: 'Oh! That`s great!',
+    authorId: '6c17cce4-dbfa-426d-8ea6-2c2f6d44e64f',
+    author: {
+      username: 'Olya',
+      avatar: null
+    }
+  },
+  {
+    id: 2,
+    body: 'Hello!!!!',
+    authorId: '51304694-a311-4a54-b244-d6fbe3a8044a', //You may put your ID here
+    author: {
+      username: 'Test',
+      avatar: 'https://i.pravatar.cc/300?img=5'
+    }
+  }
+];
+
 class DiffCommitView extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      title: '',
+      body: '',
+      selectedTab: 'write'
+    };
+
+    this.onBodyChange = this.onBodyChange.bind(this);
+    this.renderPreview = this.renderPreview.bind(this);
+    this.onTabChange = this.onTabChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+
   componentDidMount() {
     this.props.fetchDiffs({
       owner: this.props.match.params.username,
@@ -14,9 +56,21 @@ class DiffCommitView extends Component {
       hash: this.props.match.params.hash
     });
   }
+  onTabChange(selectedTab) {
+    this.setState({ ...this.state, selectedTab });
+  }
+  onBodyChange(body) {
+    this.setState({ ...this.state, body });
+  }
+  onSubmit() {}
+
+  renderPreview(markdown) {
+    return Promise.resolve(<ReactMarkdown source={markdown} />);
+  }
 
   render() {
-    const { diffsData } = this.props;
+    const { body, selectedTab } = this.state;
+    const { diffsData, match, currentUser } = this.props;
     let files = [];
 
     if (diffsData.diffs) {
@@ -24,6 +78,23 @@ class DiffCommitView extends Component {
     }
 
     const error = diffsData.error ? <div>{diffsData.error}</div> : null;
+
+    const comments = commentsMock ? (
+      <Item.Group className="commit-comments-list">
+        {commentsMock.map(comment => (
+          <CommitCommentItem
+            comment={comment}
+            key={comment.id}
+            authorId={comment.authorId}
+            author={comment.author.username}
+            body={comment.body}
+            avatar={comment.author.avatar}
+            hash={match.params.hash}
+            userId={currentUser.id}
+          />
+        ))}
+      </Item.Group>
+    ) : null;
 
     const renderHunk = (newPath, hunk) => [
       <Decoration key={hunk.content} className="diff-filename">
@@ -53,6 +124,39 @@ class DiffCommitView extends Component {
       <div>
         {error}
         {files.map(renderFile)}
+        <p className="comments-count">
+          {`${commentsMock ? commentsMock.length : 0} comments on commit`}{' '}
+          <Message compact>{match.params.hash.slice(0, 7)}</Message>
+        </p>
+        {comments}
+        <Container>
+          <Form onSubmit={this.onSubmit}>
+            <Grid>
+              <Grid.Column width={1}>
+                <Item.Image
+                  size="tiny"
+                  src={
+                    currentUser.imgUrl
+                      ? getUserImgLink(currentUser.imgUrl)
+                      : 'https://forwardsummit.ca/wp-content/uploads/2019/01/avatar-default.png'
+                  }
+                />
+              </Grid.Column>
+              <Grid.Column width={15}>
+                <ReactMde
+                  value={body}
+                  onChange={this.onBodyChange}
+                  selectedTab={selectedTab}
+                  onTabChange={this.onTabChange}
+                  generateMarkdownPreview={this.renderPreview}
+                />
+                <Button color="green" floated="right" type="submit">
+                  Comment on this commit
+                </Button>
+              </Grid.Column>
+            </Grid>
+          </Form>
+        </Container>
       </div>
     );
   }
@@ -65,11 +169,13 @@ DiffCommitView.propTypes = {
     diffs: PropTypes.string
   }).isRequired,
   fetchDiffs: PropTypes.func.isRequired,
-  match: PropTypes.object
+  match: PropTypes.object,
+  currentUser: PropTypes.object
 };
 
-const mapStateToProps = ({ diffsData }) => ({
-  diffsData
+const mapStateToProps = ({ diffsData, profile: { currentUser } }) => ({
+  diffsData,
+  currentUser
 });
 
 const mapDispatchToProps = {
