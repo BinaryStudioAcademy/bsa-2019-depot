@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
@@ -19,11 +20,10 @@ import styles from './styles.module.scss';
 
 class RepositoryPage extends React.Component {
   render() {
-    const { match, location } = this.props;
+    const { match, location, issues } = this.props;
     const { username, reponame } = match.params;
 
-    // Mocks
-    const issueCount = 14;
+    const issueCount = issues.length;
     const forkCount = 22;
 
     return (
@@ -74,7 +74,12 @@ RepositoryPage.propTypes = {
     search: PropTypes.string.isRequired,
     hash: PropTypes.string.isRequired,
     state: PropTypes.array
-  }).isRequired
+  }).isRequired,
+  issues: PropTypes.array.isRequired
 };
 
-export default RepositoryPage;
+const mapStateToProps = ({ issuesData: { issues } }) => ({
+  issues
+});
+
+export default connect(mapStateToProps)(RepositoryPage);

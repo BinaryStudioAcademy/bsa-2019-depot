@@ -32,16 +32,26 @@ class IssuesTab extends React.Component {
     });
   }
 
+  countOpenIssues = () => {
+    const counter = this.props.issuesData.issues.filter(issue => issue.isOpened);
+    return counter.length;
+  };
+
+  countClosedIssues = () => {
+    const counter = this.props.issuesData.issues.filter(issue => !issue.isOpened);
+    return counter.length;
+  };
+
   render() {
     const {
       issuesData: { loading, issues },
       match
     } = this.props;
 
-    // Mock data
-    const openIssues = 20;
-    const closedIssues = 34;
+    const openIssues = this.countOpenIssues();
+    const closedIssues = this.countClosedIssues();
 
+    // Mock data
     const sortOptions = [
       {
         key: 'createdAt_DESC',

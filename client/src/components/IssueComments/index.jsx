@@ -104,9 +104,11 @@ class IssueComments extends React.Component {
           <Label color={currentIssue.isOpened ? 'green' : 'red'}>
             <Icon name="exclamation circle" /> {currentIssue.isOpened ? 'Open' : 'Closed'}
           </Label>
-          <span className={styles.comment_author}>
+          <span className={styles.comment_author_name}>
             {`${currentIssue.user.username} `}
-            <span>{`opened this issue ${moment(currentIssue.createdAt).fromNow()} · comments`}</span>
+            <span>{`opened this issue ${moment(currentIssue.createdAt).fromNow()} · ${
+              issueComments.length
+            } comments`}</span>
           </span>
         </div>
 
