@@ -8,7 +8,9 @@ const {
   isEmpty,
   forkRepo,
   getReposData,
-  setStar
+  setStar,
+  getByUserAndReponame,
+  updateByUserAndReponame
 } = require('../services/repo.service');
 const { getCommits, getCommitDiff } = require('../services/commit.service');
 const {
@@ -129,6 +131,18 @@ router
 
     forkRepo({ username, owner, repoName })
       .then(result => res.send(result))
+      .catch(next);
+  })
+  .get('/:owner/:reponame', (req, res, next) => {
+    const { owner, reponame } = req.params;
+    getByUserAndReponame({ owner, reponame })
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .put('/:owner/:reponame', (req, res, next) => {
+    const { owner, reponame } = req.params;
+    updateByUserAndReponame({ owner, reponame, data: req.body })
+      .then(data => res.send(data))
       .catch(next);
   })
   .put('/star', (req, res, next) => {

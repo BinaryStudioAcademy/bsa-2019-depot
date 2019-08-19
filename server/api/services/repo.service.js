@@ -4,6 +4,7 @@ const fse = require('fs-extra');
 
 const repoHelper = require('../../helpers/repo.helper');
 const repoRepository = require('../../data/repositories/repository.repository');
+const userRepository = require('../../data/repositories/user.repository');
 const { initialCommit } = require('./commit.service');
 const starRepository = require('../../data/repositories/star.repository');
 
@@ -19,9 +20,7 @@ const createRepo = async ({
         url: pathToRepo
       };
     })
-    .catch(() => {
-      return Promise.reject({status: 404, message: 'Error! Repos wasn`t created'});
-    });
+    .catch(() => Promise.reject({ status: 404, message: 'Error! Repos wasn`t created' }));
 
   // Initial data has to contain 'email' (of user) and 'files' in form of [ { filename, content }, {... ]
   if (initialData) {
@@ -58,11 +57,27 @@ const isEmpty = async ({ owner, reponame }) => {
   }
 };
 
+const getByUserAndReponame = async ({ owner, reponame }) => {
+  const { id } = await userRepository.getByUsername(owner);
+  return repoRepository.getByUserAndReponame(id, reponame);
+};
+
+const updateByUserAndReponame = async ({ owner, reponame, data }) => {
+  const { id } = await userRepository.getByUsername(owner);
+  return repoRepository.updateByUserAndReponame(id, reponame, data);
+};
+
+const deleteByUserAndReponame = async ({ owner, reponame }) => {
+  const { id } = await userRepository.getByUsername(owner);
+  return repoRepository.deleteByUserAndReponame(id, reponame);
+};
+
 const renameRepo = async ({ repoName, newName, username }) => {
   try {
     const oldDirectory = repoHelper.getPathToRepo(username, repoName);
     const newDirectory = repoHelper.getPathToRepo(username, newName);
     fs.renameSync(oldDirectory, newDirectory);
+    await updateByUserAndReponame({ owner: username, reponame: repoName, data: { name: newName } });
     return true;
   } catch (e) {
     return false;
@@ -73,6 +88,7 @@ const deleteRepo = async ({ repoName, username }) => {
   try {
     const directory = repoHelper.getPathToRepo(username, repoName);
     await fs.remove(directory);
+    await deleteByUserAndReponame({ owner: username, reponame: repoName });
     return true;
   } catch (e) {
     return false;
@@ -137,5 +153,7 @@ module.exports = {
   isEmpty,
   forkRepo,
   getReposData,
-  setStar
+  setStar,
+  getByUserAndReponame,
+  updateByUserAndReponame
 };

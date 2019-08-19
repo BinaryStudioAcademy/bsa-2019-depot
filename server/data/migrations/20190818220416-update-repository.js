@@ -9,6 +9,10 @@ module.exports = {
       allowNull: true,
       type: Sequelize.STRING,
       unique: false
+    }),
+    queryInterface.addConstraint('repositories', ['name', 'userId'], {
+      type: 'unique',
+      name: 'unique_reponame_per_user'
     })
   ])),
   down: queryInterface => queryInterface.sequelize.transaction(transaction => Promise.all([
