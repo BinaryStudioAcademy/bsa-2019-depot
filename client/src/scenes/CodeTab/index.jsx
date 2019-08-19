@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import RepoFileTree from '../../components/RepoFileTree/index';
+import * as commitsService from '../../services/commitsService';
 import RepoReadme from '../../components/RepoReadme/index';
 import { fetchBranches, fetchFileTree, fetchLastCommitOnBranch } from '../../routines/routines';
 
@@ -14,7 +15,8 @@ class CodeTab extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      branch: 'master'
+      branch: 'master',
+      commitCount: 0
     };
     this.onBranchChange = this.onBranchChange.bind(this);
   }
@@ -27,6 +29,8 @@ class CodeTab extends React.Component {
       branch: actualBranch
     });
     history.push(`/${username}/${reponame}/tree/${actualBranch}`);
+    commitsService.getCommitCount(username, reponame, actualBranch)
+      .then(count => this.setState({ commitCount: count.count }));
     this.props.fetchLastCommitOnBranch({
       username,
       reponame,
@@ -50,6 +54,8 @@ class CodeTab extends React.Component {
         const { branch } = this.state;
         history.push(`/${username}/${reponame}/tree/${data.value}`);
 
+        commitsService.getCommitCount(username, reponame, branch)
+          .then(count => this.setState({ commitCount: count.count }));
         this.props.fetchLastCommitOnBranch({
           username,
           reponame,
@@ -70,7 +76,7 @@ class CodeTab extends React.Component {
   };
 
   render() {
-    const { branch } = this.state;
+    const { branch, commitCount } = this.state;
     const { username, reponame, lastCommitData, branchesData, fileTreeData, history, fetchFileTree } = this.props;
     const { branches } = branchesData;
     const branchesCount = branches ? branches.length : 0;
@@ -97,7 +103,7 @@ class CodeTab extends React.Component {
             <Menu.Item>
               <Octicon icon={getIconByName('history')} />
               <Link className={styles.repoMetaDataLinks} to={`/${username}/${reponame}/commits/${branch}`}>
-                <b>4,325 </b> commits
+                <b>{commitCount} </b> commits
               </Link>
             </Menu.Item>
             <Menu.Item>

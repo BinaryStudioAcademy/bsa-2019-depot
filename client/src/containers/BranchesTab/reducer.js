@@ -15,7 +15,7 @@ export const branchesData = (state = initialState, action) => {
       loading: true
     };
   case fetchBranches.SUCCESS:
-    const { branches, lastCommits, error } = action.payload;
+    const { branches, lastCommits } = action.payload;
     return {
       ...state,
       branches,
@@ -24,7 +24,7 @@ export const branchesData = (state = initialState, action) => {
   case fetchBranches.FAILURE:
     return {
       ...state,
-      error
+      error: action.payload
     };
   case fetchBranches.FULFILL:
     return {
