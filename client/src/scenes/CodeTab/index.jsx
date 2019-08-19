@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import RepoFileTree from '../../components/RepoFileTree/index';
+import * as commitsService from '../../services/commitsService';
 import RepoReadme from '../../components/RepoReadme/index';
 import { fetchBranches, fetchFileTree, fetchLastCommitOnBranch } from '../../routines/routines';
 
@@ -14,7 +15,8 @@ class CodeTab extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      branch: 'master'
+      branch: 'master',
+      commitCount: 0
     };
     this.onBranchChange = this.onBranchChange.bind(this);
   }
@@ -27,6 +29,9 @@ class CodeTab extends React.Component {
       branch: actualBranch
     });
     history.push(`/${username}/${reponame}/tree/${actualBranch}`);
+    commitsService
+      .getCommitCount(username, reponame, actualBranch)
+      .then(count => this.setState({ commitCount: count.count }));
     this.props.fetchLastCommitOnBranch({
       username,
       reponame,
@@ -45,10 +50,14 @@ class CodeTab extends React.Component {
         branch: data.value
       },
       () => {
-        const { username, reponame, history } = this.props;
+        const { match, history } = this.props;
+        const { username, reponame } = match.params;
         const { branch } = this.state;
         history.push(`/${username}/${reponame}/tree/${data.value}`);
 
+        commitsService
+          .getCommitCount(username, reponame, branch)
+          .then(count => this.setState({ commitCount: count.count }));
         this.props.fetchLastCommitOnBranch({
           username,
           reponame,
@@ -63,9 +72,23 @@ class CodeTab extends React.Component {
     );
   };
 
+  onCreateFile = () => {
+    const { location, history } = this.props;
+    history.push(location.pathname.replace('/tree', '/new'));
+  };
+
   render() {
-    const { branch } = this.state;
-    const { username, reponame, lastCommitData, branchesData, fileTreeData, history, fetchFileTree } = this.props;
+    const { branch, commitCount } = this.state;
+    const {
+      username,
+      currentUser,
+      reponame,
+      lastCommitData,
+      branchesData,
+      fileTreeData,
+      history,
+      fetchFileTree
+    } = this.props;
     const { branches } = branchesData;
     const branchesCount = branches ? branches.length : 0;
 
@@ -91,7 +114,7 @@ class CodeTab extends React.Component {
             <Menu.Item>
               <Octicon icon={getIconByName('history')} />
               <Link className={styles.repoMetaDataLinks} to={`/${username}/${reponame}/commits/${branch}`}>
-                <b>4,325 </b> commits
+                <b>{commitCount} </b> commits
               </Link>
             </Menu.Item>
             <Menu.Item>
@@ -160,8 +183,14 @@ class CodeTab extends React.Component {
           </div>
           <div className={styles.repoActions}>
             <Button.Group>
-              <Button className={styles.actionButton}>Create New File</Button>
-              <Button className={styles.actionButton}>Upload files</Button>
+              {currentUser && currentUser === username && (
+                <>
+                  <Button className={styles.actionButton} onClick={this.onCreateFile}>
+                    Create New File
+                  </Button>
+                  <Button className={styles.actionButton}>Upload files</Button>
+                </>
+              )}
               <Button className={styles.actionButton}>Find file</Button>
             </Button.Group>
             <Popup
@@ -227,10 +256,11 @@ class CodeTab extends React.Component {
   }
 }
 
-const mapStateToProps = ({ lastCommitData, branchesData, fileTreeData }) => ({
+const mapStateToProps = ({ lastCommitData, branchesData, fileTreeData, profile }) => ({
   lastCommitData,
   branchesData,
-  fileTreeData
+  fileTreeData,
+  currentUser: profile.currentUser.username
 });
 
 const mapDispatchToProps = {
@@ -260,6 +290,9 @@ CodeTab.propTypes = {
   fetchBranches: PropTypes.func.isRequired,
   fetchFileTree: PropTypes.func.isRequired,
   history: PropTypes.object,
+  location: PropTypes.object.isRequired,
+  match: PropTypes.object,
+  currentUser: PropTypes.string,
   username: PropTypes.string.isRequired,
   reponame: PropTypes.string.isRequired,
   branch: PropTypes.string
@@ -268,4 +301,4 @@ CodeTab.propTypes = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CodeTab);
+)(withRouter(CodeTab));

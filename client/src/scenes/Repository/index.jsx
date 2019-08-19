@@ -8,7 +8,10 @@ import CommitsPage from '../../containers/CommitsPage/index';
 import DiffCommitView from '../../components/DiffCommitView/index';
 import RepositoryTab from '../../containers/RepositoryTab';
 import RepoSettings from '../../containers/SettingsTab/index';
+import FileViewPage from '../../containers/FileViewPage';
+import FileEditPage from '../../containers/FileEditPage';
 import BranchesTab from '../../containers/BranchesTab/index';
+import PrivateTab from '../../containers/PrivateTab';
 
 import styles from './styles.module.scss';
 
@@ -39,8 +42,10 @@ class RepositoryPage extends React.Component {
               <Route exact path={`${match.path}/commits/:branch`} component={CommitsPage} />
               <Route exact path={`${match.path}/commit/:hash`} component={DiffCommitView} />
               <Route exact path={`${match.path}/issues`} component={IssuesTab} />
-              <Route exact path={`${match.path}/settings`} component={RepoSettings} />
+              <PrivateTab exact path={`${match.path}/settings`} component={RepoSettings} />
               <Route exact path={`${match.path}/branches`} component={BranchesTab} />
+              <PrivateTab path={[`${match.path}/new/:branch`, `${match.path}/edit/:branch`]} component={FileEditPage} />
+              <Route path={`${match.path}/blob/:branch`} component={FileViewPage} />
             </Switch>
           </div>
         </Container>

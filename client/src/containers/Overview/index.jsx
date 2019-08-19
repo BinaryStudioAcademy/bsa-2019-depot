@@ -107,26 +107,30 @@ export class Overview extends React.Component {
         <Grid>
           <Grid.Row columns={2}>
             <Grid.Column mobile={16} computer={13}>
-              <Container className={styles.pinned_header}>
-                <h2>
-                  {currentYearContribution || 'No'} contributions in {currentYear} year
-                </h2>
-                <Dropdown className={styles.dropdown_header} text="Contribution settings">
-                  <Dropdown.Menu>
-                    <Dropdown.Item text="Private contributions" />
-                    <Dropdown.Item text="Activity overview" />
-                  </Dropdown.Menu>
-                </Dropdown>
+              <Container className={styles.section}>
+                <Container className={styles.section_header}>
+                  <h2>
+                    {currentYearContribution || 'No'} contributions in {currentYear} year
+                  </h2>
+                  <Dropdown className={styles.header_actions} text="Contribution settings">
+                    <Dropdown.Menu>
+                      <Dropdown.Item text="Private contributions" />
+                      <Dropdown.Item text="Activity overview" />
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </Container>
+                <div className={styles.calendarContainer}>
+                  <Calendar
+                    values={userActivityByDate}
+                    until={this.until}
+                    weekNames={this.weekNames}
+                    monthNames={this.monthNames}
+                    panelColors={this.panelColors}
+                  />
+                </div>
               </Container>
-              <Calendar
-                values={userActivityByDate}
-                until={this.until}
-                weekNames={this.weekNames}
-                monthNames={this.monthNames}
-                panelColors={this.panelColors}
-              />
 
-              <Container className={styles.pinned_header}>
+              <Container className={styles.section_header}>
                 <h2>Contribution activity</h2>
               </Container>
 
@@ -180,7 +184,7 @@ export class Overview extends React.Component {
               <ul className={styles.contribution_year_list}>
                 {yearList.map(year => (
                   <li key={year}>
-                    <Link to="" className={styles.contribution_year__active}>
+                    <Link to="" className={[styles.contribution_year, styles.active].join(' ')}>
                       {year}
                     </Link>
                   </li>

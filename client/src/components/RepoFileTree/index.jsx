@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 import { Table, Image, Message } from 'semantic-ui-react';
 import Octicon, { getIconByName } from '@primer/octicons-react';
@@ -56,7 +56,8 @@ class RepoFileTree extends React.Component {
         tree: { files, directories, currentPath }
       },
       reponame,
-      username
+      username,
+      location
     } = this.props;
 
     const lastCommitLink = `/${username}/${reponame}/commit/${sha}`;
@@ -124,7 +125,7 @@ class RepoFileTree extends React.Component {
                 <Table.Row>
                   <Table.Cell singleLine width="five">
                     <Octicon className={styles.fileIcon} icon={getIconByName('file')} />
-                    <Link className={styles.link} to="">
+                    <Link className={styles.link} to={`${location.pathname.replace('tree', 'blob')}/${file.name}`}>
                       {file.name}
                     </Link>
                   </Table.Cell>
@@ -168,10 +169,11 @@ RepoFileTree.propTypes = {
     })
   }).isRequired,
   history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
   username: PropTypes.string.isRequired,
   reponame: PropTypes.string.isRequired,
   branch: PropTypes.string.isRequired,
   fetchFileTree: PropTypes.func.isRequired
 };
 
-export default RepoFileTree;
+export default withRouter(RepoFileTree);

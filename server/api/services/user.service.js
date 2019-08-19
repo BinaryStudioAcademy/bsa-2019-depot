@@ -19,9 +19,12 @@ const checkUsernameExists = async ({ username }) => {
 };
 
 const resetPassword = async ({ token, password }) => {
-  let result = { success: 'Password updated' };
+  const result = { status: 200, message: 'Password updated' };
   const authorizedData = await tokenHelper.verifyToken(token);
-  if (!authorizedData) result = { failure: 'Incorrect token' };
+  if (!authorizedData) {
+    const errorObj = { status: 401, message: 'Incorrect token' };
+    return Promise.reject(errorObj);
+  }
   await UserRepository.setUserPassword(authorizedData.data, password);
   return result;
 };

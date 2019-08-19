@@ -10,8 +10,11 @@ const {
   getReposData,
   setStar
 } = require('../services/repo.service');
-const { getCommits, getCommitDiff } = require('../services/commit.service');
-const { getBranches, getBranchTree, getLastCommitOnBranch } = require('../services/branch.service');
+const { getCommits, getCommitDiff, getCommitCount } = require('../services/commit.service');
+const {
+  getBranches, getBranchTree, getLastCommitOnBranch, getFileContent
+} = require('../services/branch.service');
+const ownerOnlyMiddleware = require('../middlewares/owner-only.middleware');
 
 const router = Router();
 
@@ -53,6 +56,12 @@ router
       .then(commits => res.send(commits))
       .catch(next);
   })
+  .get('/:owner/:repoName/:branchName/count', (req, res, next) => {
+    const { owner, repoName, branchName } = req.params;
+    getCommitCount({ user: owner, name: repoName, branch: branchName })
+      .then(count => res.send(count))
+      .catch(next);
+  })
   .get('/:owner/:repoName/branches', (req, res, next) => {
     const { owner, repoName } = req.params;
     getBranches({ user: owner, repoName })
@@ -77,13 +86,25 @@ router
       .then(tree => res.send(tree))
       .catch(next);
   })
+  .get('/:owner/:repoName/:branchName/file', (req, res, next) => {
+    const { owner, repoName, branchName } = req.params;
+    const { filepath } = req.query;
+    getFileContent({
+      user: owner,
+      name: repoName,
+      branch: branchName,
+      filepath
+    })
+      .then(fileData => res.send(fileData))
+      .catch(next);
+  })
   .get('/:owner/:repoName/:branchName/last-commit', (req, res, next) => {
     const { owner, repoName, branchName } = req.params;
     getLastCommitOnBranch({ user: owner, name: repoName, branch: branchName })
       .then(commit => res.send(commit))
       .catch(next);
   })
-  .get('/:owner/:repoName/settings', (req, res) => {
+  .get('/:owner/:repoName/settings', ownerOnlyMiddleware, (req, res) => {
     res.sendStatus(200);
     /* Can be used in future to get settings data from DB
     const { repoName } = req.params;
@@ -92,14 +113,14 @@ router
       .catch(next);
     */
   })
-  .post('/:owner/:repoName/settings/rename', (req, res, next) => {
+  .post('/:owner/:repoName/settings/rename', ownerOnlyMiddleware, (req, res, next) => {
     const { repoName } = req.params;
     const { newName } = req.body;
     renameRepo({ repoName, newName, username: req.user.username })
       .then(result => res.send(result))
       .catch(next);
   })
-  .delete('/:owner/:repoName/settings', (req, res, next) => {
+  .delete('/:owner/:repoName/settings', ownerOnlyMiddleware, (req, res, next) => {
     const { repoName } = req.params;
     deleteRepo({ repoName, username: req.user.username })
       .then(result => res.send(result))
