@@ -41,3 +41,12 @@ export const forkRepo = async ({ owner, repo }) => {
   });
   return response.json();
 };
+
+export const setStar = async request => {
+  const response = await callWebApi({
+    endpoint: '/api/repo/star',
+    type: 'PUT',
+    request
+  });
+  return response.json();
+};
