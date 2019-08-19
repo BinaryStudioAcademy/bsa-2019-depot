@@ -1,7 +1,7 @@
 const usersSeed = require('../seed-data/users.seed');
 
 module.exports = {
-  up: async (queryInterface /* Sequelize */) => {
+  up: async (queryInterface) => {
     await queryInterface.bulkInsert('users', usersSeed);
   },
 
