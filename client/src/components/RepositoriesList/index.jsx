@@ -6,13 +6,13 @@ import { Link } from 'react-router-dom';
 import { Container, Input, Dropdown, Button } from 'semantic-ui-react';
 import Octicon, { Repo } from '@primer/octicons-react';
 import { repositoryActions } from '../../scenes/Dashboard/actions';
-import { RepositoryItem } from '../RepositoryItem';
+import RepositoryItem from '../RepositoryItem';
 
 import styles from './styles.module.scss';
 
 export class RepositoriesList extends React.Component {
   render() {
-    const { repositories, username } = this.props;
+    const { repositories, username, actions: { setStar } } = this.props;
     //Mock
 
     const repoTypes = [
@@ -59,7 +59,14 @@ export class RepositoriesList extends React.Component {
           </div>
         </Container>
         {repositories.map(repo => {
-          return <RepositoryItem repo={repo} username={username} key={repo.name} />;
+          return (
+            <RepositoryItem
+              repo={repo}
+              username={username}
+              key={repo.name}
+              onStar={setStar}
+            />
+          );
         })}
       </Container>
     );

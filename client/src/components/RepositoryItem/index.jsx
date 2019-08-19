@@ -7,7 +7,18 @@ import PropTypes from 'prop-types';
 
 import styles from './styles.module.scss';
 
-export class RepositoryItem extends React.Component {
+class RepositoryItem extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.starClickHandler = this.starClickHandler.bind(this);
+  }
+
+  starClickHandler() {
+    const repositoryId = this.props.repo.id;
+    this.props.onStar({ repositoryId });
+  }
+
   render() {
     //Mock
     const { repo: { name }, username } = this.props;
@@ -22,6 +33,7 @@ export class RepositoryItem extends React.Component {
       { name: 'commit7', uv: 3490, commitDate: 3800, amt: 2100 },
       { name: 'commit8', uv: 3490, commitDate: 0, amt: 2100 }
     ];
+
 
     return (
       <div className={styles.repo_item}>
@@ -49,7 +61,7 @@ export class RepositoryItem extends React.Component {
         </div>
         <div className={styles.repo_item_right}>
           <div>
-            <button className={styles.repo_item_stars}>
+            <button className={styles.repo_item_stars} onClick={this.starClickHandler}>
               <Octicon className={styles.star_icon} icon={Star} />
               Star
             </button>
@@ -71,3 +83,5 @@ RepositoryItem.propTypes = {
   repo: PropTypes.string,
   username: PropTypes.string.isRequired
 };
+
+export default RepositoryItem;

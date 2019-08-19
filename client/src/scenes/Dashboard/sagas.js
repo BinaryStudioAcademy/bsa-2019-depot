@@ -40,6 +40,20 @@ function* watchFetchActivity() {
   yield takeEvery(types.FETCH_ACTIVITY, fetchActivity);
 }
 
+function* setStar({ payload: { repositoryId } }) {
+  try {
+    const userId = yield select(({ profile }) => profile.currentUser.id);
+    yield call(repositoryService.setStar, { userId, repositoryId });
+    yield put(repositoryActions.fetchRepositories());
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+function* watchSetStar() {
+  yield takeEvery(types.SET_STAR, setStar);
+}
+
 export function* watchRepositories() {
-  yield all([call(watchFetchRepositories), call(watchFetchActivity)]);
+  yield all([call(watchFetchRepositories), call(watchFetchActivity), call(watchSetStar)]);
 }
