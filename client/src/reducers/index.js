@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 
 import issuesReducer from '../containers/IssuesTab/reducer';
+import issueCommentsReducer from '../components/IssueComments/reducer';
 import { forgotReducer as forgot } from '../scenes/Forgot/reducer';
 import { resetReducer as reset } from '../scenes/Reset/reducer';
 import { commitsData } from '../containers/CommitsPage/reducer';
@@ -18,6 +19,7 @@ export default combineReducers({
   forgot,
   reset,
   issuesData: issuesReducer,
+  issueCommentsData: issueCommentsReducer,
   commitsData,
   branchesData,
   diffsData,

@@ -18,3 +18,4 @@ export const forkRepo = createRoutine('FORK_REPO');
 export const createIssue = createRoutine('CREATE_ISSUE');
 export const fetchCurrentRepoId = createRoutine('CURRENT_REPO_ID');
 export const fetchIssueComments = createRoutine('ISSUE_COMMENTS');
+export const createIssueComment = createRoutine('CREATE_ISSUE_COMMENTS');
