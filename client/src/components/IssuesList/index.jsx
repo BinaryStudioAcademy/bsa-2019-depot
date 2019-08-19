@@ -9,35 +9,38 @@ import './styles.module.scss';
 
 const IssuesList = props => {
   return (
-    <List divided verticalAlign="middle">
-      {props.issues.map(issue => (
-        <List.Item key={issue.id}>
-          <List.Content floated="right">
-            <Icon name="comments outline" /> {issue.commentCount}
-          </List.Content>
-          <List.Content floated="right">
-            {issue.assignees &&
-              issue.assignees
-                .slice(0, 3)
-                .map(assignee => (
-                  <Popup
-                    key={assignee.username}
-                    content={`Assigned to ${assignee.username}`}
-                    trigger={<Image src={getUserImgLink(assignee.avatar)} avatar />}
-                  />
-                ))}
-          </List.Content>
-          <Icon name={issue.opened ? 'info' : 'check'} color={issue.opened ? 'green' : 'red'} />
-          <List.Content>
-            <List.Header>{issue.text}</List.Header>
-            <List.Description>
-              {`#${issue.id}`} <Link to={`${props.match.url}/${issue.id}`}>{issue.title}</Link>{' '}
-              {`opened ${moment(issue.createdAt).fromNow()} by ${issue.user.username}`}
-            </List.Description>
-          </List.Content>
-        </List.Item>
-      ))}
-    </List>
+    props.issues.length > 0 && (
+      <List divided verticalAlign="middle">
+        {props.issues.map(issue => (
+          <List.Item key={issue.id}>
+            <List.Content floated="right">
+              <Icon name="comments outline" /> {issue.commentCount}
+            </List.Content>
+            <List.Content floated="right">
+              {issue.assignees &&
+                issue.assignees
+                  .slice(0, 3)
+                  .map(assignee => (
+                    <Popup
+                      key={assignee.username}
+                      content={`Assigned to ${assignee.username}`}
+                      trigger={<Image src={getUserImgLink(assignee.avatar)} avatar />}
+                    />
+                  ))}
+            </List.Content>
+            <Icon name={issue.opened ? 'info' : 'check'} color={issue.opened ? 'green' : 'red'} />
+            <List.Content>
+              <List.Header>
+                <Link to={`${props.match.url}/${issue.id}`}>{issue.title}</Link>
+              </List.Header>
+              <List.Description>
+                {`#${issue.id} opened ${moment(issue.createdAt).fromNow()} by ${issue.user.username}`}
+              </List.Description>
+            </List.Content>
+          </List.Item>
+        ))}
+      </List>
+    )
   );
 };
 

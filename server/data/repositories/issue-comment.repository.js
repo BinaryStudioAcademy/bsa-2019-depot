@@ -1,5 +1,5 @@
 const BaseRepository = require('./base.repository');
-const { IssueCommentModel } = require('../models/index');
+const { IssueCommentModel, UserModel } = require('../models/index');
 
 class IssueCommentRepository extends BaseRepository {
   addIssueComment({ ...issueCommentData }) {
@@ -12,6 +12,16 @@ class IssueCommentRepository extends BaseRepository {
 
   deleteIssueCommentById(id) {
     return this.deleteById(id);
+  }
+
+  getAllIssueComments({issueId}) {
+    return this.model.findAll({ 
+      where: { issueId },
+      include: [{
+        model: UserModel,
+        attributes: ['username'],
+      }]
+    })
   }
 }
 

@@ -4,6 +4,7 @@ import { Switch, Route } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 import RepositoryHeader from '../../components/RepositoryHeader';
 import IssuesTab from '../../containers/IssuesTab/index';
+import IssueComments from '../../components/IssueComments/index';
 import CommitsPage from '../../containers/CommitsPage/index';
 import DiffCommitView from '../../components/DiffCommitView/index';
 import RepositoryTab from '../../containers/RepositoryTab';
@@ -42,8 +43,9 @@ class RepositoryPage extends React.Component {
               <Route path={`${match.path}/tree/:branch`} component={RepositoryTab} />
               <Route exact path={`${match.path}/commits/:branch`} component={CommitsPage} />
               <Route exact path={`${match.path}/commit/:hash`} component={DiffCommitView} />
-              <Route exact path={`${match.path}/issues/:number`} component={IssuesTab} />
+              <Route exact path={`${match.path}/issues`} component={IssuesTab} />
               <Route exact path={`${match.path}/issues/new`} component={CreateIssuePage} />
+              <Route exact path={`${match.path}/issues/:number`} component={IssueComments} />
               <Route exact path={`${match.path}/settings`} component={RepoSettings} />
               <Route exact path={`${match.path}/branches`} component={BranchesTab} />
               <PrivateRoute

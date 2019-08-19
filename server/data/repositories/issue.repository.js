@@ -15,7 +15,6 @@ class IssueRepository extends BaseRepository {
   }
 
   getRepositoryIssues({repositoryId}) {
-    console.log('repositoryId: ', repositoryId);
     return this.model.findAll({ 
       where: { repositoryId },
       include: [{
@@ -23,12 +22,6 @@ class IssueRepository extends BaseRepository {
         attributes: ['username'],
       }]
     })
-  }
-
-  getIssueComments(issueId) {
-    return this.model.findAll({ where: { 
-      "$issueComments.issueId$": `${issueId}` 
-    }});
   }
 }
 

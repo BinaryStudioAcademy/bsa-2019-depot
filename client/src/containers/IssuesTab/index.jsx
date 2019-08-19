@@ -122,7 +122,7 @@ class IssuesTab extends React.Component {
               </Dropdown>
             </div>
           </div>
-          <IssuesList issues={issues} />
+          <IssuesList issues={issues} match={match} />
         </div>
       </>
     );

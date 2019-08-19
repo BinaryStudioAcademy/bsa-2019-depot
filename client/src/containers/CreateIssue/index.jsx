@@ -60,7 +60,15 @@ class CreateIssuePage extends React.Component {
 
   onSubmit() {
     const { title, body } = this.state;
-    const { createIssue, username, repoName, repositoryId, userId } = this.props;
+    const {
+      createIssue,
+      username,
+      repoName,
+      repositoryId,
+      userId,
+      history,
+      match: { url }
+    } = this.props;
 
     createIssue({
       title,
@@ -68,8 +76,15 @@ class CreateIssuePage extends React.Component {
       username,
       repoName,
       userId,
-      repositoryId
+      repositoryId,
+      isOpened: true,
+      assignees: []
     });
+    const newUrl = url
+      .split('/')
+      .slice(0, -1)
+      .join('/');
+    history.push(newUrl);
   }
 
   renderLabel = label => ({
@@ -139,9 +154,10 @@ class CreateIssuePage extends React.Component {
 CreateIssuePage.propTypes = {
   username: PropTypes.string.isRequired,
   repoName: PropTypes.string.isRequired,
-  repositoryId: PropTypes.string.isRequired,
+  repositoryId: PropTypes.number.isRequired,
   userId: PropTypes.string.isRequired,
   createIssue: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
     isExact: PropTypes.bool.isRequired,
