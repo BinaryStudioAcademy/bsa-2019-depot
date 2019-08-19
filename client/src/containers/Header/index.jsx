@@ -218,7 +218,7 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
                 <Dropdown.Menu>
                   <Dropdown.Item href="/new">New repository</Dropdown.Item>
                   <Dropdown.Item>Import repository</Dropdown.Item>
-                  <Dropdown.Item>New organization</Dropdown.Item>
+                  <Dropdown.Item href="/organizations/new">New organization</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </li>

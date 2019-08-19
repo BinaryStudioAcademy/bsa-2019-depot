@@ -15,6 +15,7 @@ import branchesSagas from '../containers/BranchesTab/sagas';
 import createIssueSagas from '../containers/CreateIssue/sagas';
 import issueCommentsSagas from '../components/IssueComments/sagas';
 import repositoryTabSagas from '../containers/RepositoryTab/sagas';
+import createOrganizationSagas from '../scenes/CreateOrganization/sagas';
 
 export default function* rootSaga() {
   yield all([
@@ -32,6 +33,7 @@ export default function* rootSaga() {
     branchesSagas(),
     createIssueSagas(),
     issueCommentsSagas(),
-    repositoryTabSagas()
+    repositoryTabSagas(),
+    createOrganizationSagas()
   ]);
 }
