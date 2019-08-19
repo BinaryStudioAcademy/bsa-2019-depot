@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 import { Container, Grid, Dropdown, Accordion } from 'semantic-ui-react';
 import Octicon, { Repo, Grabber, Fold, Unfold, RepoPush } from '@primer/octicons-react';
 import { repositoryActions } from '../../scenes/Dashboard/actions';
+import StarLink from '../../components/StarLink';
 
 import styles from './styles.module.scss';
 
@@ -86,16 +87,18 @@ export class Overview extends React.Component {
         <Container className={styles.favorite_repos_wrapper}>
           {repositories &&
             repositories.map(repo => {
+              const { name, starsCount } = repo;
               return (
-                <div key={repo.name} className={styles.pinned_item}>
+                <div key={name} className={styles.pinned_item}>
                   <div>
                     <Octicon className={styles.card_icon} icon={Repo} />
-                    <Link to={`${username}/${repo.name}`}>{repo.name}</Link>
+                    <Link to={`${username}/${name}`}>{name}</Link>
                     <Octicon className={styles.card_icon_grab} icon={Grabber} />
                   </div>
                   <p className={styles.pinned_item_desc}> </p>
                   <p className={styles.pinned_item_lang}>
                     <span></span>Javascript
+                    <StarLink starsCount={starsCount} />
                   </p>
                 </div>
               );
