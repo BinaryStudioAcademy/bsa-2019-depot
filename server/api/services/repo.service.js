@@ -1,16 +1,16 @@
 const NodeGit = require('nodegit');
 const fs = require('fs-extra');
 const fse = require('fs-extra');
-
 const repoHelper = require('../../helpers/repo.helper');
 const repoRepository = require('../../data/repositories/repository.repository');
 const userRepository = require('../../data/repositories/user.repository');
 const { initialCommit } = require('./commit.service');
 const starRepository = require('../../data/repositories/star.repository');
 
-const createRepo = async ({
-  owner, name, userId, description, initialData
-}) => {
+const createRepo = async (repoData) => {
+  const {
+    owner, name, userId, description
+  } = repoData;
   let result = 'Repo was created';
   const pathToRepo = repoHelper.getPathToRepo(owner, name);
   await NodeGit.Repository.init(pathToRepo, 1)
@@ -20,11 +20,19 @@ const createRepo = async ({
         url: pathToRepo
       };
     })
-    .catch(() => Promise.reject({ status: 404, message: 'Error! Repos wasn`t created' }));
+    .catch(() => {
+      const errorObj = { status: 404, message: 'Error! Repos wasn`t created' };
+      Promise.reject(errorObj);
+    });
 
+  const initialData = repoHelper.generateInitialData({ ...repoData });
   // Initial data has to contain 'email' (of user) and 'files' in form of [ { filename, content }, {... ]
   if (initialData) {
-    await initialCommit({ owner, repoName: name, ...initialData });
+    await initialCommit({
+      owner,
+      repoName: name,
+      ...initialData
+    });
   }
 
   repoRepository.create({

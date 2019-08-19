@@ -5,6 +5,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import RepoFileTree from '../../components/RepoFileTree/index';
+import * as commitsService from '../../services/commitsService';
 import RepoReadme from '../../components/RepoReadme/index';
 import { InputError } from '../../components/InputError';
 import { fetchBranches, fetchFileTree, fetchLastCommitOnBranch } from '../../routines/routines';
@@ -36,7 +37,8 @@ class CodeTab extends React.Component {
       description: '',
       website: '',
       editingInfo: false,
-      infoLoading: true
+      infoLoading: true,
+      commitCount: 0
     };
     this.onBranchChange = this.onBranchChange.bind(this);
   }
@@ -49,6 +51,9 @@ class CodeTab extends React.Component {
       branch: actualBranch
     });
     history.push(`/${username}/${reponame}/tree/${actualBranch}`);
+    commitsService
+      .getCommitCount(username, reponame, actualBranch)
+      .then(count => this.setState({ commitCount: count.count }));
     this.props.fetchLastCommitOnBranch({
       username,
       reponame,
@@ -82,6 +87,9 @@ class CodeTab extends React.Component {
         const { branch } = this.state;
         history.push(`/${username}/${reponame}/tree/${data.value}`);
 
+        commitsService
+          .getCommitCount(username, reponame, branch)
+          .then(count => this.setState({ commitCount: count.count }));
         this.props.fetchLastCommitOnBranch({
           username,
           reponame,
@@ -143,7 +151,7 @@ class CodeTab extends React.Component {
   };
 
   render() {
-    const { branch, description, website, infoLoading, editingInfo } = this.state;
+    const { branch, description, website, infoLoading, editingInfo, commitCount } = this.state;
     const {
       username,
       currentUser,
@@ -267,7 +275,7 @@ class CodeTab extends React.Component {
             <Menu.Item>
               <Octicon icon={getIconByName('history')} />
               <Link className={styles.repoMetaDataLinks} to={`/${username}/${reponame}/commits/${branch}`}>
-                <b>4,325 </b> commits
+                <b>{commitCount} </b> commits
               </Link>
             </Menu.Item>
             <Menu.Item>
@@ -336,10 +344,14 @@ class CodeTab extends React.Component {
           </div>
           <div className={styles.repoActions}>
             <Button.Group>
-              <Button className={styles.actionButton} onClick={this.onCreateFile}>
-                Create New File
-              </Button>
-              <Button className={styles.actionButton}>Upload files</Button>
+              {currentUser && currentUser === username && (
+                <>
+                  <Button className={styles.actionButton} onClick={this.onCreateFile}>
+                    Create New File
+                  </Button>
+                  <Button className={styles.actionButton}>Upload files</Button>
+                </>
+              )}
               <Button className={styles.actionButton}>Find file</Button>
             </Button.Group>
             <Popup

@@ -11,6 +11,7 @@ import profile from '../containers/Profile/reducer';
 import { userStatsReducer } from '../scenes/Dashboard/reducer';
 import forkRepo from '../components/ForkButton/reducer';
 import { branchesData } from '../containers/BranchesTab/reducer';
+import createOrg from '../scenes/CreateOrganization/reducer';
 
 export default combineReducers({
   profile,
@@ -25,5 +26,6 @@ export default combineReducers({
   newFile: newFileReducer,
   repoSettingsData,
   userStats: userStatsReducer,
-  forkRepo
+  forkRepo,
+  createOrg
 });
