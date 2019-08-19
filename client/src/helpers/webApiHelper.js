@@ -50,7 +50,7 @@ export async function throwIfResponseFailed(res) {
 export default async function callWebApi(args) {
   try {
     const res = await fetch(getFetchUrl(args), getFetchArgs(args));
-    await throwIfResponseFailed(res);
+    if (args.endpoint !== '/api/auth/user') await throwIfResponseFailed(res);
     return res;
   } catch (err) {
     toast.error(`Status: ${err.status}. ${err.message}`);
