@@ -50,7 +50,7 @@ const traverseFileTree = async (user, name, branch, tree) => {
           sha: entry.sha(),
           name: entry.name(),
           time: lastModifiedCommit.date(),
-          commitMessage: lastModifiedCommit.message(),
+          commitMessage: lastModifiedCommit.message()
         });
       }
     } catch (error) {

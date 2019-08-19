@@ -25,7 +25,7 @@ class BranchesTab extends React.Component {
 
   componentDidMount() {
     const {
-      branchesData: { branches },   
+      branchesData: { branches },
       match: {
         params: { username, reponame }
       }

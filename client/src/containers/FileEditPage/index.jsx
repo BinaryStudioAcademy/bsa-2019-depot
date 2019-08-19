@@ -105,9 +105,13 @@ class FileEditPage extends React.Component {
       oldFilepath: toEdit ? this.filepath : newFilePath, // Otherwise our old filepath would be path to folder
       filepath: newFilePath,
       fileData: content
-    }).then(() => {
-      this.handleCancel();
-    });
+    })
+      .then(() => {
+        this.handleCancel();
+      })
+      .catch(() => {
+        this.handleCancel();
+      });
   }
 
   render() {
