@@ -23,5 +23,9 @@ export const repositoryActions = {
   }),
   fetchActivity: () => ({
     type: types.FETCH_ACTIVITY
+  }),
+  setStar: repositoryId => ({
+    type: types.SET_STAR,
+    payload: repositoryId
   })
 };
