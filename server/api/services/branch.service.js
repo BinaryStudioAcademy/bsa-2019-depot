@@ -54,7 +54,8 @@ const traverseFileTree = async (user, name, branch, tree) => {
         });
       }
     } catch (error) {
-      return Promise.reject({status: 401, message: error});
+      const errorObj = { status: 401, message: error };
+      return Promise.reject(errorObj);
     }
   }
   return fileTree;

@@ -17,7 +17,8 @@ const { sendToQueue } = require('./queue.service.js');
 async function sendForgetPasswordEmail({ email, url }) {
   const isExist = await checkEmailExists({ email });
   if (!isExist.emailExists) {
-    return Promise.reject({ status: 404, message: 'Email is not exist' });
+    const errorObj = { status: 404, message: 'Email is not exist' };
+    return Promise.reject(errorObj);
   }
   const user = await UserRepository.getByEmail(email);
   const token = jwt.sign({ data: user.dataValues.email }, secret, { expiresIn: '1h' });
