@@ -130,12 +130,15 @@ const getCommitCount = async ({ user, name, branch }) => {
 
 const getCommitDiff = async ({ user, name, hash }) => {
   const pathToRepo = repoHelper.getPathToRepo(user, name);
+
   const cdCommand = `cd  ${pathToRepo} `;
-  const gitDiffCommand = `git diff ${hash}~ ${hash} -U`;
+
+  const gitDiffCommand = `git show ${hash}`;
   const command = `${cdCommand} && ${gitDiffCommand}`;
   const cmd = await exec(command);
   if (cmd.stderr) throw new Error(cmd.stderr);
-  return { diffs: cmd.stdout };
+  const diffsData = cmd.stdout.substring(cmd.stdout.indexOf('diff --git'));
+  return { diffs: diffsData };
 };
 
 const modifyFile = async ({

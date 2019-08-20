@@ -35,8 +35,8 @@ class CommitsPage extends React.Component {
     history.push(`/${username}/${reponame}/commits/${data.value}`);
 
     this.props.fetchBranches({
-      username,
-      reponame
+      owner: username,
+      repoName: reponame
     });
     this.props.fetchCommits({
       username,
