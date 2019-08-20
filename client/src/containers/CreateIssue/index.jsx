@@ -4,8 +4,8 @@ import ReactMarkdown from 'react-markdown';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 import * as Yup from 'yup';
 
-import { Container, Grid, Button, Dropdown, Form,  Popup, Image } from 'semantic-ui-react';
-import { Formik,  Field } from 'formik';
+import { Container, Grid, Button, Dropdown, Form, Popup, Image } from 'semantic-ui-react';
+import { Formik, Field } from 'formik';
 import styles from './styles.module.scss';
 import { InputError } from '../../components/InputError';
 
@@ -25,8 +25,7 @@ const assigneeOptions = [
 ];
 
 const validationSchema = Yup.object().shape({
-  issueTitle: Yup.string()
-    .max(256, 'Maximum length - 256 characters')
+  issueTitle: Yup.string().max(256, 'Maximum length - 256 characters')
 });
 
 class CreateIssuePage extends React.Component {
@@ -67,8 +66,8 @@ class CreateIssuePage extends React.Component {
     const { body, selectedTab } = this.state;
     return (
       <Container>
-        <Formik  onSubmit={this.onSubmit} validationSchema={validationSchema}>
-          {({ errors,  handleChange, issueTitle }) => (
+        <Formik onSubmit={this.onSubmit} validationSchema={validationSchema}>
+          {({ errors, handleChange, issueTitle }) => (
             <Form className={styles.issueForm} onSubmit={this.onSubmit}>
               <Grid>
                 <Grid.Column>
@@ -78,7 +77,13 @@ class CreateIssuePage extends React.Component {
                   />
                 </Grid.Column>
                 <Grid.Column width={10}>
-                  <Field name="issueTitle" value={issueTitle} onChange={handleChange} placeholder="Title" className={styles.titleInput} />
+                  <Field
+                    name="issueTitle"
+                    value={issueTitle}
+                    onChange={handleChange}
+                    placeholder="Title"
+                    className={styles.titleInput}
+                  />
                   <InputError name="issueTitle" />
                   <div className={styles.commentEditor}>
                     <ReactMde
