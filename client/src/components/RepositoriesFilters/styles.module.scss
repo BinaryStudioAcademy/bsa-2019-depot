@@ -1,0 +1,22 @@
+$secondary-color: #d1d5da;
+$button-color: #2dc04f;
+
+:global(.ui.container):local(.repos_filters) {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 5px 0 15px 0;
+  border-bottom: 1px solid $secondary-color;
+
+  :local(.repos_search_input) {
+    width: 55%;
+  }
+
+  :local(.new_repo) {
+    background-color: $button-color;
+    color: #fff;
+  }
+  :local(.new_repo_icon) {
+    margin-right: 5px;
+  }
+}

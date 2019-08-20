@@ -1,46 +1,20 @@
-:local(.container) {
-  max-width: 1200px;
-  margin: auto;
+$primary-color: #586069;
+$secondary-color: #d1d5da;
+
+:global(.ui.container):local(.org_repositories_list),
+:global(.ui.container):local(.org_repositories_filters) {
+  width: 1000px;
+  max-width: 1000px;
+  padding-top: 5px;
 }
 
-:local(.filterRow) {
-  margin: 10px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+:local(.org_repositories_filters):global(.ui.container [class*='repos_filters']) {
+  justify-content: start;
 
-:local(.issuesContainer) {
-  margin-top: 10px;
-  border: 1px solid lightgrey;
-  border-radius: 5px;
-}
-
-:local(.issuesHeader) {
-  padding: 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #f6f6f6;
-  border-bottom: 1px solid lightgrey;
-  border-radius: 5px 5px 0 0;
-}
-
-:local(.openedIssues),
-:local(.closedIssues),
-:global(.ui.dropdown) {
-  color: #575757;
-  cursor: pointer;
-
-  &:hover {
-    color: #000000;
+  :global([class*='repos_search_input']) {
+    width: 18%;
   }
-}
-
-:local(.openedIssues) {
-  margin-right: 15px;
-}
-
-:local(.issueFilters) > :not(:last-child) {
-  margin-right: 10px;
+  > div {
+    margin-right: 20px;
+  }
 }

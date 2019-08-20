@@ -1,3 +1,5 @@
+$background-color: #fafbfc;
+
 :global(.ui.top.attached.tabular.menu) {
   position: relative;
   top: 1px;
@@ -19,32 +21,46 @@
   border-bottom: none;
 }
 
-:local(.repoHeader) {
+:local(.orgHeader) {
   border-bottom: 1px solid lightgrey;
+  background-color: $background-color;
+  padding-top: 20px;
 
-  :local(.repoHeaderContainer) {
+  :local(.orgHeaderContainer) {
     max-width: 1000px;
     margin: auto;
-    padding-top: 20px;
   }
-}
+  :global(.ui.container):local(.orgInfoContainer) {
+    max-width: 1000px !important;
+    margin: auto;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+  }
+  :global(.ui.container):local(.orgInfo) {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
-:local(.repoNameRow) {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  :local(.repoName) {
-    :global(.octicon) {
-      margin-right: 0;
+    padding: 7px 0 7px 20px;
+  }
+  :local(.orgName) {
+    font-size: 20px;
+    font-weight: 400;
+    text-transform: capitalize;
+  }
+  :local(.orgDescription) {
+    font-size: 85%;
+  }
+  :local(.orgWebsite) {
+    font-size: 75%;
+    :local(.orgWebsiteIcon) {
+      color: #ccc;
+      margin-right: 5px;
     }
-
-    :local(.repoPath) {
-      margin-left: 10px;
-      font-size: 125%;
-      :local(.pathDivider) {
-        margin: 0 5px;
-      }
+    a {
+      color: #586069;
     }
   }
 }

@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Octicon, { Person } from '@primer/octicons-react';
+import Octicon, { Person, Link as linkIco } from '@primer/octicons-react';
 import { Icon, Label, Container } from 'semantic-ui-react';
+import { getUserImgLink } from '../../helpers/imageHelper';
 
 import styles from './styles.module.scss';
 
-const OrganizationHeader = ({ activePage, baseUrl }) => {
+const OrganizationHeader = ({ activePage, baseUrl, repoCount, imgUrl, orgInfo }) => {
   let activeTab;
   switch (activePage) {
   case 'repositories':
@@ -21,17 +22,28 @@ const OrganizationHeader = ({ activePage, baseUrl }) => {
   }
 
   return (
-    <header className={styles.repoHeader}>
+    <header className={styles.orgHeader}>
       <Container>
-        <div className={styles.repoHeaderContainer}>
+        <Container className={styles.orgInfoContainer}>
+          <img src={getUserImgLink(imgUrl)} alt="organization avatar" width="100px" height="100px" />
+          <Container className={styles.orgInfo}>
+            <div className={styles.orgName}>{orgInfo.username}</div>
+            <div className={styles.orgDescription}>{orgInfo.description ? orgInfo.description : ''}</div>
+            <div className={styles.orgWebsite}>
+              {orgInfo.website ? <Octicon icon={linkIco} className={styles.orgWebsiteIcon} /> : null}
+              <a href={`${orgInfo.website ? orgInfo.website : ''}`}>{orgInfo.website ? orgInfo.website : ''}</a>
+            </div>
+          </Container>
+        </Container>
+        <div className={styles.orgHeaderContainer}>
           <div className="ui top attached tabular menu">
             <div className={`${activeTab === 'repositories' && 'active'} item`}>
               <Link to={baseUrl}>
-                <Icon name="code" /> Repositories <Label circular>133</Label>
+                <Icon name="code" /> Repositories <Label circular>{repoCount}</Label>
               </Link>
             </div>
             <div className={`${activeTab === 'people' && 'active'} item`}>
-              <Link to={`${baseUrl}/people`}>
+              <Link to={`orgs${baseUrl}people`}>
                 <Octicon icon={Person} />
                 People<Label circular>1</Label>
               </Link>
@@ -46,7 +58,10 @@ const OrganizationHeader = ({ activePage, baseUrl }) => {
 OrganizationHeader.propTypes = {
   username: PropTypes.string.isRequired,
   activePage: PropTypes.string,
-  baseUrl: PropTypes.string
+  baseUrl: PropTypes.string,
+  repoCount: PropTypes.number,
+  imgUrl: PropTypes.string,
+  orgInfo: PropTypes.object.isRequired
 };
 
 const mapStateToProps = ({

@@ -10,6 +10,7 @@ import { repositoryActions } from './actions';
 import Overview from '../../containers/Overview';
 import OrganizationDashboard from '../OrganizationDashboard';
 import RepositoriesList from '../../components/RepositoriesList';
+import RepositoriesFilters from '../../components/RepositoriesFilters';
 import { getUserImgLink } from '../../helpers/imageHelper';
 import { getUser } from '../../services/userService';
 
@@ -106,7 +107,12 @@ class Dashboard extends React.Component {
                 </nav>
               </Container>
               {!tab && <Overview repositoriesNames={repositoriesNames} userToRender={params.username} />}
-              {tab === 'repositories' && <RepositoriesList repositories={repositoriesNames} isOwner={isOwner} />}
+              {tab === 'repositories' && (
+                <>
+                  <RepositoriesFilters />
+                  <RepositoriesList repositories={repositoriesNames} isOwner={isOwner} />
+                </>
+              )}
             </Grid.Column>
           </Grid.Row>
         </Grid>
