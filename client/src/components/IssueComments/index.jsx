@@ -53,6 +53,9 @@ class IssueComments extends React.Component {
   }
 
   onSubmit() {
+    const { comment } = this.state;
+    if (!comment) return;
+
     const {
       createIssueComment,
       username,
@@ -62,7 +65,6 @@ class IssueComments extends React.Component {
         params: { number: issueNumber }
       }
     } = this.props;
-    const { comment } = this.state;
     createIssueComment({
       username,
       repoName,

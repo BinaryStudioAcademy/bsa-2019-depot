@@ -12,7 +12,7 @@ import profileSettingsSagas from '../containers/SettingsProfile/sagas';
 import forkRepoSagas from '../components/ForkButton/sagas';
 import repoSettingsSagas from '../containers/SettingsTab/sagas';
 import branchesSagas from '../containers/BranchesTab/sagas';
-import createIssueSagas from '../containers/CreateIssue/sagas';
+import createIssueSagas from '../containers/CreateIssuePage/sagas';
 import issueCommentsSagas from '../components/IssueComments/sagas';
 import repositoryTabSagas from '../containers/RepositoryTab/sagas';
 import createOrganizationSagas from '../scenes/CreateOrganization/sagas';

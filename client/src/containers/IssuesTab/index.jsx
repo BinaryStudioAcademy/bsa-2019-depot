@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { Loader, Icon, Input, Dropdown, Button } from 'semantic-ui-react';
 import { fetchIssues } from '../../routines/routines';
 import IssuesList from '../../components/IssuesList';
@@ -40,6 +39,11 @@ class IssuesTab extends React.Component {
   countClosedIssues = () => {
     const counter = this.props.issuesData.issues.filter(issue => !issue.isOpened);
     return counter.length;
+  };
+
+  onCreateIssue = () => {
+    const { location, history } = this.props;
+    history.push(`${location.pathname}/new`);
   };
 
   render() {
@@ -83,9 +87,7 @@ class IssuesTab extends React.Component {
             labelPosition="left"
             placeholder="Filter by title"
           />
-          <Link to={`${match.url}/new`}>
-            <Button content="New Issue" positive />
-          </Link>
+          <Button content="New Issue" positive onClick={this.onCreateIssue} />
         </div>
         <div className={styles.issuesContainer}>
           <div className={styles.issuesHeader}>
