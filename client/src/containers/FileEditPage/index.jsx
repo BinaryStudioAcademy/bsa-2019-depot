@@ -24,18 +24,23 @@ class FileEditPage extends React.Component {
       .filter(dir => dir)
       .join('/');
 
-    let filename = '';
-    if (match.url.includes('edit')) {
+    const toEdit = match.url.includes('edit');
+    let filename, content;
+    if (toEdit) {
       filename = location.pathname.split('/').pop();
+    }
+    if (match.url.includes('new')) {
+      filename = props.filename || '';
+      content = props.content || '';
     }
 
     this.state = {
-      fileData: { content: '' },
-      oldContent: '',
+      fileData: { content },
+      oldContent: content,
       filename: filename,
       oldFilename: filename,
-      toEdit: !!filename,
-      loading: !!filename
+      toEdit,
+      loading: toEdit
     };
 
     this.handleChangeFilename = this.handleChangeFilename.bind(this);
@@ -105,9 +110,13 @@ class FileEditPage extends React.Component {
       oldFilepath: toEdit ? this.filepath : newFilePath, // Otherwise our old filepath would be path to folder
       filepath: newFilePath,
       fileData: content
-    }).then(() => {
-      this.handleCancel();
-    });
+    })
+      .then(() => {
+        this.handleCancel();
+      })
+      .catch(() => {
+        this.handleCancel();
+      });
   }
 
   render() {
@@ -124,7 +133,7 @@ class FileEditPage extends React.Component {
 
     const filepathDirs = this.filepath.split('/').filter(dir => dir);
 
-    if (match.url.includes('edit')) filepathDirs.pop();
+    if (toEdit) filepathDirs.pop();
     const fileExtension = filename.split('.').pop();
 
     const editorStyles = { width: '100%' };
@@ -221,6 +230,8 @@ FileEditPage.propTypes = {
   username: PropTypes.string.isRequired,
   avatar: PropTypes.string,
   email: PropTypes.string.isRequired,
+  filename: PropTypes.string.isRequired,
+  content: PropTypes.string.isRequired,
   history: PropTypes.object.isRequired,
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
@@ -240,11 +251,14 @@ FileEditPage.propTypes = {
 const mapStateToProps = ({
   profile: {
     currentUser: { username, avatar, email }
-  }
+  },
+  newFile: { filename, content }
 }) => ({
   username,
   avatar,
-  email
+  email,
+  filename,
+  content
 });
 
 export default connect(mapStateToProps)(FileEditPage);

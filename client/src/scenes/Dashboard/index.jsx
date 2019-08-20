@@ -37,13 +37,13 @@ class Dashboard extends React.Component {
       username,
       name,
       imgUrl,
-      repositoriesNames,
+      repositories,
       projects,
       stars,
       followers,
       following
     } = this.props;
-    const repoCount = repositoriesNames.length;
+    const repoCount = repositories.length;
     const { tab } = parse(search);
 
     return (
@@ -89,8 +89,8 @@ class Dashboard extends React.Component {
                   <Link to="">Following{following ? <span>{following}</span> : null}</Link>
                 </nav>
               </Container>
-              {!tab && <Overview repositoriesNames={repositoriesNames} />}
-              {tab === 'repositories' && <RepositoriesList repositories={repositoriesNames} />}
+              {!tab && <Overview repositories={repositories} />}
+              {tab === 'repositories' && <RepositoriesList repositories={repositories} />}
             </Grid.Column>
           </Grid.Row>
         </Grid>
@@ -101,7 +101,7 @@ class Dashboard extends React.Component {
 
 Dashboard.defaultProps = {
   imgUrl: 'https://avatars3.githubusercontent.com/u/32107863?s=460&v=4',
-  repositoriesNames: [],
+  repositories: [],
   projects: 0,
   stars: 0,
   followers: 0,
@@ -110,7 +110,7 @@ Dashboard.defaultProps = {
 
 Dashboard.propTypes = {
   actions: PropTypes.object.isRequired,
-  repositoriesNames: PropTypes.array.isRequired,
+  repositories: PropTypes.array.isRequired,
   username: PropTypes.string.isRequired,
   name: PropTypes.string,
   imgUrl: PropTypes.string,
@@ -130,11 +130,11 @@ Dashboard.propTypes = {
   })
 };
 
-const mapStateToProps = ({ userStats: { repositoriesNames }, profile: { currentUser } }) => ({
+const mapStateToProps = ({ userStats: { repositories }, profile: { currentUser } }) => ({
   name: currentUser.name,
   username: currentUser.username,
   imgUrl: currentUser.imgUrl,
-  repositoriesNames
+  repositories
 });
 
 const mapDispatchToProps = dispatch => {

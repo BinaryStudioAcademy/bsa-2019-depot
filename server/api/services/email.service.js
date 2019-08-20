@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const UserRepository = require('../../data/repositories/user.repository');
-const { createTokenEmail } = require('../../helpers/email.helper');
+const { createTokenEmail, createInviteEmail } = require('../../helpers/email.helper');
 const { emailQueue } = require('../../config/rabbitmq.config');
 
 const secret = process.env.SECRET_KEY;
@@ -32,6 +32,14 @@ async function sendForgetPasswordEmail({ email, url }) {
   };
 }
 
+async function sendInviteEmail({
+  email, url, orgName, username
+}) {
+  const message = createInviteEmail(email, url, orgName, username);
+  await sendToQueue(emailQueue, message);
+}
+
 module.exports = {
-  sendForgetPasswordEmail
+  sendForgetPasswordEmail,
+  sendInviteEmail
 };

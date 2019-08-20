@@ -59,7 +59,7 @@ export class RepositoriesList extends React.Component {
           </div>
         </Container>
         {repositories.map(repo => {
-          return <RepositoryItem repo={repo} username={username} key={repo} />;
+          return <RepositoryItem repo={repo} username={username} key={repo.name} />;
         })}
       </Container>
     );
@@ -82,9 +82,9 @@ const mapStateToProps = ({
   profile: {
     currentUser: { username }
   },
-  userStats: { repositoriesNames }
+  userStats: { repositories }
 }) => ({
-  repositoriesNames,
+  repositories,
   username
 });
 

@@ -11,7 +11,10 @@ module.exports = (sequelize, DataTypes) => {
       url: DataTypes.STRING,
       company: DataTypes.STRING,
       location: DataTypes.STRING,
-      imgUrl: DataTypes.STRING
+      imgUrl: DataTypes.STRING,
+      // ------------------
+      type: DataTypes.ENUM('USER', 'ORG'),
+      fake: DataTypes.BOOLEAN
     },
     {}
   );
