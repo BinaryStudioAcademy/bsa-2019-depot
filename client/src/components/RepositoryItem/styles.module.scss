@@ -21,10 +21,10 @@ $secondary-color: #d1d5da;
 
   & a {
     flex: 1 1 auto;
-    color: #0366d6;
+    // color: #0366d6;
 
     &:hover {
-      text-decoration: underline;
+      // text-decoration: underline;
     }
   }
 }
@@ -41,6 +41,10 @@ $secondary-color: #d1d5da;
   align-items: flex-end;
 }
 
+:local(.repo_info_item) {
+  margin-right: 1em;
+}
+
 :local(.repo_item_updated) {
   /*margin: 8px 0 16px;*/
   font-size: 75%;
@@ -49,7 +53,6 @@ $secondary-color: #d1d5da;
 :local(.repo_item_lang) {
   font-size: 75%;
   line-height: 1.5;
-  margin-right: 16px;
 
   & span {
     position: relative;

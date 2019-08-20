@@ -2,13 +2,31 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 import RepoFileTree from '../../components/RepoFileTree/index';
 import * as commitsService from '../../services/commitsService';
 import RepoReadme from '../../components/RepoReadme/index';
+import { InputError } from '../../components/InputError';
 import { fetchBranches, fetchFileTree, fetchLastCommitOnBranch } from '../../routines/routines';
+import * as repositoryService from '../../services/repositoryService';
+import { newFile } from './actions';
 
 import Octicon, { getIconByName } from '@primer/octicons-react';
-import { Container, Button, Header, Dropdown, Input, Popup, Segment, Menu, Loader, Divider } from 'semantic-ui-react';
+import {
+  Container,
+  Button,
+  Header,
+  Dropdown,
+  Form,
+  Input,
+  Popup,
+  Segment,
+  Menu,
+  Loader,
+  Divider,
+  Message
+} from 'semantic-ui-react';
 import styles from './styles.module.scss';
 
 class CodeTab extends React.Component {
@@ -16,6 +34,10 @@ class CodeTab extends React.Component {
     super(props);
     this.state = {
       branch: 'master',
+      description: '',
+      website: '',
+      editingInfo: false,
+      infoLoading: true,
       commitCount: 0
     };
     this.onBranchChange = this.onBranchChange.bind(this);
@@ -42,7 +64,17 @@ class CodeTab extends React.Component {
       reponame,
       branch: actualBranch
     });
+    repositoryService.getRepositoryByOwnerAndName(username, reponame).then(({ description, website }) => {
+      this.setState({ description, website, infoLoading: false });
+    });
   }
+
+  infoValidationSchema = Yup.object().shape({
+    description: Yup.string(),
+    website: Yup.string()
+      .url('Invalid URL')
+      .max(255)
+  });
 
   onBranchChange = (event, data) => {
     this.setState(
@@ -77,8 +109,49 @@ class CodeTab extends React.Component {
     history.push(location.pathname.replace('/tree', '/new'));
   };
 
+  onReadmeEdit = () => {
+    const {
+      history,
+      match,
+      fileTreeData: {
+        tree: { currentPath }
+      }
+    } = this.props;
+    const { username, reponame, branch } = match.params;
+
+    history.push(`/${username}/${reponame}/edit/${branch}/${currentPath}/README.md`);
+  };
+
+  onAddReadme = () => {
+    const {
+      history,
+      match,
+      fileTreeData: {
+        tree: { currentPath }
+      }
+    } = this.props;
+    const { description } = this.state;
+    const { username, reponame, branch } = match.params;
+
+    this.props.newFile({ filename: 'README.md', content: `# ${reponame}\n\n${description}` });
+    history.push(`/${username}/${reponame}/new/${branch}/${currentPath}`);
+  };
+
+  onSubmitInfo = ({ description, website }) => {
+    const { username: owner, reponame } = this.props.match.params;
+
+    this.setState({ infoLoading: true, editingInfo: false });
+    repositoryService
+      .updateRepositoryByOwnerAndName({ owner, reponame, request: { description, website } })
+      .then(() => this.setState({ infoLoading: false, description, website }));
+  };
+
+  toggleEditingDescription = () => {
+    this.setState(prevState => ({ editingInfo: !prevState.editingInfo }));
+  };
+
   render() {
-    const { branch, commitCount } = this.state;
+    const { branch, description, website, infoLoading, editingInfo, commitCount } = this.state;
     const {
       username,
       currentUser,
@@ -90,9 +163,53 @@ class CodeTab extends React.Component {
       fetchFileTree
     } = this.props;
     const { branches } = branchesData;
+    const { files, currentPath } = fileTreeData.tree;
+    const readme = files && files.find(file => file.name === 'README.md');
     const branchesCount = branches ? branches.length : 0;
 
-    return lastCommitData.loading || fileTreeData.loading || branchesData.loading ? (
+    let readmeSection;
+    if (readme) {
+      readmeSection = (
+        <RepoReadme
+          content={readme.content}
+          showEdit={currentUser && currentUser === username}
+          onReadmeEdit={this.onReadmeEdit}
+        />
+      );
+    } else if (!currentPath && username === currentUser) {
+      readmeSection = (
+        <Message color="blue" className={styles.readmeTip}>
+          Help people interested in this repository understand your project by adding a README.
+          <Button className={styles.addReadme} size="small" compact positive onClick={this.onAddReadme}>
+            Add a README
+          </Button>
+        </Message>
+      );
+    }
+
+    let infoContent, descriptionContent, websiteContent;
+    if (!(description || website)) {
+      infoContent = <i>No description or website provided</i>;
+    } else {
+      if (description) {
+        descriptionContent = description;
+      }
+      if (website) {
+        websiteContent = (
+          <a className={styles.link} href={website}>
+            {website}
+          </a>
+        );
+      }
+      infoContent = (
+        <>
+          {descriptionContent}
+          {websiteContent}
+        </>
+      );
+    }
+
+    return lastCommitData.loading || fileTreeData.loading || branchesData.loading || infoLoading ? (
       <div>
         <Loader active />
       </div>
@@ -100,14 +217,60 @@ class CodeTab extends React.Component {
       <Container>
         <Divider hidden />
         <div className={styles.repoDescription}>
-          <div className={styles.repoDescriptionText}>
-            Semantic is a UI component framework based around useful principles from natural language.{' '}
-            <Link className={styles.link} to="http://www.semantic-ui.com">
-              {' '}
-              http://www.semantic-ui.com
-            </Link>
-          </div>
-          <Button className={styles.actionButton}>Edit</Button>
+          {editingInfo ? (
+            <Formik
+              initialValues={{
+                description: description || '',
+                website: website || ''
+              }}
+              validationSchema={this.infoValidationSchema}
+              onSubmit={this.onSubmitInfo}
+            >
+              {({ values, errors, handleChange, handleBlur, handleSubmit }) => (
+                <Form onSubmit={handleSubmit}>
+                  <Form.Input
+                    name="description"
+                    placeholder="Short description"
+                    label="Description"
+                    error={!!errors.description}
+                    value={values.description}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                  />
+                  <InputError name="description" />
+                  <Form.Input
+                    name="website"
+                    placeholder="Website"
+                    label="Website"
+                    width={7}
+                    error={!!errors.website}
+                    value={values.website}
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                  />
+                  <InputError name="website" />
+                  <Button type="submit" disabled={errors.description || errors.website} className={styles.actionButton}>
+                    Save
+                  </Button>
+                  <Button onClick={this.toggleEditingDescription} className={styles.actionButton}>
+                    Cancel
+                  </Button>
+                </Form>
+              )}
+            </Formik>
+          ) : (
+            <>
+              <div className={styles.repoDescriptionText}>{infoContent}</div>
+              {username === currentUser && (
+                <Button
+                  className={[styles.actionButton, styles.editButton].join(' ')}
+                  onClick={this.toggleEditingDescription}
+                >
+                  Edit
+                </Button>
+              )}
+            </>
+          )}
         </div>
         <div>
           <Menu borderless attached="top" widths={4}>
@@ -250,7 +413,7 @@ class CodeTab extends React.Component {
           history={history}
           fetchFileTree={fetchFileTree}
         />
-        <RepoReadme />
+        {readmeSection}
       </Container>
     );
   }
@@ -266,7 +429,8 @@ const mapStateToProps = ({ lastCommitData, branchesData, fileTreeData, profile }
 const mapDispatchToProps = {
   fetchLastCommitOnBranch,
   fetchBranches,
-  fetchFileTree
+  fetchFileTree,
+  newFile
 };
 
 CodeTab.propTypes = {
@@ -289,6 +453,7 @@ CodeTab.propTypes = {
   fetchLastCommitOnBranch: PropTypes.func.isRequired,
   fetchBranches: PropTypes.func.isRequired,
   fetchFileTree: PropTypes.func.isRequired,
+  newFile: PropTypes.func.isRequired,
   history: PropTypes.object,
   location: PropTypes.object.isRequired,
   match: PropTypes.object,

@@ -1,4 +1,5 @@
 import { fetchLastCommitOnBranch, fetchFileTree } from '../../routines/routines';
+import { NEW_FILE } from './actionTypes';
 
 const initialLastCommitState = {
   commit: {
@@ -20,6 +21,24 @@ const initialFileTreeState = {
   },
   loading: false,
   error: null
+};
+
+const initialEditFileState = {
+  filename: '',
+  content: ''
+};
+
+export const newFileReducer = (state = initialEditFileState, action) => {
+  switch (action.type) {
+  case NEW_FILE:
+    return {
+      ...state,
+      filename: action.payload.filename,
+      content: action.payload.content
+    };
+  default:
+    return state;
+  }
 };
 
 export const lastCommitReducer = (state = initialLastCommitState, action) => {

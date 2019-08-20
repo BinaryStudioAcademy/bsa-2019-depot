@@ -84,6 +84,24 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  :local(.link) {
+    margin-left: 10px;
+  }
+
+  .editButton {
+    align-self: flex-start;
+  }
+
+  :global(.ui.form) {
+    width: 100%;
+    :global(.fields) {
+      margin-bottom: 0;
+    }
+    :local(.actionButton) {
+      font-size: 90%;
+    }
+  }
 }
 
 :local(.repoDescriptionText) {
@@ -199,4 +217,12 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
+}
+
+:global(.ui.message):local(.readmeTip) {
+  margin-top: 10px;
+  padding: 15px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

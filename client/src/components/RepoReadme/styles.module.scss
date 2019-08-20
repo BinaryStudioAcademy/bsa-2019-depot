@@ -9,3 +9,14 @@
     }
   }
 }
+
+.editReadme {
+  color: rgba(0, 0, 0, 0.87);
+  opacity: 0.8;
+  transition: opacity 0.1s ease;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 1;
+  }
+}
