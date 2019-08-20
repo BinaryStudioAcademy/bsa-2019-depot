@@ -50,10 +50,7 @@ const initialValues = {
 
 const validationSchema = Yup.object().shape({
   reponame: Yup.string()
-    .matches(
-      /^[a-zA-Z0-9_.-]*$/,
-      'Invalid repository name!'
-    )
+    .matches(/^[a-zA-Z0-9_.-]*$/, 'Invalid repository name!')
     .required('Repository name is required!')
     .max(100, 'Maximum length - 100 characters')
 });
@@ -85,7 +82,7 @@ class CreateRepository extends React.Component {
   }
 
   async onSubmit(values) {
-    values.reponame = values.reponame.slice(0,100);
+    values.reponame = values.reponame.slice(0, 100);
     const result = await createRepository({
       ...values
     });
