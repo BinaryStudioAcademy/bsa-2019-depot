@@ -1,19 +1,42 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { Container, Input, Dropdown, Button } from 'semantic-ui-react';
+import { Link, withRouter } from 'react-router-dom';
+import { Input, Dropdown, Button } from 'semantic-ui-react';
 import Octicon, { Repo } from '@primer/octicons-react';
 import RepositoryItem from '../../components/RepositoryItem';
+import { getRepositories } from '../../services/repositoryService';
 
 import styles from './styles.module.scss';
 
 export class RepositoriesList extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      repositories: []
+    };
+  }
+
+  async getRepositories(username) {
+    const repositories = await getRepositories(username);
+    this.setState({
+      ...this.state,
+      repositories
+    });
+  }
+
+  componentDidMount() {
+    const { match: { params: { username } } } = this.props;
+    this.getRepositories(username);
+  }
+
   render() {
-    const { repositories, username, id, actions: { setStar } } = this.props;
+    const { repositories } = this.state;
+
     return (
-      <Container className={styles.favorite_repos_wrapper}>
-        <Container className={styles.repos_filters}>
+      <div>
+        <div className={styles.filters}>
           <Input placeholder="Find a repository…" className={styles.repos_search_input}></Input>
           <div>
             <Dropdown
@@ -39,53 +62,37 @@ export class RepositoriesList extends React.Component {
               </Button>
             </Link>
           </div>
-        </Container>
+        </div>
         {repositories.map(repo => {
           return (
             <RepositoryItem
               repo={repo}
-              username={username}
               key={repo.name}
-              onStar={setStar}
-              currentUserId={id}
             />
           );
         })}
-      </Container>
+      </div>
     );
   }
 }
 
-RepositoriesList.defaultProps = {
-  repoTypes: PropTypes.array.isRequired,
-  username: PropTypes.string.isRequired,
-  languageTypes: PropTypes.array.isRequired
-};
-
 RepositoriesList.propTypes = {
-  actions: PropTypes.object.isRequired,
-  username: PropTypes.string.isRequired,
-  repositories: PropTypes.array.isRequired
+  match: {
+    params: {
+      username:PropTypes.string
+    }
+  }
 };
 
 const mapStateToProps = ({
   profile: {
     currentUser: { username, id }
-  },
-  userStats: { repositories }
+  }
 }) => ({
-  repositories,
   username,
   id
 });
 
-const mapDispatchToProps = dispatch => {
-  return {
-    // actions: bindActionCreators({ ...repositoryActions }, dispatch)
-  };
-};
-
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RepositoriesList);
+  mapStateToProps
+)(withRouter(RepositoriesList));

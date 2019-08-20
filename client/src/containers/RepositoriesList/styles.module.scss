@@ -99,3 +99,9 @@ $secondary-color: #d1d5da;
     width: 100%;
   }
 }
+
+
+:local(.filters) {
+  display: flex;
+  justify-content: space-between;
+}
