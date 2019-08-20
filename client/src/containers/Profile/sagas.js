@@ -49,12 +49,7 @@ function* watchCurrentUserRequest() {
 
 function* loginGoogle({ payload: { user } }) {
   try {
-    const authorizedUser = {
-      id: user.id,
-      username: user.username,
-      email: user.email
-    };
-    yield put(loginGoogleRoutine.success(authorizedUser));
+    yield put(loginGoogleRoutine.success(user));
   } catch (error) {
     yield put(loginGoogleRoutine.failure(error.message));
   }
