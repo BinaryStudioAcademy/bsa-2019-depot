@@ -54,7 +54,7 @@ const validationSchema = Yup.object().shape({
       'Invalid repository name!'
     )
     .required('Repository name is required!')
-    .max(255, 'Maximum length - 255 characters')
+    .max(100, 'Maximum length - 100 characters')
 });
 
 class CreateRepository extends React.Component {
@@ -68,18 +68,17 @@ class CreateRepository extends React.Component {
 
   async validate(values) {
     let errors = {};
-
     const { exists } = await checkName(values);
     if (exists) {
       errors.reponame = `The repository ${values.reponame} already exists on this account`;
     }
-
     if (Object.keys(errors).length) {
       throw errors;
     }
   }
 
   async onSubmit(values) {
+    values.reponame = values.reponame.slice(0,100);
     const result = await createRepository({
       ...values
     });
