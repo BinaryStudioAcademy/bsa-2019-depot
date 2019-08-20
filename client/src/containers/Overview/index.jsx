@@ -87,7 +87,7 @@ export class Overview extends React.Component {
           return target[2];
         } else if (prop >= 20 && prop < 30) {
           return target[3];
-        } else if (prop >= 5) {
+        } else if (prop >= 30) {
           return target[4];
         } else {
           return target[0];
