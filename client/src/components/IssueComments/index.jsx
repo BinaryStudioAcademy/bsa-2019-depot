@@ -49,7 +49,7 @@ class IssueComments extends React.Component {
   }
 
   renderPreview(markdown) {
-    return Promise.resolve(<ReactMarkdown source={markdown} />);
+    return <ReactMarkdown source={markdown} />;
   }
 
   onSubmit() {
