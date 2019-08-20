@@ -7,34 +7,47 @@ import PropTypes from 'prop-types';
 
 import styles from './styles.module.scss';
 
+
+//Mock
+const data = [
+  { name: 'commit1', uv: 4000, commitDate: 0, amt: 2400 },
+  { name: 'commit2', uv: 3000, commitDate: 0, amt: 2210 },
+  { name: 'commit3', uv: 2000, commitDate: 0, amt: 2290 },
+  { name: 'commit4', uv: 2780, commitDate: 0, amt: 2000 },
+  { name: 'commit5', uv: 1890, commitDate: 0, amt: 2181 },
+  { name: 'commit6', uv: 2390, commitDate: 0, amt: 2500 },
+  { name: 'commit7', uv: 3490, commitDate: 3800, amt: 2100 },
+  { name: 'commit8', uv: 3490, commitDate: 0, amt: 2100 }
+];
+
+
 class RepositoryItem extends React.Component {
   constructor(props) {
     super(props);
+    this.state = { ...props.repo };
 
     this.starClickHandler = this.starClickHandler.bind(this);
   }
 
   starClickHandler() {
-    const repositoryId = this.props.repo.id;
-    this.props.onStar({ repositoryId });
+    const { onStar } = this.props;
+    const isStar = !this.state.isStar;
+    const starsCount = isStar
+      ? Number(this.state.starsCount) + 1
+      : Number(this.state.starsCount) - 1;
+
+    this.setState({
+      ...this.state,
+      isStar,
+      starsCount
+    });
+
+    onStar({ ...this.state, isStar, starsCount });
   }
 
   render() {
-    //Mock
-    const { repo: { name, stars }, username, currentUserId } = this.props;
+    const { repo: { name, isStar }, username } = this.props;
     const starsCount = Number(this.props.repo.starsCount);
-    const isStar = stars.find(({ userId }) => currentUserId === userId);
-    const data = [
-      { name: 'commit1', uv: 4000, commitDate: 0, amt: 2400 },
-      { name: 'commit2', uv: 3000, commitDate: 0, amt: 2210 },
-      { name: 'commit3', uv: 2000, commitDate: 0, amt: 2290 },
-      { name: 'commit4', uv: 2780, commitDate: 0, amt: 2000 },
-      { name: 'commit5', uv: 1890, commitDate: 0, amt: 2181 },
-      { name: 'commit6', uv: 2390, commitDate: 0, amt: 2500 },
-      { name: 'commit7', uv: 3490, commitDate: 3800, amt: 2100 },
-      { name: 'commit8', uv: 3490, commitDate: 0, amt: 2100 }
-    ];
-
 
     return (
       <div className={styles.repo_item}>
