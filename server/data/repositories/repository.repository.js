@@ -7,10 +7,6 @@ class RepositoryRepository extends BaseRepository {
     return this.model.findAll({ where: { userId } });
   }
 
-  // getCurrentRepoId({userId, name}) {
-  //   return this.model.findOne({ where: { userId, name } });
-  // }
-
   addRepository({ ...repositoryData }) {
     return this.create(repositoryData);
   }

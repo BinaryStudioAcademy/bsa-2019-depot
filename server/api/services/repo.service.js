@@ -143,7 +143,6 @@ const forkRepo = async ({ username, owner, repoName }) => {
   }
 };
 
-// const getCurrentRepoId = repoData => repoRepository.getCurrentRepoId(repoData);
 const setStar = async (userId, repositoryId) => {
   const star = await starRepository.getStar(userId, repositoryId);
 
@@ -161,7 +160,6 @@ module.exports = {
   getReposNames,
   checkName,
   isEmpty,
-  // getCurrentRepoId,
   forkRepo,
   getReposData,
   setStar,

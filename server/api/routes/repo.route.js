@@ -6,7 +6,6 @@ const {
   deleteRepo,
   checkName,
   isEmpty,
-  // getCurrentRepoId,
   forkRepo,
   getReposData,
   setStar,
@@ -142,12 +141,6 @@ router
       .then(result => res.send(result))
       .catch(next);
   })
-  // .get('/:owner/:repoName/id', (req, res, next) => {
-  //   const { userId } = req.query;
-  //   getCurrentRepoId({ userId, name: req.params.repoName })
-  //     .then(result => res.send(result))
-  //     .catch(next);
-  // })
   .post('/:owner/:repoName/issues', (req, res, next) => {
     const { userId, repositoryId, title, body, isOpened, assignees } = req.body;
     addIssue({ userId, repositoryId, title, body, isOpened, assignees })
