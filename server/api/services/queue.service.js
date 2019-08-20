@@ -20,7 +20,6 @@ amqp.connect(connectionUrl, (err, connection) => {
       emailQueue,
       (msg) => {
         const message = JSON.parse(msg.content);
-        // console.log(message.Message.Body);
         sendEmail(message);
       },
       { noAck: true }

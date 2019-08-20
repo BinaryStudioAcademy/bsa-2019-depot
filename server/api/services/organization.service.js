@@ -47,9 +47,8 @@ const addMember = async (data) => {
   });
 
   const { id: orgId } = await userRepository.getByUsername(orgName);
-  const isActivated = false;
   await OrgUserRepository.create({
-    roleId, userId, orgId, isActivated
+    roleId, userId, orgId, isActivated: false
   });
   return {
     status: true

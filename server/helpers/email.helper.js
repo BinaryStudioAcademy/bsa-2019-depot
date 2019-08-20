@@ -68,7 +68,7 @@ const createInviteEmail = (email, url, orgName, username) => {
                     <p>You had been invited to join the @${orgName} organization on GitHub. 
                     Head over to ${url}/${orgName} to check out @${orgName}’s profile.</p>
                     <p>You can use the following link to join right now:</p>
-                    <p>${url}/${orgName}/invitation</p>
+                    <p>${url}/orgs/${orgName}/invitation</p>
                     <p>Note: If you get a 404 page, make sure you’re signed in as ${username}.</p>
                     <p>Thanks,</p>
                     <p>Your friends at Depot</p>

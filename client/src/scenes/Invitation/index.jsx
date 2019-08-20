@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Container, Button, Icon } from 'semantic-ui-react';
 import { isInvited, acceptInvitation, cancelInvitation } from '../../services/inviteMemberService';
 
@@ -12,52 +12,56 @@ class Invitation extends React.Component {
     super(props);
 
     this.state = {
-      invited: false
+      invited: false,
+      isActivated: false
     };
   }
 
   async componentDidMount() {
-    const { id } = this.props;
-    const { name } = this.props.match.params;
+    const { id, match } = this.props;
+    const { name } = match.params;
 
     const { result } = await isInvited({
       userId: id,
       orgName: name
     });
-    if (result) {
-      this.setState({
-        invited: Boolean(result)
-      });
+
+    const invited = Boolean(result);
+    if (invited) {
       const { isActivated } = result;
       this.setState({
+        invited,
         isActivated
       });
     }
   }
 
   OnClickJoin = async () => {
-    const { id } = this.props;
-    const { name } = this.props.match.params;
+    const { id, match, history } = this.props;
+    const { name } = match.params;
 
     await acceptInvitation({
       userId: id,
       orgName: name
     });
+    history.push(`/orgs/${name}`);
   };
 
   onClickDecline = async () => {
-    const { id } = this.props;
-    const { name } = this.props.match.params;
+    const { id, match, history } = this.props;
+    const { name } = match.params;
 
     await cancelInvitation({
       userId: id,
       orgName: name
     });
+    history.push('/dashboard');
   };
 
   goToProfileOrg = () => {
-    //const { name } = this.props.match.params;
-    //history.push(`/orgs/${name}`);
+    const { history, match } = this.props;
+    const { name } = match.params;
+    history.push(`/orgs/${name}`);
   };
 
   renderHaveInviteComponent = () => {
@@ -77,7 +81,7 @@ class Invitation extends React.Component {
     );
   };
 
-  renderNotInviteComponent = () => {
+  renderNotInvitedComponent = () => {
     const { name } = this.props.match.params;
     return (
       <Container textAlign="center" className={styles.form}>
@@ -92,14 +96,18 @@ class Invitation extends React.Component {
   };
 
   render() {
-    if (this.state.invited && this.state.isActivated) return <Redirect to={`/orgs/${this.props.match.params.name}`} />;
-    if (!this.state.invited) return this.renderNotInviteComponent();
-    if (!this.state.isActivated) return this.renderHaveInviteComponent();
+    const { name } = this.props.match.params;
+    const { invited, isActivated } = this.state;
+
+    if (invited && !isActivated) return this.renderHaveInviteComponent();
+    if (!invited) return this.renderNotInvitedComponent();
+    return <Redirect to={`/orgs/${name}`} />;
   }
 }
 
 Invitation.propTypes = {
   match: PropTypes.object,
+  history: PropTypes.object,
   id: PropTypes.string
 };
 

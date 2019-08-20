@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { Formik } from 'formik';
-import { InputError } from '../../components/InputError';
 import { Icon, Container, Input, Button, Form, Divider, Checkbox } from 'semantic-ui-react';
-import { invite } from '../../services/inviteMemberService';
 import * as Yup from 'yup';
 
+import { invite } from '../../services/inviteMemberService';
 import styles from './styles.module.scss';
 
 const usernameValidationSchema = Yup.object().shape({
@@ -36,7 +35,8 @@ class InviteMembersTab extends React.Component {
   };
 
   submitInvite = values => {
-    const { name } = this.props.match.params;
+    const { history, match } = this.props;
+    const { name } = match.params;
     const { username } = this.state;
     const { role } = values;
 
@@ -45,6 +45,7 @@ class InviteMembersTab extends React.Component {
       username,
       role
     });
+    history.push(`/orgs/${name}`);
   };
 
   handleChangeRadio = handleChange => (e, data) => {
@@ -56,6 +57,7 @@ class InviteMembersTab extends React.Component {
 
   renderInputUsername = ({ errors, touched, handleChange, handleBlur, handleSubmit, values }) => {
     const { name } = this.props.match.params;
+    const { username } = values;
     return (
       <Form size="large" onSubmit={handleSubmit}>
         <Container textAlign="center">
@@ -68,7 +70,7 @@ class InviteMembersTab extends React.Component {
               iconPosition="left"
               placeholder="Username"
               name="username"
-              value={values.username}
+              value={username}
               type="text"
               onChange={handleChange}
               onBlur={handleBlur}
@@ -79,7 +81,6 @@ class InviteMembersTab extends React.Component {
                 </Button>
               }
             />
-            <InputError name="username" />
           </Form.Field>
         </Container>
       </Form>
@@ -156,7 +157,7 @@ class InviteMembersTab extends React.Component {
     ) : (
       <Formik
         initialValues={{
-          role: null
+          role: ''
         }}
         validationSchema={roleValidationSchema}
         onSubmit={this.submitInvite}
@@ -168,13 +169,8 @@ class InviteMembersTab extends React.Component {
 
 InviteMembersTab.propTypes = {
   match: PropTypes.object,
-  id: PropTypes.string
+  id: PropTypes.string,
+  history: PropTypes.object
 };
 
-const mapStateToProps = ({
-  profile: {
-    currentUser: { id }
-  }
-}) => ({ id });
-
-export default connect(mapStateToProps)(InviteMembersTab);
+export default withRouter(InviteMembersTab);

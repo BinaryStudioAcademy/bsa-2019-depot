@@ -11,7 +11,7 @@ export const invite = async request => {
 
 export const isInvited = async query => {
   const response = await callWebApi({
-    endpoint: '/api/organizations/user-invited',
+    endpoint: '/api/organizations/invitation',
     type: 'GET',
     query
   });
@@ -20,7 +20,7 @@ export const isInvited = async query => {
 
 export const acceptInvitation = async request => {
   const response = await callWebApi({
-    endpoint: '/api/organizations/accept-invitation',
+    endpoint: '/api/organizations/invitation',
     type: 'POST',
     request
   });
@@ -29,7 +29,7 @@ export const acceptInvitation = async request => {
 
 export const cancelInvitation = async request => {
   const response = await callWebApi({
-    endpoint: '/api/organizations/cancel-invitation',
+    endpoint: '/api/organizations/invitation',
     type: 'DELETE',
     request
   });

@@ -20,17 +20,17 @@ router.post('/invite', (req, res) => {
   }).then(data => res.send(data));
 });
 
-router.get('/user-invited', (req, res) => {
+router.get('/invitation', (req, res) => {
   const { orgName, userId } = req.query;
   checkInvite({ orgName, userId }).then(data => res.send(data));
 });
 
-router.post('/accept-invitation', (req, res) => {
+router.post('/invitation', (req, res) => {
   const { orgName, userId } = req.body;
   acceptInvitation({ orgName, userId }).then(data => res.send(data));
 });
 
-router.delete('/cancel-invitation', (req, res) => {
+router.delete('/invitation', (req, res) => {
   const { orgName, userId } = req.body;
   cancelInvitation({ orgName, userId }).then(data => res.send(data));
 });
