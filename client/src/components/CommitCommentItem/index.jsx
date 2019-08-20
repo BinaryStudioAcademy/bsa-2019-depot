@@ -7,7 +7,7 @@ import './styles.module.scss';
 
 export class CommitCommentItem extends Component {
   render() {
-    const { key, body, author, authorId, avatar, hash, userId } = this.props;
+    const { body, author, authorId, avatar, hash, userId } = this.props;
     const isAbleToChange =
       userId === authorId ? (
         <div className="menu">
@@ -20,7 +20,7 @@ export class CommitCommentItem extends Component {
         </div>
       ) : null;
     return (
-      <Item key={key} className="comment-item">
+      <Item className="comment-item">
         <Item.Image
           size="tiny"
           src={
@@ -47,7 +47,6 @@ CommitCommentItem.defaultProps = {};
 CommitCommentItem.propTypes = {
   author: PropTypes.string.isRequired,
   authorId: PropTypes.string.isRequired,
-  key: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
   avatar: PropTypes.string,
   hash: PropTypes.string.isRequired,
