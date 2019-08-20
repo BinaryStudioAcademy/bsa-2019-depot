@@ -39,6 +39,7 @@ module.exports = {
         userId: users[id].id,
         orgId: org.id,
         roleId: ind ? memberRoleId : ownerRoleId,
+        isActivated: true,
         createdAt: now,
         updatedAt: now
       })))

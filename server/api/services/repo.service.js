@@ -3,10 +3,14 @@ const fs = require('fs-extra');
 const fse = require('fs-extra');
 const repoHelper = require('../../helpers/repo.helper');
 const repoRepository = require('../../data/repositories/repository.repository');
+const userRepository = require('../../data/repositories/user.repository');
 const { initialCommit } = require('./commit.service');
+const starRepository = require('../../data/repositories/star.repository');
 
 const createRepo = async (repoData) => {
-  const { owner, name, userId } = repoData;
+  const {
+    owner, name, userId, description
+  } = repoData;
   let result = 'Repo was created';
   const pathToRepo = repoHelper.getPathToRepo(owner, name);
   await NodeGit.Repository.init(pathToRepo, 1)
@@ -33,7 +37,8 @@ const createRepo = async (repoData) => {
 
   repoRepository.create({
     userId,
-    name
+    name,
+    description
   });
   return result;
 };
@@ -61,11 +66,27 @@ const isEmpty = async ({ owner, reponame }) => {
   }
 };
 
+const getByUserAndReponame = async ({ owner, reponame }) => {
+  const { id } = await userRepository.getByUsername(owner);
+  return repoRepository.getByUserAndReponame(id, reponame);
+};
+
+const updateByUserAndReponame = async ({ owner, reponame, data }) => {
+  const { id } = await userRepository.getByUsername(owner);
+  return repoRepository.updateByUserAndReponame(id, reponame, data);
+};
+
+const deleteByUserAndReponame = async ({ owner, reponame }) => {
+  const { id } = await userRepository.getByUsername(owner);
+  return repoRepository.deleteByUserAndReponame(id, reponame);
+};
+
 const renameRepo = async ({ repoName, newName, username }) => {
   try {
     const oldDirectory = repoHelper.getPathToRepo(username, repoName);
     const newDirectory = repoHelper.getPathToRepo(username, newName);
     fs.renameSync(oldDirectory, newDirectory);
+    await updateByUserAndReponame({ owner: username, reponame: repoName, data: { name: newName } });
     return true;
   } catch (e) {
     return false;
@@ -76,6 +97,7 @@ const deleteRepo = async ({ repoName, username }) => {
   try {
     const directory = repoHelper.getPathToRepo(username, repoName);
     await fs.remove(directory);
+    await deleteByUserAndReponame({ owner: username, reponame: repoName });
     return true;
   } catch (e) {
     return false;
@@ -95,6 +117,8 @@ const getReposNames = async ({ user, filter, limit }) => {
   }
   return [];
 };
+
+const getReposData = async ({ username }) => repoRepository.getByUsername(username);
 
 const forkRepo = async ({ username, owner, repoName }) => {
   try {
@@ -119,6 +143,16 @@ const forkRepo = async ({ username, owner, repoName }) => {
   }
 };
 
+const setStar = async (userId, repositoryId) => {
+  const star = await starRepository.getStar(userId, repositoryId);
+
+  const result = star
+    ? await starRepository.deleteById(star.id)
+    : await starRepository.create({ userId, repositoryId });
+
+  return Number.isInteger(result) ? {} : starRepository.getStar(userId, repositoryId);
+};
+
 module.exports = {
   createRepo,
   renameRepo,
@@ -126,5 +160,9 @@ module.exports = {
   getReposNames,
   checkName,
   isEmpty,
-  forkRepo
+  forkRepo,
+  getReposData,
+  setStar,
+  getByUserAndReponame,
+  updateByUserAndReponame
 };

@@ -3,6 +3,8 @@ module.exports = (sequelize, DataTypes) => {
     'repository',
     {
       name: DataTypes.STRING,
+      description: DataTypes.TEXT,
+      website: DataTypes.STRING,
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE
     },

@@ -42,6 +42,9 @@ const FileViewer = ({ content, style, fileExtension, readOnly, onChange }) => {
       style={style}
       onChange={onChange}
       readOnly={readOnly}
+      editorProps={{
+        $blockScrolling: Infinity
+      }}
     />
   );
 };
