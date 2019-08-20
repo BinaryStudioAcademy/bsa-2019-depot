@@ -56,8 +56,8 @@ const addMember = async (data) => {
   };
 };
 
-const checkInvite = async (data) => {
-  const { orgname, userId } = data;
+const getRelationUserOrg = async (data) => {
+  const { orgname, userID } = data;
 
   const org = await userRepository.getByUsername(orgname);
   if (!org) {
@@ -67,7 +67,7 @@ const checkInvite = async (data) => {
     };
   }
   const { id: orgId } = org;
-  const result = await OrgUserRepository.findUserInOrg(userId, orgId);
+  const result = await OrgUserRepository.findUserInOrg(userID, orgId);
   return {
     result,
     status: true
@@ -104,7 +104,7 @@ const cancelInvitation = async (data) => {
 module.exports = {
   createOrganization,
   addMember,
-  checkInvite,
+  getRelationUserOrg,
   acceptInvitation,
   cancelInvitation
 };

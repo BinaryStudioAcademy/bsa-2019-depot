@@ -7,7 +7,7 @@ import { Formik, Field } from 'formik';
 import Octicon, { getIconByName } from '@primer/octicons-react';
 import { InputError } from '../../components/InputError';
 import { createRepository, checkName } from '../../services/repositoryService';
-import { hasRelation } from '../../services/inviteMemberService';
+import { getRelationUserOrg } from '../../services/orgService';
 import styles from './styles.module.scss';
 
 const gitingnoreOptions = [
@@ -57,7 +57,7 @@ class CreateRepository extends React.Component {
 
     this.state = {
       owner: '',
-      userId: '',
+      ownerID: '',
       permission: true
     };
   }
@@ -82,7 +82,6 @@ class CreateRepository extends React.Component {
       ...values
     });
     const { reponame, owner } = values;
-    //console.log(values);
     if (result.url) {
       this.props.history.push(`/${owner}/${reponame}`);
     }
@@ -216,21 +215,21 @@ class CreateRepository extends React.Component {
   }
 
   async componentDidMount() {
-    let { username: owner, id: userId, match } = this.props;
+    let { username: owner, id: ownerID, match } = this.props;
     const { orgname } = match.params;
     let permission = true;
     if (orgname) {
-      const { result } = await hasRelation({ orgname, userId });
+      const { result } = await getRelationUserOrg(orgname, ownerID);
       if (result) {
         const { orgId } = result;
-        userId = orgId;
+        ownerID = orgId;
         owner = orgname;
       } else {
         permission = false;
       }
     }
     this.setState({
-      userId,
+      ownerID,
       owner,
       permission
     });
@@ -238,7 +237,7 @@ class CreateRepository extends React.Component {
 
   render() {
     const { email, history } = this.props;
-    const { owner, userId, permission } = this.state;
+    const { owner, ownerID, permission } = this.state;
     if (!permission) history.push('/dashboard');
 
     return (
@@ -248,7 +247,7 @@ class CreateRepository extends React.Component {
           ...initialValues,
           owner,
           email,
-          userId
+          ownerID
         }}
         validate={this.validate}
         onSubmit={this.onSubmit}
