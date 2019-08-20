@@ -1,0 +1,15 @@
+:local(.starLink) {
+  display: inline-block;
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    color: #0366d6;
+    text-decoration: none;
+  }
+
+  svg {
+    margin-right: 2px;
+    transform: translateY(-1px);
+  }
+}

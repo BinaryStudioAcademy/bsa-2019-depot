@@ -50,13 +50,13 @@ class Dashboard extends React.Component {
       username,
       name,
       imgUrl,
-      repositoriesNames,
+      repositories,
       projects,
       stars,
       followers,
       following
     } = this.props;
-    const repoCount = repositoriesNames.length;
+    const repoCount = repositories.length;
     const isOwner = this.state.currentUser.username === username;
     const userType = this.state.currentUser.type;
     const { tab } = parse(search);
@@ -106,11 +106,11 @@ class Dashboard extends React.Component {
                   <Link to="">Following{following ? <span>{following}</span> : null}</Link>
                 </nav>
               </Container>
-              {!tab && <Overview repositoriesNames={repositoriesNames} userToRender={params.username} />}
+              {!tab && <Overview repositories={repositories} userToRender={params.username} />}
               {tab === 'repositories' && (
                 <>
                   <RepositoriesFilters />
-                  <RepositoriesList repositories={repositoriesNames} isOwner={isOwner} />
+                  <RepositoriesList repositories={repositories} isOwner={isOwner} />
                 </>
               )}
             </Grid.Column>
@@ -123,7 +123,7 @@ class Dashboard extends React.Component {
 
 Dashboard.defaultProps = {
   imgUrl: 'https://avatars3.githubusercontent.com/u/32107863?s=460&v=4',
-  repositoriesNames: [],
+  repositories: [],
   projects: 0,
   stars: 0,
   followers: 0,
@@ -132,7 +132,7 @@ Dashboard.defaultProps = {
 
 Dashboard.propTypes = {
   actions: PropTypes.object.isRequired,
-  repositoriesNames: PropTypes.array.isRequired,
+  repositories: PropTypes.array.isRequired,
   username: PropTypes.string.isRequired,
   name: PropTypes.string,
   imgUrl: PropTypes.string,
@@ -152,11 +152,11 @@ Dashboard.propTypes = {
   })
 };
 
-const mapStateToProps = ({ userStats: { repositoriesNames }, profile: { currentUser } }) => ({
+const mapStateToProps = ({ userStats: { repositories }, profile: { currentUser } }) => ({
   name: currentUser.name,
   username: currentUser.username,
   imgUrl: currentUser.imgUrl,
-  repositoriesNames
+  repositories
 });
 
 const mapDispatchToProps = dispatch => {

@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Octicon, { Star } from '@primer/octicons-react';
 import { LineChart, Line } from 'recharts';
+import StarLink from '../../components/StarLink';
 import PropTypes from 'prop-types';
 
 import styles from './styles.module.scss';
@@ -9,7 +10,11 @@ import styles from './styles.module.scss';
 export class RepositoryItem extends React.Component {
   render() {
     //Mock
-    const { repo, username } = this.props;
+    const {
+      repo: { name },
+      username
+    } = this.props;
+    const starsCount = Number(this.props.repo.starsCount);
     const data = [
       { name: 'commit1', uv: 4000, commitDate: 0, amt: 2400 },
       { name: 'commit2', uv: 3000, commitDate: 0, amt: 2210 },
@@ -25,15 +30,24 @@ export class RepositoryItem extends React.Component {
       <div className={styles.repo_item}>
         <div className={styles.repo_item_left}>
           <div>
-            <Link to={`${username}/${repo}`} className={styles.repo_name}>
-              {repo}
+            <Link to={`${username}/${name}`} className={styles.repo_name}>
+              {name}
             </Link>
           </div>
           <div className="repo-info">
-            <p className={styles.repo_item_lang}>
-              <span></span>JavaScript
-            </p>
-            <p className={styles.repo_item_updated}>Updated 11 days ago</p>
+            <span className={styles.repo_info_item}>
+              <span className={styles.repo_item_lang}>
+                <span></span>JavaScript
+              </span>
+            </span>
+            {starsCount ? (
+              <span className={styles.repo_info_item}>
+                <StarLink starsCount={starsCount} />
+              </span>
+            ) : null}
+            <span className={styles.repo_info_item}>
+              <span className={styles.repo_item_updated}>Updated 11 days ago</span>
+            </span>
           </div>
         </div>
         <div className={styles.repo_item_right}>
