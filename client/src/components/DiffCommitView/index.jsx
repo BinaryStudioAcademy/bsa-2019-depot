@@ -40,7 +40,9 @@ class DiffCommitView extends Component {
     this.state = {
       title: '',
       body: '',
-      selectedTab: 'write'
+      selectedTab: 'write',
+      comments: [],
+      error: ''
     };
 
     this.onBodyChange = this.onBodyChange.bind(this);
