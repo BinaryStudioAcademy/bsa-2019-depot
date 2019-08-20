@@ -1,0 +1,29 @@
+:local(.title) {
+  font-size: 125% !important;
+}
+
+:local(.form) {
+  width: 50% !important;
+  padding: 24px !important;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  border: 1px solid #d1d5da;
+  border-radius: 3px;
+}
+
+:local(.notFoundTitle) {
+  margin-top: 10px !important;
+  font-weight: 600;
+  margin: 0;
+}
+
+:local(.note) {
+  font-size: 87%;
+}
+
+:local(.goToBtn) {
+  padding: 6px 12px;
+  border: 1px solid rgba(27, 31, 35, 0.2);
+  border-radius: 0.25em;
+  font-weight: 600;
+}

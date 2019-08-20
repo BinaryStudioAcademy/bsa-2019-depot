@@ -22,9 +22,8 @@ const resetPassword = async ({ token, password }) => {
   const result = { status: 200, message: 'Password updated' };
   const authorizedData = await tokenHelper.verifyToken(token);
   if (!authorizedData) {
-    const error = new Error('Incorrect token');
-    error.status = 401;
-    return Promise.reject(error);
+    const errorObj = { status: 401, message: 'Incorrect token' };
+    return Promise.reject(errorObj);
   }
   await UserRepository.setUserPassword(authorizedData.data, password);
   return result;

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Octicon, { Repo } from '@primer/octicons-react';
 import { Icon, Label, Container } from 'semantic-ui-react';
@@ -7,7 +8,7 @@ import ForkButton from '../ForkButton';
 
 import styles from './styles.module.scss';
 
-const RepositoryHeader = ({ owner, repoName, forkCount, issueCount, activePage, baseUrl }) => {
+const RepositoryHeader = ({ owner, username, repoName, forkCount, issueCount, activePage, baseUrl }) => {
   let activeTab;
   switch (activePage) {
   case 'issues':
@@ -49,11 +50,13 @@ const RepositoryHeader = ({ owner, repoName, forkCount, issueCount, activePage, 
                 Issues<Label circular>{issueCount}</Label>
               </Link>
             </div>
-            <div className={`${activeTab === 'settings' && 'active'} item`}>
-              <Link to={`${baseUrl}/settings`}>
-                <Icon name="cog" /> Settings
-              </Link>
-            </div>
+            {username && username === owner && (
+              <div className={`${activeTab === 'settings' && 'active'} item`}>
+                <Link to={`${baseUrl}/settings`}>
+                  <Icon name="cog" /> Settings
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </Container>
@@ -63,6 +66,7 @@ const RepositoryHeader = ({ owner, repoName, forkCount, issueCount, activePage, 
 
 RepositoryHeader.propTypes = {
   owner: PropTypes.string.isRequired,
+  username: PropTypes.string.isRequired,
   repoName: PropTypes.string.isRequired,
   forkCount: PropTypes.number.isRequired,
   issueCount: PropTypes.number.isRequired,
@@ -70,4 +74,12 @@ RepositoryHeader.propTypes = {
   baseUrl: PropTypes.string.isRequired
 };
 
-export default RepositoryHeader;
+const mapStateToProps = ({
+  profile: {
+    currentUser: { username }
+  }
+}) => ({
+  username
+});
+
+export default connect(mapStateToProps)(RepositoryHeader);

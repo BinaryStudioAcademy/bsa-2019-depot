@@ -43,7 +43,12 @@ const NewKeyPage = () => {
           <Breadcrumb.Section>Add new</Breadcrumb.Section>
         </Breadcrumb>
       </Header>
-      <Formik initialValues={{ title: '', key: '' }} validationSchema={validationSchema} onSubmit={handleSubmit}>
+      <Formik
+        initialValues={{ title: '', key: '' }}
+        validationSchema={validationSchema}
+        validateOnChange={true}
+        onSubmit={handleSubmit}
+      >
         {({ values: { title, key }, errors, handleChange, handleBlur, handleSubmit }) => (
           <Form onSubmit={handleSubmit}>
             <Form.Input

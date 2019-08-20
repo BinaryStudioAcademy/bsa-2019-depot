@@ -3,6 +3,7 @@ const { Router } = require('express');
 const {
   getCommits, getCommitsByDate, modifyFile, deleteFile
 } = require('../services/commit.service');
+const ownerOnlyMiddleware = require('../middlewares/owner-only.middleware');
 
 const router = Router();
 
@@ -16,7 +17,7 @@ router
       .then(commits => res.send(commits))
       .catch(next);
   })
-  .post('/:owner/:repoName/:branchName', (req, res, next) => {
+  .post('/:owner/:repoName/:branchName', ownerOnlyMiddleware, (req, res, next) => {
     const { owner, repoName, branchName: branch } = req.params;
     const { toDelete, ...commitArgs } = req.body;
     if (toDelete) {
