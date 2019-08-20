@@ -2,12 +2,22 @@ const { Router } = require('express');
 
 const { sendForgetPasswordEmail } = require('../services/email.service');
 const {
-  setUsername, checkUsernameExists, resetPassword, updateUserSettings
+  setUsername,
+  checkUsernameExists,
+  resetPassword,
+  updateUserSettings,
+  getUserByName
 } = require('../services/user.service');
 const { getKeysByUser, createKey, deleteKey } = require('../services/ssh-key.service');
 const { clientUrl } = require('../../config/common.config');
 
 const router = Router();
+
+router.get('/:username', (req, res, next) => {
+  getUserByName(req.params.username)
+    .then(data => res.send(data))
+    .catch(next);
+});
 
 router.post('/username', (req, res, next) => {
   const { username } = req.body;

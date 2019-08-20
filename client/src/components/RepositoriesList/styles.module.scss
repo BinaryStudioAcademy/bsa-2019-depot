@@ -92,6 +92,12 @@ $secondary-color: #d1d5da;
   :local(.new_repo_wrapper) {
     margin: 16px 0;
   }
+  :local(.new_repo_wrapper__hidden) {
+    display: none;
+  }
+  :local(.new_repo__hidden) {
+    display: none;
+  }
 }
 
 @media (max-width: 1024px) {

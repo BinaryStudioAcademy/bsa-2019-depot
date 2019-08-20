@@ -21,12 +21,13 @@ export class Overview extends React.Component {
   }
 
   componentDidMount() {
-    const { actions } = this.props;
+    const { actions, userToRender } = this.props;
     actions.fetchRepositories({
       limit: '4',
-      filterWord: ''
+      filterWord: '',
+      userToRender
     });
-    actions.fetchActivity();
+    actions.fetchActivity({ userToRender });
   }
 
   handleActivityState = (e, titleProps) => {
@@ -208,6 +209,7 @@ Overview.defaultProps = {
 Overview.propTypes = {
   actions: PropTypes.object.isRequired,
   username: PropTypes.string.isRequired,
+  userToRender: PropTypes.string.isRequired,
   userActivityByDate: PropTypes.object.isRequired,
   monthCommitsActivity: PropTypes.object.isRequired,
   repositoriesNames: PropTypes.array.isRequired

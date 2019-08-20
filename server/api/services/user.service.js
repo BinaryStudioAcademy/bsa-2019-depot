@@ -4,6 +4,8 @@ const tokenHelper = require('../../helpers/token.helper');
 
 const getUserById = userId => UserRepository.getUserById(userId);
 
+const getUserByName = userName => UserRepository.getByUsername(userName);
+
 const setUsername = async ({ id, username }) => {
   const data = await UserRepository.setUsernameById(id, username);
   return {
@@ -48,6 +50,7 @@ const updateUserSettings = async ({ id, settings }) => {
 
 module.exports = {
   getUserById,
+  getUserByName,
   setUsername,
   checkUsernameExists,
   updateUserSettings,

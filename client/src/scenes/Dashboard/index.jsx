@@ -8,8 +8,10 @@ import Octicon, { Smiley } from '@primer/octicons-react';
 import { parse } from 'query-string';
 import { repositoryActions } from './actions';
 import Overview from '../../containers/Overview';
+import OrganizationDashboard from '../OrganizationDashboard';
 import RepositoriesList from '../../components/RepositoriesList';
 import { getUserImgLink } from '../../helpers/imageHelper';
+import { getUser } from '../../services/userService';
 
 import styles from './styles.module.scss';
 
@@ -18,21 +20,31 @@ class Dashboard extends React.Component {
     super(props);
     this.state = {
       activeIndex: -1,
-      repoCount: 0
+      repoCount: 0,
+      currentUser: {}
     };
   }
 
   componentDidMount() {
-    const { actions } = this.props;
+    const { actions, match } = this.props;
+    const userToRender = match.params.username;
     actions.fetchRepositories({
       limit: '',
-      filterWord: ''
+      filterWord: '',
+      userToRender
     });
+
+    this.getUserInfo(userToRender);
+  }
+
+  async getUserInfo(userToRender) {
+    const data = await getUser({ userToRender });
+    this.setState({ currentUser: data });
   }
 
   render() {
     const {
-      match: { url },
+      match: { url, params },
       location: { search },
       username,
       name,
@@ -44,9 +56,13 @@ class Dashboard extends React.Component {
       following
     } = this.props;
     const repoCount = repositoriesNames.length;
+    const isOwner = this.state.currentUser.username === username;
+    const userType = this.state.currentUser.type;
     const { tab } = parse(search);
 
-    return (
+    return userType === 'ORG' ? (
+      <OrganizationDashboard />
+    ) : (
       <Container className={styles.wrapper}>
         <Divider hidden />
         <Grid>
@@ -63,7 +79,7 @@ class Dashboard extends React.Component {
               </div>
               <div className={styles.namesContainer}>
                 {name ? <h1 className={styles.name}>{name}</h1> : null}
-                <h1 className={styles.username}>{username}</h1>
+                <h1 className={styles.username}>{params.username}</h1>
               </div>
               <Link to="/settings/profile">
                 <Button fluid basic className={styles.edit_profile}>
@@ -89,8 +105,8 @@ class Dashboard extends React.Component {
                   <Link to="">Following{following ? <span>{following}</span> : null}</Link>
                 </nav>
               </Container>
-              {!tab && <Overview repositoriesNames={repositoriesNames} />}
-              {tab === 'repositories' && <RepositoriesList repositories={repositoriesNames} />}
+              {!tab && <Overview repositoriesNames={repositoriesNames} userToRender={params.username} />}
+              {tab === 'repositories' && <RepositoriesList repositories={repositoriesNames} isOwner={isOwner} />}
             </Grid.Column>
           </Grid.Row>
         </Grid>

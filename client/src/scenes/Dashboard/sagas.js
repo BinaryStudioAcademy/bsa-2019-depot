@@ -1,5 +1,5 @@
 // Core
-import { takeEvery, all, call, put, apply, select } from 'redux-saga/effects';
+import { takeEvery, all, call, put, apply } from 'redux-saga/effects';
 
 // Types
 import { types } from './types';
@@ -11,7 +11,7 @@ import * as commitsService from '../../services/commitsService';
 
 function* fetchRepositories({ payload: filter }) {
   try {
-    const username = yield select(({ profile }) => profile.currentUser.username);
+    const username = filter.userToRender;
     const repositories = yield apply(repositoryService, repositoryService.getRepositories, [username, filter]);
     yield put(repositoryActions.fillRepositories(repositories));
   } catch (error) {
@@ -23,9 +23,9 @@ function* watchFetchRepositories() {
   yield takeEvery(types.FETCH_REPOSITORIES, fetchRepositories);
 }
 
-function* fetchActivity() {
+function* fetchActivity({ payload: user }) {
   try {
-    const username = yield select(({ profile }) => profile.currentUser.username);
+    const username = user.userToRender;
     const { monthActivity, userActivitybyDate } = yield apply(repositoryService, commitsService.getAllUserCommits, [
       username
     ]);

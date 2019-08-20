@@ -21,7 +21,8 @@ export const repositoryActions = {
     type: types.FETCH_REPOSITORIES,
     payload: filter
   }),
-  fetchActivity: () => ({
-    type: types.FETCH_ACTIVITY
+  fetchActivity: user => ({
+    type: types.FETCH_ACTIVITY,
+    payload: user
   })
 };

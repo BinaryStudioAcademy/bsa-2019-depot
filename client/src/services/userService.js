@@ -1,5 +1,13 @@
 import callWebApi from '../helpers/webApiHelper';
 
+export const getUser = async ({ userToRender }) => {
+  const response = await callWebApi({
+    endpoint: `/api/user/${userToRender}`,
+    type: 'GET'
+  });
+  return response.json();
+};
+
 export const forgot = async request => {
   const response = await callWebApi({
     endpoint: '/api/user/forget-password',
