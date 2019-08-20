@@ -8,3 +8,11 @@ export const create = async request => {
   });
   return response.json();
 };
+
+export const getRelationUserOrg = async (orgname, userID) => {
+  const response = await callWebApi({
+    endpoint: `/api/organizations/${orgname}/users/${userID}`,
+    type: 'GET'
+  });
+  return response.json();
+};
