@@ -47,15 +47,12 @@ function* watchCurrentUserRequest() {
   yield takeEvery(fetchCurrentUser.TRIGGER, currentUserRequest);
 }
 
-function* loginGoogle({ payload: { user, history } }) {
+function* loginGoogle({ payload: { user } }) {
   try {
-    const { jwt } = user;
-    yield call(signupService.setToken, jwt);
     const authorizedUser = {
       id: user.id,
       username: user.username,
-      email: user.email,
-      token: jwt
+      email: user.email
     };
     yield put(loginGoogleRoutine.success(authorizedUser));
   } catch (error) {
@@ -64,7 +61,7 @@ function* loginGoogle({ payload: { user, history } }) {
 }
 
 function* watchLoginGoogleRequest() {
-  yield takeEvery(loginGoogleRoutine.REQUEST, loginGoogle);
+  yield takeEvery(loginGoogleRoutine.TRIGGER, loginGoogle);
 }
 
 function* signup({ payload: { user, history } }) {
