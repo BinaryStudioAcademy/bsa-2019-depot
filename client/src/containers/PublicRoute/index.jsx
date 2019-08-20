@@ -5,14 +5,21 @@ import { connect } from 'react-redux';
 
 const renderComponent = ({ Component, ...rest }) => <Component {...rest} />;
 
-const PublicRoute = ({ isAuthorized, hasUsername, username, location, ...props }) =>
-  !isAuthorized && !hasUsername ? (
-    <Route {...props} render={renderComponent} />
-  ) : isAuthorized && !hasUsername ? (
-    <Redirect to={{ pathname: '/login', state: { from: location } }} />
-  ) : (
-    <Redirect to={{ pathname: `/${username}`, state: { from: location } }} />
-  );
+const PublicRoute = ({ isAuthorized, hasUsername, username, location, ...props }) => {
+  if (!isAuthorized && !hasUsername) {
+    return <Route {...props} render={renderComponent} />;
+  }
+
+  const { state } = location;
+  if (state && state.from.pathname.includes('/login')) {
+    return <Route {...props} render={renderComponent} />;
+  }
+
+  if (isAuthorized && !hasUsername) {
+    return <Redirect to={{ pathname: '/login', state: { from: location } }} />;
+  }
+  return <Redirect to={{ pathname: `/${username}`, state: { from: location } }} />;
+};
 
 PublicRoute.propTypes = {
   isAuthorized: PropTypes.bool,
