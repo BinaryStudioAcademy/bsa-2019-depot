@@ -34,7 +34,6 @@ class CreateIssuePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: '',
       body: '',
       selectedTab: 'write'
     };
@@ -57,8 +56,9 @@ class CreateIssuePage extends React.Component {
     return Promise.resolve(<ReactMarkdown source={markdown} />);
   }
 
-  onSubmit() {
-    const { title, body } = this.state;
+  onSubmit({ title }) {
+    if (!title) return;
+    const { body } = this.state;
     const {
       createIssue,
       username,
@@ -96,8 +96,8 @@ class CreateIssuePage extends React.Component {
     return (
       <Container>
         <Formik onSubmit={this.onSubmit} validationSchema={validationSchema}>
-          {({ errors, handleChange, issueTitle }) => (
-            <Form className={styles.issueForm} onSubmit={this.onSubmit}>
+          {({ values: { title }, errors, handleChange, handleSubmit }) => (
+            <Form className={styles.issueForm} onSubmit={handleSubmit}>
               <Grid>
                 <Grid.Column>
                   <Popup
@@ -107,13 +107,13 @@ class CreateIssuePage extends React.Component {
                 </Grid.Column>
                 <Grid.Column width={10}>
                   <Field
-                    name="issueTitle"
-                    value={issueTitle}
+                    name="title"
+                    value={title}
                     onChange={handleChange}
                     placeholder="Title"
                     className={styles.titleInput}
                   />
-                  <InputError name="issueTitle" />
+                  <InputError name="title" />
                   <div className={styles.commentEditor}>
                     <ReactMde
                       value={body}
