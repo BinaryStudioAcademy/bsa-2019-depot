@@ -176,7 +176,7 @@ class CodeTab extends React.Component {
           onReadmeEdit={this.onReadmeEdit}
         />
       );
-    } else if (!currentPath) {
+    } else if (!currentPath && username === currentUser) {
       readmeSection = (
         <Message color="blue" className={styles.readmeTip}>
           Help people interested in this repository understand your project by adding a README.
