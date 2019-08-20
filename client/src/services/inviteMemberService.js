@@ -9,7 +9,7 @@ export const invite = async request => {
   return response.json();
 };
 
-export const isInvited = async query => {
+export const hasRelation = async query => {
   const response = await callWebApi({
     endpoint: '/api/organizations/invitation',
     type: 'GET',

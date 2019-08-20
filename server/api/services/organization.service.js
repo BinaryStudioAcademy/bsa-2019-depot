@@ -57,11 +57,17 @@ const addMember = async (data) => {
 };
 
 const checkInvite = async (data) => {
-  const { orgName, userId } = data;
+  const { orgname, userId } = data;
 
-  const { id: orgId } = await userRepository.getByUsername(orgName);
+  const org = await userRepository.getByUsername(orgname);
+  if (!org) {
+    return {
+      result: false,
+      status: true
+    };
+  }
+  const { id: orgId } = org;
   const result = await OrgUserRepository.findUserInOrg(userId, orgId);
-
   return {
     result,
     status: true

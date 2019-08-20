@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Container, Button, Icon } from 'semantic-ui-react';
-import { isInvited, acceptInvitation, cancelInvitation } from '../../services/inviteMemberService';
+import { hasRelation, acceptInvitation, cancelInvitation } from '../../services/inviteMemberService';
 
 import styles from './styles.module.scss';
 
@@ -21,9 +21,9 @@ class Invitation extends React.Component {
     const { id, match } = this.props;
     const { name } = match.params;
 
-    const { result } = await isInvited({
+    const { result } = await hasRelation({
       userId: id,
-      orgName: name
+      orgname: name
     });
 
     const invited = Boolean(result);

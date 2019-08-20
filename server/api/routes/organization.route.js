@@ -21,8 +21,8 @@ router.post('/invite', (req, res) => {
 });
 
 router.get('/invitation', (req, res) => {
-  const { orgName, userId } = req.query;
-  checkInvite({ orgName, userId }).then(data => res.send(data));
+  const { orgname, userId } = req.query;
+  checkInvite({ orgname, userId }).then(data => res.send(data));
 });
 
 router.post('/invitation', (req, res) => {

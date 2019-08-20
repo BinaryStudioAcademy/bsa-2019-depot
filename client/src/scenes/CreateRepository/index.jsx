@@ -7,6 +7,7 @@ import { Formik, Field } from 'formik';
 import Octicon, { getIconByName } from '@primer/octicons-react';
 import { InputError } from '../../components/InputError';
 import { createRepository, checkName } from '../../services/repositoryService';
+import { hasRelation } from '../../services/inviteMemberService';
 import styles from './styles.module.scss';
 
 const gitingnoreOptions = [
@@ -53,6 +54,12 @@ class CreateRepository extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.renderCreateRepository = this.renderCreateRepository.bind(this);
     this.validate = this.validate.bind(this);
+
+    this.state = {
+      owner: '',
+      userId: '',
+      permission: true
+    };
   }
 
   async validate(values) {
@@ -75,8 +82,9 @@ class CreateRepository extends React.Component {
       ...values
     });
     const { reponame, owner } = values;
+    //console.log(values);
     if (result.url) {
-      this.props.history.push(`${owner}/${reponame}`);
+      this.props.history.push(`/${owner}/${reponame}`);
     }
   }
 
@@ -112,8 +120,7 @@ class CreateRepository extends React.Component {
   }
 
   renderCreateRepository({ errors, touched, handleChange, handleSubmit, values }) {
-    const { username } = this.props;
-    const { reponame, description, privacy, readme } = values;
+    const { owner, reponame, description, privacy, readme } = values;
     const handleChangeDropdown = this.handleChangeDropdown(handleChange);
 
     const ignores = gitingnoreOptions.map(option => {
@@ -139,7 +146,7 @@ class CreateRepository extends React.Component {
           <Form.Group>
             <Form.Field>
               <label>Owner</label>
-              <Input name="owner" value={username} onChange={handleChange} />
+              <Input name="owner" value={owner} onChange={handleChange} />
             </Form.Field>
             <span className={styles.slash}>/</span>
             <Form.Field className={styles.formField}>
@@ -208,14 +215,40 @@ class CreateRepository extends React.Component {
     );
   }
 
+  async componentDidMount() {
+    let { username: owner, id: userId, match } = this.props;
+    const { orgname } = match.params;
+    let permission = true;
+    if (orgname) {
+      const { result } = await hasRelation({ orgname, userId });
+      if (result) {
+        const { orgId } = result;
+        userId = orgId;
+        owner = orgname;
+      } else {
+        permission = false;
+      }
+    }
+    this.setState({
+      userId,
+      owner,
+      permission
+    });
+  }
+
   render() {
+    const { email, history } = this.props;
+    const { owner, userId, permission } = this.state;
+    if (!permission) history.push('/dashboard');
+
     return (
       <Formik
+        enableReinitialize={true}
         initialValues={{
           ...initialValues,
-          owner: this.props.username,
-          email: this.props.email,
-          ownerID: this.props.id
+          owner,
+          email,
+          userId
         }}
         validate={this.validate}
         onSubmit={this.onSubmit}
@@ -229,7 +262,8 @@ CreateRepository.propTypes = {
   username: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
-  history: PropTypes.any
+  history: PropTypes.any,
+  match: PropTypes.object
 };
 
 const mapStateToProps = ({
