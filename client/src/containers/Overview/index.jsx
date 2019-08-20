@@ -36,14 +36,6 @@ export class Overview extends React.Component {
     this.setState({ activeIndex: newIndex });
   };
 
-  panelColors = [
-    styles.activity_lvl1,
-    styles.activity_lvl2,
-    styles.activity_lvl3,
-    styles.activity_lvl4,
-    styles.activity_lvl5
-  ];
-
   currentYearContribution = () => {
     const { userActivityByDate } = this.props;
     const { currentYear } = this.state;
@@ -76,6 +68,32 @@ export class Overview extends React.Component {
     const { activeIndex, currentYear } = this.state;
     const currentYearContribution = this.currentYearContribution();
     const yearList = this.getYearList();
+
+    let panelColors = [
+      styles.activity_lvl1,
+      styles.activity_lvl2,
+      styles.activity_lvl3,
+      styles.activity_lvl4,
+      styles.activity_lvl5
+    ];
+    panelColors = new Proxy(panelColors, {
+      get(target, prop) {
+        prop = +prop;
+        if (prop === 0) {
+          return target[0];
+        } else if (prop > 0 && prop < 10) {
+          return target[1];
+        } else if (prop >= 10 && prop < 20) {
+          return target[2];
+        } else if (prop >= 20 && prop < 30) {
+          return target[3];
+        } else if (prop >= 5) {
+          return target[4];
+        } else {
+          return target[0];
+        }
+      }
+    });
 
     return (
       <div>
@@ -127,7 +145,7 @@ export class Overview extends React.Component {
                     until={this.until}
                     weekNames={this.weekNames}
                     monthNames={this.monthNames}
-                    panelColors={this.panelColors}
+                    panelColors={panelColors}
                   />
                 </div>
               </Container>
