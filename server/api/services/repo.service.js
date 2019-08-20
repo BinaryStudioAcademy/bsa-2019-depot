@@ -16,7 +16,10 @@ const createRepo = async (repoData) => {
         url: pathToRepo
       };
     })
-    .catch(() => Promise.reject({ status: 404, message: 'Error! Repos wasn`t created' }));
+    .catch(() => {
+      const errorObj = { status: 404, message: 'Error! Repos wasn`t created' };
+      Promise.reject(errorObj);
+    });
 
   const initialData = repoHelper.generateInitialData({ ...repoData });
   // Initial data has to contain 'email' (of user) and 'files' in form of [ { filename, content }, {... ]
