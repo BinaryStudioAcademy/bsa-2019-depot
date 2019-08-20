@@ -16,7 +16,7 @@ const validationSchema = Yup.object().shape({
   name: Yup.string()
     .max(255, 'Maximum length - 255 characters'),
   bio: Yup.string()
-    .max(160, 'Maximum length - 255 characters'),
+    .max(160, 'Maximum length - 160 characters'),
   url: Yup.string()
     .max(255, 'Maximum length - 255 characters'),
   company: Yup.string()
