@@ -4,7 +4,7 @@ import { types } from './types';
 const initialState = {
   userActivityByDate: {},
   monthCommitsActivity: {},
-  repositoriesNames: []
+  repositories: []
 };
 
 export const userStatsReducer = (state = initialState, action) => {
@@ -12,7 +12,7 @@ export const userStatsReducer = (state = initialState, action) => {
   case types.FILL_REPOSITORIES:
     return {
       ...state,
-      repositoriesNames: [...action.payload]
+      repositories: [...action.payload]
     };
   case types.FILL_MONTH_COMMITS_ACTIVITY:
     return {

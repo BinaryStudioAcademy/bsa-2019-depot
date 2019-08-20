@@ -6,6 +6,7 @@ const SshKey = orm.import('./sshkey');
 const Repository = orm.import('./repository');
 const Issue = orm.import('./issue');
 const IssueComment = orm.import('./issueComment');
+const Star = orm.import('./star');
 const OrgUser = orm.import('./orgUser');
 const Role = orm.import('./role');
 
@@ -15,6 +16,7 @@ associate({
   Repository,
   Issue,
   IssueComment,
+  Star,
   OrgUser,
   Role
 });
@@ -25,6 +27,7 @@ module.exports = {
   RepositoryModel: Repository,
   IssueModel: Issue,
   IssueCommentModel: IssueComment,
+  StarModel: Star,
   OrgUserModel: OrgUser,
   RoleModel: Role
 };

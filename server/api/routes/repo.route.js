@@ -4,11 +4,14 @@ const {
   createRepo,
   renameRepo,
   deleteRepo,
-  getReposNames,
   checkName,
   isEmpty,
   getCurrentRepoId,
-  forkRepo
+  forkRepo,
+  getReposData,
+  setStar,
+  getByUserAndReponame,
+  updateByUserAndReponame
 } = require('../services/repo.service');
 const { getCommits, getCommitDiff, getCommitCount } = require('../services/commit.service');
 const {
@@ -38,10 +41,16 @@ router
       })
       .catch(next);
   })
+  // .get('/:owner/repos', (req, res, next) => {
+  //   const { filterWord, limit } = req.body;
+  //   const { owner } = req.params;
+  //   getReposNames({ user: owner, filter: filterWord, limit })
+  //     .then(repos => res.send(repos))
+  //     .catch(next);
+  // })
   .get('/:owner/repos', (req, res, next) => {
-    const { filterWord, limit } = req.body;
     const { owner } = req.params;
-    getReposNames({ user: owner, filter: filterWord, limit })
+    getReposData({ username: owner })
       .then(repos => res.send(repos))
       .catch(next);
   })
@@ -166,6 +175,24 @@ router
       .then(() => res.send({
         status: true
       }))
+      .catch(next);
+   })
+  .get('/:owner/:reponame', (req, res, next) => {
+    const { owner, reponame } = req.params;
+    getByUserAndReponame({ owner, reponame })
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .put('/:owner/:reponame', ownerOnlyMiddleware, (req, res, next) => {
+    const { owner, reponame } = req.params;
+    updateByUserAndReponame({ owner, reponame, data: req.body })
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .put('/star', (req, res, next) => {
+    const { userId, repositoryId } = req.body;
+    setStar(userId, repositoryId)
+      .then(star => res.send(star))
       .catch(next);
   });
 
