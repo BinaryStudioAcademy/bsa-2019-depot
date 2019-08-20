@@ -7,6 +7,7 @@ import PublicRoute from '../PublicRoute';
 import Spinner from '../../components/Spinner';
 import { NotFound, Login, Forgot, Reset, MainPage, Signup, Dashboard, CreateRepository } from '../../scenes';
 import Settings from '../../scenes/Settings';
+import CreateOrganization from '../../scenes/CreateOrganization';
 import { fetchCurrentUser } from '../../routines/routines';
 import RepositoryPage from '../../scenes/Repository';
 import Header from '../Header';
@@ -35,6 +36,7 @@ class Routing extends React.Component {
             <PublicRoute exact path="/forgot" component={Forgot} />
             <PublicRoute exact path="/reset/:hash" component={Reset} />
             <PrivateRoute path="/settings" component={Settings} />
+            <PrivateRoute exact path="/organizations/new" component={CreateOrganization} />
             <PrivateRoute exact path="/new" component={CreateRepository} />
             <PrivateRoute exact path="/:username" component={Dashboard} />
             <PrivateRoute path="/:username/:reponame" component={RepositoryPage} />

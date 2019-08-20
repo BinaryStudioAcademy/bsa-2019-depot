@@ -180,7 +180,7 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
   return (
     <div className={styles.headerWrpAuth}>
       <Grid>
-        <Grid.Column computer={7} tablet={6} mobile={6} floated="left">
+        <Grid.Column computer={6} tablet={6} mobile={6} floated="left">
           <Responsive minWidth={1200}>
             <ul>
               <li>{logo}</li>
@@ -197,7 +197,7 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
         <Grid.Column computer={4} tablet={4} mobile={4}>
           <Responsive maxWidth={1200}>{logo}</Responsive>
         </Grid.Column>
-        <Grid.Column computer={4} tablet={6} mobile={6} floated="right">
+        <Grid.Column computer={6} tablet={6} mobile={6} floated="right">
           <ul className={styles.rightMenu}>
             <li>
               <a href="/">
@@ -218,7 +218,7 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
                 <Dropdown.Menu>
                   <Dropdown.Item href="/new">New repository</Dropdown.Item>
                   <Dropdown.Item>Import repository</Dropdown.Item>
-                  <Dropdown.Item>New organization</Dropdown.Item>
+                  <Dropdown.Item href="/organizations/new">New organization</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
             </li>

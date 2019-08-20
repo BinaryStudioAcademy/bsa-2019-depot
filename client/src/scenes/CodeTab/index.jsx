@@ -29,7 +29,8 @@ class CodeTab extends React.Component {
       branch: actualBranch
     });
     history.push(`/${username}/${reponame}/tree/${actualBranch}`);
-    commitsService.getCommitCount(username, reponame, actualBranch)
+    commitsService
+      .getCommitCount(username, reponame, actualBranch)
       .then(count => this.setState({ commitCount: count.count }));
     this.props.fetchLastCommitOnBranch({
       username,
@@ -54,7 +55,8 @@ class CodeTab extends React.Component {
         const { branch } = this.state;
         history.push(`/${username}/${reponame}/tree/${data.value}`);
 
-        commitsService.getCommitCount(username, reponame, branch)
+        commitsService
+          .getCommitCount(username, reponame, branch)
           .then(count => this.setState({ commitCount: count.count }));
         this.props.fetchLastCommitOnBranch({
           username,
@@ -77,7 +79,16 @@ class CodeTab extends React.Component {
 
   render() {
     const { branch, commitCount } = this.state;
-    const { username, reponame, lastCommitData, branchesData, fileTreeData, history, fetchFileTree } = this.props;
+    const {
+      username,
+      currentUser,
+      reponame,
+      lastCommitData,
+      branchesData,
+      fileTreeData,
+      history,
+      fetchFileTree
+    } = this.props;
     const { branches } = branchesData;
     const branchesCount = branches ? branches.length : 0;
 
@@ -172,10 +183,14 @@ class CodeTab extends React.Component {
           </div>
           <div className={styles.repoActions}>
             <Button.Group>
-              <Button className={styles.actionButton} onClick={this.onCreateFile}>
-                Create New File
-              </Button>
-              <Button className={styles.actionButton}>Upload files</Button>
+              {currentUser && currentUser === username && (
+                <>
+                  <Button className={styles.actionButton} onClick={this.onCreateFile}>
+                    Create New File
+                  </Button>
+                  <Button className={styles.actionButton}>Upload files</Button>
+                </>
+              )}
               <Button className={styles.actionButton}>Find file</Button>
             </Button.Group>
             <Popup
@@ -241,10 +256,11 @@ class CodeTab extends React.Component {
   }
 }
 
-const mapStateToProps = ({ lastCommitData, branchesData, fileTreeData }) => ({
+const mapStateToProps = ({ lastCommitData, branchesData, fileTreeData, profile }) => ({
   lastCommitData,
   branchesData,
-  fileTreeData
+  fileTreeData,
+  currentUser: profile.currentUser.username
 });
 
 const mapDispatchToProps = {
@@ -276,6 +292,7 @@ CodeTab.propTypes = {
   history: PropTypes.object,
   location: PropTypes.object.isRequired,
   match: PropTypes.object,
+  currentUser: PropTypes.string,
   username: PropTypes.string.isRequired,
   reponame: PropTypes.string.isRequired,
   branch: PropTypes.string

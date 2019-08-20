@@ -51,12 +51,14 @@ $secondary-color: #d1d5da;
 }
 
 :global(.ui.container):local(.favorite_repos_wrapper) {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+  justify-items: center;
+  align-items: center;
 
   :local(.pinned_item) {
-    width: 48%;
+    width: 100%;
     min-height: 110px;
     display: flex;
     flex-direction: column;

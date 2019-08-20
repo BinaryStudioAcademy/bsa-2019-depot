@@ -86,7 +86,7 @@ class FileViewPage extends React.Component {
   }
 
   render() {
-    const { match, location } = this.props;
+    const { match, location, username } = this.props;
     const {
       fileData: { content, size },
       loading,
@@ -126,10 +126,12 @@ class FileViewPage extends React.Component {
               <code className={styles.lineCount}>{lineCount} lines</code>
               <code>{this.formatBytes(size)}</code>
             </div>
-            <div className={styles.fileControls}>
-              <Icon link name="pencil" onClick={this.handleEditFile} />
-              <Icon link name="trash alternate" onClick={this.handleDeleteFile} />
-            </div>
+            {username && username === owner && (
+              <div className={styles.fileControls}>
+                <Icon link name="pencil" onClick={this.handleEditFile} />
+                <Icon link name="trash alternate" onClick={this.handleDeleteFile} />
+              </div>
+            )}
           </Segment>
           <Segment className={styles.fileView}>
             {fileExtension === 'md' ? (
