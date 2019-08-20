@@ -79,7 +79,7 @@ class KeysPage extends React.Component {
         )}
         <Header as="h2" dividing>
           <Header.Content>SSH keys</Header.Content>
-          <Button color="green" size="small" onClick={this.handleNewKey} compact>
+          <Button color="blue" size="small" onClick={this.handleNewKey} compact>
             New SSH key
           </Button>
         </Header>

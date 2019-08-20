@@ -1,5 +1,7 @@
+$red: #ed1a37;
+
 :local(.error_wrapper) {
-  color: #d0a89c;
+  color: $red;
   text-align: left;
   margin: -10px 0 10px 0;
   padding-top: 5px;

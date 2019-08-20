@@ -7,3 +7,6 @@
 @gray: #F7F7FB;
 @red: #ED1A37;
 @blue: #2E53DB;
+@positiveColor: @blue;
+@primaryColor: @blue;
+@linkColor: rgb(79, 96, 172, 0.7);

@@ -178,7 +178,7 @@ class Login extends Component {
                   />
                   <InputError name="username" />
                 </Form.Field>
-                <Button type="submit" color="green" fluid size="large" disabled={errors.username && touched.username}>
+                <Button type="submit" color="blue" fluid size="large" disabled={errors.username && touched.username}>
                   Set Username
                 </Button>
                 <Message error content={error} />

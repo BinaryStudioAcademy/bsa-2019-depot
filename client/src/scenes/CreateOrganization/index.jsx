@@ -103,7 +103,7 @@ class CreateOrganization extends Component {
                 </div>
                 <Divider hidden />
 
-                <Button color="green" type="submit" disabled={loading}>
+                <Button color="blue" type="submit" disabled={loading}>
                   Create otganization
                 </Button>
               </Form>

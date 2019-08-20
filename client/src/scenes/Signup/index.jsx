@@ -106,7 +106,7 @@ class Signup extends React.Component {
 
           <Button
             type="submit"
-            color="green"
+            color="blue"
             fluid
             size="large"
             disabled={

@@ -11,18 +11,12 @@ import styles from './styles.module.scss';
 import { getUserImgLink } from '../../helpers/imageHelper';
 import { InputError } from '../../components/InputError';
 
-
 const validationSchema = Yup.object().shape({
-  name: Yup.string()
-    .max(255, 'Maximum length - 255 characters'),
-  bio: Yup.string()
-    .max(160, 'Maximum length - 160 characters'),
-  url: Yup.string()
-    .max(255, 'Maximum length - 255 characters'),
-  company: Yup.string()
-    .max(255, 'Maximum length - 255 characters'),
-  location: Yup.string()
-    .max(255, 'Maximum length - 255 characters')
+  name: Yup.string().max(255, 'Maximum length - 255 characters'),
+  bio: Yup.string().max(160, 'Maximum length - 160 characters'),
+  url: Yup.string().max(255, 'Maximum length - 255 characters'),
+  company: Yup.string().max(255, 'Maximum length - 255 characters'),
+  location: Yup.string().max(255, 'Maximum length - 255 characters')
 });
 
 class SettingsProfile extends Component {
@@ -139,7 +133,7 @@ class SettingsProfile extends Component {
                     <div className={styles.note}>{this.NOTES.disclaimer}</div>
                     <Divider hidden />
 
-                    <Button color="green" type="submit" disabled={loading}>
+                    <Button color="blue" type="submit" disabled={loading}>
                       Update profile
                     </Button>
                   </Form>

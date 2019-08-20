@@ -155,7 +155,7 @@ const StatusModal = (showStatusModal, hideModal) => {
         <Form>
           <Form.Field control="input" placeholder="What's happening?" />
           <div className={styles.statusFormButtons}>
-            <Button type="submit" color="green" fluid>
+            <Button type="submit" color="blue" fluid>
               Set status
             </Button>
             <Button basic fluid>
