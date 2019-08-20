@@ -9,15 +9,6 @@ export const invite = async request => {
   return response.json();
 };
 
-export const isInvited = async query => {
-  const response = await callWebApi({
-    endpoint: '/api/organizations/invitation',
-    type: 'GET',
-    query
-  });
-  return response.json();
-};
-
 export const acceptInvitation = async request => {
   const response = await callWebApi({
     endpoint: '/api/organizations/invitation',
