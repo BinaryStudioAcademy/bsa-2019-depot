@@ -1,0 +1,38 @@
+:local(.addToOrgTitle) {
+  font-size: 131.25%;
+  font-weight: 400;
+  margin-top: 16px;
+}
+
+:local(.roleToOrgTitle) {
+  font-size: 120%;
+  font-weight: 600;
+}
+
+:local(.editTitle) {
+  font-size: 150%;
+  font-weight: 400;
+  margin-top: 16px;
+}
+
+:local(.emailIcon) {
+  margin-top: 16px !important;
+}
+
+:local(.usernameInput) {
+  width: 40% !important;
+}
+
+:local(.formField) {
+  margin: 0 auto;
+  width: 35% !important;
+}
+
+:local(label) {
+  font-weight: 600;
+}
+
+:local(.note) {
+  font-size: 80%;
+  padding-left: 26px;
+}
