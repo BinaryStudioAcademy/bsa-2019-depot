@@ -39,11 +39,11 @@ class Dashboard extends React.Component {
   renderTab(tab) {
     switch (tab) {
     case tabs.repositories:
-      return <RepositoriesList />;
+      return <div>RepositoriesList</div>;
     case tabs.projects:
       return <div>Hello! Projects are there</div>;
     case tabs.stars:
-      return <StarsTab />;
+      return <div>Stars tab</div>;
     case tabs.following:
       return <div>Following</div>;
     case tabs.followers:
