@@ -64,7 +64,7 @@ class CodeTab extends React.Component {
       reponame,
       branch: actualBranch
     });
-    repositoryService.getRepositoryByOwnerAndName(username, reponame).then(({ description, website }) => {
+    repositoryService.getRepositoryByOwnerAndName({ username, reponame }).then(({ description, website }) => {
       this.setState({ description, website, infoLoading: false });
     });
   }

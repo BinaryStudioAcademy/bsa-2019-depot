@@ -160,16 +160,16 @@ IssuesTab.propTypes = {
 const mapStateToProps = ({
   issuesData,
   currentRepo: {
-    currentRepoInfo: { repoId, repoName }
+    currentRepoInfo: { id, name }
   },
   profile: {
     currentUser: { username }
   }
 }) => ({
   username,
-  repoName,
+  repoName: name,
   issuesData,
-  repositoryId: repoId
+  repositoryId: id
 });
 
 const mapDispatchToProps = {

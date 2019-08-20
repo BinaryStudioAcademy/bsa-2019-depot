@@ -1,25 +1,25 @@
 import { takeEvery, put, call, all } from 'redux-saga/effects';
 import * as repositoryService from '../../services/repositoryService';
-import { fetchCurrentRepoId } from '../../routines/routines';
+import { fetchCurrentRepo } from '../../routines/routines';
 
-function* currentRepoIdRequest({ payload }) {
+function* currentRepoRequest({ payload }) {
   try {
-    yield put(fetchCurrentRepoId.request());
+    yield put(fetchCurrentRepo.request());
 
-    const response = yield call(repositoryService.getCurrentRepoId, payload);
+    const response = yield call(repositoryService.getRepositoryByOwnerAndName, payload);
 
-    yield put(fetchCurrentRepoId.success(response));
+    yield put(fetchCurrentRepo.success(response));
   } catch (error) {
-    yield put(fetchCurrentRepoId.failure(error.message));
+    yield put(fetchCurrentRepo.failure(error.message));
   } finally {
-    yield put(fetchCurrentRepoId.fulfill());
+    yield put(fetchCurrentRepo.fulfill());
   }
 }
 
-function* watchCurrentRepoIdRequest() {
-  yield takeEvery(fetchCurrentRepoId.TRIGGER, currentRepoIdRequest);
+function* watchCurrentRepoRequest() {
+  yield takeEvery(fetchCurrentRepo.TRIGGER, currentRepoRequest);
 }
 
 export default function* repositoryTabSagas() {
-  yield all([watchCurrentRepoIdRequest()]);
+  yield all([watchCurrentRepoRequest()]);
 }

@@ -1,32 +1,31 @@
-import { fetchCurrentRepoId } from '../../routines/routines';
+import { fetchCurrentRepo } from '../../routines/routines';
 
-const initialCurrentRepoIdState = {
+const initialCurrentRepoState = {
   currentRepoInfo: {},
   loading: false,
   error: null
 };
 
-export const currentRepoReducer = (state = initialCurrentRepoIdState, action) => {
+export const currentRepoReducer = (state = initialCurrentRepoState, action) => {
   switch (action.type) {
-  case fetchCurrentRepoId.TRIGGER:
+  case fetchCurrentRepo.TRIGGER:
     return {
       ...state,
       loading: true
     };
-  case fetchCurrentRepoId.SUCCESS:
+  case fetchCurrentRepo.SUCCESS:
     return {
       ...state,
       currentRepoInfo: {
-        repoId: action.payload.id,
-        repoName: action.payload.name
+        ...action.payload
       }
     };
-  case fetchCurrentRepoId.FAILURE:
+  case fetchCurrentRepo.FAILURE:
     return {
       ...state,
       error: action.payload
     };
-  case fetchCurrentRepoId.FULFILL:
+  case fetchCurrentRepo.FULFILL:
     return {
       ...state,
       loading: false

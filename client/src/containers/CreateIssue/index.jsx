@@ -168,16 +168,16 @@ CreateIssuePage.propTypes = {
 
 const mapStateToProps = ({
   profile: {
-    currentUser: { id, username }
+    currentUser: { id: userId, username }
   },
   currentRepo: {
-    currentRepoInfo: { repoId, repoName }
+    currentRepoInfo: { id, name }
   }
 }) => ({
-  userId: id,
+  userId,
   username,
-  repoName,
-  repositoryId: repoId
+  repoName: name,
+  repositoryId: id
 });
 
 const mapDispatchToProps = {

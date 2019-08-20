@@ -8,7 +8,7 @@ export const getRepositories = async (owner, filter) => {
   return response.json();
 };
 
-export const getRepositoryByOwnerAndName = async (owner, reponame) => {
+export const getRepositoryByOwnerAndName = async ({ username: owner, reponame }) => {
   const response = await callWebApi({
     endpoint: `/api/repo/${owner}/${reponame}`,
     type: 'GET'
@@ -52,16 +52,16 @@ export const checkIfEmpty = async ({ owner, reponame }) => {
   return response.json();
 };
 
-export const getCurrentRepoId = async ({ username: owner, reponame, userId }) => {
-  const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/${reponame}/id`,
-    type: 'GET',
-    query: {
-      userId
-    }
-  });
-  return response.json();
-};
+// export const getCurrentRepoId = async ({ username: owner, reponame, userId }) => {
+//   const response = await callWebApi({
+//     endpoint: `/api/repo/${owner}/${reponame}/id`,
+//     type: 'GET',
+//     query: {
+//       userId
+//     }
+//   });
+//   return response.json();
+// };
 
 export const forkRepo = async ({ owner, repo }) => {
   const response = await callWebApi({

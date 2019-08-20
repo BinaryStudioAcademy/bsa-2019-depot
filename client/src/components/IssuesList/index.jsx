@@ -8,10 +8,14 @@ import { Link } from 'react-router-dom';
 import './styles.module.scss';
 
 const IssuesList = props => {
+  const {
+    issues,
+    match: { url }
+  } = props;
   return (
-    props.issues.length > 0 && (
+    issues.length > 0 && (
       <List divided verticalAlign="middle">
-        {props.issues.map(issue => (
+        {issues.map(issue => (
           <List.Item key={issue.id}>
             <List.Content floated="right">
               <Icon name="comments outline" /> {issue.commentCount}
@@ -31,7 +35,7 @@ const IssuesList = props => {
             <Icon name={issue.opened ? 'info' : 'check'} color={issue.opened ? 'green' : 'red'} />
             <List.Content>
               <List.Header>
-                <Link to={`${props.match.url}/${issue.id}`}>{issue.title}</Link>
+                <Link to={`${url}/${issue.id}`}>{issue.title}</Link>
               </List.Header>
               <List.Description>
                 {`#${issue.id} opened ${moment(issue.createdAt).fromNow()} by ${issue.user.username}`}

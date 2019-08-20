@@ -49,7 +49,7 @@ class IssueComments extends React.Component {
   }
 
   renderPreview(markdown) {
-    return <ReactMarkdown source={markdown} />;
+    return Promise.resolve(<ReactMarkdown source={markdown} />);
   }
 
   onSubmit() {
@@ -223,14 +223,14 @@ const mapStateToProps = ({
     currentUser: { id, username }
   },
   currentRepo: {
-    currentRepoInfo: { repoName }
+    currentRepoInfo: { name }
   }
 }) => ({
   userId: id,
   issues,
   issueComments,
   username,
-  repoName
+  repoName: name
 });
 
 const mapDispatchToProps = { fetchIssueComments, createIssueComment };
