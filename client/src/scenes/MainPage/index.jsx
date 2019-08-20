@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 
 import { Button, Grid, Image, Form } from 'semantic-ui-react';
 
@@ -8,7 +10,7 @@ import { ReactComponent as ThirdSVG } from '../../styles/assets/landing-images/t
 import { ReactComponent as FourthSVG } from '../../styles/assets/landing-images/fourth-pic.svg';
 import { ReactComponent as LogoSVG } from '../../styles/assets/landing-images/logo.svg';
 
-const MainPage = () => {
+const MainPage = ({ history }) => {
   const [email, setEmail] = useState('');
 
   function handleChange({ target }) {
@@ -17,6 +19,10 @@ const MainPage = () => {
 
   function handleSubmit() {
     setEmail('');
+  }
+
+  function handleGetStarted() {
+    history.push('/login');
   }
 
   return (
@@ -31,7 +37,7 @@ const MainPage = () => {
             </p>
           </Grid.Column>
         </Grid>
-        <Button className={styles.button} color="blue">
+        <Button className={styles.button} onClick={handleGetStarted}>
           Get started for free
         </Button>
         <Grid centered container columns={1}>
@@ -111,7 +117,7 @@ const MainPage = () => {
             <h2 className={styles.headerCentered}>A better way to build software</h2>
           </Grid.Row>
           <Grid.Row computer={13} mobile={16}>
-            <Button className={styles.button} color="blue">
+            <Button className={styles.button} onClick={handleGetStarted}>
               Get started for free
             </Button>
           </Grid.Row>
@@ -174,4 +180,8 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+MainPage.propTypes = {
+  history: PropTypes.object.isRequired
+};
+
+export default withRouter(MainPage);
