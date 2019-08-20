@@ -2,6 +2,9 @@ const NodeGit = require('nodegit');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const repoHelper = require('../../helpers/repo.helper');
+const { getReposNames, isEmpty } = require('./repo.service');
+const CommitRepository = require('../../data/repositories/commit.repository');
+const CommitCommentRepository = require('../../data/repositories/commit-comment.repository');
 
 const initialCommit = async ({
   owner, email, repoName, files
@@ -35,10 +38,6 @@ const initialCommit = async ({
   const commit = await repo.getCommit(commitId);
   return NodeGit.Branch.create(repo, 'master', commit, 1);
 };
-
-module.exports = { initialCommit };
-
-const { getReposNames, isEmpty } = require('./repo.service');
 
 const getCommitsByDate = async (data) => {
   const { user } = data;
@@ -212,11 +211,29 @@ const deleteFile = async ({
   return repo.getCommit(commitId);
 };
 
+const getCommitCommentsByCommitId = async (commitId) => {
+  const commit = await CommitRepository.getById(commitId);
+  if (!commit) {
+    return [];
+  }
+  const { id } = commit;
+  const comments = await CommitCommentRepository.getCommitCommentsByCommitId(id);
+  return comments;
+};
+
+const createCommit = async ({ ...commitData }) => {
+  const commit = await CommitRepository.add(commitData);
+  return commit;
+};
+
 module.exports = {
   getCommits,
   getCommitDiff,
   getCommitsByDate,
   modifyFile,
   deleteFile,
+  initialCommit,
+  getCommitCommentsByCommitId,
+  createCommit,
   getCommitCount
 };

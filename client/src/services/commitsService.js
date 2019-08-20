@@ -18,7 +18,7 @@ export const getCommitCount = async (owner, repoName, branch) => {
 
 export const getAllUserCommits = async owner => {
   const response = await callWebApi({
-    endpoint: `/api/commit/${owner}/commits`,
+    endpoint: `/api/commits/${owner}/commits`,
     type: 'GET'
   });
   return response.json();
@@ -34,7 +34,7 @@ export const getCommitDiffs = async (owner, repoName, hash) => {
 
 export const modifyFile = async (owner, repoName, branch, request) => {
   const response = await callWebApi({
-    endpoint: `/api/commit/${owner}/${repoName}/${branch}/`,
+    endpoint: `/api/commits/${owner}/${repoName}/${branch}/`,
     type: 'POST',
     request
   });
