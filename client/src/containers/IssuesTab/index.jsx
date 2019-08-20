@@ -84,7 +84,7 @@ class IssuesTab extends React.Component {
             placeholder="Filter by title"
           />
           <Link to={`${match.url}/new`}>
-            <Button content="New Issue" primary />
+            <Button content="New Issue" positive />
           </Link>
         </div>
         <div className={styles.issuesContainer}>
@@ -154,7 +154,9 @@ IssuesTab.propTypes = {
     path: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired
   }).isRequired,
-  fetchIssues: PropTypes.func.isRequired
+  fetchIssues: PropTypes.func.isRequired,
+  history: PropTypes.object,
+  location: PropTypes.object.isRequired
 };
 
 const mapStateToProps = ({

@@ -5,9 +5,19 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { updateUserSettings } from '../../routines/routines';
 import { NavLink } from 'react-router-dom';
+import * as Yup from 'yup';
 
 import styles from './styles.module.scss';
 import { getUserImgLink } from '../../helpers/imageHelper';
+import { InputError } from '../../components/InputError';
+
+const validationSchema = Yup.object().shape({
+  name: Yup.string().max(255, 'Maximum length - 255 characters'),
+  bio: Yup.string().max(160, 'Maximum length - 160 characters'),
+  url: Yup.string().max(255, 'Maximum length - 255 characters'),
+  company: Yup.string().max(255, 'Maximum length - 255 characters'),
+  location: Yup.string().max(255, 'Maximum length - 255 characters')
+});
 
 class SettingsProfile extends Component {
   NOTES = {
@@ -87,11 +97,12 @@ class SettingsProfile extends Component {
         <Grid>
           <>
             <Grid.Column computer={11} tablet={16} mobile={16}>
-              <Formik initialValues={initialValues} onSubmit={this.onSubmit}>
-                {({ isSubmitting }) => (
+              <Formik initialValues={initialValues} onSubmit={this.onSubmit} validationSchema={validationSchema}>
+                {({ isSubmitting, errors, touched }) => (
                   <Form className="ui form">
                     <Header as="h4">Name</Header>
                     <Field type="text" name="name" render={this.renderField} />
+                    <InputError name="name" />
                     <div className={styles.note}>{this.NOTES.name}</div>
 
                     <Header as="h4">Public email</Header>
@@ -100,19 +111,23 @@ class SettingsProfile extends Component {
 
                     <Header as="h4">Bio</Header>
                     <Field name="bio" render={this.renderTextArea} />
+                    <InputError name="bio" />
                     <div className={styles.note}>{this.NOTES.bio}</div>
 
                     <Header as="h4">URL</Header>
                     <Field type="text" name="url" render={this.renderField} />
+                    <InputError name="url" />
 
                     <Header as="h4">Company</Header>
                     <Field type="text" name="company" render={this.renderField} />
+                    <InputError name="company" />
                     <div className={styles.note}>{this.NOTES.company}</div>
 
                     <Divider />
 
                     <Header as="h4">Location</Header>
                     <Field type="text" name="location" render={this.renderField} />
+                    <InputError name="location" />
 
                     <Divider hidden />
                     <div className={styles.note}>{this.NOTES.disclaimer}</div>
