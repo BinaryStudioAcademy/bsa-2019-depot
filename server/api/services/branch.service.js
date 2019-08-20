@@ -50,11 +50,13 @@ const traverseFileTree = async (user, name, branch, tree) => {
           sha: entry.sha(),
           name: entry.name(),
           time: lastModifiedCommit.date(),
-          commitMessage: lastModifiedCommit.message(),
+          commitMessage: lastModifiedCommit.message()
         });
       }
     } catch (error) {
-      return Promise.reject({status: 401, message: error});
+      const returnError = new Error(error);
+      returnError.status = 401;
+      return Promise.reject(returnError);
     }
   }
   return fileTree;

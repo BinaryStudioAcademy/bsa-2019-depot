@@ -4,6 +4,8 @@ const exec = util.promisify(require('child_process').exec);
 const { getReposNames } = require('./repo.service');
 const repoHelper = require('../../helpers/repo.helper');
 const { isEmpty } = require('./repo.service');
+const CommitRepository = require('../../data/repositories/commit.repository');
+const CommitCommentRepository = require('../../data/repositories/commit-comment.repository');
 
 const getCommits = async ({ user, name, branch }) => {
   const pathToRepo = repoHelper.getPathToRepo(user, name);
@@ -205,11 +207,28 @@ const deleteFile = async ({
   return repo.getCommit(commitId);
 };
 
+const getCommitCommentsByCommitId = async (commitId) => {
+  const commit = await CommitRepository.getById(commitId);
+  if (!commit) {
+    return [];
+  }
+  const { id } = commit;
+  const comments = await CommitCommentRepository.getCommitCommentsByCommitId(id);
+  return comments;
+};
+
+const createCommit = async ({ ...commitData }) => {
+  const commit = await CommitRepository.add(commitData);
+  return commit;
+};
+
 module.exports = {
   getCommits,
   getCommitDiff,
   getCommitsByDate,
   modifyFile,
   deleteFile,
-  initialCommit
+  initialCommit,
+  getCommitCommentsByCommitId,
+  createCommit
 };
