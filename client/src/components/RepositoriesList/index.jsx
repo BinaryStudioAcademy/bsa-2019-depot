@@ -1,11 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Container, Input, Dropdown, Button } from 'semantic-ui-react';
 import Octicon, { Repo } from '@primer/octicons-react';
-import { repositoryActions } from '../../scenes/Dashboard/actions';
+// import { repositoryActions } from '../../scenes/Dashboard/actions';
 import RepositoryItem from '../RepositoryItem';
 
 import styles from './styles.module.scss';
@@ -99,7 +98,7 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    actions: bindActionCreators({ ...repositoryActions }, dispatch)
+    // actions: bindActionCreators({ ...repositoryActions }, dispatch)
   };
 };
 

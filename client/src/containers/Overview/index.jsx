@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Container, Grid, Dropdown, Accordion } from 'semantic-ui-react';
 import Octicon, { Repo, Grabber, Fold, Unfold, RepoPush } from '@primer/octicons-react';
-import { repositoryActions } from '../../scenes/Dashboard/actions';
+// import { repositoryActions } from '../../scenes/Dashboard/actions';
 import StarLink from '../../components/StarLink';
 
 import styles from './styles.module.scss';
@@ -22,12 +22,12 @@ export class Overview extends React.Component {
   }
 
   componentDidMount() {
-    const { actions } = this.props;
-    actions.fetchRepositories({
-      limit: '4',
-      filterWord: ''
-    });
-    actions.fetchActivity();
+    // const { actions } = this.props;
+    // actions.fetchRepositories({
+    //   limit: '4',
+    //   filterWord: ''
+    // });
+    // actions.fetchActivity();
   }
 
   handleActivityState = (e, titleProps) => {
@@ -212,19 +212,19 @@ Overview.propTypes = {
 };
 
 const mapStateToProps = ({
-  userStats: { userActivityByDate, monthCommitsActivity },
+  // userStats: { userActivityByDate, monthCommitsActivity },
   profile: {
     currentUser: { username }
   }
 }) => ({
-  userActivityByDate,
-  monthCommitsActivity,
+  // userActivityByDate,
+  // monthCommitsActivity,
   username
 });
 
 const mapDispatchToProps = dispatch => {
   return {
-    actions: bindActionCreators({ ...repositoryActions }, dispatch)
+    // actions: bindActionCreators({ ...repositoryActions }, dispatch)
   };
 };
 
