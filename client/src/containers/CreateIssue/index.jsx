@@ -26,7 +26,7 @@ const assigneeOptions = [
 
 const validationSchema = Yup.object().shape({
   issueTitle: Yup.string()
-    .max(256, 'Maximum length - 255 characters')
+    .max(256, 'Maximum length - 256 characters')
 });
 
 class CreateIssuePage extends React.Component {
