@@ -1,10 +1,9 @@
 $blue-color: #2e53db;
-$header-color: #253858;
 $text-color: #363a44;
 $gray-color: #f7f7fb;
 
 :local(.main) {
-  padding: 80px 0 16px;
+  padding: 80px 0 40px;
   background-color: $gray-color;
   text-align: center;
 }
@@ -64,7 +63,7 @@ $gray-color: #f7f7fb;
 
   h3 {
     font-size: 150%;
-    color: $header-color;
+    color: $text-color;
     text-align: center;
   }
 
@@ -144,145 +143,13 @@ $gray-color: #f7f7fb;
   }
 }
 
-:local(.integrations) {
-  composes: main;
-  padding: 50px 0;
-}
-
-:local(.integrationsBlock) {
-  composes: advantageSmall;
-  margin: 20px 0;
-
-  img {
-    height: 90px;
-    margin: 0;
-  }
-
-  h3,
-  p {
-    text-align: left;
-  }
-}
-
-:local(.clients) {
-  .header {
-    padding-top: 80px;
-  }
-
-  img {
-    margin: 30px 0 50px;
-  }
-}
-
-:local(.plans) {
-  padding-bottom: 80px;
-
-  .header {
-    padding-top: 50px;
-  }
-
-  p {
-    text-align: center;
-  }
-}
-
-:local(.plan) {
-  box-shadow: 1px 1px 6px rgba(0, 0, 0, 0.1);
-
-  hr {
-    background-color: #dfe1e5 !important;
-    border: none;
-    height: 2px;
-  }
-
-  .planHeader {
-    text-align: center;
-    padding: 40px;
-    background-color: $gray-color;
-
-    h4 {
-      font-size: 125%;
-    }
-
-    p {
-      &:last-child {
-        font-size: 125%;
-      }
-    }
-
-    h2 {
-      font-size: 450%;
-      color: $blue-color;
-      font-weight: bold;
-    }
-  }
-
-  .planBody {
-    padding: 40px;
-
-    li {
-      padding-left: 32px;
-      line-height: 24px;
-
-      &:not(:last-child) {
-        margin-bottom: 12px;
-      }
-
-      &.featured {
-        background: url('https://bitbucket.org/dam/jcr:743645da-cea8-4466-879b-0c0f99aee501/check-mark-adg3-blue.svg')
-          no-repeat;
-        background-size: 24px 24px;
-      }
-
-      &.deemphasized {
-        opacity: 0.15;
-      }
-    }
-  }
-
-  .planFooter {
-    padding: 40px;
-
-    li {
-      &:not(:last-child) {
-        margin-bottom: 12px;
-      }
-
-      i {
-        font-style: italic;
-      }
-    }
-  }
-}
-
 :local(.btnWrapper) {
   display: flex;
   justify-content: center;
 }
 
-:local(.cloud) {
-  .block {
-    padding: 40px;
-    background-color: $gray-color;
-
-    img {
-      width: 90px;
-    }
-
-    h2 {
-      color: $header-color;
-      font-size: 275%;
-      margin-bottom: 24px;
-    }
-
-    p {
-      line-height: 24px;
-    }
-  }
-}
-
 :local(.betterWay) {
-  margin: 1rem 0;
+  margin: 2rem 0;
   padding: 1rem 0;
   min-height: 300px;
 
@@ -293,8 +160,8 @@ $gray-color: #f7f7fb;
   }
 
   .logo {
-    margin: 1.5em;
-    width: 35%;
+    margin-top: 3em;
+    width: 20em;
   }
 }
 

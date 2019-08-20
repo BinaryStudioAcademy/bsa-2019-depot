@@ -129,7 +129,7 @@ class Login extends Component {
                 </Form.Field>
                 <Button
                   type="submit"
-                  color="green"
+                  color="blue"
                   fluid
                   size="large"
                   disabled={(errors.password && touched.password) || (errors.email && touched.email)}
