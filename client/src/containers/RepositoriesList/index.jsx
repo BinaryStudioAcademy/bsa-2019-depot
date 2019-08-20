@@ -4,28 +4,13 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Container, Input, Dropdown, Button } from 'semantic-ui-react';
 import Octicon, { Repo } from '@primer/octicons-react';
-// import { repositoryActions } from '../../scenes/Dashboard/actions';
-import RepositoryItem from '../RepositoryItem';
+import RepositoryItem from '../../components/RepositoryItem';
 
 import styles from './styles.module.scss';
 
 export class RepositoriesList extends React.Component {
   render() {
     const { repositories, username, id, actions: { setStar } } = this.props;
-    //Mock
-
-    const repoTypes = [
-      { key: 'rt_1', text: 'Type: All', value: 'All' },
-      { key: 'rt_2', text: 'Type: Public', value: 'Public' },
-      { key: 'rt_3', text: 'Type: Private', value: 'Private' }
-    ];
-
-    const languageTypes = [
-      { key: 'lt_1', text: 'JavaScript', value: 'JavaScript' },
-      { key: 'lt_2', text: 'HTML', value: 'HTML' },
-      { key: 'lt_3', text: 'CSS', value: 'CSS' }
-    ];
-
     return (
       <Container className={styles.favorite_repos_wrapper}>
         <Container className={styles.repos_filters}>
@@ -35,7 +20,6 @@ export class RepositoriesList extends React.Component {
               placeholder="Type: All"
               fluid
               selection
-              options={repoTypes}
               className={styles.repos_filters_dropdown}
             />
           </div>
@@ -44,7 +28,6 @@ export class RepositoriesList extends React.Component {
               placeholder="Language"
               fluid
               selection
-              options={languageTypes}
               className={styles.repos_filters_dropdown}
             />
           </div>
