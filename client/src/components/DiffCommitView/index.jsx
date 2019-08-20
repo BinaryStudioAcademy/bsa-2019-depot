@@ -44,7 +44,7 @@ class DiffCommitView extends Component {
     this.state = {
       body: '',
       selectedTab: 'write',
-      comments: [],
+      comments: commentsMock,
       error: ''
     };
 
@@ -81,11 +81,13 @@ class DiffCommitView extends Component {
   }
 
   deleteComment(id) {
-    commitsService.deleteCommitComment(id).then(() =>
-      this.setState(({ comments }) => ({
-        comments: comments.filter(comment => comment.id !== id)
-      }))
-    );
+    // need to revert when server side will work
+    //commitsService.deleteCommitComment(id).then(() =>
+    console.warn(id);
+    this.setState(({ comments }) => ({
+      comments: comments.filter(comment => comment.id !== id)
+    }));
+    //);
   }
 
   editComment({ id, body }) {
@@ -105,7 +107,7 @@ class DiffCommitView extends Component {
 
   render() {
     const { selectedTab } = this.state;
-    const { diffsData, match, currentUser, onSubmit, deleteComment, editComment } = this.props;
+    const { diffsData, match, currentUser } = this.props;
     let files = [];
 
     if (diffsData.diffs) {
@@ -131,8 +133,8 @@ class DiffCommitView extends Component {
             avatar={comment.author.avatar}
             hash={match.params.hash}
             userId={currentUser.id}
-            editComment={editComment}
-            deleteComment={deleteComment}
+            editComment={this.editComment}
+            deleteComment={this.deleteComment}
           />
         ))}
       </Item.Group>
@@ -172,7 +174,7 @@ class DiffCommitView extends Component {
         </div>
         {comments}
         <Container>
-          <Formik initialValues={{ body: '' }} validationSchema={validationSchema} onSubmit={onSubmit}>
+          <Formik initialValues={{ body: '' }} validationSchema={validationSchema} onSubmit={this.onSubmit}>
             {({ values: { body }, errors, isValid, handleChange, handleBlur, handleSubmit }) => (
               <Form onSubmit={this.onSubmit}>
                 <Grid>
@@ -217,10 +219,7 @@ DiffCommitView.propTypes = {
   }).isRequired,
   fetchDiffs: PropTypes.func.isRequired,
   match: PropTypes.object,
-  currentUser: PropTypes.object,
-  onSubmit: PropTypes.func.isRequired,
-  deleteComment: PropTypes.func.isRequired,
-  editComment: PropTypes.func.isRequired
+  currentUser: PropTypes.object
 };
 
 const mapStateToProps = ({ diffsData, profile: { currentUser } }) => ({
