@@ -8,7 +8,6 @@ import { diffsData } from '../components/DiffCommitView/reducer';
 import { lastCommitReducer, fileTreeReducer } from '../scenes/CodeTab/reducer';
 import { repoSettingsData } from '../containers/SettingsTab/reducer';
 import profile from '../containers/Profile/reducer';
-import { userStatsReducer } from '../scenes/Dashboard/reducer';
 import forkRepo from '../components/ForkButton/reducer';
 import { branchesData } from '../containers/BranchesTab/reducer';
 import createOrg from '../scenes/CreateOrganization/reducer';
@@ -24,7 +23,6 @@ export default combineReducers({
   lastCommitData: lastCommitReducer,
   fileTreeData: fileTreeReducer,
   repoSettingsData,
-  userStats: userStatsReducer,
   forkRepo,
   createOrg
 });
