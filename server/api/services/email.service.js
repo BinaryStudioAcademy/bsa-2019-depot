@@ -35,9 +35,6 @@ async function sendInviteEmail({
 }) {
   const message = createInviteEmail(email, url, orgName, username);
   await sendToQueue(emailQueue, message);
-  return {
-    status: 200
-  };
 }
 
 module.exports = {
