@@ -19,15 +19,6 @@ module.exports = {
         key: 'id'
       }
     },
-    commitSHA: {
-      allowNull: false,
-      unique: true,
-      type: Sequelize.STRING,
-      references: {
-        model: 'commits',
-        key: 'sha'
-      }
-    },
     userId: {
       allowNull: false,
       type: Sequelize.UUID,

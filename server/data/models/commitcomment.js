@@ -10,13 +10,6 @@ module.exports = (sequelize, DataTypes) => {
           key: 'id'
         }
       },
-      commitSHA: {
-        type: DataTypes.STRING,
-        references: {
-          model: 'commit',
-          key: 'sha'
-        }
-      },
       userId: {
         type: DataTypes.UUID,
         references: {
