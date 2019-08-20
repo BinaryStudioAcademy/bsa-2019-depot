@@ -11,6 +11,7 @@ const createRepo = async (repoData) => {
   const {
     owner, name, userId, description
   } = repoData;
+  console.log(repoData);
   let result = 'Repo was created';
   const pathToRepo = repoHelper.getPathToRepo(owner, name);
   await NodeGit.Repository.init(pathToRepo, 1)

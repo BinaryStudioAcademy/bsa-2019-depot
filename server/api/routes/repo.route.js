@@ -48,6 +48,7 @@ router
   // })
   .get('/:owner/repos', (req, res, next) => {
     const { owner } = req.params;
+    console.log({ owner });
     getReposData({ username: owner })
       .then(repos => res.send(repos))
       .catch(next);

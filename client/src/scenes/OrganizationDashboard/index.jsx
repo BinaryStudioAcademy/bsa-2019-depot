@@ -35,12 +35,12 @@ class OrganizationDashboard extends React.Component {
     this.setState({ currentUser: data });
   }
   render() {
-    const { repositoriesNames } = this.props;
+    const { repositories } = this.props;
     return (
       <>
-        <OrganizationHeader repoCount={repositoriesNames.length} orgInfo={this.state.currentUser} />
+        <OrganizationHeader repoCount={repositories.length} orgInfo={this.state.currentUser} />
         <Container>
-          <OrgRepositoriesTab repositories={repositoriesNames} />
+          <OrgRepositoriesTab repositories={repositories} />
         </Container>
       </>
     );
@@ -49,7 +49,7 @@ class OrganizationDashboard extends React.Component {
 
 OrganizationDashboard.propTypes = {
   actions: PropTypes.object.isRequired,
-  repositoriesNames: PropTypes.array.isRequired,
+  repositories: PropTypes.array.isRequired,
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
     isExact: PropTypes.bool.isRequired,
@@ -62,11 +62,11 @@ OrganizationDashboard.propTypes = {
   })
 };
 
-const mapStateToProps = ({ userStats: { repositoriesNames }, profile: { currentUser } }) => ({
+const mapStateToProps = ({ userStats: { repositories }, profile: { currentUser } }) => ({
   name: currentUser.name,
   username: currentUser.username,
   imgUrl: currentUser.imgUrl,
-  repositoriesNames
+  repositories
 });
 
 const mapDispatchToProps = dispatch => {

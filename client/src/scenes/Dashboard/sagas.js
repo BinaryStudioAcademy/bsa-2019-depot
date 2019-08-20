@@ -11,8 +11,8 @@ import * as commitsService from '../../services/commitsService';
 
 function* fetchRepositories({ payload: filter }) {
   try {
-    const username = filter.userToRender;
-    const repositories = yield apply(repositoryService, repositoryService.getRepositories, [username, filter]);
+    const owner = filter.userToRender;
+    const repositories = yield apply(repositoryService, repositoryService.getRepositories, [owner, filter]);
     yield put(repositoryActions.fillRepositories(repositories));
   } catch (error) {
     throw new Error(error + ' repository worker');

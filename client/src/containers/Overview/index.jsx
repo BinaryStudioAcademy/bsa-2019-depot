@@ -22,11 +22,11 @@ export class Overview extends React.Component {
 
   componentDidMount() {
     const { actions, userToRender } = this.props;
-    actions.fetchRepositories({
+    /*     actions.fetchRepositories({
       limit: '4',
       filterWord: '',
       userToRender
-    });
+    }); */
     actions.fetchActivity({ userToRender });
   }
 
@@ -73,7 +73,7 @@ export class Overview extends React.Component {
   until = new Date().toISOString().slice(0, 10);
 
   render() {
-    const { repositoriesNames, userActivityByDate, monthCommitsActivity, username } = this.props;
+    const { repositories, userActivityByDate, monthCommitsActivity, username } = this.props;
     const { activeIndex, currentYear } = this.state;
     const currentYearContribution = this.currentYearContribution();
     const yearList = this.getYearList();
@@ -88,13 +88,13 @@ export class Overview extends React.Component {
             </Link>
           </Container>
           <Container className={styles.favorite_repos_wrapper}>
-            {repositoriesNames &&
-              repositoriesNames.map(repo => {
+            {repositories &&
+              repositories.map(repo => {
                 return (
-                  <div key={repo} className={styles.pinned_item}>
+                  <div key={repo.name + repo.id} className={styles.pinned_item}>
                     <div>
                       <Octicon className={styles.card_icon} icon={Repo} />
-                      <Link to={`${username}/${repo}`}>{repo}</Link>
+                      <Link to={`${username}/${repo.name}`}>{repo.name}</Link>
                       <Octicon className={styles.card_icon_grab} icon={Grabber} />
                     </div>
                     <p className={styles.pinned_item_desc}> </p>
@@ -212,7 +212,7 @@ Overview.propTypes = {
   userToRender: PropTypes.string.isRequired,
   userActivityByDate: PropTypes.object.isRequired,
   monthCommitsActivity: PropTypes.object.isRequired,
-  repositoriesNames: PropTypes.array.isRequired
+  repositories: PropTypes.array.isRequired
 };
 
 const mapStateToProps = ({
