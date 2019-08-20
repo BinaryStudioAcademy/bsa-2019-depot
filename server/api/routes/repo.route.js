@@ -146,7 +146,7 @@ router
       .then(data => res.send(data))
       .catch(next);
   })
-  .put('/:owner/:reponame', (req, res, next) => {
+  .put('/:owner/:reponame', ownerOnlyMiddleware, (req, res, next) => {
     const { owner, reponame } = req.params;
     updateByUserAndReponame({ owner, reponame, data: req.body })
       .then(data => res.send(data))

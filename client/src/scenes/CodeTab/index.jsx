@@ -261,12 +261,14 @@ class CodeTab extends React.Component {
           ) : (
             <>
               <div className={styles.repoDescriptionText}>{infoContent}</div>
-              <Button
-                className={[styles.actionButton, styles.editButton].join(' ')}
-                onClick={this.toggleEditingDescription}
-              >
-                Edit
-              </Button>
+              {username === currentUser && (
+                <Button
+                  className={[styles.actionButton, styles.editButton].join(' ')}
+                  onClick={this.toggleEditingDescription}
+                >
+                  Edit
+                </Button>
+              )}
             </>
           )}
         </div>
