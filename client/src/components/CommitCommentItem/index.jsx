@@ -27,12 +27,12 @@ export class CommitCommentItem extends Component {
   }
 
   deleteComment() {
-    const { id, deleteComment } = this.props;
-    deleteComment(id);
+    const { comment, deleteComment } = this.props;
+    deleteComment(comment.id);
   }
 
   startEditComment() {
-    const { body } = this.props;
+    const { body } = this.props.comment;
     this.setState({ ...this.state, isEditing: true, text: body });
   }
 
@@ -48,10 +48,12 @@ export class CommitCommentItem extends Component {
     this.setState({ ...this.state, isEditing: false });
   }
 
-  onSubmit(text) {
+  onSubmit() {
+    const { text } = this.state;
     if (text !== '') {
-      const { id, editComment, commentId, userId } = this.props;
-      editComment(id, text, commentId, userId);
+      const { editComment, comment, userId } = this.props;
+      const { id, commitId } = comment;
+      editComment(id, text, commitId, userId);
       this.setState({ ...this.state, isEditing: false, text: '' });
     }
   }
@@ -61,8 +63,11 @@ export class CommitCommentItem extends Component {
   }
 
   render() {
-    const { body, author, authorId, avatar, hash, userId } = this.props;
+    const { comment, hash, userId } = this.props;
+    const { body, author } = comment;
+    const { id: authorId, name, username, imgUrl } = author;
     const { text, isEditing, selectedTab } = this.state;
+    const authorTitle = name || username;
 
     const isAbleToChange =
       userId === authorId ? (
@@ -95,7 +100,7 @@ export class CommitCommentItem extends Component {
       <>
         <Item.Header>
           <div className="name">
-            <span>{author}</span>
+            <span>{authorTitle}</span>
             {` commented ${hash.slice(0, 7)}`}
           </div>
           {isAbleToChange}
@@ -111,7 +116,7 @@ export class CommitCommentItem extends Component {
         <Item.Image
           size="tiny"
           src={
-            avatar ? getUserImgLink(avatar) : 'https://forwardsummit.ca/wp-content/uploads/2019/01/avatar-default.png'
+            imgUrl ? getUserImgLink(imgUrl) : 'https://forwardsummit.ca/wp-content/uploads/2019/01/avatar-default.png'
           }
         />
         <Item.Content>{commentElement}</Item.Content>
@@ -123,14 +128,19 @@ export class CommitCommentItem extends Component {
 CommitCommentItem.defaultProps = {};
 
 CommitCommentItem.propTypes = {
-  author: PropTypes.string.isRequired,
-  authorId: PropTypes.string.isRequired,
-  body: PropTypes.string.isRequired,
-  avatar: PropTypes.string,
-  id: PropTypes.string.isRequired,
+  comment: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    author: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      imgUrl: PropTypes.string,
+      username: PropTypes.string,
+      name: PropTypes.string
+    }),
+    body: PropTypes.string.isRequired,
+    commitId: PropTypes.string.isRequired
+  }),
   hash: PropTypes.string.isRequired,
   match: PropTypes.object,
-  commentId: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
   editComment: PropTypes.func,
   deleteComment: PropTypes.func
