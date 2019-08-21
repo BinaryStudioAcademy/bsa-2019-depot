@@ -27,7 +27,6 @@ export default combineReducers({
   fileTreeData: fileTreeReducer,
   newFile: newFileReducer,
   repoSettingsData,
-  userStats: userStatsReducer,
   currentRepo: currentRepoReducer,
   forkRepo,
   createOrg
