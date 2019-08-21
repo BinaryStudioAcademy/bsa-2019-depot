@@ -5,11 +5,11 @@ const { clientUrl } = require('../../config/common.config');
 const {
   createOrganization,
   addMember,
-  checkInvite,
   acceptInvitation,
   cancelInvitation,
   getOrganizationMembers,
-  getOrganizationOwner
+  getOrganizationOwner,
+  getRelationUserOrg
 } = require('../services/organization.service');
 const { getUserById } = require('../services/user.service');
 
@@ -46,9 +46,9 @@ router.post('/invite', (req, res) => {
   }).then(data => res.send(data));
 });
 
-router.get('/invitation', (req, res) => {
-  const { orgName, userId } = req.query;
-  checkInvite({ orgName, userId }).then(data => res.send(data));
+router.get('/:orgname/users/:userID', (req, res) => {
+  const { orgname, userID } = req.params;
+  getRelationUserOrg({ orgname, userID }).then(data => res.send(data));
 });
 
 router.post('/invitation', (req, res) => {
