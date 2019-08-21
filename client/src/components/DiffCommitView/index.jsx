@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactMde from 'react-mde';
 import ReactMarkdown from 'react-markdown';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-import { InputError } from '../InputError';
 import { CommitCommentItem } from '../CommitCommentItem';
 import { Container, Grid, Form, Button, Message, Item } from 'semantic-ui-react';
 import 'react-mde/lib/styles/css/react-mde-all.css';
@@ -44,7 +41,7 @@ class DiffCommitView extends Component {
     this.state = {
       body: '',
       selectedTab: 'write',
-      comments: commentsMock,
+      comments: [],
       error: ''
     };
 
@@ -106,7 +103,7 @@ class DiffCommitView extends Component {
   }
 
   render() {
-    const { selectedTab } = this.state;
+    const { body, selectedTab } = this.state;
     const { diffsData, match, currentUser } = this.props;
     let files = [];
 
@@ -115,11 +112,7 @@ class DiffCommitView extends Component {
     }
 
     const error = diffsData.error ? <div>{diffsData.error}</div> : null;
-    const validationSchema = Yup.object().shape({
-      body: Yup.string()
-        .required('Comment message is required')
-        .max(200)
-    });
+
     const comments = commentsMock ? (
       <Item.Group className="commit-comments-list">
         {commentsMock.map(comment => (
@@ -174,37 +167,32 @@ class DiffCommitView extends Component {
         </div>
         {comments}
         <Container>
-          <Formik initialValues={{ body: '' }} validationSchema={validationSchema} onSubmit={this.onSubmit}>
-            {({ values: { body }, errors, isValid, handleChange, handleBlur, handleSubmit }) => (
-              <Form onSubmit={this.onSubmit}>
-                <Grid>
-                  <Grid.Column width={1}>
-                    <Item.Image
-                      size="tiny"
-                      src={
-                        currentUser.imgUrl
-                          ? getUserImgLink(currentUser.imgUrl)
-                          : 'https://forwardsummit.ca/wp-content/uploads/2019/01/avatar-default.png'
-                      }
-                    />
-                  </Grid.Column>
-                  <Grid.Column width={15}>
-                    <ReactMde
-                      value={body}
-                      onChange={this.onBodyChange}
-                      selectedTab={selectedTab}
-                      onTabChange={this.onTabChange}
-                      generateMarkdownPreview={this.renderPreview}
-                    />
-                    <InputError name="body" />
-                    <Button color="green" floated="right" type="submit">
-                      Comment on this commit
-                    </Button>
-                  </Grid.Column>
-                </Grid>
-              </Form>
-            )}
-          </Formik>
+          <Form onSubmit={this.onSubmit}>
+            <Grid>
+              <Grid.Column width={1}>
+                <Item.Image
+                  size="tiny"
+                  src={
+                    currentUser.imgUrl
+                      ? getUserImgLink(currentUser.imgUrl)
+                      : 'https://forwardsummit.ca/wp-content/uploads/2019/01/avatar-default.png'
+                  }
+                />
+              </Grid.Column>
+              <Grid.Column width={15}>
+                <ReactMde
+                  value={body}
+                  onChange={this.onBodyChange}
+                  selectedTab={selectedTab}
+                  onTabChange={this.onTabChange}
+                  generateMarkdownPreview={this.renderPreview}
+                />
+                <Button color="green" floated="right" type="submit">
+                  Comment on this commit
+                </Button>
+              </Grid.Column>
+            </Grid>
+          </Form>
         </Container>
       </div>
     );
