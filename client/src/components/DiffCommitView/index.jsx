@@ -205,7 +205,7 @@ class DiffCommitView extends Component {
           <Message compact>{match.params.hash.slice(0, 7)}</Message>
         </div>
         {commentsList}
-        <Container>
+        <Container className="commit-comment-form">
           <Form onSubmit={this.onSubmit}>
             <Grid>
               <Grid.Column width={1}>
@@ -226,7 +226,7 @@ class DiffCommitView extends Component {
                   onTabChange={this.onTabChange}
                   generateMarkdownPreview={this.renderPreview}
                 />
-                <Button color="green" floated="right" type="submit" disabled={!body}>
+                <Button color="blue" floated="right" type="submit" disabled={!body}>
                   Comment on this commit
                 </Button>
               </Grid.Column>
