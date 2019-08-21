@@ -5,7 +5,7 @@ module.exports = {
     }),
     queryInterface.addColumn('repositories', 'repositoryId', {
       type: Sequelize.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'repositories',
         key: 'id'
