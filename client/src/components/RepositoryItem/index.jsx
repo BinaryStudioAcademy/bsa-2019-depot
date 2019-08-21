@@ -45,18 +45,33 @@ class RepositoryItem extends React.Component {
     onStar({ ...this.state, isStar, starsCount });
   }
 
+  getRepoLink({ username, name, type }) {
+    switch (type) {
+    case 'stars':
+      return (
+      <Link to={`${username}/${name}`} className={styles.repo_name}>
+        <span className={styles.repo_owner}>{username}</span>&nbsp;/&nbsp;{name}
+      </Link>
+      );
+    default:
+      return (
+        <Link to={`${username}/${name}`} className={styles.repo_name}>
+          {name}
+        </Link>
+      );
+    }
+  }
+
   render() {
-    const { repo: { name, isStar }, username } = this.props;
+    const { repo: { name, isStar }, username, type } = this.props;
     const starsCount = Number(this.props.repo.starsCount);
 
     return (
       <div className={styles.repo_item}>
         <div className={styles.repo_item_left}>
-          <div>
-            <Link to={`${username}/${name}`} className={styles.repo_name}>
-              {name}
-            </Link>
-          </div>
+          <h3>
+            {this.getRepoLink({ username, name, type })}
+          </h3>
           <div className="repo-info">
             <span className={styles.repo_info_item}>
               <span className={styles.repo_item_lang}>
@@ -80,9 +95,11 @@ class RepositoryItem extends React.Component {
               {isStar ? 'Unstar' : 'Star'}
             </button>
           </div>
-          <LineChart width={155} height={25} data={data}>
-            <Line type="monotone" dataKey="commitDate" stroke="#D7ECAD" strokeWidth={2} dot={null} />
-          </LineChart>
+          {data && (
+            <LineChart width={155} height={25} data={data}>
+              <Line type="monotone" dataKey="commitDate" stroke="#D7ECAD" strokeWidth={2} dot={null} />
+            </LineChart>
+          )}
         </div>
       </div>
     );

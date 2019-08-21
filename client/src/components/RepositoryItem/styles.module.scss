@@ -2,7 +2,15 @@ $primary-color: #586069;
 $secondary-color: #d1d5da;
 
 :local(.repo_name) {
-  font-size: 125%;
+  font-size: 120%;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+:local(.repo_owner) {
+  font-weight: normal;
 }
 
 :local(.repo_item) {
@@ -11,7 +19,7 @@ $secondary-color: #d1d5da;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 24px 0;
+  padding: 1.5em 0;
   border-bottom: 1px solid $secondary-color;
   border-radius: 3px;
 
@@ -21,11 +29,6 @@ $secondary-color: #d1d5da;
 
   & a {
     flex: 1 1 auto;
-    // color: #0366d6;
-
-    &:hover {
-      // text-decoration: underline;
-    }
   }
 }
 :local(.repo_item_left),
