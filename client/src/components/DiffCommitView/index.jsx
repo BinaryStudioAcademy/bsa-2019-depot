@@ -67,6 +67,7 @@ class DiffCommitView extends Component {
 
   async fetchComments(id) {
     try {
+      await this.setLoading(true);
       const comments = await commitsService.getCommitComments(id);
       this.setState({
         ...this.state,
@@ -121,15 +122,23 @@ class DiffCommitView extends Component {
     //);
   }
 
-  editComment(id, body) {
-    let { comments } = this.state;
-    comments.map(comment => {
-      if (comment.id === id) {
-        comment.body = body;
+  async editComment(id, text, commitId, userId) {
+    try {
+      const updatedComment = await commitsService.updateCommitComment({ id, body: text, commitId, userId });
+      if (updatedComment) {
+        const { id } = updatedComment;
+        const { comments } = this.state;
+        const commentIdx = comments.findIndex(comment => comment.id === id);
+        let updatedComments = [...comments];
+        updatedComments.splice(commentIdx, 1, updatedComment);
+        await this.setState({
+          ...this.state,
+          comments: updatedComments
+        });
       }
-      return comment;
-    });
-    commitsService.updateCommitComment({ id, body }).then(newComment => this.setState({ comments }));
+    } catch (err) {
+      await this.setError(err);
+    }
   }
 
   renderPreview(markdown) {
@@ -139,7 +148,7 @@ class DiffCommitView extends Component {
   render() {
     const { body, selectedTab, loading, comments, diffsData, error } = this.state;
     if (loading) {
-      return <Loader active inline="centered" />;
+      return <Loader active />;
     }
 
     const { match, currentUser } = this.props;
@@ -156,15 +165,8 @@ class DiffCommitView extends Component {
         {comments.map(comment => (
           <CommitCommentItem
             comment={comment}
-            id={comment.id}
             key={comment.id}
-            authorId={comment.author.id}
-            author={comment.author.username || comment.author.name}
-            body={comment.body}
-            avatar={comment.author.imgUrl}
-            createdAt={comment.createdAt}
             hash={match.params.hash}
-            commitId={comment.commitId}
             userId={currentUser.id}
             editComment={this.editComment}
             deleteComment={this.deleteComment}

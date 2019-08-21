@@ -47,20 +47,6 @@ const getCommitCommentsByCommitId = async (commitId) => {
   }
 };
 
-// const getCommitCommentsByCommitHash = async (hash) => {
-//   try {
-//     const commit = await CommitRepository.getByHash(hash);
-//     if (!commit) {
-//       const errorObj = { status: 404, error: `Commit with hash ${hash} does not exist in database` };
-//       return Promise.reject(errorObj);
-//     }
-//     const comments = await getCommitCommentsByCommitId(commit.id);
-//     return comments;
-//   } catch (err) {
-//     return { error: err.message };
-//   }
-// };
-
 const createCommitComment = async (commitCommentData) => {
   try {
     const {
