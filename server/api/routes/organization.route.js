@@ -16,7 +16,7 @@ const { getUserById } = require('../services/user.service');
 const router = Router();
 
 router.get('/:orgID/users', (req, res) => {
-  const orgId = req.params.orgID;
+  const { orgId } = req.params;
   getOrganizationMembers(orgId).then((data) => {
     const ids = data.map(record => record.dataValues.userId);
     const users = ids.map(user => getUserById(user));
@@ -27,7 +27,7 @@ router.get('/:orgID/users', (req, res) => {
 });
 
 router.get('/:orgID/owner', (req, res) => {
-  const orgId = req.params.orgID;
+  const { orgId } = req.params;
   getOrganizationOwner(orgId).then(data => res.send(data));
 });
 
