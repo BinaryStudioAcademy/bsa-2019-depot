@@ -51,10 +51,11 @@ export const checkIfEmpty = async ({ owner, reponame }) => {
   });
   return response.json();
 };
-export const forkRepo = async ({ owner, repo, forkedFromrepoId }) => {
+export const forkRepo = async request => {
   const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/${repo}/${forkedFromrepoId}/fork`,
-    type: 'POST'
+    endpoint: `/api/repo/fork`,
+    type: 'POST',
+    request
   });
   return response.json();
 };

@@ -131,9 +131,14 @@ router
       .then(result => res.send(result))
       .catch(next);
   })
-  .post('/:owner/:repoName/:forkedFromrepoId/fork', (req, res, next) => {
+  .post('/fork', (req, res, next) => {
     const {
-      params: { owner, repoName, forkedFromrepoId },
+      body: {
+        owner,
+        repoData: {
+          id: forkedFromRepoId, name: repoName, website, description
+        }
+      },
       user: {
         dataValues: { id: userId, username }
       }
@@ -144,7 +149,9 @@ router
       username,
       owner,
       repoName,
-      forkedFromrepoId
+      website,
+      description,
+      forkedFromRepoId
     })
       .then(result => res.send(result))
       .catch(next);

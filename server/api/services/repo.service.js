@@ -121,7 +121,7 @@ const getReposNames = async ({ user, filter, limit }) => {
 const getReposData = async ({ username }) => repoRepository.getByUsername(username);
 
 const forkRepo = async ({
-  userId, username, owner, repoName, forkedFromrepoId
+  userId, username, owner, repoName, website, description, forkedFromRepoId
 }) => {
   try {
     const source = repoHelper.getPathToRepo(owner, repoName);
@@ -141,7 +141,10 @@ const forkRepo = async ({
       .then(() => {
         repoRepository.create({
           userId,
-          forkedFromrepoId
+          repoName,
+          website,
+          description,
+          forkedFromRepoId
         });
         return { status: true, path: target };
       })
