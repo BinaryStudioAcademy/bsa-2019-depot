@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import ReactMde from 'react-mde';
 import ReactMarkdown from 'react-markdown';
 import { Item, Dropdown, Button } from 'semantic-ui-react';
@@ -61,7 +62,7 @@ export class CommitCommentItem extends Component {
   }
 
   render() {
-    const { body, author, authorId, avatar, hash, userId } = this.props;
+    const { body, author, authorId, avatar, hash, userId, createdAt } = this.props;
     const { text, isEditing, selectedTab } = this.state;
 
     const isAbleToChange =
@@ -96,7 +97,7 @@ export class CommitCommentItem extends Component {
         <Item.Header>
           <div className="name">
             <span>{author}</span>
-            {` commented ${hash.slice(0, 7)}`}
+            {` commented ${hash.slice(0, 7)} ${moment(createdAt).fromNow()}`}
           </div>
           {isAbleToChange}
         </Item.Header>
@@ -126,6 +127,7 @@ CommitCommentItem.propTypes = {
   author: PropTypes.string.isRequired,
   authorId: PropTypes.string.isRequired,
   body: PropTypes.string.isRequired,
+  createdAt: PropTypes.string.isRequired,
   avatar: PropTypes.string,
   id: PropTypes.string.isRequired,
   hash: PropTypes.string.isRequired,

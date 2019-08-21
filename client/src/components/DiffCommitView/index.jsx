@@ -162,6 +162,7 @@ class DiffCommitView extends Component {
             author={comment.author.username || comment.author.name}
             body={comment.body}
             avatar={comment.author.imgUrl}
+            createdAt={comment.createdAt}
             hash={match.params.hash}
             commitId={comment.commitId}
             userId={currentUser.id}
