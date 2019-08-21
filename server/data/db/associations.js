@@ -16,12 +16,14 @@ module.exports = (models) => {
   User.hasMany(OrgUser, { foreignKey: 'orgId' });
   Role.hasMany(OrgUser, { foreignKey: 'roleId' });
 
+  Repository.belongsTo(Repository, {
+    foreignKey: 'forkedFromRepoId',
+    as: 'originalRepo'
+  });
   Repository.belongsTo(User);
   Issue.belongsTo(User);
   Issue.belongsTo(Repository);
   IssueComment.belongsTo(User);
   IssueComment.belongsTo(Issue);
-  // Repository.hasMany(Repository);
-  Repository.belongsTo(Repository, { forkedFromRepoId: 'id' });
   // Repository.hasOne(DefaultBranch);
 };
