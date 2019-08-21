@@ -90,7 +90,7 @@ class Reset extends Component {
                 <InputError name="repeatPassword" />
                 <Button
                   type="submit"
-                  color="green"
+                  color="blue"
                   fluid
                   size="large"
                   disabled={errors.repeatPassword && touched.repeatPassword}

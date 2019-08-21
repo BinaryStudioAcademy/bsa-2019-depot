@@ -102,8 +102,7 @@ class CreateOrganization extends Component {
                   <Link to="#"> Depot Privacy Statement</Link>.
                 </div>
                 <Divider hidden />
-
-                <Button color="green" type="submit" disabled={loading}>
+                <Button color="blue" type="submit" disabled={loading}>
                   Create organization
                 </Button>
               </Form>

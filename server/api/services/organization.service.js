@@ -18,7 +18,10 @@ const createOrganization = async (data) => {
   const profile = await userRepository.addUser({ ...data, type: 'ORG', fake: false });
   const { id: orgId } = profile;
   const orgUser = await OrgUserRepository.create({
-    roleId, userId: userID, orgId, isActivated: true
+    roleId,
+    userId: userID,
+    orgId,
+    isActivated: true
   });
 
   return {
@@ -44,12 +47,18 @@ const addMember = async (data) => {
 
   const { id: userId, email } = user;
   await sendInviteEmail({
-    email, url, orgName, username
+    email,
+    url,
+    orgName,
+    username
   });
 
   const { id: orgId } = await userRepository.getByUsername(orgName);
   await OrgUserRepository.create({
-    roleId, userId, orgId, isActivated: false
+    roleId,
+    userId,
+    orgId,
+    isActivated: false
   });
   return {
     status: true
