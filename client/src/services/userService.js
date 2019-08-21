@@ -58,3 +58,13 @@ export const getUserDetailed = async username => {
   });
   return response.json();
 };
+
+export const getStars = async username => {
+  const response = await callWebApi({
+    endpoint: `/api/user/${username}/stars`,
+    type: 'GET'
+  });
+  return response.json();
+};
+
+
