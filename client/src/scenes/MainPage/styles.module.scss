@@ -50,6 +50,9 @@ $gray-color: #f7f7fb;
 }
 
 :local(.wave) {
+  path {
+    fill: $gray-color;
+  }
   transform: rotate(180deg);
 }
 
