@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Container, Grid, Divider } from 'semantic-ui-react';
 import { parse } from 'query-string';
 // import Overview from '../../containers/Overview';
-import RepositoriesList from '../../components/RepositoriesList';
+import RepositoriesList from '../../containers/RepositoriesList';
 import StarsTab from '../../containers/StarsTab';
 import UserInfo from '../../components/UserInfo';
 import DashboardHeader, { tabs } from '../../components/DashboardHeader';
@@ -39,11 +39,11 @@ class Dashboard extends React.Component {
   renderTab(tab) {
     switch (tab) {
     case tabs.repositories:
-      return <div>RepositoriesList</div>;
+      return <RepositoriesList />;
     case tabs.projects:
       return <div>Hello! Projects are there</div>;
     case tabs.stars:
-      return <div>Stars tab</div>;
+      return <StarsTab />;
     case tabs.following:
       return <div>Following</div>;
     case tabs.followers:
