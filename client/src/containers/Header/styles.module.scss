@@ -13,7 +13,7 @@ $input-background: #1d1f28;
       display: flex;
       align-items: center;
       &:not(:last-child) {
-        margin-right: 24px;
+        margin-right: 11px;
       }
       &:not(:first-child) {
         @media screen and (max-width: 1200px) {
