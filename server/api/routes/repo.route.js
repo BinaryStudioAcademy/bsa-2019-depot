@@ -131,15 +131,28 @@ router
       .then(result => res.send(result))
       .catch(next);
   })
-  .post('/:owner/:repoName', (req, res, next) => {
+  .post('/fork', (req, res, next) => {
     const {
-      params: { owner, repoName },
+      body: {
+        owner,
+        repoData: {
+          id: forkedFromRepoId, name: repoName, website, description
+        }
+      },
       user: {
-        dataValues: { username }
+        dataValues: { id: userId, username }
       }
     } = req;
 
-    forkRepo({ username, owner, repoName })
+    forkRepo({
+      userId,
+      username,
+      owner,
+      repoName,
+      website,
+      description,
+      forkedFromRepoId
+    })
       .then(result => res.send(result))
       .catch(next);
   })
@@ -148,7 +161,12 @@ router
       userId, repositoryId, title, body, isOpened, assignees
     } = req.body;
     addIssue({
-      userId, repositoryId, title, body, isOpened, assignees
+      userId,
+      repositoryId,
+      title,
+      body,
+      isOpened,
+      assignees
     })
       .then(() => res.send({
         status: true
