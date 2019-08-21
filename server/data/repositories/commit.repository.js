@@ -14,8 +14,8 @@ class CommitRepository extends BaseRepository {
     return this.model.findOne({ where: { id } });
   }
 
-  getBySha(sha) {
-    return this.model.findOne({ where: { sha } });
+  getByHash(hash) {
+    return this.model.findOne({ where: { sha: hash } });
   }
 }
 

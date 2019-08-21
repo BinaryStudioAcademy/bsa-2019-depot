@@ -1,6 +1,10 @@
 const { Router } = require('express');
 
-const { createCommitComment, getCommitCommentsByCommitId } = require('../services/commit-comment.service');
+const {
+  createCommitComment,
+  getCommitCommentsByCommitId,
+  getCommitCommentsByCommitHash
+} = require('../services/commit-comment.service');
 
 const router = Router();
 
@@ -13,6 +17,13 @@ router.post('/', (req, res, next) => {
 router.get('/:commitId', (req, res, next) => {
   const { commitId } = req.params;
   getCommitCommentsByCommitId(commitId)
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.get('/hash/:hash', (req, res, next) => {
+  const { hash } = req.params;
+  getCommitCommentsByCommitHash(hash)
     .then(data => res.send(data))
     .catch(next);
 });
