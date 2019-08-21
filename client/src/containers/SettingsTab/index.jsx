@@ -98,10 +98,10 @@ class RepoSettings extends React.Component {
             {({ values: { name }, errors, handleChange, handleSubmit }) => (
               <Form onSubmit={handleSubmit}>
                 <Field name="name" value={name} className={styles.text_input} onChange={handleChange} />
-                <InputError name="name" />
                 <Button className={styles.button_rename} disabled={errors.name} type="submit">
                   Rename
                 </Button>
+                <InputError name="name" />
               </Form>
             )}
           </Formik>
