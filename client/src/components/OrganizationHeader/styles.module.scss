@@ -63,4 +63,16 @@ $background-color: #fafbfc;
       color: #586069;
     }
   }
+  :local(.orgEmail) {
+    margin-right: 5px;
+  }
+  :local(.personIcon) {
+    margin-right: 5px;
+  }
+}
+
+:global(.ui.menu) {
+  :global(.item.active) {
+    border-top: 2px solid #e36209 !important;
+  }
 }

@@ -29,13 +29,10 @@ class Dashboard extends React.Component {
   componentDidMount() {
     const { actions, match } = this.props;
     const userToRender = match.params.username;
+    this.getUserInfo(userToRender);
     actions.fetchRepositories({
-      limit: '',
-      filterWord: '',
       userToRender
     });
-
-    this.getUserInfo(userToRender);
   }
 
   async getUserInfo(userToRender) {
@@ -62,7 +59,7 @@ class Dashboard extends React.Component {
     const { tab } = parse(search);
 
     return userType === 'ORG' ? (
-      <OrganizationDashboard />
+      <OrganizationDashboard currentOrg={this.state.currentUser} />
     ) : (
       <Container className={styles.wrapper}>
         <Divider hidden />

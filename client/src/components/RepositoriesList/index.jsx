@@ -10,12 +10,12 @@ import styles from './styles.module.scss';
 
 export class RepositoriesList extends React.Component {
   render() {
-    const { repositories, username } = this.props;
+    const { repositories, username, currentOrg } = this.props;
 
     return (
       <Container className={styles.favorite_repos_wrapper}>
         {repositories.map(repo => {
-          return <RepositoryItem repo={repo} username={username} key={repo.name} />;
+          return <RepositoryItem repo={repo} orgInfo={currentOrg} username={username} key={repo.name} />;
         })}
       </Container>
     );
@@ -31,7 +31,9 @@ RepositoriesList.defaultProps = {
 RepositoriesList.propTypes = {
   actions: PropTypes.object.isRequired,
   username: PropTypes.string.isRequired,
-  repositories: PropTypes.array.isRequired
+  repositories: PropTypes.array,
+  repo: PropTypes.object,
+  currentOrg: PropTypes.object
 };
 
 const mapStateToProps = ({

@@ -41,22 +41,28 @@ export class RepositoriesFilters extends React.Component {
             className={styles.repos_filters_dropdown}
           />
         </div>
-        <div className={styles.new_repo_wrapper}>
-          <Link to="/new">
-            <Button className={styles.new_repo}>
-              <Octicon icon={Repo} className={styles.new_repo_icon} />
-              New
-            </Button>
-          </Link>
-        </div>
+        {(this.props.orgPage ? this.props.isOwner : true) && (
+          <div className={styles.new_repo_wrapper}>
+            <Link to="/new">
+              <Button className={styles.new_repo}>
+                <Octicon icon={Repo} className={styles.new_repo_icon} />
+                New
+              </Button>
+            </Link>
+          </div>
+        )}
       </Container>
     );
   }
 }
 
-RepositoriesFilters.defaultProps = {
-  repoTypes: PropTypes.array.isRequired,
-  languageTypes: PropTypes.array.isRequired
+RepositoriesFilters.propTypes = {
+  actions: PropTypes.object,
+  username: PropTypes.string,
+  repositories: PropTypes.array,
+  repo: PropTypes.object,
+  orgPage: PropTypes.bool,
+  isOwner: PropTypes.bool
 };
 
 export default RepositoriesFilters;

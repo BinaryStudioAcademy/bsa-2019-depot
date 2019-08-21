@@ -12,7 +12,8 @@ export class RepositoryItem extends React.Component {
     //Mock
     const {
       repo: { name },
-      username
+      username,
+      orgInfo
     } = this.props;
     const starsCount = Number(this.props.repo.starsCount);
     const data = [
@@ -30,7 +31,7 @@ export class RepositoryItem extends React.Component {
       <div className={styles.repo_item}>
         <div className={styles.repo_item_left}>
           <div>
-            <Link to={`${username}/${name}`} className={styles.repo_name}>
+            <Link to={`${orgInfo ? orgInfo.username : username}/${name}`} className={styles.repo_name}>
               {name}
             </Link>
           </div>
@@ -71,6 +72,7 @@ RepositoryItem.defaultProps = {
 };
 
 RepositoryItem.propTypes = {
-  repo: PropTypes.string,
-  username: PropTypes.string.isRequired
+  repo: PropTypes.object,
+  username: PropTypes.string.isRequired,
+  orgInfo: PropTypes.any
 };

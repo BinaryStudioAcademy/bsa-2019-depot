@@ -1,46 +1,50 @@
-:local(.container) {
-  max-width: 1200px;
-  margin: auto;
-}
+$button-color: #4f60ac;
 
-:local(.filterRow) {
-  margin: 10px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+:global(.ui.container):local(.memberListContainer) {
+  width: 1000px;
+  max-width: 1000px;
+  padding-top: 20px;
+  margin-bottom: 24px;
 
-:local(.issuesContainer) {
-  margin-top: 10px;
-  border: 1px solid lightgrey;
-  border-radius: 5px;
-}
+  :local(.memberListFilters) {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 20px;
 
-:local(.issuesHeader) {
-  padding: 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #f6f6f6;
-  border-bottom: 1px solid lightgrey;
-  border-radius: 5px 5px 0 0;
-}
-
-:local(.openedIssues),
-:local(.closedIssues),
-:global(.ui.dropdown) {
-  color: #575757;
-  cursor: pointer;
-
-  &:hover {
-    color: #000000;
+    :local(.inviteButton) {
+      background-color: $button-color;
+      color: #fff;
+    }
   }
-}
 
-:local(.openedIssues) {
-  margin-right: 15px;
-}
+  :local(.memberListHeader) {
+    color: #586069;
+    background-color: #f6f8fa;
+    padding-bottom: 13px;
+    padding-top: 13px;
+    padding-left: 16px;
+  }
 
-:local(.issueFilters) > :not(:last-child) {
-  margin-right: 10px;
+  :local(.memberItem) {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 12px 14px;
+    border: 1px solid #eaecef;
+
+    :local(.memberBox_member) {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      margin-left: 30px;
+    }
+    :local(.memberUsername) {
+      color: #586069;
+    }
+    :local(.memberRole) {
+      display: flex;
+      margin: auto;
+    }
+  }
 }
