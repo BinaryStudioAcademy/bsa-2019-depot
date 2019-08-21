@@ -1,11 +1,12 @@
 import { takeEvery, put, all, call } from 'redux-saga/effects';
-import * as repoServise from '../../services/repositoryService';
+import * as repoService from '../../services/repositoryService';
 import { forkRepo } from '../../routines/routines';
 
-function* forkRepoRoutine({ payload }) {
+function* forkRepoRoutine({ payload: { owner, repo } }) {
   try {
+    const repoData = yield call(repoService.getRepositoryByOwnerAndName, { username: owner, reponame: repo });
     yield put(forkRepo.request());
-    const response = yield call(repoServise.forkRepo, payload);
+    const response = yield call(repoService.forkRepo, { owner, repoData });
     if (response.status) {
       yield put(forkRepo.success(response.path));
     } else {

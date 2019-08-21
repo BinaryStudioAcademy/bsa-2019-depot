@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Grid, Menu, Sidebar, Icon, Dropdown, Responsive, Modal, Form, Button } from 'semantic-ui-react';
+import Octicon, { Smiley } from '@primer/octicons-react';
 import { getUserImgLink } from '../../helpers/imageHelper';
 
 import styles from './styles.module.scss';
-import { ReactComponent as LogoSVG } from '../../styles/assets/icons/home.svg';
+import { ReactComponent as LogoSVG } from '../../styles/assets/icons/logo_icon.svg';
 import { ReactComponent as BurgerSVG } from '../../styles/assets/icons/burger.svg';
 
 const signOut = () => {
@@ -155,7 +156,7 @@ const StatusModal = (showStatusModal, hideModal) => {
         <Form>
           <Form.Field control="input" placeholder="What's happening?" />
           <div className={styles.statusFormButtons}>
-            <Button type="submit" color="green" fluid>
+            <Button type="submit" color="blue" fluid>
               Set status
             </Button>
             <Button basic fluid>
@@ -180,7 +181,7 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
   return (
     <div className={styles.headerWrpAuth}>
       <Grid>
-        <Grid.Column computer={6} tablet={6} mobile={6} floated="left">
+        <Grid.Column computer={7} tablet={6} mobile={6} floated="left">
           <Responsive minWidth={1200}>
             <ul>
               <li>{logo}</li>
@@ -194,10 +195,10 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
           </Responsive>
         </Grid.Column>
 
-        <Grid.Column computer={4} tablet={4} mobile={4}>
+        <Grid.Column computer={2} tablet={4} mobile={4}>
           <Responsive maxWidth={1200}>{logo}</Responsive>
         </Grid.Column>
-        <Grid.Column computer={6} tablet={6} mobile={6} floated="right">
+        <Grid.Column computer={7} tablet={6} mobile={6} floated="right">
           <ul className={styles.rightMenu}>
             <li>
               <a href="/">
@@ -240,7 +241,7 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
                   <Dropdown.Divider />
                   <Dropdown.Item onClick={showModal}>
                     <div className={styles.statusItem}>
-                      <Icon color="black" name="smile outline" />
+                      <Octicon icon={Smiley} />
                       Set status
                     </div>
                   </Dropdown.Item>

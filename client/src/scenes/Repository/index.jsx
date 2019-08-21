@@ -1,10 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 import RepositoryHeader from '../../components/RepositoryHeader';
 import IssuesTab from '../../containers/IssuesTab/index';
-import CreateIssue from '../../containers/CreateIssue/index';
+import IssueComments from '../../components/IssueComments/index';
 import CommitsPage from '../../containers/CommitsPage/index';
 import DiffCommitView from '../../components/DiffCommitView/index';
 import RepositoryTab from '../../containers/RepositoryTab';
@@ -12,17 +13,17 @@ import RepoSettings from '../../containers/SettingsTab/index';
 import FileViewPage from '../../containers/FileViewPage';
 import FileEditPage from '../../containers/FileEditPage';
 import BranchesTab from '../../containers/BranchesTab/index';
+import CreateIssuePage from '../../containers/CreateIssuePage';
 import PrivateTab from '../../containers/PrivateTab';
 
 import styles from './styles.module.scss';
 
 class RepositoryPage extends React.Component {
   render() {
-    const { match, location } = this.props;
+    const { match, location, issues } = this.props;
     const { username, reponame } = match.params;
 
-    // Mocks
-    const issueCount = 14;
+    const issueCount = issues.length;
     const forkCount = 22;
 
     return (
@@ -43,7 +44,8 @@ class RepositoryPage extends React.Component {
               <Route exact path={`${match.path}/commits/:branch`} component={CommitsPage} />
               <Route exact path={`${match.path}/commit/:hash`} component={DiffCommitView} />
               <Route exact path={`${match.path}/issues`} component={IssuesTab} />
-              <Route exact path={`${match.path}/issues/new`} component={CreateIssue} />
+              <Route exact path={`${match.path}/issues/new`} component={CreateIssuePage} />
+              <Route exact path={`${match.path}/issues/:number`} component={IssueComments} />
               <PrivateTab exact path={`${match.path}/settings`} component={RepoSettings} />
               <Route exact path={`${match.path}/branches`} component={BranchesTab} />
               <PrivateTab path={[`${match.path}/new/:branch`, `${match.path}/edit/:branch`]} component={FileEditPage} />
@@ -69,7 +71,12 @@ RepositoryPage.propTypes = {
     search: PropTypes.string.isRequired,
     hash: PropTypes.string.isRequired,
     state: PropTypes.array
-  }).isRequired
+  }).isRequired,
+  issues: PropTypes.array.isRequired
 };
 
-export default RepositoryPage;
+const mapStateToProps = ({ issuesData: { issues } }) => ({
+  issues
+});
+
+export default connect(mapStateToProps)(RepositoryPage);

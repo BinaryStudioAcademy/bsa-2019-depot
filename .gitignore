@@ -85,3 +85,7 @@ package-lock.json
 yarn.lock
 
 .idea/
+
+# Test
+
+test/output/

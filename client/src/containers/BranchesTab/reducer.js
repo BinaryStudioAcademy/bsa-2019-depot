@@ -9,30 +9,30 @@ const initialState = {
 
 export const branchesData = (state = initialState, action) => {
   switch (action.type) {
-  case fetchBranches.TRIGGER:
-    return {
-      ...state,
-      loading: true
-    };
-  case fetchBranches.SUCCESS:
-    const { branches, lastCommits } = action.payload;
-    return {
-      ...state,
-      branches,
-      lastCommits
-    };
-  case fetchBranches.FAILURE:
-    return {
-      ...state,
-      error: action.payload
-    };
-  case fetchBranches.FULFILL:
-    return {
-      ...state,
-      loading: false
-    };
+    case fetchBranches.TRIGGER:
+      return {
+        ...state,
+        loading: true
+      };
+    case fetchBranches.SUCCESS:
+      const { branches, lastCommits } = action.payload;
+      return {
+        ...state,
+        branches,
+        lastCommits
+      };
+    case fetchBranches.FAILURE:
+      return {
+        ...state,
+        error: action.payload
+      };
+    case fetchBranches.FULFILL:
+      return {
+        ...state,
+        loading: false
+      };
 
-  default:
-    return state;
+    default:
+      return state;
   }
 };

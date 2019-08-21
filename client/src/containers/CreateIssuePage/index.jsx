@@ -1,9 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import ReactMde from 'react-mde';
 import ReactMarkdown from 'react-markdown';
 import 'react-mde/lib/styles/css/react-mde-all.css';
+import { createIssue } from '../../routines/routines';
 import * as Yup from 'yup';
-
 import { Container, Grid, Button, Dropdown, Form, Popup, Image } from 'semantic-ui-react';
 import { Formik, Field } from 'formik';
 import styles from './styles.module.scss';
@@ -25,14 +27,15 @@ const assigneeOptions = [
 ];
 
 const validationSchema = Yup.object().shape({
-  issueTitle: Yup.string().max(256, 'Maximum length - 256 characters')
+  title: Yup.string()
+    .required('Required')
+    .max(256, 'Maximum length - 256 characters')
 });
 
 class CreateIssuePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: '',
       body: '',
       selectedTab: 'write'
     };
@@ -55,7 +58,34 @@ class CreateIssuePage extends React.Component {
     return Promise.resolve(<ReactMarkdown source={markdown} />);
   }
 
-  onSubmit() {}
+  onSubmit({ title }) {
+    const { body } = this.state;
+    const {
+      createIssue,
+      username,
+      repoName,
+      repositoryId,
+      userId,
+      history,
+      match: { url }
+    } = this.props;
+
+    createIssue({
+      title,
+      body,
+      username,
+      repoName,
+      userId,
+      repositoryId,
+      isOpened: true,
+      assignees: []
+    });
+    const newUrl = url
+      .split('/')
+      .slice(0, -1)
+      .join('/');
+    history.push(newUrl);
+  }
 
   renderLabel = label => ({
     color: label.color,
@@ -67,8 +97,8 @@ class CreateIssuePage extends React.Component {
     return (
       <Container>
         <Formik onSubmit={this.onSubmit} validationSchema={validationSchema}>
-          {({ errors, handleChange, issueTitle }) => (
-            <Form className={styles.issueForm} onSubmit={this.onSubmit}>
+          {({ values: { title }, errors, handleChange, handleSubmit }) => (
+            <Form className={styles.issueForm} onSubmit={handleSubmit}>
               <Grid>
                 <Grid.Column>
                   <Popup
@@ -78,13 +108,13 @@ class CreateIssuePage extends React.Component {
                 </Grid.Column>
                 <Grid.Column width={10}>
                   <Field
-                    name="issueTitle"
-                    value={issueTitle}
+                    name="title"
+                    value={title}
                     onChange={handleChange}
                     placeholder="Title"
                     className={styles.titleInput}
                   />
-                  <InputError name="issueTitle" />
+                  <InputError name="title" />
                   <div className={styles.commentEditor}>
                     <ReactMde
                       value={body}
@@ -132,4 +162,40 @@ class CreateIssuePage extends React.Component {
   }
 }
 
-export default CreateIssuePage;
+CreateIssuePage.propTypes = {
+  username: PropTypes.string.isRequired,
+  repoName: PropTypes.string.isRequired,
+  repositoryId: PropTypes.number.isRequired,
+  userId: PropTypes.string.isRequired,
+  createIssue: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
+  match: PropTypes.exact({
+    params: PropTypes.object.isRequired,
+    isExact: PropTypes.bool.isRequired,
+    path: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired
+  }).isRequired
+};
+
+const mapStateToProps = ({
+  profile: {
+    currentUser: { id: userId, username }
+  },
+  currentRepo: {
+    currentRepoInfo: { id, name }
+  }
+}) => ({
+  userId,
+  username,
+  repoName: name,
+  repositoryId: id
+});
+
+const mapDispatchToProps = {
+  createIssue
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CreateIssuePage);

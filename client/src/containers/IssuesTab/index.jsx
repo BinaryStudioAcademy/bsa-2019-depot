@@ -12,6 +12,7 @@ class IssuesTab extends React.Component {
     super(props);
 
     this.state = {
+      filterByTitle: '',
       filter: {
         title: '',
         author: '',
@@ -22,10 +23,39 @@ class IssuesTab extends React.Component {
   }
 
   componentDidMount() {
+    const { username, repoName, repositoryId } = this.props;
     this.props.fetchIssues({
+      username,
+      repoName,
+      repositoryId,
       filter: this.state.filter
     });
   }
+
+  countOpenIssues = () => {
+    const counter = this.props.issuesData.issues.filter(issue => issue.isOpened);
+    return counter.length;
+  };
+
+  countClosedIssues = () => {
+    const counter = this.props.issuesData.issues.filter(issue => !issue.isOpened);
+    return counter.length;
+  };
+
+  renderFilteredIssues = () => {
+    const {
+      issuesData: { issues }
+    } = this.props;
+    const { filterByTitle } = this.state;
+    return issues.filter(({ title }) => title.includes(filterByTitle));
+  };
+
+  filterIssues = e => {
+    this.setState({
+      ...this.state,
+      filterByTitle: e.target.value
+    });
+  };
 
   onCreateIssue = () => {
     const { location, history } = this.props;
@@ -34,13 +64,20 @@ class IssuesTab extends React.Component {
 
   render() {
     const {
-      issuesData: { loading, issues }
+      issuesData: { loading, issues },
+      match
     } = this.props;
+    const { filterByTitle } = this.state;
+
+    const authorList = issues.reduce((acc, { user }) => {
+      return !acc.includes(user.username) ? [...acc, user.username] : acc;
+    }, []);
+
+    const openIssues = this.countOpenIssues();
+    const closedIssues = this.countClosedIssues();
+    const filteredIssues = filterByTitle ? this.renderFilteredIssues() : issues;
 
     // Mock data
-    const openIssues = 20;
-    const closedIssues = 34;
-
     const sortOptions = [
       {
         key: 'createdAt_DESC',
@@ -71,8 +108,9 @@ class IssuesTab extends React.Component {
             label={<Dropdown text="Filters" options={filterOptions} />}
             labelPosition="left"
             placeholder="Filter by title"
+            onChange={this.filterIssues}
           />
-          <Button content="New Issue" primary onClick={this.onCreateIssue} />
+          <Button content="New Issue" positive onClick={this.onCreateIssue} />
         </div>
         <div className={styles.issuesContainer}>
           <div className={styles.issuesHeader}>
@@ -89,25 +127,23 @@ class IssuesTab extends React.Component {
                 <Dropdown.Menu>
                   <Input icon="search" iconPosition="left" className="search" placeholder="Filter authors" />
                   <Dropdown.Menu scrolling>
-                    {issues
-                      .map(issue => issue.author)
-                      .map((author, index) => (
-                        <Dropdown.Item key={index} text={author.username} value={author.username} />
-                      ))}
+                    {authorList.map((author, index) => (
+                      <Dropdown.Item key={index} text={author} value={author} />
+                    ))}
                   </Dropdown.Menu>
                 </Dropdown.Menu>
               </Dropdown>
               <Dropdown text="Assignee" icon="filter">
                 <Dropdown.Menu>
                   <Input icon="search" iconPosition="left" className="search" placeholder="Filter assignees" />
-                  <Dropdown.Menu scrolling>
+                  {/* <Dropdown.Menu scrolling>
                     {issues
                       .map(issue => issue.assignees)
                       .flat()
                       .map(assignee => (
                         <Dropdown.Item key={assignee.username} text={assignee.username} value={assignee.username} />
                       ))}
-                  </Dropdown.Menu>
+                  </Dropdown.Menu> */}
                 </Dropdown.Menu>
               </Dropdown>
               <Dropdown text="Sort" icon="filter">
@@ -119,7 +155,7 @@ class IssuesTab extends React.Component {
               </Dropdown>
             </div>
           </div>
-          <IssuesList issues={issues} />
+          <IssuesList issues={filteredIssues} match={match} />
         </div>
       </>
     );
@@ -127,18 +163,38 @@ class IssuesTab extends React.Component {
 }
 
 IssuesTab.propTypes = {
+  username: PropTypes.string.isRequired,
+  repoName: PropTypes.string.isRequired,
+  repositoryId: PropTypes.number.isRequired,
   issuesData: PropTypes.exact({
     loading: PropTypes.bool.isRequired,
     error: PropTypes.string,
     issues: PropTypes.array
+  }).isRequired,
+  match: PropTypes.exact({
+    params: PropTypes.object.isRequired,
+    isExact: PropTypes.bool.isRequired,
+    path: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired
   }).isRequired,
   fetchIssues: PropTypes.func.isRequired,
   history: PropTypes.object,
   location: PropTypes.object.isRequired
 };
 
-const mapStateToProps = ({ issuesData }) => ({
-  issuesData
+const mapStateToProps = ({
+  issuesData,
+  currentRepo: {
+    currentRepoInfo: { id, name }
+  },
+  profile: {
+    currentUser: { username }
+  }
+}) => ({
+  username,
+  repoName: name,
+  issuesData,
+  repositoryId: id
 });
 
 const mapDispatchToProps = {

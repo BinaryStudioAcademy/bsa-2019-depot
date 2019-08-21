@@ -1,5 +1,6 @@
 $primary-color: #586069;
 $secondary-color: #d1d5da;
+$blue: #2e53db;
 
 .new_repo {
   :global(svg.octicon) {
@@ -80,8 +81,7 @@ $secondary-color: #d1d5da;
   }
 
   :local(.new_repo) {
-    background-color: #28a745;
-    background-image: linear-gradient(-180deg, #34d058, #28a745 90%);
+    background-color: $blue;
     color: #fff;
 
     & svg {

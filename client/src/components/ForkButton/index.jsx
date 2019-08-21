@@ -47,7 +47,7 @@ class ForkButton extends Component {
         {loading ? (
           <Modal.Content>
             {' '}
-            <Loader active inline="centered" />
+            <Loader inline="centered" />
           </Modal.Content>
         ) : null}
 
