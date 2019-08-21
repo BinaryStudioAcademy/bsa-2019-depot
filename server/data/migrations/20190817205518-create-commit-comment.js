@@ -11,16 +11,18 @@ module.exports = {
       // allowNull set to default since there could be emoty comments with attached files in future
       type: Sequelize.STRING
     },
-    repoId: {
+    commitId: {
       allowNull: false,
-      type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
+      type: Sequelize.UUID,
       references: {
-        model: 'repositories',
+        model: 'commits',
         key: 'id'
       }
     },
     userId: {
       allowNull: false,
+      onDelete: 'CASCADE',
       type: Sequelize.UUID,
       references: {
         model: 'users',

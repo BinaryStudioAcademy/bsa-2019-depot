@@ -41,7 +41,6 @@ export const addKey = async request => {
     type: 'POST',
     request
   });
-  debugger;
   return response.json();
 };
 

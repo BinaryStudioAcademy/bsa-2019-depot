@@ -7,23 +7,19 @@ module.exports = (models) => {
 
   User.hasMany(SshKey);
   User.hasMany(Repository);
+  Repository.belongsTo(User);
 
   User.hasMany(OrgUser, { foreignKey: 'userId' });
   User.hasMany(OrgUser, { foreignKey: 'orgId' });
   Role.hasMany(OrgUser, { foreignKey: 'roleId' });
 
-  Repository.belongsTo(User);
+  Repository.hasMany(Commit, { foreignKey: 'repoId', onDelete: 'CASCADE' });
+  // Commit.belongsTo(Repository);
 
-  Repository.hasMany(Commit);
-  Commit.belongsTo(Repository);
-
-  Commit.hasMany(CommitComment);
+  Commit.hasMany(CommitComment, { foreignKey: 'commitId', onDelete: 'CASCADE' });
   CommitComment.belongsTo(Commit);
 
-  Repository.hasMany(CommitComment);
-  CommitComment.belongsTo(Repository);
-
-  User.hasMany(CommitComment);
+  User.hasMany(CommitComment, { foreignKey: 'userId', onDelete: 'CASCADE' });
   CommitComment.belongsTo(User);
   // Repository.hasOne(DefaultBranch);
 };

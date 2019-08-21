@@ -1,12 +1,12 @@
 module.exports = (sequelize, DataTypes) => {
   const CommitComment = sequelize.define(
-    'CommitComment',
+    'commitComment',
     {
       body: DataTypes.STRING,
-      repoId: {
-        type: DataTypes.INTEGER,
+      commitId: {
+        type: DataTypes.UUID,
         references: {
-          model: 'repository',
+          model: 'commit',
           key: 'id'
         }
       },

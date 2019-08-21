@@ -12,11 +12,20 @@ module.exports = {
     },
     repoId: {
       type: Sequelize.INTEGER,
+      onDelete: 'CASCADE',
       references: {
         model: 'repositories',
         key: 'id'
       }
+    },
+    createdAt: {
+      allowNull: false,
+      type: Sequelize.DATE
+    },
+    updatedAt: {
+      allowNull: false,
+      type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('commits')
+  down: queryInterface => queryInterface.dropTable('commits', { force: true, cascade: true })
 };

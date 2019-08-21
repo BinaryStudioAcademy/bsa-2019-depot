@@ -16,7 +16,6 @@ router
   .get('/', (req, res) => {
     getCommits({ ...req.body }).then(data => res.send(data));
   })
-  /* todo: refactor to match updated API */
   .get('/:owner/commits', (req, res, next) => {
     const { owner } = req.params;
     getCommitsByDate({ user: owner })
