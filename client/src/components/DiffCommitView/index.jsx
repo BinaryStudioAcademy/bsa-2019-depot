@@ -16,22 +16,30 @@ import './styles.module.scss';
 //Mock
 const commentsMock = [
   {
-    id: '1',
-    body: 'Oh! That`s great!',
-    authorId: '6c17cce4-dbfa-426d-8ea6-2c2f6d44e64f',
+    id: '0de03bf7-f7c9-4eb8-81c0-5dd7ea0ad877',
+    commitId: '9a075176-6aae-43f9-aaa0-921260b0d67d',
     author: {
+      id: '6c17cce4-dbfa-426d-8ea6-2c2f6d44e64f',
       username: 'Olya',
-      avatar: null
-    }
+      name: null,
+      imgUrl: null
+    },
+    body: '**Oh! That`s great!**',
+    createdAt: '2019-08-20T04:28:16.599Z',
+    updatedAt: '2019-08-20T04:28:16.599Z'
   },
   {
-    id: '2',
-    body: 'Hello!!!!',
-    authorId: '51304694-a311-4a54-b244-d6fbe3a8044a', //You may put your ID here
+    id: '0de03bf7-f7c9-4eb8-81c0-5dd7ea0ad855',
+    commitId: '9a075176-6aae-43f9-aaa0-921260b0d67d',
     author: {
-      username: 'Test',
-      avatar: 'https://i.pravatar.cc/300?img=5'
-    }
+      id: '51304694-a311-4a54-b244-d6fbe3a8044a',
+      username: 'test',
+      name: null,
+      imgUrl: 'https://i.pravatar.cc/300?img=5'
+    },
+    body: 'Hello!!!!',
+    createdAt: '2019-08-21T04:28:16.599Z',
+    updatedAt: '2019-08-21T04:28:16.599Z'
   }
 ];
 
@@ -72,8 +80,14 @@ class DiffCommitView extends Component {
   }
 
   onSubmit({ body }) {
+    const {
+      match: {
+        params: { hash, reponame }
+      },
+      currentUser: { username }
+    } = this.props;
     commitsService
-      .addCommitComment({ body })
+      .addCommitComment({ sha: hash, username, reponame, body })
       .then(newComment => this.setState({ comments: { ...this.state.comments, newComment } }));
   }
 
@@ -87,7 +101,7 @@ class DiffCommitView extends Component {
     //);
   }
 
-  editComment({ id, body }) {
+  editComment(id, body) {
     let { comments } = this.state;
     comments.map(comment => {
       if (comment.id === id) {
@@ -120,11 +134,12 @@ class DiffCommitView extends Component {
             comment={comment}
             id={comment.id}
             key={comment.id}
-            authorId={comment.authorId}
-            author={comment.author.username}
+            authorId={comment.author.id}
+            author={comment.author.name ? comment.author.name : comment.author.username}
             body={comment.body}
-            avatar={comment.author.avatar}
+            avatar={comment.author.imgUrl}
             hash={match.params.hash}
+            commitId={comment.commitId}
             userId={currentUser.id}
             editComment={this.editComment}
             deleteComment={this.deleteComment}
