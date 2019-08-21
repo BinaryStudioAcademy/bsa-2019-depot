@@ -58,6 +58,7 @@ const NewKeyPage = props => {
               name="title"
               value={title}
               width="5"
+              error={!!errors.title}
               onBlur={handleBlur}
               onChange={handleChange}
               disabled={loading}
@@ -68,6 +69,7 @@ const NewKeyPage = props => {
               name="key"
               rows="8"
               placeholder="Begins with 'ssh-rsa', 'ssh-dss', 'ssh-ed25519', 'ecdsa-sha2-nistp256', 'ecdsa-sha2-nistp384', or 'ecdsa-sha2-nistp521'"
+              error={!!errors.key}
               content={key}
               onBlur={handleBlur}
               onChange={handleChange}

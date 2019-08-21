@@ -210,7 +210,7 @@ class CreateRepository extends React.Component {
             </Form.Field>
           </Form.Group>
           <Divider />
-          <Button type="submit" color="green" disabled={errors.reponame && touched.reponame}>
+          <Button type="submit" color="blue" disabled={errors.reponame && touched.reponame}>
             Create repository
           </Button>
         </Form>

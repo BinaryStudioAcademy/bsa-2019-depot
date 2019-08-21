@@ -12,28 +12,6 @@ import { getUserImgLink } from '../../helpers/imageHelper';
 
 import './styles.module.scss';
 
-// //Mock
-// const commentsMock = [
-//   {
-//     id: '1',
-//     body: 'Oh! That`s great!',
-//     authorId: '6c17cce4-dbfa-426d-8ea6-2c2f6d44e64f',
-//     author: {
-//       username: 'Olya',
-//       avatar: null
-//     }
-//   },
-//   {
-//     id: '2',
-//     body: 'Hello!!!!',
-//     authorId: '51304694-a311-4a54-b244-d6fbe3a8044a', //You may put your ID here
-//     author: {
-//       username: 'Test',
-//       avatar: 'https://i.pravatar.cc/300?img=5'
-//     }
-//   }
-// ];
-
 class DiffCommitView extends Component {
   constructor(props) {
     super(props);
@@ -143,7 +121,7 @@ class DiffCommitView extends Component {
     //);
   }
 
-  editComment({ id, body }) {
+  editComment(id, body) {
     let { comments } = this.state;
     comments.map(comment => {
       if (comment.id === id) {
@@ -181,10 +159,11 @@ class DiffCommitView extends Component {
             id={comment.id}
             key={comment.id}
             authorId={comment.author.id}
-            author={comment.author.username}
+            author={comment.author.username || comment.author.name}
             body={comment.body}
             avatar={comment.author.imgUrl}
             hash={match.params.hash}
+            commitId={comment.commitId}
             userId={currentUser.id}
             editComment={this.editComment}
             deleteComment={this.deleteComment}

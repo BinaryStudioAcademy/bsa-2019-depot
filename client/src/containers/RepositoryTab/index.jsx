@@ -1,8 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import EmptyRepositoryTab from '../../containers/EmptyRepositoryTab';
 import PropTypes from 'prop-types';
 import { CodeTab } from '../../scenes';
 import { checkIfEmpty } from '../../services/repositoryService';
+import { fetchCurrentRepo } from '../../routines/routines';
 import Spinner from '../../components/Spinner';
 
 class RepositoryTab extends React.Component {
@@ -13,8 +15,9 @@ class RepositoryTab extends React.Component {
     };
   }
 
-  async getData() {
+  async componentDidMount() {
     const {
+      fetchCurrentRepo,
       match: {
         params: { username, reponame }
       }
@@ -25,10 +28,8 @@ class RepositoryTab extends React.Component {
       isEmpty,
       isLoading: false
     });
-  }
 
-  componentDidMount() {
-    this.getData();
+    fetchCurrentRepo({ username, reponame });
   }
 
   render() {
@@ -52,6 +53,7 @@ class RepositoryTab extends React.Component {
 }
 
 RepositoryTab.propTypes = {
+  fetchCurrentRepo: PropTypes.func.isRequired,
   history: PropTypes.any,
   match: PropTypes.shape({
     params: PropTypes.shape({
@@ -62,4 +64,11 @@ RepositoryTab.propTypes = {
   })
 };
 
-export default RepositoryTab;
+const mapDispatchToProps = {
+  fetchCurrentRepo
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(RepositoryTab);

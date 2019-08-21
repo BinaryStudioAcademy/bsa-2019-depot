@@ -11,17 +11,17 @@ import styles from './styles.module.scss';
 const RepositoryHeader = ({ owner, username, repoName, forkCount, issueCount, activePage, baseUrl }) => {
   let activeTab;
   switch (activePage) {
-  case 'issues':
-    activeTab = 'issues';
-    break;
-  case 'commits':
-    activeTab = 'code';
-    break;
-  case 'settings':
-    activeTab = 'settings';
-    break;
-  default:
-    activeTab = 'code';
+    case 'issues':
+      activeTab = 'issues';
+      break;
+    case 'commits':
+      activeTab = 'code';
+      break;
+    case 'settings':
+      activeTab = 'settings';
+      break;
+    default:
+      activeTab = 'code';
   }
 
   return (

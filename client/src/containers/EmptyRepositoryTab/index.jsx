@@ -106,7 +106,7 @@ function EmptyRepositoryTab(props) {
       </div>
       <p className={styles.protip}>
         <Icon name="idea" />
-        ProTip! Use the URL for this page when adding GitHub as a remote.
+        ProTip! Use the URL for this page when adding Depot as a remote.
       </p>
     </Container>
   );

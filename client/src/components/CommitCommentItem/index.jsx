@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Item, Dropdown } from 'semantic-ui-react';
+import ReactMde from 'react-mde';
+import ReactMarkdown from 'react-markdown';
+import { Item, Dropdown, Button } from 'semantic-ui-react';
 import { getUserImgLink } from '../../helpers/imageHelper';
 
 import './styles.module.scss';
@@ -8,28 +10,102 @@ import './styles.module.scss';
 export class CommitCommentItem extends Component {
   constructor(props) {
     super(props);
-    this.deleteComment = this.deleteComment.bind(this);
+
+    this.state = {
+      isEditing: false,
+      text: '',
+      selectedTab: 'write',
+      error: ''
+    };
+
+    this.onCancel = this.onCancel.bind(this);
+    this.startEditComment = this.startEditComment.bind(this);
+    this.onBodyChange = this.onBodyChange.bind(this);
+    this.renderPreview = this.renderPreview.bind(this);
+    this.onTabChange = this.onTabChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
+
   deleteComment() {
     const { id, deleteComment } = this.props;
     deleteComment(id);
   }
-  render() {
-    const { body, author, authorId, avatar, hash, userId, editComment } = this.props;
 
-    this.editComment = editComment.bind(this);
+  startEditComment() {
+    const { body } = this.props;
+    this.setState({ ...this.state, isEditing: true, text: body });
+  }
+
+  onTabChange(selectedTab) {
+    this.setState({ ...this.state, selectedTab });
+  }
+
+  onBodyChange(text) {
+    this.setState({ ...this.state, text });
+  }
+
+  onCancel() {
+    this.setState({ ...this.state, isEditing: false });
+  }
+
+  onSubmit(text) {
+    if (text !== '') {
+      const { id, editComment, commentId, userId } = this.props;
+      editComment(id, text, commentId, userId);
+      this.setState({ ...this.state, isEditing: false, text: '' });
+    }
+  }
+
+  renderPreview(markdown) {
+    return Promise.resolve(<ReactMarkdown source={markdown} />);
+  }
+
+  render() {
+    const { body, author, authorId, avatar, hash, userId } = this.props;
+    const { text, isEditing, selectedTab } = this.state;
 
     const isAbleToChange =
       userId === authorId ? (
         <div className="menu">
           <Dropdown item text="...">
             <Dropdown.Menu>
-              <Dropdown.Item onClick={editComment}>Edit</Dropdown.Item>
+              <Dropdown.Item onClick={this.startEditComment}>Edit</Dropdown.Item>
               <Dropdown.Item onClick={this.deleteComment}>Delete</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </div>
       ) : null;
+    const commentElement = isEditing ? (
+      <>
+        <ReactMde
+          value={text}
+          onChange={this.onBodyChange}
+          selectedTab={selectedTab}
+          onTabChange={this.onTabChange}
+          generateMarkdownPreview={this.renderPreview}
+        />
+        <Button color="green" floated="right" type="submit" onClick={this.onSubmit}>
+          Update comment text
+        </Button>
+        <Button color="red" floated="right" type="cancel" onClick={this.onCancel}>
+          Cancel
+        </Button>
+      </>
+    ) : (
+      <>
+        <Item.Header>
+          <div className="name">
+            <span>{author}</span>
+            {` commented ${hash.slice(0, 7)}`}
+          </div>
+          {isAbleToChange}
+        </Item.Header>
+        <Item.Description>
+          <ReactMarkdown source={body} />
+        </Item.Description>
+      </>
+    );
+
     return (
       <Item className="comment-item">
         <Item.Image
@@ -38,16 +114,7 @@ export class CommitCommentItem extends Component {
             avatar ? getUserImgLink(avatar) : 'https://forwardsummit.ca/wp-content/uploads/2019/01/avatar-default.png'
           }
         />
-        <Item.Content>
-          <Item.Header>
-            <div className="name">
-              <span>{author}</span>
-              {` commented ${hash.slice(0, 7)}`}
-            </div>
-            {isAbleToChange}
-          </Item.Header>
-          <Item.Description>{body}</Item.Description>
-        </Item.Content>
+        <Item.Content>{commentElement}</Item.Content>
       </Item>
     );
   }
@@ -63,6 +130,7 @@ CommitCommentItem.propTypes = {
   id: PropTypes.string.isRequired,
   hash: PropTypes.string.isRequired,
   match: PropTypes.object,
+  commentId: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
   editComment: PropTypes.func,
   deleteComment: PropTypes.func

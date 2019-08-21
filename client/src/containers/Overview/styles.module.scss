@@ -1,5 +1,6 @@
 $primary-color: #586069;
 $secondary-color: #d1d5da;
+$blue: #2e53db;
 
 :export {
   activity_lvl1: #eeeeee;
@@ -85,7 +86,7 @@ $secondary-color: #d1d5da;
     & a {
       flex: 1 1 auto;
       font-weight: bold;
-      color: #0366d6;
+      color: $blue;
 
       &:hover {
         text-decoration: underline;
@@ -214,7 +215,7 @@ $secondary-color: #d1d5da;
   width: 100%;
   display: inline-block;
   padding: 12px;
-  color: #0366d6;
+  color: $blue;
   font-size: 75%;
   font-weight: 600;
   background-color: #fff;
@@ -249,7 +250,7 @@ $secondary-color: #d1d5da;
 
     :local(.contribution_year):local(.active) {
       color: #fff;
-      background-color: #0366d6;
+      background-color: $blue;
     }
   }
 }

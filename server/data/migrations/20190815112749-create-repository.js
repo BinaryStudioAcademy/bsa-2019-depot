@@ -20,13 +20,6 @@ module.exports = {
         key: 'id'
       }
     },
-    /*      defaultBranchId: {
-        type: Sequelize.UUID,
-        references: {
-          model: 'branches',
-          key: 'repoID'
-        }
-      }, */
     updatedAt: {
       allowNull: false,
       type: Sequelize.DATE
