@@ -9,9 +9,6 @@ import UserInfo from '../../components/UserInfo';
 import DashboardHeader, { tabs } from '../../components/DashboardHeader';
 import { getUserDetailed } from '../../services/userService';
 
-import styles from './styles.module.scss';
-
-
 const initialUserData = {};
 
 class Dashboard extends React.Component {
@@ -74,11 +71,11 @@ class Dashboard extends React.Component {
     const { tab } = parse(search);
 
     return (
-      <Container className={styles.wrapper}>
+      <Container>
         <Divider hidden />
         <Grid>
           <Grid.Row columns={2}>
-            <Grid.Column className={styles.userinfo_wrapper} mobile={16} tablet={4} computer={4}>
+            <Grid.Column mobile={16} tablet={4} computer={4}>
               <UserInfo
                 username={username}
                 name={name}
