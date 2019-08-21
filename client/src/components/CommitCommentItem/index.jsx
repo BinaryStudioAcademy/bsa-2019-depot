@@ -84,10 +84,10 @@ export class CommitCommentItem extends Component {
           onTabChange={this.onTabChange}
           generateMarkdownPreview={this.renderPreview}
         />
-        <Button color="green" floated="right" type="submit" onClick={this.onSubmit}>
+        <Button color="blue" floated="right" type="submit" onClick={this.onSubmit}>
           Update comment text
         </Button>
-        <Button color="red" floated="right" type="cancel" onClick={this.onCancel}>
+        <Button floated="right" type="cancel" className="cancel-button" onClick={this.onCancel}>
           Cancel
         </Button>
       </>
