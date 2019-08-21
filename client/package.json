@@ -39,6 +39,7 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
+    "test:e2e": "./node_modules/.bin/wdio wdio.conf.js",
     "eject": "craco eject",
     "lint": "eslint --fix \"**/*.{js,jsx}\"",
     "prettify": "prettier --write \"**/*.{css,scss,sass,js,jsx,json,md}\"",
@@ -46,7 +47,14 @@
   },
   "devDependencies": {
     "@craco/craco": "^5.2.4",
+    "@wdio/cli": "^5.12.1",
+    "@wdio/junit-reporter": "^5.12.3",
+    "@wdio/local-runner": "^5.12.1",
+    "@wdio/mocha-framework": "^5.12.1",
+    "@wdio/spec-reporter": "^5.12.1",
     "babel-eslint": "^10.0.2",
+    "chai": "^4.2.0",
+    "chromedriver": "^76.0.0",
     "craco-less": "^1.12.0",
     "eslint": "5.16.0",
     "eslint-config-react-app": "^4.0.1",
@@ -55,11 +63,13 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^1.6.1",
+    "eslint-plugin-wdio": "^5.12.1",
     "husky": "^3.0.2",
     "lint-staged": "^9.2.1",
     "prettier": "^1.18.2",
     "redux-devtools-extension": "^2.13.8",
-    "semantic-ui-less": "^2.4.1"
+    "semantic-ui-less": "^2.4.1",
+    "wdio-chromedriver-service": "^5.0.2"
   },
   "browserslist": {
     "production": [

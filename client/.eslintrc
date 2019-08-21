@@ -4,9 +4,13 @@
 	},
 	"extends": [
 		"plugin:react/recommended",
-		"react-app"
+    "react-app",
+    "plugin:wdio/recommended"
 	],
-	"plugins": ["react"],
+	"plugins": [
+    "react",
+    "wdio"
+  ],
 	"rules": {
 		"camelcase": 2,
 		"no-unused-vars": 2,
