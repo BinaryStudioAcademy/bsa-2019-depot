@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Container, Grid, Divider } from 'semantic-ui-react';
 import { parse } from 'query-string';
-// import Overview from '../../containers/Overview';
+import Overview from '../../containers/Overview';
 import RepositoriesList from '../../containers/RepositoriesList';
 import StarsTab from '../../containers/StarsTab';
 import UserInfo from '../../components/UserInfo';
@@ -49,7 +49,7 @@ class Dashboard extends React.Component {
     case tabs.followers:
       return <div>followers</div>;
     default:
-      return <div>I'm Overview</div>;
+      return <Overview />;
     }
   };
 

@@ -1,13 +1,13 @@
 import React from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import Calendar from 'react-github-contribution-calendar';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { Container, Grid, Dropdown, Accordion } from 'semantic-ui-react';
-import Octicon, { Repo, Grabber, Fold, Unfold, RepoPush } from '@primer/octicons-react';
-import { repositoryActions } from '../../scenes/Dashboard/actions';
+import Octicon, { Fold, Unfold, RepoPush } from '@primer/octicons-react';
+import * as repositoryService from '../../services/repositoryService';
+import * as commitsService from '../../services/commitsService';
 
 import styles from './styles.module.scss';
 
@@ -16,17 +16,28 @@ export class Overview extends React.Component {
     super(props);
     this.state = {
       activeIndex: -1,
-      currentYear: moment().year()
+      currentYear: moment().year(),
+      userActivity: {
+        userActivityByDate: {},
+        monthCommitsActivity: {}
+      }
     };
   }
 
+  async getActivity(username) {
+    const { monthActivity, userActivitybyDate } = await commitsService.getAllUserCommits(username);
+    this.setState({
+      ...this.state,
+      userActivity: {
+        monthCommitsActivity: monthActivity,
+        userActivityByDate: userActivitybyDate
+      }
+    });
+  }
+
   componentDidMount() {
-    // const { actions } = this.props;
-    // actions.fetchRepositories({
-    //   limit: '4',
-    //   filterWord: ''
-    // });
-    // actions.fetchActivity();
+    const { match: { params: { username } } } = this.props;
+    this.getActivity(username);
   }
 
   handleActivityState = (e, titleProps) => {
@@ -37,7 +48,7 @@ export class Overview extends React.Component {
   };
 
   currentYearContribution = () => {
-    const { userActivityByDate } = this.props;
+    const { userActivity: { userActivityByDate } } = this.state;
     const { currentYear } = this.state;
     let counter = 0;
     for (const [date, commitCount] of Object.entries(userActivityByDate)) {
@@ -50,7 +61,7 @@ export class Overview extends React.Component {
   };
 
   getYearList = () => {
-    const { userActivityByDate } = this.props;
+    const { userActivity: { userActivityByDate } } = this.state;
     let years = [];
     for (const date of Object.keys(userActivityByDate)) {
       const year = date.slice(0, 4);
@@ -64,8 +75,8 @@ export class Overview extends React.Component {
   until = new Date().toISOString().slice(0, 10);
 
   render() {
-    const { repositories, userActivityByDate, monthCommitsActivity, username } = this.props;
-    const repositoriesNames = repositories.map(repo => repo.name).slice(-6);
+    const { match: { params: { username } } } = this.props;
+    const { userActivity: { userActivityByDate, monthCommitsActivity } } = this.state;
     const { activeIndex, currentYear } = this.state;
     const currentYearContribution = this.currentYearContribution();
     const yearList = this.getYearList();
@@ -101,26 +112,6 @@ export class Overview extends React.Component {
         <Container className={styles.pinned_header}>
           <h2>Pinned</h2>
           <Link to="">Customize your pins</Link>
-        </Container>
-        <Container className={styles.favorite_repos_wrapper}>
-          {repositories &&
-            repositories.map(repo => {
-              const { name, starsCount } = repo;
-              return (
-                <div key={name} className={styles.pinned_item}>
-                  <div>
-                    <Octicon className={styles.card_icon} icon={Repo} />
-                    <Link to={`${username}/${name}`}>{name}</Link>
-                    <Octicon className={styles.card_icon_grab} icon={Grabber} />
-                  </div>
-                  <p className={styles.pinned_item_desc}> </p>
-                  <p className={styles.pinned_item_lang}>
-                    <span></span>Javascript
-                    <StarLink starsCount={starsCount} />
-                  </p>
-                </div>
-              );
-            })}
         </Container>
         <Grid>
           <Grid.Row columns={2}>
@@ -226,28 +217,7 @@ Overview.propTypes = {
   actions: PropTypes.object.isRequired,
   username: PropTypes.string.isRequired,
   userActivityByDate: PropTypes.object.isRequired,
-  monthCommitsActivity: PropTypes.object.isRequired,
-  repositories: PropTypes.array.isRequired
+  monthCommitsActivity: PropTypes.object.isRequired
 };
 
-const mapStateToProps = ({
-  // userStats: { userActivityByDate, monthCommitsActivity },
-  profile: {
-    currentUser: { username }
-  }
-}) => ({
-  // userActivityByDate,
-  // monthCommitsActivity,
-  username
-});
-
-const mapDispatchToProps = dispatch => {
-  return {
-    // actions: bindActionCreators({ ...repositoryActions }, dispatch)
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Overview);
+export default withRouter(Overview);
