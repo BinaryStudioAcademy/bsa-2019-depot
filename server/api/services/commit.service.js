@@ -137,7 +137,12 @@ const getCommitDiff = async ({ user, name, hash }) => {
   const cmd = await exec(command);
   if (cmd.stderr) throw new Error(cmd.stderr);
   const diffsData = cmd.stdout.substring(cmd.stdout.indexOf('diff --git'));
-  return { diffs: diffsData };
+  const response = { diffs: diffsData };
+  const commit = await CommitRepository.getByHash(hash);
+  if (commit) {
+    response.id = commit.id;
+  }
+  return response;
 };
 
 const modifyFile = async ({

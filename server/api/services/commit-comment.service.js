@@ -10,7 +10,8 @@ const getCommitCommentsByCommitId = async (commitId) => {
   try {
     const commit = await CommitRepository.getById(commitId);
     if (!commit) {
-      return { status: false, error: `Commit with id ${commitId} does not exist in database` };
+      const errorObj = { status: 404, error: `Commit with id ${commitId} does not exist in database` };
+      return Promise.reject(errorObj);
     }
     const commitComments = await CommitCommentRepository.getByCommitId(commitId);
     if (!commitComments.length) {
@@ -42,22 +43,23 @@ const getCommitCommentsByCommitId = async (commitId) => {
     });
     return comments;
   } catch (err) {
-    return { status: false, error: err.message };
+    return { error: err.message };
   }
 };
 
-const getCommitCommentsByCommitHash = async (hash) => {
-  try {
-    const commit = await CommitRepository.getByHash(hash);
-    if (!commit) {
-      return { status: false, error: `Commit with hash ${hash} does not exist in database` };
-    }
-    const comments = await getCommitCommentsByCommitId(commit.id);
-    return comments;
-  } catch (err) {
-    return { status: false, error: err.message };
-  }
-};
+// const getCommitCommentsByCommitHash = async (hash) => {
+//   try {
+//     const commit = await CommitRepository.getByHash(hash);
+//     if (!commit) {
+//       const errorObj = { status: 404, error: `Commit with hash ${hash} does not exist in database` };
+//       return Promise.reject(errorObj);
+//     }
+//     const comments = await getCommitCommentsByCommitId(commit.id);
+//     return comments;
+//   } catch (err) {
+//     return { error: err.message };
+//   }
+// };
 
 const createCommitComment = async (commitCommentData) => {
   try {
@@ -99,7 +101,7 @@ const createCommitComment = async (commitCommentData) => {
     };
     return newCommitComment;
   } catch (err) {
-    return { status: false, error: err.message };
+    return { error: err.message };
   }
 };
 
@@ -155,6 +157,5 @@ module.exports = {
   getCommitCommentById,
   getCommitCommentsByCommitId,
   createCommitComment,
-  updateCommitComment,
-  getCommitCommentsByCommitHash
+  updateCommitComment
 };

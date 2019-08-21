@@ -3,8 +3,7 @@ const { Router } = require('express');
 const {
   createCommitComment,
   updateCommitComment,
-  getCommitCommentsByCommitId,
-  getCommitCommentsByCommitHash
+  getCommitCommentsByCommitId
 } = require('../services/commit-comment.service');
 
 const router = Router();
@@ -28,11 +27,11 @@ router.get('/:commitId', (req, res, next) => {
     .catch(next);
 });
 
-router.get('/hash/:hash', (req, res, next) => {
-  const { hash } = req.params;
-  getCommitCommentsByCommitHash(hash)
-    .then(data => res.send(data))
-    .catch(next);
-});
+// router.get('/hash/:hash', (req, res, next) => {
+//   const { hash } = req.params;
+//   getCommitCommentsByCommitHash(hash)
+//     .then(data => res.send(data))
+//     .catch(next);
+// });
 
 module.exports = router;
