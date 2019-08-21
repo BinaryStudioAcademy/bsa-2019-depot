@@ -69,14 +69,14 @@ class BranchesTab extends React.Component {
       filteredBranches = branches.filter(branch => branch.name.includes(text));
     }
     switch (type) {
-      case 'Active':
-      case 'Stale':
-        return filteredBranches.filter(branch => branch.status === type);
-      case 'Yours':
-        return filteredBranches.filter(branch => branch.ownedByCurrentUser);
-      case 'Overview':
-      default:
-        return filteredBranches;
+    case 'Active':
+    case 'Stale':
+      return filteredBranches.filter(branch => branch.status === type);
+    case 'Yours':
+      return filteredBranches.filter(branch => branch.ownedByCurrentUser);
+    case 'Overview':
+    default:
+      return filteredBranches;
     }
   };
 
@@ -136,9 +136,9 @@ class BranchesTab extends React.Component {
         idx % 2
           ? null
           : {
-              number: idx * 3,
-              status: idx % 4 === 1 ? 'Merged' : 'Open'
-            },
+            number: idx * 3,
+            status: idx % 4 === 1 ? 'Merged' : 'Open'
+          },
       status: this.getBranchStatus(lastCommits[branch].date),
       ownedByCurrentUser: username === lastCommits[branch].author,
       author: lastCommits[branch].author,

@@ -5,7 +5,7 @@ files:
     destination: /home/git/bsa-2019-depot
 permissions:
   - object: /
-    pattern: "**"
+    pattern: '**'
     owner: git
     group: git
 hooks:
