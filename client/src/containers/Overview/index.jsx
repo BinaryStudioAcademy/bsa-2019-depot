@@ -66,6 +66,7 @@ export class Overview extends React.Component {
 
   render() {
     const { repositories, userActivityByDate, monthCommitsActivity, username } = this.props;
+    const repositoriesNames = repositories.map(repo => repo.name).slice(-6);
     const { activeIndex, currentYear } = this.state;
     const currentYearContribution = this.currentYearContribution();
     const yearList = this.getYearList();
@@ -107,12 +108,12 @@ export class Overview extends React.Component {
           </Container>
           <Container className={styles.favorite_repos_wrapper}>
             {repositories &&
-              repositories.map(repo => {
+              repositoriesNames.map(repo => {
                 return (
                   <div key={repo.name + repo.id} className={styles.pinned_item}>
                     <div>
                       <Octicon className={styles.card_icon} icon={Repo} />
-                      <Link to={`${username}/${repo.name}`}>{repo.name}</Link>
+                      <Link to={`${username}/${repo}`}>{repo}</Link>
                       <Octicon className={styles.card_icon_grab} icon={Grabber} />
                     </div>
                     <p className={styles.pinned_item_desc}> </p>
