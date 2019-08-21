@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 
 import { Button, Grid, Image, Form } from 'semantic-ui-react';
 
 import styles from './styles.module.scss';
-import { ReactComponent as FirstSVG } from '../../styles/assets/landing-images/first-pic.svg';
 import { ReactComponent as SecondSVG } from '../../styles/assets/landing-images/second-pic.svg';
 import { ReactComponent as ThirdSVG } from '../../styles/assets/landing-images/third-pic.svg';
 import { ReactComponent as FourthSVG } from '../../styles/assets/landing-images/fourth-pic.svg';
-import { ReactComponent as FifthSVG } from '../../styles/assets/landing-images/fifth-pic.svg';
+import { ReactComponent as LogoSVG } from '../../styles/assets/landing-images/logo.svg';
 
-const MainPage = () => {
+const MainPage = ({ history }) => {
   const [email, setEmail] = useState('');
 
   function handleChange({ target }) {
@@ -18,6 +19,10 @@ const MainPage = () => {
 
   function handleSubmit() {
     setEmail('');
+  }
+
+  function handleGetStarted() {
+    history.push('/login');
   }
 
   return (
@@ -32,14 +37,9 @@ const MainPage = () => {
             </p>
           </Grid.Column>
         </Grid>
-        <Button className={styles.button}>Get started for free</Button>
-        <p>
-          Or host it yourself with&nbsp;
-          <a className={styles.link} href="/">
-            Depot Enterprise
-            <FirstSVG />
-          </a>
-        </p>
+        <Button className={styles.button} onClick={handleGetStarted}>
+          Get started for free
+        </Button>
         <Grid centered container columns={1}>
           <Grid.Column computer={13} mobile={16}>
             <Image src="https://wac-cdn.atlassian.com/dam/jcr:10218a75-9e62-445d-b14c-55c8e5ea7aeb/00_HeroImage.png?cdnVersion=494" />
@@ -111,41 +111,18 @@ const MainPage = () => {
         </Grid>
       </section>
 
-      <section className={styles.clients}>
-        <FifthSVG className={styles.wave} />
-        <Grid centered container columns={1}>
-          <Grid.Column computer={12} mobile={16}>
-            <h2 className={styles.headerCentered}>More than 1 million teams and 10 million developers love Depot</h2>
-          </Grid.Column>
-
-          <Grid.Column>
-            <Image
-              className={styles.advantageTextShow}
-              centered
-              src="https://wac-cdn.atlassian.com/dam/jcr:8987dded-dcd1-4eff-abea-a592da1ec4c2/customers-image.png?cdnVersion=494"
-            />
-            <Image
-              className={styles.advantageTextHide}
-              centered
-              src="https://wac-cdn.atlassian.com/dam/jcr:24d25d1b-61af-41c6-bf40-eb577896e926/Products.png?cdnVersion=494"
-            />
-          </Grid.Column>
-        </Grid>
-      </section>
-
-      <Grid centered container columns={1}>
-        <Grid.Column computer={15} mobile={16}>
-          <hr />
-        </Grid.Column>
-      </Grid>
-
       <section className={styles.betterWay}>
         <Grid centered container columns={1}>
-          <Grid.Column computer={13} mobile={16}>
-            <h2 className={styles.headerCentered}>A better way to build software</h2>
-          </Grid.Column>
           <Grid.Row computer={13} mobile={16}>
-            <Button className={styles.button}>Get started for free</Button>
+            <h2 className={styles.headerCentered}>A better way to build software</h2>
+          </Grid.Row>
+          <Grid.Row computer={13} mobile={16}>
+            <Button className={styles.button} onClick={handleGetStarted}>
+              Get started for free
+            </Button>
+          </Grid.Row>
+          <Grid.Row>
+            <LogoSVG className={styles.logo} />
           </Grid.Row>
         </Grid>
       </section>
@@ -203,4 +180,8 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+MainPage.propTypes = {
+  history: PropTypes.object.isRequired
+};
+
+export default withRouter(MainPage);

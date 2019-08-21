@@ -89,7 +89,7 @@ export class Overview extends React.Component {
           return target[2];
         } else if (prop >= 20 && prop < 30) {
           return target[3];
-        } else if (prop >= 5) {
+        } else if (prop >= 30) {
           return target[4];
         } else {
           return target[0];
@@ -99,32 +99,34 @@ export class Overview extends React.Component {
 
     return (
       <div>
-        <div className={styles.section}>
-          <Container className={styles.section_header}>
-            <h2>Pinned</h2>
-            <Link to="" className={styles.header_actions}>
-              Customize your pins
-            </Link>
-          </Container>
-          <Container className={styles.favorite_repos_wrapper}>
-            {repositories &&
-              repositoriesNames.map(repo => {
-                return (
-                  <div key={repo.name + repo.id} className={styles.pinned_item}>
-                    <div>
-                      <Octicon className={styles.card_icon} icon={Repo} />
-                      <Link to={`${username}/${repo}`}>{repo}</Link>
-                      <Octicon className={styles.card_icon_grab} icon={Grabber} />
+        {!!repositoriesNames.length && (
+          <div className={styles.section}>
+            <Container className={styles.section_header}>
+              <h2>Pinned</h2>
+              <Link to="" className={styles.header_actions}>
+                Customize your pins
+              </Link>
+            </Container>
+            <Container className={styles.favorite_repos_wrapper}>
+              {repositoriesNames &&
+                repositoriesNames.map(repo => {
+                  return (
+                    <div key={repo} className={styles.pinned_item}>
+                      <div>
+                        <Octicon className={styles.card_icon} icon={Repo} />
+                        <Link to={`${username}/${repo}`}>{repo}</Link>
+                        <Octicon className={styles.card_icon_grab} icon={Grabber} />
+                      </div>
+                      <p className={styles.pinned_item_desc}> </p>
+                      <p className={styles.pinned_item_lang}>
+                        <span></span>Javascript
+                      </p>
                     </div>
-                    <p className={styles.pinned_item_desc}> </p>
-                    <p className={styles.pinned_item_lang}>
-                      <span></span>Javascript
-                    </p>
-                  </div>
-                );
-              })}
-          </Container>
-        </div>
+                  );
+                })}
+            </Container>
+          </div>
+        )}
 
         <Grid>
           <Grid.Row columns={2}>
@@ -152,10 +154,6 @@ export class Overview extends React.Component {
                 </div>
               </Container>
 
-              <Container className={styles.section_header}>
-                <h2>Contribution activity</h2>
-              </Container>
-
               {Object.entries(monthCommitsActivity).length > 0 &&
                 Object.entries(monthCommitsActivity).map(([date, monthActivityObject]) => {
                   const monthAndYear = moment(date).format('MMMM YYYY');
@@ -164,37 +162,42 @@ export class Overview extends React.Component {
                     0
                   );
                   return (
-                    <Container key={monthAndYear} className={styles.contribution_activity}>
-                      <h3>{monthAndYear}</h3>
-                      <div className={styles.contribution_activity_desc}>
-                        <span className={styles.contribution_activity_icon}>
-                          <Octicon icon={RepoPush} />
-                        </span>
-                        <Accordion>
-                          <Accordion.Title
-                            active={activeIndex === `commit-${monthAndYear}`}
-                            index={`commit-${monthAndYear}`}
-                            onClick={this.handleActivityState}
-                          >
-                            <p>Created {commitCount} commits</p>
-                            <Octicon icon={activeIndex === `commit-${monthAndYear}` ? Fold : Unfold} />
-                          </Accordion.Title>
-                          <Accordion.Content active={activeIndex === `commit-${monthAndYear}`}>
-                            {Object.entries(monthActivityObject).map(([repoName, repoCommits]) => {
-                              const link = `${username}/${repoName}`;
-                              return (
-                                <div key={repoName}>
-                                  <Link to={link} className={styles.activity_link}>
-                                    {username}/{repoName}
-                                  </Link>{' '}
-                                  <span>{repoCommits} commits</span>
-                                </div>
-                              );
-                            })}
-                          </Accordion.Content>
-                        </Accordion>
-                      </div>
-                    </Container>
+                    <>
+                      <Container className={styles.section_header}>
+                        <h2>Contribution activity</h2>
+                      </Container>
+                      <Container key={monthAndYear} className={styles.contribution_activity}>
+                        <h3>{monthAndYear}</h3>
+                        <div className={styles.contribution_activity_desc}>
+                          <span className={styles.contribution_activity_icon}>
+                            <Octicon icon={RepoPush} />
+                          </span>
+                          <Accordion>
+                            <Accordion.Title
+                              active={activeIndex === `commit-${monthAndYear}`}
+                              index={`commit-${monthAndYear}`}
+                              onClick={this.handleActivityState}
+                            >
+                              <p>Created {commitCount} commits</p>
+                              <Octicon icon={activeIndex === `commit-${monthAndYear}` ? Fold : Unfold} />
+                            </Accordion.Title>
+                            <Accordion.Content active={activeIndex === `commit-${monthAndYear}`}>
+                              {Object.entries(monthActivityObject).map(([repoName, repoCommits]) => {
+                                const link = `${username}/${repoName}`;
+                                return (
+                                  <div key={repoName}>
+                                    <Link to={link} className={styles.activity_link}>
+                                      {username}/{repoName}
+                                    </Link>{' '}
+                                    <span>{repoCommits} commits</span>
+                                  </div>
+                                );
+                              })}
+                            </Accordion.Content>
+                          </Accordion>
+                        </div>
+                      </Container>
+                    </>
                   );
                 })}
 
