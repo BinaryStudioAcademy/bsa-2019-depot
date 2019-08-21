@@ -76,7 +76,7 @@ export class RepositoriesList extends React.Component {
     const { match: { params: { username } } } = this.props;
 
     return (
-      <div>
+      <>
         <div className={styles.filters}>
           <div className={styles.filters_item}>
             <Input placeholder="Find a repository…" className={styles.repos_search_input}></Input>
@@ -97,14 +97,12 @@ export class RepositoriesList extends React.Component {
               className={styles.repos_filters_dropdown}
             />
           </div>
-          <div  className={styles.filters_item}>
-            <Link to="/new">
-              <Button className={styles.new_repo}>
-                <Octicon icon={Repo} />
-                New
-              </Button>
-            </Link>
-          </div>
+          <Link to="/new">
+            <Button className={styles.new_repo} color="green">
+              <Octicon icon={Repo} />
+              New
+            </Button>
+          </Link>
         </div>
         {repositories.map(repo => {
           return (
@@ -116,7 +114,7 @@ export class RepositoriesList extends React.Component {
             />
           );
         })}
-      </div>
+      </>
     );
   }
 }

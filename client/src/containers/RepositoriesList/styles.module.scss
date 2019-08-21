@@ -2,13 +2,6 @@ $primary-color: #586069;
 $secondary-color: #d1d5da;
 $blue: #2e53db;
 
-.new_repo {
-  :global(svg.octicon) {
-    margin-right: 0;
-    color: $primary-color;
-  }
-}
-
 :local(.wrapper) {
   margin: 0 auto;
   max-width: 1200px;
@@ -80,17 +73,15 @@ $blue: #2e53db;
     width: 100px;
   }
 
-  :local(.new_repo) {
-    background-color: $blue;
-    color: #fff;
 
-    & svg {
-      color: #fff;
-      margin-right: 3px;
-    }
-  }
-  :local(.new_repo_wrapper) {
-    margin: 16px 0;
+}
+:local(.new_repo) {
+  font-size: inherit !important;
+  color: #fff;
+
+  svg {
+    margin-right: 3px;
+    color: inherit;
   }
 }
 

@@ -106,7 +106,7 @@ export class Overview extends React.Component {
     });
 
     return (
-      <div>
+      <>
         <Container className={styles.pinned_header}>
           <h2>Pinned</h2>
           <Link to="">Customize your pins</Link>
@@ -201,7 +201,7 @@ export class Overview extends React.Component {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-      </div>
+      </>
     );
   }
 }
