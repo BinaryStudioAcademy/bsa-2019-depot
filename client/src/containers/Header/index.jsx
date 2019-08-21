@@ -5,7 +5,7 @@ import { Grid, Menu, Sidebar, Icon, Dropdown, Responsive, Modal, Form, Button } 
 import { getUserImgLink } from '../../helpers/imageHelper';
 
 import styles from './styles.module.scss';
-import { ReactComponent as LogoSVG } from '../../styles/assets/icons/home.svg';
+import { ReactComponent as LogoSVG } from '../../styles/assets/icons/logo_icon.svg';
 import { ReactComponent as BurgerSVG } from '../../styles/assets/icons/burger.svg';
 
 const signOut = () => {
@@ -155,7 +155,7 @@ const StatusModal = (showStatusModal, hideModal) => {
         <Form>
           <Form.Field control="input" placeholder="What's happening?" />
           <div className={styles.statusFormButtons}>
-            <Button type="submit" color="green" fluid>
+            <Button type="submit" color="blue" fluid>
               Set status
             </Button>
             <Button basic fluid>

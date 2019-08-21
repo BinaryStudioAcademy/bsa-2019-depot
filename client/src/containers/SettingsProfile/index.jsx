@@ -133,7 +133,7 @@ class SettingsProfile extends Component {
                     <div className={styles.note}>{this.NOTES.disclaimer}</div>
                     <Divider hidden />
 
-                    <Button color="green" type="submit" disabled={loading}>
+                    <Button color="blue" type="submit" disabled={loading}>
                       Update profile
                     </Button>
                   </Form>
