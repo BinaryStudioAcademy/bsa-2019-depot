@@ -7,12 +7,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Container, Grid, Dropdown, Accordion } from 'semantic-ui-react';
 import Octicon, { Repo, Grabber, Fold, Unfold, RepoPush } from '@primer/octicons-react';
-<<<<<<< HEAD
-// import { repositoryActions } from '../../scenes/Dashboard/actions';
-import StarLink from '../../components/StarLink';
-=======
 import { repositoryActions } from '../../scenes/Dashboard/actions';
->>>>>>> develop
 
 import styles from './styles.module.scss';
 
