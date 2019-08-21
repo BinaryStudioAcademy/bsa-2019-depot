@@ -52,6 +52,10 @@ class IssuesTab extends React.Component {
       match
     } = this.props;
 
+    const authorList = issues.reduce((acc, { user }) => {
+      return !acc.includes(user.username) ? [...acc, user.username] : acc;
+    }, []);
+
     const openIssues = this.countOpenIssues();
     const closedIssues = this.countClosedIssues();
 
@@ -104,11 +108,9 @@ class IssuesTab extends React.Component {
                 <Dropdown.Menu>
                   <Input icon="search" iconPosition="left" className="search" placeholder="Filter authors" />
                   <Dropdown.Menu scrolling>
-                    {issues
-                      .map(issue => issue.user)
-                      .map((author, index) => (
-                        <Dropdown.Item key={index} text={author.username} value={author.username} />
-                      ))}
+                    {authorList.map((author, index) => (
+                      <Dropdown.Item key={index} text={author} value={author} />
+                    ))}
                   </Dropdown.Menu>
                 </Dropdown.Menu>
               </Dropdown>
