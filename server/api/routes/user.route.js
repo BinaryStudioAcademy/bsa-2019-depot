@@ -14,7 +14,8 @@ const { clientUrl } = require('../../config/common.config');
 const router = Router();
 
 router.get('/:username', (req, res, next) => {
-  getUserByName(req.params.username)
+  const { username } = req.params;
+  getUserByName(username)
     .then(data => res.send(data))
     .catch(next);
 });
