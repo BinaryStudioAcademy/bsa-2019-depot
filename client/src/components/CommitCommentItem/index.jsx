@@ -24,11 +24,12 @@ export class CommitCommentItem extends Component {
     this.renderPreview = this.renderPreview.bind(this);
     this.onTabChange = this.onTabChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.deleteComment = this.deleteComment.bind(this);
   }
 
   deleteComment() {
-    const { comment, deleteComment } = this.props;
-    deleteComment(comment.id);
+    const { comment } = this.props;
+    this.props.deleteComment(comment.id);
   }
 
   startEditComment() {

@@ -2,16 +2,20 @@ const BaseRepository = require('./base.repository');
 const { CommitCommentModel } = require('../models/index');
 
 class CommitCommentRepository extends BaseRepository {
-  add({ ...commitCommentData }) {
+  addCommitComment({ ...commitCommentData }) {
     return this.create(commitCommentData);
   }
 
-  updateCommentById(id, { ...commitCommentData }) {
+  updateCommitCommentById(id, { ...commitCommentData }) {
     return this.updateById(id, commitCommentData);
   }
 
-  getById(id) {
+  getCommitCommentById(id) {
     return this.model.findOne({ where: { id } });
+  }
+
+  deleteCommitCommentById(id) {
+    return this.deleteById(id);
   }
 
   getByCommitId(commitId) {

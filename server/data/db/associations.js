@@ -17,7 +17,7 @@ module.exports = (models) => {
   User.hasMany(OrgUser, { foreignKey: 'orgId' });
   Role.hasMany(OrgUser, { foreignKey: 'roleId' });
 
-  Repository.hasMany(Commit, { foreignKey: 'repoId', onDelete: 'CASCADE', allowNull: true });
+  Repository.hasMany(Commit, { foreignKey: 'repoId', onDelete: 'CASCADE' });
   Commit.hasMany(CommitComment, { foreignKey: 'commitId', onDelete: 'CASCADE' });
   CommitComment.belongsTo(Commit);
 

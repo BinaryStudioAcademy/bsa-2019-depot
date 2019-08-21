@@ -6,7 +6,8 @@ const {
   modifyFile,
   deleteFile,
   getCommitCommentsByCommitId,
-  createCommit
+  createCommit,
+  deleteCommitById
 } = require('../services/commit.service');
 const ownerOnlyMiddleware = require('../middlewares/owner-only.middleware');
 
@@ -48,13 +49,19 @@ router
   .get('/:commitId/comments', (req, res, next) => {
     const { commitId } = req.params;
     getCommitCommentsByCommitId(commitId)
-      .then(comments => res.status(200).send(comments))
+      .then(comments => res.send(comments))
       .catch(next);
   })
   .post('/', (req, res, next) => {
     const { sha, repoId } = req.body;
     createCommit({ sha, repoId })
-      .then(commit => res.status(201).send(commit))
+      .then(commit => res.send(commit))
+      .catch(next);
+  })
+  .delete('/', (req, res, next) => {
+    const { id, userId } = req.body;
+    deleteCommitById(id, userId)
+      .then(result => res.send(result))
       .catch(next);
   });
 

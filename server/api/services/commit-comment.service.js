@@ -4,7 +4,7 @@ const CommitCommentRepository = require('../../data/repositories/commit-comment.
 const UserRepository = require('../../data/repositories/user.repository');
 const RepoRepository = require('../../data/repositories/repository.repository');
 
-const getCommitCommentById = commitCommentId => CommitCommentRepository.getById(commitCommentId);
+const getCommitCommentById = commitCommentId => CommitCommentRepository.getCommitCommentById(commitCommentId);
 
 const getCommitCommentsByCommitId = async (commitId) => {
   try {
@@ -43,7 +43,7 @@ const getCommitCommentsByCommitId = async (commitId) => {
     });
     return comments;
   } catch (err) {
-    return { error: err.message };
+    return Promise.reject(new Error(err.message));
   }
 };
 
@@ -63,7 +63,7 @@ const createCommitComment = async (commitCommentData) => {
       commit = await CommitRepository.add({ sha: hash, repoId });
     }
 
-    const addedComment = await CommitCommentRepository.add({
+    const addedComment = await CommitCommentRepository.addCommitComment({
       commitId: commit.id,
       userId,
       body
@@ -87,7 +87,7 @@ const createCommitComment = async (commitCommentData) => {
     };
     return newCommitComment;
   } catch (err) {
-    return { error: err.message };
+    return Promise.reject(new Error(err.message));
   }
 };
 
@@ -97,7 +97,7 @@ const updateCommitComment = async (commitCommentData) => {
       id, body, commitId, userId
     } = commitCommentData;
 
-    const commitComment = await CommitCommentRepository.getById(id);
+    const commitComment = await CommitCommentRepository.getCommitCommentById(id);
     if (!commitComment) {
       const errorObj = { status: 400, message: `Comment with id ${id} does not exist.` };
       return Promise.reject(errorObj);
@@ -108,13 +108,13 @@ const updateCommitComment = async (commitCommentData) => {
       return Promise.reject(errorObj);
     }
 
-    await CommitCommentRepository.updateCommentById(id, {
+    await CommitCommentRepository.updateCommitCommentById(id, {
       commitId,
       userId,
       body
     });
 
-    const updatedComment = await CommitCommentRepository.getById(id);
+    const updatedComment = await CommitCommentRepository.getCommitCommentById(id);
 
     const { body: updatedBody, createdAt, updatedAt } = updatedComment;
     const updatedCommitComment = {
@@ -135,7 +135,26 @@ const updateCommitComment = async (commitCommentData) => {
     };
     return updatedCommitComment;
   } catch (err) {
-    return { status: false, error: err.message };
+    return Promise.reject(new Error(err.message));
+  }
+};
+
+const deleteCommitComment = async (id, userId) => {
+  try {
+    const comment = await CommitCommentRepository.getCommitCommentById(id);
+    if (!comment) {
+      const errorObj = { status: 404, error: `Commit comment with ${id} does not exist.` };
+      return Promise.reject(errorObj);
+    }
+    const { userId: commitUserId } = comment;
+    if (commitUserId !== userId) {
+      const errorObj = { status: 400, error: `User with ${userId} is not allowed to delete comment ${id}.` };
+      return Promise.reject(errorObj);
+    }
+    const result = await CommitCommentRepository.deleteCommitCommentById(id);
+    return result;
+  } catch (err) {
+    return Promise.reject(new Error(err.message));
   }
 };
 
@@ -143,5 +162,6 @@ module.exports = {
   getCommitCommentById,
   getCommitCommentsByCommitId,
   createCommitComment,
-  updateCommitComment
+  updateCommitComment,
+  deleteCommitComment
 };

@@ -41,10 +41,11 @@ export const modifyFile = async (owner, repoName, branch, request) => {
   return response.json();
 };
 
-export const deleteCommitComment = async id => {
+export const deleteCommitComment = async (id, userId) => {
   const response = await callWebApi({
     endpoint: `/api/commit-comments/${id}`,
-    type: 'DELETE'
+    type: 'DELETE',
+    request: { userId }
   });
   return response.json();
 };

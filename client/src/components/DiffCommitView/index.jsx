@@ -112,14 +112,27 @@ class DiffCommitView extends Component {
     });
   }
 
-  deleteComment(id) {
-    // need to revert when server side will work
-    //commitsService.deleteCommitComment(id).then(() =>
-    console.warn(id);
+  async deleteComment(id) {
+    try {
+      const { currentUser } = this.props;
+      const result = await commitsService.deleteCommitComment(id, currentUser.id);
+      if (result) {
+        const { comments } = this.state;
+        const commentIdx = comments.findIndex(comment => comment.id === id);
+        let updatedComments = [...comments];
+        updatedComments.splice(commentIdx, 1);
+        await this.setState({
+          ...this.state,
+          comments: updatedComments
+        });
+      }
+    } catch (err) {
+      await this.setError(err);
+    }
+
     this.setState(({ comments }) => ({
       comments: comments.filter(comment => comment.id !== id)
     }));
-    //);
   }
 
   async editComment(id, text, commitId, userId) {

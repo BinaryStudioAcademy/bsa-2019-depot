@@ -223,7 +223,7 @@ const createCommit = async ({ ...commitData }) => {
     const commit = await CommitRepository.add(commitData);
     return commit;
   } catch (err) {
-    return { status: false, error: err.message };
+    return Promise.reject(new Error(err.message));
   }
 };
 

@@ -18,7 +18,10 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    {}
+    {
+      paranoid: true,
+      timestamps: true
+    }
   );
   CommitComment.associate = function (/* models */) {
     // associations can be defined here
