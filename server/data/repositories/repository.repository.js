@@ -37,6 +37,18 @@ class RepositoryRepository extends BaseRepository {
       ]
     });
   }
+
+  getByUserAndReponame(userId, reponame) {
+    return this.model.findOne({ where: { name: reponame, userId } });
+  }
+
+  updateByUserAndReponame(userId, reponame, data) {
+    return this.model.update(data, { where: { name: reponame, userId } });
+  }
+
+  deleteByUserAndReponame(userId, reponame) {
+    return this.model.destroy({ where: { name: reponame, userId } });
+  }
 }
 
 module.exports = new RepositoryRepository(RepositoryModel);

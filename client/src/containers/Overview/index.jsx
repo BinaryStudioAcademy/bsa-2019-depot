@@ -7,8 +7,12 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Container, Grid, Dropdown, Accordion } from 'semantic-ui-react';
 import Octicon, { Repo, Grabber, Fold, Unfold, RepoPush } from '@primer/octicons-react';
+<<<<<<< HEAD
 // import { repositoryActions } from '../../scenes/Dashboard/actions';
 import StarLink from '../../components/StarLink';
+=======
+import { repositoryActions } from '../../scenes/Dashboard/actions';
+>>>>>>> develop
 
 import styles from './styles.module.scss';
 
@@ -36,14 +40,6 @@ export class Overview extends React.Component {
     const newIndex = activeIndex === index ? -1 : index;
     this.setState({ activeIndex: newIndex });
   };
-
-  panelColors = [
-    styles.activity_lvl1,
-    styles.activity_lvl2,
-    styles.activity_lvl3,
-    styles.activity_lvl4,
-    styles.activity_lvl5
-  ];
 
   currentYearContribution = () => {
     const { userActivityByDate } = this.props;
@@ -73,10 +69,36 @@ export class Overview extends React.Component {
   until = new Date().toISOString().slice(0, 10);
 
   render() {
-    const { repositories, userActivityByDate, monthCommitsActivity, username } = this.props;
+    const { repositoriesNames, userActivityByDate, monthCommitsActivity, username } = this.props;
     const { activeIndex, currentYear } = this.state;
     const currentYearContribution = this.currentYearContribution();
     const yearList = this.getYearList();
+
+    let panelColors = [
+      styles.activity_lvl1,
+      styles.activity_lvl2,
+      styles.activity_lvl3,
+      styles.activity_lvl4,
+      styles.activity_lvl5
+    ];
+    panelColors = new Proxy(panelColors, {
+      get(target, prop) {
+        prop = +prop;
+        if (prop === 0) {
+          return target[0];
+        } else if (prop > 0 && prop < 10) {
+          return target[1];
+        } else if (prop >= 10 && prop < 20) {
+          return target[2];
+        } else if (prop >= 20 && prop < 30) {
+          return target[3];
+        } else if (prop >= 5) {
+          return target[4];
+        } else {
+          return target[0];
+        }
+      }
+    });
 
     return (
       <div>
@@ -125,7 +147,7 @@ export class Overview extends React.Component {
                     until={this.until}
                     weekNames={this.weekNames}
                     monthNames={this.monthNames}
-                    panelColors={this.panelColors}
+                    panelColors={panelColors}
                   />
                 </div>
               </Container>
@@ -208,7 +230,7 @@ Overview.propTypes = {
   username: PropTypes.string.isRequired,
   userActivityByDate: PropTypes.object.isRequired,
   monthCommitsActivity: PropTypes.object.isRequired,
-  repositories: PropTypes.array.isRequired
+  repositoriesNames: PropTypes.array.isRequired
 };
 
 const mapStateToProps = ({

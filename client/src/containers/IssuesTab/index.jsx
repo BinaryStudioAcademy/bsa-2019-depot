@@ -27,6 +27,11 @@ class IssuesTab extends React.Component {
     });
   }
 
+  onCreateIssue = () => {
+    const { location, history } = this.props;
+    history.push(`${location.pathname}/new`);
+  };
+
   render() {
     const {
       issuesData: { loading, issues }
@@ -67,7 +72,7 @@ class IssuesTab extends React.Component {
             labelPosition="left"
             placeholder="Filter by title"
           />
-          <Button content="New Issue" primary />
+          <Button content="New Issue" primary onClick={this.onCreateIssue} />
         </div>
         <div className={styles.issuesContainer}>
           <div className={styles.issuesHeader}>
@@ -127,7 +132,9 @@ IssuesTab.propTypes = {
     error: PropTypes.string,
     issues: PropTypes.array
   }).isRequired,
-  fetchIssues: PropTypes.func.isRequired
+  fetchIssues: PropTypes.func.isRequired,
+  history: PropTypes.object,
+  location: PropTypes.object.isRequired
 };
 
 const mapStateToProps = ({ issuesData }) => ({

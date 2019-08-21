@@ -7,7 +7,6 @@ module.exports = (models) => {
 
   User.hasMany(SshKey);
   User.hasMany(Repository);
-  User.hasMany(Star);
 
   User.hasMany(OrgUser, { foreignKey: 'userId' });
   User.hasMany(OrgUser, { foreignKey: 'orgId' });

@@ -8,10 +8,27 @@ export const getRepositories = async (owner) => {
   return response.json();
 };
 
+export const getRepositoryByOwnerAndName = async (owner, reponame) => {
+  const response = await callWebApi({
+    endpoint: `/api/repo/${owner}/${reponame}`,
+    type: 'GET'
+  });
+  return response.json();
+};
+
 export const createRepository = async request => {
   const response = await callWebApi({
     endpoint: '/api/repo',
     type: 'POST',
+    request
+  });
+  return response.json();
+};
+
+export const updateRepositoryByOwnerAndName = async ({ owner, reponame, request }) => {
+  const response = await callWebApi({
+    endpoint: `/api/repo/${owner}/${reponame}`,
+    type: 'PUT',
     request
   });
   return response.json();
