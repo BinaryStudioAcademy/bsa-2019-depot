@@ -1,12 +1,10 @@
 import React from 'react';
 import moment from 'moment';
-import { connect } from 'react-redux';
 import Calendar from 'react-github-contribution-calendar';
 import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import { Container, Grid, Dropdown, Accordion } from 'semantic-ui-react';
 import Octicon, { Fold, Unfold, RepoPush } from '@primer/octicons-react';
-import * as repositoryService from '../../services/repositoryService';
 import * as commitsService from '../../services/commitsService';
 
 import styles from './styles.module.scss';
@@ -214,8 +212,11 @@ Overview.defaultProps = {
 };
 
 Overview.propTypes = {
-  actions: PropTypes.object.isRequired,
-  username: PropTypes.string.isRequired,
+  match: {
+    params: {
+      username: PropTypes.string
+    }
+  },
   userActivityByDate: PropTypes.object.isRequired,
   monthCommitsActivity: PropTypes.object.isRequired
 };

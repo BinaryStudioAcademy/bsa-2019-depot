@@ -12,7 +12,11 @@ $secondary-color: #d1d5da;
 
 :local(.navbar_list) {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+
+  li {
+    margin-right: 1em;
+  }
 }
 
 :global(.dashboard_link) {
@@ -23,11 +27,10 @@ $secondary-color: #d1d5da;
   &:hover {
     color: #24292e;
     transition: 0.2s ease;
-    border-bottom-color: $secondary-color;
+    border-bottom: 2px solid $secondary-color;
   }
 
   & > span {
-
     display: inline-block;
     margin-left: 2px;
     padding: 2px 5px;
@@ -42,7 +45,7 @@ $secondary-color: #d1d5da;
 
 :global(.dashboard_link):global(.selected) {
   font-weight: bold;
-  border-bottom: 1px solid #e36209;
+  border-bottom: 2px solid #e36209;
 
   &:hover {
     border-bottom-color: #e36209;
