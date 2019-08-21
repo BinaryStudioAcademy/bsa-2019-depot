@@ -64,7 +64,8 @@ export class Overview extends React.Component {
   until = new Date().toISOString().slice(0, 10);
 
   render() {
-    const { repositoriesNames, userActivityByDate, monthCommitsActivity, username } = this.props;
+    const { repositories, userActivityByDate, monthCommitsActivity, username } = this.props;
+    const repositoriesNames = repositories.map(repo => repo.name).slice(-6);
     const { activeIndex, currentYear } = this.state;
     const currentYearContribution = this.currentYearContribution();
     const yearList = this.getYearList();
@@ -97,7 +98,7 @@ export class Overview extends React.Component {
 
     return (
       <div>
-        {repositoriesNames && repositoriesNames.length && (
+        {!!repositoriesNames.length && (
           <div className={styles.section}>
             <Container className={styles.section_header}>
               <h2>Pinned</h2>
@@ -231,7 +232,7 @@ Overview.propTypes = {
   username: PropTypes.string.isRequired,
   userActivityByDate: PropTypes.object.isRequired,
   monthCommitsActivity: PropTypes.object.isRequired,
-  repositoriesNames: PropTypes.array.isRequired
+  repositories: PropTypes.array.isRequired
 };
 
 const mapStateToProps = ({

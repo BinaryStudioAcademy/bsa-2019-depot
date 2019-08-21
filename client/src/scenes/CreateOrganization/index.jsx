@@ -98,13 +98,12 @@ class CreateOrganization extends Component {
                 <Divider hidden />
                 <div>
                   By clicking on "Create organization" below, you are agreeing to the{' '}
-                  <Link to="#">Terms of Service</Link>. For more information about GitHub's privacy practices, see the
-                  <Link to="#"> GitHub Privacy Statement</Link>.
+                  <Link to="#">Terms of Service</Link>. For more information about Depot's privacy practices, see the
+                  <Link to="#"> Depot Privacy Statement</Link>.
                 </div>
                 <Divider hidden />
-
                 <Button color="blue" type="submit" disabled={loading}>
-                  Create otganization
+                  Create organization
                 </Button>
               </Form>
             )}
