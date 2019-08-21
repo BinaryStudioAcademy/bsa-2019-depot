@@ -103,12 +103,19 @@ class Dashboard extends React.Component {
 };
 
 Dashboard.propTypes = {
-  location: {
-    search: PropTypes.string
-  },
-  match: {
+  location: PropTypes.exact({
+    key: PropTypes.string,
+    pathname: PropTypes.string.isRequired,
+    search: PropTypes.string.isRequired,
+    hash: PropTypes.string.isRequired,
+    state: PropTypes.array
+  }).isRequired,
+  match: PropTypes.exact({
+    params: PropTypes.object.isRequired,
+    isExact: PropTypes.bool.isRequired,
+    path: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired
-  }
+  }).isRequired
 };
 
 export default Dashboard;

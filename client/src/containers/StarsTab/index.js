@@ -71,11 +71,12 @@ class StarsTab extends React.Component {
 };
 
 StarsTab.propTypes = {
-  match: {
-    params: {
-      username: PropTypes.string
-    }
-  },
+  match: PropTypes.exact({
+    params: PropTypes.object.isRequired,
+    isExact: PropTypes.bool.isRequired,
+    path: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired
+  }).isRequired,
   id: PropTypes.string
 };
 

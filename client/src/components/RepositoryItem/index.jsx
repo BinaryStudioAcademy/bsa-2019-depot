@@ -65,7 +65,7 @@ class RepositoryItem extends React.Component {
             </span>
             {starsCount ? (
               <span className={styles.repo_info_item}>
-                <StarLink starsCount={starsCount} />
+                <StarLink href={`${username}/${name}/stargazers`} starsCount={starsCount} />
               </span>
             ) : null}
             <span className={styles.repo_info_item}>
@@ -95,9 +95,8 @@ RepositoryItem.defaultProps = {
 
 RepositoryItem.propTypes = {
   repo: PropTypes.object,
-  username: PropTypes.string.isRequired,
-  onStar: PropTypes.func,
-  currentUserId: PropTypes.string.isRequired
+  username: PropTypes.string,
+  onStar: PropTypes.func.isRequired
 };
 
 export default RepositoryItem;

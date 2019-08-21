@@ -37,7 +37,7 @@ const UserInfo = ({ imgUrl, name, username }) => (
 );
 
 UserInfo.propTypes = {
-  username: PropTypes.string.isRequired,
+  username: PropTypes.string,
   name: PropTypes.string,
   imgUrl: PropTypes.string,
 };

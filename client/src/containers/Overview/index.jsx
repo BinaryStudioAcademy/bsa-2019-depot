@@ -107,10 +107,34 @@ export class Overview extends React.Component {
 
     return (
       <>
-        <Container className={styles.pinned_header}>
-          <h2>Pinned</h2>
-          <Link to="">Customize your pins</Link>
-        </Container>
+      {/* {!!repositoriesNames.length && (
+          <div className={styles.section}>
+            <Container className={styles.section_header}>
+              <h2>Pinned</h2>
+              <Link to="" className={styles.header_actions}>
+                Customize your pins
+              </Link>
+            </Container>
+            <Container className={styles.favorite_repos_wrapper}>
+              {repositoriesNames &&
+                repositoriesNames.map(repo => {
+                  return (
+                    <div key={repo} className={styles.pinned_item}>
+                      <div>
+                        <Octicon className={styles.card_icon} icon={Repo} />
+                        <Link to={`${username}/${repo}`}>{repo}</Link>
+                        <Octicon className={styles.card_icon_grab} icon={Grabber} />
+                      </div>
+                      <p className={styles.pinned_item_desc}> </p>
+                      <p className={styles.pinned_item_lang}>
+                        <span></span>Javascript
+                      </p>
+                    </div>
+                  );
+                })}
+            </Container>
+          </div>
+        )} */}
         <Grid>
           <Grid.Row columns={2}>
             <Grid.Column mobile={16} computer={13}>
@@ -208,15 +232,18 @@ export class Overview extends React.Component {
 
 Overview.defaultProps = {
   panelColors: PropTypes.array,
-  contributionValues: PropTypes.object.isRequired
+  contributionValues: PropTypes.object.isRequired,
+  userActivityByDate: {},
+  monthCommitsActivity: {}
 };
 
 Overview.propTypes = {
-  match: {
-    params: {
-      username: PropTypes.string
-    }
-  },
+  match: PropTypes.exact({
+    params: PropTypes.object.isRequired,
+    isExact: PropTypes.bool.isRequired,
+    path: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired
+  }).isRequired,
   userActivityByDate: PropTypes.object.isRequired,
   monthCommitsActivity: PropTypes.object.isRequired
 };

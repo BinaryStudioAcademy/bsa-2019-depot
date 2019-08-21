@@ -69,11 +69,11 @@ const DashboardHeader = ({
 };
 
 DashboardHeader.propTypes = {
-  repoCount: PropTypes.number,
-  projectsCount: PropTypes.number,
-  starsCount: PropTypes.number,
-  followersCount: PropTypes.number,
-  followingCount: PropTypes.number,
+  repoCount: PropTypes.string,
+  projectsCount: PropTypes.string,
+  starsCount: PropTypes.string,
+  followersCount: PropTypes.string,
+  followingCount: PropTypes.string,
   baseUrl: PropTypes.string,
   activeTab: PropTypes.string
 };
