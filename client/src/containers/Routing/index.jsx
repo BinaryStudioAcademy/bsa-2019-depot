@@ -12,6 +12,7 @@ import { fetchCurrentUser } from '../../routines/routines';
 import RepositoryPage from '../../scenes/Repository';
 import Header from '../Header';
 import Footer from '../../components/Footer';
+import OrganizationPeople from '../../scenes/OrganizationPeople';
 import Invitation from '../../scenes/Invitation';
 
 import './styles.module.scss';
@@ -39,6 +40,7 @@ class Routing extends React.Component {
             <PrivateRoute path="/settings" component={Settings} />
             <PrivateRoute exact path="/organizations/new" component={CreateOrganization} />
             <PrivateRoute exact path="/orgs/:name/invitation" component={Invitation} />
+            <PrivateRoute exact path="/orgs/:name/people" component={OrganizationPeople} />
             <PrivateRoute exact path="/new" component={CreateRepository} />
             <PrivateRoute exact path="/organizations/:orgname/repositories/new" component={CreateRepository} />
             <PrivateRoute exact path="/:username" component={Dashboard} />

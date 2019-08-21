@@ -13,6 +13,7 @@ import RepositoriesList from '../../components/RepositoriesList';
 import RepositoriesFilters from '../../components/RepositoriesFilters';
 import { getUserImgLink } from '../../helpers/imageHelper';
 import { getUser } from '../../services/userService';
+import Spinner from '../../components/Spinner';
 
 import styles from './styles.module.scss';
 
@@ -55,8 +56,12 @@ class Dashboard extends React.Component {
     } = this.props;
     const repoCount = repositories.length;
     const isOwner = this.state.currentUser.username === username;
-    const userType = this.state.currentUser.type;
+    let userType = this.state.currentUser.type;
     const { tab } = parse(search);
+
+    if (!userType) {
+      return <Spinner />;
+    }
 
     return userType === 'ORG' ? (
       <OrganizationDashboard currentOrg={this.state.currentUser} />

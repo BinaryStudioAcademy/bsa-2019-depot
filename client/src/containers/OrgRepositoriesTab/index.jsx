@@ -26,7 +26,7 @@ class OrgRepositoriesTab extends React.Component {
             </Grid.Column>
             <Grid.Column className={styles.userinfo_wrapper} mobile={16} tablet={8} computer={5}>
               <Container className={styles.memberBox}>
-                <Link to="" className={styles.memberBox_header}>
+                <Link to={`/orgs/${this.props.orgInfo.username}/people`} className={styles.memberBox_header}>
                   <div>People</div>
                   <div>{this.props.orgMembers.length} ></div>
                 </Link>

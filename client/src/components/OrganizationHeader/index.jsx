@@ -8,7 +8,7 @@ import { getUserImgLink } from '../../helpers/imageHelper';
 
 import styles from './styles.module.scss';
 
-const OrganizationHeader = ({ activePage, baseUrl, repoCount, memberCount, imgUrl, orgInfo }) => {
+const OrganizationHeader = ({ repoCount, memberCount, imgUrl, orgInfo, tab }) => {
   let website = orgInfo.website ? orgInfo.website : '';
   let email = orgInfo.email ? orgInfo.email : '';
   let description = orgInfo.description ? orgInfo.description : '';
@@ -31,13 +31,13 @@ const OrganizationHeader = ({ activePage, baseUrl, repoCount, memberCount, imgUr
         </Container>
         <div className={styles.orgHeaderContainer}>
           <div className="ui top attached tabular menu">
-            <div className="active item">
-              <Link to={baseUrl}>
+            <div className={`${tab === 'repositories' && 'active'} item`}>
+              <Link to={`/${orgInfo.username}`}>
                 <Icon name="code" /> Repositories <Label circular>{repoCount}</Label>
               </Link>
             </div>
-            <div className="item">
-              <Link to={`orgs${baseUrl}/people`}>
+            <div className={`${tab === 'people' && 'active'} item`}>
+              <Link to={`/orgs/${orgInfo.username}/people`}>
                 <Octicon icon={Person} className={styles.personIcon} />
                 People<Label circular>{memberCount}</Label>
               </Link>
@@ -57,7 +57,8 @@ OrganizationHeader.propTypes = {
   imgUrl: PropTypes.string,
   memberCount: PropTypes.number,
   orgInfo: PropTypes.object.isRequired,
-  isOwner: PropTypes.bool
+  isOwner: PropTypes.bool,
+  tab: PropTypes.string
 };
 
 const mapStateToProps = ({

@@ -6,13 +6,12 @@ import { withRouter } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 import { repositoryActions } from '../Dashboard/actions';
 import OrganizationHeader from '../../components/OrganizationHeader';
-import OrgRepositoriesTab from '../../containers/OrgRepositoriesTab';
 import OrgPeopleTab from '../../containers/OrgPeopleTab';
 
 import { getUser } from '../../services/userService';
 import { getOrgMembers, getOrgOwner } from '../../services/orgService';
 
-class OrganizationDashboard extends React.Component {
+class OrganizationPeople extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -20,43 +19,16 @@ class OrganizationDashboard extends React.Component {
       orgMembers: [],
       orgOwner: ''
     };
-    this.renderRepoView = this.renderRepoView.bind(this);
-    this.renderPeopleView = this.renderPeopleView.bind(this);
   }
 
   componentDidMount() {
-    const { actions, match } = this.props;
-    const userToRender = match.params.username;
-    actions.fetchRepositories({
-      userToRender
-    });
+    const { match } = this.props;
+    const userToRender = match.params.name;
 
     this.getUserInfo(userToRender).then(() => {
       this.getMembers(this.state.currentOrg.id);
       this.getOwner(this.state.currentOrg.id);
     });
-  }
-
-  renderRepoView() {
-    return (
-      <OrgRepositoriesTab
-        repositories={this.props.repositories}
-        orgInfo={this.props.currentOrg}
-        orgMembers={this.state.orgMembers}
-        isOwner={this.props.id === this.state.orgOwner.ownerId}
-      />
-    );
-  }
-
-  renderPeopleView() {
-    return (
-      <OrgPeopleTab
-        orgMembers={this.state.orgMembers}
-        orgInfo={this.state.currentOrg}
-        ownerId={this.state.orgOwner.ownerId}
-        isOwner={this.props.id === this.state.orgOwner.ownerId}
-      />
-    );
   }
 
   async getUserInfo(userToRender) {
@@ -75,23 +47,22 @@ class OrganizationDashboard extends React.Component {
   }
 
   render() {
-    const { repositories, currentOrg, match, id } = this.props;
+    const { repositories, id } = this.props;
     return (
       <>
         <OrganizationHeader
           repoCount={repositories.length}
           memberCount={this.state.orgMembers.length}
-          orgInfo={currentOrg}
-          baseUrl={match.url}
+          orgInfo={this.state.currentOrg}
           ownerId={this.state.orgOwner.ownerId}
           currentUserId={id}
-          tab="repositories"
+          tab="people"
         />
         <Container>
-          <OrgRepositoriesTab
-            repositories={this.props.repositories}
-            orgInfo={this.props.currentOrg}
+          <OrgPeopleTab
             orgMembers={this.state.orgMembers}
+            orgInfo={this.state.currentOrg}
+            ownerId={this.state.orgOwner.ownerId}
             isOwner={this.props.id === this.state.orgOwner.ownerId}
           />
         </Container>
@@ -100,7 +71,7 @@ class OrganizationDashboard extends React.Component {
   }
 }
 
-OrganizationDashboard.propTypes = {
+OrganizationPeople.propTypes = {
   actions: PropTypes.object.isRequired,
   currentOrg: PropTypes.object,
   id: PropTypes.string,
@@ -134,4 +105,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withRouter(OrganizationDashboard));
+)(withRouter(OrganizationPeople));
