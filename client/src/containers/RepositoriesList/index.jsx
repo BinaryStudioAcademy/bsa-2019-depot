@@ -78,8 +78,10 @@ export class RepositoriesList extends React.Component {
     return (
       <div>
         <div className={styles.filters}>
-          <Input placeholder="Find a repository…" className={styles.repos_search_input}></Input>
-          <div>
+          <div className={styles.filters_item}>
+            <Input placeholder="Find a repository…" className={styles.repos_search_input}></Input>
+          </div>
+          <div className={styles.filters_item}>
             <Dropdown
               placeholder="Type: All"
               fluid
@@ -87,7 +89,7 @@ export class RepositoriesList extends React.Component {
               className={styles.repos_filters_dropdown}
             />
           </div>
-          <div>
+          <div className={styles.filters_item}>
             <Dropdown
               placeholder="Language"
               fluid
@@ -95,7 +97,7 @@ export class RepositoriesList extends React.Component {
               className={styles.repos_filters_dropdown}
             />
           </div>
-          <div className={styles.new_repo_wrapper}>
+          <div  className={styles.filters_item}>
             <Link to="/new">
               <Button className={styles.new_repo}>
                 <Octicon icon={Repo} />

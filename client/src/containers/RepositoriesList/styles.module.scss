@@ -105,3 +105,19 @@ $blue: #2e53db;
   display: flex;
   justify-content: space-between;
 }
+
+:local(.filters_item) {
+  margin-right: 1em;
+
+  &:first-child {
+    flex-grow: 1;
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+:local(.repos_search_input) {
+  width: 100%;
+}
