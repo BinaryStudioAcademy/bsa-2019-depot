@@ -8,6 +8,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  
+
   return IssueComment;
 };

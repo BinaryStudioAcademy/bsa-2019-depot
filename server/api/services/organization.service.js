@@ -12,9 +12,7 @@ const createOrganization = async (data) => {
     return { status: false, error: 'such profile name already exists' };
   }
 
-  const {
-    dataValues: { id: roleId }
-  } = await RoleRepository.getByName('OWNER');
+  const { id: roleId } = (await RoleRepository.getByName('OWNER')).get({ plain: true });
   const profile = await userRepository.addUser({ ...data, type: 'ORG', fake: false });
   const { id: orgId } = profile;
   const orgUser = await OrgUserRepository.create({
@@ -36,9 +34,7 @@ const addMember = async (data) => {
     orgName, username, role, url
   } = data;
 
-  const {
-    dataValues: { id: roleId }
-  } = await RoleRepository.getByName(role);
+  const { id: roleId } = (await RoleRepository.getByName(role)).get({ plain: true });
 
   const user = await userRepository.getByUsername(username);
   if (!user) {
