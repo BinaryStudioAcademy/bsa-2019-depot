@@ -64,7 +64,7 @@ const getCommitCommentsByCommitId = async (commitId) => {
 const createCommitComment = async (commitCommentData) => {
   try {
     const {
-      sha, username, reponame, body
+      hash, username, reponame, body
     } = commitCommentData;
 
     const user = await UserRepository.getByUsername(username);
@@ -72,9 +72,9 @@ const createCommitComment = async (commitCommentData) => {
 
     const repo = await RepoRepository.getByUserAndReponame(userId, reponame);
     const { repoId } = repo;
-    let commit = await CommitRepository.getByHash(sha);
+    let commit = await CommitRepository.getByHash(hash);
     if (!commit) {
-      commit = await CommitRepository.add({ sha, repoId });
+      commit = await CommitRepository.add({ sha: hash, repoId });
     }
 
     const addedComment = await CommitCommentRepository.add({

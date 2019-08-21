@@ -2,6 +2,7 @@ import { fetchDiffs } from '../../routines/routines';
 
 const initialDiffsState = {
   diffs: '',
+  id: null,
   loading: false,
   error: null
 };
@@ -14,9 +15,11 @@ export const diffsData = (state = initialDiffsState, action) => {
       loading: true
     };
   case fetchDiffs.SUCCESS:
+    const { diffs, id } = action.payload;
     return {
       ...state,
-      diffs: action.payload.diffs
+      diffs,
+      id
     };
   case fetchDiffs.FAILURE:
     return {

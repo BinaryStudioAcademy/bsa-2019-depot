@@ -7,7 +7,6 @@ function* diffsRequest({ payload: { owner, repoName, hash } }) {
     yield put(fetchDiffs.request());
 
     const response = yield call(commitsService.getCommitDiffs, owner, repoName, hash);
-
     yield put(fetchDiffs.success(response));
   } catch (error) {
     yield put(fetchDiffs.failure(error.message));

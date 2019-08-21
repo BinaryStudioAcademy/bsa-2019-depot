@@ -66,3 +66,11 @@ export const updateCommitComment = async request => {
   });
   return response.json();
 };
+
+export const getCommitComments = async id => {
+  const response = await callWebApi({
+    endpoint: `/api/commit-comments/${id}`,
+    type: 'GET'
+  });
+  return response.json();
+};
