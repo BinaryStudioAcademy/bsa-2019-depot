@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Grid, Menu, Sidebar, Icon, Dropdown, Responsive, Modal, Form, Button } from 'semantic-ui-react';
+import Octicon, { Smiley } from '@primer/octicons-react';
 import { getUserImgLink } from '../../helpers/imageHelper';
 
 import styles from './styles.module.scss';
@@ -240,7 +241,7 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
                   <Dropdown.Divider />
                   <Dropdown.Item onClick={showModal}>
                     <div className={styles.statusItem}>
-                      <Icon color="black" name="smile outline" />
+                      <Octicon icon={Smiley} />
                       Set status
                     </div>
                   </Dropdown.Item>
