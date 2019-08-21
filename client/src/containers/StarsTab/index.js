@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
-import { Container, Input, Dropdown, Button } from 'semantic-ui-react';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import RepositoryItem from '../../components/RepositoryItem';
 import { getStars } from '../../services/userService';
