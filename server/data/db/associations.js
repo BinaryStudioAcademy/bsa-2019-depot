@@ -21,5 +21,7 @@ module.exports = (models) => {
   Issue.belongsTo(Repository);
   IssueComment.belongsTo(User);
   IssueComment.belongsTo(Issue);
+  // Repository.hasMany(Repository);
+  Repository.belongsTo(Repository, { forkedFromRepoId: 'id' });
   // Repository.hasOne(DefaultBranch);
 };

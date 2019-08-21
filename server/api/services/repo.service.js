@@ -120,7 +120,9 @@ const getReposNames = async ({ user, filter, limit }) => {
 
 const getReposData = async ({ username }) => repoRepository.getByUsername(username);
 
-const forkRepo = async ({ username, owner, repoName }) => {
+const forkRepo = async ({
+  userId, username, owner, repoName, forkedFromrepoId
+}) => {
   try {
     const source = repoHelper.getPathToRepo(owner, repoName);
     const target = repoHelper.getPathToRepo(username, repoName);
@@ -136,7 +138,13 @@ const forkRepo = async ({ username, owner, repoName }) => {
     fs.mkdirSync(target);
     return await fse
       .copy(source, target, { preserveTimestamps: true })
-      .then(() => ({ status: true, path: target }))
+      .then(() => {
+        repoRepository.create({
+          userId,
+          forkedFromrepoId
+        });
+        return { status: true, path: target };
+      })
       .catch(err => ({ status: false, error: err.message }));
   } catch (err) {
     return { status: false, error: err.message };
