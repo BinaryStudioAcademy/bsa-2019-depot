@@ -97,12 +97,14 @@ export class RepositoriesList extends React.Component {
               className={styles.repos_filters_dropdown}
             />
           </div>
-          <Link to="/new">
-            <Button className={styles.new_repo} color="green">
-              <Octicon icon={Repo} />
-              New
-            </Button>
-          </Link>
+          <div className={styles.filters_item}>
+            <Link to="/new">
+              <Button className={styles.new_repo} color="blue">
+                <Octicon icon={Repo} />
+                New
+              </Button>
+            </Link>
+          </div>
         </div>
         {repositories.map(repo => {
           return (

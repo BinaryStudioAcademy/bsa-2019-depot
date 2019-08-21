@@ -8,6 +8,7 @@ $secondary-color: #d1d5da;
   background-color: #fff;
   z-index: 2;
   border-bottom: 1px solid $secondary-color;
+
 }
 
 :local(.navbar_list) {
@@ -15,6 +16,7 @@ $secondary-color: #d1d5da;
   flex-wrap: wrap;
 
   li {
+    flex-shrink: 0;
     margin-right: 1em;
   }
 }

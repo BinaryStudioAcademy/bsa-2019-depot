@@ -39,9 +39,10 @@ $md: 768px;
 }
 
 :local(.set_status) {
-  display: inline-block;
+  display: flex;
+  align-items: center;
   width: 100%;
-  padding: 8px;
+  padding: 0.5em;
   color: $primary-color;
   border: 1px solid $secondary-color;
   border-top-color: transparent;
