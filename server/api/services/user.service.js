@@ -1,4 +1,5 @@
 const UserRepository = require('../../data/repositories/user.repository');
+const StarRepository = require('../../data/repositories/star.repository');
 
 const tokenHelper = require('../../helpers/token.helper');
 
@@ -48,11 +49,14 @@ const updateUserSettings = async ({ id, settings }) => {
   };
 };
 
+const getStars = async username => StarRepository.getStars(username);
+
 module.exports = {
   getUserById,
   setUsername,
   checkUsernameExists,
   updateUserSettings,
   resetPassword,
-  getUserDetailed
+  getUserDetailed,
+  getStars
 };

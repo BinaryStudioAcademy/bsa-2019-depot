@@ -6,7 +6,8 @@ const {
   checkUsernameExists,
   resetPassword,
   updateUserSettings,
-  getUserDetailed
+  getUserDetailed,
+  getStars
 } = require('../services/user.service');
 const { getKeysByUser, createKey, deleteKey } = require('../services/ssh-key.service');
 const { clientUrl } = require('../../config/common.config');
@@ -70,6 +71,13 @@ router.delete('/keys/:id', (req, res, next) => {
   const { id } = req.params;
   deleteKey(id)
     .then(() => res.sendStatus(200))
+    .catch(next);
+});
+
+router.get('/:username/stars', (req, res, next) => {
+  const { username } = req.params;
+  getStars(username)
+    .then(stars => res.send(stars))
     .catch(next);
 });
 
