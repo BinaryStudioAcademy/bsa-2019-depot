@@ -46,5 +46,8 @@ $button-color: #4f60ac;
       display: flex;
       margin: auto;
     }
+    :local(.memberNameContainer) {
+      width: 25%;
+    }
   }
 }
