@@ -1,12 +1,12 @@
 const BaseRepository = require('./base.repository');
 const { CommitCommentModel } = require('../models/index');
 
-class CommitRepository extends BaseRepository {
+class CommitCommentRepository extends BaseRepository {
   add({ ...commitCommentData }) {
     return this.create(commitCommentData);
   }
 
-  updateById(id, { ...commitCommentData }) {
+  updateCommentById(id, { ...commitCommentData }) {
     return this.updateById(id, commitCommentData);
   }
 
@@ -19,4 +19,4 @@ class CommitRepository extends BaseRepository {
   }
 }
 
-module.exports = new CommitRepository(CommitCommentModel);
+module.exports = new CommitCommentRepository(CommitCommentModel);

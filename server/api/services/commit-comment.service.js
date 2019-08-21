@@ -103,9 +103,58 @@ const createCommitComment = async (commitCommentData) => {
   }
 };
 
+const updateCommitComment = async (commitCommentData) => {
+  try {
+    const {
+      id, body, commitId, userId
+    } = commitCommentData;
+
+    const commitComment = await CommitCommentRepository.getById(id);
+    if (!commitComment) {
+      const errorObj = { status: 400, message: `Comment with id ${id} does not exist.` };
+      return Promise.reject(errorObj);
+    }
+    const { userId: commentUserId } = commitComment;
+    if (userId !== commentUserId) {
+      const errorObj = { status: 401, message: `User with id ${userId} is not allowed to update this comment.` };
+      return Promise.reject(errorObj);
+    }
+
+    await CommitCommentRepository.updateCommentById(id, {
+      commitId,
+      userId,
+      body
+    });
+
+    const updatedComment = await CommitCommentRepository.getById(id);
+
+    const { body: updatedBody, createdAt, updatedAt } = updatedComment;
+    const updatedCommitComment = {
+      id,
+      commitId,
+      body: updatedBody,
+      updatedAt,
+      createdAt
+    };
+
+    const user = await UserRepository.getById(userId);
+    const { username, name, imgUrl } = user;
+    updatedCommitComment.author = {
+      id: userId,
+      name,
+      username,
+      imgUrl
+    };
+    return updatedCommitComment;
+  } catch (err) {
+    return { status: false, error: err.message };
+  }
+};
+
 module.exports = {
   getCommitCommentById,
   getCommitCommentsByCommitId,
   createCommitComment,
+  updateCommitComment,
   getCommitCommentsByCommitHash
 };
