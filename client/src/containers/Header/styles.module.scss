@@ -204,7 +204,8 @@ $input-background: #1d1f28;
       vertical-align: middle;
     }
     div {
-      vertical-align: middle;
+      display: flex;
+      align-items: center;
     }
     i {
       height: inherit !important;
@@ -218,7 +219,8 @@ $input-background: #1d1f28;
     border-radius: 5px;
     padding: 10px;
 
-    :global(.black.smile.outline.icon) {
+    :global(.octicon) {
+      color: $black-color;
       margin-right: 15px;
     }
   }
