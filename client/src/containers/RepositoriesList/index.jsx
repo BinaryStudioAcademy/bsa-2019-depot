@@ -73,6 +73,7 @@ export class RepositoriesList extends React.Component {
 
   render() {
     const { repositories } = this.state;
+    const { match: { params: { username } } } = this.props;
 
     return (
       <div>
@@ -109,6 +110,7 @@ export class RepositoriesList extends React.Component {
               repo={repo}
               key={repo.name}
               onStar={this.onStar}
+              username={username}
             />
           );
         })}
