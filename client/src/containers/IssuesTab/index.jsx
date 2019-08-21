@@ -12,6 +12,7 @@ class IssuesTab extends React.Component {
     super(props);
 
     this.state = {
+      filterByTitle: '',
       filter: {
         title: '',
         author: '',
@@ -41,6 +42,21 @@ class IssuesTab extends React.Component {
     return counter.length;
   };
 
+  renderFilteredIssues = () => {
+    const {
+      issuesData: { issues }
+    } = this.props;
+    const { filterByTitle } = this.state;
+    return issues.filter(({ title }) => title.includes(filterByTitle));
+  };
+
+  filterIssues = e => {
+    this.setState({
+      ...this.state,
+      filterByTitle: e.target.value
+    });
+  };
+
   onCreateIssue = () => {
     const { location, history } = this.props;
     history.push(`${location.pathname}/new`);
@@ -51,6 +67,7 @@ class IssuesTab extends React.Component {
       issuesData: { loading, issues },
       match
     } = this.props;
+    const { filterByTitle } = this.state;
 
     const authorList = issues.reduce((acc, { user }) => {
       return !acc.includes(user.username) ? [...acc, user.username] : acc;
@@ -58,6 +75,7 @@ class IssuesTab extends React.Component {
 
     const openIssues = this.countOpenIssues();
     const closedIssues = this.countClosedIssues();
+    const filteredIssues = filterByTitle ? this.renderFilteredIssues() : issues;
 
     // Mock data
     const sortOptions = [
@@ -90,6 +108,7 @@ class IssuesTab extends React.Component {
             label={<Dropdown text="Filters" options={filterOptions} />}
             labelPosition="left"
             placeholder="Filter by title"
+            onChange={this.filterIssues}
           />
           <Button content="New Issue" positive onClick={this.onCreateIssue} />
         </div>
@@ -136,7 +155,7 @@ class IssuesTab extends React.Component {
               </Dropdown>
             </div>
           </div>
-          <IssuesList issues={issues} match={match} />
+          <IssuesList issues={filteredIssues} match={match} />
         </div>
       </>
     );
