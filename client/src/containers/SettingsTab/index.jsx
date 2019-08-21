@@ -1,7 +1,10 @@
 import React from 'react';
-import { Grid, Menu, Header, Divider, Input, Button, Message, Loader } from 'semantic-ui-react';
+import { Grid, Menu, Header, Divider, Button, Message, Loader, Form } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Formik, Field } from 'formik';
+import * as Yup from 'yup';
+import { InputError } from '../../components/InputError';
 import { fetchRepoSettings } from '../../routines/routines';
 import { renameRepo, deleteRepo } from './actions';
 import styles from './styles.module.scss';
@@ -36,6 +39,10 @@ class RepoSettings extends React.Component {
     };
   }
 
+  validationSchema = Yup.object().shape({
+    name: Yup.string().required('Required')
+  });
+
   componentDidMount() {
     const { owner, name } = this.state;
     const { fetchRepoSettings } = this.props;
@@ -58,14 +65,8 @@ class RepoSettings extends React.Component {
     history.push('/dashboard');
   };
 
-  handleChangeRepoName = ({ target }) => {
-    this.setState({
-      name: target.value
-    });
-  };
-
-  onClickRename = () => {
-    const { name, owner } = this.state;
+  onClickRename = ({ name }) => {
+    const { owner } = this.state;
     const { oldName } = this;
     const { renameRepo, history } = this.props;
 
@@ -93,10 +94,17 @@ class RepoSettings extends React.Component {
           <Divider />
 
           <Header as="h4">Repository name</Header>
-          <Input className={styles.text_input} defaultValue={name} onChange={this.handleChangeRepoName} />
-          <Button className={styles.button_rename} type="button" onClick={this.onClickRename}>
-            Rename
-          </Button>
+          <Formik initialValues={{ name }} onSubmit={this.onClickRename} validationSchema={this.validationSchema}>
+            {({ values: { name }, errors, handleChange, handleSubmit }) => (
+              <Form onSubmit={handleSubmit}>
+                <Field name="name" value={name} className={styles.text_input} onChange={handleChange} />
+                <InputError name="name" />
+                <Button className={styles.button_rename} disabled={errors.name} type="submit">
+                  Rename
+                </Button>
+              </Form>
+            )}
+          </Formik>
 
           <Header as="h2">Danger Zone</Header>
           <div className={styles.dangerZone}>
