@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Grid, Responsive } from 'semantic-ui-react';
-import { ReactComponent as LogoSVG } from '../../styles/assets/icons/logo_icon.svg';
+import { ReactComponent as LogoSVG } from '../../styles/assets/icons/logo_icon_dark.svg';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
