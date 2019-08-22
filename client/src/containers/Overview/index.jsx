@@ -182,6 +182,7 @@ export class Overview extends React.Component {
                     (acc, key) => acc + monthActivityObject[key],
                     0
                   );
+                  const numOfRepos = Object.keys(monthActivityObject).length;
                   return (
                     <>
                       <Container className={styles.section_header}>
@@ -199,7 +200,10 @@ export class Overview extends React.Component {
                               index={`commit-${monthAndYear}`}
                               onClick={this.handleActivityState}
                             >
-                              <p>Created {commitCount} commits</p>
+                              <p>
+                                Created {commitCount} commit{commitCount === 1 ? '' : 's'} in {numOfRepos} repositor
+                                {numOfRepos === 1 ? 'y' : 'ies'}
+                              </p>
                               <Octicon icon={activeIndex === `commit-${monthAndYear}` ? Fold : Unfold} />
                             </Accordion.Title>
                             <Accordion.Content active={activeIndex === `commit-${monthAndYear}`}>
