@@ -1,0 +1,42 @@
+$primary-color: #586069;
+$secondary-color: #d1d5da;
+
+:global(.ui.container):local(.org_repositories_list),
+:global(.ui.container):local(.org_repositories_filters) {
+  width: 1000px;
+  max-width: 1000px;
+  padding-top: 5px;
+}
+
+:local(.org_repositories_filters):global(.ui.container [class*='repos_filters']) {
+  justify-content: start;
+
+  :global([class*='repos_search_input']) {
+    width: 18%;
+  }
+  > div {
+    margin-right: 20px;
+  }
+}
+
+:local(.memberBox) {
+  border: 1px solid #e1e4e8;
+  padding: 16px;
+  margin-top: 20px;
+
+  :local(.memberBox_header) {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    color: #24292e;
+  }
+  :local(.memberBox_member) {
+    margin: 1px;
+    position: relative;
+  }
+  :local(.memberPhoto) {
+    width: 48px;
+    height: 48px;
+  }
+}

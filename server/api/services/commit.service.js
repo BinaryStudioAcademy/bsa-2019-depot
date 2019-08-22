@@ -5,39 +5,6 @@ const repoHelper = require('../../helpers/repo.helper');
 const { getReposNames, isEmpty } = require('./repo.service');
 const CommitRepository = require('../../data/repositories/commit.repository');
 
-const initialCommit = async ({
-  owner, email, repoName, files
-}) => {
-  const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
-  const repo = await NodeGit.Repository.open(pathToRepo);
-  const treeBuilder = await NodeGit.Treebuilder.create(repo, null);
-  const authorSignature = NodeGit.Signature.now(owner, email);
-
-  const fileBlobOids = await Promise.all(
-    files.map(({ content, filename }) => {
-      const fileBuffer = Buffer.from(content);
-      return NodeGit.Blob.createFromBuffer(repo, fileBuffer, fileBuffer.length).then(oid => ({ oid, filename }));
-    })
-  );
-
-  fileBlobOids.forEach(({ oid, filename }) => {
-    treeBuilder.insert(filename, oid, NodeGit.TreeEntry.FILEMODE.BLOB);
-  });
-
-  const newCommitTree = await treeBuilder.write();
-  const commitId = await repo.createCommit(
-    'HEAD',
-    authorSignature,
-    authorSignature,
-    'Initial commit',
-    newCommitTree,
-    []
-  );
-
-  const commit = await repo.getCommit(commitId);
-  return NodeGit.Branch.create(repo, 'master', commit, 1);
-};
-
 const getCommitsByDate = async (data) => {
   const { user } = data;
   const repoList = await getReposNames(data);
@@ -233,7 +200,6 @@ module.exports = {
   getCommitsByDate,
   modifyFile,
   deleteFile,
-  initialCommit,
   createCommit,
   getCommitCount
 };

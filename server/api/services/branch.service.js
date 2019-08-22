@@ -41,6 +41,7 @@ const traverseFileTree = async (user, name, branch, tree) => {
       });
       if (entry.isDirectory()) {
         fileTree.directories.push({
+          sha: lastModifiedCommit.sha(),
           name: entry.name(),
           time: lastModifiedCommit.date(),
           commitMessage: lastModifiedCommit.message()
@@ -52,7 +53,7 @@ const traverseFileTree = async (user, name, branch, tree) => {
           readmeContent = (await entry.getBlob()).toString();
         }
         fileTree.files.push({
-          sha: entry.sha(),
+          sha: lastModifiedCommit.sha(),
           name: entry.name(),
           time: lastModifiedCommit.date(),
           commitMessage: lastModifiedCommit.message(),

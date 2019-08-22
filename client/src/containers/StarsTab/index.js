@@ -54,11 +54,6 @@ class StarsTab extends React.Component {
 
   render() {
     const { repositories } = this.state;
-    const {
-      match: {
-        params: { username }
-      }
-    } = this.props;
 
     return (
       <>
@@ -66,9 +61,12 @@ class StarsTab extends React.Component {
           <h2>Repositories</h2>
         </div>
         <div>
-          {repositories.map(repo => (
-            <RepositoryItem repo={repo} key={repo.name} onStar={this.onStar} username={username} type="stars" />
-          ))}
+          {repositories.map(repo => {
+            const {
+              user: { username }
+            } = repo;
+            return <RepositoryItem repo={repo} key={repo.name} onStar={this.onStar} username={username} type="stars" />;
+          })}
         </div>
       </>
     );

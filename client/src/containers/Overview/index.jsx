@@ -100,7 +100,7 @@ export class Overview extends React.Component {
       styles.activity_lvl4,
       styles.activity_lvl5
     ];
-    panelColors = new Proxy(panelColors, {
+    const proxyPanelColors = new Proxy(panelColors, {
       get(target, prop) {
         prop = +prop;
         if (prop === 0) {
@@ -118,7 +118,6 @@ export class Overview extends React.Component {
         }
       }
     });
-
     return (
       <>
         {/* {!!repositoriesNames.length && (
@@ -170,8 +169,17 @@ export class Overview extends React.Component {
                     until={this.until}
                     weekNames={this.weekNames}
                     monthNames={this.monthNames}
-                    panelColors={panelColors}
+                    panelColors={proxyPanelColors}
                   />
+                  <div className="calendar-wrapper calendar-wrapper-meaning">
+                    {'Less '}
+                    <svg className="calendar calendar-meaning" height="11">
+                      {panelColors.map((color, i) => (
+                        <rect key={i} x={13 * i} y="0" width="11" height="11" fill={color}></rect>
+                      ))}
+                    </svg>
+                    {' More'}
+                  </div>
                 </div>
               </Container>
 
@@ -182,6 +190,7 @@ export class Overview extends React.Component {
                     (acc, key) => acc + monthActivityObject[key],
                     0
                   );
+                  const numOfRepos = Object.keys(monthActivityObject).length;
                   return (
                     <>
                       <Container className={styles.section_header}>
@@ -199,7 +208,10 @@ export class Overview extends React.Component {
                               index={`commit-${monthAndYear}`}
                               onClick={this.handleActivityState}
                             >
-                              <p>Created {commitCount} commits</p>
+                              <p>
+                                Created {commitCount} commit{commitCount === 1 ? '' : 's'} in {numOfRepos} repositor
+                                {numOfRepos === 1 ? 'y' : 'ies'}
+                              </p>
                               <Octicon icon={activeIndex === `commit-${monthAndYear}` ? Fold : Unfold} />
                             </Accordion.Title>
                             <Accordion.Content active={activeIndex === `commit-${monthAndYear}`}>

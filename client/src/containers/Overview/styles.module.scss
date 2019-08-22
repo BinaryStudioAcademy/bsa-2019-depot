@@ -261,6 +261,17 @@ $blue: #2e53db;
   }
 }
 
+:global(.calendar-wrapper.calendar-wrapper-meaning) {
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 80%;
+  :global(.calendar.calendar-meaning) {
+    width: 75px;
+    padding: 0 5px;
+  }
+}
+
 @media (max-width: 1024px) {
   :global(.thirteen.wide.column):local(.contribution_years) {
     width: 100%;

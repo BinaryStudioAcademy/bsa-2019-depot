@@ -6,8 +6,12 @@ import Overview from '../../containers/Overview';
 import RepositoriesList from '../../containers/RepositoriesList';
 import StarsTab from '../../containers/StarsTab';
 import UserInfo from '../../components/UserInfo';
+import AdditionalUserInfo from '../../components/AdditionalUserInfo';
 import DashboardHeader, { tabs } from '../../components/DashboardHeader';
+import RepositoriesFilters from '../../components/RepositoriesFilters';
 import { getUserDetailed } from '../../services/userService';
+import Spinner from '../../components/Spinner';
+import OrganizationDashboard from '../OrganizationDashboard';
 
 const initialUserData = {};
 
@@ -40,7 +44,12 @@ class Dashboard extends React.Component {
   renderTab(tab) {
     switch (tab) {
     case tabs.repositories:
-      return <RepositoriesList />;
+      return (
+          <>
+            <RepositoriesFilters />
+            <RepositoriesList />
+          </>
+      );
     case tabs.projects:
       return <div>Hello! Projects are there</div>;
     case tabs.stars:
@@ -56,22 +65,44 @@ class Dashboard extends React.Component {
 
   render() {
     const {
-      userData: { name, username, imgUrl, repositoriesCount, projectsCount, starsCount, followersCount, followingCount }
+      userData,
+      userData: {
+        name,
+        username,
+        imgUrl,
+        repositoriesCount,
+        projectsCount,
+        starsCount,
+        followersCount,
+        followingCount,
+        type,
+        bio,
+        url: link,
+        email,
+        company,
+        location
+      }
     } = this.state;
-
     const {
       location: { search },
       match: { url }
     } = this.props;
     const { tab } = parse(search);
 
-    return (
+    if (!type) {
+      return <Spinner />;
+    }
+
+    return type === 'ORG' ? (
+      <OrganizationDashboard userData={userData} />
+    ) : (
       <Container>
         <Divider hidden />
         <Grid>
           <Grid.Row columns={2}>
             <Grid.Column mobile={16} tablet={4} computer={4}>
               <UserInfo username={username} name={name} imgUrl={imgUrl} />
+              <AdditionalUserInfo bio={bio} link={link} location={location} email={email} company={company} />
             </Grid.Column>
 
             <Grid.Column mobile={16} tablet={12} computer={12}>
