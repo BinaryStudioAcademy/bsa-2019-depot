@@ -71,14 +71,14 @@ class Forgot extends Component {
                       className={`${errors.email && touched.email ? 'has-error' : 'no-error'}`}
                     />
                     <InputError name="email" />
-                    <Button type="submit" color="green" fluid size="large" disabled={errors.email && touched.email}>
+                    <Button type="submit" color="blue" fluid size="large" disabled={errors.email && touched.email}>
                       Send password reset email
                     </Button>
                   </div>
                 ) : (
                   <div>
                     {succsessMessage}
-                    <Button type="button" color="green" fluid size="large" onClick={this.returnToSignIn}>
+                    <Button type="button" color="blue" fluid size="large" onClick={this.returnToSignIn}>
                       Return to sign in
                     </Button>
                   </div>

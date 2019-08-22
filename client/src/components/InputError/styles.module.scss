@@ -1,6 +1,7 @@
+$red: #ed1a37;
+
 :local(.error_wrapper) {
-  color: #d0a89c;
-  position: absolute;
+  color: $red;
   margin-top: -5px;
   font-size: 85%;
 }
