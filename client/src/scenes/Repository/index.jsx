@@ -25,6 +25,11 @@ class RepositoryPage extends React.Component {
 
     const issueCount = issues.length;
     const forkCount = 22;
+    const pathToDir = location.pathname.replace(`${match.url}/tree/master`, '').split('/');
+    const params = pathToDir
+      .filter(path => path)
+      .map(param => `:${param}`)
+      .join('/');
 
     return (
       <>
@@ -40,7 +45,8 @@ class RepositoryPage extends React.Component {
           <div className={styles.repoContentContainer}>
             <Switch>
               <Route exact path={`${match.path}/`} component={RepositoryTab} />
-              <Route path={`${match.path}/tree/:branch`} component={RepositoryTab} />
+              <Route exact path={`${match.path}/tree/:branch`} component={RepositoryTab} />
+              <Route exact path={`${match.path}/tree/:branch/${params}`} component={RepositoryTab} />
               <Route exact path={`${match.path}/commits/:branch`} component={CommitsPage} />
               <Route exact path={`${match.path}/commit/:hash`} component={DiffCommitView} />
               <Route exact path={`${match.path}/issues`} component={IssuesTab} />

@@ -16,8 +16,8 @@ class FileViewPage extends React.Component {
     super(props);
 
     const { match, location } = this.props;
-
     this.filepath = location.pathname.replace(`${match.url}/`, '');
+
     this.state = {
       fileData: {},
       loading: true,
@@ -110,7 +110,7 @@ class FileViewPage extends React.Component {
         <div className={styles.filePathRow}>
           <Breadcrumb size="big" className={styles.filePath}>
             <Breadcrumb.Section>
-              <Link to={`/${owner}/${reponame}`}>{reponame}</Link>
+              <Link to={`/${owner}/${reponame}/tree/${branch}`}>{reponame}</Link>
             </Breadcrumb.Section>
             <Breadcrumb.Divider />
             <FilePathBreadcrumbSections owner={owner} reponame={reponame} branch={branch} filepath={filepathDirs} />
