@@ -13,8 +13,8 @@ $button-color: #4f60ac;
   }
 
   :local(.new_repo) {
-    background-color: $button-color;
     color: #fff;
+    height: 100%;
   }
   :local(.new_repo_icon) {
     margin-right: 5px;
