@@ -31,6 +31,10 @@ class StarRepository extends BaseRepository {
                 'starsCount'
               ]
             ]
+          },
+          include: {
+            model: UserModel,
+            attributes: ['username']
           }
         }
       ]
