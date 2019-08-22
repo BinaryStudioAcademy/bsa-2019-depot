@@ -8,13 +8,7 @@ import ForkButton from '../ForkButton';
 
 import styles from './styles.module.scss';
 
-const RepositoryHeader = ({ currentRepoInfo: { forkedCount, originalRepo }, owner, username, repoName, issueCount, activePage, baseUrl }) => {
-const goToRootDir = (history, url) => () => {
-  history.push(url);
-  window.location.reload();
-};
-
-const RepositoryHeader = ({ owner, username, repoName, forkCount, issueCount, activePage, baseUrl, history }) => {
+const RepositoryHeader = ({ currentRepoInfo: { forkedCount, originalRepo }, owner, username, repoName, issueCount, activePage, baseUrl, history }) => {
   let activeTab;
   switch (activePage) {
     case 'issues':
@@ -29,6 +23,11 @@ const RepositoryHeader = ({ owner, username, repoName, forkCount, issueCount, ac
     default:
       activeTab = 'code';
   }
+
+  const goToRootDir = (history, url) => () => {
+    history.push(url);
+    window.location.reload();
+  };  
 
   const renderOrignalRepoLink = () => {
     if(originalRepo) {
@@ -108,4 +107,7 @@ const mapStateToProps = ({
   currentRepoInfo
 });
 
-export default connect(mapStateToProps)(withRouter(RepositoryHeader));
+export default connect(
+  mapStateToProps
+)
+(withRouter(RepositoryHeader));

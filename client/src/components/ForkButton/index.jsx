@@ -67,9 +67,9 @@ class ForkButton extends Component {
             <Modal.Header>You are going to fork {repoName}</Modal.Header>
             <Modal.Actions>
               <Button onClick={this.handleClose}>Cancel</Button>
-                <Button primary onClick={this.handleFork}>
-                  Fork
-                </Button>
+              <Button primary onClick={this.handleFork}>
+                Fork
+              </Button>
             </Modal.Actions>
           </>
         )}
@@ -81,12 +81,13 @@ class ForkButton extends Component {
 ForkButton.propTypes = {
   owner: PropTypes.string,
   repoName: PropTypes.string,
-  forkCount: PropTypes.number,
+  forkedCount: PropTypes.number,
   currentUser: PropTypes.object,
   forkRepo: PropTypes.func,
   clearModal: PropTypes.func,
   loading: PropTypes.bool,
-  username: PropTypes.string
+  username: PropTypes.string,
+  forkRepoData: PropTypes.object
 };
 
 ForkButton.defaultProps = {
