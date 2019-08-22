@@ -28,8 +28,8 @@ class UserRepository extends BaseRepository {
   }
 
   async setUserPassword(email, password) {
-    const user = await this.getByEmail(email);
-    return this.updateById(user.dataValues.id, { password: cryptoHelper.encryptSync(password) });
+    const user = (await this.getByEmail(email)).get({ plain: true });
+    return this.updateById(user.id, { password: cryptoHelper.encryptSync(password) });
   }
 }
 

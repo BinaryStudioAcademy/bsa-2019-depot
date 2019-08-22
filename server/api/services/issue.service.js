@@ -3,7 +3,7 @@ const issueCommentRepository = require('../../data/repositories/issue-comment.re
 
 const addIssue = issueData => issueRepository.addIssue(issueData);
 
-const updateIssueById = ({id, ...issueData}) => issueRepository.updateIssueById(id, {issueData});
+const updateIssueById = ({ id, ...issueData }) => issueRepository.updateIssueById(id, { issueData });
 
 const getAllRepoIssues = repoId => issueRepository.getRepositoryIssues(repoId);
 
@@ -11,7 +11,7 @@ const getAllIssueComments = issueId => issueCommentRepository.getAllIssueComment
 
 const addIssueComment = issueCommentData => issueCommentRepository.addIssueComment(issueCommentData);
 
-const updateIssueCommentById = ({id, ...issueCommentData}) => issueCommentRepository.updateIssueCommentById(id, {issueCommentData});
+const updateIssueCommentById = ({ id, ...issueCommentData }) => issueCommentRepository.updateIssueCommentById(id, { issueCommentData });
 
 const deleteIssueCommentById = issueCommentId => issueCommentRepository.deleteIssueCommentById(issueCommentId);
 
