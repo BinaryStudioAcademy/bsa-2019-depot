@@ -12,11 +12,21 @@ import { getUserImgLink } from '../../helpers/imageHelper';
 import { InputError } from '../../components/InputError';
 
 const validationSchema = Yup.object().shape({
-  name: Yup.string().max(255, 'Maximum length - 255 characters'),
-  bio: Yup.string().max(160, 'Maximum length - 160 characters'),
-  url: Yup.string().max(255, 'Maximum length - 255 characters'),
-  company: Yup.string().max(255, 'Maximum length - 255 characters'),
-  location: Yup.string().max(255, 'Maximum length - 255 characters')
+  name: Yup.string()
+    .nullable()
+    .max(255, 'Maximum length - 255 characters'),
+  bio: Yup.string()
+    .nullable()
+    .max(160, 'Maximum length - 160 characters'),
+  url: Yup.string()
+    .nullable()
+    .max(255, 'Maximum length - 255 characters'),
+  company: Yup.string()
+    .nullable()
+    .max(255, 'Maximum length - 255 characters'),
+  location: Yup.string()
+    .nullable()
+    .max(255, 'Maximum length - 255 characters')
 });
 
 class SettingsProfile extends Component {
