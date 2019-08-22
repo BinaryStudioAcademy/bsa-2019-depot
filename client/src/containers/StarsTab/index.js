@@ -53,7 +53,7 @@ class StarsTab extends React.Component {
     const { match: { params: { username } } } = this.props;
 
     return (
-      <div>
+      <>
         <div className={styles.tabHeader}>
           <h2>Repositories</h2>
         </div>
@@ -68,7 +68,7 @@ class StarsTab extends React.Component {
             />
           ))}
         </div>
-      </div>
+      </>
     );
   }
 };

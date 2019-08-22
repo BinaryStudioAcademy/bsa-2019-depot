@@ -46,20 +46,16 @@ class RepositoryItem extends React.Component {
   }
 
   getRepoLink({ username, name, type }) {
-    switch (type) {
-    case 'stars':
-      return (
-      <Link to={`${username}/${name}`} className={styles.repo_name}>
-        <span className={styles.repo_owner}>{username}</span>&nbsp;/&nbsp;{name}
-      </Link>
-      );
-    default:
-      return (
+    return type === 'stars'
+      ? (
+        <Link to={`${username}/${name}`} className={styles.repo_name}>
+          <span className={styles.repo_owner}>{username}</span>&nbsp;/&nbsp;{name}
+        </Link>
+      ) : (
         <Link to={`${username}/${name}`} className={styles.repo_name}>
           {name}
         </Link>
       );
-    }
   }
 
   render() {
