@@ -44,7 +44,7 @@ class RepositoryPage extends React.Component {
         <Container>
           <div className={styles.repoContentContainer}>
             <Switch>
-              <Route exact path={`${match.path}/`} component={RepositoryTab} />
+              <Route exact path={`${match.path}`} component={RepositoryTab} />
               <Route exact path={`${match.path}/tree/:branch`} component={RepositoryTab} />
               <Route exact path={`${match.path}/tree/:branch/${params}`} component={RepositoryTab} />
               <Route exact path={`${match.path}/commits/:branch`} component={CommitsPage} />

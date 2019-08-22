@@ -65,6 +65,7 @@ class CodeTab extends React.Component {
     const defaultPath = `/${username}/${reponame}/tree/${actualBranch}`;
     const pathToDir = match.url
       .replace(`${defaultPath}`, '')
+      .replace(`${username}/${reponame}`, '')
       .split('/')
       .filter(path => path)
       .join('/');
