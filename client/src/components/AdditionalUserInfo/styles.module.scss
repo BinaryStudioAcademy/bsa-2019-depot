@@ -1,0 +1,18 @@
+:local(.additionInfo) {
+  font-size: 87.5%;
+  margin-top: 10px;
+  div {
+    word-wrap: break-word;
+  }
+  li {
+    width: 100%;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3em;
+    white-space: nowrap;
+  }
+  i {
+    margin-right: 7px !important;
+  }
+}

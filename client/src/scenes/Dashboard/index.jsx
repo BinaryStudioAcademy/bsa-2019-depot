@@ -6,6 +6,7 @@ import Overview from '../../containers/Overview';
 import RepositoriesList from '../../containers/RepositoriesList';
 import StarsTab from '../../containers/StarsTab';
 import UserInfo from '../../components/UserInfo';
+import AdditionalUserInfo from '../../components/AdditionalUserInfo';
 import DashboardHeader, { tabs } from '../../components/DashboardHeader';
 import RepositoriesFilters from '../../components/RepositoriesFilters';
 import { getUserDetailed } from '../../services/userService';
@@ -74,10 +75,14 @@ class Dashboard extends React.Component {
         starsCount,
         followersCount,
         followingCount,
-        type
+        type,
+        bio,
+        url: link,
+        email,
+        company,
+        location
       }
     } = this.state;
-
     const {
       location: { search },
       match: { url }
@@ -97,6 +102,7 @@ class Dashboard extends React.Component {
           <Grid.Row columns={2}>
             <Grid.Column mobile={16} tablet={4} computer={4}>
               <UserInfo username={username} name={name} imgUrl={imgUrl} />
+              <AdditionalUserInfo bio={bio} link={link} location={location} email={email} company={company} />
             </Grid.Column>
 
             <Grid.Column mobile={16} tablet={12} computer={12}>
