@@ -3,7 +3,7 @@
 ![TravisCI](https://api.travis-ci.org/BinaryStudioAcademy/bsa-2019-depot.svg?branch=develop)
 
 Powerful tool for team work with code, based on GIT version control system.
-![logo](https://user-images.githubusercontent.com/28801003/62847518-5f0e1c80-bcdf-11e9-9621-a0aeb4265019.png)
+![logo](https://user-images.githubusercontent.com/28801003/63500492-9eecb500-c4d2-11e9-9077-a7f398207217.png)
 
 ## About
 
