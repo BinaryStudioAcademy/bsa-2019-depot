@@ -6,7 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 import { createIssue, fetchCurrentRepo } from '../../routines/routines';
 import * as Yup from 'yup';
-import { Container, Grid, Button, Dropdown, Form, Popup, Image } from 'semantic-ui-react';
+import { Container, Grid, Button, Dropdown, Form } from 'semantic-ui-react';
 import { Formik, Field } from 'formik';
 import styles from './styles.module.scss';
 import { InputError } from '../../components/InputError';
@@ -113,12 +113,7 @@ class CreateIssuePage extends React.Component {
           {({ values: { title }, errors, handleChange, handleSubmit }) => (
             <Form className={styles.issueForm} onSubmit={handleSubmit}>
               <Grid>
-                <Grid.Column>
-                  <Popup
-                    content={'current user'}
-                    trigger={<Image avatar src="https://react.semantic-ui.com/images/wireframe/image.png" />}
-                  />
-                </Grid.Column>
+                <Grid.Column></Grid.Column>
                 <Grid.Column width={10}>
                   <Field
                     name="title"
