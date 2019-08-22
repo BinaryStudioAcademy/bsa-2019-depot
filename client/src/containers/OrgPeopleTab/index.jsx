@@ -22,7 +22,7 @@ class OrgPeopleTab extends React.Component {
         </div>
         <div className={styles.memberListContainer}>
           <ul>
-            {this.props.orgMembers.map(member => {
+            {orgMembers.map(member => {
               return (
                 <li key={member.username} className={styles.memberItem}>
                   <div className={styles.memberImg}>

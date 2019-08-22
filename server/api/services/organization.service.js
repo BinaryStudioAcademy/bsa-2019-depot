@@ -10,7 +10,6 @@ const getOrganizationOwner = async (orgId) => {
   const ownerRole = await RoleRepository.getByName('OWNER');
   const ownerRoleId = ownerRole.get({ plain: true }).id;
   const orgMembers = await getOrganizationMembers(orgId);
-  console.log(orgMembers);
   const owner = orgMembers.filter(member => member.roleId === ownerRoleId);
   const ownerId = owner[0].get({ plain: true }).userId;
   return { ownerId };
