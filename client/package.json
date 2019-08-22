@@ -37,7 +37,7 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build",
+    "build": "craco --max_old_space_size=4096 build",
     "test": "craco test",
     "test:e2e": "./node_modules/.bin/wdio wdio.conf.js",
     "eject": "craco eject",
