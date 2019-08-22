@@ -53,4 +53,7 @@ const mapDispatchToProps = {
   fetchFileTree
 };
 
-export default connect(mapDispatchToProps)(withRouter(FilePathBreadcrumbSections));
+export default connect(
+  null,
+  mapDispatchToProps
+)(withRouter(FilePathBreadcrumbSections));
