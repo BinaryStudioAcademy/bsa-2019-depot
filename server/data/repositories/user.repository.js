@@ -1,6 +1,7 @@
 const BaseRepository = require('./base.repository');
 const { UserModel } = require('../models/index');
 const cryptoHelper = require('../../helpers/crypto.helper');
+const sequelize = require('../db/connection');
 
 class UserRepository extends BaseRepository {
   addUser({ ...userData }) {
@@ -28,8 +29,32 @@ class UserRepository extends BaseRepository {
   }
 
   async setUserPassword(email, password) {
-    const user = await this.getByEmail(email);
-    return this.updateById(user.dataValues.id, { password: cryptoHelper.encryptSync(password) });
+    const user = (await this.getByEmail(email)).get({ plain: true });
+    return this.updateById(user.id, { password: cryptoHelper.encryptSync(password) });
+  }
+
+  getUserDetailed(username) {
+    return this.model.findOne({
+      where: { username },
+      attributes: {
+        include: [
+          [
+            sequelize.literal(`
+            (SELECT COUNT(*)
+            FROM "repositories"
+            WHERE "repositories"."userId" = "user"."id")`),
+            'repositoriesCount'
+          ],
+          [
+            sequelize.literal(`
+            (SELECT COUNT(*)
+            FROM "stars"
+            WHERE "user"."id" = "stars"."userId")`),
+            'starsCount'
+          ]
+        ]
+      }
+    });
   }
 }
 

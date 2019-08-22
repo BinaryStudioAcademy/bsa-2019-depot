@@ -225,10 +225,7 @@ class DiffCommitView extends Component {
           <Form onSubmit={this.onSubmit}>
             <Grid>
               <Grid.Column width={1}>
-                <Item.Image
-                  size="tiny"
-                  src={getUserImgLink(currentUser.imgUrl)}
-                />
+                <Item.Image size="tiny" src={getUserImgLink(currentUser.imgUrl)} />
               </Grid.Column>
               <Grid.Column width={15}>
                 <ReactMde

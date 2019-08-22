@@ -23,6 +23,12 @@ $blue: #2e53db;
   }
 }
 
+:local(.pinned_header) {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
 .section {
   margin-bottom: 20px;
 }

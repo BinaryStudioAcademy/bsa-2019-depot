@@ -1,8 +1,8 @@
 import callWebApi from '../helpers/webApiHelper';
 
-export const getIssues = async ({ username: owner, repoName, repositoryId }) => {
+export const getIssues = async ({ username: owner, reponame, repositoryId }) => {
   const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/${repoName}/issues`,
+    endpoint: `/api/repo/${owner}/${reponame}/issues`,
     type: 'GET',
     query: {
       repositoryId
@@ -11,26 +11,26 @@ export const getIssues = async ({ username: owner, repoName, repositoryId }) => 
   return response.json();
 };
 
-export const createIssue = async ({ username: owner, repoName, ...request }) => {
+export const createIssue = async ({ username: owner, reponame, ...request }) => {
   const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/${repoName}/issues`,
+    endpoint: `/api/repo/${owner}/${reponame}/issues`,
     type: 'POST',
     request
   });
   return response.json();
 };
 
-export const getIssueComments = async ({ username: owner, repoName, issueNumber }) => {
+export const getIssueComments = async ({ username: owner, reponame, issueNumber }) => {
   const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/${repoName}/issues/${issueNumber}/comments`,
+    endpoint: `/api/repo/${owner}/${reponame}/issues/${issueNumber}/comments`,
     type: 'GET'
   });
   return response.json();
 };
 
-export const postIssueComment = async ({ username: owner, repoName, issueNumber, ...request }) => {
+export const postIssueComment = async ({ username: owner, reponame, issueNumber, ...request }) => {
   const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/${repoName}/issues/${issueNumber}/comments`,
+    endpoint: `/api/repo/${owner}/${reponame}/issues/${issueNumber}/comments`,
     type: 'POST',
     request
   });

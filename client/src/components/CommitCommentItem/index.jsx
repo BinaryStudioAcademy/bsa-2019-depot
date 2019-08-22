@@ -115,10 +115,7 @@ export class CommitCommentItem extends Component {
 
     return (
       <Item className="comment-item">
-        <Item.Image
-          size="tiny"
-          src={getUserImgLink(imgUrl)}
-        />
+        <Item.Image size="tiny" src={getUserImgLink(imgUrl)} />
         <Item.Content>{commentElement}</Item.Content>
       </Item>
     );

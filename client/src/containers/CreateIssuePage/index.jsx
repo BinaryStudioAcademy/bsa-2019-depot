@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import ReactMde from 'react-mde';
 import ReactMarkdown from 'react-markdown';
 import 'react-mde/lib/styles/css/react-mde-all.css';
-import { createIssue } from '../../routines/routines';
+import { createIssue, fetchCurrentRepo } from '../../routines/routines';
 import * as Yup from 'yup';
 import { Container, Grid, Button, Dropdown, Form, Popup, Image } from 'semantic-ui-react';
 import { Formik, Field } from 'formik';
@@ -46,6 +46,19 @@ class CreateIssuePage extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
+  componentDidMount() {
+    const {
+      repositoryId,
+      fetchCurrentRepo,
+      match: {
+        params: { reponame, username }
+      }
+    } = this.props;
+    if (!repositoryId) {
+      fetchCurrentRepo({ username, reponame });
+    }
+  }
+
   onBodyChange(body) {
     this.setState({ ...this.state, body });
   }
@@ -63,7 +76,7 @@ class CreateIssuePage extends React.Component {
     const {
       createIssue,
       username,
-      repoName,
+      reponame,
       repositoryId,
       userId,
       history,
@@ -74,7 +87,7 @@ class CreateIssuePage extends React.Component {
       title,
       body,
       username,
-      repoName,
+      reponame,
       userId,
       repositoryId,
       isOpened: true,
@@ -164,17 +177,19 @@ class CreateIssuePage extends React.Component {
 
 CreateIssuePage.propTypes = {
   username: PropTypes.string.isRequired,
-  repoName: PropTypes.string.isRequired,
-  repositoryId: PropTypes.number.isRequired,
+  reponame: PropTypes.string,
+  repositoryId: PropTypes.number,
   userId: PropTypes.string.isRequired,
   createIssue: PropTypes.func.isRequired,
+  fetchCurrentRepo: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
     isExact: PropTypes.bool.isRequired,
     path: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired
-  }).isRequired
+  }).isRequired,
+  loading: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = ({
@@ -187,12 +202,13 @@ const mapStateToProps = ({
 }) => ({
   userId,
   username,
-  repoName: name,
+  reponame: name,
   repositoryId: id
 });
 
 const mapDispatchToProps = {
-  createIssue
+  createIssue,
+  fetchCurrentRepo
 };
 
 export default connect(
