@@ -117,9 +117,7 @@ export class CommitCommentItem extends Component {
       <Item className="comment-item">
         <Item.Image
           size="tiny"
-          src={
-            imgUrl ? getUserImgLink(imgUrl) : 'https://forwardsummit.ca/wp-content/uploads/2019/01/avatar-default.png'
-          }
+          src={getUserImgLink(imgUrl)}
         />
         <Item.Content>{commentElement}</Item.Content>
       </Item>

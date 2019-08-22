@@ -227,11 +227,7 @@ class DiffCommitView extends Component {
               <Grid.Column width={1}>
                 <Item.Image
                   size="tiny"
-                  src={
-                    currentUser.imgUrl
-                      ? getUserImgLink(currentUser.imgUrl)
-                      : 'https://forwardsummit.ca/wp-content/uploads/2019/01/avatar-default.png'
-                  }
+                  src={getUserImgLink(currentUser.imgUrl)}
                 />
               </Grid.Column>
               <Grid.Column width={15}>
