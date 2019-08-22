@@ -8,20 +8,36 @@ import ForkButton from '../ForkButton';
 
 import styles from './styles.module.scss';
 
-const RepositoryHeader = ({ owner, username, repoName, forkCount, issueCount, activePage, baseUrl }) => {
+const RepositoryHeader = ({ currentRepoInfo: { forkedCount, originalRepo }, owner, username, repoName, issueCount, activePage, baseUrl }) => {
   let activeTab;
   switch (activePage) {
-  case 'issues':
-    activeTab = 'issues';
-    break;
-  case 'commits':
-    activeTab = 'code';
-    break;
-  case 'settings':
-    activeTab = 'settings';
-    break;
-  default:
-    activeTab = 'code';
+    case 'issues':
+      activeTab = 'issues';
+      break;
+    case 'commits':
+      activeTab = 'code';
+      break;
+    case 'settings':
+      activeTab = 'settings';
+      break;
+    default:
+      activeTab = 'code';
+  }
+
+  const renderOrignalRepoLink = () => {
+    if(originalRepo) {
+      const { name: forkedRepoName, user: { username: forkedRepoOwner } } = originalRepo;
+      if (forkedRepoName && forkedRepoOwner) {
+        return (
+          <div className={styles.originalRepoLink}>
+            <span>
+              forked from{' '}
+              <a href={`/${forkedRepoOwner}/${forkedRepoName}`}>{`${forkedRepoOwner}/${forkedRepoName}`}</a>
+            </span>
+          </div>
+        );
+      }
+    }
   }
 
   return (
@@ -35,9 +51,10 @@ const RepositoryHeader = ({ owner, username, repoName, forkCount, issueCount, ac
                 <Link to="">{owner}</Link>
                 <span className={styles.pathDivider}>/</span>
                 <Link to={baseUrl}>{repoName}</Link>
-              </span>
+                {renderOrignalRepoLink()}
+              </span>  
             </div>
-            <ForkButton owner={owner} repoName={repoName} forkCount={forkCount} />
+            <ForkButton owner={owner} repoName={repoName} forkedCount={forkedCount} />
           </div>
           <div className="ui top attached tabular menu">
             <div className={`${activeTab === 'code' && 'active'} item`}>
@@ -68,7 +85,6 @@ RepositoryHeader.propTypes = {
   owner: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
   repoName: PropTypes.string.isRequired,
-  forkCount: PropTypes.number.isRequired,
   issueCount: PropTypes.number.isRequired,
   activePage: PropTypes.string,
   baseUrl: PropTypes.string.isRequired
@@ -77,9 +93,11 @@ RepositoryHeader.propTypes = {
 const mapStateToProps = ({
   profile: {
     currentUser: { username }
-  }
+  },
+  currentRepo: { currentRepoInfo }
 }) => ({
-  username
+  username,
+  currentRepoInfo
 });
 
 export default connect(mapStateToProps)(RepositoryHeader);

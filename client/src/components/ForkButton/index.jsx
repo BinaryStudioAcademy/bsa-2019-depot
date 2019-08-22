@@ -6,13 +6,23 @@ import { forkRepo } from '../../routines/routines';
 import { actions } from './actions';
 
 class ForkButton extends Component {
-  state = { modalOpen: false };
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalOpen: false
+    };
+  }
 
   handleOpen = () => this.setState({ modalOpen: true });
 
   handleClose = () => {
     this.props.clearModal();
     this.setState({ modalOpen: false });
+  };
+
+  handleRedirect = (username, repoName) => {
+    this.handleClose();
+    window.location.replace(`/${username}/${repoName}`);
   };
 
   handleFork = () => {
@@ -22,10 +32,11 @@ class ForkButton extends Component {
   };
 
   render() {
-    const { forkCount, repoName, error, loading, path } = this.props;
+    const { forkRepoData: { loading, username }, repoName, forkedCount } = this.props;
     return (
       <Modal
         closeIcon
+        dimmer='inverted'
         open={this.state.modalOpen}
         onClose={this.handleClose}
         size="small"
@@ -36,29 +47,30 @@ class ForkButton extends Component {
               Fork
             </Button>
             <Label as="a" basic pointing="left">
-              {forkCount}
+              {forkedCount}
             </Label>
           </Button>
         }
       >
-        <Modal.Header>You are going to fork {repoName}</Modal.Header>
-        {error ? <Modal.Content>{error}</Modal.Content> : null}
-        {path ? <Modal.Content>Path to your forked repository: {path}</Modal.Content> : null}
         {loading ? (
-          <Modal.Content>
-            {' '}
-            <Loader inline="centered" />
-          </Modal.Content>
-        ) : null}
-
-        <Modal.Actions>
-          <Button onClick={this.handleClose}>{!error && !path ? 'Cancel' : 'Ok'}</Button>
-          {!error && !path ? (
-            <Button primary onClick={this.handleFork}>
-              Fork
-            </Button>
-          ) : null}
-        </Modal.Actions>
+          <>
+            <Modal.Header>You are going to fork {repoName}</Modal.Header>
+            <Modal.Content>
+              {' '}
+              <Loader active inline="centered" />
+            </Modal.Content>
+          </>
+        ) : username ? this.handleRedirect(username, repoName) : (
+          <>
+            <Modal.Header>You are going to fork {repoName}</Modal.Header>
+            <Modal.Actions>
+              <Button onClick={this.handleClose}>Cancel</Button>
+                <Button primary onClick={this.handleFork}>
+                  Fork
+                </Button>
+            </Modal.Actions>
+          </>
+        )}
       </Modal>
     );
   }
@@ -71,20 +83,26 @@ ForkButton.propTypes = {
   currentUser: PropTypes.object,
   forkRepo: PropTypes.func,
   clearModal: PropTypes.func,
-  error: PropTypes.bool,
   loading: PropTypes.bool,
-  path: PropTypes.string
+  username: PropTypes.string
 };
 
 ForkButton.defaultProps = {
   owner: '',
   repoName: '',
-  forkCount: 0
+  loading: false,
+  username: null,
+  forkedCount: 0
 };
 
-const mapStateToProps = state => ({ ...state.profile, ...state.forkRepo });
+const mapStateToProps = ({ forkRepo }) => ({
+  forkRepoData: forkRepo
+});
 
-const mapDispatchToProps = { forkRepo, ...actions };
+const mapDispatchToProps = {
+  forkRepo,
+  ...actions
+};
 
 export default connect(
   mapStateToProps,

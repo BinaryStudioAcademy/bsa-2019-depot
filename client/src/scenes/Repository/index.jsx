@@ -24,7 +24,6 @@ class RepositoryPage extends React.Component {
     const { username, reponame } = match.params;
 
     const issueCount = issues.length;
-    const forkCount = 22;
 
     return (
       <>
@@ -32,7 +31,6 @@ class RepositoryPage extends React.Component {
           owner={username}
           repoName={reponame}
           issueCount={issueCount}
-          forkCount={forkCount}
           activePage={location.pathname.split('/')[3]}
           baseUrl={match.url}
         />
@@ -75,7 +73,7 @@ RepositoryPage.propTypes = {
   issues: PropTypes.array.isRequired
 };
 
-const mapStateToProps = ({ issuesData: { issues } }) => ({
+const mapStateToProps = ({ issuesData: { issues }}) => ({
   issues
 });
 

@@ -20,6 +20,10 @@ module.exports = (models) => {
     foreignKey: 'forkedFromRepoId',
     as: 'forkedRepos'
   });
+  Repository.belongsTo(Repository, {
+    foreignKey: 'forkedFromRepoId',
+    as: 'originalRepo'
+  });
   Repository.belongsTo(User);
   Issue.belongsTo(User);
   Issue.belongsTo(Repository);

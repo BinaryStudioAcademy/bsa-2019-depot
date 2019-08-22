@@ -37,16 +37,27 @@ class RepositoryRepository extends BaseRepository {
   getByUserAndReponame(userId, reponame) {
     return this.model.findOne({
       where: { name: reponame, userId },
-      group: ['repository.id', 'forkedRepos.id'],
       attributes: {
-        include: [[sequelize.fn('COUNT', sequelize.col('forkedRepos.id')), 'forkedCount']]
+        include: [
+          [
+            sequelize.literal(`(SELECT COUNT(*)
+            FROM "repositories" 
+            WHERE "repository"."id" = "repositories"."forkedFromRepoId")`),
+            'forkedCount'
+          ]
+        ]
       },
       include: [
         {
           model: this.model,
-          as: 'forkedRepos',
-          attributes: [],
-          duplicating: false
+          as: 'originalRepo',
+          attributes: ['id', 'name'],
+          include: [
+            {
+              model: UserModel,
+              attributes: ['id', 'username']
+            }
+          ]
         }
       ]
     });

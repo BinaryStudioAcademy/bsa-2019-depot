@@ -46,5 +46,11 @@
         margin: 0 5px;
       }
     }
+    :local(.originalRepoLink) {
+      font-size: 0.65em;
+      margin: 6px 0 0 23px;
+      line-height: 10px;
+      white-space: nowrap;
+    }
   }
 }

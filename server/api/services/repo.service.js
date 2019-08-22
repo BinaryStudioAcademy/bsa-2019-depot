@@ -146,7 +146,7 @@ const forkRepo = async ({
           description,
           forkedFromRepoId
         });
-        return { status: true, path: target };
+        return { status: true, username };
       })
       .catch(err => ({ status: false, error: err.message }));
   } catch (err) {
