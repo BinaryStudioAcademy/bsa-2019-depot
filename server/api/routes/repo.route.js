@@ -136,7 +136,7 @@ router
       body: {
         owner,
         repoData: {
-          id: forkedFromRepoId, name: repoName, website, description
+          id: forkedFromRepoId, name, website, description
         }
       },
       user: {
@@ -148,7 +148,7 @@ router
       userId,
       username,
       owner,
-      repoName,
+      name,
       website,
       description,
       forkedFromRepoId

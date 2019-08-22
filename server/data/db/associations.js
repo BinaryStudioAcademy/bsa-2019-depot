@@ -16,9 +16,9 @@ module.exports = (models) => {
   User.hasMany(OrgUser, { foreignKey: 'orgId' });
   Role.hasMany(OrgUser, { foreignKey: 'roleId' });
 
-  Repository.belongsTo(Repository, {
+  Repository.hasMany(Repository, {
     foreignKey: 'forkedFromRepoId',
-    as: 'originalRepo'
+    as: 'forkedRepos'
   });
   Repository.belongsTo(User);
   Issue.belongsTo(User);
