@@ -17,6 +17,10 @@ $secondary-color: #d1d5da;
   li {
     flex-shrink: 0;
     margin-right: 1em;
+
+    .tabName {
+      font-size: 88%;
+    }
   }
 }
 
@@ -31,7 +35,7 @@ $secondary-color: #d1d5da;
     border-bottom: 2px solid $secondary-color;
   }
 
-  & > span {
+  & > span:not(.tabName) {
     display: inline-block;
     margin-left: 2px;
     padding: 0.15em 0.3em;

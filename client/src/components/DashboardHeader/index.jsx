@@ -35,32 +35,37 @@ const DashboardHeader = ({
       <ul className={styles.navbar_list}>
         <li>
           <Link to={baseUrl} className={getClassName(tabs.overview, activeTab)}>
-            Overview
+            <span className={styles.tabName}>Overview</span>
           </Link>
         </li>
         <li>
           <Link to={`${baseUrl}?tab=repositories`} className={getClassName(tabs.repositories, activeTab)}>
-            Repositories<span>{repoCount || 0}</span>
+            <span className={styles.tabName}>Repositories</span>
+            <span>{repoCount || 0}</span>
           </Link>
         </li>
         <li>
           <Link to={`${baseUrl}?tab=projects`} className={getClassName(tabs.projects, activeTab)}>
-            Projects<span>{projectsCount || 0}</span>
+            <span className={styles.tabName}>Projects</span>
+            <span>{projectsCount || 0}</span>
           </Link>
         </li>
         <li>
           <Link to={`${baseUrl}?tab=stars`} className={getClassName(tabs.stars, activeTab)}>
-            Stars<span>{starsCount || 0}</span>
+            <span className={styles.tabName}>Stars</span>
+            <span>{starsCount || 0}</span>
           </Link>
         </li>
         <li>
           <Link to={`${baseUrl}?tab=followers`} className={getClassName(tabs.followers, activeTab)}>
-            Followers<span>{followersCount || 0}</span>
+            <span className={styles.tabName}>Followers</span>
+            <span>{followersCount || 0}</span>
           </Link>
         </li>
         <li>
           <Link to={`${baseUrl}?tab=following`} className={getClassName(tabs.following, activeTab)}>
-            Following<span>{followingCount || 0}</span>
+            <span className={styles.tabName}>Following</span>
+            <span>{followingCount || 0}</span>
           </Link>
         </li>
       </ul>

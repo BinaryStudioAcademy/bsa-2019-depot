@@ -24,7 +24,7 @@ export class RepositoriesFilters extends React.Component {
 
     return (
       <Container className={styles.repos_filters}>
-        <Input placeholder="Find a repository…" className={styles.repos_search_input}></Input>
+        <Input placeholder="Find a repository…" className={styles.repos_search_input} />
         <div>
           <Dropdown
             placeholder="Type: All"
@@ -46,7 +46,7 @@ export class RepositoriesFilters extends React.Component {
         {(orgPage ? isOwner : true) && (
           <div className={styles.new_repo_wrapper}>
             <Link to="/new">
-              <Button className={styles.new_repo}>
+              <Button primary className={styles.new_repo}>
                 <Octicon icon={Repo} className={styles.new_repo_icon} />
                 New
               </Button>
