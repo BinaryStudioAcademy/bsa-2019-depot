@@ -53,8 +53,8 @@ IssuesList.propTypes = {
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       title: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired,
-      author: PropTypes.shape({
+      body: PropTypes.string,
+      user: PropTypes.shape({
         username: PropTypes.string.isRequired
       }).isRequired,
       assignees: PropTypes.arrayOf(
@@ -70,7 +70,7 @@ IssuesList.propTypes = {
           color: PropTypes.string.isRequired
         })
       ),
-      opened: PropTypes.bool.isRequired,
+      isOpened: PropTypes.bool.isRequired,
       commentCount: PropTypes.number,
       createdAt: PropTypes.string.isRequired
     })
