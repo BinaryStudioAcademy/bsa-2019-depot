@@ -32,7 +32,8 @@ router.delete('/:commentId', (req, res, next) => {
   const { commentId } = req.params;
   const { userId } = req.body;
   deleteCommitComment(commentId, userId)
-    .then(result => (result ? res.send({ id: commentId }) : res.sendStatus(400).send({ error: `Cannot delete comment ${commentId}` })))
+    // .then(result => (result ? res.send({ id: commentId }) : res.sendStatus(400).send({ error: `Cannot delete comment ${commentId}` })))
+    .then(() => res.send({ id: commentId }))
     .catch(next);
 });
 

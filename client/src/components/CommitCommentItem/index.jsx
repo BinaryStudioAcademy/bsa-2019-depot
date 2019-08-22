@@ -52,7 +52,7 @@ export class CommitCommentItem extends Component {
 
   onSubmit() {
     const { text } = this.state;
-    if (text !== '') {
+    if (text) {
       const { editComment, comment, userId } = this.props;
       const { id, commitId } = comment;
       editComment(id, text, commitId, userId);

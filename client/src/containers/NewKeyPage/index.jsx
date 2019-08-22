@@ -26,7 +26,7 @@ const NewKeyPage = props => {
 
   function handleSubmit({ title, key }) {
     setLoading(true);
-    addKey({ title, value: key, userId: props.currentUser.id }).then(() => {
+    addKey({ title, value: key, userId: props.userId }).then(() => {
       setLoading(true);
       setSubmitted(true);
     });
@@ -92,12 +92,16 @@ const NewKeyPage = props => {
 };
 
 NewKeyPage.propTypes = {
-  currentUser: PropTypes.object
+  userId: PropTypes.string.isRequired
 };
 
-const mapStateToProps = ({ profile: { currentUser } }) => {
+const mapStateToProps = ({
+  profile: {
+    currentUser: { id: userId }
+  }
+}) => {
   return {
-    currentUser
+    userId
   };
 };
 

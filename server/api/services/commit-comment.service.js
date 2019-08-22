@@ -152,6 +152,10 @@ const deleteCommitComment = async (id, userId) => {
       return Promise.reject(errorObj);
     }
     const result = await CommitCommentRepository.deleteCommitCommentById(id);
+    if (!result) {
+      const errorObj = { status: 400, error: `Cannot delete comment ${id}` };
+      return Promise.reject(errorObj);
+    }
     return result;
   } catch (err) {
     return Promise.reject(new Error(err.message));

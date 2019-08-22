@@ -125,14 +125,13 @@ class DiffCommitView extends Component {
           ...this.state,
           comments: updatedComments
         });
+        this.setState(({ comments }) => ({
+          comments: comments.filter(comment => comment.id !== id)
+        }));
       }
     } catch (err) {
       await this.setError(err);
     }
-
-    this.setState(({ comments }) => ({
-      comments: comments.filter(comment => comment.id !== id)
-    }));
   }
 
   async editComment(id, text, commitId, userId) {
