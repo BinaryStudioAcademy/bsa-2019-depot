@@ -43,7 +43,6 @@ class CreateOrganization extends Component {
 
   render() {
     const initialValues = { username: '', email: '' };
-    const isInitialValid = this.newOrgSchema.isValidSync(initialValues);
 
     const { company, loading, userID } = this.props;
 
@@ -117,7 +116,7 @@ class CreateOrganization extends Component {
                   <Link to="#"> Depot Privacy Statement</Link>.
                 </div>
                 <Divider hidden />
-                <Button color="blue" type="submit" disabled={loading || !isValid || (!touched && !isInitialValid)}>
+                <Button color="blue" type="submit" disabled={loading || !isValid || !touched}>
                   Create organization
                 </Button>
               </Form>
