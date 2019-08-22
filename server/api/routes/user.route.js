@@ -61,8 +61,7 @@ router.get('/keys', (req, res, next) => {
 });
 
 router.post('/keys', (req, res, next) => {
-  const { id } = req.user;
-  createKey({ userId: id, ...req.body })
+  createKey({ ...req.body })
     .then(data => res.send(data))
     .catch(next);
 });

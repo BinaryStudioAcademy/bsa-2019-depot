@@ -2,6 +2,8 @@ const NodeGit = require('nodegit');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const repoHelper = require('../../helpers/repo.helper');
+const { getReposNames, isEmpty } = require('./repo.service');
+const CommitRepository = require('../../data/repositories/commit.repository');
 
 const initialCommit = async ({
   owner, email, repoName, files
@@ -35,10 +37,6 @@ const initialCommit = async ({
   const commit = await repo.getCommit(commitId);
   return NodeGit.Branch.create(repo, 'master', commit, 1);
 };
-
-module.exports = { initialCommit };
-
-const { getReposNames, isEmpty } = require('./repo.service');
 
 const getCommitsByDate = async (data) => {
   const { user } = data;
@@ -139,7 +137,12 @@ const getCommitDiff = async ({ user, name, hash }) => {
   const cmd = await exec(command);
   if (cmd.stderr) throw new Error(cmd.stderr);
   const diffsData = cmd.stdout.substring(cmd.stdout.indexOf('diff --git'));
-  return { diffs: diffsData };
+  const response = { diffs: diffsData };
+  const commit = await CommitRepository.getByHash(hash);
+  if (commit) {
+    response.id = commit.id;
+  }
+  return response;
 };
 
 const modifyFile = async ({
@@ -215,11 +218,22 @@ const deleteFile = async ({
   return repo.getCommit(commitId);
 };
 
+const createCommit = async ({ ...commitData }) => {
+  try {
+    const commit = await CommitRepository.add(commitData);
+    return commit;
+  } catch (err) {
+    return Promise.reject(new Error(err.message));
+  }
+};
+
 module.exports = {
   getCommits,
   getCommitDiff,
   getCommitsByDate,
   modifyFile,
   deleteFile,
+  initialCommit,
+  createCommit,
   getCommitCount
 };

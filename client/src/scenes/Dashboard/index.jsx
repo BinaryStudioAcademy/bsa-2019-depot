@@ -26,10 +26,14 @@ class Dashboard extends React.Component {
       ...this.state,
       userData
     });
-  };
+  }
 
   componentDidMount() {
-    const { match: { params: { username } } } = this.props;
+    const {
+      match: {
+        params: { username }
+      }
+    } = this.props;
     this.getUserData(username);
   }
 
@@ -48,20 +52,11 @@ class Dashboard extends React.Component {
     default:
       return <Overview />;
     }
-  };
+  }
 
   render() {
     const {
-      userData: {
-        name,
-        username,
-        imgUrl,
-        repositoriesCount,
-        projectsCount,
-        starsCount,
-        followersCount,
-        followingCount
-      }
+      userData: { name, username, imgUrl, repositoriesCount, projectsCount, starsCount, followersCount, followingCount }
     } = this.state;
 
     const {
@@ -76,11 +71,7 @@ class Dashboard extends React.Component {
         <Grid>
           <Grid.Row columns={2}>
             <Grid.Column mobile={16} tablet={4} computer={4}>
-              <UserInfo
-                username={username}
-                name={name}
-                imgUrl={imgUrl}
-              />
+              <UserInfo username={username} name={name} imgUrl={imgUrl} />
             </Grid.Column>
 
             <Grid.Column mobile={16} tablet={12} computer={12}>
@@ -100,7 +91,7 @@ class Dashboard extends React.Component {
       </Container>
     );
   }
-};
+}
 
 Dashboard.propTypes = {
   location: PropTypes.exact({

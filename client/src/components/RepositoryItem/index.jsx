@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 
 import styles from './styles.module.scss';
 
-
 //Mock
 const data = [
   { name: 'commit1', uv: 4000, commitDate: 0, amt: 2400 },
@@ -20,7 +19,6 @@ const data = [
   { name: 'commit8', uv: 3490, commitDate: 0, amt: 2100 }
 ];
 
-
 class RepositoryItem extends React.Component {
   constructor(props) {
     super(props);
@@ -32,9 +30,7 @@ class RepositoryItem extends React.Component {
   starClickHandler() {
     const { onStar } = this.props;
     const isStar = !this.state.isStar;
-    const starsCount = isStar
-      ? Number(this.state.starsCount) + 1
-      : Number(this.state.starsCount) - 1;
+    const starsCount = isStar ? Number(this.state.starsCount) + 1 : Number(this.state.starsCount) - 1;
 
     this.setState({
       ...this.state,
@@ -46,28 +42,29 @@ class RepositoryItem extends React.Component {
   }
 
   getRepoLink({ username, name, type }) {
-    return type === 'stars'
-      ? (
-        <Link to={`${username}/${name}`} className={styles.repo_name}>
-          <span className={styles.repo_owner}>{username}</span>&nbsp;/&nbsp;{name}
-        </Link>
-      ) : (
-        <Link to={`${username}/${name}`} className={styles.repo_name}>
-          {name}
-        </Link>
-      );
+    return type === 'stars' ? (
+      <Link to={`${username}/${name}`} className={styles.repo_name}>
+        <span className={styles.repo_owner}>{username}</span>&nbsp;/&nbsp;{name}
+      </Link>
+    ) : (
+      <Link to={`${username}/${name}`} className={styles.repo_name}>
+        {name}
+      </Link>
+    );
   }
 
   render() {
-    const { repo: { name, isStar }, username, type } = this.props;
+    const {
+      repo: { name, isStar },
+      username,
+      type
+    } = this.props;
     const starsCount = Number(this.props.repo.starsCount);
 
     return (
       <div className={styles.repo_item}>
         <div className={styles.repo_item_left}>
-          <h3>
-            {this.getRepoLink({ username, name, type })}
-          </h3>
+          <h3>{this.getRepoLink({ username, name, type })}</h3>
           <div className="repo-info">
             <span className={styles.repo_info_item}>
               <span className={styles.repo_item_lang}>
@@ -109,6 +106,7 @@ RepositoryItem.defaultProps = {
 RepositoryItem.propTypes = {
   repo: PropTypes.object,
   username: PropTypes.string,
+  type: PropTypes.string,
   onStar: PropTypes.func.isRequired
 };
 

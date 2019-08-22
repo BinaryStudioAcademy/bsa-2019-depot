@@ -21,9 +21,7 @@ const UserInfo = ({ imgUrl, name, username }) => (
       </Link>
       <div className={styles.namesContainer}>
         <h1>
-          <span className={styles.fullname}>
-            {name ? <span className={styles.name}>{name}</span> : null}
-          </span>
+          <span className={styles.fullname}>{name ? <span className={styles.name}>{name}</span> : null}</span>
           {username}
         </h1>
       </div>
@@ -39,7 +37,7 @@ const UserInfo = ({ imgUrl, name, username }) => (
 UserInfo.propTypes = {
   username: PropTypes.string,
   name: PropTypes.string,
-  imgUrl: PropTypes.string,
+  imgUrl: PropTypes.string
 };
 
 export default UserInfo;

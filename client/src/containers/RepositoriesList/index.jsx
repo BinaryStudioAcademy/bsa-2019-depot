@@ -21,7 +21,11 @@ export class RepositoriesList extends React.Component {
   }
 
   componentDidMount() {
-    const { match: { params: { username } } } = this.props;
+    const {
+      match: {
+        params: { username }
+      }
+    } = this.props;
     this.getRepositories(username);
   }
 
@@ -40,7 +44,7 @@ export class RepositoriesList extends React.Component {
     const repositoryId = repository.id;
 
     const { repositories } = this.state;
-    const updatedRepositories = repositories.map(repo => repository.id === repo.id ? repository : repo);
+    const updatedRepositories = repositories.map(repo => (repository.id === repo.id ? repository : repo));
 
     this.setState({
       ...this.state,
@@ -73,7 +77,11 @@ export class RepositoriesList extends React.Component {
 
   render() {
     const { repositories } = this.state;
-    const { match: { params: { username } } } = this.props;
+    const {
+      match: {
+        params: { username }
+      }
+    } = this.props;
 
     return (
       <>
@@ -82,20 +90,10 @@ export class RepositoriesList extends React.Component {
             <Input placeholder="Find a repository…" className={styles.repos_search_input}></Input>
           </div>
           <div className={styles.filters_item}>
-            <Dropdown
-              placeholder="Type: All"
-              fluid
-              selection
-              className={styles.repos_filters_dropdown}
-            />
+            <Dropdown placeholder="Type: All" fluid selection className={styles.repos_filters_dropdown} />
           </div>
           <div className={styles.filters_item}>
-            <Dropdown
-              placeholder="Language"
-              fluid
-              selection
-              className={styles.repos_filters_dropdown}
-            />
+            <Dropdown placeholder="Language" fluid selection className={styles.repos_filters_dropdown} />
           </div>
           <div className={styles.filters_item}>
             <Link to="/new">
@@ -107,14 +105,7 @@ export class RepositoriesList extends React.Component {
           </div>
         </div>
         {repositories.map(repo => {
-          return (
-            <RepositoryItem
-              repo={repo}
-              key={repo.name}
-              onStar={this.onStar}
-              username={username}
-            />
-          );
+          return <RepositoryItem repo={repo} key={repo.name} onStar={this.onStar} username={username} />;
         })}
       </>
     );
@@ -139,6 +130,4 @@ const mapStateToProps = ({
   id
 });
 
-export default connect(
-  mapStateToProps
-)(withRouter(RepositoriesList));
+export default connect(mapStateToProps)(withRouter(RepositoriesList));

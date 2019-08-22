@@ -66,5 +66,3 @@ export const getStars = async username => {
   });
   return response.json();
 };
-
-

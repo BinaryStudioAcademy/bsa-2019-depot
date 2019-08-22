@@ -5,8 +5,10 @@ import { Link, Redirect } from 'react-router-dom';
 import { Breadcrumb, Button, Form, Header } from 'semantic-ui-react';
 import { addKey } from '../../services/userService';
 import { InputError } from '../../components/InputError';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-const NewKeyPage = () => {
+const NewKeyPage = props => {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -24,7 +26,7 @@ const NewKeyPage = () => {
 
   function handleSubmit({ title, key }) {
     setLoading(true);
-    addKey({ title, value: key }).then(() => {
+    addKey({ title, value: key, userId: props.userId }).then(() => {
       setLoading(true);
       setSubmitted(true);
     });
@@ -89,4 +91,18 @@ const NewKeyPage = () => {
   );
 };
 
-export default NewKeyPage;
+NewKeyPage.propTypes = {
+  userId: PropTypes.string.isRequired
+};
+
+const mapStateToProps = ({
+  profile: {
+    currentUser: { id: userId }
+  }
+}) => {
+  return {
+    userId
+  };
+};
+
+export default connect(mapStateToProps)(NewKeyPage);

@@ -1,7 +1,13 @@
 const { Router } = require('express');
 
 const {
-  getCommits, getCommitsByDate, modifyFile, deleteFile
+  getCommits,
+  getCommitsByDate,
+  modifyFile,
+  deleteFile,
+  getCommitCommentsByCommitId,
+  createCommit,
+  deleteCommitById
 } = require('../services/commit.service');
 const ownerOnlyMiddleware = require('../middlewares/owner-only.middleware');
 
@@ -39,6 +45,24 @@ router
         .then(newCommit => res.send({ sha: newCommit.sha() }))
         .catch(next);
     }
+  })
+  .get('/:commitId/comments', (req, res, next) => {
+    const { commitId } = req.params;
+    getCommitCommentsByCommitId(commitId)
+      .then(comments => res.send(comments))
+      .catch(next);
+  })
+  .post('/', (req, res, next) => {
+    const { sha, repoId } = req.body;
+    createCommit({ sha, repoId })
+      .then(commit => res.send(commit))
+      .catch(next);
+  })
+  .delete('/', (req, res, next) => {
+    const { id, userId } = req.body;
+    deleteCommitById(id, userId)
+      .then(result => res.send(result))
+      .catch(next);
   });
 
 module.exports = router;
