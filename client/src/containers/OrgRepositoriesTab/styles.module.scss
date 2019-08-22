@@ -35,4 +35,8 @@ $secondary-color: #d1d5da;
     margin: 1px;
     position: relative;
   }
+  :local(.memberPhoto) {
+    width: 48px;
+    height: 48px;
+  }
 }

@@ -20,25 +20,26 @@ class OrganizationDashboard extends React.Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const {
       match: {
         params: { name }
       }
     } = this.props;
+
+    await this.getUserInfo(name);
+
     const {
       currentOrg: { id }
     } = this.state;
 
-    this.getUserInfo(name);
-
-    this.getMembers(id);
-    this.getOwner(id);
-    this.getRepositories(name);
+    await this.getMembers(id);
+    await this.getOwner(id);
+    await this.getRepositories(name);
   }
 
-  async getUserInfo(username) {
-    const data = await getUserDetailed(username);
+  async getUserInfo(name) {
+    const data = await getUserDetailed(name);
     this.setState({ currentOrg: data });
   }
   async getMembers(orgId) {
@@ -77,7 +78,7 @@ class OrganizationDashboard extends React.Component {
           orgInfo={currentOrg}
           ownerId={ownerId}
           currentUserId={id}
-          tab="repositories"
+          tab="people"
         />
         <Container>
           <OrgPeopleTab orgMembers={orgMembers} orgInfo={currentOrg} ownerId={ownerId} isOwner={id === ownerId} />

@@ -49,5 +49,9 @@ $button-color: #4f60ac;
     :local(.memberNameContainer) {
       width: 25%;
     }
+    :local(.memberPhoto) {
+      width: 48px;
+      height: 48px;
+    }
   }
 }

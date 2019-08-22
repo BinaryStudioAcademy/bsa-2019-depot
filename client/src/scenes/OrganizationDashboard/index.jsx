@@ -41,13 +41,11 @@ class OrganizationDashboard extends React.Component {
       this.setState({ orgMembers: data });
     });
   }
-
   async getOwner(orgId) {
     await getOrgOwner(orgId).then(data => {
       this.setState({ orgOwner: data });
     });
   }
-
   async getRepositories(username) {
     const repositories = await getRepositories(username);
     this.setState({

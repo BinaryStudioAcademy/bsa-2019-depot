@@ -53,7 +53,7 @@ export const deleteKey = async keyId => {
 
 export const getUserDetailed = async username => {
   const response = await callWebApi({
-    endpoint: `api/user/${username}`,
+    endpoint: `/api/user/${username}`,
     type: 'GET'
   });
   return response.json();
@@ -66,5 +66,3 @@ export const getStars = async username => {
   });
   return response.json();
 };
-
-

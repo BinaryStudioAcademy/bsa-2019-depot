@@ -27,7 +27,7 @@ class OrgPeopleTab extends React.Component {
                 <li key={member.username} className={styles.memberItem}>
                   <div className={styles.memberImg}>
                     <a href={`/${member.username}`} className={styles.memberBox_member}>
-                      <img src={getUserImgLink(member.imgUrl)} width="48px" height="48px" alt="userPicture" />
+                      <img src={getUserImgLink(member.imgUrl)} className={styles.memberPhoto} alt="userPicture" />
                     </a>
                   </div>
                   <div className={styles.memberNameContainer}>

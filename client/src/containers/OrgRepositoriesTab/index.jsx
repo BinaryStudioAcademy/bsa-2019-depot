@@ -33,7 +33,7 @@ class OrgRepositoriesTab extends React.Component {
                 {this.props.orgMembers.map(member => {
                   return (
                     <a href={`/${member.username}`} className={styles.memberBox_member} key={member.username}>
-                      <img src={getUserImgLink(member.imgUrl)} width="48px" height="48px" alt="user" />
+                      <img src={getUserImgLink(member.imgUrl)} className={styles.memberPhoto} alt="user" />
                     </a>
                   );
                 })}

@@ -17,8 +17,6 @@ const getOrganizationOwner = async (orgId) => {
 };
 
 const createOrganization = async (data) => {
-  await RoleRepository.create({ name: 'OWNER' });
-  await RoleRepository.create({ name: 'MEMBER' }); // TEMPORARY!!! for organization creation
   const { username, userID } = data;
   const found = await userRepository.getByUsername(username);
 

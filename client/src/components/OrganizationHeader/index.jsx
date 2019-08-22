@@ -9,9 +9,10 @@ import { getUserImgLink } from '../../helpers/imageHelper';
 import styles from './styles.module.scss';
 
 const OrganizationHeader = ({ repoCount, memberCount, imgUrl, orgInfo, tab }) => {
-  let website = orgInfo.website ? orgInfo.website : '';
-  let email = orgInfo.email ? orgInfo.email : '';
-  let description = orgInfo.description ? orgInfo.description : '';
+  let website = orgInfo.website || '';
+  let email = orgInfo.email || '';
+  let description = orgInfo.description || '';
+  const { username } = orgInfo;
 
   return (
     <header className={styles.orgHeader}>
@@ -19,7 +20,7 @@ const OrganizationHeader = ({ repoCount, memberCount, imgUrl, orgInfo, tab }) =>
         <Container className={styles.orgInfoContainer}>
           <img src={getUserImgLink(imgUrl)} alt="organization avatar" width="100px" height="100px" />
           <Container className={styles.orgInfo}>
-            <div className={styles.orgName}>{orgInfo.username}</div>
+            <div className={styles.orgName}>{username}</div>
             <div className={styles.orgDescription}>{description}</div>
             <div className={styles.orgWebsite}>
               {orgInfo.website ? <Octicon icon={linkIco} className={styles.orgWebsiteIcon} /> : null}
@@ -32,12 +33,12 @@ const OrganizationHeader = ({ repoCount, memberCount, imgUrl, orgInfo, tab }) =>
         <div className={styles.orgHeaderContainer}>
           <div className="ui top attached tabular menu">
             <div className={`${tab === 'repositories' && 'active'} item`}>
-              <Link to={`/${orgInfo.username}`}>
+              <Link to={`/${username}`}>
                 <Icon name="code" /> Repositories <Label circular>{repoCount}</Label>
               </Link>
             </div>
             <div className={`${tab === 'people' && 'active'} item`}>
-              <Link to={`/orgs/${orgInfo.username}/people`}>
+              <Link to={`/orgs/${username}/people`}>
                 <Octicon icon={Person} className={styles.personIcon} />
                 People<Label circular>{memberCount}</Label>
               </Link>
