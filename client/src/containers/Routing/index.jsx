@@ -9,6 +9,7 @@ import { NotFound, Login, Forgot, Reset, MainPage, Signup, Dashboard, CreateRepo
 import Settings from '../../scenes/Settings';
 import CreateOrganization from '../../scenes/CreateOrganization';
 import { fetchCurrentUser } from '../../routines/routines';
+import OrganizationPeople from '../../scenes/OrganizationPeople';
 import RepositoryPage from '../../scenes/Repository';
 import Header from '../Header';
 import Footer from '../../components/Footer';
@@ -38,6 +39,7 @@ class Routing extends React.Component {
             <PublicRoute exact path="/reset/:hash" component={Reset} />
             <PrivateRoute path="/settings" component={Settings} />
             <PrivateRoute exact path="/organizations/new" component={CreateOrganization} />
+            <PrivateRoute exact path="/orgs/:name/people" component={OrganizationPeople} />
             <PrivateRoute exact path="/orgs/:name/invitation" component={Invitation} />
             <PrivateRoute exact path="/new" component={CreateRepository} />
             <PrivateRoute exact path="/organizations/:orgname/repositories/new" component={CreateRepository} />

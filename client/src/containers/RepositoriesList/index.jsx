@@ -1,13 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Link, withRouter } from 'react-router-dom';
-import { Input, Dropdown, Button } from 'semantic-ui-react';
-import Octicon, { Repo } from '@primer/octicons-react';
+import { withRouter } from 'react-router-dom';
+
 import RepositoryItem from '../../components/RepositoryItem';
 import { getRepositories, setStar } from '../../services/repositoryService';
-
-import styles from './styles.module.scss';
 
 export class RepositoriesList extends React.Component {
   constructor(props) {
@@ -21,7 +18,11 @@ export class RepositoriesList extends React.Component {
   }
 
   componentDidMount() {
-    const { match: { params: { username } } } = this.props;
+    const {
+      match: {
+        params: { username }
+      }
+    } = this.props;
     this.getRepositories(username);
   }
 
@@ -40,7 +41,7 @@ export class RepositoriesList extends React.Component {
     const repositoryId = repository.id;
 
     const { repositories } = this.state;
-    const updatedRepositories = repositories.map(repo => repository.id === repo.id ? repository : repo);
+    const updatedRepositories = repositories.map(repo => (repository.id === repo.id ? repository : repo));
 
     this.setState({
       ...this.state,
@@ -73,48 +74,16 @@ export class RepositoriesList extends React.Component {
 
   render() {
     const { repositories } = this.state;
-    const { match: { params: { username } } } = this.props;
+    const {
+      match: {
+        params: { username }
+      }
+    } = this.props;
 
     return (
       <>
-        <div className={styles.filters}>
-          <div className={styles.filters_item}>
-            <Input placeholder="Find a repository…" className={styles.repos_search_input}></Input>
-          </div>
-          <div className={styles.filters_item}>
-            <Dropdown
-              placeholder="Type: All"
-              fluid
-              selection
-              className={styles.repos_filters_dropdown}
-            />
-          </div>
-          <div className={styles.filters_item}>
-            <Dropdown
-              placeholder="Language"
-              fluid
-              selection
-              className={styles.repos_filters_dropdown}
-            />
-          </div>
-          <div className={styles.filters_item}>
-            <Link to="/new">
-              <Button className={styles.new_repo} color="blue">
-                <Octicon icon={Repo} />
-                New
-              </Button>
-            </Link>
-          </div>
-        </div>
         {repositories.map(repo => {
-          return (
-            <RepositoryItem
-              repo={repo}
-              key={repo.name}
-              onStar={this.onStar}
-              username={username}
-            />
-          );
+          return <RepositoryItem repo={repo} key={repo.name} onStar={this.onStar} username={username} />;
         })}
       </>
     );
@@ -139,6 +108,4 @@ const mapStateToProps = ({
   id
 });
 
-export default connect(
-  mapStateToProps
-)(withRouter(RepositoriesList));
+export default connect(mapStateToProps)(withRouter(RepositoriesList));
