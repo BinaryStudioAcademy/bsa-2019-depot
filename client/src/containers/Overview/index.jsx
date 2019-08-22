@@ -34,7 +34,11 @@ export class Overview extends React.Component {
   }
 
   componentDidMount() {
-    const { match: { params: { username } } } = this.props;
+    const {
+      match: {
+        params: { username }
+      }
+    } = this.props;
     this.getActivity(username);
   }
 
@@ -46,7 +50,9 @@ export class Overview extends React.Component {
   };
 
   currentYearContribution = () => {
-    const { userActivity: { userActivityByDate } } = this.state;
+    const {
+      userActivity: { userActivityByDate }
+    } = this.state;
     const { currentYear } = this.state;
     let counter = 0;
     for (const [date, commitCount] of Object.entries(userActivityByDate)) {
@@ -59,7 +65,9 @@ export class Overview extends React.Component {
   };
 
   getYearList = () => {
-    const { userActivity: { userActivityByDate } } = this.state;
+    const {
+      userActivity: { userActivityByDate }
+    } = this.state;
     let years = [];
     for (const date of Object.keys(userActivityByDate)) {
       const year = date.slice(0, 4);
@@ -73,8 +81,14 @@ export class Overview extends React.Component {
   until = new Date().toISOString().slice(0, 10);
 
   render() {
-    const { match: { params: { username } } } = this.props;
-    const { userActivity: { userActivityByDate, monthCommitsActivity } } = this.state;
+    const {
+      match: {
+        params: { username }
+      }
+    } = this.props;
+    const {
+      userActivity: { userActivityByDate, monthCommitsActivity }
+    } = this.state;
     const { activeIndex, currentYear } = this.state;
     const currentYearContribution = this.currentYearContribution();
     const yearList = this.getYearList();
@@ -107,7 +121,7 @@ export class Overview extends React.Component {
 
     return (
       <>
-      {/* {!!repositoriesNames.length && (
+        {/* {!!repositoriesNames.length && (
           <div className={styles.section}>
             <Container className={styles.section_header}>
               <h2>Pinned</h2>

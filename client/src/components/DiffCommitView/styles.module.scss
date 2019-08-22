@@ -1,5 +1,6 @@
 :global(.diff-content) {
   width: 100%;
+  margin-top: 10px;
   border: 1px solid #ddd;
   > p {
     background-color: #eee;
@@ -132,5 +133,27 @@
     font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
     padding: 0;
     background-color: #e8f3ff;
+  }
+}
+
+:global(.comments-count) {
+  margin-top: 1em;
+  font-weight: 700;
+  :global(.ui.compact.message) {
+    padding: 5px;
+    font-weight: normal;
+  }
+}
+:global(.ui.container.commit-comment-form) {
+  :global(.react-mde.react-mde-tabbed-layout) {
+    > :global(.grip) {
+      display: none;
+    }
+    > :global(.mde-text) {
+      height: 100px !important;
+    }
+    + :global(.ui.blue.button) {
+      margin: 5px 0;
+    }
   }
 }

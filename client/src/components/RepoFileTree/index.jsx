@@ -59,7 +59,6 @@ class RepoFileTree extends React.Component {
       username,
       location
     } = this.props;
-
     const lastCommitLink = `/${username}/${reponame}/commit/${sha}`;
 
     return (
@@ -109,7 +108,7 @@ class RepoFileTree extends React.Component {
                     </Link>
                   </Table.Cell>
                   <Table.Cell>
-                    <Link className={styles.link} to="">
+                    <Link className={styles.link} to={`/${username}/${reponame}/commit/${dir.sha}`}>
                       {dir.commitMessage}
                     </Link>
                   </Table.Cell>

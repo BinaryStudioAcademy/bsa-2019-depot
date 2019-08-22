@@ -1,6 +1,6 @@
 import callWebApi from '../helpers/webApiHelper';
 
-export const getRepositories = async (owner) => {
+export const getRepositories = async owner => {
   const response = await callWebApi({
     endpoint: `/api/repo/${owner}/repos`,
     type: 'GET'

@@ -20,7 +20,11 @@ class StarsTab extends React.Component {
   }
 
   componentDidMount() {
-    const { match: { params: { username } } } = this.props;
+    const {
+      match: {
+        params: { username }
+      }
+    } = this.props;
     this.getStars(username);
   }
 
@@ -39,7 +43,7 @@ class StarsTab extends React.Component {
     const repositoryId = repository.id;
 
     const { repositories } = this.state;
-    const updatedRepositories = repositories.map(repo => repository.id === repo.id ? repository : repo);
+    const updatedRepositories = repositories.map(repo => (repository.id === repo.id ? repository : repo));
 
     this.setState({
       ...this.state,
@@ -50,7 +54,6 @@ class StarsTab extends React.Component {
 
   render() {
     const { repositories } = this.state;
-    const { match: { params: { username } } } = this.props;
 
     return (
       <>
@@ -58,20 +61,17 @@ class StarsTab extends React.Component {
           <h2>Repositories</h2>
         </div>
         <div>
-          {repositories.map(repo => (
-            <RepositoryItem
-              repo={repo}
-              key={repo.name}
-              onStar={this.onStar}
-              username={username}
-              type="stars"
-            />
-          ))}
+          {repositories.map(repo => {
+            const {
+              user: { username }
+            } = repo;
+            return <RepositoryItem repo={repo} key={repo.name} onStar={this.onStar} username={username} type="stars" />;
+          })}
         </div>
       </>
     );
   }
-};
+}
 
 StarsTab.propTypes = {
   match: PropTypes.exact({
@@ -91,6 +91,4 @@ const mapStateToProps = ({
   id
 });
 
-export default connect(
-  mapStateToProps
-)(withRouter(StarsTab));
+export default connect(mapStateToProps)(withRouter(StarsTab));

@@ -6,6 +6,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import RepoFileTree from '../../components/RepoFileTree/index';
 import * as commitsService from '../../services/commitsService';
+import FilePathBreadcrumbSections from '../../components/FilePathBreadcrumbSections';
 import RepoReadme from '../../components/RepoReadme/index';
 import { InputError } from '../../components/InputError';
 import { fetchBranches, fetchFileTree, fetchLastCommitOnBranch } from '../../routines/routines';
@@ -25,7 +26,8 @@ import {
   Menu,
   Loader,
   Divider,
-  Message
+  Message,
+  Breadcrumb
 } from 'semantic-ui-react';
 import styles from './styles.module.scss';
 
@@ -44,7 +46,7 @@ class CodeTab extends React.Component {
   }
 
   componentDidMount() {
-    const { username, reponame, branch, history } = this.props;
+    const { username, reponame, branch, history, match } = this.props;
     this.props.fetchBranches({ owner: username, repoName: reponame });
     let actualBranch = branch || this.state.branch;
     this.setState({
@@ -59,11 +61,23 @@ class CodeTab extends React.Component {
       reponame,
       branch: actualBranch
     });
+
+    const defaultPath = `/${username}/${reponame}/tree/${actualBranch}`;
+    const pathToDir = match.url
+      .replace(`${defaultPath}`, '')
+      .replace(`${username}/${reponame}`, '')
+      .split('/')
+      .filter(path => path)
+      .join('/');
+
     this.props.fetchFileTree({
       username,
       reponame,
-      branch: actualBranch
+      branch: actualBranch,
+      query: { pathToDir }
     });
+    history.push(`${defaultPath}${pathToDir ? `/${pathToDir}` : ''}`);
+
     repositoryService.getRepositoryByOwnerAndName({ username, reponame }).then(({ description, website }) => {
       this.setState({ description, website, infoLoading: false });
     });
@@ -160,12 +174,24 @@ class CodeTab extends React.Component {
       branchesData,
       fileTreeData,
       history,
-      fetchFileTree
+      fetchFileTree,
+      location
     } = this.props;
     const { branches } = branchesData;
     const { files, currentPath } = fileTreeData.tree;
     const readme = files && files.find(file => file.name === 'README.md');
     const branchesCount = branches ? branches.length : 0;
+
+    const rootDir = `/${username}/${reponame}/tree/${branch}`;
+    const pathToDir = location.pathname
+      .replace(rootDir, '')
+      .split('/')
+      .filter(path => path);
+    const currentDir = pathToDir.pop();
+    this.toRootDir = () => {
+      history.push(rootDir);
+      window.location.reload();
+    };
 
     let readmeSection;
     if (readme) {
@@ -404,6 +430,20 @@ class CodeTab extends React.Component {
             </Popup>
           </div>
         </div>
+        {currentDir ? (
+          <div className={styles.filePathRow}>
+            <Breadcrumb size="big" className={styles.filePath}>
+              <Breadcrumb.Section>
+                <Link to="" onClick={this.toRootDir}>
+                  {reponame}
+                </Link>
+              </Breadcrumb.Section>
+              <Breadcrumb.Divider />
+              <FilePathBreadcrumbSections owner={username} reponame={reponame} branch={branch} filepath={pathToDir} />
+              <Breadcrumb.Section>{currentDir}</Breadcrumb.Section>
+            </Breadcrumb>
+          </div>
+        ) : null}
         <RepoFileTree
           lastCommitData={lastCommitData}
           fileTreeData={fileTreeData}

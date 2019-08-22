@@ -1,6 +1,6 @@
 module.exports = (models) => {
   const {
-    User, SshKey, Repository, OrgUser, Role, Issue, IssueComment, Star
+    User, SshKey, Repository, Commit, CommitComment, OrgUser, Role, Issue, IssueComment, Star
   } = models;
 
   SshKey.belongsTo(User);
@@ -16,6 +16,13 @@ module.exports = (models) => {
   User.hasMany(OrgUser, { foreignKey: 'orgId' });
   Role.hasMany(OrgUser, { foreignKey: 'roleId' });
   User.hasMany(Star);
+
+  Repository.hasMany(Commit, { foreignKey: 'repoId', onDelete: 'CASCADE' });
+  Commit.hasMany(CommitComment, { foreignKey: 'commitId', onDelete: 'CASCADE' });
+  CommitComment.belongsTo(Commit);
+
+  User.hasMany(CommitComment, { foreignKey: 'userId', onDelete: 'CASCADE' });
+  CommitComment.belongsTo(User);
 
   Repository.belongsTo(Repository, {
     foreignKey: 'forkedFromRepoId',
