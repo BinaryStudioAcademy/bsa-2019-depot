@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import { forkRepo } from '../../routines/routines';
 import { actions } from './actions';
 
+import styles from './styles.module.scss';
+
 class ForkButton extends Component {
   state = { modalOpen: false };
 
@@ -31,7 +33,7 @@ class ForkButton extends Component {
         size="small"
         trigger={
           <Button size="small" as="div" compact labelPosition="right" onClick={this.handleOpen}>
-            <Button size="small" compact>
+            <Button size="small" compact className={styles.forkButton}>
               <Icon name="fork" />
               Fork
             </Button>
