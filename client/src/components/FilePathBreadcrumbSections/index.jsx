@@ -49,15 +49,8 @@ FilePathBreadcrumbSections.propTypes = {
   history: PropTypes.object
 };
 
-const mapStateToProps = ({ fileTreeData }) => ({
-  fileTreeData
-});
-
 const mapDispatchToProps = {
   fetchFileTree
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(FilePathBreadcrumbSections));
+export default connect(mapDispatchToProps)(withRouter(FilePathBreadcrumbSections));
