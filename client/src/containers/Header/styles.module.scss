@@ -30,6 +30,10 @@ $input-background: #1d1f28;
         color: #fff;
         margin: 0;
       }
+      a {
+        display: flex;
+        align-items: center;
+      }
       p svg {
         width: 18px;
         margin-left: 5px;
@@ -199,11 +203,8 @@ $input-background: #1d1f28;
     height: 20px;
   }
   ul li {
+    div,
     a {
-      display: inline-block;
-      vertical-align: middle;
-    }
-    div {
       display: flex;
       align-items: center;
     }

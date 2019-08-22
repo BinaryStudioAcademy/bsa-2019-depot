@@ -6,7 +6,7 @@ import Octicon, { Smiley } from '@primer/octicons-react';
 import { getUserImgLink } from '../../helpers/imageHelper';
 
 import styles from './styles.module.scss';
-import { ReactComponent as LogoSVG } from '../../styles/assets/icons/logo_icon.svg';
+import { ReactComponent as LogoSVG } from '../../styles/assets/icons/logo_icon_bright.svg';
 import { ReactComponent as BurgerSVG } from '../../styles/assets/icons/burger.svg';
 
 const signOut = () => {
