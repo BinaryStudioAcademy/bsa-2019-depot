@@ -4,6 +4,17 @@ const RoleRepository = require('../../data/repositories/role.repository');
 
 const { sendInviteEmail } = require('./email.service');
 
+const getOrganizationMembers = async orgId => OrgUserRepository.getAllOrganizationUsers(orgId);
+
+const getOrganizationOwner = async (orgId) => {
+  const ownerRole = await RoleRepository.getByName('OWNER');
+  const ownerRoleId = ownerRole.get({ plain: true }).id;
+  const orgMembers = await getOrganizationMembers(orgId);
+  const owner = orgMembers.filter(member => member.roleId === ownerRoleId);
+  const ownerId = owner[0].get({ plain: true }).userId;
+  return { ownerId };
+};
+
 const createOrganization = async (data) => {
   const { username, userID } = data;
   const found = await userRepository.getByUsername(username);
@@ -111,5 +122,7 @@ module.exports = {
   addMember,
   getRelationUserOrg,
   acceptInvitation,
-  cancelInvitation
+  cancelInvitation,
+  getOrganizationMembers,
+  getOrganizationOwner
 };
