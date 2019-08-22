@@ -11,6 +11,7 @@ import RepoReadme from '../../components/RepoReadme/index';
 import { InputError } from '../../components/InputError';
 import { fetchBranches, fetchFileTree, fetchLastCommitOnBranch } from '../../routines/routines';
 import * as repositoryService from '../../services/repositoryService';
+import * as branchesService from '../../services/branchesService';
 import { newFile } from './actions';
 
 import Octicon, { getIconByName } from '@primer/octicons-react';
@@ -45,13 +46,20 @@ class CodeTab extends React.Component {
     this.onBranchChange = this.onBranchChange.bind(this);
   }
 
-  componentDidMount() {
-    const { username, reponame, branch, history, match } = this.props;
+  async componentDidMount() {
+    const { username, reponame, history, match } = this.props;
+    const { branch } = this.state;
     this.props.fetchBranches({ owner: username, repoName: reponame });
-    let actualBranch = branch || this.state.branch;
-    this.setState({
-      branch: actualBranch
-    });
+    const branchNames = await branchesService.getBranches(username, reponame);
+    let actualBranch = branch;
+    const firstBranch = branchNames.sort()[0];
+
+    if (!branchNames.includes(branch)) {
+      actualBranch = firstBranch;
+      this.setState({
+        branch: firstBranch
+      });
+    }
     history.push(`/${username}/${reponame}/tree/${actualBranch}`);
     commitsService
       .getCommitCount(username, reponame, actualBranch)
@@ -499,8 +507,7 @@ CodeTab.propTypes = {
   match: PropTypes.object,
   currentUser: PropTypes.string,
   username: PropTypes.string.isRequired,
-  reponame: PropTypes.string.isRequired,
-  branch: PropTypes.string
+  reponame: PropTypes.string.isRequired
 };
 
 export default connect(
