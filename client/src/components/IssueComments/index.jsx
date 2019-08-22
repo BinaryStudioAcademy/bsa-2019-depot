@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Dropdown, Header, Button, Divider, Form, Label, Icon, Image } from 'semantic-ui-react';
+import { Dropdown, Header, Button, Divider, Form, Label, Icon, Image, Loader } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { getUserImgLink } from '../../helpers/imageHelper';
 import { fetchIssueComments, createIssueComment } from '../../routines/routines';
@@ -30,13 +30,11 @@ class IssueComments extends React.Component {
   componentDidMount() {
     const {
       fetchIssueComments,
-      username,
-      repoName,
       match: {
-        params: { number: issueNumber }
+        params: { username, reponame, number: issueNumber }
       }
     } = this.props;
-    fetchIssueComments({ username, repoName, issueNumber });
+    fetchIssueComments({ username, reponame, issueNumber });
   }
 
   onCommentChange(comment) {
@@ -58,16 +56,14 @@ class IssueComments extends React.Component {
 
     const {
       createIssueComment,
-      username,
-      repoName,
       userId,
       match: {
-        params: { number: issueNumber }
+        params: { username, reponame, number: issueNumber }
       }
     } = this.props;
     createIssueComment({
       username,
-      repoName,
+      reponame,
       comment,
       issueNumber,
       userId
@@ -80,6 +76,7 @@ class IssueComments extends React.Component {
     const {
       issues,
       issueComments,
+      loading,
       match: {
         url,
         params: { number }
@@ -91,7 +88,9 @@ class IssueComments extends React.Component {
       .join('/');
     const currentIssue = issues.find(issue => issue.id === +number);
 
-    return (
+    return loading ? (
+      <Loader active />
+    ) : (
       <>
         <div className={styles.header_row}>
           <Header as="h2">
@@ -210,29 +209,24 @@ IssueComments.propTypes = {
     url: PropTypes.string.isRequired
   }).isRequired,
   fetchIssueComments: PropTypes.func.isRequired,
-  repoName: PropTypes.string.isRequired,
-  username: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
   issues: PropTypes.array.isRequired,
   issueComments: PropTypes.array.isRequired,
-  createIssueComment: PropTypes.func.isRequired
+  createIssueComment: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = ({
   issuesData: { issues },
-  issueCommentsData: { issueComments },
+  issueCommentsData: { issueComments, loading },
   profile: {
-    currentUser: { id, username }
-  },
-  currentRepo: {
-    currentRepoInfo: { name }
+    currentUser: { id }
   }
 }) => ({
   userId: id,
   issues,
   issueComments,
-  username,
-  repoName: name
+  loading
 });
 
 const mapDispatchToProps = { fetchIssueComments, createIssueComment };

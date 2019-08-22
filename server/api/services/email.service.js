@@ -20,8 +20,8 @@ async function sendForgetPasswordEmail({ email, url }) {
     const errorObj = { status: 404, message: 'Email is not exist' };
     return Promise.reject(errorObj);
   }
-  const user = await UserRepository.getByEmail(email);
-  const token = jwt.sign({ data: user.dataValues.email }, secret, { expiresIn: '1h' });
+  const user = (await UserRepository.getByEmail(email)).get({ plain: true });
+  const token = jwt.sign({ data: user.email }, secret, { expiresIn: '1h' });
   const message = createTokenEmail(email, token, url);
   await sendToQueue(emailQueue, message);
   return {
