@@ -1,3 +1,5 @@
+$gray: #f7f7fb;
+
 :global(.ui.top.attached.tabular.menu) {
   position: relative;
   top: 1px;
@@ -10,6 +12,7 @@
     }
 
     :global(.ui.circular.label) {
+      background-color: $gray;
       margin-left: 5px;
     }
   }

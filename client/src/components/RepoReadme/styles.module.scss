@@ -1,7 +1,10 @@
-:local(.readmeHeader) {
+$gray: #f7f7fb;
+
+:global(.ui.block.top.attached.header):local(.readmeHeader) {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: $gray;
 
   div:first-child {
     :global(.octicon) {
