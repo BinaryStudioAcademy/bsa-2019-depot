@@ -8,8 +8,20 @@ import styles from './styles.module.scss';
 import { createOrg } from '../../routines/routines';
 import * as Yup from 'yup';
 import { InputError } from '../../components/InputError';
+import { checkUsernameExists } from '../../services/userService';
 
 import PropTypes from 'prop-types';
+
+const isOrgNameValid = async username => {
+  const { usernameExists } = await checkUsernameExists(username);
+  return !usernameExists;
+};
+
+Yup.addMethod(Yup.string, 'validateOrgName', function() {
+  return this.test('validateOrgName', 'This name is already taken', function(value) {
+    return isOrgNameValid(value);
+  });
+});
 
 class CreateOrganization extends Component {
   renderField = ({ field }) => <Input fluid {...field} />;
@@ -18,7 +30,8 @@ class CreateOrganization extends Component {
     username: Yup.string()
       .min(2, 'Too Short!')
       .max(50, 'Too Long!')
-      .required('Required'),
+      .required('Required')
+      .validateOrgName('This name is already taken'),
     email: Yup.string()
       .email('Invalid email')
       .required('Required')
@@ -30,6 +43,7 @@ class CreateOrganization extends Component {
 
   render() {
     const initialValues = { username: '', email: '' };
+
     const { company, loading, userID } = this.props;
 
     return company ? (
@@ -55,7 +69,7 @@ class CreateOrganization extends Component {
             onSubmit={this.onSubmit}
             validationSchema={this.newOrgSchema}
           >
-            {({ isSubmitting, errors, touched }) => (
+            {({ isSubmitting, touched, isValid }) => (
               <Form className="ui form">
                 <Header as="h3">
                   Set up the organization
@@ -102,7 +116,7 @@ class CreateOrganization extends Component {
                   <Link to="#"> Depot Privacy Statement</Link>.
                 </div>
                 <Divider hidden />
-                <Button color="blue" type="submit" disabled={loading}>
+                <Button color="blue" type="submit" disabled={loading || !isValid || !touched}>
                   Create organization
                 </Button>
               </Form>

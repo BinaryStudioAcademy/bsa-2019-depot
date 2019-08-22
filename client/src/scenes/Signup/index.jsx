@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Grid, Header, Form, Button, Segment, Message } from 'semantic-ui-react';
 import { signupRoutine } from '../../routines/routines';
+import { checkUsernameExists } from '../../services/userService';
 import GoogleAuth from '../../components/GoogleAuth';
 import { InputError } from '../../components/InputError';
 import { serverUrl } from '../../app.config';
@@ -12,13 +13,25 @@ import * as Yup from 'yup';
 
 import './styles.module.scss';
 
+const isUsernameValid = async username => {
+  const { usernameExists } = await checkUsernameExists(username);
+  return !usernameExists;
+};
+
+Yup.addMethod(Yup.string, 'validateUsername', function() {
+  return this.test('validateUsername', 'This username is already taken', function(value) {
+    return isUsernameValid(value);
+  });
+});
+
 const validationSchema = Yup.object().shape({
   username: Yup.string()
     .required('Username is required!')
     .matches(
       /^(([a-zA-Z0-9]+-)*[a-zA-Z0-9]+){1,39}$/,
       'Username contains of only alphanumeric characters or single hyphens. Cannot have multiple consecutive hyphens'
-    ),
+    )
+    .validateUsername('This username is already taken'),
   email: Yup.string()
     .email('Invalid email address!')
     .matches(
