@@ -40,27 +40,27 @@ const DashboardHeader = ({
         </li>
         <li>
           <Link to={`${baseUrl}?tab=repositories`} className={getClassName(tabs.repositories, activeTab)}>
-            Repositories{<span>{repoCount || 0}</span>}
+            Repositories<span>{repoCount || 0}</span>
           </Link>
         </li>
         <li>
           <Link to={`${baseUrl}?tab=projects`} className={getClassName(tabs.projects, activeTab)}>
-            Projects{<span>{projectsCount || 0}</span>}
+            Projects<span>{projectsCount || 0}</span>
           </Link>
         </li>
         <li>
           <Link to={`${baseUrl}?tab=stars`} className={getClassName(tabs.stars, activeTab)}>
-            Stars{<span>{starsCount || 0}</span>}
+            Stars<span>{starsCount || 0}</span>
           </Link>
         </li>
         <li>
           <Link to={`${baseUrl}?tab=followers`} className={getClassName(tabs.followers, activeTab)}>
-            Followers{<span>{followersCount || 0}</span>}
+            Followers<span>{followersCount || 0}</span>
           </Link>
         </li>
         <li>
           <Link to={`${baseUrl}?tab=following`} className={getClassName(tabs.following, activeTab)}>
-            Following{<span>{followingCount || 0}</span>}
+            Following<span>{followingCount || 0}</span>
           </Link>
         </li>
       </ul>
