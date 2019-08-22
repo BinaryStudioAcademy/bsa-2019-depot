@@ -17,10 +17,12 @@ class IssueRepository extends BaseRepository {
   getRepositoryIssues({ repositoryId }) {
     return this.model.findAll({
       where: { repositoryId },
-      include: [{
-        model: UserModel,
-        attributes: ['username'],
-      }]
+      include: [
+        {
+          model: UserModel,
+          attributes: ['username']
+        }
+      ]
     });
   }
 }

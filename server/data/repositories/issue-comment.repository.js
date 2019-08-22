@@ -17,10 +17,12 @@ class IssueCommentRepository extends BaseRepository {
   getAllIssueComments({ issueId }) {
     return this.model.findAll({
       where: { issueId },
-      include: [{
-        model: UserModel,
-        attributes: ['username'],
-      }]
+      include: [
+        {
+          model: UserModel,
+          attributes: ['username']
+        }
+      ]
     });
   }
 }

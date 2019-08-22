@@ -13,10 +13,10 @@ module.exports = {
       type: Sequelize.TEXT
     },
     isOpened: {
-      type: Sequelize.BOOLEAN,
+      type: Sequelize.BOOLEAN
     },
     assignees: {
-      type: Sequelize.ARRAY(Sequelize.TEXT),
+      type: Sequelize.ARRAY(Sequelize.TEXT)
     },
     userId: {
       type: Sequelize.UUID,

@@ -3,7 +3,11 @@ const { Router } = require('express');
 const { clientUrl } = require('../../config/common.config');
 
 const {
-  createOrganization, addMember, getRelationUserOrg, acceptInvitation, cancelInvitation
+  createOrganization,
+  addMember,
+  getRelationUserOrg,
+  acceptInvitation,
+  cancelInvitation
 } = require('../services/organization.service');
 
 const router = Router();
@@ -16,7 +20,10 @@ router.post('/new', (req, res) => {
 router.post('/invite', (req, res) => {
   const { orgName, username, role } = req.body;
   addMember({
-    orgName, username, role, url: clientUrl
+    orgName,
+    username,
+    role,
+    url: clientUrl
   }).then(data => res.send(data));
 });
 

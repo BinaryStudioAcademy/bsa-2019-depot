@@ -8,7 +8,7 @@ const usersSeed = [
   {
     email: 'test@test.com',
     username: 'test',
-    password: hash('test'),
+    password: hash('test1111'),
     name: 'Quintana Fullard',
     bio: 'odio porttitor id consequat in consequat ut nulla sed accumsan felis ut at dolor quis odio',
     url: 'https://parallels.com/non.jsp',
