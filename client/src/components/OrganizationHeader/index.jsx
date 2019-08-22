@@ -8,12 +8,13 @@ import { getUserImgLink } from '../../helpers/imageHelper';
 
 import styles from './styles.module.scss';
 
-const OrganizationHeader = ({ repoCount, memberCount, imgUrl, orgInfo, tab }) => {
-  let website = orgInfo.website || '';
-  let email = orgInfo.email || '';
-  let description = orgInfo.description || '';
-  const { username } = orgInfo;
-
+const OrganizationHeader = ({
+  repoCount,
+  memberCount,
+  imgUrl,
+  orgInfo: { username, website, email, description },
+  tab
+}) => {
   return (
     <header className={styles.orgHeader}>
       <Container>
@@ -23,9 +24,9 @@ const OrganizationHeader = ({ repoCount, memberCount, imgUrl, orgInfo, tab }) =>
             <div className={styles.orgName}>{username}</div>
             <div className={styles.orgDescription}>{description}</div>
             <div className={styles.orgWebsite}>
-              {orgInfo.website ? <Octicon icon={linkIco} className={styles.orgWebsiteIcon} /> : null}
+              {website ? <Octicon icon={linkIco} className={styles.orgWebsiteIcon} /> : null}
               <a href={`${website}`}>{website}</a>
-              {orgInfo.email ? <Octicon icon={Mail} className={styles.orgEmail} /> : null}
+              {email ? <Octicon icon={Mail} className={styles.orgEmail} /> : null}
               <a href={`mailto:${email}`}>{email}</a>
             </div>
           </Container>

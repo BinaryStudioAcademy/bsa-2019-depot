@@ -20,6 +20,8 @@ export class RepositoriesFilters extends React.Component {
       { key: 'lt_3', text: 'CSS', value: 'CSS' }
     ];
 
+    const { orgPage, isOwner } = this.props;
+
     return (
       <Container className={styles.repos_filters}>
         <Input placeholder="Find a repository…" className={styles.repos_search_input}></Input>
@@ -41,7 +43,7 @@ export class RepositoriesFilters extends React.Component {
             className={styles.repos_filters_dropdown}
           />
         </div>
-        {(this.props.orgPage ? this.props.isOwner : true) && (
+        {(orgPage ? isOwner : true) && (
           <div className={styles.new_repo_wrapper}>
             <Link to="/new">
               <Button className={styles.new_repo}>
