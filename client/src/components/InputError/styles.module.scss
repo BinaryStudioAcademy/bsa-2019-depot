@@ -2,6 +2,7 @@ $red: #ed1a37;
 
 :local(.error_wrapper) {
   color: $red;
-  margin-top: -5px;
+  margin-top: 0;
+  margin-bottom: 5px;
   font-size: 85%;
 }
