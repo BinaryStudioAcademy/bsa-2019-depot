@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import Octicon, { Repo } from '@primer/octicons-react';
 import { Icon, Label, Container } from 'semantic-ui-react';
 import ForkButton from '../ForkButton';
@@ -9,6 +9,12 @@ import ForkButton from '../ForkButton';
 import styles from './styles.module.scss';
 
 const RepositoryHeader = ({ currentRepoInfo: { forkedCount, originalRepo }, owner, username, repoName, issueCount, activePage, baseUrl }) => {
+const goToRootDir = (history, url) => () => {
+  history.push(url);
+  window.location.reload();
+};
+
+const RepositoryHeader = ({ owner, username, repoName, forkCount, issueCount, activePage, baseUrl, history }) => {
   let activeTab;
   switch (activePage) {
     case 'issues':
@@ -39,7 +45,6 @@ const RepositoryHeader = ({ currentRepoInfo: { forkedCount, originalRepo }, owne
       }
     }
   }
-
   return (
     <header className={styles.repoHeader}>
       <Container>
@@ -50,9 +55,11 @@ const RepositoryHeader = ({ currentRepoInfo: { forkedCount, originalRepo }, owne
               <span className={styles.repoPath}>
                 <Link to="">{owner}</Link>
                 <span className={styles.pathDivider}>/</span>
-                <Link to={baseUrl}>{repoName}</Link>
-                {renderOrignalRepoLink()}
+                <Link to="" onClick={goToRootDir(history, baseUrl)}>
+                  {repoName}
+                </Link>
               </span>  
+              {renderOrignalRepoLink()}
             </div>
             <ForkButton owner={owner} repoName={repoName} forkedCount={forkedCount} />
           </div>
@@ -87,7 +94,8 @@ RepositoryHeader.propTypes = {
   repoName: PropTypes.string.isRequired,
   issueCount: PropTypes.number.isRequired,
   activePage: PropTypes.string,
-  baseUrl: PropTypes.string.isRequired
+  baseUrl: PropTypes.string.isRequired,
+  history: PropTypes.object
 };
 
 const mapStateToProps = ({
@@ -100,4 +108,4 @@ const mapStateToProps = ({
   currentRepoInfo
 });
 
-export default connect(mapStateToProps)(RepositoryHeader);
+export default connect(mapStateToProps)(withRouter(RepositoryHeader));

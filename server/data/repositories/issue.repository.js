@@ -14,14 +14,16 @@ class IssueRepository extends BaseRepository {
     return this.updateById(id, issueData);
   }
 
-  getRepositoryIssues({repositoryId}) {
-    return this.model.findAll({ 
+  getRepositoryIssues({ repositoryId }) {
+    return this.model.findAll({
       where: { repositoryId },
-      include: [{
-        model: UserModel,
-        attributes: ['username'],
-      }]
-    })
+      include: [
+        {
+          model: UserModel,
+          attributes: ['username']
+        }
+      ]
+    });
   }
 }
 

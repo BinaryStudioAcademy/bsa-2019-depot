@@ -1,13 +1,11 @@
 import React from 'react';
 import moment from 'moment';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import Calendar from 'react-github-contribution-calendar';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { Container, Grid, Dropdown, Accordion } from 'semantic-ui-react';
-import Octicon, { Repo, Grabber, Fold, Unfold, RepoPush } from '@primer/octicons-react';
-import { repositoryActions } from '../../scenes/Dashboard/actions';
+import Octicon, { Fold, Unfold, RepoPush } from '@primer/octicons-react';
+import * as commitsService from '../../services/commitsService';
 
 import styles from './styles.module.scss';
 
@@ -16,17 +14,32 @@ export class Overview extends React.Component {
     super(props);
     this.state = {
       activeIndex: -1,
-      currentYear: moment().year()
+      currentYear: moment().year(),
+      userActivity: {
+        userActivityByDate: {},
+        monthCommitsActivity: {}
+      }
     };
   }
 
-  componentDidMount() {
-    const { actions } = this.props;
-    actions.fetchRepositories({
-      limit: '4',
-      filterWord: ''
+  async getActivity(username) {
+    const { monthActivity, userActivitybyDate } = await commitsService.getAllUserCommits(username);
+    this.setState({
+      ...this.state,
+      userActivity: {
+        monthCommitsActivity: monthActivity,
+        userActivityByDate: userActivitybyDate
+      }
     });
-    actions.fetchActivity();
+  }
+
+  componentDidMount() {
+    const {
+      match: {
+        params: { username }
+      }
+    } = this.props;
+    this.getActivity(username);
   }
 
   handleActivityState = (e, titleProps) => {
@@ -37,7 +50,9 @@ export class Overview extends React.Component {
   };
 
   currentYearContribution = () => {
-    const { userActivityByDate } = this.props;
+    const {
+      userActivity: { userActivityByDate }
+    } = this.state;
     const { currentYear } = this.state;
     let counter = 0;
     for (const [date, commitCount] of Object.entries(userActivityByDate)) {
@@ -50,7 +65,9 @@ export class Overview extends React.Component {
   };
 
   getYearList = () => {
-    const { userActivityByDate } = this.props;
+    const {
+      userActivity: { userActivityByDate }
+    } = this.state;
     let years = [];
     for (const date of Object.keys(userActivityByDate)) {
       const year = date.slice(0, 4);
@@ -64,8 +81,14 @@ export class Overview extends React.Component {
   until = new Date().toISOString().slice(0, 10);
 
   render() {
-    const { repositories, userActivityByDate, monthCommitsActivity, username } = this.props;
-    const repositoriesNames = repositories.map(repo => repo.name).slice(-6);
+    const {
+      match: {
+        params: { username }
+      }
+    } = this.props;
+    const {
+      userActivity: { userActivityByDate, monthCommitsActivity }
+    } = this.state;
     const { activeIndex, currentYear } = this.state;
     const currentYearContribution = this.currentYearContribution();
     const yearList = this.getYearList();
@@ -77,7 +100,7 @@ export class Overview extends React.Component {
       styles.activity_lvl4,
       styles.activity_lvl5
     ];
-    panelColors = new Proxy(panelColors, {
+    const proxyPanelColors = new Proxy(panelColors, {
       get(target, prop) {
         prop = +prop;
         if (prop === 0) {
@@ -95,10 +118,9 @@ export class Overview extends React.Component {
         }
       }
     });
-
     return (
-      <div>
-        {!!repositoriesNames.length && (
+      <>
+        {/* {!!repositoriesNames.length && (
           <div className={styles.section}>
             <Container className={styles.section_header}>
               <h2>Pinned</h2>
@@ -125,8 +147,7 @@ export class Overview extends React.Component {
                 })}
             </Container>
           </div>
-        )}
-
+        )} */}
         <Grid>
           <Grid.Row columns={2}>
             <Grid.Column mobile={16} computer={13}>
@@ -148,8 +169,17 @@ export class Overview extends React.Component {
                     until={this.until}
                     weekNames={this.weekNames}
                     monthNames={this.monthNames}
-                    panelColors={panelColors}
+                    panelColors={proxyPanelColors}
                   />
+                  <div className="calendar-wrapper calendar-wrapper-meaning">
+                    {'Less '}
+                    <svg className="calendar calendar-meaning" height="11">
+                      {panelColors.map((color, i) => (
+                        <rect key={i} x={13 * i} y="0" width="11" height="11" fill={color}></rect>
+                      ))}
+                    </svg>
+                    {' More'}
+                  </div>
                 </div>
               </Container>
 
@@ -160,6 +190,7 @@ export class Overview extends React.Component {
                     (acc, key) => acc + monthActivityObject[key],
                     0
                   );
+                  const numOfRepos = Object.keys(monthActivityObject).length;
                   return (
                     <>
                       <Container className={styles.section_header}>
@@ -177,7 +208,10 @@ export class Overview extends React.Component {
                               index={`commit-${monthAndYear}`}
                               onClick={this.handleActivityState}
                             >
-                              <p>Created {commitCount} commits</p>
+                              <p>
+                                Created {commitCount} commit{commitCount === 1 ? '' : 's'} in {numOfRepos} repositor
+                                {numOfRepos === 1 ? 'y' : 'ies'}
+                              </p>
                               <Octicon icon={activeIndex === `commit-${monthAndYear}` ? Fold : Unfold} />
                             </Accordion.Title>
                             <Accordion.Content active={activeIndex === `commit-${monthAndYear}`}>
@@ -217,42 +251,27 @@ export class Overview extends React.Component {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-      </div>
+      </>
     );
   }
 }
 
 Overview.defaultProps = {
   panelColors: PropTypes.array,
-  contributionValues: PropTypes.object.isRequired
+  contributionValues: PropTypes.object.isRequired,
+  userActivityByDate: {},
+  monthCommitsActivity: {}
 };
 
 Overview.propTypes = {
-  actions: PropTypes.object.isRequired,
-  username: PropTypes.string.isRequired,
+  match: PropTypes.exact({
+    params: PropTypes.object.isRequired,
+    isExact: PropTypes.bool.isRequired,
+    path: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired
+  }).isRequired,
   userActivityByDate: PropTypes.object.isRequired,
-  monthCommitsActivity: PropTypes.object.isRequired,
-  repositories: PropTypes.array.isRequired
+  monthCommitsActivity: PropTypes.object.isRequired
 };
 
-const mapStateToProps = ({
-  userStats: { userActivityByDate, monthCommitsActivity },
-  profile: {
-    currentUser: { username }
-  }
-}) => ({
-  userActivityByDate,
-  monthCommitsActivity,
-  username
-});
-
-const mapDispatchToProps = dispatch => {
-  return {
-    actions: bindActionCreators({ ...repositoryActions }, dispatch)
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Overview);
+export default withRouter(Overview);

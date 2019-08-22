@@ -1,5 +1,5 @@
 const BaseRepository = require('./base.repository');
-const { RepositoryModel, UserModel } = require('../models/index');
+const { RepositoryModel, UserModel, StarModel } = require('../models/index');
 const sequelize = require('../db/connection');
 
 class RepositoryRepository extends BaseRepository {
@@ -29,6 +29,10 @@ class RepositoryRepository extends BaseRepository {
           model: UserModel,
           attributes: [],
           where: { username }
+        },
+        {
+          model: StarModel,
+          attributes: ['userId']
         }
       ]
     });

@@ -1,8 +1,17 @@
 $primary-color: #586069;
 $secondary-color: #d1d5da;
+$gray: #f7f7fb;
 
 :local(.repo_name) {
-  font-size: 125%;
+  font-size: 110%;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+:local(.repo_owner) {
+  font-weight: normal;
 }
 
 :local(.repo_item) {
@@ -11,7 +20,7 @@ $secondary-color: #d1d5da;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 24px 0;
+  padding: 1.5em 0;
   border-bottom: 1px solid $secondary-color;
   border-radius: 3px;
 
@@ -21,11 +30,6 @@ $secondary-color: #d1d5da;
 
   & a {
     flex: 1 1 auto;
-    // color: #0366d6;
-
-    &:hover {
-      // text-decoration: underline;
-    }
   }
 }
 :local(.repo_item_left),
@@ -66,13 +70,12 @@ $secondary-color: #d1d5da;
   }
 }
 
-:local(.repo_item_stars) {
+:global(.ui.button):local(.repo_item_stars) {
   display: inline-block;
   font-size: 75%;
   line-height: 20px;
-  padding: 3px 10px;
-  background-color: #eff3f6;
-  background-image: linear-gradient(-180deg, #fafbfc, #eff3f6 90%);
+
+  background-color: $gray;
   color: #24292e;
   border: 1px solid rgba(27, 31, 35, 0.2);
   border-radius: 0.25em;
@@ -82,6 +85,10 @@ $secondary-color: #d1d5da;
 
   & .star_icon {
     margin-right: 5px;
+  }
+
+  &:global(.compact) {
+    padding: 3px 10px;
   }
 }
 

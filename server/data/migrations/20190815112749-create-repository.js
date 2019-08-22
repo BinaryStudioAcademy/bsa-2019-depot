@@ -20,17 +20,10 @@ module.exports = {
         key: 'id'
       }
     },
-    /*      defaultBranchId: {
-        type: Sequelize.UUID,
-        references: {
-          model: 'branches',
-          key: 'repoID'
-        }
-      }, */
     updatedAt: {
       allowNull: false,
       type: Sequelize.DATE
     }
   }),
-  down: queryInterface => queryInterface.dropTable('repositories')
+  down: queryInterface => queryInterface.dropTable('repositories', { force: true, cascade: true })
 };

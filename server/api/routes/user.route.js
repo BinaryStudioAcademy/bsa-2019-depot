@@ -2,12 +2,24 @@ const { Router } = require('express');
 
 const { sendForgetPasswordEmail } = require('../services/email.service');
 const {
-  setUsername, checkUsernameExists, resetPassword, updateUserSettings
+  setUsername,
+  checkUsernameExists,
+  resetPassword,
+  updateUserSettings,
+  getUserDetailed,
+  getStars
 } = require('../services/user.service');
 const { getKeysByUser, createKey, deleteKey } = require('../services/ssh-key.service');
 const { clientUrl } = require('../../config/common.config');
 
 const router = Router();
+
+router.get('/:username', (req, res, next) => {
+  const { username } = req.params;
+  getUserDetailed(username)
+    .then(data => res.send(data))
+    .catch(next);
+});
 
 router.post('/username', (req, res, next) => {
   const { username } = req.body;
@@ -49,8 +61,7 @@ router.get('/keys', (req, res, next) => {
 });
 
 router.post('/keys', (req, res, next) => {
-  const { id } = req.user;
-  createKey({ userId: id, ...req.body })
+  createKey({ ...req.body })
     .then(data => res.send(data))
     .catch(next);
 });
@@ -59,6 +70,13 @@ router.delete('/keys/:id', (req, res, next) => {
   const { id } = req.params;
   deleteKey(id)
     .then(() => res.sendStatus(200))
+    .catch(next);
+});
+
+router.get('/:username/stars', (req, res, next) => {
+  const { username } = req.params;
+  getStars(username)
+    .then(stars => res.send(stars))
     .catch(next);
 });
 

@@ -6,7 +6,7 @@ import Octicon, { Smiley } from '@primer/octicons-react';
 import { getUserImgLink } from '../../helpers/imageHelper';
 
 import styles from './styles.module.scss';
-import { ReactComponent as LogoSVG } from '../../styles/assets/icons/logo_icon.svg';
+import { ReactComponent as LogoSVG } from '../../styles/assets/icons/logo_icon_bright.svg';
 import { ReactComponent as BurgerSVG } from '../../styles/assets/icons/burger.svg';
 
 const signOut = () => {
@@ -247,7 +247,7 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
                   </Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item href={`/${username}`}>Your profile</Dropdown.Item>
-                  <Dropdown.Item href="/dashboard?tab=repositories">Your repositories</Dropdown.Item>
+                  <Dropdown.Item href={`/${username}?tab=repositories`}>Your repositories</Dropdown.Item>
                   <Dropdown.Divider />
                   <Dropdown.Item href="/settings/profile">Settings</Dropdown.Item>
                   <Dropdown.Item onClick={signOut}>Sign out</Dropdown.Item>

@@ -3,10 +3,35 @@ const { Router } = require('express');
 const { clientUrl } = require('../../config/common.config');
 
 const {
-  createOrganization, addMember, getRelationUserOrg, acceptInvitation, cancelInvitation
+  createOrganization,
+  addMember,
+  getRelationUserOrg,
+  acceptInvitation,
+  cancelInvitation,
+  getOrganizationMembers,
+  getOrganizationOwner
 } = require('../services/organization.service');
 
+const { getUserById } = require('../services/user.service');
+
 const router = Router();
+
+router.get('/:orgID/users', (req, res) => {
+  const { orgID } = req.params;
+  getOrganizationMembers(orgID).then((data) => {
+    const ids = data.map(record => record.dataValues.userId);
+    const users = ids.map(user => getUserById(user));
+    // eslint-disable-next-line no-shadow
+    Promise.all(users).then((data) => {
+      res.send(data);
+    });
+  });
+});
+
+router.get('/:orgID/owner', (req, res) => {
+  const { orgID } = req.params;
+  getOrganizationOwner(orgID).then(data => res.send(data));
+});
 
 router.post('/new', (req, res) => {
   const { username, email, userID } = req.body;
@@ -16,7 +41,10 @@ router.post('/new', (req, res) => {
 router.post('/invite', (req, res) => {
   const { orgName, username, role } = req.body;
   addMember({
-    orgName, username, role, url: clientUrl
+    orgName,
+    username,
+    role,
+    url: clientUrl
   }).then(data => res.send(data));
 });
 

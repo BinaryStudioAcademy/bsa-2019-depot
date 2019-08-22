@@ -23,6 +23,12 @@ $blue: #2e53db;
   }
 }
 
+:local(.pinned_header) {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
 .section {
   margin-bottom: 20px;
 }
@@ -252,6 +258,17 @@ $blue: #2e53db;
       color: #fff;
       background-color: $blue;
     }
+  }
+}
+
+:global(.calendar-wrapper.calendar-wrapper-meaning) {
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 80%;
+  :global(.calendar.calendar-meaning) {
+    width: 75px;
+    padding: 0 5px;
   }
 }
 

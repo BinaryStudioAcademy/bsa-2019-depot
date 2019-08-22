@@ -62,7 +62,7 @@ class RepoSettings extends React.Component {
       owner,
       name: oldName
     });
-    history.push('/dashboard');
+    history.push(`/${owner}`);
   };
 
   onClickRename = ({ name }) => {

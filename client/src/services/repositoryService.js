@@ -1,6 +1,6 @@
 import callWebApi from '../helpers/webApiHelper';
 
-export const getRepositories = async (owner, filter) => {
+export const getRepositories = async owner => {
   const response = await callWebApi({
     endpoint: `/api/repo/${owner}/repos`,
     type: 'GET'
@@ -55,6 +55,15 @@ export const forkRepo = async request => {
   const response = await callWebApi({
     endpoint: '/api/repo/fork',
     type: 'POST',
+    request
+  });
+  return response.json();
+};
+
+export const setStar = async request => {
+  const response = await callWebApi({
+    endpoint: '/api/repo/star',
+    type: 'PUT',
     request
   });
   return response.json();

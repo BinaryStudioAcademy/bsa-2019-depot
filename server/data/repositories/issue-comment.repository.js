@@ -14,14 +14,16 @@ class IssueCommentRepository extends BaseRepository {
     return this.deleteById(id);
   }
 
-  getAllIssueComments({issueId}) {
-    return this.model.findAll({ 
+  getAllIssueComments({ issueId }) {
+    return this.model.findAll({
       where: { issueId },
-      include: [{
-        model: UserModel,
-        attributes: ['username'],
-      }]
-    })
+      include: [
+        {
+          model: UserModel,
+          attributes: ['username']
+        }
+      ]
+    });
   }
 }
 

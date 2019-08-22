@@ -12,7 +12,6 @@ export const fetchLastCommitOnBranch = createRoutine('LAST_COMMIT');
 export const fetchCurrentUser = createRoutine('CURRENT_USER');
 export const fetchRepoSettings = createRoutine('REPO_SETTINGS');
 export const authorizeUser = createRoutine('AUTHORIZE_USER');
-export const fetchDiffs = createRoutine('DIFFS');
 export const updateUserSettings = createRoutine('UPDATE_USER_SETTINGS');
 export const forkRepo = createRoutine('FORK_REPO');
 export const createIssue = createRoutine('CREATE_ISSUE');

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Loader, Icon, Input, Dropdown, Button } from 'semantic-ui-react';
-import { fetchIssues } from '../../routines/routines';
+import { fetchIssues, fetchCurrentRepo } from '../../routines/routines';
 import IssuesList from '../../components/IssuesList';
 
 import styles from './styles.module.scss';
@@ -23,29 +23,39 @@ class IssuesTab extends React.Component {
   }
 
   componentDidMount() {
-    const { username, repoName, repositoryId } = this.props;
-    this.props.fetchIssues({
+    const {
       username,
-      repoName,
       repositoryId,
-      filter: this.state.filter
-    });
+      fetchIssues,
+      fetchCurrentRepo,
+      match: {
+        params: { reponame }
+      }
+    } = this.props;
+    if (!repositoryId) {
+      fetchCurrentRepo({ username, reponame });
+    } else {
+      fetchIssues({
+        username,
+        reponame,
+        repositoryId,
+        filter: this.state.filter
+      });
+    }
   }
 
   countOpenIssues = () => {
-    const counter = this.props.issuesData.issues.filter(issue => issue.isOpened);
+    const counter = this.props.issues.filter(issue => issue.isOpened);
     return counter.length;
   };
 
   countClosedIssues = () => {
-    const counter = this.props.issuesData.issues.filter(issue => !issue.isOpened);
+    const counter = this.props.issues.filter(issue => !issue.isOpened);
     return counter.length;
   };
 
   renderFilteredIssues = () => {
-    const {
-      issuesData: { issues }
-    } = this.props;
+    const { issues } = this.props;
     const { filterByTitle } = this.state;
     return issues.filter(({ title }) => title.includes(filterByTitle));
   };
@@ -63,10 +73,7 @@ class IssuesTab extends React.Component {
   };
 
   render() {
-    const {
-      issuesData: { loading, issues },
-      match
-    } = this.props;
+    const { loading, issues, match } = this.props;
     const { filterByTitle } = this.state;
 
     const authorList = issues.reduce((acc, { user }) => {
@@ -164,13 +171,14 @@ class IssuesTab extends React.Component {
 
 IssuesTab.propTypes = {
   username: PropTypes.string.isRequired,
-  repoName: PropTypes.string.isRequired,
-  repositoryId: PropTypes.number.isRequired,
+  reponame: PropTypes.string,
+  repositoryId: PropTypes.number,
+  issues: PropTypes.array.isRequired,
   issuesData: PropTypes.exact({
     loading: PropTypes.bool.isRequired,
     error: PropTypes.string,
     issues: PropTypes.array
-  }).isRequired,
+  }),
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
     isExact: PropTypes.bool.isRequired,
@@ -178,12 +186,14 @@ IssuesTab.propTypes = {
     url: PropTypes.string.isRequired
   }).isRequired,
   fetchIssues: PropTypes.func.isRequired,
+  fetchCurrentRepo: PropTypes.func.isRequired,
   history: PropTypes.object,
-  location: PropTypes.object.isRequired
+  location: PropTypes.object.isRequired,
+  loading: PropTypes.bool.isRequired
 };
 
 const mapStateToProps = ({
-  issuesData,
+  issuesData: { loading, issues },
   currentRepo: {
     currentRepoInfo: { id, name }
   },
@@ -192,13 +202,14 @@ const mapStateToProps = ({
   }
 }) => ({
   username,
-  repoName: name,
-  issuesData,
+  loading,
+  issues,
   repositoryId: id
 });
 
 const mapDispatchToProps = {
-  fetchIssues
+  fetchIssues,
+  fetchCurrentRepo
 };
 
 export default connect(
