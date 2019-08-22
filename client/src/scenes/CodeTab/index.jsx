@@ -434,7 +434,9 @@ class CodeTab extends React.Component {
           <div className={styles.filePathRow}>
             <Breadcrumb size="big" className={styles.filePath}>
               <Breadcrumb.Section>
-                <Link onClick={this.toRootDir}>{reponame}</Link>
+                <Link to="" onClick={this.toRootDir}>
+                  {reponame}
+                </Link>
               </Breadcrumb.Section>
               <Breadcrumb.Divider />
               <FilePathBreadcrumbSections owner={username} reponame={reponame} branch={branch} filepath={pathToDir} />
