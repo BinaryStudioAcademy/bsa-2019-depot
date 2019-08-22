@@ -26,7 +26,7 @@ const UserInfo = ({ imgUrl, name, username }) => (
         </h1>
       </div>
       <Link to="/settings/profile" className={styles.edit_profile}>
-        <Button fluid basic>
+        <Button fluid className={styles.editButton}>
           Edit profile
         </Button>
       </Link>
