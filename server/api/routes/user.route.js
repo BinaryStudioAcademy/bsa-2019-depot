@@ -14,6 +14,12 @@ const { clientUrl } = require('../../config/common.config');
 
 const router = Router();
 
+router.get('/username-exists', (req, res, next) => {
+  checkUsernameExists({ username: req.query.username })
+    .then(data => res.send(data))
+    .catch(next);
+});
+
 router.get('/:username', (req, res, next) => {
   const { username } = req.params;
   getUserDetailed(username)
@@ -25,12 +31,6 @@ router.post('/username', (req, res, next) => {
   const { username } = req.body;
   const { id } = req.user;
   setUsername({ id, username })
-    .then(data => res.send(data))
-    .catch(next);
-});
-
-router.get('/username-exists', (req, res, next) => {
-  checkUsernameExists({ username: req.query.username })
     .then(data => res.send(data))
     .catch(next);
 });

@@ -8,10 +8,22 @@ import GoogleAuth from '../../components/GoogleAuth';
 import { InputError } from '../../components/InputError';
 import { serverUrl } from '../../app.config';
 import { authorizeUser, loginGoogleRoutine, setUsernameRoutine } from '../../routines/routines';
+import { checkUsernameExists } from '../../services/userService';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
 import './styles.module.scss';
+
+const isUsernameValid = async username => {
+  const { usernameExists } = await checkUsernameExists(username);
+  return !usernameExists;
+};
+
+Yup.addMethod(Yup.string, 'validateUsername', function() {
+  return this.test('validateUsername', 'This username is already taken', function(value) {
+    return isUsernameValid(value);
+  });
+});
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -35,6 +47,7 @@ const usernameValidationSchema = Yup.object().shape({
   username: Yup.string()
     .required('Username is required!')
     .matches(/^(([a-zA-Z0-9]+-)*[a-zA-Z0-9]+){1,39}$/)
+    .validateUsername('This username is already taken')
 });
 
 class Login extends Component {
