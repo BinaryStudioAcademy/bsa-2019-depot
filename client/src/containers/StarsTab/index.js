@@ -62,8 +62,10 @@ class StarsTab extends React.Component {
         </div>
         <div>
           {repositories.map(repo => {
-            const { user: { username } } = repo;
-            return (<RepositoryItem repo={repo} key={repo.name} onStar={this.onStar} username={username} type="stars" />);
+            const {
+              user: { username }
+            } = repo;
+            return <RepositoryItem repo={repo} key={repo.name} onStar={this.onStar} username={username} type="stars" />;
           })}
         </div>
       </>

@@ -8,7 +8,10 @@ import StarsTab from '../../containers/StarsTab';
 import UserInfo from '../../components/UserInfo';
 import AdditionalUserInfo from '../../components/AdditionalUserInfo';
 import DashboardHeader, { tabs } from '../../components/DashboardHeader';
+import RepositoriesFilters from '../../components/RepositoriesFilters';
 import { getUserDetailed } from '../../services/userService';
+import Spinner from '../../components/Spinner';
+import OrganizationDashboard from '../OrganizationDashboard';
 
 const initialUserData = {};
 
@@ -41,7 +44,12 @@ class Dashboard extends React.Component {
   renderTab(tab) {
     switch (tab) {
     case tabs.repositories:
-      return <RepositoriesList />;
+      return (
+          <>
+            <RepositoriesFilters />
+            <RepositoriesList />
+          </>
+      );
     case tabs.projects:
       return <div>Hello! Projects are there</div>;
     case tabs.stars:
@@ -57,6 +65,7 @@ class Dashboard extends React.Component {
 
   render() {
     const {
+      userData,
       userData: {
         name,
         username,
@@ -66,6 +75,7 @@ class Dashboard extends React.Component {
         starsCount,
         followersCount,
         followingCount,
+        type,
         bio,
         url: link,
         email,
@@ -79,7 +89,13 @@ class Dashboard extends React.Component {
     } = this.props;
     const { tab } = parse(search);
 
-    return (
+    if (!type) {
+      return <Spinner />;
+    }
+
+    return type === 'ORG' ? (
+      <OrganizationDashboard userData={userData} />
+    ) : (
       <Container>
         <Divider hidden />
         <Grid>
