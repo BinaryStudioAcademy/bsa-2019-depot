@@ -1,14 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import Octicon, { Repo } from '@primer/octicons-react';
 import { Icon, Label, Container } from 'semantic-ui-react';
 import ForkButton from '../ForkButton';
 
 import styles from './styles.module.scss';
 
-const RepositoryHeader = ({ owner, username, repoName, forkCount, issueCount, activePage, baseUrl }) => {
+const goToRootDir = (history, url) => () => {
+  history.push(url);
+  window.location.reload();
+};
+
+const RepositoryHeader = ({ owner, username, repoName, forkCount, issueCount, activePage, baseUrl, history }) => {
   let activeTab;
   switch (activePage) {
   case 'issues':
@@ -23,7 +28,6 @@ const RepositoryHeader = ({ owner, username, repoName, forkCount, issueCount, ac
   default:
     activeTab = 'code';
   }
-
   return (
     <header className={styles.repoHeader}>
       <Container>
@@ -34,7 +38,9 @@ const RepositoryHeader = ({ owner, username, repoName, forkCount, issueCount, ac
               <span className={styles.repoPath}>
                 <Link to="">{owner}</Link>
                 <span className={styles.pathDivider}>/</span>
-                <Link to={baseUrl}>{repoName}</Link>
+                <Link to="" onClick={goToRootDir(history, baseUrl)}>
+                  {repoName}
+                </Link>
               </span>
             </div>
             <ForkButton owner={owner} repoName={repoName} forkCount={forkCount} />
@@ -71,7 +77,8 @@ RepositoryHeader.propTypes = {
   forkCount: PropTypes.number.isRequired,
   issueCount: PropTypes.number.isRequired,
   activePage: PropTypes.string,
-  baseUrl: PropTypes.string.isRequired
+  baseUrl: PropTypes.string.isRequired,
+  history: PropTypes.object
 };
 
 const mapStateToProps = ({
@@ -82,4 +89,4 @@ const mapStateToProps = ({
   username
 });
 
-export default connect(mapStateToProps)(RepositoryHeader);
+export default connect(mapStateToProps)(withRouter(RepositoryHeader));

@@ -8,7 +8,17 @@ $blue: #2e53db;
     margin-right: 5px;
   }
 }
+.filePathRow {
+  margin-bottom: 10px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
+  :global(.ui.breadcrumb):local(.filePath) {
+    margin: 0;
+  }
+}
 :global(.ui.button):local(.actionButton) {
   background-color: #eff3f6;
   background-image: linear-gradient(-180deg, #fafbfc, #eff3f6 90%);
