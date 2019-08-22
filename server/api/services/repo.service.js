@@ -4,8 +4,40 @@ const fse = require('fs-extra');
 const repoHelper = require('../../helpers/repo.helper');
 const repoRepository = require('../../data/repositories/repository.repository');
 const userRepository = require('../../data/repositories/user.repository');
-const { initialCommit } = require('./commit.service');
 const starRepository = require('../../data/repositories/star.repository');
+
+const initialCommit = async ({
+  owner, email, repoName, files
+}) => {
+  const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
+  const repo = await NodeGit.Repository.open(pathToRepo);
+  const treeBuilder = await NodeGit.Treebuilder.create(repo, null);
+  const authorSignature = NodeGit.Signature.now(owner, email);
+
+  const fileBlobOids = await Promise.all(
+    files.map(({ content, filename }) => {
+      const fileBuffer = Buffer.from(content);
+      return NodeGit.Blob.createFromBuffer(repo, fileBuffer, fileBuffer.length).then(oid => ({ oid, filename }));
+    })
+  );
+
+  fileBlobOids.forEach(({ oid, filename }) => {
+    treeBuilder.insert(filename, oid, NodeGit.TreeEntry.FILEMODE.BLOB);
+  });
+
+  const newCommitTree = await treeBuilder.write();
+  const commitId = await repo.createCommit(
+    'HEAD',
+    authorSignature,
+    authorSignature,
+    'Initial commit',
+    newCommitTree,
+    []
+  );
+
+  const commit = await repo.getCommit(commitId);
+  return NodeGit.Branch.create(repo, 'master', commit, 1);
+};
 
 const createRepo = async (repoData) => {
   const {
