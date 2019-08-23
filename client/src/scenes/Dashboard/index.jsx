@@ -25,6 +25,7 @@ class Dashboard extends React.Component {
     };
 
     this.getUserData = this.getUserData.bind(this);
+    this.getUsersOrgs = this.getUsersOrgs.bind(this);
   }
 
   async getUserData() {
