@@ -24,7 +24,7 @@ const createOrganization = async (data) => {
   }
 
   const { id: roleId } = (await RoleRepository.getByName('OWNER')).get({ plain: true });
-  const profile = await userRepository.addUser({ ...data, type: 'ORG', fake: false });
+  const profile = await userRepository.addUser({ ...data, type: 'ORG' });
   const { id: orgId } = profile;
   const orgUser = await OrgUserRepository.create({
     roleId,

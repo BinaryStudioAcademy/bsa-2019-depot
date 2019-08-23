@@ -51,12 +51,6 @@ module.exports = {
         unique: false,
         defaultValue: 'USER'
       },
-      fake: {
-        allowNull: false,
-        type: Sequelize.BOOLEAN,
-        unique: false,
-        defaultValue: false
-      },
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE,
       deletedAt: Sequelize.DATE

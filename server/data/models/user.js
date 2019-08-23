@@ -13,8 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       location: DataTypes.STRING,
       imgUrl: DataTypes.STRING,
       // ------------------
-      type: DataTypes.ENUM('USER', 'ORG'),
-      fake: DataTypes.BOOLEAN
+      type: DataTypes.ENUM('USER', 'ORG')
     },
     {
       paranoid: true,
