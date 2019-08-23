@@ -273,9 +273,6 @@ module.exports = {
       isOpened: {
         type: Sequelize.BOOLEAN
       },
-      assignees: {
-        type: Sequelize.ARRAY(Sequelize.TEXT)
-      },
       userId: {
         type: Sequelize.UUID,
         references: {
@@ -292,8 +289,7 @@ module.exports = {
       },
       number: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        autoIncrement: true
+        allowNull: false
       },
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE,
