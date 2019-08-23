@@ -42,16 +42,16 @@ class UserRepository extends BaseRepository {
             sequelize.literal(`
             (SELECT COUNT(*)
             FROM "repositories"
-            WHERE "repositories"."userId" = "user"."id" AND
-            "repositories"."deletedAt" IS NULL)`),
+            WHERE "repositories"."userId" = "user"."id" 
+            AND "repositories"."deletedAt" IS NULL)`),
             'repositoriesCount'
           ],
           [
             sequelize.literal(`
             (SELECT COUNT(*)
             FROM "stars"
-            WHERE "user"."id" = "stars"."userId" AND
-            "stars"."deletedAt" IS NULL)`),
+            WHERE "user"."id" = "stars"."userId" 
+            AND "stars"."deletedAt" IS NULL)`),
             'starsCount'
           ]
         ]
