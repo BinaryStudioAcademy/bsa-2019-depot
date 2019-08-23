@@ -57,7 +57,7 @@ const createCommitComment = async (commitCommentData) => {
     const { id: userId, name, imgUrl } = user;
 
     const repo = await RepoRepository.getByUserAndReponame(userId, reponame);
-    const { repositoryId } = repo;
+    const { id: repositoryId } = repo;
     let commit = await CommitRepository.getByHash(hash);
     if (!commit) {
       commit = await CommitRepository.add({ sha: hash, repositoryId });
