@@ -45,7 +45,7 @@ class InviteMembersTab extends React.Component {
       username,
       role
     });
-    history.push(`/orgs/${name}`);
+    history.push(`/${name}`);
   };
 
   handleChangeRadio = handleChange => (e, data) => {
@@ -96,7 +96,6 @@ class InviteMembersTab extends React.Component {
     return (
       <Form className={styles.formField} onSubmit={handleSubmit}>
         <Container textAlign="left">
-          <Divider hidden />
           <h1 className={styles.editTitle}>
             Invite {username} to {name}
           </h1>
@@ -134,7 +133,7 @@ class InviteMembersTab extends React.Component {
             </p>
           </Form.Field>
           <Divider />
-          <Button type="submit" positive>
+          <Button type="submit" positive fluid>
             Send invitation
           </Button>
         </Container>
