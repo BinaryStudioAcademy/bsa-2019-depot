@@ -36,7 +36,7 @@ export class RepositoriesList extends React.Component {
     });
   }
 
-  onStar(repository) {
+  async onStar(repository) {
     const userId = this.props.id;
     const repositoryId = repository.id;
 
@@ -47,7 +47,8 @@ export class RepositoriesList extends React.Component {
       ...this.state,
       repositories: updatedRepositories
     });
-    setStar({ userId, repositoryId });
+    await setStar({ userId, repositoryId });
+    this.props.onDataChange();
   }
 
   checkIfStar(repositories) {
