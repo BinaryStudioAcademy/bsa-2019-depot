@@ -158,16 +158,12 @@ const forkRepo = async ({
   try {
     const source = repoHelper.getPathToRepo(owner, name);
     const target = repoHelper.getPathToRepo(username, name);
+    const targetDir = target
+      .split('/')
+      .slice(0, -1)
+      .join('/');
 
-    if (!fs.existsSync(source)) {
-      return { status: false, error: 'repo to copy doesn`t exist' };
-    }
-
-    if (fs.existsSync(target)) {
-      return { status: false, error: 'such repo already exists' };
-    }
-
-    fs.mkdirSync(target);
+    fs.mkdirSync(targetDir);
     return await fse
       .copy(source, target, { preserveTimestamps: true })
       .then(() => {
