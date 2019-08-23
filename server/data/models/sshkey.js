@@ -6,7 +6,10 @@ module.exports = (sequelize, DataTypes) => {
       title: DataTypes.STRING,
       fingerprint: DataTypes.STRING
     },
-    {}
+    {
+      paranoid: true,
+      timestamps: true
+    }
   );
 
   return SshKey;

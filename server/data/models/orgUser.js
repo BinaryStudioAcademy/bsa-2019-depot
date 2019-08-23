@@ -2,11 +2,12 @@ module.exports = (sequelize, DataTypes) => {
   const OrgUser = sequelize.define(
     'orgUser',
     {
-      isActivated: DataTypes.BOOLEAN,
-      createdAt: DataTypes.DATE,
-      updatedAt: DataTypes.DATE
+      isActivated: DataTypes.BOOLEAN
     },
-    {}
+    {
+      paranoid: true,
+      timestamps: true
+    }
   );
 
   return OrgUser;
