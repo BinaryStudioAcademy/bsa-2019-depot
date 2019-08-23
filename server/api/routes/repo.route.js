@@ -151,7 +151,7 @@ router
   })
   .post('/:owner/:repoName/issues', (req, res, next) => {
     const {
-      userId, repositoryId, title, body, isOpened, assignees
+      userId, repositoryId, title, body, isOpened, number
     } = req.body;
     addIssue({
       userId,
@@ -159,7 +159,7 @@ router
       title,
       body,
       isOpened,
-      assignees
+      number
     })
       .then(() => res.send({
         status: true
