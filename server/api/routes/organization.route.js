@@ -21,8 +21,8 @@ router.get('/:orgID/users', (req, res) => {
   getOrganizationMembers(orgID).then((data) => {
     const ids = data.map(record => record.dataValues.userId);
     const users = ids.map(user => getUserById(user));
-    Promise.all(users).then((data) => {
-      res.send(data);
+    Promise.all(users).then((userData) => {
+      res.send(userData);
     });
   });
 });

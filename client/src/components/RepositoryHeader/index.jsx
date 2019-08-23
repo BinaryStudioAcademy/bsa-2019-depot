@@ -8,12 +8,7 @@ import ForkButton from '../ForkButton';
 
 import styles from './styles.module.scss';
 
-const goToRootDir = (history, url) => () => {
-  history.push(url);
-  window.location.reload();
-};
-
-const RepositoryHeader = ({ owner, username, repoName, forkCount, issueCount, activePage, baseUrl, history }) => {
+const RepositoryHeader = ({ userId, currentRepoInfo: { userId: repoOwnerId, forkedCount, originalRepo }, owner, username, repoName, issueCount, activePage, baseUrl, history }) => {
   let activeTab;
   switch (activePage) {
   case 'issues':
@@ -28,6 +23,27 @@ const RepositoryHeader = ({ owner, username, repoName, forkCount, issueCount, ac
   default:
     activeTab = 'code';
   }
+
+  const goToRootDir = (history, url) => () => {
+    history.push(url);
+    window.location.reload();
+  };
+
+  const renderOrignalRepoLink = () => {
+    if (originalRepo) {
+      const { name: forkedRepoName, user: { username: forkedRepoOwner } } = originalRepo;
+      if (forkedRepoName && forkedRepoOwner) {
+        return (
+          <div className={styles.originalRepoLink}>
+            <span>
+              forked from{' '}
+              <a href={`/${forkedRepoOwner}/${forkedRepoName}`}>{`${forkedRepoOwner}/${forkedRepoName}`}</a>
+            </span>
+          </div>
+        );
+      }
+    }
+  };
   return (
     <header className={styles.repoHeader}>
       <Container>
@@ -42,8 +58,11 @@ const RepositoryHeader = ({ owner, username, repoName, forkCount, issueCount, ac
                   {repoName}
                 </Link>
               </span>
+              {renderOrignalRepoLink()}
             </div>
-            <ForkButton owner={owner} repoName={repoName} forkCount={forkCount} />
+            {repoOwnerId !== userId 
+              ? <ForkButton owner={owner} repoName={repoName} forkedCount={forkedCount} />
+              : null}
           </div>
           <div className="ui top attached tabular menu">
             <div className={`${activeTab === 'code' && 'active'} item`}>
@@ -74,8 +93,18 @@ RepositoryHeader.propTypes = {
   owner: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
   repoName: PropTypes.string.isRequired,
-  forkCount: PropTypes.number.isRequired,
   issueCount: PropTypes.number.isRequired,
+  userId: PropTypes.string.isRequired,
+  currentRepoInfo: PropTypes.exact({
+    userId: PropTypes.string.isRequired,
+    forkedCount: PropTypes.string.isRequired,
+    originalRepo: PropTypes.exact({
+      name: PropTypes.string.isRequired,
+      user: PropTypes.exact({
+        username: PropTypes.string.isRequired
+      }).isRequired
+    }).isRequired
+  }).isRequired,
   activePage: PropTypes.string,
   baseUrl: PropTypes.string.isRequired,
   history: PropTypes.object
@@ -83,10 +112,15 @@ RepositoryHeader.propTypes = {
 
 const mapStateToProps = ({
   profile: {
-    currentUser: { username }
-  }
+    currentUser: { id, username }
+  },
+  currentRepo: { currentRepoInfo }
 }) => ({
-  username
+  userId: id,
+  username,
+  currentRepoInfo
 });
 
-export default connect(mapStateToProps)(withRouter(RepositoryHeader));
+export default connect(
+  mapStateToProps
+)(withRouter(RepositoryHeader));

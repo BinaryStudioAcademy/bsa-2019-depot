@@ -39,7 +39,32 @@ class RepositoryRepository extends BaseRepository {
   }
 
   getByUserAndReponame(userId, reponame) {
-    return this.model.findOne({ where: { name: reponame, userId } });
+    return this.model.findOne({
+      where: { name: reponame, userId },
+      attributes: {
+        include: [
+          [
+            sequelize.literal(`(SELECT COUNT(*)
+            FROM "repositories" 
+            WHERE "repository"."id" = "repositories"."forkedFromRepoId")`),
+            'forkedCount'
+          ]
+        ]
+      },
+      include: [
+        {
+          model: this.model,
+          as: 'originalRepo',
+          attributes: ['id', 'name'],
+          include: [
+            {
+              model: UserModel,
+              attributes: ['id', 'username']
+            }
+          ]
+        }
+      ]
+    });
   }
 
   updateByUserAndReponame(userId, reponame, data) {

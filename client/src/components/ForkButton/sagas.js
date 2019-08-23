@@ -8,7 +8,7 @@ function* forkRepoRoutine({ payload: { owner, repo } }) {
     yield put(forkRepo.request());
     const response = yield call(repoService.forkRepo, { owner, repoData });
     if (response.status) {
-      yield put(forkRepo.success(response.path));
+      yield put(forkRepo.success(response.username));
     } else {
       yield put(forkRepo.failure(response.error));
     }

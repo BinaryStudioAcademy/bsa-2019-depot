@@ -28,8 +28,6 @@ class RepositoryPage extends React.Component {
     const { username, reponame } = match.params;
 
     const issueCount = issues.length;
-    const forkCount = 22;
-
     const branchExists = pathname.match(/tree\/.+/);
     let branch = '';
     if (branchExists) branch = branchExists[0].split('/')[1]; // branchExists[0] has format 'tree/nameOfBranch/...'
@@ -44,7 +42,6 @@ class RepositoryPage extends React.Component {
           owner={username}
           repoName={reponame}
           issueCount={issueCount}
-          forkCount={forkCount}
           activePage={pathname.split('/')[3]}
           baseUrl={match.url}
         />
@@ -88,7 +85,7 @@ RepositoryPage.propTypes = {
   issues: PropTypes.array.isRequired
 };
 
-const mapStateToProps = ({ issuesData: { issues } }) => ({
+const mapStateToProps = ({ issuesData: { issues }}) => ({
   issues
 });
 
