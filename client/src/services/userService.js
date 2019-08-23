@@ -66,3 +66,11 @@ export const getStars = async username => {
   });
   return response.json();
 };
+
+export const checkUsernameExists = async username => {
+  const response = await callWebApi({
+    endpoint: `/api/user/username-exists?username=${username}`,
+    type: 'GET'
+  });
+  return response.json();
+};
