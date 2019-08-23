@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     'commit',
     {
       sha: DataTypes.STRING,
-      repoId: DataTypes.UUID
+      repositoryId: DataTypes.UUID
     },
     {
       paranoid: true,

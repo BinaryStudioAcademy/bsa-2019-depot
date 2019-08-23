@@ -70,15 +70,19 @@ module.exports = {
         defaultValue: Sequelize.literal('gen_random_uuid()')
       },
       value: {
+        allowNull: false,
         type: Sequelize.TEXT
       },
       title: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       fingerprint: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       userId: {
+        allowNull: false,
         type: Sequelize.UUID,
         references: {
           model: 'users',
@@ -98,9 +102,11 @@ module.exports = {
         defaultValue: Sequelize.literal('gen_random_uuid()')
       },
       name: {
+        allowNull: false,
         type: Sequelize.TEXT
       },
       userId: {
+        allowNull: false,
         type: Sequelize.UUID,
         references: {
           model: 'users',
@@ -148,6 +154,7 @@ module.exports = {
         defaultValue: Sequelize.literal('gen_random_uuid()')
       },
       orgId: {
+        allowNull: false,
         type: Sequelize.UUID,
         references: {
           model: 'users',
@@ -155,6 +162,7 @@ module.exports = {
         }
       },
       userId: {
+        allowNull: false,
         type: Sequelize.UUID,
         references: {
           model: 'users',
@@ -162,6 +170,7 @@ module.exports = {
         }
       },
       roleId: {
+        allowNull: false,
         type: Sequelize.UUID,
         references: {
           model: 'roles',
@@ -186,9 +195,11 @@ module.exports = {
         defaultValue: Sequelize.literal('gen_random_uuid()')
       },
       sha: {
+        allowNull: false,
         type: Sequelize.STRING
       },
-      repoId: {
+      repositoryId: {
+        allowNull: false,
         type: Sequelize.UUID,
         references: {
           model: 'repositories',
@@ -208,6 +219,7 @@ module.exports = {
         defaultValue: Sequelize.literal('gen_random_uuid()')
       },
       userId: {
+        allowNull: false,
         type: Sequelize.UUID,
         references: {
           model: 'users',
@@ -215,6 +227,7 @@ module.exports = {
         }
       },
       repositoryId: {
+        allowNull: false,
         type: Sequelize.UUID,
         references: {
           model: 'repositories',
@@ -234,6 +247,7 @@ module.exports = {
         defaultValue: Sequelize.literal('gen_random_uuid()')
       },
       body: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       commitId: {
@@ -265,15 +279,19 @@ module.exports = {
         defaultValue: Sequelize.literal('gen_random_uuid()')
       },
       title: {
+        allowNull: false,
         type: Sequelize.TEXT
       },
       body: {
+        allowNull: false,
         type: Sequelize.TEXT
       },
       isOpened: {
+        allowNull: false,
         type: Sequelize.BOOLEAN
       },
       userId: {
+        allowNull: false,
         type: Sequelize.UUID,
         references: {
           model: 'users',
@@ -281,15 +299,12 @@ module.exports = {
         }
       },
       repositoryId: {
+        allowNull: false,
         type: Sequelize.UUID,
         references: {
           model: 'repositories',
           key: 'id'
         }
-      },
-      number: {
-        type: Sequelize.INTEGER,
-        allowNull: false
       },
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE,
@@ -304,9 +319,11 @@ module.exports = {
         defaultValue: Sequelize.literal('gen_random_uuid()')
       },
       body: {
+        allowNull: false,
         type: Sequelize.TEXT
       },
       userId: {
+        allowNull: false,
         type: Sequelize.UUID,
         references: {
           model: 'users',
@@ -314,6 +331,7 @@ module.exports = {
         }
       },
       issueId: {
+        allowNull: false,
         type: Sequelize.UUID,
         references: {
           model: 'issues',

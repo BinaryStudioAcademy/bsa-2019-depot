@@ -5,7 +5,7 @@ const addIssue = issueData => issueRepository.addIssue(issueData);
 
 const updateIssueById = ({ id, ...issueData }) => issueRepository.updateIssueById(id, { issueData });
 
-const getAllRepoIssues = repoId => issueRepository.getRepositoryIssues(repoId);
+const getAllRepoIssues = repositoryId => issueRepository.getRepositoryIssues(repositoryId);
 
 const getAllIssueComments = issueId => issueCommentRepository.getAllIssueComments(issueId);
 
