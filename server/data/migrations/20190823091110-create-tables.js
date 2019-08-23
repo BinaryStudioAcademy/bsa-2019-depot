@@ -18,37 +18,29 @@ module.exports = {
         unique: true
       },
       password: {
-        type: Sequelize.STRING,
-        unique: false
+        type: Sequelize.STRING
       },
       name: {
-        type: Sequelize.STRING,
-        unique: false
+        type: Sequelize.STRING
       },
       bio: {
-        type: Sequelize.STRING,
-        unique: false
+        type: Sequelize.STRING
       },
       url: {
-        type: Sequelize.STRING,
-        unique: false
+        type: Sequelize.STRING
       },
       company: {
-        type: Sequelize.STRING,
-        unique: false
+        type: Sequelize.STRING
       },
       location: {
-        type: Sequelize.STRING,
-        unique: false
+        type: Sequelize.STRING
       },
       imgUrl: {
-        type: Sequelize.STRING,
-        unique: false
+        type: Sequelize.STRING
       },
       type: {
         allowNull: false,
         type: Sequelize.TEXT,
-        unique: false,
         defaultValue: 'USER'
       },
       createdAt: Sequelize.DATE,
@@ -108,15 +100,13 @@ module.exports = {
         }
       },
       description: {
-        type: Sequelize.TEXT,
-        unique: false
+        type: Sequelize.TEXT
       },
       forkedFromRepoId: {
         type: Sequelize.UUID
       },
       website: {
-        type: Sequelize.STRING,
-        unique: false
+        type: Sequelize.STRING
       },
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE,
@@ -173,8 +163,7 @@ module.exports = {
       },
       isActivated: {
         allowNull: false,
-        type: Sequelize.BOOLEAN,
-        unique: false
+        type: Sequelize.BOOLEAN
       },
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE,
