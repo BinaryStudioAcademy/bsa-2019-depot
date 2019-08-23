@@ -9,6 +9,10 @@ class OrgUserRepository extends BaseRepository {
   getAllOrganizationUsers(orgId) {
     return this.model.findAll({ where: { orgId } });
   }
+
+  getUsersOrganizations(userId) {
+    return this.model.findAll({ where: { userId } });
+  }
 }
 
 module.exports = new OrgUserRepository(OrgUserModel);

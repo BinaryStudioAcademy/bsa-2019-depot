@@ -1,9 +1,15 @@
 const UserRepository = require('../../data/repositories/user.repository');
 const StarRepository = require('../../data/repositories/star.repository');
+const OrgUserRepository = require('../../data/repositories/org-user.repository');
 
 const tokenHelper = require('../../helpers/token.helper');
 
 const getUserById = userId => UserRepository.getUserById(userId);
+
+const getUsersOrganizations = (userId) => {
+  console.log();
+  return OrgUserRepository.getUsersOrganizations(userId);
+};
 
 const getUserDetailed = username => UserRepository.getUserDetailed(username);
 
@@ -58,5 +64,6 @@ module.exports = {
   updateUserSettings,
   resetPassword,
   getUserDetailed,
-  getStars
+  getStars,
+  getUsersOrganizations
 };

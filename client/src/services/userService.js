@@ -74,3 +74,11 @@ export const checkUsernameExists = async username => {
   });
   return response.json();
 };
+
+export const getUsersOrganizations = async userid => {
+  const response = await callWebApi({
+    endpoint: `/api/user/${userid}/organizations`,
+    type: 'GET'
+  });
+  return response.json();
+};

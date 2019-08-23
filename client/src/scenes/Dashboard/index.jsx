@@ -9,7 +9,7 @@ import UserInfo from '../../components/UserInfo';
 import AdditionalUserInfo from '../../components/AdditionalUserInfo';
 import DashboardHeader, { tabs } from '../../components/DashboardHeader';
 import RepositoriesFilters from '../../components/RepositoriesFilters';
-import { getUserDetailed } from '../../services/userService';
+import { getUserDetailed, getUsersOrganizations } from '../../services/userService';
 import Spinner from '../../components/Spinner';
 import OrganizationDashboard from '../OrganizationDashboard';
 
@@ -20,7 +20,8 @@ class Dashboard extends React.Component {
     super(props);
 
     this.state = {
-      userData: initialUserData
+      userData: initialUserData,
+      userOrgs: []
     };
 
     this.getUserData = this.getUserData.bind(this);
@@ -40,8 +41,21 @@ class Dashboard extends React.Component {
     });
   }
 
-  componentDidMount() {
-    this.getUserData();
+  async getUsersOrgs() {
+    const {
+      userData: { id }
+    } = this.state;
+
+    const userOrgs = await getUsersOrganizations(id);
+    this.setState({
+      ...this.state,
+      userOrgs
+    });
+  }
+
+  async componentDidMount() {
+    await this.getUserData();
+    await this.getUsersOrgs();
   }
 
   renderTab(tab) {
