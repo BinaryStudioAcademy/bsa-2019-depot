@@ -43,7 +43,7 @@ class UserRepository extends BaseRepository {
             (SELECT COUNT(*)
             FROM "repositories"
             WHERE "repositories"."userId" = "user"."id" AND
-            "repositories"."deletedAt" IS NOT NULL)`),
+            "repositories"."deletedAt" IS NULL)`),
             'repositoriesCount'
           ],
           [
@@ -51,7 +51,7 @@ class UserRepository extends BaseRepository {
             (SELECT COUNT(*)
             FROM "stars"
             WHERE "user"."id" = "stars"."userId" AND
-            "stars"."deletedAt" IS NOT NULL)`),
+            "stars"."deletedAt" IS NULL)`),
             'starsCount'
           ]
         ]
