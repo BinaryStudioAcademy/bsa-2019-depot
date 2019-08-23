@@ -6,7 +6,10 @@ module.exports = (sequelize, DataTypes) => {
       description: DataTypes.TEXT,
       website: DataTypes.STRING,
       createdAt: DataTypes.DATE,
-      updatedAt: DataTypes.DATE
+      updatedAt: DataTypes.DATE,
+      userId: DataTypes.UUID,
+      forkedFromRepoId: DataTypes.UUID,
+      deletedAt: DataTypes.DATE
     },
     {
       paranoid: true,

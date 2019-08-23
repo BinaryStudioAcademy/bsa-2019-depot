@@ -9,7 +9,6 @@ module.exports = {
         defaultValue: Sequelize.literal('gen_random_uuid()')
       },
       username: {
-        allowNull: true,
         type: Sequelize.STRING,
         unique: true
       },
@@ -19,37 +18,30 @@ module.exports = {
         unique: true
       },
       password: {
-        allowNull: true,
         type: Sequelize.STRING,
         unique: false
       },
       name: {
-        allowNull: true,
         type: Sequelize.STRING,
         unique: false
       },
       bio: {
-        allowNull: true,
         type: Sequelize.STRING,
         unique: false
       },
       url: {
-        allowNull: true,
         type: Sequelize.STRING,
         unique: false
       },
       company: {
-        allowNull: true,
         type: Sequelize.STRING,
         unique: false
       },
       location: {
-        allowNull: true,
         type: Sequelize.STRING,
         unique: false
       },
       imgUrl: {
-        allowNull: true,
         type: Sequelize.STRING,
         unique: false
       },
@@ -116,7 +108,6 @@ module.exports = {
         }
       },
       description: {
-        allowNull: true,
         type: Sequelize.TEXT,
         unique: false
       },
@@ -124,7 +115,6 @@ module.exports = {
         type: Sequelize.UUID
       },
       website: {
-        allowNull: true,
         type: Sequelize.STRING,
         unique: false
       },
@@ -141,7 +131,7 @@ module.exports = {
         defaultValue: Sequelize.literal('gen_random_uuid()')
       },
       name: {
-        allowNull: true,
+        allowNull: false,
         type: Sequelize.STRING,
         unique: true
       },
@@ -244,7 +234,6 @@ module.exports = {
         defaultValue: Sequelize.literal('gen_random_uuid()')
       },
       body: {
-        // allowNull set to default since there could be emoty comments with attached files in future
         type: Sequelize.STRING
       },
       commitId: {
@@ -300,6 +289,11 @@ module.exports = {
           model: 'repositories',
           key: 'id'
         }
+      },
+      number: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        autoIncrement: true
       },
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE,

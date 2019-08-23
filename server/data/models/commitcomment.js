@@ -3,20 +3,8 @@ module.exports = (sequelize, DataTypes) => {
     'commitComment',
     {
       body: DataTypes.STRING,
-      commitId: {
-        type: DataTypes.UUID,
-        references: {
-          model: 'commit',
-          key: 'id'
-        }
-      },
-      userId: {
-        type: DataTypes.UUID,
-        references: {
-          model: 'user',
-          key: 'id'
-        }
-      }
+      commitId: DataTypes.UUID,
+      userId: DataTypes.UUID,
     },
     {
       paranoid: true,

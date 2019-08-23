@@ -7,7 +7,10 @@ module.exports = (sequelize, DataTypes) => {
       isOpened: DataTypes.BOOLEAN,
       assignees: DataTypes.ARRAY(DataTypes.TEXT),
       createdAt: DataTypes.DATE,
-      updatedAt: DataTypes.DATE
+      updatedAt: DataTypes.DATE,
+      userId: DataTypes.UUID,
+      repositoryId: DataTypes.UUID,
+      number: DataTypes.INTEGER
     },
     {
       paranoid: true,
