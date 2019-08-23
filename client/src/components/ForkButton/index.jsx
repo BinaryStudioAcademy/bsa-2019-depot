@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import * as repositoryService from '../../services/repositoryService';
 import { Button, Label, Icon, Modal, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
-// import { forkRepo } from '../../routines/routines';
-// import { actions } from './actions';
 
 import styles from './styles.module.scss';
 
@@ -20,13 +18,7 @@ class ForkButton extends Component {
 
   handleOpen = () => this.setState({ modalOpen: true });
 
-  // handleClose = () => {
-  //   this.props.clearModal();
-  //   this.setState({ modalOpen: false });
-  // };
-
   handleRedirect = (username, repoName) => {
-    // this.handleClose();
     this.setState({ modalOpen: false });
     window.location.replace(`/${username}/${repoName}`);
   };
@@ -37,7 +29,6 @@ class ForkButton extends Component {
     this.setState({ loading: true });
     repositoryService.forkRepo(payload)
       .then(data => this.setState({ username: data.username, loading: false }));
-    // this.props.forkRepo(payload);
   };
 
   render() {
@@ -90,13 +81,9 @@ ForkButton.propTypes = {
   owner: PropTypes.string,
   repoName: PropTypes.string,
   forkedCount: PropTypes.number,
-  // currentUser: PropTypes.object,
-  // forkRepo: PropTypes.func,
-  // clearModal: PropTypes.func,
   loading: PropTypes.bool,
   username: PropTypes.string,
   currentRepoInfo: PropTypes.object.isRequired
-  // forkRepoData: PropTypes.object
 };
 
 ForkButton.defaultProps = {
@@ -111,13 +98,7 @@ const mapStateToProps = ({ currentRepo: { currentRepoInfo } }) => ({
   currentRepoInfo
 });
 
-// const mapDispatchToProps = {
-//   forkRepo,
-//   ...actions
-// };
-
 export default connect(
   mapStateToProps
-  // mapDispatchToProps
 )(ForkButton);
 
