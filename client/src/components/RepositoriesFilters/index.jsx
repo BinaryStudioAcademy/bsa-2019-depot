@@ -20,7 +20,7 @@ export class RepositoriesFilters extends React.Component {
       { key: 'lt_3', text: 'CSS', value: 'CSS' }
     ];
 
-    const { orgPage, isOwner } = this.props;
+    const { orgPage, isOwner, orgName } = this.props;
 
     return (
       <Container className={styles.repos_filters}>
@@ -45,7 +45,7 @@ export class RepositoriesFilters extends React.Component {
         </div>
         {(orgPage ? isOwner : true) && (
           <div className={styles.new_repo_wrapper}>
-            <Link to="/new">
+            <Link to={orgPage ? `/organizations/${orgName}/repositories/new` : '/new'}>
               <Button primary className={styles.new_repo}>
                 <Octicon icon={Repo} className={styles.new_repo_icon} />
                 New
@@ -64,7 +64,8 @@ RepositoriesFilters.propTypes = {
   repositories: PropTypes.array,
   repo: PropTypes.object,
   orgPage: PropTypes.bool,
-  isOwner: PropTypes.bool
+  isOwner: PropTypes.bool,
+  orgName: PropTypes.string
 };
 
 export default RepositoriesFilters;

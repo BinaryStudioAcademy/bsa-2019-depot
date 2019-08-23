@@ -153,32 +153,28 @@ const getReposNames = async ({ user, filter, limit }) => {
 const getReposData = async ({ username }) => repoRepository.getByUsername(username);
 
 const forkRepo = async ({
-  userId, username, owner, repoName, website, description, forkedFromRepoId
+  userId, username, owner, name, website, description, forkedFromRepoId
 }) => {
   try {
-    const source = repoHelper.getPathToRepo(owner, repoName);
-    const target = repoHelper.getPathToRepo(username, repoName);
+    const source = repoHelper.getPathToRepo(owner, name);
+    const target = repoHelper.getPathToRepo(username, name);
+    const targetDir = target
+      .split('/')
+      .slice(0, -1)
+      .join('/');
 
-    if (!fs.existsSync(source)) {
-      return { status: false, error: 'repo to copy doesn`t exist' };
-    }
-
-    if (fs.existsSync(target)) {
-      return { status: false, error: 'such repo already exists' };
-    }
-
-    fs.mkdirSync(target);
+    fs.mkdirSync(targetDir);
     return await fse
       .copy(source, target, { preserveTimestamps: true })
       .then(() => {
         repoRepository.create({
           userId,
-          repoName,
+          name,
           website,
           description,
           forkedFromRepoId
         });
-        return { status: true, path: target };
+        return { status: true, username };
       })
       .catch(err => ({ status: false, error: err.message }));
   } catch (err) {

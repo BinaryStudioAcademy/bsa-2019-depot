@@ -1,7 +1,14 @@
 import { fetchCurrentRepo } from '../../routines/routines';
 
 const initialCurrentRepoState = {
-  currentRepoInfo: {},
+  currentRepoInfo: {
+    originalRepo: {
+      name: '',
+      user: {
+        username: ''
+      }
+    }
+  },
   loading: false,
   error: null
 };

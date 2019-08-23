@@ -109,7 +109,7 @@ HeaderDesktopUnauth.propTypes = {
 };
 
 const pullRequests = <a href="/">Pull requests</a>;
-const issues = <a href="/">Issues</a>;
+const issues = username => <a href={`/${username}/issues`}>Issues</a>;
 
 const SidebarAuth = (closeSidebar, sidebarOpened, userName, avatar) => (
   <Sidebar
@@ -132,7 +132,7 @@ const SidebarAuth = (closeSidebar, sidebarOpened, userName, avatar) => (
       <a href="/">Dashboard</a>
     </Menu.Item>
     <Menu.Item as="div">{pullRequests}</Menu.Item>
-    <Menu.Item as="div">{issues}</Menu.Item>
+    <Menu.Item as="div">{issues(userName)}</Menu.Item>
     <Menu.Item as="div">
       <a href={`/${userName}`}>
         {<img src={getUserImgLink(avatar)} alt="user" />}
@@ -187,7 +187,7 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
               <li>{logo}</li>
               <li>{SearchInp()}</li>
               <li>{pullRequests}</li>
-              <li>{issues}</li>
+              <li>{issues(username)}</li>
             </ul>
           </Responsive>
           <Responsive maxWidth={1200}>

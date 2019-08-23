@@ -49,5 +49,11 @@ $gray: #f7f7fb;
         margin: 0 5px;
       }
     }
+    :local(.originalRepoLink) {
+      font-size: 0.75em;
+      margin: 6px 0 0 23px;
+      line-height: 0.75em;
+      white-space: nowrap;
+    }
   }
 }

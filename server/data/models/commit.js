@@ -10,8 +10,5 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: true
     }
   );
-  Commit.associate = function (/* models */) {
-    // associations can be defined here
-  };
   return Commit;
 };

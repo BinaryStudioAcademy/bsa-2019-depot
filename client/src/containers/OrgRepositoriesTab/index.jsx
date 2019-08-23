@@ -10,13 +10,23 @@ import styles from './styles.module.scss';
 
 class OrgRepositoriesTab extends React.Component {
   render() {
-    const { orgMembers, orgInfo, isOwner } = this.props;
+    const {
+      orgMembers,
+      orgInfo,
+      isOwner,
+      orgInfo: { username }
+    } = this.props;
     return (
       <Container className={styles.org_repositories_list}>
         <Grid>
           <Grid.Row columns={2}>
             <Container className={styles.org_repositories_filters}>
-              <RepositoriesFilters className={styles.org_repositories_filter} isOwner={isOwner} orgPage={true} />
+              <RepositoriesFilters
+                className={styles.org_repositories_filter}
+                isOwner={isOwner}
+                orgPage={true}
+                orgName={username}
+              />
             </Container>
             <Grid.Column className={styles.userinfo_wrapper} mobile={16} tablet={8} computer={11}>
               <RepositoriesList currentOrg={orgInfo} />
