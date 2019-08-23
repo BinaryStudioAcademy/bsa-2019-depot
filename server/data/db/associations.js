@@ -9,7 +9,7 @@ module.exports = (models) => {
   User.hasMany(Repository);
   User.hasMany(Issue);
   User.hasMany(IssueComment);
-  Repository.hasMany(Issue, { foreignKey: 'repositoryId', onDelete: 'CASCADE' });
+  Repository.hasMany(Issue, { foreignKey: 'repositoryId' });
   Issue.hasMany(IssueComment);
 
   User.hasMany(OrgUser, { foreignKey: 'userId' });
@@ -17,11 +17,11 @@ module.exports = (models) => {
   Role.hasMany(OrgUser, { foreignKey: 'roleId' });
   User.hasMany(Star);
 
-  Repository.hasMany(Commit, { foreignKey: 'repoId', onDelete: 'CASCADE' });
-  Commit.hasMany(CommitComment, { foreignKey: 'commitId', onDelete: 'CASCADE' });
+  Repository.hasMany(Commit, { foreignKey: 'repositoryId' });
+  Commit.hasMany(CommitComment, { foreignKey: 'commitId' });
   CommitComment.belongsTo(Commit);
 
-  User.hasMany(CommitComment, { foreignKey: 'userId', onDelete: 'CASCADE' });
+  User.hasMany(CommitComment, { foreignKey: 'userId' });
   CommitComment.belongsTo(User);
 
   Repository.hasMany(Repository, {

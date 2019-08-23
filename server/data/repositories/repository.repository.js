@@ -19,7 +19,8 @@ class RepositoryRepository extends BaseRepository {
             sequelize.literal(`
             (SELECT COUNT(*)
             FROM "stars"
-            WHERE "repository"."id" = "stars"."repositoryId")`),
+            WHERE "repository"."id" = "stars"."repositoryId"
+            AND "repository"."deletedAt" IS NULL)`),
             'starsCount'
           ]
         ]
@@ -45,8 +46,9 @@ class RepositoryRepository extends BaseRepository {
         include: [
           [
             sequelize.literal(`(SELECT COUNT(*)
-            FROM "repositories" 
-            WHERE "repository"."id" = "repositories"."forkedFromRepoId")`),
+            FROM "repositories"
+            WHERE "repository"."id" = "repositories"."forkedFromRepoId"
+            AND "repository"."deletedAt" IS NULL)`),
             'forkedCount'
           ]
         ]

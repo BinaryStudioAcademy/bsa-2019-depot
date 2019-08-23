@@ -32,7 +32,7 @@ const IssuesList = props => {
                     />
                   ))}
             </List.Content>
-            <Icon name={issue.opened ? 'info' : 'check'} color={issue.opened ? 'green' : 'red'} />
+            <Icon name={issue.isOpened ? 'info circle' : 'check'} color={issue.isOpened ? 'green' : 'red'} />
             <List.Content>
               <List.Header>
                 <Link to={`${url}/${issue.id}`}>{issue.title}</Link>

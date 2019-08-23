@@ -45,7 +45,7 @@ class ForkButton extends Component {
     return (
       <Modal
         closeIcon
-        dimmer='inverted'
+        dimmer="inverted"
         open={this.state.modalOpen}
         onClose={this.handleClose}
         size="small"
@@ -69,7 +69,9 @@ class ForkButton extends Component {
               <Loader active inline="centered" />
             </Modal.Content>
           </>
-        ) : username ? this.handleRedirect(username, repoName) : (
+        ) : username ? (
+          this.handleRedirect(username, repoName)
+        ) : (
           <>
             <Modal.Header>You are going to fork {repoName}</Modal.Header>
             <Modal.Actions>
