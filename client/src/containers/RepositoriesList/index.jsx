@@ -98,7 +98,8 @@ RepositoriesList.propTypes = {
     path: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired
   }).isRequired,
-  id: PropTypes.string
+  id: PropTypes.string,
+  onDataChange: PropTypes.func.isRequired
 };
 
 const mapStateToProps = ({

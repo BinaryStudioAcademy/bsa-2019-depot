@@ -8,7 +8,17 @@ import ForkButton from '../ForkButton';
 
 import styles from './styles.module.scss';
 
-const RepositoryHeader = ({ userId, currentRepoInfo: { userId: repoOwnerId, forkedCount, originalRepo }, owner, username, repoName, issueCount, activePage, baseUrl, history }) => {
+const RepositoryHeader = ({
+  userId,
+  currentRepoInfo: { userId: repoOwnerId, forkedCount, originalRepo },
+  owner,
+  username,
+  repoName,
+  issueCount,
+  activePage,
+  baseUrl,
+  history
+}) => {
   let activeTab;
   switch (activePage) {
   case 'issues':
@@ -31,13 +41,15 @@ const RepositoryHeader = ({ userId, currentRepoInfo: { userId: repoOwnerId, fork
 
   const renderOrignalRepoLink = () => {
     if (originalRepo) {
-      const { name: forkedRepoName, user: { username: forkedRepoOwner } } = originalRepo;
+      const {
+        name: forkedRepoName,
+        user: { username: forkedRepoOwner }
+      } = originalRepo;
       if (forkedRepoName && forkedRepoOwner) {
         return (
           <div className={styles.originalRepoLink}>
             <span>
-              forked from{' '}
-              <a href={`/${forkedRepoOwner}/${forkedRepoName}`}>{`${forkedRepoOwner}/${forkedRepoName}`}</a>
+              forked from <a href={`/${forkedRepoOwner}/${forkedRepoName}`}>{`${forkedRepoOwner}/${forkedRepoName}`}</a>
             </span>
           </div>
         );
@@ -60,9 +72,7 @@ const RepositoryHeader = ({ userId, currentRepoInfo: { userId: repoOwnerId, fork
               </span>
               {renderOrignalRepoLink()}
             </div>
-            {repoOwnerId !== userId 
-              ? <ForkButton owner={owner} repoName={repoName} forkedCount={forkedCount} />
-              : null}
+            {repoOwnerId !== userId ? <ForkButton owner={owner} repoName={repoName} forkedCount={forkedCount} /> : null}
           </div>
           <div className="ui top attached tabular menu">
             <div className={`${activeTab === 'code' && 'active'} item`}>
@@ -121,6 +131,4 @@ const mapStateToProps = ({
   currentRepoInfo
 });
 
-export default connect(
-  mapStateToProps
-)(withRouter(RepositoryHeader));
+export default connect(mapStateToProps)(withRouter(RepositoryHeader));
