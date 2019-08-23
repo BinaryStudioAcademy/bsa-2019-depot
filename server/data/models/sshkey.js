@@ -4,8 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       value: DataTypes.STRING,
       title: DataTypes.STRING,
-      fingerprint: DataTypes.STRING,
-      userId: DataTypes.UUID
+      fingerprint: DataTypes.STRING
     },
     {
       paranoid: true,

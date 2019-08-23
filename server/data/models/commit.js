@@ -2,8 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   const Commit = sequelize.define(
     'commit',
     {
-      sha: DataTypes.STRING,
-      repositoryId: DataTypes.UUID
+      sha: DataTypes.STRING
     },
     {
       paranoid: true,

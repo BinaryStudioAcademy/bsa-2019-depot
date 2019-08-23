@@ -4,12 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING,
       description: DataTypes.TEXT,
-      website: DataTypes.STRING,
-      createdAt: DataTypes.DATE,
-      updatedAt: DataTypes.DATE,
-      userId: DataTypes.UUID,
-      forkedFromRepoId: DataTypes.UUID,
-      deletedAt: DataTypes.DATE
+      website: DataTypes.STRING
     },
     {
       paranoid: true,

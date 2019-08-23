@@ -4,11 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       title: DataTypes.STRING,
       body: DataTypes.STRING,
-      isOpened: DataTypes.BOOLEAN,
-      createdAt: DataTypes.DATE,
-      updatedAt: DataTypes.DATE,
-      userId: DataTypes.UUID,
-      repositoryId: DataTypes.UUID,
+      isOpened: DataTypes.BOOLEAN
     },
     {
       paranoid: true,
