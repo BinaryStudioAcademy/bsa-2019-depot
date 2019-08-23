@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import * as repositoryService from '../../services/repositoryService';
 import { Button, Label, Icon, Modal, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
@@ -32,20 +32,20 @@ class ForkButton extends Component {
   };
 
   handleFork = () => {
-    const { owner, repoName: repo } = this.props;
-    const payload = { owner, repo };
+    const { owner, currentRepoInfo } = this.props;
+    const payload = { owner, repoData: currentRepoInfo };
     repositoryService.forkRepo(payload)
       .then(data => this.setState({ username: data.username }));
     // this.props.forkRepo(payload);
   };
 
   render() {
-    const { repoName, forkedCount } = this.props;
+    const { repoName, currentRepoInfo: { forkedCount } } = this.props;
     const { username, loading } = this.state;
     return (
       <Modal
         closeIcon
-        dimmer="inverted"
+        dimmer='inverted'
         open={this.state.modalOpen}
         onClose={this.handleClose}
         size="small"
@@ -69,9 +69,7 @@ class ForkButton extends Component {
               <Loader active inline="centered" />
             </Modal.Content>
           </>
-        ) : username ? (
-          this.handleRedirect(username, repoName)
-        ) : (
+        ) : username ? this.handleRedirect(username, repoName) : (
           <>
             <Modal.Header>You are going to fork {repoName}</Modal.Header>
             <Modal.Actions>
@@ -96,6 +94,7 @@ ForkButton.propTypes = {
   // clearModal: PropTypes.func,
   loading: PropTypes.bool,
   username: PropTypes.string,
+  currentRepoInfo: PropTypes.object.isRequired
   // forkRepoData: PropTypes.object
 };
 
@@ -107,13 +106,17 @@ ForkButton.defaultProps = {
   forkedCount: 0
 };
 
-// const mapStateToProps = ({ forkRepo }) => ({
-//   forkRepoData: forkRepo
-// });
+const mapStateToProps = ({ currentRepo: { currentRepoInfo } }) => ({
+  currentRepoInfo
+});
 
 // const mapDispatchToProps = {
 //   forkRepo,
 //   ...actions
 // };
 
-export default ForkButton;
+export default connect(
+  mapStateToProps
+  // mapDispatchToProps
+)(ForkButton);
+
