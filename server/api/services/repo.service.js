@@ -1,6 +1,5 @@
 const NodeGit = require('nodegit');
 const fs = require('fs-extra');
-const fse = require('fs-extra');
 const repoHelper = require('../../helpers/repo.helper');
 const repoRepository = require('../../data/repositories/repository.repository');
 const userRepository = require('../../data/repositories/user.repository');
@@ -158,14 +157,8 @@ const forkRepo = async ({
   try {
     const source = repoHelper.getPathToRepo(owner, name);
     const target = repoHelper.getPathToRepo(username, name);
-    const targetDir = target
-      .split('/')
-      .slice(0, -1)
-      .join('/');
 
-    fs.mkdirSync(targetDir);
-    return await fse
-      .copy(source, target, { preserveTimestamps: true })
+    return NodeGit.Clone(source, target, { bare: 1 })
       .then(() => {
         repoRepository.create({
           userId,
