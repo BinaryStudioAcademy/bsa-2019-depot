@@ -85,7 +85,7 @@ RepositoryPage.propTypes = {
   issues: PropTypes.array.isRequired
 };
 
-const mapStateToProps = ({ issuesData: { issues }}) => ({
+const mapStateToProps = ({ issuesData: { issues } }) => ({
   issues
 });
 
