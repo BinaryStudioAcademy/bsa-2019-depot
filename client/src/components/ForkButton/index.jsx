@@ -34,8 +34,9 @@ class ForkButton extends Component {
   handleFork = () => {
     const { owner, currentRepoInfo } = this.props;
     const payload = { owner, repoData: currentRepoInfo };
+    this.setState({ loading: true });
     repositoryService.forkRepo(payload)
-      .then(data => this.setState({ username: data.username }));
+      .then(data => this.setState({ username: data.username, loading: false }));
     // this.props.forkRepo(payload);
   };
 
