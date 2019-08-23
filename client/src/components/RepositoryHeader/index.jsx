@@ -99,11 +99,11 @@ RepositoryHeader.propTypes = {
     userId: PropTypes.string.isRequired,
     forkedCount: PropTypes.string.isRequired,
     originalRepo: PropTypes.exact({
-      name: PropTypes.string.isRequired,
+      name: PropTypes.string,
       user: PropTypes.exact({
-        username: PropTypes.string.isRequired
-      }).isRequired
-    }).isRequired
+        username: PropTypes.string
+      })
+    })
   }).isRequired,
   activePage: PropTypes.string,
   baseUrl: PropTypes.string.isRequired,
