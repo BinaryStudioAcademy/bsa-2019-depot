@@ -9,7 +9,10 @@ module.exports = (sequelize, DataTypes) => {
       createdAt: DataTypes.DATE,
       updatedAt: DataTypes.DATE
     },
-    {}
+    {
+      paranoid: true,
+      timestamps: true
+    }
   );
 
   return Issue;

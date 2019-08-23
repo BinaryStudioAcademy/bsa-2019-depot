@@ -16,7 +16,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM('USER', 'ORG'),
       fake: DataTypes.BOOLEAN
     },
-    {}
+    {
+      paranoid: true,
+      timestamps: true
+    }
   );
   User.associate = (/* models */) => {
     // associations can be defined here

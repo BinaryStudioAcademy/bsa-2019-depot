@@ -4,14 +4,17 @@ module.exports = (sequelize, DataTypes) => {
     {
       sha: DataTypes.STRING,
       repoId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
         references: {
           model: 'repositories',
           key: 'id'
         }
       }
     },
-    {}
+    {
+      paranoid: true,
+      timestamps: true
+    }
   );
   Commit.associate = function (/* models */) {
     // associations can be defined here
