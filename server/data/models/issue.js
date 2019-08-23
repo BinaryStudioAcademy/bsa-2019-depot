@@ -9,7 +9,6 @@ module.exports = (sequelize, DataTypes) => {
       updatedAt: DataTypes.DATE,
       userId: DataTypes.UUID,
       repositoryId: DataTypes.UUID,
-      number: DataTypes.INTEGER
     },
     {
       paranoid: true,
