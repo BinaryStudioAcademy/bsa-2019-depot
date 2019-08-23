@@ -20,17 +20,24 @@ import styles from './styles.module.scss';
 
 class RepositoryPage extends React.Component {
   render() {
-    const { match, location, issues } = this.props;
+    const {
+      match,
+      issues,
+      location: { pathname }
+    } = this.props;
     const { username, reponame } = match.params;
 
     const issueCount = issues.length;
     const forkCount = 22;
-    const pathToDir = location.pathname.replace(`${match.url}/tree/master`, '').split('/');
+
+    const branchExists = pathname.match(/tree\/.+/);
+    let branch = '';
+    if (branchExists) branch = branchExists[0].split('/')[1]; // branchExists[0] has format 'tree/nameOfBranch/...'
+    const pathToDir = pathname.replace(`${match.url}/tree/${branch || 'master'}`, '').split('/');
     const params = pathToDir
       .filter(path => path)
       .map(param => `:${param}`)
       .join('/');
-
     return (
       <>
         <RepositoryHeader
@@ -38,7 +45,7 @@ class RepositoryPage extends React.Component {
           repoName={reponame}
           issueCount={issueCount}
           forkCount={forkCount}
-          activePage={location.pathname.split('/')[3]}
+          activePage={pathname.split('/')[3]}
           baseUrl={match.url}
         />
         <Container>
