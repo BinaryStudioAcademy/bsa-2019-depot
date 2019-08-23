@@ -38,7 +38,7 @@ class StarsTab extends React.Component {
     });
   }
 
-  onStar(repository) {
+  async onStar(repository) {
     const userId = this.props.id;
     const repositoryId = repository.id;
 
@@ -49,7 +49,8 @@ class StarsTab extends React.Component {
       ...this.state,
       repositories: updatedRepositories
     });
-    setStar({ userId, repositoryId });
+    await setStar({ userId, repositoryId });
+    this.props.onDataChange();
   }
 
   render() {

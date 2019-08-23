@@ -22,9 +22,17 @@ class Dashboard extends React.Component {
     this.state = {
       userData: initialUserData
     };
+
+    this.getUserData = this.getUserData.bind(this);
   }
 
-  async getUserData(username) {
+  async getUserData() {
+    const {
+      match: {
+        params: { username }
+      }
+    } = this.props;
+
     const userData = await getUserDetailed(username);
     this.setState({
       ...this.state,
@@ -33,12 +41,7 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    const {
-      match: {
-        params: { username }
-      }
-    } = this.props;
-    this.getUserData(username);
+    this.getUserData();
   }
 
   renderTab(tab) {
@@ -47,13 +50,13 @@ class Dashboard extends React.Component {
       return (
           <>
             <RepositoriesFilters />
-            <RepositoriesList />
+            <RepositoriesList onDataChange={this.getUserData} />
           </>
       );
     case tabs.projects:
       return <div>Hello! Projects are there</div>;
     case tabs.stars:
-      return <StarsTab />;
+      return <StarsTab onDataChange={this.getUserData} />;
     case tabs.following:
       return <div>Following</div>;
     case tabs.followers:
