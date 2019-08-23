@@ -11,17 +11,17 @@ import styles from './styles.module.scss';
 const RepositoryHeader = ({ userId, currentRepoInfo: { userId: repoOwnerId, forkedCount, originalRepo }, owner, username, repoName, issueCount, activePage, baseUrl, history }) => {
   let activeTab;
   switch (activePage) {
-    case 'issues':
-      activeTab = 'issues';
-      break;
-    case 'commits':
-      activeTab = 'code';
-      break;
-    case 'settings':
-      activeTab = 'settings';
-      break;
-    default:
-      activeTab = 'code';
+  case 'issues':
+    activeTab = 'issues';
+    break;
+  case 'commits':
+    activeTab = 'code';
+    break;
+  case 'settings':
+    activeTab = 'settings';
+    break;
+  default:
+    activeTab = 'code';
   }
 
   const goToRootDir = (history, url) => () => {
@@ -43,7 +43,7 @@ const RepositoryHeader = ({ userId, currentRepoInfo: { userId: repoOwnerId, fork
         );
       }
     }
-  }
+  };
   return (
     <header className={styles.repoHeader}>
       <Container>
@@ -94,6 +94,17 @@ RepositoryHeader.propTypes = {
   username: PropTypes.string.isRequired,
   repoName: PropTypes.string.isRequired,
   issueCount: PropTypes.number.isRequired,
+  userId: PropTypes.string.isRequired,
+  currentRepoInfo: PropTypes.exact({
+    userId: PropTypes.string.isRequired,
+    forkedCount: PropTypes.string.isRequired,
+    originalRepo: PropTypes.exact({
+      name: PropTypes.string.isRequired,
+      user: PropTypes.exact({
+        username: PropTypes.string.isRequired
+      }).isRequired
+    }).isRequired
+  }).isRequired,
   activePage: PropTypes.string,
   baseUrl: PropTypes.string.isRequired,
   history: PropTypes.object

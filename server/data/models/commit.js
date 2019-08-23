@@ -13,8 +13,5 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  // Commit.associate = function (/* models */) {
-  //   // associations can be defined here
-  // };
   return Commit;
 };
