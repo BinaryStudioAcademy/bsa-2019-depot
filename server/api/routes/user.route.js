@@ -14,21 +14,6 @@ const { clientUrl } = require('../../config/common.config');
 
 const router = Router();
 
-router.get('/:username', (req, res, next) => {
-  const { username } = req.params;
-  getUserDetailed(username)
-    .then(data => res.send(data))
-    .catch(next);
-});
-
-router.post('/username', (req, res, next) => {
-  const { username } = req.body;
-  const { id } = req.user;
-  setUsername({ id, username })
-    .then(data => res.send(data))
-    .catch(next);
-});
-
 router.get('/username-exists', (req, res, next) => {
   checkUsernameExists({ username: req.query.username })
     .then(data => res.send(data))
@@ -70,6 +55,21 @@ router.delete('/keys/:id', (req, res, next) => {
   const { id } = req.params;
   deleteKey(id)
     .then(() => res.sendStatus(200))
+    .catch(next);
+});
+
+router.get('/:username', (req, res, next) => {
+  const { username } = req.params;
+  getUserDetailed(username)
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.post('/username', (req, res, next) => {
+  const { username } = req.body;
+  const { id } = req.user;
+  setUsername({ id, username })
+    .then(data => res.send(data))
     .catch(next);
 });
 

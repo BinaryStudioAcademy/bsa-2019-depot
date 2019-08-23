@@ -9,7 +9,7 @@ module.exports = (models) => {
   User.hasMany(Repository);
   User.hasMany(Issue);
   User.hasMany(IssueComment);
-  Repository.hasMany(Issue);
+  Repository.hasMany(Issue, { foreignKey: 'repositoryId', onDelete: 'CASCADE' });
   Issue.hasMany(IssueComment);
 
   User.hasMany(OrgUser, { foreignKey: 'userId' });

@@ -35,8 +35,9 @@ import styles from './styles.module.scss';
 class CodeTab extends React.Component {
   constructor(props) {
     super(props);
+    const { branch } = this.props;
     this.state = {
-      branch: 'master',
+      branch,
       description: '',
       website: '',
       editingInfo: false,
@@ -507,7 +508,8 @@ CodeTab.propTypes = {
   match: PropTypes.object,
   currentUser: PropTypes.string,
   username: PropTypes.string.isRequired,
-  reponame: PropTypes.string.isRequired
+  reponame: PropTypes.string.isRequired,
+  branch: PropTypes.string.isRequired
 };
 
 export default connect(

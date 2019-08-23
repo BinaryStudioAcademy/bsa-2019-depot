@@ -6,8 +6,14 @@ function* branchesRequest({ payload: { owner, repoName } }) {
   try {
     yield put(fetchBranches.request());
     const branches = yield call(branchesService.getBranches, owner, repoName);
+    let lastCommits = {};
+    let lastCommitList = [];
+    if (branches && branches.length) {
+      lastCommitList = yield all(branches.map(branch => call(branchesService.getLastCommit, owner, repoName, branch)));
+    }
+    lastCommitList.forEach((commit, idx) => (lastCommits[branches[idx]] = lastCommitList[idx]));
 
-    yield put(fetchBranches.success({ branches }));
+    yield put(fetchBranches.success({ branches, lastCommits }));
   } catch (error) {
     yield put(fetchBranches.failure(error.message));
   } finally {
