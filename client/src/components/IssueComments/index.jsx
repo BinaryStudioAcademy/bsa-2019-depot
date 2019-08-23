@@ -177,7 +177,7 @@ class IssueComments extends React.Component {
                 </div>
                 <Divider className={styles.divide} />
                 <div className={styles.issue_comment_desc}>
-                  {issueComment.body ? issueComment.body : 'No description provided.'}
+                  {issueComment.body ? <ReactMarkdown source={issueComment.body} /> : 'No description provided.'}
                 </div>
               </div>
             </div>
