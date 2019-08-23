@@ -8,7 +8,7 @@ import ForkButton from '../ForkButton';
 
 import styles from './styles.module.scss';
 
-const RepositoryHeader = ({ currentRepoInfo: { forkedCount, originalRepo }, owner, username, repoName, issueCount, activePage, baseUrl, history }) => {
+const RepositoryHeader = ({ userId, currentRepoInfo: { userId: repoOwnerId, forkedCount, originalRepo }, owner, username, repoName, issueCount, activePage, baseUrl, history }) => {
   let activeTab;
   switch (activePage) {
     case 'issues':
@@ -27,10 +27,10 @@ const RepositoryHeader = ({ currentRepoInfo: { forkedCount, originalRepo }, owne
   const goToRootDir = (history, url) => () => {
     history.push(url);
     window.location.reload();
-  };  
+  };
 
   const renderOrignalRepoLink = () => {
-    if(originalRepo) {
+    if (originalRepo) {
       const { name: forkedRepoName, user: { username: forkedRepoOwner } } = originalRepo;
       if (forkedRepoName && forkedRepoOwner) {
         return (
@@ -57,10 +57,12 @@ const RepositoryHeader = ({ currentRepoInfo: { forkedCount, originalRepo }, owne
                 <Link to="" onClick={goToRootDir(history, baseUrl)}>
                   {repoName}
                 </Link>
-              </span>  
+              </span>
               {renderOrignalRepoLink()}
             </div>
-            <ForkButton owner={owner} repoName={repoName} forkedCount={forkedCount} />
+            {repoOwnerId !== userId 
+              ? <ForkButton owner={owner} repoName={repoName} forkedCount={forkedCount} />
+              : null}
           </div>
           <div className="ui top attached tabular menu">
             <div className={`${activeTab === 'code' && 'active'} item`}>
@@ -99,15 +101,15 @@ RepositoryHeader.propTypes = {
 
 const mapStateToProps = ({
   profile: {
-    currentUser: { username }
+    currentUser: { id, username }
   },
   currentRepo: { currentRepoInfo }
 }) => ({
+  userId: id,
   username,
   currentRepoInfo
 });
 
 export default connect(
   mapStateToProps
-)
-(withRouter(RepositoryHeader));
+)(withRouter(RepositoryHeader));
