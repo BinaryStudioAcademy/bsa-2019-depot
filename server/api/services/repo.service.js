@@ -76,9 +76,9 @@ const createRepo = async (repoData) => {
 };
 
 const checkName = async ({ owner, reponame }) => {
-  const filePath = repoHelper.getPathToRepo(owner, reponame);
-  const exists = await fs.existsSync(filePath);
-  return exists;
+  const { id } = await userRepository.getByUsername(owner);
+  const repository = await repoRepository.getByUserAndReponame(id, reponame);
+  return Boolean(repository);
 };
 
 const isEmpty = async ({ owner, reponame }) => {
@@ -121,7 +121,7 @@ const renameRepo = async ({ repoName, newName, username }) => {
     await updateByUserAndReponame({ owner: username, reponame: repoName, data: { name: newName } });
     return true;
   } catch (e) {
-    return false;
+    return e;
   }
 };
 
@@ -132,25 +132,25 @@ const deleteRepo = async ({ repoName, username }) => {
     await deleteByUserAndReponame({ owner: username, reponame: repoName });
     return true;
   } catch (e) {
-    return false;
+    return e;
   }
 };
 
-const getReposNames = async ({ user, filter, limit }) => {
-  const pathToRepo = repoHelper.getPathToRepos(user);
-  const doesDirExists = fs.existsSync(pathToRepo);
-  if (doesDirExists) {
-    const repos = fs
-      .readdirSync(pathToRepo, { withFileTypes: true })
-      .filter(dir => dir.isDirectory())
-      .map(dir => dir.name.slice(0, -4));
-    const filteredRepos = filter ? repos.filter(repo => repo.includes(filter)) : repos;
-    return limit ? filteredRepos.slice(0, limit) : repos;
-  }
-  return [];
+const getReposNames = async ({ user: username, filter, limit }) => {
+  const { id } = await userRepository.getByUsername(username);
+  const findOptions = {
+    filter,
+    limit,
+    sortByCreatedDateDesc: true
+  };
+  const repos = await repoRepository.getByUserWithOptions(id, findOptions);
+  return repos.map(({ name }) => name);
 };
 
-const getReposData = async ({ username }) => repoRepository.getByUsername(username);
+const getReposData = async ({ username }) => {
+  const { id } = await userRepository.getByUsername(username);
+  return repoRepository.getByUser(id);
+};
 
 const forkRepo = async ({
   userId, username, owner, name, website, description, forkedFromRepoId
