@@ -1,0 +1,12 @@
+:global(.orgUserPreview-small) {
+  width: 35px;
+  height: 35px;
+}
+:global(.orgUserPreview-medium) {
+  width: 48px;
+  height: 48px;
+}
+
+:local(.orgUserItem) {
+  margin-right: 0.5em;
+}

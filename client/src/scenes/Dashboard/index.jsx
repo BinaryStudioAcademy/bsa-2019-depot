@@ -84,6 +84,7 @@ class Dashboard extends React.Component {
   render() {
     const {
       userData,
+      userOrgs,
       userData: {
         name,
         username,
@@ -120,7 +121,14 @@ class Dashboard extends React.Component {
           <Grid.Row columns={2}>
             <Grid.Column mobile={16} tablet={4} computer={4}>
               <UserInfo username={username} name={name} imgUrl={imgUrl} />
-              <AdditionalUserInfo bio={bio} link={link} location={location} email={email} company={company} />
+              <AdditionalUserInfo
+                bio={bio}
+                link={link}
+                location={location}
+                email={email}
+                company={company}
+                organizations={userOrgs}
+              />
             </Grid.Column>
 
             <Grid.Column mobile={16} tablet={12} computer={12}>
