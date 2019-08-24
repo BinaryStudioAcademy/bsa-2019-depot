@@ -1,3 +1,5 @@
+$button-color: #4f60ac;
+
 :local(.addToOrgTitle) {
   font-size: 131.25%;
   font-weight: 400;
@@ -19,8 +21,9 @@
   margin-top: 16px !important;
 }
 
-:local(.usernameInput) {
+:local(.usernameSearch) {
   width: 40% !important;
+  margin: 0 auto;
 }
 
 :local(.formField) {
@@ -35,4 +38,11 @@
 :local(.note) {
   font-size: 80%;
   padding-left: 26px;
+}
+
+:local(.inviteBtn) {
+  background-color: $button-color !important;
+  color: #fff !important;
+  margin-top: 10px !important;
+  width: 150px;
 }

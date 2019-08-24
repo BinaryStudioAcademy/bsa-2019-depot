@@ -1,7 +1,10 @@
+const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
 const { UserModel } = require('../models/index');
 const cryptoHelper = require('../../helpers/crypto.helper');
 const sequelize = require('../db/connection');
+
+const { Op } = Sequelize;
 
 class UserRepository extends BaseRepository {
   addUser({ ...userData }) {
@@ -53,6 +56,17 @@ class UserRepository extends BaseRepository {
             'starsCount'
           ]
         ]
+      }
+    });
+  }
+
+  findUserByLetter(username) {
+    return this.model.findAll({
+      where: {
+        username: {
+          [Op.startsWith]: username
+        },
+        type: 'USER'
       }
     });
   }

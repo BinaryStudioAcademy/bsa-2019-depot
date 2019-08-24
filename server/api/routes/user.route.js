@@ -7,7 +7,8 @@ const {
   resetPassword,
   updateUserSettings,
   getUserDetailed,
-  getStars
+  getStars,
+  getUsersToInviting
 } = require('../services/user.service');
 const { getKeysByUser, createKey, deleteKey } = require('../services/ssh-key.service');
 const { clientUrl } = require('../../config/common.config');
@@ -78,6 +79,11 @@ router.get('/:username/stars', (req, res, next) => {
   getStars(username)
     .then(stars => res.send(stars))
     .catch(next);
+});
+
+router.get('/search/:username/:orgId', (req, res) => {
+  const { orgId, username } = req.params;
+  getUsersToInviting({ orgId, username }).then(data => res.send(data));
 });
 
 module.exports = router;

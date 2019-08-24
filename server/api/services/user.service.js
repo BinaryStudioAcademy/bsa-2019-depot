@@ -1,5 +1,6 @@
 const UserRepository = require('../../data/repositories/user.repository');
 const StarRepository = require('../../data/repositories/star.repository');
+const OrgUserRepository = require('../../data/repositories/org-user.repository');
 
 const tokenHelper = require('../../helpers/token.helper');
 
@@ -51,6 +52,18 @@ const updateUserSettings = async ({ id, settings }) => {
 
 const getStars = async username => StarRepository.getStars(username);
 
+const getUsersToInviting = async ({ orgId, username }) => {
+  const allUsers = await UserRepository.findUserByLetter(username);
+  const orgUsers = await Promise.all(allUsers.map(user => OrgUserRepository.findUserInOrg(user.id, orgId)));
+  const users = allUsers
+    .map(user => user.username)
+    .filter((user, index) => {
+      const result = orgUsers[index];
+      return !result;
+    });
+  return users.slice(0, 6);
+};
+
 module.exports = {
   getUserById,
   setUsername,
@@ -58,5 +71,6 @@ module.exports = {
   updateUserSettings,
   resetPassword,
   getUserDetailed,
-  getStars
+  getStars,
+  getUsersToInviting
 };

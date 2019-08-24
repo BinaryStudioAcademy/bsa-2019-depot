@@ -74,3 +74,11 @@ export const checkUsernameExists = async username => {
   });
   return response.json();
 };
+
+export const getUsersToInviting = async (username, orgId) => {
+  const response = await callWebApi({
+    endpoint: `/api/user/search/${username}/${orgId}`,
+    type: 'GET'
+  });
+  return response.json();
+};

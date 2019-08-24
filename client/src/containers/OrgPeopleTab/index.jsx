@@ -70,9 +70,9 @@ class OrgPeopleTab extends React.Component {
       </Container>
     ) : (
       <Container className={styles.memberListContainer} textAlign="center">
-        <InviteMembersTab />
+        <InviteMembersTab orgId={orgInfo.id} />
         <Button className={styles.backBtn} onClick={this.changeInvite}>
-          Go Back
+          Go back
         </Button>
       </Container>
     );

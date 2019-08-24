@@ -2,37 +2,52 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { Formik } from 'formik';
-import { Icon, Container, Input, Button, Form, Divider, Checkbox } from 'semantic-ui-react';
-import * as Yup from 'yup';
+import { Icon, Container, Button, Form, Divider, Checkbox, Search } from 'semantic-ui-react';
 
 import { invite } from '../../services/inviteMemberService';
-import styles from './styles.module.scss';
+import { getUsersToInviting } from '../../services/userService';
 
-const usernameValidationSchema = Yup.object().shape({
-  username: Yup.string()
-    .required('Username is required!')
-    .matches(/^(([a-zA-Z0-9]+-)*[a-zA-Z0-9]+){1,39}$/)
-});
+import * as Yup from 'yup';
+import styles from './styles.module.scss';
 
 const roleValidationSchema = Yup.object().shape({
   role: Yup.string().required('Role is required!')
 });
+
+const initialState = {
+  isLoading: false,
+  results: [],
+  value: ''
+};
 
 class InviteMembersTab extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      username: ''
+      username: '',
+      ...initialState
     };
   }
 
-  submitUsername = values => {
-    const { username } = values;
+  handleResultSelect = (e, { result }) => this.setState({ username: result.content });
+
+  handleSearchChange = async (e, { value }) => {
+    const { orgId } = this.props;
+    this.setState({ isLoading: true, value });
+    if (!value) return this.setState(initialState);
+
+    const users = await getUsersToInviting(value, orgId);
+    const results = users.map(user => ({
+      content: user
+    }));
     this.setState({
-      username
+      isLoading: false,
+      results
     });
   };
+
+  resultRenderer = ({ content }) => <p>{content}</p>;
 
   submitInvite = values => {
     const { history, match } = this.props;
@@ -55,31 +70,25 @@ class InviteMembersTab extends React.Component {
     handleChange(e);
   };
 
-  renderInputUsername = ({ errors, touched, handleChange, handleBlur, handleSubmit, values }) => {
+  renderInputUsername = () => {
+    const { isLoading, value, results } = this.state;
     const { name } = this.props.match.params;
-    const { username } = values;
+
     return (
-      <Form size="large" onSubmit={handleSubmit}>
+      <Form size="large">
         <Container textAlign="center">
           <Icon className={styles.emailIcon} name="mail outline" size="big" />
-          <Form.Field required>
+          <Form.Field>
             <h1 className={styles.addToOrgTitle}>Invite member to {name}</h1>
-            <Input
-              className={styles.usernameInput}
-              icon="user"
-              iconPosition="left"
+            <Search
+              className={styles.usernameSearch}
               placeholder="Username"
-              name="username"
-              value={username}
-              type="text"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              required
-              action={
-                <Button color="teal" type="submit">
-                  Invite
-                </Button>
-              }
+              loading={isLoading}
+              onResultSelect={this.handleResultSelect}
+              onSearchChange={this.handleSearchChange}
+              results={results}
+              value={value}
+              resultRenderer={this.resultRenderer}
             />
           </Form.Field>
         </Container>
@@ -145,14 +154,7 @@ class InviteMembersTab extends React.Component {
     const { username } = this.state;
 
     return !username ? (
-      <Formik
-        initialValues={{
-          username: ''
-        }}
-        validationSchema={usernameValidationSchema}
-        onSubmit={this.submitUsername}
-        render={this.renderInputUsername}
-      />
+      this.renderInputUsername()
     ) : (
       <Formik
         initialValues={{
@@ -169,7 +171,8 @@ class InviteMembersTab extends React.Component {
 InviteMembersTab.propTypes = {
   match: PropTypes.object,
   id: PropTypes.string,
-  history: PropTypes.object
+  history: PropTypes.object,
+  orgId: PropTypes.string
 };
 
 export default withRouter(InviteMembersTab);
