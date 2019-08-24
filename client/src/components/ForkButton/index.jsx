@@ -18,6 +18,8 @@ class ForkButton extends Component {
 
   handleOpen = () => this.setState({ modalOpen: true });
 
+  handleClose = () => this.setState({ modalOpen: false });
+
   handleRedirect = (username, repoName) => {
     this.setState({ modalOpen: false });
     window.location.replace(`/${username}/${repoName}`);
