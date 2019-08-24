@@ -20,7 +20,7 @@ class RepositoryRepository extends BaseRepository {
             (SELECT COUNT(*)
             FROM "stars"
             WHERE "repository"."id" = "stars"."repositoryId"
-            AND "repository"."deletedAt" IS NULL)`),
+            AND "stars"."deletedAt" IS NULL)`),
             'starsCount'
           ]
         ]
