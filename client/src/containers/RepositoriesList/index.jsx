@@ -39,6 +39,7 @@ export class RepositoriesList extends React.Component {
   async onStar(repository) {
     const userId = this.props.id;
     const repositoryId = repository.id;
+    const { onDataChange } = this.props;
 
     const { repositories } = this.state;
     const updatedRepositories = repositories.map(repo => (repository.id === repo.id ? repository : repo));
@@ -48,7 +49,7 @@ export class RepositoriesList extends React.Component {
       repositories: updatedRepositories
     });
     await setStar({ userId, repositoryId });
-    this.props.onDataChange();
+    if (onDataChange) onDataChange();
   }
 
   checkIfStar(repositories) {
@@ -99,7 +100,7 @@ RepositoriesList.propTypes = {
     url: PropTypes.string.isRequired
   }).isRequired,
   id: PropTypes.string,
-  onDataChange: PropTypes.func.isRequired
+  onDataChange: PropTypes.func
 };
 
 const mapStateToProps = ({

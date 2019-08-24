@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Input, Button } from 'semantic-ui-react';
-import { getUserImgLink } from '../../helpers/imageHelper';
 import Octicon, { Trashcan } from '@primer/octicons-react';
+import UserPreview from '../../components/UserPreview/index';
 import PropTypes from 'prop-types';
 
 import styles from './styles.module.scss';
@@ -26,9 +26,7 @@ class OrgPeopleTab extends React.Component {
               return (
                 <li key={member.username} className={styles.memberItem}>
                   <div className={styles.memberImg}>
-                    <a href={`/${member.username}`} className={styles.memberBox_member}>
-                      <img src={getUserImgLink(member.imgUrl)} className={styles.memberPhoto} alt="userPicture" />
-                    </a>
+                    <UserPreview size="medium" orgUser={member} />
                   </div>
                   <div className={styles.memberNameContainer}>
                     <a href={`/${member.username}`} className={styles.memberBox_member}>

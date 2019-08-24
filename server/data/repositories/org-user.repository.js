@@ -1,5 +1,5 @@
 const BaseRepository = require('./base.repository');
-const { OrgUserModel } = require('../models/index');
+const { OrgUserModel, UserModel } = require('../models/index');
 
 class OrgUserRepository extends BaseRepository {
   findUserInOrg(userId, orgId) {
@@ -8,6 +8,17 @@ class OrgUserRepository extends BaseRepository {
 
   getAllOrganizationUsers(orgId) {
     return this.model.findAll({ where: { orgId } });
+  }
+
+  getUsersOrganizations(userId) {
+    return this.model.findAll({
+      where: { userId },
+      include: [
+        {
+          model: UserModel
+        }
+      ]
+    });
   }
 }
 

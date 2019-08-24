@@ -1,8 +1,8 @@
 import React from 'react';
 import RepositoriesList from '../../containers/RepositoriesList';
 import RepositoriesFilters from '../../components/RepositoriesFilters';
+import UserPreview from '../../components/UserPreview/index';
 import { Container, Grid } from 'semantic-ui-react';
-import { getUserImgLink } from '../../helpers/imageHelper';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -38,11 +38,7 @@ class OrgRepositoriesTab extends React.Component {
                   <div>{orgMembers.length} ></div>
                 </Link>
                 {orgMembers.map(member => {
-                  return (
-                    <a href={`/${member.username}`} className={styles.memberBox_member} key={member.username}>
-                      <img src={getUserImgLink(member.imgUrl)} className={styles.memberPhoto} alt="user" />
-                    </a>
-                  );
+                  return <UserPreview size="medium" orgUser={member} key={member.username} />;
                 })}
               </Container>
             </Grid.Column>
