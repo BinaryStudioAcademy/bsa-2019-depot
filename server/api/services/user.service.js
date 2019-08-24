@@ -60,11 +60,9 @@ const getUsersToInviting = async ({ orgID, username }) => {
   const usersIdInOrg = orgUsers.map(({ userId }) => userId);
 
   const users = allUsers
-    .filter(({ id }) => {
-      const result = usersIdInOrg.includes(id);
-      return !result;
-    });
-  const usernames = users.slice(0, 6).map(user => user.username);
+    .filter(({ id }) => !usersIdInOrg.includes(id))
+    .slice(0, 6);
+  const usernames = users.map(user => user.username);
   return usernames;
 };
 
