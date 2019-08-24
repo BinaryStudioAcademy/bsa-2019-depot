@@ -20,7 +20,6 @@ class OrganizationsPage extends React.Component {
   async getUsersOrgs(id) {
     const userOrgs = await getUsersOrganizations(id);
     this.setState({
-      ...this.state,
       userOrgs
     });
   }
