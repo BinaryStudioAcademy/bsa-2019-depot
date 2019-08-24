@@ -159,7 +159,7 @@ const forkRepo = async ({
     const source = repoHelper.getPathToRepo(owner, name);
     const target = repoHelper.getPathToRepo(username, name);
 
-    await fs.mkdir(target);
+    await fs.mkdir(target, { recursive: true });
     await copydir(
       source,
       target,
