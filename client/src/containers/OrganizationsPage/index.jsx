@@ -43,11 +43,14 @@ class OrganizationsPage extends React.Component {
         </Header>
         <ul className={styles.orgList}>
           {userOrgs.map(organization => {
-            const { username } = organization;
+            const {
+              user: { username },
+              user
+            } = organization;
             return (
               <li key={username} className={styles.orgItem}>
                 <div className={styles.orgInfo}>
-                  <UserPreview size="micro" orgUser={organization} />
+                  <UserPreview size="micro" orgUser={user} />
                   <a href={`/${username}`} className={styles.orgName}>
                     {username}
                   </a>

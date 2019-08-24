@@ -6,11 +6,7 @@ const tokenHelper = require('../../helpers/token.helper');
 
 const getUserById = userId => UserRepository.getUserById(userId);
 
-const getUsersOrganizations = async (userId) => {
-  const orgsIds = await OrgUserRepository.getUsersOrganizations(userId);
-  const orgNames = orgsIds.map(org => getUserById(org.orgId));
-  return Promise.all(orgNames);
-};
+const getUsersOrganizations = async userId => (orgsIds = await OrgUserRepository.getUsersOrganizations(userId));
 
 const getUserDetailed = username => UserRepository.getUserDetailed(username);
 

@@ -41,9 +41,13 @@ const AdditionalUserInfo = ({ company, location, bio, link, email, organizations
           <h3 className={styles.organizationsHeader}>Organizations</h3>
           <ul className={styles.organizationsList}>
             {organizations.map(organization => {
+              const {
+                user,
+                user: { username }
+              } = organization;
               return (
-                <li key={organization.username}>
-                  <UserPreview size="small" orgUser={organization} />
+                <li key={username}>
+                  <UserPreview size="small" orgUser={user} />
                 </li>
               );
             })}
