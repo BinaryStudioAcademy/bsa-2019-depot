@@ -81,9 +81,9 @@ router.get('/:username/stars', (req, res, next) => {
     .catch(next);
 });
 
-router.get('/search/:username/:orgId', (req, res) => {
-  const { orgId, username } = req.params;
-  getUsersToInviting({ orgId, username }).then(data => res.send(data));
+router.get('/search/:username/:orgID', (req, res) => {
+  const { orgID, username } = req.params;
+  getUsersToInviting({ orgID, username }).then(data => res.send(data));
 });
 
 module.exports = router;

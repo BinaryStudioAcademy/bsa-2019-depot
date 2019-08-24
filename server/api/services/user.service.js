@@ -52,16 +52,18 @@ const updateUserSettings = async ({ id, settings }) => {
 
 const getStars = async username => StarRepository.getStars(username);
 
-const getUsersToInviting = async ({ orgId, username }) => {
+const getUsersToInviting = async ({ orgID, username }) => {
   const allUsers = await UserRepository.findUserByLetter(username);
-  const orgUsers = await Promise.all(allUsers.map(user => OrgUserRepository.findUserInOrg(user.id, orgId)));
+  const orgUsers = await OrgUserRepository.getAllOrganizationUsers(orgID);
+  const usersIdInOrg = orgUsers.map(({ userId }) => userId);
+
   const users = allUsers
-    .map(user => user.username)
-    .filter((user, index) => {
-      const result = orgUsers[index];
+    .filter(({ id }) => {
+      const result = usersIdInOrg.includes(id);
       return !result;
     });
-  return users.slice(0, 6);
+  const usernames = users.slice(0, 6).map(user => user.username);
+  return usernames;
 };
 
 module.exports = {
