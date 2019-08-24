@@ -36,7 +36,7 @@ $background-color: #fafbfc;
     margin-bottom: 24px;
     display: flex;
     flex-direction: row;
-    justify-content: start;
+    justify-content: flex-start;
   }
   :global(.ui.container):local(.orgInfo) {
     display: flex;

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Container, Button, Header } from 'semantic-ui-react';
 import { getUsersOrganizations } from '../../services/userService';
+import UserPreview from '../../components/UserPreview/index';
 
 import styles from './styles.module.scss';
 
@@ -30,6 +31,7 @@ class OrganizationsPage extends React.Component {
   }
 
   render() {
+    const { userOrgs } = this.state;
     return (
       <Container>
         <Header as="h2" dividing className={styles.headerWrapper}>
@@ -40,6 +42,25 @@ class OrganizationsPage extends React.Component {
             </Button>
           </Link>
         </Header>
+        <ul className={styles.orgList}>
+          {userOrgs.map(organization => {
+            const { username } = organization;
+            return (
+              <li key={username} className={styles.orgItem}>
+                <div className={styles.orgInfo}>
+                  <UserPreview size="micro" orgUser={organization} />
+                  <a href={`/${username}`} className={styles.orgName}>
+                    {username}
+                  </a>
+                  <span>owner</span>
+                </div>
+                <Button color="blue" compact>
+                  Leave
+                </Button>
+              </li>
+            );
+          })}
+        </ul>
       </Container>
     );
   }
