@@ -5,6 +5,9 @@ import { LineChart, Line } from 'recharts';
 import StarLink from '../../components/StarLink';
 import PropTypes from 'prop-types';
 import { Button } from 'semantic-ui-react';
+import { withRouter } from 'react-router-dom';
+import { getCommits } from '../../services/commitsService';
+import { checkIfEmpty } from '../../services/repositoryService';
 
 import styles from './styles.module.scss';
 
@@ -26,6 +29,29 @@ class RepositoryItem extends React.Component {
     this.state = { ...props.repo };
 
     this.starClickHandler = this.starClickHandler.bind(this);
+  }
+
+  async componentDidMount() {
+    const {
+      repo: { name },
+      match: {
+        params: { username }
+      }
+    } = this.props;
+    await this.checkIfEmpty(username, name);
+
+    const { isEmpty } = this.state;
+    if (!isEmpty) await this.getRepoCommits(username, name, 'master');
+  }
+
+  async checkIfEmpty(username, reponame) {
+    const data = await checkIfEmpty({ owner: username, reponame });
+    this.setState({ isEmpty: data.isEmpty });
+  }
+
+  async getRepoCommits(username, reponame, branch) {
+    const data = await getCommits(username, reponame, branch);
+    this.setState({ repoCommits: data });
   }
 
   starClickHandler() {
@@ -108,7 +134,8 @@ RepositoryItem.propTypes = {
   repo: PropTypes.object,
   username: PropTypes.string,
   type: PropTypes.string,
-  onStar: PropTypes.func.isRequired
+  onStar: PropTypes.func.isRequired,
+  match: PropTypes.object
 };
 
-export default RepositoryItem;
+export default withRouter(RepositoryItem);
