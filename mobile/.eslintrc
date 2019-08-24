@@ -2,7 +2,7 @@
   "env": {
     "browser": true
   },
-  "extends": ["plugin:react/recommended", "plugin:wdio/recommended"],
+  "extends": ["plugin:react/recommended", "plugin:wdio/recommended", "@react-native-community"],
   "plugins": ["react", "wdio"],
   "rules": {
     "camelcase": 2,
