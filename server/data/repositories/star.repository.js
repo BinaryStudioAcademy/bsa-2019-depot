@@ -27,8 +27,8 @@ class StarRepository extends BaseRepository {
                 sequelize.literal(`
                 (SELECT COUNT(*)
                 FROM "stars"
-                WHERE "repository"."id" = "stars"."repositoryId" 
-                AND "repository"."deletedAt" IS NULL)`),
+                WHERE "repository"."id" = "stars"."repositoryId"
+                AND "stars"."deletedAt" IS NULL)`),
                 'starsCount'
               ]
             ]
