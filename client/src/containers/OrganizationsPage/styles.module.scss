@@ -1,0 +1,5 @@
+:global(.ui.container):local(.headerWrapper) {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

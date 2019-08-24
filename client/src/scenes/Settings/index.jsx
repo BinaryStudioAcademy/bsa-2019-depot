@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import { SettingsProfile } from '../../scenes';
 import KeysPage from '../../containers/KeysPage';
 import NewKeysPage from '../../containers/NewKeyPage';
+import OrganizationsPage from '../../containers/OrganizationsPage';
 
 const redirectToProfile = () => <Redirect to="/settings/profile" />;
 
@@ -24,6 +25,9 @@ const Settings = ({ match }) => {
             <Menu.Item>
               <Link to={`${match.url}/keys`}>SSH Keys</Link>
             </Menu.Item>
+            <Menu.Item>
+              <Link to={`${match.url}/organizations`}>Organizations</Link>
+            </Menu.Item>
           </Menu>
         </Grid.Column>
         <Grid.Column computer={12} tablet={16} mobile={16}>
@@ -32,6 +36,7 @@ const Settings = ({ match }) => {
             <PrivateRoute path={`${match.path}/profile`} component={SettingsProfile} />
             <PrivateRoute path={`${match.path}/keys/new`} component={NewKeysPage} />
             <PrivateRoute path={`${match.path}/keys`} component={KeysPage} />
+            <PrivateRoute path={`${match.path}/organizations`} component={OrganizationsPage} />
           </Switch>
         </Grid.Column>
       </Grid>
