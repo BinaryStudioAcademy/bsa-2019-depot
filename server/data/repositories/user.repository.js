@@ -66,7 +66,7 @@ class UserRepository extends BaseRepository {
     return this.model.findAll({
       where: {
         username: {
-          [Op.startsWith]: username
+          [Op.iLike]: `%${username}%`
         },
         type: 'USER'
       }
