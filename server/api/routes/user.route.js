@@ -8,7 +8,8 @@ const {
   updateUserSettings,
   getUserDetailed,
   getStars,
-  getUsersToInviting
+  getUsersToInviting,
+  getUsersOrganizations
 } = require('../services/user.service');
 const { getKeysByUser, createKey, deleteKey } = require('../services/ssh-key.service');
 const { clientUrl } = require('../../config/common.config');
@@ -84,6 +85,13 @@ router.get('/:username/stars', (req, res, next) => {
 router.get('/search/:username/:orgID', (req, res) => {
   const { orgID, username } = req.params;
   getUsersToInviting({ orgID, username }).then(data => res.send(data));
+});
+
+router.get('/:userid/organizations', (req, res, next) => {
+  const { userid } = req.params;
+  getUsersOrganizations(userid)
+    .then(data => res.send(data))
+    .catch(next);
 });
 
 module.exports = router;

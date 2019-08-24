@@ -16,7 +16,7 @@ const IssuesList = props => {
     issues.length > 0 && (
       <List divided verticalAlign="middle">
         {issues.map(issue => (
-          <List.Item key={issue.id}>
+          <List.Item key={issue.number}>
             <List.Content floated="right">
               <Icon name="comments outline" /> {issue.commentCount}
             </List.Content>
@@ -32,13 +32,13 @@ const IssuesList = props => {
                     />
                   ))}
             </List.Content>
-            <Icon name={issue.opened ? 'info' : 'check'} color={issue.opened ? 'green' : 'red'} />
+            <Icon name={issue.isOpened ? 'info circle' : 'check'} color={issue.isOpened ? 'green' : 'red'} />
             <List.Content>
               <List.Header>
-                <Link to={`${url}/${issue.id}`}>{issue.title}</Link>
+                <Link to={`${url}/${issue.number}`}>{issue.title}</Link>
               </List.Header>
               <List.Description>
-                {`#${issue.id} opened ${moment(issue.createdAt).fromNow()} by ${issue.user.username}`}
+                {`#${issue.number} opened ${moment(issue.createdAt).fromNow()} by ${issue.user.username}`}
               </List.Description>
             </List.Content>
           </List.Item>
@@ -51,7 +51,7 @@ const IssuesList = props => {
 IssuesList.propTypes = {
   issues: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
+      number: PropTypes.number.isRequired,
       title: PropTypes.string.isRequired,
       body: PropTypes.string,
       user: PropTypes.shape({

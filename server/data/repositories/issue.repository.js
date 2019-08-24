@@ -2,8 +2,18 @@ const BaseRepository = require('./base.repository');
 const { IssueModel, UserModel } = require('../models/index');
 
 class IssueRepository extends BaseRepository {
-  addIssue({ ...issueData }) {
-    return this.create(issueData);
+  async addIssue({ ...issueData }) {
+    const { repositoryId } = issueData;
+    const number = (await this.getMaxIssueRepoNumber(repositoryId) || 0) + 1;
+    const issueDataWithNumber = {
+      ...issueData,
+      number
+    }
+    return this.create(issueDataWithNumber);
+  }
+
+  getMaxIssueRepoNumber(repositoryId) {
+    return this.model.max('number', { where: { repositoryId } });
   }
 
   getIssueById(id) {

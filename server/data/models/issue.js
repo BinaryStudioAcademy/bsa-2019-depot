@@ -5,11 +5,12 @@ module.exports = (sequelize, DataTypes) => {
       title: DataTypes.STRING,
       body: DataTypes.STRING,
       isOpened: DataTypes.BOOLEAN,
-      assignees: DataTypes.ARRAY(DataTypes.TEXT),
-      createdAt: DataTypes.DATE,
-      updatedAt: DataTypes.DATE
+      number: DataTypes.INTEGER,
     },
-    {}
+    {
+      paranoid: true,
+      timestamps: true
+    }
   );
 
   return Issue;

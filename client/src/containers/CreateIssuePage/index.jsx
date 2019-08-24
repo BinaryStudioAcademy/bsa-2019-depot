@@ -90,8 +90,7 @@ class CreateIssuePage extends React.Component {
       reponame,
       userId,
       repositoryId,
-      isOpened: true,
-      assignees: []
+      isOpened: true
     });
     const newUrl = url
       .split('/')
@@ -173,6 +172,7 @@ class CreateIssuePage extends React.Component {
 CreateIssuePage.propTypes = {
   username: PropTypes.string.isRequired,
   reponame: PropTypes.string,
+  issues: PropTypes.array.isRequired,
   repositoryId: PropTypes.number,
   userId: PropTypes.string.isRequired,
   createIssue: PropTypes.func.isRequired,
@@ -191,12 +191,14 @@ const mapStateToProps = ({
   profile: {
     currentUser: { id: userId, username }
   },
+  issuesData: { issues },
   currentRepo: {
     currentRepoInfo: { id, name }
   }
 }) => ({
   userId,
   username,
+  issues,
   reponame: name,
   repositoryId: id
 });

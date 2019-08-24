@@ -1,6 +1,6 @@
 const NodeGit = require('nodegit');
 const fs = require('fs-extra');
-const fse = require('fs-extra');
+const copydir = require('copy-dir');
 const repoHelper = require('../../helpers/repo.helper');
 const repoRepository = require('../../data/repositories/repository.repository');
 const userRepository = require('../../data/repositories/user.repository');
@@ -159,28 +159,28 @@ const forkRepo = async ({
     const source = repoHelper.getPathToRepo(owner, name);
     const target = repoHelper.getPathToRepo(username, name);
 
-    if (!fs.existsSync(source)) {
-      return { status: false, error: 'repo to copy doesn`t exist' };
-    }
+    await fs.mkdir(target, { recursive: true });
+    await copydir(
+      source,
+      target,
+      {
+        utimes: true,
+        mode: true,
+        cover: true
+      },
+      (err) => {
+        if (err) throw err;
+      }
+    );
+    await repoRepository.create({
+      userId,
+      name,
+      website,
+      description,
+      forkedFromRepoId
+    });
 
-    if (fs.existsSync(target)) {
-      return { status: false, error: 'such repo already exists' };
-    }
-
-    fs.mkdirSync(target);
-    return await fse
-      .copy(source, target, { preserveTimestamps: true })
-      .then(() => {
-        repoRepository.create({
-          userId,
-          name,
-          website,
-          description,
-          forkedFromRepoId
-        });
-        return { status: true, username };
-      })
-      .catch(err => ({ status: false, error: err.message }));
+    return { status: true, username };
   } catch (err) {
     return { status: false, error: err.message };
   }

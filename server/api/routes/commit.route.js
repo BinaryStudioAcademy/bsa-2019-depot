@@ -53,8 +53,8 @@ router
       .catch(next);
   })
   .post('/', (req, res, next) => {
-    const { sha, repoId } = req.body;
-    createCommit({ sha, repoId })
+    const { sha, repositoryId } = req.body;
+    createCommit({ sha, repositoryId })
       .then(commit => res.send(commit))
       .catch(next);
   })

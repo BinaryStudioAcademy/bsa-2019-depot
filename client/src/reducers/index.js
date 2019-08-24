@@ -9,7 +9,6 @@ import { lastCommitReducer, fileTreeReducer, newFileReducer } from '../scenes/Co
 import { repoSettingsData } from '../containers/SettingsTab/reducer';
 import { currentRepoReducer } from '../containers/RepositoryTab/reducer';
 import profile from '../containers/Profile/reducer';
-import forkRepo from '../components/ForkButton/reducer';
 import { branchesData } from '../containers/BranchesTab/reducer';
 import createOrg from '../scenes/CreateOrganization/reducer';
 
@@ -26,6 +25,5 @@ export default combineReducers({
   newFile: newFileReducer,
   repoSettingsData,
   currentRepo: currentRepoReducer,
-  forkRepo,
   createOrg
 });

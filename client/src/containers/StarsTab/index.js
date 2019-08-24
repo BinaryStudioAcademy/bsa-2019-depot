@@ -66,7 +66,15 @@ class StarsTab extends React.Component {
             const {
               user: { username }
             } = repo;
-            return <RepositoryItem repo={repo} key={repo.name} onStar={this.onStar} username={username} type="stars" />;
+            return (
+              <RepositoryItem
+                repo={repo}
+                key={`${repo.name}-${username}`}
+                onStar={this.onStar}
+                username={username}
+                type="stars"
+              />
+            );
           })}
         </div>
       </>
@@ -81,7 +89,8 @@ StarsTab.propTypes = {
     path: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired
   }).isRequired,
-  id: PropTypes.string
+  id: PropTypes.string,
+  onDataChange: PropTypes.func.isRequired
 };
 
 const mapStateToProps = ({
