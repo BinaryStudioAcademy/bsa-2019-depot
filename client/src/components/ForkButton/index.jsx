@@ -34,25 +34,37 @@ class ForkButton extends Component {
   };
 
   render() {
-    const { repoName, currentRepoInfo: { forkedCount } } = this.props;
+    const { repoName, currentRepoInfo: { forkedCount }, isOwnRepo } = this.props;
     const { username, loading } = this.state;
     return (
       <Modal
         closeIcon
-        dimmer='inverted'
+        dimmer="inverted"
         open={this.state.modalOpen}
         onClose={this.handleClose}
         size="small"
-        trigger={
-          <Button size="small" as="div" compact labelPosition="right" onClick={this.handleOpen}>
-            <Button size="small" compact className={styles.forkButton}>
-              <Icon name="fork" />
-              Fork
+        trigger={isOwnRepo
+          ? (
+            <Button disabled size="small" as="div" compact labelPosition="right" onClick={this.handleOpen}>
+              <Button size="small" compact className={styles.forkButton}>
+                <Icon name="fork" />
+                Fork
+              </Button>
+              <Label as="a" basic pointing="left">
+                {forkedCount}
+              </Label>
             </Button>
-            <Label as="a" basic pointing="left">
-              {forkedCount}
-            </Label>
-          </Button>
+          ) : (
+            <Button size="small" as="div" compact labelPosition="right" onClick={this.handleOpen}>
+              <Button size="small" compact className={styles.forkButton}>
+                <Icon name="fork" />
+                Fork
+              </Button>
+              <Label as="a" basic pointing="left">
+                {forkedCount}
+              </Label>
+            </Button>
+          )
         }
       >
         {loading ? (
@@ -85,7 +97,8 @@ ForkButton.propTypes = {
   forkedCount: PropTypes.number,
   loading: PropTypes.bool,
   username: PropTypes.string,
-  currentRepoInfo: PropTypes.object.isRequired
+  currentRepoInfo: PropTypes.object.isRequired,
+  isOwnRepo: PropTypes.bool
 };
 
 ForkButton.defaultProps = {

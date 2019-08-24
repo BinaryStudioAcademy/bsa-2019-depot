@@ -72,7 +72,9 @@ const RepositoryHeader = ({
               </span>
               {renderOrignalRepoLink()}
             </div>
-            {repoOwnerId !== userId ? <ForkButton owner={owner} repoName={repoName} /> : null}
+            {repoOwnerId !== userId 
+              ? <ForkButton isOwnRepo={false} owner={owner} repoName={repoName} /> 
+              : <ForkButton isOwnRepo owner={owner} repoName={repoName} />}
           </div>
           <div className="ui top attached tabular menu">
             <div className={`${activeTab === 'code' && 'active'} item`}>
