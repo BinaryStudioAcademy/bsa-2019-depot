@@ -149,7 +149,7 @@ const getReposNames = async ({ user: username, filter, limit }) => {
 
 const getReposData = async ({ username }) => {
   const { id } = await userRepository.getByUsername(username);
-  return repoRepository.getByUser(id);
+  return repoRepository.getByUserWithOptions(id);
 };
 
 const forkRepo = async ({
