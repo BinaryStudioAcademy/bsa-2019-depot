@@ -1,0 +1,46 @@
+{
+  "name": "mobile",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "react": "16.8.6",
+    "react-native": "0.60.5"
+  },
+  "devDependencies": {
+    "@babel/core": "7.5.5",
+    "@babel/runtime": "7.5.5",
+    "@react-native-community/eslint-config": "0.0.3",
+    "babel-jest": "24.9.0",
+    "eslint": "6.2.2",
+    "husky": "^3.0.4",
+    "jest": "24.9.0",
+    "lint-staged": "^9.2.3",
+    "metro-react-native-babel-preset": "0.54.1",
+    "prettier": "^1.18.2",
+    "react-test-renderer": "16.8.6"
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "post-commit": "git update-index --again"
+    }
+  },
+  "lint-staged": {
+    "**/*.{css,scss,sass,js,jsx,json,md}": [
+      "prettier --write",
+      "git add"
+    ],
+    "**/*.{js,jsx}": [
+      "eslint --fix",
+      "git add"
+    ]
+  }
+}
