@@ -80,8 +80,7 @@ class CreateIssuePage extends React.Component {
       repositoryId,
       userId,
       history,
-      match: { url },
-      issues
+      match: { url }
     } = this.props;
 
     createIssue({
@@ -91,8 +90,7 @@ class CreateIssuePage extends React.Component {
       reponame,
       userId,
       repositoryId,
-      isOpened: true,
-      number: issues.length + 1
+      isOpened: true
     });
     const newUrl = url
       .split('/')
