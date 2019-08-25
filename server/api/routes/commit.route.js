@@ -2,7 +2,6 @@ const { Router } = require('express');
 
 const {
   getCommits,
-  getCommitsByDate,
   modifyFile,
   deleteFile,
   getCommitCommentsByCommitId,
@@ -16,12 +15,6 @@ const router = Router();
 router
   .get('/', (req, res) => {
     getCommits({ ...req.body }).then(data => res.send(data));
-  })
-  .get('/:owner/commits', (req, res, next) => {
-    const { owner } = req.params;
-    getCommitsByDate({ user: owner })
-      .then(commits => res.send(commits))
-      .catch(next);
   })
   .post('/:owner/:repoName/:branchName', ownerOnlyMiddleware, (req, res, next) => {
     const { owner, repoName, branchName: branch } = req.params;
