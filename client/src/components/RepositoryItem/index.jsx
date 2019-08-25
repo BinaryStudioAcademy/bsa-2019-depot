@@ -92,7 +92,7 @@ class RepositoryItem extends React.Component {
         commitsPerYear.push({ day: dayOfYear, commits: 0 });
       }
     }
-    this.setState({ commitsPerYear: commitsPerYear });
+    this.setState({ commitsPerYear });
   }
 
   getRepoLink({ username, name, type }) {
