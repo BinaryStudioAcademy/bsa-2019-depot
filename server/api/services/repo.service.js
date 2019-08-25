@@ -1,6 +1,6 @@
 const NodeGit = require('nodegit');
 const fs = require('fs-extra');
-const fse = require('fs-extra');
+const copydir = require('copy-dir');
 const repoHelper = require('../../helpers/repo.helper');
 const repoRepository = require('../../data/repositories/repository.repository');
 const userRepository = require('../../data/repositories/user.repository');
@@ -76,9 +76,9 @@ const createRepo = async (repoData) => {
 };
 
 const checkName = async ({ owner, reponame }) => {
-  const filePath = repoHelper.getPathToRepo(owner, reponame);
-  const exists = await fs.existsSync(filePath);
-  return exists;
+  const { id } = await userRepository.getByUsername(owner);
+  const repository = await repoRepository.getByUserAndReponame(id, reponame);
+  return Boolean(repository);
 };
 
 const isEmpty = async ({ owner, reponame }) => {
@@ -121,7 +121,7 @@ const renameRepo = async ({ repoName, newName, username }) => {
     await updateByUserAndReponame({ owner: username, reponame: repoName, data: { name: newName } });
     return true;
   } catch (e) {
-    return false;
+    return e;
   }
 };
 
@@ -132,25 +132,25 @@ const deleteRepo = async ({ repoName, username }) => {
     await deleteByUserAndReponame({ owner: username, reponame: repoName });
     return true;
   } catch (e) {
-    return false;
+    return e;
   }
 };
 
-const getReposNames = async ({ user, filter, limit }) => {
-  const pathToRepo = repoHelper.getPathToRepos(user);
-  const doesDirExists = fs.existsSync(pathToRepo);
-  if (doesDirExists) {
-    const repos = fs
-      .readdirSync(pathToRepo, { withFileTypes: true })
-      .filter(dir => dir.isDirectory())
-      .map(dir => dir.name.slice(0, -4));
-    const filteredRepos = filter ? repos.filter(repo => repo.includes(filter)) : repos;
-    return limit ? filteredRepos.slice(0, limit) : repos;
-  }
-  return [];
+const getReposNames = async ({ user: username, filter, limit }) => {
+  const { id } = await userRepository.getByUsername(username);
+  const findOptions = {
+    filter,
+    limit,
+    sortByCreatedDateDesc: true
+  };
+  const repos = await repoRepository.getByUserWithOptions(id, findOptions);
+  return repos.map(({ name }) => name);
 };
 
-const getReposData = async ({ username }) => repoRepository.getByUsername(username);
+const getReposData = async ({ username }) => {
+  const { id } = await userRepository.getByUsername(username);
+  return repoRepository.getByUserWithOptions(id);
+};
 
 const forkRepo = async ({
   userId, username, owner, name, website, description, forkedFromRepoId
@@ -158,25 +158,29 @@ const forkRepo = async ({
   try {
     const source = repoHelper.getPathToRepo(owner, name);
     const target = repoHelper.getPathToRepo(username, name);
-    const targetDir = target
-      .split('/')
-      .slice(0, -1)
-      .join('/');
 
-    fs.mkdirSync(targetDir);
-    return await fse
-      .copy(source, target, { preserveTimestamps: true })
-      .then(() => {
-        repoRepository.create({
-          userId,
-          name,
-          website,
-          description,
-          forkedFromRepoId
-        });
-        return { status: true, username };
-      })
-      .catch(err => ({ status: false, error: err.message }));
+    await fs.mkdir(target, { recursive: true });
+    await copydir(
+      source,
+      target,
+      {
+        utimes: true,
+        mode: true,
+        cover: true
+      },
+      (err) => {
+        if (err) throw err;
+      }
+    );
+    await repoRepository.create({
+      userId,
+      name,
+      website,
+      description,
+      forkedFromRepoId
+    });
+
+    return { status: true, username };
   } catch (err) {
     return { status: false, error: err.message };
   }

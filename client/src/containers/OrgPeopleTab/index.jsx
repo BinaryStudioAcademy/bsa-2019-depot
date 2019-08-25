@@ -1,19 +1,39 @@
 import React from 'react';
 import { Container, Input, Button } from 'semantic-ui-react';
 import Octicon, { Trashcan } from '@primer/octicons-react';
+import InviteMembersTab from '../InviteMembersTab';
 import UserPreview from '../../components/UserPreview/index';
 import PropTypes from 'prop-types';
 
 import styles from './styles.module.scss';
 
 class OrgPeopleTab extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      invite: false
+    };
+  }
+
+  changeInvite = () => {
+    const { invite } = this.state;
+    this.setState({
+      invite: !invite
+    });
+  };
+
   render() {
     const { orgMembers, orgInfo, ownerId, isOwner } = this.props;
-    return (
+    const { invite } = this.state;
+    return !invite ? (
       <Container className={styles.memberListContainer}>
         <div className={styles.memberListFilters}>
           <Input placeholder="Find a member…" className={styles.memberSearchInput}></Input>
-          {isOwner && <Button className={styles.inviteButton}>Invite Member</Button>}
+          {isOwner && (
+            <Button onClick={this.changeInvite} className={styles.inviteButton}>
+              Invite Member
+            </Button>
+          )}
         </div>
         <div className={styles.memberListHeader}>
           <span className={styles.headerInfo}>
@@ -45,6 +65,13 @@ class OrgPeopleTab extends React.Component {
             })}
           </ul>
         </div>
+      </Container>
+    ) : (
+      <Container className={styles.memberListContainer} textAlign="center">
+        <InviteMembersTab orgId={orgInfo.id} />
+        <Button className={styles.backBtn} onClick={this.changeInvite}>
+          Go back
+        </Button>
       </Container>
     );
   }

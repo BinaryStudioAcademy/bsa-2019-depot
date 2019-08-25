@@ -54,6 +54,18 @@ const updateUserSettings = async ({ id, settings }) => {
 
 const getStars = async username => StarRepository.getStars(username);
 
+const getUsersToInviting = async ({ orgID, username }) => {
+  const allUsers = await UserRepository.findUserByLetter(username);
+  const orgUsers = await OrgUserRepository.getAllOrganizationUsers(orgID);
+  const usersIdInOrg = orgUsers.map(({ userId }) => userId);
+
+  const users = allUsers
+    .filter(({ id }) => !usersIdInOrg.includes(id))
+    .slice(0, 6);
+  const usernames = users.map(user => user.username);
+  return usernames;
+};
+
 module.exports = {
   getUserById,
   setUsername,
@@ -62,5 +74,6 @@ module.exports = {
   resetPassword,
   getUserDetailed,
   getStars,
+  getUsersToInviting,
   getUsersOrganizations
 };
