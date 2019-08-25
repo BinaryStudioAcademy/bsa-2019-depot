@@ -1,5 +1,5 @@
 const BaseRepository = require('./base.repository');
-const { IssueModel, UserModel } = require('../models/index');
+const { IssueModel, UserModel, RepositoryModel } = require('../models/index');
 
 class IssueRepository extends BaseRepository {
   async addIssue({ ...issueData }) {
@@ -28,6 +28,28 @@ class IssueRepository extends BaseRepository {
     return this.model.findAll({
       where: { repositoryId },
       include: [
+        {
+          model: UserModel,
+          attributes: ['username']
+        }
+      ]
+    });
+  }
+
+  getRepoIssueByNumber({ username, name, number }) {
+    return this.model.findOne({
+      where: { number },
+      include: [
+        {
+          model: UserModel,
+          attributes: [],
+          where: { username }
+        },
+        {
+          model: RepositoryModel,
+          attributes: [],
+          where: { name }
+        },
         {
           model: UserModel,
           attributes: ['username']

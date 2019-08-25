@@ -5,7 +5,7 @@ import moment from 'moment';
 import { Dropdown, Header, Button, Divider, Form, Label, Icon, Image, Loader } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { getUserImgLink } from '../../helpers/imageHelper';
-import { fetchIssueComments, createIssueComment } from '../../routines/routines';
+import { getIssueByNumber, getIssueComments, postIssueComment } from '../../services/issuesService';
 import ReactMde from 'react-mde';
 import ReactMarkdown from 'react-markdown';
 import 'react-mde/lib/styles/css/react-mde-all.css';
@@ -16,6 +16,9 @@ class IssueComments extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentIssue: {},
+      issueComments: [],
+      loading: true,
       comment: '',
       selectedTab: 'write',
       isDisabled: true
@@ -27,20 +30,27 @@ class IssueComments extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const {
-      issues,
-      fetchIssueComments,
       match: {
-        params: { username, reponame, number: issueNumber }
+        params: { username, reponame, number }
       }
     } = this.props;
-    const currentIssue = issues.find(issue => issue.number === +issueNumber);
-    fetchIssueComments({
+    const currentIssue = await getIssueByNumber({
       username,
       reponame,
-      issueNumber,
-      issueId: currentIssue.id
+      number
+    });
+    const { id } = currentIssue;
+    const issueComments = await getIssueComments({
+      username,
+      reponame,
+      issueId: id
+    });
+    this.setState({
+      currentIssue,
+      issueComments,
+      loading: false
     });
   }
 
@@ -57,46 +67,48 @@ class IssueComments extends React.Component {
     return Promise.resolve(<ReactMarkdown source={markdown} />);
   }
 
-  onSubmit() {
-    const { comment } = this.state;
-    if (!comment) return;
-
+  async onSubmit() {
+    this.setState({
+      isDisabled: true
+    });
     const {
-      createIssueComment,
+      comment,
+      currentIssue: { id: issueId }
+    } = this.state;
+    if (!comment) return;
+    const {
       userId,
-      issues,
       match: {
-        params: { username, reponame, number: issueNumber }
+        params: { username, reponame }
       }
     } = this.props;
-    const currentIssue = issues.find(issue => issue.number === +issueNumber);
-    createIssueComment({
+    await postIssueComment({
       username,
       reponame,
       comment,
-      issueNumber,
-      issueId: currentIssue.id,
+      issueId,
       userId
     });
-    this.setState({ comment: '' });
+    const issueComments = await getIssueComments({
+      username,
+      reponame,
+      issueId
+    });
+    this.setState({
+      comment: '',
+      issueComments
+    });
   }
 
   render() {
-    const { comment, selectedTab, isDisabled } = this.state;
+    const { currentIssue, issueComments, comment, selectedTab, isDisabled, loading } = this.state;
     const {
-      issues,
-      issueComments,
-      loading,
-      match: {
-        url,
-        params: { number }
-      }
+      match: { url }
     } = this.props;
     const newIssueUrl = url
       .split('/')
       .slice(0, -1)
       .join('/');
-    const currentIssue = issues.find(issue => issue.number === +number);
 
     return loading ? (
       <Loader active />
@@ -218,30 +230,15 @@ IssueComments.propTypes = {
     path: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired
   }).isRequired,
-  fetchIssueComments: PropTypes.func.isRequired,
-  userId: PropTypes.string.isRequired,
-  issues: PropTypes.array.isRequired,
-  issueComments: PropTypes.array.isRequired,
-  createIssueComment: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired
+  userId: PropTypes.string.isRequired
 };
 
 const mapStateToProps = ({
-  issuesData: { issues },
-  issueCommentsData: { issueComments, loading },
   profile: {
     currentUser: { id }
   }
 }) => ({
-  userId: id,
-  issues,
-  issueComments,
-  loading
+  userId: id
 });
 
-const mapDispatchToProps = { fetchIssueComments, createIssueComment };
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(IssueComments);
+export default connect(mapStateToProps)(IssueComments);
