@@ -66,6 +66,29 @@ More info:
 
 [Guide on how to set up a Git server on EC2](https://www.freecodecamp.org/news/create-your-own-github-kinda-9b4581db675c/)
 
+### Git Hooks
+
+In order to keep our DB in sync with user interactions with remote Git repository we are using **"pre-receive"** and
+**"update"** Git server-side hooks.
+
+To set them up locally you should copy them from `scripts/git-hooks` folder to the `hooks` folder in 
+your **bare** testing repository.
+
+Also you should set up `rabbitmqadmin` CLI tool which allows us to send messages to our RabbitMQ queue from the "update" Git hook:
+
+1. You can download it by either:
+    - Going to http://localhost:15672/cli/rabbitmqadmin which will trigger the download (if you've already installed RabbitMQ service).
+    - Downloading raw file from [Github](https://raw.githubusercontent.com/rabbitmq/rabbitmq-management/v3.7.17/bin/rabbitmqadmin).
+2. Next, depending on your OS, you should put it in:
+    - a directory in PATH, e.g. /usr/local/bin, for **Linux**
+    - anywhere you like, for **Windows**
+3. This tool requires **Python** installed, so [download](https://www.python.org/downloads/) and install it if you haven't already.
+4. The last thing you should do is to uncomment the corresponding line in the **"update"** hook (lines 47-48), depending on your OS,
+and to put the path to the `rabbitmqadmin` file inside the command, in case of **Windows**.
+
+Also you should be aware that in order to see changes from the website you should configure your Git client using the email
+which corresponds to the account on the website, otherwise we won't be able to identify the user.
+
 ### RabbitMQ
 
 - Install RabbitMQ: [Tutorial](https://www.rabbitmq.com/download.html)
@@ -133,6 +156,7 @@ PUBLIC_KEY_PATH = /etc/ssh/ssh_host_rsa_key.pub # default for SSH server. Change
 
 RABBITMQ_CONNECTION_URL = amqp://localhost:5672 # default. has to be changed if it is different
 EMAIL_QUEUE_NAME = emails # default. has to be changed if it is different
+REPO_DATA_QUEUE_NAME = repo-data # default. has to be changed if it is different
 
 SECRET_KEY = secretkey # has to be changed to own random secret key
 

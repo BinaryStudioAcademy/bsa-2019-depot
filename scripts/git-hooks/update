@@ -1,0 +1,79 @@
+#!/usr/bin/env node
+
+const childProcessExec = require('child_process').exec;
+const util = require('util');
+const os = require('os');
+
+const exec = util.promisify(childProcessExec);
+
+sendPushData();
+
+async function sendPushData() {
+  const [branchRef, prevHeadSha, newHeadSha] = process.argv.slice(2);
+  const branchName = branchRef.slice(11);
+
+  let pathToRepo;
+  if (os.platform() === 'win32') {
+    pathToRepo = __dirname.split('\\').slice(0, -1);
+  } else if (os.platform() === 'linux') {
+    pathToRepo = __dirname.split('/').slice(0, -1);
+  }
+
+  const repoOwner = pathToRepo[pathToRepo.length - 2];
+  let repoName = pathToRepo[pathToRepo.length - 1];
+  if (repoName.endsWith('.git')) {
+    repoName = repoName.slice(0, -4);
+  }
+
+  const commits = await getCommitsData(prevHeadSha, newHeadSha, repoOwner, repoName);
+
+  const branch = {
+    branchName,
+    newHeadSha,
+    repoOwner,
+    repoName
+  };
+
+  const data = {
+    commits,
+    branch
+  };
+
+  let payload = JSON.stringify(data);
+  if (os.platform() === 'win32') {
+    payload = payload.replace(/"/g, '""');
+  }
+
+  // await exec(`rabbitmqadmin publish payload="${payload}" routing_key="repo-data"`); // For Linux
+  // await exec(`python "С:\\path\\to\\rabbitmqadmin" publish payload="${payload}" routing_key="repo-data"`); // For Windows
+
+  process.exit(0);
+}
+
+async function getCommitsData(shaFrom, shaTo, repoOwner, repoName) {
+  const revList = await exec(`git rev-list ${shaFrom}..${shaTo}`);
+  const commitShas = revList.stdout.split('\n').filter(line => line);
+  const messagesAndEmails = await Promise.all(commitShas.map(sha => Promise.all([sha, getCommitMessage(sha), getAuthorEmail(sha)])));
+
+  return messagesAndEmails.map(([sha, message, email]) => ({
+    sha,
+    message,
+    userEmail: email,
+    repoOwner,
+    repoName
+  }));
+}
+
+async function getCommitMessage(sha) {
+  const message = await exec(`git log --format=%B -n 1 ${sha}`);
+  return message.stdout.trim();
+}
+
+async function getAuthorEmail(sha) {
+  const { stdout } = await exec(`git log --format='%ae' ${sha} -1`);
+  let email = stdout.trim();
+  if (email.startsWith('\'')) {
+    email = email.slice(1, -1);
+  }
+  return email;
+}
