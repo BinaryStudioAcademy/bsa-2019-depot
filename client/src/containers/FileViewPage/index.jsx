@@ -25,6 +25,7 @@ class FileViewPage extends React.Component {
     };
 
     this.handleCopyPath = this.handleCopyPath.bind(this);
+    this.handleOpenRaw = this.handleOpenRaw.bind(this);
     this.handleEditFile = this.handleEditFile.bind(this);
     this.handleDeleteFile = this.handleDeleteFile.bind(this);
   }
@@ -43,6 +44,14 @@ class FileViewPage extends React.Component {
 
   handleCopyPath() {
     navigator.clipboard.writeText(this.filepath);
+  }
+
+  handleOpenRaw() {
+
+    let w = window.open("");
+    w.document.write(`<pre>${this.state.fileData.content}</pre>`);
+    w.focus();
+
   }
 
   handleEditFile() {
@@ -126,12 +135,15 @@ class FileViewPage extends React.Component {
               <code className={styles.lineCount}>{lineCount} lines</code>
               <code>{this.formatBytes(size)}</code>
             </div>
+            <div className={styles.fileControls}>
+              <Button compact size="small" onClick={this.handleOpenRaw}>Raw</Button>
             {username && username === owner && (
-              <div className={styles.fileControls}>
+              <>
                 <Icon link name="pencil" onClick={this.handleEditFile} />
                 <Icon link name="trash alternate" onClick={this.handleDeleteFile} />
-              </div>
+              </>
             )}
+            </div>
           </Segment>
           <Segment className={styles.fileView}>
             {fileExtension === 'md' ? (
