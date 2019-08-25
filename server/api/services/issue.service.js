@@ -7,6 +7,8 @@ const updateIssueById = ({ id, ...issueData }) => issueRepository.updateIssueByI
 
 const getAllRepoIssues = repositoryId => issueRepository.getRepositoryIssues(repositoryId);
 
+const getRepoIssueByNumber = request => issueRepository.getRepoIssueByNumber(request);
+
 const getAllIssueComments = issueId => issueCommentRepository.getAllIssueComments(issueId);
 
 const addIssueComment = issueCommentData => issueCommentRepository.addIssueComment(issueCommentData);
@@ -19,6 +21,7 @@ module.exports = {
   addIssue,
   updateIssueById,
   getAllRepoIssues,
+  getRepoIssueByNumber,
   getAllIssueComments,
   addIssueComment,
   updateIssueCommentById,

@@ -173,7 +173,7 @@ CreateIssuePage.propTypes = {
   username: PropTypes.string.isRequired,
   reponame: PropTypes.string,
   issues: PropTypes.array.isRequired,
-  repositoryId: PropTypes.number,
+  repositoryId: PropTypes.string,
   userId: PropTypes.string.isRequired,
   createIssue: PropTypes.func.isRequired,
   fetchCurrentRepo: PropTypes.func.isRequired,
@@ -183,8 +183,7 @@ CreateIssuePage.propTypes = {
     isExact: PropTypes.bool.isRequired,
     path: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired
-  }).isRequired,
-  loading: PropTypes.bool.isRequired
+  }).isRequired
 };
 
 const mapStateToProps = ({
