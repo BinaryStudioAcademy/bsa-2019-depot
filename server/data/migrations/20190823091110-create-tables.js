@@ -367,15 +367,15 @@ module.exports = {
     )
   ]))),
   down: queryInterface => queryInterface.sequelize.transaction(transaction => Promise.all([
-    queryInterface.dropTable('users', { transaction }),
-    queryInterface.dropTable('sshKeys', { transaction }),
-    queryInterface.dropTable('repositories', { transaction }),
-    queryInterface.dropTable('roles', { transaction }),
-    queryInterface.dropTable('orgUsers', { transaction }),
-    queryInterface.dropTable('commits', { transaction }),
-    queryInterface.dropTable('stars', { transaction }),
-    queryInterface.dropTable('commitComments', { transaction }),
+    queryInterface.dropTable('issueComments', { transaction }),
     queryInterface.dropTable('issues', { transaction }),
-    queryInterface.dropTable('issueComments', { transaction })
+    queryInterface.dropTable('commitComments', { transaction }),
+    queryInterface.dropTable('stars', { transaction }),
+    queryInterface.dropTable('commits', { transaction }),
+    queryInterface.dropTable('orgUsers', { transaction }),
+    queryInterface.dropTable('roles', { transaction }),
+    queryInterface.dropTable('repositories', { transaction }),
+    queryInterface.dropTable('sshKeys', { transaction }),
+    queryInterface.dropTable('users', { transaction })
   ]))
 };
