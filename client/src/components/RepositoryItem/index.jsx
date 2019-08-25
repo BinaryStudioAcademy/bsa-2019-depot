@@ -8,19 +8,20 @@ import { Button } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
 import { getCommits } from '../../services/commitsService';
 import { checkIfEmpty } from '../../services/repositoryService';
+import moment from 'moment';
 
 import styles from './styles.module.scss';
 
 //Mock
 const data = [
-  { name: 'commit1', commitDate: 0 },
-  { name: 'commit2', commitDate: 0 },
-  { name: 'commit3', commitDate: 0 },
-  { name: 'commit4', commitDate: 0 },
-  { name: 'commit5', commitDate: 0 },
-  { name: 'commit6', commitDate: 0 },
-  { name: 'commit7', commitDate: 3800 },
-  { name: 'commit8', commitDate: 0 }
+  { day: '1', commitCount: 0 },
+  { day: '2', commitCount: 0 },
+  { day: '3', commitCount: 0 },
+  { day: '4', commitCount: 0 },
+  { day: '5', commitCount: 0 },
+  { day: '6', commitCount: 0 },
+  { day: '7', commitCount: 3 },
+  { day: '8', commitCount: 0 }
 ];
 
 class RepositoryItem extends React.Component {
@@ -33,11 +34,15 @@ class RepositoryItem extends React.Component {
 
   async componentDidMount() {
     const {
-      repo: { name },
+      repo: { name, updatedAt },
       match: {
         params: { username }
       }
     } = this.props;
+
+    const updatedAtTime = moment(updatedAt).fromNow();
+    this.setState({ updatedAt: updatedAtTime });
+
     await this.checkIfEmpty(username, name);
 
     const { isEmpty } = this.state;
@@ -86,6 +91,7 @@ class RepositoryItem extends React.Component {
       username,
       type
     } = this.props;
+    const { updatedAt } = this.state;
     const starsCount = Number(this.props.repo.starsCount);
 
     return (
@@ -104,7 +110,7 @@ class RepositoryItem extends React.Component {
               </span>
             ) : null}
             <span className={styles.repo_info_item}>
-              <span className={styles.repo_item_updated}>Updated 11 days ago</span>
+              <span className={styles.repo_item_updated}>{`Updated ${updatedAt}`}</span>
             </span>
           </div>
         </div>
@@ -117,7 +123,7 @@ class RepositoryItem extends React.Component {
           </div>
           {data && (
             <LineChart width={155} height={25} data={data}>
-              <Line type="monotone" dataKey="commitDate" stroke="#D7ECAD" strokeWidth={2} dot={null} />
+              <Line type="monotone" dataKey="commitCount" stroke="#D7ECAD" strokeWidth={2} dot={null} />
             </LineChart>
           )}
         </div>
