@@ -16,50 +16,64 @@ const { getUserById } = require('../services/user.service');
 
 const router = Router();
 
-router.get('/:orgID/users', (req, res) => {
+router.get('/:orgID/users', (req, res, next) => {
   const { orgID } = req.params;
-  getOrganizationMembers(orgID).then((data) => {
-    const ids = data.map(record => record.dataValues.userId);
-    const users = ids.map(user => getUserById(user));
-    Promise.all(users).then((userData) => {
-      res.send(userData);
-    });
-  });
+  getOrganizationMembers(orgID)
+    .then((data) => {
+      const ids = data.map(record => record.dataValues.userId);
+      const users = ids.map(user => getUserById(user));
+      Promise.all(users).then((userData) => {
+        res.send(userData);
+      });
+    })
+    .catch(next);
 });
 
-router.get('/:orgID/owner', (req, res) => {
+router.get('/:orgID/owner', (req, res, next) => {
   const { orgID } = req.params;
-  getOrganizationOwner(orgID).then(data => res.send(data));
+  getOrganizationOwner(orgID)
+    .then(data => res.send(data))
+    .catch(next);
 });
 
-router.post('/new', (req, res) => {
+router.post('/', (req, res, next) => {
   const { username, email, userID } = req.body;
-  createOrganization({ username, email, userID }).then(data => res.send(data));
+  createOrganization({ username, email, userID })
+    .then(data => res.send(data))
+    .catch(next);
 });
 
-router.post('/invite', (req, res) => {
+router.post('/invite', (req, res, next) => {
   const { orgName, username, role } = req.body;
   addMember({
     orgName,
     username,
     role,
     url: clientUrl
-  }).then(data => res.send(data));
+  })
+    .then(data => res.send(data))
+    .catch(next);
 });
 
-router.get('/:orgname/users/:userID', (req, res) => {
+router.get('/:orgname/users/:userID', (req, res, next) => {
   const { orgname, userID } = req.params;
-  getRelationUserOrg({ orgname, userID }).then(data => res.send(data));
+  getRelationUserOrg({ orgname, userID })
+    .then(data => res.send(data))
+    .catch(next);
 });
 
-router.post('/invitation', (req, res) => {
+router.post('/invitation', (req, res, next) => {
   const { orgName, userId } = req.body;
-  acceptInvitation({ orgName, userId }).then(data => res.send(data));
+  acceptInvitation({ orgName, userId })
+    .then(data => res.send(data))
+    .catch(next);
 });
 
-router.delete('/invitation', (req, res) => {
+router.delete('/invitation', (req, res, next) => {
   const { orgName, userId } = req.body;
-  cancelInvitation({ orgName, userId }).then(data => res.send(data));
+  cancelInvitation({ orgName, userId })
+    .then(data => res.send(data))
+    .catch(next);
 });
 
 module.exports = router;
