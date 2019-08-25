@@ -2,7 +2,7 @@ import callWebApi from '../helpers/webApiHelper';
 
 export const create = async request => {
   const response = await callWebApi({
-    endpoint: '/api/orgs/new',
+    endpoint: '/api/orgs',
     type: 'POST',
     request
   });
