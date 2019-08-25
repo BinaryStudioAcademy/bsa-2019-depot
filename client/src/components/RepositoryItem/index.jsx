@@ -12,18 +12,6 @@ import moment from 'moment';
 
 import styles from './styles.module.scss';
 
-//Mock
-const data = [
-  { day: '1', commitCount: 0 },
-  { day: '2', commitCount: 0 },
-  { day: '3', commitCount: 0 },
-  { day: '4', commitCount: 0 },
-  { day: '5', commitCount: 0 },
-  { day: '6', commitCount: 0 },
-  { day: '7', commitCount: 3 },
-  { day: '8', commitCount: 0 }
-];
-
 class RepositoryItem extends React.Component {
   constructor(props) {
     super(props);
@@ -46,7 +34,15 @@ class RepositoryItem extends React.Component {
     await this.checkIfEmpty(username, name);
 
     const { isEmpty } = this.state;
-    if (!isEmpty) await this.getRepoCommits(username, name, 'master');
+    if (!isEmpty) {
+      //sometimes we have repository in DB, but don't have folder on the server, so
+      try {
+        await this.getRepoCommits(username, name, 'master');
+      } catch (error) {
+        return error;
+      }
+      this.groupCommitsByDay(this.state.repoCommits);
+    }
   }
 
   async checkIfEmpty(username, reponame) {
@@ -74,6 +70,28 @@ class RepositoryItem extends React.Component {
     onStar({ ...this.state, isStar, starsCount });
   }
 
+  groupCommitsByDay(commits) {
+    const countOfCommitsByDate = commits.reduce((acc, commit) => {
+      let i = acc.findIndex(x => x.day === moment(commit.date.split('T')[0]).dayOfYear());
+      return (
+        i === -1 ? acc.push({ day: moment(commit.date.split('T')[0]).dayOfYear(), commits: 1 }) : acc[i].commits++, acc
+      );
+    }, []); //transform server data to data for recharts
+    const period = moment().diff(moment().startOf('year'), 'days') + 1; //days from year's start
+    const commitsPerYear = [];
+    let index = 0;
+    //from start of year to NOW
+    for (let i = 1; i <= period; i++) {
+      if (countOfCommitsByDate.some(elem => elem.day === i)) {
+        commitsPerYear.push({ day: i, commits: countOfCommitsByDate[index].commits });
+        index += 1;
+      } else {
+        commitsPerYear.push({ day: i, commits: 0 });
+      }
+    }
+    this.setState({ commitsPerYear: commitsPerYear });
+  }
+
   getRepoLink({ username, name, type }) {
     return type === 'stars' ? (
       <Link to={`${username}/${name}`} className={styles.repo_name}>
@@ -92,7 +110,7 @@ class RepositoryItem extends React.Component {
       username,
       type
     } = this.props;
-    const { updatedAt } = this.state;
+    const { updatedAt, isEmpty, commitsPerYear } = this.state;
     const starsCount = Number(this.props.repo.starsCount);
 
     return (
@@ -122,9 +140,9 @@ class RepositoryItem extends React.Component {
               {isStar ? 'Unstar' : 'Star'}
             </Button>
           </div>
-          {data && (
-            <LineChart width={155} height={25} data={data}>
-              <Line type="monotone" dataKey="commitCount" stroke="#D7ECAD" strokeWidth={2} dot={null} />
+          {!isEmpty && (
+            <LineChart width={155} height={25} data={commitsPerYear}>
+              <Line type="monotone" dataKey="commits" stroke="#D7ECAD" strokeWidth={2} dot={null} />
             </LineChart>
           )}
         </div>
