@@ -34,14 +34,14 @@ class RepositoryItem extends React.Component {
 
   async componentDidMount() {
     const {
-      repo: { name, updatedAt },
+      repo: { name, createdAt },
       match: {
         params: { username }
       }
     } = this.props;
 
-    const updatedAtTime = moment(updatedAt).fromNow();
-    this.setState({ updatedAt: updatedAtTime });
+    const repoCreated = moment(createdAt).fromNow();
+    this.setState({ updatedAt: repoCreated });
 
     await this.checkIfEmpty(username, name);
 
@@ -55,8 +55,9 @@ class RepositoryItem extends React.Component {
   }
 
   async getRepoCommits(username, reponame, branch) {
-    const data = await getCommits(username, reponame, branch);
-    this.setState({ repoCommits: data });
+    const commits = await getCommits(username, reponame, branch);
+    const lastCommitDate = moment(commits[0].date).fromNow();
+    this.setState({ repoCommits: commits, updatedAt: lastCommitDate });
   }
 
   starClickHandler() {
