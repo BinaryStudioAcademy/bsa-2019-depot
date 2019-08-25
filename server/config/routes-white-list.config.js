@@ -5,7 +5,7 @@ module.exports = [
   '/auth/google/callback',
   '/repos',
   '/commit',
-  '/user/username-exists',
-  '/user/forget-password',
-  '/user/reset-password'
+  '/users/username-exists',
+  '/users/forget-password',
+  '/users/reset-password'
 ];

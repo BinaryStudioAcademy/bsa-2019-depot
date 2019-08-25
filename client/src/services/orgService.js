@@ -2,7 +2,7 @@ import callWebApi from '../helpers/webApiHelper';
 
 export const create = async request => {
   const response = await callWebApi({
-    endpoint: '/api/organizations/new',
+    endpoint: '/api/orgs',
     type: 'POST',
     request
   });
@@ -11,7 +11,7 @@ export const create = async request => {
 
 export const getOrgMembers = async orgID => {
   const response = await callWebApi({
-    endpoint: `/api/organizations/${orgID}/users`,
+    endpoint: `/api/orgs/${orgID}/users`,
     type: 'GET'
   });
   return response.json();
@@ -19,7 +19,7 @@ export const getOrgMembers = async orgID => {
 
 export const getOrgOwner = async orgID => {
   const response = await callWebApi({
-    endpoint: `/api/organizations/${orgID}/owner`,
+    endpoint: `/api/orgs/${orgID}/owner`,
     type: 'GET'
   });
   return response.json();
@@ -27,7 +27,7 @@ export const getOrgOwner = async orgID => {
 
 export const getRelationUserOrg = async (orgname, userID) => {
   const response = await callWebApi({
-    endpoint: `/api/organizations/${orgname}/users/${userID}`,
+    endpoint: `/api/orgs/${orgname}/users/${userID}`,
     type: 'GET'
   });
   return response.json();
