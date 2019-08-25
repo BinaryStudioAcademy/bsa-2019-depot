@@ -27,9 +27,9 @@ function* createIssueCommentRequest({ payload }) {
     const response = yield call(issuesService.postIssueComment, payload);
 
     if (response.status) {
-      const { username, reponame, issueNumber } = payload;
+      const { username, reponame, issueNumber, issueId } = payload;
       yield put(createIssueComment.success());
-      yield put(fetchIssueComments.trigger({ username, reponame, issueNumber }));
+      yield put(fetchIssueComments.trigger({ username, reponame, issueNumber, issueId }));
     } else {
       yield put(createIssueComment.failure(response.error.message));
     }

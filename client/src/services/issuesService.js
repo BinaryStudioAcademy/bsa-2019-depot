@@ -20,10 +20,13 @@ export const createIssue = async ({ username: owner, reponame, ...request }) => 
   return response.json();
 };
 
-export const getIssueComments = async ({ username: owner, reponame, issueNumber }) => {
+export const getIssueComments = async ({ username: owner, reponame, issueNumber, issueId }) => {
   const response = await callWebApi({
     endpoint: `/api/repo/${owner}/${reponame}/issues/${issueNumber}/comments`,
-    type: 'GET'
+    type: 'GET',
+    query: {
+      issueId
+    }
   });
   return response.json();
 };

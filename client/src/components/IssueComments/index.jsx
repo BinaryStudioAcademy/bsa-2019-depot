@@ -29,12 +29,19 @@ class IssueComments extends React.Component {
 
   componentDidMount() {
     const {
+      issues,
       fetchIssueComments,
       match: {
         params: { username, reponame, number: issueNumber }
       }
     } = this.props;
-    fetchIssueComments({ username, reponame, issueNumber });
+    const currentIssue = issues.find(issue => issue.number === +issueNumber);
+    fetchIssueComments({
+      username,
+      reponame,
+      issueNumber,
+      issueId: currentIssue.id
+    });
   }
 
   onCommentChange(comment) {
@@ -57,15 +64,18 @@ class IssueComments extends React.Component {
     const {
       createIssueComment,
       userId,
+      issues,
       match: {
         params: { username, reponame, number: issueNumber }
       }
     } = this.props;
+    const currentIssue = issues.find(issue => issue.number === +issueNumber);
     createIssueComment({
       username,
       reponame,
       comment,
       issueNumber,
+      issueId: currentIssue.id,
       userId
     });
     this.setState({ comment: '' });
@@ -86,7 +96,7 @@ class IssueComments extends React.Component {
       .split('/')
       .slice(0, -1)
       .join('/');
-    const currentIssue = issues.find(issue => issue.id === +number);
+    const currentIssue = issues.find(issue => issue.number === +number);
 
     return loading ? (
       <Loader active />
@@ -95,7 +105,7 @@ class IssueComments extends React.Component {
         <div className={styles.header_row}>
           <Header as="h2">
             {currentIssue.title}
-            <span>{` #${currentIssue.id}`}</span>
+            <span>{` #${currentIssue.number}`}</span>
           </Header>
           <Link to={`${newIssueUrl}/new`}>
             <Button compact positive content="New Issue" primary />
