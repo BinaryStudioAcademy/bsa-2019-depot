@@ -11,6 +11,7 @@ const {
   getUsersToInviting,
   getUsersOrganizations
 } = require('../services/user.service');
+const { getCommitsByDate } = require('../services/commit.service');
 const { getKeysByUser, createKey, deleteKey } = require('../services/ssh-key.service');
 const { clientUrl } = require('../../config/common.config');
 
@@ -93,5 +94,12 @@ router.get('/:userid/organizations', (req, res, next) => {
     .then(data => res.send(data))
     .catch(next);
 });
+
+router.get('/:username/contribution-activity', (req, res, next) => {
+  const { username } = req.params;
+  getCommitsByDate({ user: username })
+    .then(commits => res.send(commits))
+    .catch(next);
+})
 
 module.exports = router;
