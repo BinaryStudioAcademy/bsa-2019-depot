@@ -9,14 +9,4 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const target = document.getElementById('root');
 
-const { detect } = require('detect-browser');
-const browser = detect();
-
-if (browser && browser.name === 'ie') {
-  const warningWrap = document.createElement('p');
-  warningWrap.classList.add('warning-ie');
-  warningWrap.innerHTML = 'This browser is not supported! ¯\\_(ツ)_/¯';
-  target.appendChild(warningWrap);
-} else {
-  render(<Home />, target);
-}
+render(<Home />, target);
