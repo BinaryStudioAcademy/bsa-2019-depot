@@ -1,25 +1,28 @@
+const { Op } = require('sequelize');
 const BaseRepository = require('./base.repository');
 const { RepositoryModel, UserModel, StarModel } = require('../models/index');
 const sequelize = require('../db/connection');
 
 class RepositoryRepository extends BaseRepository {
-  getByUser(userId) {
-    return this.model.findAll({ where: { userId } });
-  }
-
   addRepository({ ...repositoryData }) {
     return this.create(repositoryData);
   }
 
-  getByUsername(username) {
-    return this.model.findAll({
+  getByUser(userId) {
+    return this.model.findAll({ where: { userId } });
+  }
+
+  getByUserWithOptions(userId, options = {}) {
+    const { filter, limit, sortByCreatedDateDesc } = options;
+    const findOptions = {
+      where: { userId },
       attributes: {
         include: [
           [
             sequelize.literal(`
             (SELECT COUNT(*)
-            FROM "stars"
-            WHERE "repository"."id" = "stars"."repositoryId"
+            FROM "stars", "repositories"
+            WHERE "repositories"."id" = "stars"."repositoryId"
             AND "stars"."deletedAt" IS NULL)`),
             'starsCount'
           ]
@@ -29,14 +32,32 @@ class RepositoryRepository extends BaseRepository {
         {
           model: UserModel,
           attributes: [],
-          where: { username }
+          where: { id: userId }
         },
         {
           model: StarModel,
           attributes: ['userId']
         }
       ]
-    });
+    };
+
+    if (sortByCreatedDateDesc) {
+      findOptions.order = [['createdAt', 'DESC']];
+    }
+
+    if (limit) {
+      findOptions.limit = limit;
+    }
+
+    if (filter) {
+      findOptions.where = {
+        ...findOptions.where,
+        name: {
+          [Op.substring]: filter
+        }
+      };
+    }
+    return this.model.findAll(findOptions);
   }
 
   getByUserAndReponame(userId, reponame) {
