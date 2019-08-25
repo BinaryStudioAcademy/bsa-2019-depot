@@ -2,8 +2,8 @@ import callWebApi from '../helpers/webApiHelper';
 
 export const forgot = async request => {
   const response = await callWebApi({
-    endpoint: '/api/users/forget-password',
-    type: 'POST',
+    endpoint: '/api/users/forgot-password',
+    type: 'PUT',
     request
   });
   return response.json();
@@ -12,7 +12,7 @@ export const forgot = async request => {
 export const reset = async request => {
   const response = await callWebApi({
     endpoint: '/api/users/reset-password',
-    type: 'POST',
+    type: 'PUT',
     request
   });
   return response.json();
@@ -20,16 +20,16 @@ export const reset = async request => {
 
 export const updateSettings = async request => {
   const response = await callWebApi({
-    endpoint: '/api/users/settings',
-    type: 'POST',
+    endpoint: '/api/users',
+    type: 'PUT',
     request
   });
   return response.json();
 };
 
-export const getKeys = async () => {
+export const getKeys = async (userId) => {
   const response = await callWebApi({
-    endpoint: '/api/users/keys',
+    endpoint: `/api/users/${userId}/keys`,
     type: 'GET'
   });
   return response.json();
@@ -53,7 +53,7 @@ export const deleteKey = async keyId => {
 
 export const getUserDetailed = async username => {
   const response = await callWebApi({
-    endpoint: `/api/users/${username}`,
+    endpoint: `/api/users/${username}/overview`,
     type: 'GET'
   });
   return response.json();
