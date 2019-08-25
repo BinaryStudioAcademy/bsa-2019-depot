@@ -41,7 +41,8 @@ class RepositoryItem extends React.Component {
       } catch (error) {
         return error;
       }
-      this.groupCommitsByDay(this.state.repoCommits);
+      const { repoCommits } = this.state;
+      this.groupCommitsByDay(repoCommits);
     }
   }
 
@@ -71,22 +72,24 @@ class RepositoryItem extends React.Component {
   }
 
   groupCommitsByDay(commits) {
+    //transform server data format to format for recharts
     const countOfCommitsByDate = commits.reduce((acc, commit) => {
       let i = acc.findIndex(x => x.day === moment(commit.date.split('T')[0]).dayOfYear());
       return (
         i === -1 ? acc.push({ day: moment(commit.date.split('T')[0]).dayOfYear(), commits: 1 }) : acc[i].commits++, acc
       );
-    }, []); //transform server data to data for recharts
-    const period = moment().diff(moment().startOf('year'), 'days') + 1; //days from year's start
+    }, []);
+    //days from year's start
+    const period = moment().diff(moment().startOf('year'), 'days') + 1;
     const commitsPerYear = [];
     let index = 0;
-    //from start of year to NOW
-    for (let i = 1; i <= period; i++) {
-      if (countOfCommitsByDate.some(elem => elem.day === i)) {
-        commitsPerYear.push({ day: i, commits: countOfCommitsByDate[index].commits });
+    //from start of year to now
+    for (let dayOfYear = 1; dayOfYear <= period; dayOfYear++) {
+      if (countOfCommitsByDate.some(elem => elem.day === dayOfYear)) {
+        commitsPerYear.push({ day: dayOfYear, commits: countOfCommitsByDate[index].commits });
         index += 1;
       } else {
-        commitsPerYear.push({ day: i, commits: 0 });
+        commitsPerYear.push({ day: dayOfYear, commits: 0 });
       }
     }
     this.setState({ commitsPerYear: commitsPerYear });
