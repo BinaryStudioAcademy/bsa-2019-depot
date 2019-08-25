@@ -34,4 +34,4 @@ const sendToQueue = async (queueName, data) => {
 
 module.exports = {
   sendToQueue
-}
+};

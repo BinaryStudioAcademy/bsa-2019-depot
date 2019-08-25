@@ -72,7 +72,7 @@ class RepositoryItem extends React.Component {
   }
 
   groupCommitsByDay(commits) {
-    //transform server data format to format for recharts
+    //transform server data format to format for recharts, count commits per 1 day
     const countOfCommitsByDate = commits.reduce((acc, commit) => {
       let i = acc.findIndex(x => x.day === moment(commit.date.split('T')[0]).dayOfYear());
       return (
