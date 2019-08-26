@@ -10,10 +10,11 @@ import Settings from '../../scenes/Settings';
 import CreateOrganization from '../../scenes/CreateOrganization';
 import { fetchCurrentUser } from '../../routines/routines';
 import OrganizationPeople from '../../scenes/OrganizationPeople';
-import RepositoryPage from '../../scenes/Repository';
+import Repository from '../../scenes/Repository';
 import Header from '../Header';
 import Footer from '../../components/Footer';
 import Invitation from '../../scenes/Invitation';
+import RepositoryPage from '../../scenes/RepositoryPage';
 
 import './styles.module.scss';
 

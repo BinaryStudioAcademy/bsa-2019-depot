@@ -9,6 +9,8 @@ import Dashboard from './Dashboard/index';
 import CodeTab from './CodeTab/index';
 import CreateRepository from './CreateRepository';
 import SettingsProfile from '../containers/SettingsProfile/index';
+import Repository from './Repository';
+import RepositoryPage from './RepositoryPage';
 
 export {
   Login,
@@ -21,5 +23,7 @@ export {
   Dashboard,
   CodeTab,
   CreateRepository,
-  SettingsProfile
+  SettingsProfile,
+  Repository,
+  RepositoryPage
 };

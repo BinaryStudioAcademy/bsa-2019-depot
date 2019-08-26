@@ -18,7 +18,7 @@ import PrivateTab from '../../containers/PrivateTab';
 
 import styles from './styles.module.scss';
 
-class RepositoryPage extends React.Component {
+class Repository extends React.Component {
   render() {
     const {
       match,
@@ -68,7 +68,7 @@ class RepositoryPage extends React.Component {
   }
 }
 
-RepositoryPage.propTypes = {
+Repository.propTypes = {
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
     isExact: PropTypes.bool.isRequired,
@@ -89,4 +89,4 @@ const mapStateToProps = ({ issuesData: { issues } }) => ({
   issues
 });
 
-export default connect(mapStateToProps)(RepositoryPage);
+export default connect(mapStateToProps)(Repository);
