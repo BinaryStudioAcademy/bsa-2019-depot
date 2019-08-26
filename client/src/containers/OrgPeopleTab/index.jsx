@@ -43,18 +43,19 @@ class OrgPeopleTab extends React.Component {
         <div className={styles.memberListContainer}>
           <ul>
             {orgMembers.map(member => {
+              const {username, name , role} = member;
               return (
-                <li key={member.username} className={styles.memberItem}>
+                <li key={username} className={styles.memberItem}>
                   <div className={styles.memberImg}>
                     <UserPreview size="medium" orgUser={member} />
                   </div>
                   <div className={styles.memberNameContainer}>
-                    <a href={`/${member.username}`} className={styles.memberBox_member}>
-                      {member.name && <span className={styles.memberName}>{member.name}</span>}
-                      <span className={styles.memberUsername}>{member.username}</span>
+                    <a href={`/${username}`} className={styles.memberBox_member}>
+                      {name && <span className={styles.memberName}>{name}</span>}
+                      <span className={styles.memberUsername}>{username}</span>
                     </a>
                   </div>
-                  <div className={styles.memberRole}>{member.role.toLowerCase()}</div>
+                  <div className={styles.memberRole}>{role.toLowerCase()}</div>
                   {isOwner && (
                     <div className={styles.deleteUser}>
                       <Octicon icon={Trashcan} />

@@ -44,8 +44,8 @@ class OrganizationDashboard extends React.Component {
   async isOwner(orgId) {
     const { username } = this.props;
     const owners = await getOrgOwner(orgId);
-    const ownersNames = owners.map(({ username }) => username);
-    this.setState({ isOwner: ownersNames.includes(username) });
+    const usernames = owners.map(({ username }) => username);
+    this.setState({ isOwner: usernames.includes(username) });
   }
   async getRepositories(username) {
     const repositories = await getRepositories(username);
