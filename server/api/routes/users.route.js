@@ -12,7 +12,7 @@ const {
   getUsersOrganizations
 } = require('../services/user.service');
 const { getReposData, getByUserAndReponame } = require('../services/repo.service');
-const { getCommitsByDate } = require('../services/commit.service');
+const { getCommitsAndCreatedRepoByDate } = require('../services/commit.service');
 const { getKeysByUser } = require('../services/ssh-key.service');
 const { clientUrl } = require('../../config/common.config');
 
@@ -86,7 +86,7 @@ router.get('/:userid/organizations', (req, res, next) => {
 
 router.get('/:username/contribution-activity', (req, res, next) => {
   const { username } = req.params;
-  getCommitsByDate({ user: username })
+  getCommitsAndCreatedRepoByDate({ user: username })
     .then(commits => res.send(commits))
     .catch(next);
 });
