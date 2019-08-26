@@ -4,8 +4,10 @@ const exec = util.promisify(require('child_process').exec);
 const repoHelper = require('../../helpers/repo.helper');
 const { getReposNames, isEmpty } = require('./repo.service');
 const CommitRepository = require('../../data/repositories/commit.repository');
+const userRepository = require('../../data/repositories/user.repository');
+const RepoRepository = require('../../data/repositories/repository.repository');
 
-const getCommitsByDate = async (data) => {
+const getCommitsAndCreatedRepoByDate = async (data) => {
   const { user } = data;
   const repoList = await getReposNames(data);
   let globalCommits = [];
@@ -32,6 +34,10 @@ const getCommitsByDate = async (data) => {
   });
 
   const allCommits = await Promise.all(promises).then(() => Promise.resolve(globalCommits));
+  const username = user;
+  const { id } = await userRepository.getByUsername(username);
+  const repos = await RepoRepository.getByUserWithOptions(id);
+  const userRepos = repos.map(repo => repo.get({ plain: true }));
   const userActivitybyDate = {};
   const monthActivity = {};
   allCommits.forEach(({ date }) => {
@@ -44,20 +50,38 @@ const getCommitsByDate = async (data) => {
       userActivitybyDate[fullDate] = 1;
     }
     if (!(monthAndYear in monthActivity)) {
-      monthActivity[monthAndYear] = {};
+      monthActivity[monthAndYear] = {
+        commits: {}
+      };
     }
-    if (!(monthAndYear in monthActivity)) {
-      monthActivity[monthAndYear] = {};
+  });
+  userRepos.forEach(({ createdAt }) => {
+    const stringifiedDate = JSON.stringify(createdAt);
+    const fullDate = stringifiedDate.slice(1, 11);
+    const monthAndYear = stringifiedDate.slice(1, 8);
+    if (fullDate in userActivitybyDate) {
+      userActivitybyDate[fullDate] += 1;
+    } else {
+      userActivitybyDate[fullDate] = 1;
     }
+    monthActivity[monthAndYear] = {
+      ...monthActivity[monthAndYear],
+      createdRepos: []
+    };
   });
   allCommits.forEach(({ date, repo }) => {
     const stringifiedDate = JSON.stringify(date);
     const monthAndYear = stringifiedDate.slice(1, 8);
-    if (monthActivity[monthAndYear][repo]) {
-      monthActivity[monthAndYear][repo] += 1;
+    if (monthActivity[monthAndYear].commits[repo]) {
+      monthActivity[monthAndYear].commits[repo] += 1;
     } else {
-      monthActivity[monthAndYear][repo] = 1;
+      monthActivity[monthAndYear].commits[repo] = 1;
     }
+  });
+  userRepos.forEach(({ name, createdAt }) => {
+    const stringifiedDate = JSON.stringify(createdAt);
+    const monthAndYear = stringifiedDate.slice(1, 8);
+    monthActivity[monthAndYear].createdRepos.push(name);
   });
   return { userActivitybyDate, monthActivity };
 };
@@ -197,7 +221,7 @@ const createCommit = async ({ ...commitData }) => {
 module.exports = {
   getCommits,
   getCommitDiff,
-  getCommitsByDate,
+  getCommitsAndCreatedRepoByDate,
   modifyFile,
   deleteFile,
   createCommit,
