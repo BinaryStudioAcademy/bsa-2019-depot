@@ -83,8 +83,9 @@ RabbitMQ queue from the "update" Git hook:
     - a directory in PATH, e.g. /usr/local/bin, for **Linux**
     - anywhere you like, for **Windows**
 3. This tool requires **Python** installed, so [download](https://www.python.org/downloads/) and install it if you haven't already.
-4. The last thing you should do is to uncomment the corresponding line in the **"update"** hook (lines 47-48), depending on your OS,
-and to put the path to the `rabbitmqadmin` file inside the command, in case of **Windows**.
+4. The last thing you should do is to uncomment the corresponding line in the **"update"** hook 
+(at `your-bare-repo.git/hooks` directory; lines 47-48), depending on your OS, and to put the path to the `rabbitmqadmin` file inside 
+the command, in case of **Windows**.
 
 Also you should be aware that in order to see changes from the website you should configure your Git client using the email
 which corresponds to the account on the website, otherwise we won't be able to identify the user.

@@ -39,7 +39,22 @@ const initialCommit = async ({
   );
 
   const commit = await repo.getCommit(commitId);
-  return NodeGit.Branch.create(repo, 'master', commit, 1);
+  await NodeGit.Branch.create(repo, 'master', commit, 1);
+
+  await repoHelper.syncDb(
+    [{
+      repoOwner: owner,
+      repoName,
+      sha: commit.sha(),
+      message: 'Initial commit',
+      userEmail: email,
+      createdAt: new Date()
+    }],
+    {
+      name: 'master',
+      newHeadSha: commit.sha(),
+    }
+  );
 };
 
 const createRepo = async (repoData) => {
@@ -63,6 +78,12 @@ const createRepo = async (repoData) => {
       Promise.reject(errorObj);
     });
 
+  await repoRepository.create({
+    userId,
+    name,
+    description
+  });
+
   const initialData = repoHelper.generateInitialData({ ...repoData });
   // Initial data has to contain 'email' (of user) and 'files' in form of [ { filename, content }, {... ]
   if (initialData) {
@@ -73,11 +94,6 @@ const createRepo = async (repoData) => {
     });
   }
 
-  repoRepository.create({
-    userId,
-    name,
-    description
-  });
   return result;
 };
 
