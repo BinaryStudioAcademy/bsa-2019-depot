@@ -73,10 +73,7 @@ class IssueComments extends React.Component {
     } = this.state;
     if (!comment) return;
     const {
-      userId,
-      // match: {
-      //   params: { username, reponame }
-      // }
+      userId
     } = this.props;
     await postIssueComment({
       comment,
