@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import io from 'socket.io-client';
 import moment from 'moment';
 import { Dropdown, Header, Button, Divider, Form, Label, Icon, Image, Loader } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
@@ -31,6 +32,7 @@ class IssueComments extends React.Component {
   }
 
   async componentDidMount() {
+    this.initSocket();
     const {
       match: {
         params: { username, reponame, number }
@@ -48,6 +50,12 @@ class IssueComments extends React.Component {
       issueComments,
       loading: false
     });
+  }
+
+  initSocket() {
+    const { REACT_APP_SOCKET_SERVER, REACT_APP_SOCKET_SERVER_PORT } = process.env;
+    const address = `http://${REACT_APP_SOCKET_SERVER}:${REACT_APP_SOCKET_SERVER_PORT}`;
+    this.socket = io(address);
   }
 
   onCommentChange(comment) {
@@ -72,9 +80,7 @@ class IssueComments extends React.Component {
       currentIssue: { id: issueId }
     } = this.state;
     if (!comment) return;
-    const {
-      userId
-    } = this.props;
+    const { userId } = this.props;
     await postIssueComment({
       comment,
       issueId,
