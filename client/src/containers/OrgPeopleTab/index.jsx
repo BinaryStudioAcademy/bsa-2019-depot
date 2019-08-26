@@ -23,7 +23,7 @@ class OrgPeopleTab extends React.Component {
   };
 
   render() {
-    const { orgMembers, orgInfo, ownerId, isOwner } = this.props;
+    const { orgMembers, orgInfo, isOwner } = this.props;
     const { invite } = this.state;
     return !invite ? (
       <Container className={styles.memberListContainer}>
@@ -43,18 +43,19 @@ class OrgPeopleTab extends React.Component {
         <div className={styles.memberListContainer}>
           <ul>
             {orgMembers.map(member => {
+              const {username, name , role} = member;
               return (
-                <li key={member.username} className={styles.memberItem}>
+                <li key={username} className={styles.memberItem}>
                   <div className={styles.memberImg}>
                     <UserPreview size="medium" orgUser={member} />
                   </div>
                   <div className={styles.memberNameContainer}>
-                    <a href={`/${member.username}`} className={styles.memberBox_member}>
-                      {member.name && <span className={styles.memberName}>{member.name}</span>}
-                      <span className={styles.memberUsername}>{member.username}</span>
+                    <a href={`/${username}`} className={styles.memberBox_member}>
+                      {name && <span className={styles.memberName}>{name}</span>}
+                      <span className={styles.memberUsername}>{username}</span>
                     </a>
                   </div>
-                  <div className={styles.memberRole}>{member.id === ownerId ? 'Owner' : 'Member'}</div>
+                  <div className={styles.memberRole}>{role.toLowerCase()}</div>
                   {isOwner && (
                     <div className={styles.deleteUser}>
                       <Octicon icon={Trashcan} />
@@ -81,7 +82,6 @@ OrgPeopleTab.propTypes = {
   repositories: PropTypes.array,
   orgMembers: PropTypes.any,
   orgInfo: PropTypes.any,
-  ownerId: PropTypes.any,
   isOwner: PropTypes.any
 };
 
