@@ -13,7 +13,7 @@ const {
 } = require('../services/user.service');
 const { getReposData, getByUserAndReponame } = require('../services/repo.service');
 const { getCommitsByDate } = require('../services/commit.service');
-const { getKeysByUser, createKey, deleteKey } = require('../services/ssh-key.service');
+const { getKeysByUser } = require('../services/ssh-key.service');
 const { clientUrl } = require('../../config/common.config');
 
 const router = Router();
@@ -47,19 +47,6 @@ router.get('/:userId/keys', (req, res, next) => {
   const { userId } = req.params;
   getKeysByUser(userId)
     .then(data => res.send(data))
-    .catch(next);
-});
-
-router.post('/keys', (req, res, next) => {
-  createKey({ ...req.body })
-    .then(data => res.send(data))
-    .catch(next);
-});
-
-router.delete('/keys/:id', (req, res, next) => {
-  const { id } = req.params;
-  deleteKey(id)
-    .then(() => res.sendStatus(200))
     .catch(next);
 });
 

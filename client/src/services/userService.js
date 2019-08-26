@@ -37,7 +37,7 @@ export const getKeys = async (userId) => {
 
 export const addKey = async request => {
   const response = await callWebApi({
-    endpoint: '/api/users/keys',
+    endpoint: '/api/keys',
     type: 'POST',
     request
   });
@@ -46,7 +46,7 @@ export const addKey = async request => {
 
 export const deleteKey = async keyId => {
   return callWebApi({
-    endpoint: `/api/users/keys/${keyId}`,
+    endpoint: `/api/keys/${keyId}`,
     type: 'DELETE'
   });
 };
