@@ -21,7 +21,7 @@ const syncDb = async (commits, branch) => {
   })));
   const headCommitId = addedCommits.find(({ sha }) => sha === branch.newHeadSha).id;
 
-  const existingBranch = await branchRepository.getByNameAndRepo(branch.name, repositoryId);
+  const existingBranch = await branchRepository.getByNameAndRepoId(branch.name, repositoryId);
   if (!existingBranch) {
     await branchRepository.create({
       name: branch.name,

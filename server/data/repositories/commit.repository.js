@@ -17,6 +17,10 @@ class CommitRepository extends BaseRepository {
   getByHash(hash) {
     return this.model.findOne({ where: { sha: hash } });
   }
+
+  deleteByRepoId(repositoryId) {
+    return this.model.destroy({ where: { repositoryId } });
+  }
 }
 
 module.exports = new CommitRepository(CommitModel);

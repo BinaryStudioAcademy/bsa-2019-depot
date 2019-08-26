@@ -5,6 +5,8 @@ const repoHelper = require('../../helpers/repo.helper');
 const repoRepository = require('../../data/repositories/repository.repository');
 const userRepository = require('../../data/repositories/user.repository');
 const starRepository = require('../../data/repositories/star.repository');
+const branchRepository = require('../../data/repositories/branch.repository');
+const commitRepository = require('../../data/repositories/commit.repository');
 
 const initialCommit = async ({
   owner, email, repoName, files
@@ -129,7 +131,10 @@ const deleteRepo = async ({ repoName, username }) => {
   try {
     const directory = repoHelper.getPathToRepo(username, repoName);
     await fs.remove(directory);
+    const { id: repositoryId } = await getByUserAndReponame({ owner: username, reponame: repoName });
     await deleteByUserAndReponame({ owner: username, reponame: repoName });
+    await branchRepository.deleteByRepoId(repositoryId);
+    await commitRepository.deleteByRepoId(repositoryId);
     return true;
   } catch (e) {
     return e;
