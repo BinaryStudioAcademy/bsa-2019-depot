@@ -45,7 +45,8 @@ class OrganizationsPage extends React.Component {
           {userOrgs.map(organization => {
             const {
               user: { username },
-              user
+              user,
+              role: { name }
             } = organization;
             return (
               <li key={username} className={styles.orgItem}>
@@ -54,7 +55,7 @@ class OrganizationsPage extends React.Component {
                   <a href={`/${username}`} className={styles.orgName}>
                     {username}
                   </a>
-                  <span>owner</span>
+                  <span className={styles.roleName}>{name}</span>
                 </div>
                 <Button color="blue" compact>
                   Leave

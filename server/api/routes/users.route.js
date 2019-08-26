@@ -11,8 +11,9 @@ const {
   getUsersToInviting,
   getUsersOrganizations
 } = require('../services/user.service');
-const { getCommitsByDate } = require('../services/commit.service');
-const { getKeysByUser, createKey, deleteKey } = require('../services/ssh-key.service');
+const { getReposData, getByUserAndReponame } = require('../services/repo.service');
+const { getCommitsAndCreatedRepoByDate } = require('../services/commit.service');
+const { getKeysByUser } = require('../services/ssh-key.service');
 const { clientUrl } = require('../../config/common.config');
 
 const router = Router();
@@ -23,45 +24,33 @@ router.get('/username-exists', (req, res, next) => {
     .catch(next);
 });
 
-router.post('/forget-password', (req, res, next) => {
+router.put('/forgot-password', (req, res, next) => {
   const { body } = req;
   sendForgetPasswordEmail({ ...body, url: clientUrl })
     .then(data => res.send(data))
     .catch(next);
 });
 
-router.post('/reset-password', (req, res, next) => {
+router.put('/reset-password', (req, res, next) => {
   resetPassword({ ...req.body })
     .then(data => res.send(data))
     .catch(next);
 });
 
-router.post('/settings', (req, res, next) => {
+router.put('/', (req, res, next) => {
   updateUserSettings({ ...req.body })
     .then(data => res.send(data))
     .catch(next);
 });
 
-router.get('/keys', (req, res, next) => {
-  getKeysByUser(req.user.id)
+router.get('/:userId/keys', (req, res, next) => {
+  const { userId } = req.params;
+  getKeysByUser(userId)
     .then(data => res.send(data))
     .catch(next);
 });
 
-router.post('/keys', (req, res, next) => {
-  createKey({ ...req.body })
-    .then(data => res.send(data))
-    .catch(next);
-});
-
-router.delete('/keys/:id', (req, res, next) => {
-  const { id } = req.params;
-  deleteKey(id)
-    .then(() => res.sendStatus(200))
-    .catch(next);
-});
-
-router.get('/:username', (req, res, next) => {
+router.get('/:username/overview', (req, res, next) => {
   const { username } = req.params;
   getUserDetailed(username)
     .then(data => res.send(data))
@@ -97,9 +86,23 @@ router.get('/:userid/organizations', (req, res, next) => {
 
 router.get('/:username/contribution-activity', (req, res, next) => {
   const { username } = req.params;
-  getCommitsByDate({ user: username })
+  getCommitsAndCreatedRepoByDate({ user: username })
     .then(commits => res.send(commits))
     .catch(next);
-})
+});
+
+router.get('/:username/repos', (req, res, next) => {
+  const { username } = req.params;
+  getReposData({ username })
+    .then(repos => res.send(repos))
+    .catch(next);
+});
+
+router.get('/:username/repos/:repo', (req, res, next) => {
+  const { username, repo } = req.params;
+  getByUserAndReponame({ owner: username, reponame: repo })
+    .then(data => res.send(data))
+    .catch(next);
+});
 
 module.exports = router;

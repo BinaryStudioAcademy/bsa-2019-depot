@@ -42,11 +42,7 @@ class IssueComments extends React.Component {
       number
     });
     const { id } = currentIssue;
-    const issueComments = await getIssueComments({
-      username,
-      reponame,
-      issueId: id
-    });
+    const issueComments = await getIssueComments(id);
     this.setState({
       currentIssue,
       issueComments,
@@ -76,24 +72,13 @@ class IssueComments extends React.Component {
       currentIssue: { id: issueId }
     } = this.state;
     if (!comment) return;
-    const {
-      userId,
-      match: {
-        params: { username, reponame }
-      }
-    } = this.props;
+    const { userId } = this.props;
     await postIssueComment({
-      username,
-      reponame,
       comment,
       issueId,
       userId
     });
-    const issueComments = await getIssueComments({
-      username,
-      reponame,
-      issueId
-    });
+    const issueComments = await getIssueComments(issueId);
     this.setState({
       comment: '',
       issueComments

@@ -7,15 +7,16 @@ const {
   checkName,
   isEmpty,
   forkRepo,
-  getReposData,
   setStar,
-  getByUserAndReponame,
   updateByUserAndReponame,
+  getByUserAndReponame,
   getRepoData
 } = require('../services/repo.service');
 const { getCommits, getCommitDiff, getCommitCount } = require('../services/commit.service');
-const { getBranches, getBranchTree, getLastCommitOnBranch, getFileContent, getPlainFileContent } = require('../services/branch.service');
-const { addIssue, addIssueComment, getAllRepoIssues, getRepoIssueByNumber, getAllIssueComments } = require('../services/issue.service');
+const {
+  getBranches, getBranchTree, getLastCommitOnBranch, getFileContent, getPlainFileContent
+} = require('../services/branch.service');
+const { getAllRepoIssues, getRepoIssueByNumber } = require('../services/issue.service');
 const ownerOnlyMiddleware = require('../middlewares/owner-only.middleware');
 
 const router = Router();
@@ -34,15 +35,9 @@ router
   .get('/:owner/:reponame/is-empty', (req, res, next) => {
     const { owner, reponame } = req.params;
     isEmpty({ owner, reponame })
-      .then(result => {
+      .then((result) => {
         res.send(result);
       })
-      .catch(next);
-  })
-  .get('/:owner/repos', (req, res, next) => {
-    const { owner } = req.params;
-    getReposData({ username: owner })
-      .then(repos => res.send(repos))
       .catch(next);
   })
   .get('/:owner/:repoName/:branchName/commits', (req, res, next) => {
@@ -125,7 +120,9 @@ router
     const {
       body: {
         owner,
-        repoData: { id: forkedFromRepoId, name, website, description }
+        repoData: {
+          id: forkedFromRepoId, name, website, description
+        }
       },
       user: {
         dataValues: { id: userId, username }
@@ -144,22 +141,6 @@ router
       .then(result => res.send(result))
       .catch(next);
   })
-  .post('/:owner/:repoName/issues', (req, res, next) => {
-    const { userId, repositoryId, title, body, isOpened } = req.body;
-    addIssue({
-      userId,
-      repositoryId,
-      title,
-      body,
-      isOpened
-    })
-      .then(() =>
-        res.send({
-          status: true
-        })
-      )
-      .catch(next);
-  })
   .get('/:owner/:repoName/issues', (req, res, next) => {
     const { repositoryId } = req.query;
     getAllRepoIssues({ repositoryId })
@@ -170,29 +151,6 @@ router
     const { owner: username, repoName: name, number } = req.params;
     getRepoIssueByNumber({ username, name, number })
       .then(result => res.send(result))
-      .catch(next);
-  })
-  .get('/:owner/:repoName/issues/:issueId/comments', (req, res, next) => {
-    const { issueId } = req.params;
-    getAllIssueComments({ issueId })
-      .then(result => res.send(result))
-      .catch(next);
-  })
-  .post('/:owner/:repoName/issues/:issueId/comments', (req, res, next) => {
-    const { issueId } = req.params;
-    const { userId, comment: body } = req.body;
-    addIssueComment({ userId, issueId, body })
-      .then(() =>
-        res.send({
-          status: true
-        })
-      )
-      .catch(next);
-  })
-  .get('/:owner/:reponame', (req, res, next) => {
-    const { owner, reponame } = req.params;
-    getByUserAndReponame({ owner, reponame })
-      .then(data => res.send(data))
       .catch(next);
   })
   .put('/:owner/:reponame', ownerOnlyMiddleware, (req, res, next) => {

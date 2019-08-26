@@ -5,20 +5,13 @@ import { LineChart, Line } from 'recharts';
 import StarLink from '../../components/StarLink';
 import PropTypes from 'prop-types';
 import { Button } from 'semantic-ui-react';
+import { withRouter } from 'react-router-dom';
+import { getCommits } from '../../services/commitsService';
+import { checkIfEmpty } from '../../services/repositoryService';
+import { getBranches } from '../../services/branchesService';
+import moment from 'moment';
 
 import styles from './styles.module.scss';
-
-//Mock
-const data = [
-  { name: 'commit1', uv: 4000, commitDate: 0, amt: 2400 },
-  { name: 'commit2', uv: 3000, commitDate: 0, amt: 2210 },
-  { name: 'commit3', uv: 2000, commitDate: 0, amt: 2290 },
-  { name: 'commit4', uv: 2780, commitDate: 0, amt: 2000 },
-  { name: 'commit5', uv: 1890, commitDate: 0, amt: 2181 },
-  { name: 'commit6', uv: 2390, commitDate: 0, amt: 2500 },
-  { name: 'commit7', uv: 3490, commitDate: 3800, amt: 2100 },
-  { name: 'commit8', uv: 3490, commitDate: 0, amt: 2100 }
-];
 
 class RepositoryItem extends React.Component {
   constructor(props) {
@@ -26,6 +19,57 @@ class RepositoryItem extends React.Component {
     this.state = { ...props.repo };
 
     this.starClickHandler = this.starClickHandler.bind(this);
+  }
+
+  async componentDidMount() {
+    const {
+      repo: { name, createdAt },
+      match: {
+        params: { username }
+      }
+    } = this.props;
+
+    const repoCreated = moment(createdAt).fromNow();
+    this.setState({ updatedAt: repoCreated });
+
+    await this.checkIfEmpty(username, name);
+
+    const { isEmpty } = this.state;
+
+    if (!isEmpty) {
+      try {
+        await this.getRepoBranches(username, name);
+        const { repoBranches } = this.state;
+        let allRepoCommits = [];
+        repoBranches.forEach(async branch => {
+          const allBranchCommits = this.getRepoCommits(username, name, branch);
+          allRepoCommits.push(allBranchCommits);
+        });
+        Promise.all(allRepoCommits).then(data => {
+          const allRepoCommitsSorted = data.flat().sort((a, b) => new Date(b.date) - new Date(a.date));
+          const lastCommitDate = moment(allRepoCommitsSorted[0].date).fromNow();
+          this.setState({ repoCommits: allRepoCommitsSorted, updatedAt: lastCommitDate });
+          const { repoCommits } = this.state;
+          this.groupCommitsByDay(repoCommits);
+        });
+      } catch (error) {
+        return error;
+      }
+    }
+  }
+
+  async checkIfEmpty(username, reponame) {
+    const data = await checkIfEmpty({ owner: username, reponame });
+    this.setState({ isEmpty: data.isEmpty });
+  }
+
+  async getRepoBranches(username, reponame) {
+    const branches = await getBranches(username, reponame);
+    this.setState({ repoBranches: branches });
+  }
+
+  getRepoCommits(username, reponame, branch) {
+    return getCommits(username, reponame, branch);
   }
 
   starClickHandler() {
@@ -40,6 +84,30 @@ class RepositoryItem extends React.Component {
     });
 
     onStar({ ...this.state, isStar, starsCount });
+  }
+
+  groupCommitsByDay(commits) {
+    //transform server data format to format for recharts, count commits per 1 day
+    const countOfCommitsByDate = commits.reduce((acc, commit) => {
+      let i = acc.findIndex(x => x.day === moment(commit.date.split('T')[0]).dayOfYear());
+      return (
+        i === -1 ? acc.push({ day: moment(commit.date.split('T')[0]).dayOfYear(), commits: 1 }) : acc[i].commits++, acc
+      );
+    }, []);
+    //days from year's start
+    const period = moment().diff(moment().startOf('year'), 'days') + 1;
+    const commitsPerYear = [];
+    let index = 0;
+    //from start of year to now
+    for (let dayOfYear = 1; dayOfYear <= period; dayOfYear++) {
+      if (countOfCommitsByDate.some(elem => elem.day === dayOfYear)) {
+        commitsPerYear.push({ day: dayOfYear, commits: countOfCommitsByDate[index].commits });
+        index += 1;
+      } else {
+        commitsPerYear.push({ day: dayOfYear, commits: 0 });
+      }
+    }
+    this.setState({ commitsPerYear });
   }
 
   getRepoLink({ username, name, type }) {
@@ -60,6 +128,7 @@ class RepositoryItem extends React.Component {
       username,
       type
     } = this.props;
+    const { updatedAt, isEmpty, commitsPerYear } = this.state;
     const starsCount = Number(this.props.repo.starsCount);
 
     return (
@@ -78,7 +147,7 @@ class RepositoryItem extends React.Component {
               </span>
             ) : null}
             <span className={styles.repo_info_item}>
-              <span className={styles.repo_item_updated}>Updated 11 days ago</span>
+              <span className={styles.repo_item_updated}>{`Updated ${updatedAt}`}</span>
             </span>
           </div>
         </div>
@@ -89,9 +158,9 @@ class RepositoryItem extends React.Component {
               {isStar ? 'Unstar' : 'Star'}
             </Button>
           </div>
-          {data && (
-            <LineChart width={155} height={25} data={data}>
-              <Line type="monotone" dataKey="commitDate" stroke="#D7ECAD" strokeWidth={2} dot={null} />
+          {!isEmpty && (
+            <LineChart width={155} height={25} data={commitsPerYear}>
+              <Line type="monotone" dataKey="commits" stroke="#D7ECAD" strokeWidth={2} dot={null} />
             </LineChart>
           )}
         </div>
@@ -100,15 +169,12 @@ class RepositoryItem extends React.Component {
   }
 }
 
-RepositoryItem.defaultProps = {
-  data: []
-};
-
 RepositoryItem.propTypes = {
   repo: PropTypes.object,
   username: PropTypes.string,
   type: PropTypes.string,
-  onStar: PropTypes.func.isRequired
+  onStar: PropTypes.func.isRequired,
+  match: PropTypes.object
 };
 
-export default RepositoryItem;
+export default withRouter(RepositoryItem);

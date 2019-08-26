@@ -2,7 +2,7 @@ import callWebApi from '../helpers/webApiHelper';
 
 export const getRepositories = async owner => {
   const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/repos`,
+    endpoint: `/api/users/${owner}/repos`,
     type: 'GET'
   });
   return response.json();
@@ -10,7 +10,7 @@ export const getRepositories = async owner => {
 
 export const getRepositoryByOwnerAndName = async ({ username: owner, reponame }) => {
   const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/${reponame}`,
+    endpoint: `/api/users/${owner}/repos/${reponame}`,
     type: 'GET'
   });
   return response.json();

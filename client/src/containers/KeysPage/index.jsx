@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Button, Header, Icon, Label, Loader, Modal } from 'semantic-ui-react';
@@ -29,7 +30,8 @@ class KeysPage extends React.Component {
   }
 
   getUserKeys() {
-    getKeys().then(keys => {
+    const { userId } = this.props;
+    getKeys(userId).then(keys => {
       this.setState({ keys, loading: false });
     });
   }
@@ -124,7 +126,16 @@ class KeysPage extends React.Component {
 }
 
 KeysPage.propTypes = {
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
+  userId: PropTypes.string.isRequired
 };
 
-export default KeysPage;
+const mapStateToProps = ({
+  profile: {
+    currentUser: { id: userId }
+  }
+}) => ({
+  userId
+});
+
+export default connect(mapStateToProps)(KeysPage);
