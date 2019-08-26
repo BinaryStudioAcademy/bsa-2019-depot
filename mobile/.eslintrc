@@ -1,9 +1,9 @@
 {
   "env": {
-    "browser": true
+    "react-native/react-native": true
   },
-  "extends": ["plugin:react/recommended", "react-app", "plugin:wdio/recommended"],
-  "plugins": ["react", "wdio"],
+  "extends": ["plugin:react/recommended", "react-app", "plugin:wdio/recommended", "plugin:react-native/all"],
+  "plugins": ["react", "wdio", "react-native"],
   "rules": {
     "camelcase": 2,
     "no-unused-vars": 2,
