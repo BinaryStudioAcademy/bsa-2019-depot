@@ -1,5 +1,6 @@
 const NodeGit = require('nodegit');
 const fs = require('fs-extra');
+const path = require('path');
 const copydir = require('copy-dir');
 const repoHelper = require('../../helpers/repo.helper');
 const repoRepository = require('../../data/repositories/repository.repository');
@@ -48,11 +49,14 @@ const createRepo = async (repoData) => {
   let result = 'Repo was created';
   const pathToRepo = repoHelper.getPathToRepo(owner, name);
   await NodeGit.Repository.init(pathToRepo, 1)
-    .then(() => {
+    .then(async () => {
       result = {
         msg: 'Repo created',
         url: pathToRepo
       };
+
+      await fs.copy(path.resolve(`${__dirname}/../../../scripts/git-hooks/pre-receive`), path.resolve(`${pathToRepo}/hooks/pre-receive`));
+      await fs.copy(path.resolve(`${__dirname}/../../../scripts/git-hooks/update`), path.resolve(`${pathToRepo}/hooks/update`));
     })
     .catch(() => {
       const errorObj = { status: 404, message: 'Error! Repos wasn`t created' };

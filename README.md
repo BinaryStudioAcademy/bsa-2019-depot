@@ -71,10 +71,10 @@ More info:
 In order to keep our DB in sync with user interactions with remote Git repository we are using **"pre-receive"** and
 **"update"** Git server-side hooks.
 
-To set them up locally you should copy them from `scripts/git-hooks` folder to the `hooks` folder in 
-your **bare** testing repository.
+Hooks are being copied to to the `hooks` folder in your **bare** testing repository when it's being created.
 
-Also you should set up `rabbitmqadmin` CLI tool which allows us to send messages to our RabbitMQ queue from the "update" Git hook:
+One thing you should do is to set up `rabbitmqadmin` CLI tool which allows us to send messages to our 
+RabbitMQ queue from the "update" Git hook:
 
 1. You can download it by either:
     - Going to http://localhost:15672/cli/rabbitmqadmin which will trigger the download (if you've already installed RabbitMQ service).
