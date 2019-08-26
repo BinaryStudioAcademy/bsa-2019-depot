@@ -46,7 +46,7 @@ class RepositoryItem extends React.Component {
           allRepoCommits.push(allBranchCommits);
         });
         Promise.all(allRepoCommits).then(data => {
-          const allRepoCommitsSorted = data.flat().sort((a, b) => (a.date > b.date ? (b.date > a.date ? 0 : -1) : 1));
+          const allRepoCommitsSorted = data.flat().sort((a, b) => new Date(b.date) - new Date(a.date));
           const lastCommitDate = moment(allRepoCommitsSorted[0].date).fromNow();
           this.setState({ repoCommits: allRepoCommitsSorted, updatedAt: lastCommitDate });
           const { repoCommits } = this.state;
@@ -68,8 +68,8 @@ class RepositoryItem extends React.Component {
     this.setState({ repoBranches: branches });
   }
 
-  async getRepoCommits(username, reponame, branch) {
-    return await getCommits(username, reponame, branch);
+  getRepoCommits(username, reponame, branch) {
+    return getCommits(username, reponame, branch);
   }
 
   starClickHandler() {
