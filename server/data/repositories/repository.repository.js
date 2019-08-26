@@ -12,6 +12,17 @@ class RepositoryRepository extends BaseRepository {
     return this.model.findAll({ where: { userId } });
   }
 
+  getRepositoryById(id) {
+    return this.model.findOne(
+      { where: { id },
+        include: [
+          {
+            model: UserModel,
+            attributes: ['id', 'username']
+          }
+        ] });
+  }
+
   getByUserWithOptions(userId, options = {}) {
     const { filter, limit, sortByCreatedDateDesc } = options;
     const findOptions = {

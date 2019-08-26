@@ -8,12 +8,13 @@ const routes = require('./api/routes/index');
 const routesWhiteList = require('./config/routes-white-list.config');
 const authorizationMiddleware = require('./api/middlewares/authorization.middleware');
 const errorHandlerMiddleware = require('./api/middlewares/error-handler.middleware');
-
+const cors = require('cors')
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(passport.initialize());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 
 app.use('/api/', authorizationMiddleware(routesWhiteList));
 

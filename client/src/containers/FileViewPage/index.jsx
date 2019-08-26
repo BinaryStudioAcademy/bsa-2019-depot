@@ -47,11 +47,9 @@ class FileViewPage extends React.Component {
   }
 
   handleOpenRaw() {
-
-    let w = window.open("");
-    w.document.write(`<pre>${this.state.fileData.content}</pre>`);
-    w.focus();
-
+    // const { history, match:{params: {branch}} } = this.props;
+    //
+    // history.push(`http://localhost:3000/raw/42e8d0df-df75-4ee2-8783-82fdb21bace9/${branch}/file?filepath=${this.filepath}`);
   }
 
   handleEditFile() {
@@ -136,13 +134,15 @@ class FileViewPage extends React.Component {
               <code>{this.formatBytes(size)}</code>
             </div>
             <div className={styles.fileControls}>
-              <Button compact size="small" onClick={this.handleOpenRaw}>Raw</Button>
-            {username && username === owner && (
-              <>
-                <Icon link name="pencil" onClick={this.handleEditFile} />
-                <Icon link name="trash alternate" onClick={this.handleDeleteFile} />
-              </>
-            )}
+              <Button compact size="small" onClick={this.handleOpenRaw}>
+                Raw
+              </Button>
+              {username && username === owner && (
+                <>
+                  <Icon link name="pencil" onClick={this.handleEditFile} />
+                  <Icon link name="trash alternate" onClick={this.handleDeleteFile} />
+                </>
+              )}
             </div>
           </Segment>
           <Segment className={styles.fileView}>

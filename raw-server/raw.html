@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Raw data</title>
+</head>
+<body id="main">
+
+<script>
+    let url = location.href;
+    let apiUrl = location.host.includes('localhost') ? 'http://localhost:3001' : location.origin.replace('raw.', '');
+    let params = url.substring(url.indexOf('/raw') + 5);
+    fetch(`${apiUrl}/api/repo/${params}`, {headers: {Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImJhZDE2NzBkLWZlNjEtNGYyYi05NWE2LTNkZWNkNjZlM2JjNiIsImVtYWlsIjoibWVvd2NhdEBnbWFpbC5jb20iLCJpYXQiOjE1NjY4NDQwNjgsImV4cCI6MTU2NjkzMDQ2OH0.N_eaHuq3oYmLvjPHjiunKOR-QZWvdUSyulh10Lgc1vU'}})
+        .then((response) => response.text())
+        .then(result => {
+            const rawWrap = document.createElement('pre');
+            rawWrap.innerHTML = result;
+            document.getElementById('main').appendChild(rawWrap);
+        })
+        .catch((e) => {
+            console.log(e + ' something went wrong');
+        });
+</script>
+</body>
+</html>
