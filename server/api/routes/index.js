@@ -3,7 +3,7 @@ const userRoutes = require('./users.route');
 const commitRoutes = require('./commit.route');
 const commitCommentRoutes = require('./commit-comment.route');
 const repoRoutes = require('./repo.route');
-const organizationRoutes = require('./organization.route');
+const organizationRoutes = require('./orgs.route');
 
 module.exports = (app) => {
   app.use('/api/auth', authRoutes);
@@ -11,5 +11,5 @@ module.exports = (app) => {
   app.use('/api/commits', commitRoutes);
   app.use('/api/commit-comments', commitCommentRoutes);
   app.use('/api/repo', repoRoutes);
-  app.use('/api/organizations', organizationRoutes);
+  app.use('/api/orgs', organizationRoutes);
 };

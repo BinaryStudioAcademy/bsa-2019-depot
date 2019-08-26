@@ -1,5 +1,5 @@
 const BaseRepository = require('./base.repository');
-const { OrgUserModel, UserModel } = require('../models/index');
+const { OrgUserModel, UserModel, RoleModel } = require('../models/index');
 
 class OrgUserRepository extends BaseRepository {
   findUserInOrg(userId, orgId) {
@@ -16,6 +16,9 @@ class OrgUserRepository extends BaseRepository {
       include: [
         {
           model: UserModel
+        },
+        {
+          model: RoleModel
         }
       ]
     });

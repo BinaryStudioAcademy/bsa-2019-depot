@@ -8,4 +8,5 @@ import './styles/common.scss';
 import 'react-toastify/dist/ReactToastify.css';
 
 const target = document.getElementById('root');
+
 render(<Home />, target);

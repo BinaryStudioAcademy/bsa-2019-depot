@@ -31,7 +31,8 @@
         font-weight: 600;
         font-size: 90%;
       }
-      span {
+      :local(.roleName) {
+        text-transform: lowercase;
         font-size: 70%;
       }
     }

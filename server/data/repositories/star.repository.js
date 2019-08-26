@@ -21,6 +21,7 @@ class StarRepository extends BaseRepository {
         },
         {
           model: RepositoryModel,
+          where: { deletedAt: null },
           attributes: {
             include: [
               [

@@ -19,6 +19,7 @@ module.exports = (models) => {
   User.hasMany(Star);
 
   OrgUser.belongsTo(User, { foreignKey: 'orgId' });
+  OrgUser.belongsTo(Role, { foreignKey: 'roleId' });
 
   Repository.belongsTo(Branch, { foreignKey: 'defaultBranchId', as: 'defaultBranch' }); // 'defaultBranchId' will be added to Repository
   Repository.hasMany(Branch);
