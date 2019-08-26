@@ -6,9 +6,15 @@ const { sendInviteEmail } = require('./email.service');
 
 const getOrganizationMembers = async (orgId) => {
   const orgUsers = await OrgUserRepository.getAllOrganizationUsers(orgId);
-  const userPromises = orgUsers.map(({ dataValues: { userId } }) => userRepository.getUserById(userId));
+  const userPromises = orgUsers.map((orgUser) => {
+    const { userId } = orgUser.get({ plain: true });
+    return userRepository.getUserById(userId);
+  });
   const users = await Promise.all(userPromises);
-  const rolePromises = orgUsers.map(({ dataValues: { roleId } }) => RoleRepository.getRoleById(roleId));
+  const rolePromises = orgUsers.map((orgUser) => {
+    const { roleId } = orgUser.get({ plain: true });
+    return RoleRepository.getRoleById(roleId);
+  });
   const roles = await Promise.all(rolePromises);
   const members = users.map((user, index) => ({
     ...user.dataValues,
