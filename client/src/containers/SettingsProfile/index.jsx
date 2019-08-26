@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
-import { Grid, Header, Divider, Image, Input, Button, TextArea, Icon, Segment, Dropdown } from 'semantic-ui-react';
+import { Grid, Header, Divider, Image, Input, Modal, Button, TextArea, Icon, Segment, Dropdown } from 'semantic-ui-react';
 import { Formik, Form, Field } from 'formik';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { updateUserSettings } from '../../routines/routines';
+import { updateUserSettings, uploadUserPhoto, deleteUserPhoto } from '../../routines/routines';
 import { NavLink } from 'react-router-dom';
 import * as Yup from 'yup';
-
+import { DashboardModal } from '@uppy/react';
+import '@uppy/core/dist/style.css';
+import '@uppy/dashboard/dist/style.css';
 import styles from './styles.module.scss';
 import { getUserImgLink } from '../../helpers/imageHelper';
 import { InputError } from '../../components/InputError';
+
+const Uppy = require('@uppy/core');
+const AwsS3 = require('@uppy/aws-s3');
+const ms = require('ms');
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -30,6 +36,40 @@ const validationSchema = Yup.object().shape({
 });
 
 class SettingsProfile extends Component {
+  constructor (props) {
+    super(props);
+
+    this.state = {
+      isUploadModalOpen: false,
+      isDeleteModalOpen: false,
+    };
+
+    const token = localStorage.getItem('token');
+    this.uppy = Uppy({
+      debug: true,
+      autoProceed: false,
+      restrictions: {
+        maxFileSize: 4000000,
+        maxNumberOfFiles: 1,
+        minNumberOfFiles: 1,
+      }
+    })
+      .use(AwsS3, {
+        limit: 2,
+        timeout: ms('1 minute'),
+        host: 'http://localhost:3001',
+        companionUrl: 'http://localhost:3000',
+        serverHeaders: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+    this.uppy.on('upload-success', (file, data) => {
+      this.props.uploadUserPhoto({imgUrl: data.uploadURL, id: this.props.currentUser.id});
+      this.uppy.close();
+    });
+  }
+
   NOTES = {
     name: (
       <div>Your name may appear around Depot where you contribute or are mentioned. You can remove it at any time.</div>
@@ -80,11 +120,27 @@ class SettingsProfile extends Component {
   };
 
   onUploadPhoto = ev => {
-    // code for uploading photo goes here
+    this.setState({
+      isUploadModalOpen: true
+    });
   };
 
-  onRemovePhoto = ev => {
-    // code for removing photo goes here
+  handleClose = () => {
+    this.setState({
+      isUploadModalOpen: false
+    });
+  };
+
+  openModal = () => {
+    this.setState({isDeleteModalOpen: true });
+  };
+
+  closeModal = () => {
+    this.setState({isDeleteModalOpen: false });
+  };
+
+  onRemovePhoto = () => {
+    this.props.deleteUserPhoto({id: this.props.currentUser.id});
   };
 
   imgEditBtn = (
@@ -110,6 +166,27 @@ class SettingsProfile extends Component {
               <Formik initialValues={initialValues} onSubmit={this.onSubmit} validationSchema={validationSchema}>
                 {({ isSubmitting, errors, touched }) => (
                   <Form className="ui form">
+                    <DashboardModal
+                      uppy={this.uppy}
+                      closeModalOnClickOutside
+                      open={this.state.isUploadModalOpen}
+                      onRequestClose={this.handleClose}
+                    />
+                    <Modal size='tiny' open={this.state.isDeleteModalOpen} onClose={this.closeModal}>
+                      <Modal.Content>
+                        <p>Are you sure you want to reset your current avatar?</p>
+                      </Modal.Content>
+                      <Modal.Actions>
+                        <Button onClick={this.closeModal}>No</Button>
+                        <Button
+                          positive
+                          icon='checkmark'
+                          labelPosition='right'
+                          content='Yes'
+                          onClick={this.onRemovePhoto}
+                        />
+                      </Modal.Actions>
+                    </Modal>
                     <Header as="h4">Name</Header>
                     <Field type="text" name="name" render={this.renderField} />
                     <InputError name="name" />
@@ -157,7 +234,7 @@ class SettingsProfile extends Component {
                 <Dropdown trigger={this.imgEditBtn} pointing="top left" icon={null} className={styles.img_edit_btn}>
                   <Dropdown.Menu className={styles.dropdown}>
                     <Dropdown.Item onClick={this.onUploadPhoto}>Upload a photo...</Dropdown.Item>
-                    <Dropdown.Item onClick={this.onRemovePhoto}>Remove photo</Dropdown.Item>
+                    <Dropdown.Item onClick={this.openModal}>Remove photo</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               </Segment>
@@ -171,12 +248,14 @@ class SettingsProfile extends Component {
 
 SettingsProfile.propTypes = {
   currentUser: PropTypes.object,
-  updateUserSettings: PropTypes.func
+  updateUserSettings: PropTypes.func,
+  uploadUserPhoto: PropTypes.func,
+  deleteUserPhoto: PropTypes.func
 };
 
 const mapStateToProps = state => state.profile;
 
-const mapDispatchToProps = { updateUserSettings };
+const mapDispatchToProps = { updateUserSettings, uploadUserPhoto, deleteUserPhoto };
 
 export default connect(
   mapStateToProps,

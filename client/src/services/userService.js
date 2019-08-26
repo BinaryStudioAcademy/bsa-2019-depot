@@ -27,6 +27,24 @@ export const updateSettings = async request => {
   return response.json();
 };
 
+export const uploadUserPhoto = async request => {
+  const response = await callWebApi({
+    endpoint: '/api/user/image',
+    type: 'POST',
+    request
+  });
+  return response.json();
+};
+
+export const deleteUserPhoto = async request => {
+  const response = await callWebApi({
+    endpoint: '/api/user/image',
+    type: 'DELETE',
+    request
+  });
+  return response.json();
+};
+
 export const getKeys = async () => {
   const response = await callWebApi({
     endpoint: '/api/user/keys',

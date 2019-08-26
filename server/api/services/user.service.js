@@ -51,6 +51,22 @@ const updateUserSettings = async ({ id, settings }) => {
 
 const getStars = async username => StarRepository.getStars(username);
 
+const uploadPhoto = async ({ id, imgUrl }) => {
+  await UserRepository.updateUserById(id, {
+    imgUrl
+  });
+  const data = await UserRepository.getById(id);
+  return data;
+};
+
+const deletePhoto = async ({ id }) => {
+  await UserRepository.updateUserById(id, {
+    imgUrl: null
+  });
+  const data = await UserRepository.getById(id);
+  return data;
+};
+
 module.exports = {
   getUserById,
   setUsername,
@@ -58,5 +74,7 @@ module.exports = {
   updateUserSettings,
   resetPassword,
   getUserDetailed,
-  getStars
+  getStars,
+  uploadPhoto,
+  deletePhoto
 };

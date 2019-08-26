@@ -3,7 +3,9 @@ import {
   fetchCurrentUser,
   signupRoutine,
   loginGoogleRoutine,
-  setUsernameRoutine
+  setUsernameRoutine,
+  uploadUserPhoto,
+  deleteUserPhoto
 } from '../../routines/routines';
 
 const initialState = {
@@ -19,6 +21,8 @@ export default (state = initialState, action) => {
   case fetchCurrentUser.TRIGGER:
   case signupRoutine.TRIGGER:
   case setUsernameRoutine.TRIGGER:
+  case uploadUserPhoto.TRIGGER:
+  case deleteUserPhoto.TRIGGER:
     return {
       ...state,
       loading: true,
@@ -28,6 +32,8 @@ export default (state = initialState, action) => {
   case authorizeUser.SUCCESS:
   case fetchCurrentUser.SUCCESS:
   case signupRoutine.SUCCESS:
+  case uploadUserPhoto.SUCCESS:
+  case deleteUserPhoto.SUCCESS:
     return {
       ...state,
       currentUser: action.payload,
@@ -45,6 +51,8 @@ export default (state = initialState, action) => {
   }
   case authorizeUser.FAILURE:
   case fetchCurrentUser.FAILURE:
+  case uploadUserPhoto.FAILURE:
+  case deleteUserPhoto.FAILURE:
   case setUsernameRoutine.FAILURE: {
     return {
       ...state,
@@ -60,6 +68,8 @@ export default (state = initialState, action) => {
   case fetchCurrentUser.FULFILL:
   case signupRoutine.FULFILL:
   case setUsernameRoutine.FULFILL:
+  case uploadUserPhoto.FULFILL:
+  case deleteUserPhoto.FULFILL:
     return {
       ...state,
       loading: false

@@ -5,6 +5,9 @@
   "proxy": "http://localhost:3000",
   "dependencies": {
     "@primer/octicons-react": "^9.1.1",
+    "@uppy/aws-s3": "^1.2.0",
+    "@uppy/core": "^1.2.0",
+    "@uppy/react": "^1.2.0",
     "dotenv": "^8.0.0",
     "formik": "^1.5.8",
     "immutable": "^4.0.0-rc.12",
