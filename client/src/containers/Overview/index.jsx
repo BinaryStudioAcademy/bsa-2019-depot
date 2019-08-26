@@ -221,20 +221,19 @@ export class Overview extends React.Component {
                                   <Octicon icon={activeIndex === `commit-${monthAndYear}` ? Fold : Unfold} />
                                 </Accordion.Title>
                                 <Accordion.Content active={activeIndex === `commit-${monthAndYear}`}>
-                                  {monthActivityObject.commits &&
-                                    Object.entries(monthActivityObject.commits).map(([repoName, repoCommits]) => {
-                                      const link = `${username}/${repoName}`;
-                                      return (
-                                        <div key={repoName}>
-                                          <Link to={link} className={styles.activity_link}>
-                                            {username}/{repoName}
-                                          </Link>{' '}
-                                          <span>
-                                            {repoCommits} commit{repoCommits === 1 ? '' : 's'}
-                                          </span>
-                                        </div>
-                                      );
-                                    })}
+                                  {Object.entries(monthActivityObject.commits).map(([repoName, repoCommits]) => {
+                                    const link = `${username}/${repoName}`;
+                                    return (
+                                      <div key={repoName}>
+                                        <Link to={link} className={styles.activity_link}>
+                                          {username}/{repoName}
+                                        </Link>{' '}
+                                        <span>
+                                          {repoCommits} commit{repoCommits === 1 ? '' : 's'}
+                                        </span>
+                                      </div>
+                                    );
+                                  })}
                                 </Accordion.Content>
                               </Accordion>
                             </div>
