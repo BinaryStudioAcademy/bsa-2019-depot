@@ -8,6 +8,34 @@ const commitRepository = require('../../data/repositories/commit.repository');
 
 let ch = null;
 
+const syncDb = async (commits, branch) => {
+  const { id: userId } = await userRepository.getByUsername(commits[0].repoOwner);
+  const { id: repositoryId } = await repoRepository.getByUserAndReponame(userId, commits[0].repoName);
+  const commitAuthors = await Promise.all(commits.map(({ userEmail }) => userRepository.getByEmail(userEmail)));
+  const addedCommits = await Promise.all(commitAuthors.map(({ id: authorId }, index) => commitRepository.add({
+    sha: commits[index].sha,
+    message: commits[index].message,
+    userId: authorId,
+    createdAt: new Date(commits[index].createdAt),
+    repositoryId
+  })));
+  const headCommitId = addedCommits.find(({ sha }) => sha === branch.newHeadSha).id;
+
+  const existingBranch = await branchRepository.getByNameAndRepo(branch.name, repositoryId);
+  if (!existingBranch) {
+    await branchRepository.create({
+      name: branch.name,
+      headCommitId,
+      createdAt: addedCommits[addedCommits.length - 1].createdAt,
+      repositoryId
+    });
+  } else {
+    await branchRepository.updateById(existingBranch.id, {
+      headCommitId
+    });
+  }
+};
+
 amqp.connect(connectionUrl, (err, connection) => {
   if (err) {
     throw err;
@@ -37,25 +65,7 @@ amqp.connect(connectionUrl, (err, connection) => {
       repoDataQueue,
       async (msg) => {
         const { commits, branch } = JSON.parse(msg.content.toString());
-
-        const { id: userId } = await userRepository.getByUsername(commits[0].repoOwner);
-        const { id: repositoryId } = await repoRepository.getByUserAndReponame(userId, commits[0].repoName);
-        const commitAuthors = await Promise.all(commits.map(({ userEmail }) => userRepository.getByEmail(userEmail)));
-        const addedCommits = await Promise.all(commitAuthors.map(({ id: authorId }, index) => {
-          return commitRepository.add({
-            sha: commits[index].sha,
-            message: commits[index].message,
-            userId: authorId,
-            repositoryId
-          });
-        }));
-        const headCommitId = addedCommits.find(({ sha }) => sha === branch.newHeadSha).id;
-
-        await branchRepository.upsert({
-          name: branch.name,
-          headCommitId,
-          repositoryId
-        });
+        await syncDb(commits, branch);
       },
       { noAck: true }
     );

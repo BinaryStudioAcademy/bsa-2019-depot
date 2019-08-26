@@ -28,7 +28,7 @@ async function sendPushData() {
   const commits = await getCommitsData(prevHeadSha, newHeadSha, repoOwner, repoName);
 
   const branch = {
-    branchName,
+    name: branchName,
     newHeadSha,
     repoOwner,
     repoName
@@ -46,20 +46,25 @@ async function sendPushData() {
 
   // await exec(`rabbitmqadmin publish payload="${payload}" routing_key="repo-data"`); // For Linux
   // await exec(`python "С:\\path\\to\\rabbitmqadmin" publish payload="${payload}" routing_key="repo-data"`); // For Windows
-  await exec(`python "D:\\My Works\\Projects\\thesubliminal\\project.git\\hooks\\rabbitmqadmin" publish payload="${payload}" routing_key="repo-data"`);
 
   process.exit(0);
 }
 
 async function getCommitsData(shaFrom, shaTo, repoOwner, repoName) {
-  const revList = await exec(`git rev-list ${shaFrom}..${shaTo}`);
+  let revList;
+  if (shaFrom === '0000000000000000000000000000000000000000') {
+    revList = await exec(`git rev-list ${shaTo} --not --branches=*`);
+  } else {
+    revList = await exec(`git rev-list ${shaFrom}..${shaTo}`);
+  }
   const commitShas = revList.stdout.split('\n').filter(line => line);
-  const messagesAndEmails = await Promise.all(commitShas.map(sha => Promise.all([sha, getCommitMessage(sha), getAuthorEmail(sha)])));
+  const messagesAndEmails = await Promise.all(commitShas.map(sha => Promise.all([sha, getCommitMessage(sha), getAuthorEmail(sha), getCommitTime(sha)])));
 
-  return messagesAndEmails.map(([sha, message, email]) => ({
+  return messagesAndEmails.map(([sha, message, email, time]) => ({
     sha,
     message,
     userEmail: email,
+    createdAt: time,
     repoOwner,
     repoName
   }));
@@ -77,4 +82,9 @@ async function getAuthorEmail(sha) {
     email = email.slice(1, -1);
   }
   return email;
+}
+
+async function getCommitTime(sha) {
+  const time = await exec(`git show -s --format=%ci ${sha}`);
+  return time.stdout.trim();
 }

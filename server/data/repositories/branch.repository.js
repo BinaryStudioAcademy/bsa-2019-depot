@@ -2,8 +2,8 @@ const BaseRepository = require('./base.repository');
 const { BranchModel } = require('../models/index');
 
 class BranchRepository extends BaseRepository {
-  upsert(data) {
-    return this.model.upsert(data);
+  getByNameAndRepo(name, repositoryId) {
+    return this.model.findOne({ where: { name, repositoryId } });
   }
 }
 
