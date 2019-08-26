@@ -15,7 +15,6 @@ class OrganizationDashboard extends React.Component {
     this.state = {
       currentOrg: {},
       orgMembers: [],
-      orgOwner: '',
       repositories: []
     };
   }
@@ -34,7 +33,7 @@ class OrganizationDashboard extends React.Component {
     } = this.state;
 
     await this.getMembers(id);
-    await this.getOwner(id);
+    await this.isOwner(id);
     await this.getRepositories(name);
   }
 
@@ -48,10 +47,11 @@ class OrganizationDashboard extends React.Component {
     });
   }
 
-  async getOwner(orgId) {
-    await getOrgOwner(orgId).then(data => {
-      this.setState({ orgOwner: data });
-    });
+  async isOwner(orgId) {
+    const { username } = this.props;
+    const owners = await getOrgOwner(orgId);
+    const usernames = owners.map(({ username }) => username);
+    this.setState({ isOwner: usernames.includes(username) });
   }
 
   async getRepositories(username) {
@@ -63,12 +63,11 @@ class OrganizationDashboard extends React.Component {
   }
 
   render() {
-    const { id } = this.props;
     const {
       repositories,
       orgMembers,
       currentOrg,
-      orgOwner: { ownerId }
+      isOwner
     } = this.state;
     return (
       <>
@@ -76,12 +75,10 @@ class OrganizationDashboard extends React.Component {
           repoCount={repositories.length}
           memberCount={orgMembers.length}
           orgInfo={currentOrg}
-          ownerId={ownerId}
-          currentUserId={id}
           tab="people"
         />
         <Container>
-          <OrgPeopleTab orgMembers={orgMembers} orgInfo={currentOrg} ownerId={ownerId} isOwner={id === ownerId} />
+          <OrgPeopleTab orgMembers={orgMembers} orgInfo={currentOrg} isOwner={isOwner} />
         </Container>
       </>
     );
@@ -91,6 +88,7 @@ class OrganizationDashboard extends React.Component {
 OrganizationDashboard.propTypes = {
   currentOrg: PropTypes.object,
   id: PropTypes.string,
+  username: PropTypes.string,
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
     isExact: PropTypes.bool.isRequired,

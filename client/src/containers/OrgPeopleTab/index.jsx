@@ -23,7 +23,7 @@ class OrgPeopleTab extends React.Component {
   };
 
   render() {
-    const { orgMembers, orgInfo, ownerId, isOwner } = this.props;
+    const { orgMembers, orgInfo, isOwner } = this.props;
     const { invite } = this.state;
     return !invite ? (
       <Container className={styles.memberListContainer}>
@@ -54,7 +54,7 @@ class OrgPeopleTab extends React.Component {
                       <span className={styles.memberUsername}>{member.username}</span>
                     </a>
                   </div>
-                  <div className={styles.memberRole}>{member.id === ownerId ? 'Owner' : 'Member'}</div>
+                  <div className={styles.memberRole}>{member.role.toLowerCase()}</div>
                   {isOwner && (
                     <div className={styles.deleteUser}>
                       <Octicon icon={Trashcan} />
@@ -81,7 +81,6 @@ OrgPeopleTab.propTypes = {
   repositories: PropTypes.array,
   orgMembers: PropTypes.any,
   orgInfo: PropTypes.any,
-  ownerId: PropTypes.any,
   isOwner: PropTypes.any
 };
 
