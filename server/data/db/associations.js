@@ -1,12 +1,13 @@
 module.exports = (models) => {
   const {
-    User, SshKey, Repository, Commit, CommitComment, OrgUser, Role, Issue, IssueComment, Star
+    User, SshKey, Repository, Branch, Commit, CommitComment, OrgUser, Role, Issue, IssueComment, Star
   } = models;
 
   SshKey.belongsTo(User);
 
   User.hasMany(SshKey);
   User.hasMany(Repository);
+  User.hasMany(Commit);
   User.hasMany(Issue);
   User.hasMany(IssueComment);
   Repository.hasMany(Issue, { foreignKey: 'repositoryId' });
@@ -19,8 +20,13 @@ module.exports = (models) => {
 
   OrgUser.belongsTo(User, { foreignKey: 'orgId' });
 
+  Repository.belongsTo(Branch, { foreignKey: 'defaultBranchId', as: 'defaultBranch' }); // 'defaultBranchId' will be added to Repository
+  Repository.hasMany(Branch);
+  Branch.belongsTo(Repository);
+  Branch.belongsTo(Commit, { foreignKey: 'headCommitId', as: 'headCommit' }); // 'headCommitId' will be added to Branch
   Repository.hasMany(Commit, { foreignKey: 'repositoryId' });
   Commit.hasMany(CommitComment, { foreignKey: 'commitId' });
+  Commit.belongsTo(User);
   CommitComment.belongsTo(Commit);
 
   User.hasMany(CommitComment, { foreignKey: 'userId' });
@@ -39,7 +45,6 @@ module.exports = (models) => {
   Issue.belongsTo(Repository);
   IssueComment.belongsTo(User);
   IssueComment.belongsTo(Issue);
-  // Repository.hasOne(DefaultBranch);
   Repository.hasMany(Star);
 
   Star.belongsTo(Repository);

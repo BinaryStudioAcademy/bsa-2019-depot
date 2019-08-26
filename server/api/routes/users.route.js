@@ -100,6 +100,6 @@ router.get('/:username/contribution-activity', (req, res, next) => {
   getCommitsByDate({ user: username })
     .then(commits => res.send(commits))
     .catch(next);
-})
+});
 
 module.exports = router;

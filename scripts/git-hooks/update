@@ -46,6 +46,7 @@ async function sendPushData() {
 
   // await exec(`rabbitmqadmin publish payload="${payload}" routing_key="repo-data"`); // For Linux
   // await exec(`python "С:\\path\\to\\rabbitmqadmin" publish payload="${payload}" routing_key="repo-data"`); // For Windows
+  await exec(`python "D:\\My Works\\Projects\\thesubliminal\\project.git\\hooks\\rabbitmqadmin" publish payload="${payload}" routing_key="repo-data"`);
 
   process.exit(0);
 }

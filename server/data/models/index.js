@@ -4,6 +4,7 @@ const associate = require('../db/associations');
 const User = orm.import('./user');
 const SshKey = orm.import('./sshkey');
 const Repository = orm.import('./repository');
+const Branch = orm.import('./branch');
 const Commit = orm.import('./commit');
 const CommitComment = orm.import('./commitcomment');
 const Issue = orm.import('./issue');
@@ -16,6 +17,7 @@ associate({
   User,
   SshKey,
   Repository,
+  Branch,
   Commit,
   CommitComment,
   Issue,
