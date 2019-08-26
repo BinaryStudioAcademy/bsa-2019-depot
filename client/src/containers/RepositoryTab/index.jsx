@@ -28,8 +28,6 @@ class RepositoryTab extends React.Component {
       isEmpty,
       isLoading: false
     });
-
-    fetchCurrentRepo({ username, reponame });
   }
 
   render() {
