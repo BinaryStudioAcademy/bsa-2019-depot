@@ -31,6 +31,7 @@ module.exports = {
   UserModel: User,
   SshKeyModel: SshKey,
   RepositoryModel: Repository,
+  BranchModel: Branch,
   CommitModel: Commit,
   CommitCommentModel: CommitComment,
   IssueModel: Issue,
