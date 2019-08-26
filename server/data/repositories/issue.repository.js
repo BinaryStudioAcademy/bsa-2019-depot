@@ -4,11 +4,11 @@ const { IssueModel, UserModel, RepositoryModel } = require('../models/index');
 class IssueRepository extends BaseRepository {
   async addIssue({ ...issueData }) {
     const { repositoryId } = issueData;
-    const number = (await this.getMaxIssueRepoNumber(repositoryId) || 0) + 1;
+    const number = ((await this.getMaxIssueRepoNumber(repositoryId)) || 0) + 1;
     const issueDataWithNumber = {
       ...issueData,
       number
-    }
+    };
     return this.create(issueDataWithNumber);
   }
 
@@ -20,8 +20,37 @@ class IssueRepository extends BaseRepository {
     return this.model.findOne({ where: { id } });
   }
 
-  updateIssueById(id, { ...issueData }) {
-    return this.updateById(id, issueData);
+  async getAuthorId(issueId) {
+    const issue = await this.getIssueById(issueId);
+    const { userId: authorId } = issue.get({ plain: true });
+    return authorId;
+  }
+
+  async getRepoOwnerId(issueId) {
+    const issue = await this.getIssueById(issueId);
+    const { repositoryId } = issue.get({ plain: true });
+    const repo = await RepositoryModel.findOne({ where: { id: repositoryId } });
+    const { userId } = repo.get({ plain: true });
+    return userId;
+  }
+
+  updateIssueById(id, data) {
+    return this.model.update(data, {
+      where: { id },
+      returning: true,
+      plain: true
+    });
+  }
+
+  setIsOpenedById(id, isOpened) {
+    return this.model.update(
+      { isOpened },
+      {
+        where: { id },
+        returning: true,
+        plain: true
+      }
+    );
   }
 
   getRepositoryIssues({ repositoryId }) {
