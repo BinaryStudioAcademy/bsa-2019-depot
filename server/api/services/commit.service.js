@@ -37,7 +37,7 @@ const getCommitsAndCreatedRepoByDate = async (data) => {
   const username = user;
   const { id } = await userRepository.getByUsername(username);
   const repos = await RepoRepository.getByUserWithOptions(id);
-  const userRepos = repos.map(repo => repo.get({plain: true}));
+  const userRepos = repos.map(repo => repo.get({ plain: true }));
   const userActivitybyDate = {};
   const monthActivity = {};
   allCommits.forEach(({ date }) => {
