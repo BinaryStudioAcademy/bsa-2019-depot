@@ -2,7 +2,7 @@ import callWebApi from '../helpers/webApiHelper';
 
 export const getCommits = async (owner, repoName, branch) => {
   const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/${repoName}/${branch}/commits`,
+    endpoint: `/api/repos/${owner}/${repoName}/${branch}/commits`,
     type: 'GET'
   });
   return response.json();
@@ -10,7 +10,7 @@ export const getCommits = async (owner, repoName, branch) => {
 
 export const getCommitCount = async (owner, repoName, branch) => {
   const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/${repoName}/${branch}/count`,
+    endpoint: `/api/repos/${owner}/${repoName}/${branch}/count`,
     type: 'GET'
   });
   return response.json();
@@ -26,7 +26,7 @@ export const getAllUserCommits = async owner => {
 
 export const getCommitDiffs = async (owner, repoName, hash) => {
   const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/${repoName}/${hash}/commit`,
+    endpoint: `/api/repos/${owner}/${repoName}/${hash}/commit`,
     type: 'GET'
   });
   return response.json();
