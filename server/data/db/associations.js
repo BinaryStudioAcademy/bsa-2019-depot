@@ -18,6 +18,7 @@ module.exports = (models) => {
   User.hasMany(Star);
 
   OrgUser.belongsTo(User, { foreignKey: 'orgId' });
+  OrgUser.belongsTo(Role, { foreignKey: 'roleId' });
 
   Repository.hasMany(Commit, { foreignKey: 'repositoryId' });
   Commit.hasMany(CommitComment, { foreignKey: 'commitId' });

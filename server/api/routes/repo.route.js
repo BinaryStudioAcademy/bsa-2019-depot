@@ -7,9 +7,7 @@ const {
   checkName,
   isEmpty,
   forkRepo,
-  getReposData,
   setStar,
-  getByUserAndReponame,
   updateByUserAndReponame
 } = require('../services/repo.service');
 const { getCommits, getCommitDiff, getCommitCount } = require('../services/commit.service');
@@ -36,12 +34,6 @@ router
       .then(result => {
         res.send(result);
       })
-      .catch(next);
-  })
-  .get('/:owner/repos', (req, res, next) => {
-    const { owner } = req.params;
-    getReposData({ username: owner })
-      .then(repos => res.send(repos))
       .catch(next);
   })
   .get('/:owner/:repoName/:branchName/commits', (req, res, next) => {
@@ -186,12 +178,6 @@ router
           status: true
         })
       )
-      .catch(next);
-  })
-  .get('/:owner/:reponame', (req, res, next) => {
-    const { owner, reponame } = req.params;
-    getByUserAndReponame({ owner, reponame })
-      .then(data => res.send(data))
       .catch(next);
   })
   .put('/:owner/:reponame', ownerOnlyMiddleware, (req, res, next) => {

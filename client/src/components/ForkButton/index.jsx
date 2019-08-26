@@ -29,12 +29,15 @@ class ForkButton extends Component {
     const { owner, currentRepoInfo } = this.props;
     const payload = { owner, repoData: currentRepoInfo };
     this.setState({ loading: true });
-    repositoryService.forkRepo(payload)
-      .then(data => this.setState({ username: data.username, loading: false }));
+    repositoryService.forkRepo(payload).then(data => this.setState({ username: data.username, loading: false }));
   };
 
   render() {
-    const { repoName, currentRepoInfo: { forkedCount }, isOwnRepo } = this.props;
+    const {
+      repoName,
+      currentRepoInfo: { forkedCount },
+      isOwnRepo
+    } = this.props;
     const { username, loading } = this.state;
     return (
       <Modal
@@ -43,8 +46,8 @@ class ForkButton extends Component {
         open={this.state.modalOpen}
         onClose={this.handleClose}
         size="small"
-        trigger={isOwnRepo
-          ? (
+        trigger={
+          isOwnRepo ? (
             <Button disabled size="small" as="div" compact labelPosition="right" onClick={this.handleOpen}>
               <Button size="small" compact className={styles.forkButton}>
                 <Icon name="fork" />
@@ -75,7 +78,9 @@ class ForkButton extends Component {
               <Loader active inline="centered" />
             </Modal.Content>
           </>
-        ) : username ? this.handleRedirect(username, repoName) : (
+        ) : username ? (
+          this.handleRedirect(username, repoName)
+        ) : (
           <>
             <Modal.Header>You are going to fork {repoName}</Modal.Header>
             <Modal.Actions>
@@ -113,7 +118,4 @@ const mapStateToProps = ({ currentRepo: { currentRepoInfo } }) => ({
   currentRepoInfo
 });
 
-export default connect(
-  mapStateToProps
-)(ForkButton);
-
+export default connect(mapStateToProps)(ForkButton);

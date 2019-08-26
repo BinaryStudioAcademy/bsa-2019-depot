@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="theme-color" content="#000000" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
@@ -34,5 +35,19 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script>
+      function isIE() {
+        const ua = navigator.userAgent;
+        return ua.indexOf("MSIE ") > -1 || ua.indexOf("Trident/") > -1;
+      }
+      /*  if the browser is IE - show warning */
+      if (isIE()){
+        const warningWrap = document.createElement('p');
+        warningWrap.classList.add('warning-ie');
+        warningWrap.innerHTML = 'This browser is not supported! ¯\\_(ツ)_/¯';
+        warningWrap.setAttribute("style", "color:red; font-weight: 700;");
+        document.getElementById('root').appendChild(warningWrap);
+      }
+    </script>
   </body>
 </html>
