@@ -14,9 +14,7 @@ const { getCommits, getCommitDiff, getCommitCount } = require('../services/commi
 const {
   getBranches, getBranchTree, getLastCommitOnBranch, getFileContent
 } = require('../services/branch.service');
-const {
-  addIssue, addIssueComment, getAllRepoIssues, getRepoIssueByNumber, getAllIssueComments
-} = require('../services/issue.service');
+const { getAllRepoIssues, getRepoIssueByNumber } = require('../services/issue.service');
 const ownerOnlyMiddleware = require('../middlewares/owner-only.middleware');
 
 const router = Router();
@@ -141,22 +139,6 @@ router
       .then(result => res.send(result))
       .catch(next);
   })
-  .post('/:owner/:repoName/issues', (req, res, next) => {
-    const {
-      userId, repositoryId, title, body, isOpened
-    } = req.body;
-    addIssue({
-      userId,
-      repositoryId,
-      title,
-      body,
-      isOpened
-    })
-      .then(() => res.send({
-        status: true
-      }))
-      .catch(next);
-  })
   .get('/:owner/:repoName/issues', (req, res, next) => {
     const { repositoryId } = req.query;
     getAllRepoIssues({ repositoryId })
@@ -167,21 +149,6 @@ router
     const { owner: username, repoName: name, number } = req.params;
     getRepoIssueByNumber({ username, name, number })
       .then(result => res.send(result))
-      .catch(next);
-  })
-  .get('/:owner/:repoName/issues/:issueId/comments', (req, res, next) => {
-    const { issueId } = req.params;
-    getAllIssueComments({ issueId })
-      .then(result => res.send(result))
-      .catch(next);
-  })
-  .post('/:owner/:repoName/issues/:issueId/comments', (req, res, next) => {
-    const { issueId } = req.params;
-    const { userId, comment: body } = req.body;
-    addIssueComment({ userId, issueId, body })
-      .then(() => res.send({
-        status: true
-      }))
       .catch(next);
   })
   .put('/:owner/:reponame', ownerOnlyMiddleware, (req, res, next) => {
