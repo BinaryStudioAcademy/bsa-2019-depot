@@ -5,11 +5,11 @@ module.exports = {
       'isPublic',
       {
         allowNull: false,
-        type: Sequelize.BOOLEAN
+        type: Sequelize.TEXT
       },
       { transaction }
     )
   ])),
 
-  down: queryInterface => queryInterface.sequelize.transaction(transaction => Promise.all([queryInterface.removeColumn('issues', 'number', { transaction })]))
+  down: queryInterface => queryInterface.sequelize.transaction(transaction => Promise.all([queryInterface.removeColumn('repositories', 'isPublic', { transaction })]))
 };
