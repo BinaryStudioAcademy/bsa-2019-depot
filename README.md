@@ -102,6 +102,7 @@ _/client/.env_
 ```
 SKIP_PREFLIGHT_CHECK = true
 PORT = 3001  # default. has to be changed if it is different
+REACT_APP_URL = "http://localhost:3001"  # default. has to be changed if it is different
 REACT_APP_SERVER_URL = "http://localhost:3000"  # default. has to be changed if it is different
 
 ```
