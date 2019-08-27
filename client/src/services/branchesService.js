@@ -33,3 +33,11 @@ export const getFileContent = async (owner, repoName, branch, query) => {
   });
   return response.json();
 };
+
+export const getBranch = async (repoID, branch) => {
+  const response = await callWebApi({
+    endpoint: `/api/repos/${repoID}/branches/${branch}`,
+    type: 'GET'
+  });
+  return response.json();
+};
