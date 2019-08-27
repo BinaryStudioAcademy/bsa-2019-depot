@@ -50,6 +50,12 @@ class IssueComments extends React.Component {
       issueComments,
       loading: false
     });
+    this.socket.on('newIssueComment', async data => {
+      const issueComments = await getIssueComments(data.issueId);
+      this.setState({
+        issueComments
+      });
+    });
   }
 
   initSocket() {
@@ -85,6 +91,9 @@ class IssueComments extends React.Component {
       comment,
       issueId,
       userId
+    });
+    this.socket.emit('newIssueComment', {
+      issueId
     });
     const issueComments = await getIssueComments(issueId);
     this.setState({
