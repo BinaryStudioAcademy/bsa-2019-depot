@@ -3,7 +3,7 @@ const secretKey = process.env.AWS_SES_SECRET_KEY;
 const awsRegion = process.env.AWS_SES_REGION;
 const emailSender = process.env.AWS_SES_SENDER;
 const bucket = process.env.AWS_S3_BUCKET;
-const appPort = process.env.APP_PORT;
+const appHost = process.env.APP_HOST;
 
 const options = {
   providerOptions: {
@@ -16,7 +16,7 @@ const options = {
     }
   },
   server: {
-    host: `localhost:${appPort}`,
+    host: appHost,
     protocol: 'http'
   }
 };

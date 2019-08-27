@@ -110,6 +110,7 @@ _/server/.env_
 
 ```
 APP_PORT = 3000
+APP_HOST = http://localhost:3000
 CLIENT_HOST = http://localhost:3001
 
 DB_NAME = depot # default. has to be changed to local DB name if it is different
