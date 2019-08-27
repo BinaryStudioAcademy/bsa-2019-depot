@@ -1,0 +1,35 @@
+:global(.ui.container):local(.headerWrapper) {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+:global(.ui.dividing.header):local(.headerWrapper) {
+  padding-bottom: 1em;
+}
+:local(.orgList) {
+  margin-top: 1em;
+}
+
+:local(.collaborators_container) {
+  border: 1px solid lightgrey;
+  border-radius: 5px;
+}
+
+:local(.collaborators_header) {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f6f8fa;
+  padding: 10px;
+}
+
+:global(.ui.divider):local(.divide) {
+  margin: 0rem 0rem;
+}
+
+:local(.collaborators_search_container) {
+  padding: 0.625em;
+}
+
+:local(.collaborators_list) {
+  padding: 1.25em 0.625em;
+}

@@ -5,7 +5,7 @@ import { forgotReducer as forgot } from '../scenes/Forgot/reducer';
 import { resetReducer as reset } from '../scenes/Reset/reducer';
 import { commitsData } from '../containers/CommitsPage/reducer';
 import { lastCommitReducer, fileTreeReducer, newFileReducer } from '../scenes/CodeTab/reducer';
-import { repoSettingsData } from '../containers/SettingsTab/reducer';
+import { repoSettingsData } from '../containers/RepositorySettings/reducer';
 import { currentRepoReducer } from '../containers/RepositoryTab/reducer';
 import profile from '../containers/Profile/reducer';
 import { branchesData } from '../containers/BranchesTab/reducer';
