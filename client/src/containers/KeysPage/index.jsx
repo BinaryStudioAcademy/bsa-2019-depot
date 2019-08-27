@@ -130,10 +130,12 @@ KeysPage.propTypes = {
   userId: PropTypes.string.isRequired
 };
 
-const mapStateToProps = ({ profile: { currentUser: { id: userId } } }) => ({
+const mapStateToProps = ({
+  profile: {
+    currentUser: { id: userId }
+  }
+}) => ({
   userId
 });
 
-export default connect(
-  mapStateToProps
-)(KeysPage);
+export default connect(mapStateToProps)(KeysPage);

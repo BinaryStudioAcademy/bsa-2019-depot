@@ -27,6 +27,7 @@ export const updateSettings = async request => {
   return response.json();
 };
 
+
 export const uploadUserPhoto = async request => {
   const response = await callWebApi({
     endpoint: '/api/users/image',
@@ -45,8 +46,7 @@ export const deleteUserPhoto = async request => {
   return response.json();
 };
 
-
-export const getKeys = async (userId) => {
+export const getKeys = async userId => {
   const response = await callWebApi({
     endpoint: `/api/users/${userId}/keys`,
     type: 'GET'
