@@ -43,7 +43,7 @@ const RepositoryHeader = ({
     if (originalRepo) {
       const {
         name: forkedRepoName,
-        user: { username: forkedRepoOwner }
+        owner: forkedRepoOwner
       } = originalRepo;
       if (forkedRepoName && forkedRepoOwner) {
         return (
