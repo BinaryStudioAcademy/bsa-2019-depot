@@ -42,9 +42,11 @@ async function sendPushData() {
   let payload = JSON.stringify(data);
   if (os.platform() === 'win32') {
     payload = payload.replace(/"/g, '""');
+  } else {
+    payload = payload.replace(/"/g, '\\"');
   }
 
-  await exec(`rabbitmqadmin publish payload=${payload} routing_key=repo-data`); // For Linux
+  await exec(`rabbitmqadmin publish payload="${payload}" routing_key=repo-data`); // For Linux
   // await exec(`python "С:\\path\\to\\rabbitmqadmin" publish payload="${payload}" routing_key="repo-data"`); // For Windows
 
   process.exit(0);
