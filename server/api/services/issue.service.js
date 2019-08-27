@@ -1,5 +1,4 @@
 const issueRepository = require('../../data/repositories/issue.repository');
-const issueCommentRepository = require('../../data/repositories/issue-comment.repository');
 
 const addIssue = issueData => issueRepository.addIssue(issueData);
 
@@ -19,14 +18,6 @@ const closeIssueById = id => issueRepository.setIsOpenedById(id, false);
 
 const reopenIssueById = id => issueRepository.setIsOpenedById(id, true);
 
-const getAllIssueComments = issueId => issueCommentRepository.getAllIssueComments(issueId);
-
-const addIssueComment = issueCommentData => issueCommentRepository.addIssueComment(issueCommentData);
-
-const updateIssueCommentById = ({ id, ...issueCommentData }) => issueCommentRepository.updateIssueCommentById(id, { issueCommentData });
-
-const deleteIssueCommentById = issueCommentId => issueCommentRepository.deleteIssueCommentById(issueCommentId);
-
 module.exports = {
   addIssue,
   updateIssueById,
@@ -36,9 +27,5 @@ module.exports = {
   getRepoOwnerId,
   deleteIssueById,
   closeIssueById,
-  reopenIssueById,
-  getAllIssueComments,
-  addIssueComment,
-  updateIssueCommentById,
-  deleteIssueCommentById
+  reopenIssueById
 };
