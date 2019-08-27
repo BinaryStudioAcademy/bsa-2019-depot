@@ -35,14 +35,14 @@ class Invitation extends React.Component {
   }
 
   OnClickJoin = async () => {
-    const { id, match, history } = this.props;
-    const { name } = match.params;
+    const { id: userId, match, history } = this.props;
+    const { name: orgName } = match.params;
 
     await acceptInvitation({
-      userId: id,
-      orgName: name
+      userId,
+      orgName
     });
-    history.push(`/orgs/${name}`);
+    history.push(`/${orgName}`);
   };
 
   onClickDecline = async () => {
@@ -59,7 +59,7 @@ class Invitation extends React.Component {
   goToProfileOrg = () => {
     const { history, match } = this.props;
     const { name } = match.params;
-    history.push(`/orgs/${name}`);
+    history.push(`/${name}`);
   };
 
   renderHaveInviteComponent = () => {
@@ -99,7 +99,7 @@ class Invitation extends React.Component {
 
     if (invited && !isActivated) return this.renderHaveInviteComponent();
     if (!invited) return this.renderNotInvitedComponent();
-    return <Redirect to={`/orgs/${name}`} />;
+    return <Redirect to={`/${name}`} />;
   }
 }
 

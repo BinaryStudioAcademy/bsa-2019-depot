@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import io from 'socket.io-client';
 import moment from 'moment';
 import { Dropdown, Header, Button, Divider, Form, Label, Icon, Image, Loader } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { getUserImgLink } from '../../helpers/imageHelper';
-import { fetchIssueComments, createIssueComment } from '../../routines/routines';
+import { getIssueByNumber, getIssueComments, postIssueComment } from '../../services/issuesService';
 import ReactMde from 'react-mde';
 import ReactMarkdown from 'react-markdown';
 import 'react-mde/lib/styles/css/react-mde-all.css';
@@ -16,6 +17,9 @@ class IssueComments extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentIssue: {},
+      issueComments: [],
+      loading: true,
       comment: '',
       selectedTab: 'write',
       isDisabled: true
@@ -27,14 +31,37 @@ class IssueComments extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    this.initSocket();
     const {
-      fetchIssueComments,
       match: {
-        params: { username, reponame, number: issueNumber }
+        params: { username, reponame, number }
       }
     } = this.props;
-    fetchIssueComments({ username, reponame, issueNumber });
+    const currentIssue = await getIssueByNumber({
+      username,
+      reponame,
+      number
+    });
+    const { id } = currentIssue;
+    const issueComments = await getIssueComments(id);
+    this.setState({
+      currentIssue,
+      issueComments,
+      loading: false
+    });
+    this.socket.on('newIssueComment', async data => {
+      const issueComments = await getIssueComments(data.issueId);
+      this.setState({
+        issueComments
+      });
+    });
+  }
+
+  initSocket() {
+    const { REACT_APP_SOCKET_SERVER, REACT_APP_SOCKET_SERVER_PORT } = process.env;
+    const address = `http://${REACT_APP_SOCKET_SERVER}:${REACT_APP_SOCKET_SERVER_PORT}`;
+    this.socket = io(address);
   }
 
   onCommentChange(comment) {
@@ -50,43 +77,40 @@ class IssueComments extends React.Component {
     return Promise.resolve(<ReactMarkdown source={markdown} />);
   }
 
-  onSubmit() {
-    const { comment } = this.state;
-    if (!comment) return;
-
+  async onSubmit() {
+    this.setState({
+      isDisabled: true
+    });
     const {
-      createIssueComment,
-      userId,
-      match: {
-        params: { username, reponame, number: issueNumber }
-      }
-    } = this.props;
-    createIssueComment({
-      username,
-      reponame,
       comment,
-      issueNumber,
+      currentIssue: { id: issueId }
+    } = this.state;
+    if (!comment) return;
+    const { userId } = this.props;
+    await postIssueComment({
+      comment,
+      issueId,
       userId
     });
-    this.setState({ comment: '' });
+    this.socket.emit('newIssueComment', {
+      issueId
+    });
+    const issueComments = await getIssueComments(issueId);
+    this.setState({
+      comment: '',
+      issueComments
+    });
   }
 
   render() {
-    const { comment, selectedTab, isDisabled } = this.state;
+    const { currentIssue, issueComments, comment, selectedTab, isDisabled, loading } = this.state;
     const {
-      issues,
-      issueComments,
-      loading,
-      match: {
-        url,
-        params: { number }
-      }
+      match: { url }
     } = this.props;
     const newIssueUrl = url
       .split('/')
       .slice(0, -1)
       .join('/');
-    const currentIssue = issues.find(issue => issue.id === +number);
 
     return loading ? (
       <Loader active />
@@ -95,7 +119,7 @@ class IssueComments extends React.Component {
         <div className={styles.header_row}>
           <Header as="h2">
             {currentIssue.title}
-            <span>{` #${currentIssue.id}`}</span>
+            <span>{` #${currentIssue.number}`}</span>
           </Header>
           <Link to={`${newIssueUrl}/new`}>
             <Button compact positive content="New Issue" primary />
@@ -208,30 +232,15 @@ IssueComments.propTypes = {
     path: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired
   }).isRequired,
-  fetchIssueComments: PropTypes.func.isRequired,
-  userId: PropTypes.string.isRequired,
-  issues: PropTypes.array.isRequired,
-  issueComments: PropTypes.array.isRequired,
-  createIssueComment: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired
+  userId: PropTypes.string.isRequired
 };
 
 const mapStateToProps = ({
-  issuesData: { issues },
-  issueCommentsData: { issueComments, loading },
   profile: {
     currentUser: { id }
   }
 }) => ({
-  userId: id,
-  issues,
-  issueComments,
-  loading
+  userId: id
 });
 
-const mapDispatchToProps = { fetchIssueComments, createIssueComment };
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(IssueComments);
+export default connect(mapStateToProps)(IssueComments);

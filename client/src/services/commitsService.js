@@ -18,7 +18,7 @@ export const getCommitCount = async (owner, repoName, branch) => {
 
 export const getAllUserCommits = async owner => {
   const response = await callWebApi({
-    endpoint: `/api/commits/${owner}/commits`,
+    endpoint: `/api/users/${owner}/contribution-activity`,
     type: 'GET'
   });
   return response.json();

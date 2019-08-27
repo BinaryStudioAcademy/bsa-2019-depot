@@ -21,13 +21,15 @@ class StarRepository extends BaseRepository {
         },
         {
           model: RepositoryModel,
+          where: { deletedAt: null },
           attributes: {
             include: [
               [
                 sequelize.literal(`
                 (SELECT COUNT(*)
                 FROM "stars"
-                WHERE "repository"."id" = "stars"."repositoryId")`),
+                WHERE "repository"."id" = "stars"."repositoryId"
+                AND "stars"."deletedAt" IS NULL)`),
                 'starsCount'
               ]
             ]

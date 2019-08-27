@@ -2,8 +2,8 @@ import callWebApi from '../helpers/webApiHelper';
 
 export const forgot = async request => {
   const response = await callWebApi({
-    endpoint: '/api/user/forget-password',
-    type: 'POST',
+    endpoint: '/api/users/forgot-password',
+    type: 'PUT',
     request
   });
   return response.json();
@@ -11,8 +11,8 @@ export const forgot = async request => {
 
 export const reset = async request => {
   const response = await callWebApi({
-    endpoint: '/api/user/reset-password',
-    type: 'POST',
+    endpoint: '/api/users/reset-password',
+    type: 'PUT',
     request
   });
   return response.json();
@@ -20,8 +20,8 @@ export const reset = async request => {
 
 export const updateSettings = async request => {
   const response = await callWebApi({
-    endpoint: '/api/user/settings',
-    type: 'POST',
+    endpoint: '/api/users',
+    type: 'PUT',
     request
   });
   return response.json();
@@ -45,9 +45,10 @@ export const deleteUserPhoto = async request => {
   return response.json();
 };
 
-export const getKeys = async () => {
+
+export const getKeys = async (userId) => {
   const response = await callWebApi({
-    endpoint: '/api/user/keys',
+    endpoint: `/api/users/${userId}/keys`,
     type: 'GET'
   });
   return response.json();
@@ -55,7 +56,7 @@ export const getKeys = async () => {
 
 export const addKey = async request => {
   const response = await callWebApi({
-    endpoint: '/api/user/keys',
+    endpoint: '/api/keys',
     type: 'POST',
     request
   });
@@ -64,14 +65,14 @@ export const addKey = async request => {
 
 export const deleteKey = async keyId => {
   return callWebApi({
-    endpoint: `/api/user/keys/${keyId}`,
+    endpoint: `/api/keys/${keyId}`,
     type: 'DELETE'
   });
 };
 
 export const getUserDetailed = async username => {
   const response = await callWebApi({
-    endpoint: `/api/user/${username}`,
+    endpoint: `/api/users/${username}/overview`,
     type: 'GET'
   });
   return response.json();
@@ -79,7 +80,7 @@ export const getUserDetailed = async username => {
 
 export const getStars = async username => {
   const response = await callWebApi({
-    endpoint: `/api/user/${username}/stars`,
+    endpoint: `/api/users/${username}/stars`,
     type: 'GET'
   });
   return response.json();
@@ -87,7 +88,23 @@ export const getStars = async username => {
 
 export const checkUsernameExists = async username => {
   const response = await callWebApi({
-    endpoint: `/api/user/username-exists?username=${username}`,
+    endpoint: `/api/users/username-exists?username=${username}`,
+    type: 'GET'
+  });
+  return response.json();
+};
+
+export const getUsersToInviting = async (username, orgID) => {
+  const response = await callWebApi({
+    endpoint: `/api/users/search/${username}/${orgID}`,
+    type: 'GET'
+  });
+  return response.json();
+};
+
+export const getUsersOrganizations = async userid => {
+  const response = await callWebApi({
+    endpoint: `/api/users/${userid}/organizations`,
     type: 'GET'
   });
   return response.json();

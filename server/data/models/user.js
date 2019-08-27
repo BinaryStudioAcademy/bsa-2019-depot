@@ -13,10 +13,12 @@ module.exports = (sequelize, DataTypes) => {
       location: DataTypes.STRING,
       imgUrl: DataTypes.STRING,
       // ------------------
-      type: DataTypes.ENUM('USER', 'ORG'),
-      fake: DataTypes.BOOLEAN
+      type: DataTypes.ENUM('USER', 'ORG')
     },
-    {}
+    {
+      paranoid: true,
+      timestamps: true
+    }
   );
   User.associate = (/* models */) => {
     // associations can be defined here

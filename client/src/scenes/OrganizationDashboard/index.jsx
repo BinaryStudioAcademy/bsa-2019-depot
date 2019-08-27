@@ -15,7 +15,7 @@ class OrganizationDashboard extends React.Component {
     this.state = {
       currentOrg: {},
       orgMembers: [],
-      orgOwner: '',
+      isOwner: false,
       repositories: []
     };
   }
@@ -27,7 +27,7 @@ class OrganizationDashboard extends React.Component {
 
     this.getUserInfo(username).then(() => {
       this.getMembers(id);
-      this.getOwner(id);
+      this.isOwner(id);
       this.getRepositories(username);
     });
   }
@@ -41,10 +41,11 @@ class OrganizationDashboard extends React.Component {
       this.setState({ orgMembers: data });
     });
   }
-  async getOwner(orgId) {
-    await getOrgOwner(orgId).then(data => {
-      this.setState({ orgOwner: data });
-    });
+  async isOwner(orgId) {
+    const { username } = this.props;
+    const owners = await getOrgOwner(orgId);
+    const usernames = owners.map(({ username }) => username);
+    this.setState({ isOwner: usernames.includes(username) });
   }
   async getRepositories(username) {
     const repositories = await getRepositories(username);
@@ -55,12 +56,11 @@ class OrganizationDashboard extends React.Component {
   }
 
   render() {
-    const { id } = this.props;
     const {
       repositories,
       orgMembers,
       currentOrg,
-      orgOwner: { ownerId }
+      isOwner
     } = this.state;
     return (
       <>
@@ -68,12 +68,10 @@ class OrganizationDashboard extends React.Component {
           repoCount={repositories.length}
           memberCount={orgMembers.length}
           orgInfo={currentOrg}
-          ownerId={ownerId}
-          currentUserId={id}
           tab="repositories"
         />
         <Container>
-          <OrgRepositoriesTab orgInfo={currentOrg} orgMembers={orgMembers} isOwner={id === ownerId} />
+          <OrgRepositoriesTab orgInfo={currentOrg} orgMembers={orgMembers} isOwner={isOwner} />
         </Container>
       </>
     );
@@ -84,6 +82,7 @@ OrganizationDashboard.propTypes = {
   currentOrg: PropTypes.object,
   userData: PropTypes.object,
   id: PropTypes.string,
+  username: PropTypes.string,
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
     isExact: PropTypes.bool.isRequired,

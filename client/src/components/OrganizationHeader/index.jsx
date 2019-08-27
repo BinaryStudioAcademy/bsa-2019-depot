@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Octicon, { Person, Link as linkIco, Mail } from '@primer/octicons-react';
 import { Icon, Label, Container } from 'semantic-ui-react';
-import { getUserImgLink } from '../../helpers/imageHelper';
+import { getOrganizationImgLink } from '../../helpers/imageHelper';
 
 import styles from './styles.module.scss';
 
@@ -19,7 +19,7 @@ const OrganizationHeader = ({
     <header className={styles.orgHeader}>
       <Container>
         <Container className={styles.orgInfoContainer}>
-          <img src={getUserImgLink(imgUrl)} alt="organization avatar" width="100px" height="100px" />
+          <img src={getOrganizationImgLink(imgUrl)} alt="organization avatar" width="100px" height="100px" />
           <Container className={styles.orgInfo}>
             <div className={styles.orgName}>{username}</div>
             <div className={styles.orgDescription}>{description}</div>

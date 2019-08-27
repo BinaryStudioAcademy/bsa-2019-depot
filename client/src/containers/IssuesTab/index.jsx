@@ -24,12 +24,11 @@ class IssuesTab extends React.Component {
 
   componentDidMount() {
     const {
-      username,
       repositoryId,
       fetchIssues,
       fetchCurrentRepo,
       match: {
-        params: { reponame }
+        params: { username, reponame }
       }
     } = this.props;
     if (!repositoryId) {
@@ -170,9 +169,8 @@ class IssuesTab extends React.Component {
 }
 
 IssuesTab.propTypes = {
-  username: PropTypes.string.isRequired,
   reponame: PropTypes.string,
-  repositoryId: PropTypes.number,
+  repositoryId: PropTypes.string,
   issues: PropTypes.array.isRequired,
   issuesData: PropTypes.exact({
     loading: PropTypes.bool.isRequired,
@@ -196,12 +194,8 @@ const mapStateToProps = ({
   issuesData: { loading, issues },
   currentRepo: {
     currentRepoInfo: { id, name }
-  },
-  profile: {
-    currentUser: { username }
   }
 }) => ({
-  username,
   loading,
   issues,
   repositoryId: id

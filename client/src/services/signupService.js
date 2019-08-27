@@ -27,7 +27,7 @@ export const setUsername = async (username, profile) => {
     profile
   };
   const response = await callWebApi({
-    endpoint: '/api/user/username',
+    endpoint: '/api/users/username',
     type: 'POST',
     request
   });
@@ -36,7 +36,7 @@ export const setUsername = async (username, profile) => {
 
 export const checkUsername = async username => {
   const response = await callWebApi({
-    endpoint: '/api/user/username-exists',
+    endpoint: '/api/users/username-exists',
     type: 'GET',
     query: {
       username

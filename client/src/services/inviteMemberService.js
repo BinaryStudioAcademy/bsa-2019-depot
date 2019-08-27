@@ -2,7 +2,7 @@ import callWebApi from '../helpers/webApiHelper';
 
 export const invite = async request => {
   const response = await callWebApi({
-    endpoint: '/api/organizations/invite',
+    endpoint: '/api/orgs/invite',
     type: 'POST',
     request
   });
@@ -11,7 +11,7 @@ export const invite = async request => {
 
 export const acceptInvitation = async request => {
   const response = await callWebApi({
-    endpoint: '/api/organizations/invitation',
+    endpoint: '/api/orgs/invitation',
     type: 'POST',
     request
   });
@@ -20,7 +20,7 @@ export const acceptInvitation = async request => {
 
 export const cancelInvitation = async request => {
   const response = await callWebApi({
-    endpoint: '/api/organizations/invitation',
+    endpoint: '/api/orgs/invitation',
     type: 'DELETE',
     request
   });

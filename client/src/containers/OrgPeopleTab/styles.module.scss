@@ -18,6 +18,10 @@ $button-color: #4f60ac;
     }
   }
 
+  :local(.backBtn) {
+    margin-top: 10px;
+  }
+
   :local(.memberListHeader) {
     color: #586069;
     background-color: #f6f8fa;

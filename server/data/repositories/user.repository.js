@@ -1,7 +1,10 @@
+const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
 const { UserModel } = require('../models/index');
 const cryptoHelper = require('../../helpers/crypto.helper');
 const sequelize = require('../db/connection');
+
+const { Op } = Sequelize;
 
 class UserRepository extends BaseRepository {
   addUser({ ...userData }) {
@@ -42,17 +45,32 @@ class UserRepository extends BaseRepository {
             sequelize.literal(`
             (SELECT COUNT(*)
             FROM "repositories"
-            WHERE "repositories"."userId" = "user"."id")`),
+            WHERE "repositories"."userId" = "user"."id" 
+            AND "repositories"."deletedAt" IS NULL)`),
             'repositoriesCount'
           ],
           [
             sequelize.literal(`
             (SELECT COUNT(*)
-            FROM "stars"
-            WHERE "user"."id" = "stars"."userId")`),
+            FROM "stars", "repositories"
+            WHERE "user"."id" = "stars"."userId" 
+            AND "repositories"."id" = "stars"."repositoryId"
+            AND "stars"."deletedAt" IS NULL
+            AND "repositories"."deletedAt" IS NULL)`),
             'starsCount'
           ]
         ]
+      }
+    });
+  }
+
+  findUserByLetter(username) {
+    return this.model.findAll({
+      where: {
+        username: {
+          [Op.iLike]: `%${username}%`
+        },
+        type: 'USER'
       }
     });
   }

@@ -4,15 +4,29 @@ const RoleRepository = require('../../data/repositories/role.repository');
 
 const { sendInviteEmail } = require('./email.service');
 
-const getOrganizationMembers = async orgId => OrgUserRepository.getAllOrganizationUsers(orgId);
+const getOrganizationMembers = async (orgId) => {
+  const orgUsers = await OrgUserRepository.getAllOrganizationUsers(orgId);
+  const userPromises = orgUsers.map((orgUser) => {
+    const { userId } = orgUser.get({ plain: true });
+    return userRepository.getUserById(userId);
+  });
+  const users = await Promise.all(userPromises);
+  const rolePromises = orgUsers.map((orgUser) => {
+    const { roleId } = orgUser.get({ plain: true });
+    return RoleRepository.getRoleById(roleId);
+  });
+  const roles = await Promise.all(rolePromises);
+  const members = users.map((user, index) => ({
+    ...user.dataValues,
+    role: roles[index].name
+  }));
+  return members;
+};
 
 const getOrganizationOwner = async (orgId) => {
-  const ownerRole = await RoleRepository.getByName('OWNER');
-  const ownerRoleId = ownerRole.get({ plain: true }).id;
   const orgMembers = await getOrganizationMembers(orgId);
-  const owner = orgMembers.filter(member => member.roleId === ownerRoleId);
-  const ownerId = owner[0].get({ plain: true }).userId;
-  return { ownerId };
+  const owners = orgMembers.filter(member => member.role === 'OWNER');
+  return owners;
 };
 
 const createOrganization = async (data) => {
@@ -24,7 +38,7 @@ const createOrganization = async (data) => {
   }
 
   const { id: roleId } = (await RoleRepository.getByName('OWNER')).get({ plain: true });
-  const profile = await userRepository.addUser({ ...data, type: 'ORG', fake: false });
+  const profile = await userRepository.addUser({ ...data, type: 'ORG' });
   const { id: orgId } = profile;
   const orgUser = await OrgUserRepository.create({
     roleId,

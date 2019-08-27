@@ -10,7 +10,7 @@ import styles from './styles.module.scss';
 
 const RepositoryHeader = ({
   userId,
-  currentRepoInfo: { userId: repoOwnerId, forkedCount, originalRepo },
+  currentRepoInfo: { userId: repoOwnerId, originalRepo },
   owner,
   username,
   repoName,
@@ -72,7 +72,11 @@ const RepositoryHeader = ({
               </span>
               {renderOrignalRepoLink()}
             </div>
-            {repoOwnerId !== userId ? <ForkButton owner={owner} repoName={repoName} forkedCount={forkedCount} /> : null}
+            {repoOwnerId !== userId ? (
+              <ForkButton isOwnRepo={false} owner={owner} repoName={repoName} />
+            ) : (
+              <ForkButton isOwnRepo owner={owner} repoName={repoName} />
+            )}
           </div>
           <div className="ui top attached tabular menu">
             <div className={`${activeTab === 'code' && 'active'} item`}>
@@ -105,15 +109,15 @@ RepositoryHeader.propTypes = {
   repoName: PropTypes.string.isRequired,
   issueCount: PropTypes.number.isRequired,
   userId: PropTypes.string.isRequired,
-  currentRepoInfo: PropTypes.exact({
-    userId: PropTypes.string.isRequired,
-    forkedCount: PropTypes.string.isRequired,
-    originalRepo: PropTypes.exact({
-      name: PropTypes.string.isRequired,
-      user: PropTypes.exact({
-        username: PropTypes.string.isRequired
-      }).isRequired
-    }).isRequired
+  currentRepoInfo: PropTypes.shape({
+    userId: PropTypes.string,
+    forkedCount: PropTypes.string,
+    originalRepo: PropTypes.shape({
+      name: PropTypes.string,
+      user: PropTypes.shape({
+        username: PropTypes.string
+      })
+    })
   }).isRequired,
   activePage: PropTypes.string,
   baseUrl: PropTypes.string.isRequired,
