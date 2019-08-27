@@ -1,5 +1,28 @@
+const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
-const { IssueModel, UserModel, RepositoryModel } = require('../models/index');
+const {
+  IssueModel, UserModel, RepositoryModel, IssueCommentModel
+} = require('../models/index');
+const sequelize = require('../db/connection');
+
+const { Op } = Sequelize;
+
+const parseSortQuery = (sort) => {
+  switch (sort) {
+  case 'created_asc':
+    return [['createdAt', 'ASC']];
+  case 'created_desc':
+    return [['createdAt', 'DESC']];
+  case 'updated_asc':
+    return [['updatedAt', 'ASC']];
+  case 'updated_desc':
+    return [['updatedAt', 'DESC']];
+  case 'coments_desc':
+    return [[sequelize.literal('commentsCount'), 'DESC']];
+  default:
+    return [];
+  }
+};
 
 class IssueRepository extends BaseRepository {
   async addIssue({ ...issueData }) {
@@ -62,6 +85,39 @@ class IssueRepository extends BaseRepository {
           attributes: ['username']
         }
       ]
+    });
+  }
+
+  getIssues({
+    repositoryId, sort, author, title
+  }) {
+    //
+    return this.model.findAll({
+      where: {
+        repositoryId,
+        ...(title ? { body: { [Op.substring]: title } } : {})
+      },
+
+      attributes: {
+        include: [
+          [
+            sequelize.literal(`
+          (SELECT COUNT(*)
+          FROM "issueComments"
+          WHERE "issue"."id" = "issueComments"."issueId"
+          AND "issueComments"."deletedAt" IS NULL)`),
+            'commentsCount'
+          ]
+        ]
+      },
+      include: [
+        {
+          model: UserModel,
+          attributes: [],
+          ...(author ? { where: { username: author } } : {})
+        }
+      ],
+      order: parseSortQuery(sort)
     });
   }
 

@@ -6,6 +6,8 @@ const updateIssueById = ({ id, ...issueData }) => issueRepository.updateIssueByI
 
 const getAllRepoIssues = repositoryId => issueRepository.getRepositoryIssues(repositoryId);
 
+const getRepoIssues = query => issueRepository.getIssues(query);
+
 const getIssueById = id => issueRepository.getIssueById(id);
 
 const getAuthorId = issueId => issueRepository.getAuthorId(issueId);
@@ -27,5 +29,6 @@ module.exports = {
   getRepoOwnerId,
   deleteIssueById,
   closeIssueById,
-  reopenIssueById
+  reopenIssueById,
+  getRepoIssues
 };
