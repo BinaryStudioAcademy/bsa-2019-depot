@@ -3,7 +3,7 @@ const secretKey = process.env.AWS_SES_SECRET_KEY;
 const awsRegion = process.env.AWS_SES_REGION;
 const emailSender = process.env.AWS_SES_SENDER;
 const bucket = process.env.AWS_S3_BUCKET;
-const appHost = process.env.APP_HOST;
+const appHost = process.env.REACT_APP_SERVER_URL;
 const uuidv4 = require('uuid/v4');
 
 const options = {
