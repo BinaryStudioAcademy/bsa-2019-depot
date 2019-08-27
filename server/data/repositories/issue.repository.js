@@ -8,7 +8,7 @@ class IssueRepository extends BaseRepository {
     const issueDataWithNumber = {
       ...issueData,
       number
-    }
+    };
     return this.create(issueDataWithNumber);
   }
 

@@ -110,37 +110,8 @@ const getLastCommitOnBranch = async ({ user, name, branch }) => {
   };
 };
 
-const getFileContent = async ({
-  user, name, branch, filepath
-}) => {
-  const pathToRepo = repoHelper.getPathToRepo(user, name);
-  const repo = await NodeGit.Repository.open(pathToRepo);
-  const lastCommitOnBranch = await repo.getBranchCommit(branch);
-  const entry = await lastCommitOnBranch.getEntry(filepath);
-  const blob = await entry.getBlob();
-
-  return {
-    content: blob.isBinary() ? blob.content() : blob.toString(),
-    size: blob.rawsize()
-  };
-};
-
-const getPlainFileContent = async ({
-                                user, name, branch, filepath
-                              }) => {
-  const pathToRepo = repoHelper.getPathToRepo(user, name);
-  const repo = await NodeGit.Repository.open(pathToRepo);
-  const lastCommitOnBranch = await repo.getBranchCommit(branch);
-  const entry = await lastCommitOnBranch.getEntry(filepath);
-  const blob = await entry.getBlob();
-
-  return  blob.isBinary() ? blob.content() : blob.toString()
-};
-
 module.exports = {
   getBranches,
   getBranchTree,
-  getLastCommitOnBranch,
-  getFileContent,
-  getPlainFileContent
+  getLastCommitOnBranch
 };

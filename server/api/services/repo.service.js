@@ -196,9 +196,7 @@ const setStar = async (userId, repositoryId) => {
   return Number.isInteger(result) ? {} : starRepository.getStar(userId, repositoryId);
 };
 
-const getRepoData = async (repositoryId) => {
-  return repoRepository.getRepositoryById(repositoryId);
-};
+const getRepoData = async repositoryId => repoRepository.getRepositoryById(repositoryId);
 
 module.exports = {
   createRepo,

@@ -14,13 +14,16 @@ class RepositoryRepository extends BaseRepository {
 
   getRepositoryById(id) {
     return this.model.findOne(
-      { where: { id },
+      {
+        where: { id },
         include: [
           {
             model: UserModel,
             attributes: ['id', 'username']
           }
-        ] });
+        ]
+      }
+    );
   }
 
   getByUserWithOptions(userId, options = {}) {

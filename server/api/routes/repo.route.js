@@ -8,15 +8,14 @@ const {
   isEmpty,
   forkRepo,
   setStar,
-  updateByUserAndReponame,
-  getByUserAndReponame,
-  getRepoData
+  updateByUserAndReponame
 } = require('../services/repo.service');
 const { getCommits, getCommitDiff, getCommitCount } = require('../services/commit.service');
 const {
-  getBranches, getBranchTree, getLastCommitOnBranch, getFileContent, getPlainFileContent
+  getBranches, getBranchTree, getLastCommitOnBranch
 } = require('../services/branch.service');
 const { getAllRepoIssues, getRepoIssueByNumber } = require('../services/issue.service');
+const { getFileContent } = require('../services/files.service');
 const ownerOnlyMiddleware = require('../middlewares/owner-only.middleware');
 
 const router = Router();
@@ -79,12 +78,7 @@ router
   .get('/:owner/:repoName/:branchName/file', (req, res, next) => {
     const { owner, repoName, branchName } = req.params;
     const { filepath } = req.query;
-    getFileContent({
-      user: owner,
-      name: repoName,
-      branch: branchName,
-      filepath
-    })
+    getFileContent(owner, repoName, branchName, filepath)
       .then(fileData => res.send(fileData))
       .catch(next);
   })
@@ -164,19 +158,6 @@ router
     setStar(userId, repositoryId)
       .then(star => res.send(star))
       .catch(next);
-  })
-  .get('/:repoId/:branchName/file', (req, res, next) => {
-    const { repoId, branchName } = req.params;
-    const { filepath } = req.query;
-    getRepoData(repoId).then((data)  =>
-      getPlainFileContent({
-        user: data.user.username,
-        name: data.name,
-        branch: branchName,
-        filepath
-      }).then(fileData => res.send(fileData))
-       .catch(next)
-    ).catch(next)
   });
 
 module.exports = router;
