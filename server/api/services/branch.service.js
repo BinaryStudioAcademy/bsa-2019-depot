@@ -7,7 +7,7 @@ const getBranches = async ({ user, repoName }) => {
   const refNames = await repo.getReferenceNames(NodeGit.Reference.TYPE.LISTALL);
 
   // Cut the 'refs/heads/' from the reference name
-  return refNames.map(refName => refName.slice(11));
+  return refNames.map(refName => refName.replace('refs/heads/', ''));
 };
 
 const getLastModifiedCommit = async ({

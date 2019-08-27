@@ -1,5 +1,5 @@
 module.exports = {
-  up: (queryInterface, Sequelize) => queryInterface.sequelize.transaction(transaction => Promise.all([
+  up: queryInterface => queryInterface.sequelize.transaction(transaction => Promise.all([
     queryInterface.addConstraint('issues', ['number', 'repositoryId'], {
       type: 'unique',
       name: 'unique_number_per_repo'

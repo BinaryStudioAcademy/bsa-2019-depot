@@ -1,17 +1,23 @@
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.sequelize.transaction(transaction => Promise.all([
     queryInterface.addColumn(
-      'issues',
-      'number',
+      'repositories',
+      'defaultBranchId',
       {
-        allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
+        references: {
+          model: 'branches',
+          key: 'id'
+        }
       },
       { transaction }
     )
   ])),
-
   down: queryInterface => queryInterface.sequelize.transaction(transaction => Promise.all([
-    queryInterface.removeColumn('issues', 'number', { transaction })
+    queryInterface.removeColumn(
+      'repositories',
+      'defaultBranchId',
+      { transaction }
+    )
   ]))
 };
