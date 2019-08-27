@@ -51,12 +51,9 @@ async function sendPushData() {
 }
 
 async function getCommitsData(shaFrom, shaTo, repoOwner, repoName) {
-  let revList;
-  if (shaFrom === '0000000000000000000000000000000000000000') {
-    revList = await exec(`git rev-list ${shaTo} --not --branches=*`);
-  } else {
-    revList = await exec(`git rev-list ${shaFrom}..${shaTo}`);
-  }
+  const revList = (shaFrom === '0000000000000000000000000000000000000000')
+    ? await exec(`git rev-list ${shaTo} --not --branches=*`)
+    : await exec(`git rev-list ${shaFrom}..${shaTo}`);
   const commitShas = revList.stdout.split('\n').filter(line => line);
   const messagesAndEmails = await Promise.all(commitShas.map(sha => Promise.all([sha, getCommitMessage(sha), getAuthorEmail(sha), getCommitTime(sha)])));
 

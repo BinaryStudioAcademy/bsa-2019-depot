@@ -34,12 +34,9 @@ process.stdin.on('end', async () => {
 });
 
 async function checkCommitEmails(shaFrom, shaTo) {
-  let revList;
-  if (shaFrom === '0000000000000000000000000000000000000000') {
-    revList = await exec(`git rev-list ${shaTo} --not --branches=*`);
-  } else {
-    revList = await exec(`git rev-list ${shaFrom}..${shaTo}`);
-  }
+  const revList = (shaFrom === '0000000000000000000000000000000000000000')
+    ? await exec(`git rev-list ${shaTo} --not --branches=*`)
+    : await exec(`git rev-list ${shaFrom}..${shaTo}`);
   const commitShas = revList.stdout.split('\n').filter(line => line);
   await Promise.all(commitShas.map(sha => getAuthorEmail(sha)));
 }
