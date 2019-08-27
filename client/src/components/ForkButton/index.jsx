@@ -35,7 +35,7 @@ class ForkButton extends Component {
   render() {
     const {
       repoName,
-      currentRepoInfo: { forkedCount },
+      currentRepoInfo: { forksCount },
       isOwnRepo
     } = this.props;
     const { username, loading } = this.state;
@@ -54,7 +54,7 @@ class ForkButton extends Component {
                 Fork
               </Button>
               <Label as="a" basic pointing="left">
-                {forkedCount}
+                {forksCount}
               </Label>
             </Button>
           ) : (
@@ -64,7 +64,7 @@ class ForkButton extends Component {
                 Fork
               </Button>
               <Label as="a" basic pointing="left">
-                {forkedCount}
+                {forksCount}
               </Label>
             </Button>
           )
@@ -99,7 +99,7 @@ class ForkButton extends Component {
 ForkButton.propTypes = {
   owner: PropTypes.string,
   repoName: PropTypes.string,
-  forkedCount: PropTypes.number,
+  forksCount: PropTypes.number,
   loading: PropTypes.bool,
   username: PropTypes.string,
   currentRepoInfo: PropTypes.object.isRequired,
@@ -111,10 +111,10 @@ ForkButton.defaultProps = {
   repoName: '',
   loading: false,
   username: '',
-  forkedCount: 0
+  forksCount: 0
 };
 
-const mapStateToProps = ({ currentRepo: { currentRepoInfo } }) => ({
+const mapStateToProps = ({ currentRepo: { repository: { currentRepoInfo } } }) => ({
   currentRepoInfo
 });
 
