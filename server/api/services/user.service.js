@@ -36,9 +36,7 @@ const resetPassword = async ({ token, password }) => {
 };
 
 const updateUserSettings = async ({ id, settings }) => {
-  const {
-    name, bio, url, company, location, imgUrl
-  } = settings;
+  const { name, bio, url, company, location, imgUrl } = settings;
   const data = await UserRepository.updateUserById(id, {
     name,
     bio,
@@ -68,15 +66,14 @@ const deletePhoto = async ({ id }) => {
   });
   const data = await UserRepository.getById(id);
   return data;
+};
 
 const getUsersToInviting = async ({ orgID, username }) => {
   const allUsers = await UserRepository.findUserByLetter(username);
   const orgUsers = await OrgUserRepository.getAllOrganizationUsers(orgID);
   const usersIdInOrg = orgUsers.map(({ userId }) => userId);
 
-  const users = allUsers
-    .filter(({ id }) => !usersIdInOrg.includes(id))
-    .slice(0, 6);
+  const users = allUsers.filter(({ id }) => !usersIdInOrg.includes(id)).slice(0, 6);
   const usernames = users.map(user => user.username);
   return usernames;
 };

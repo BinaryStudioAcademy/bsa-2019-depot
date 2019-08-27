@@ -12,6 +12,7 @@ import '@uppy/dashboard/dist/style.css';
 import styles from './styles.module.scss';
 import { getUserImgLink } from '../../helpers/imageHelper';
 import { InputError } from '../../components/InputError';
+import { serverUrl } from '../../app.config';
 
 const Uppy = require('@uppy/core');
 const AwsS3 = require('@uppy/aws-s3');
@@ -58,7 +59,7 @@ class SettingsProfile extends Component {
         limit: 2,
         timeout: ms('1 minute'),
         host: 'http://localhost:3001',
-        companionUrl: 'http://localhost:3000',
+        companionUrl: serverUrl,
         serverHeaders: {
           Authorization: `Bearer ${token}`
         }
