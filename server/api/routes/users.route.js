@@ -9,7 +9,9 @@ const {
   getUserDetailed,
   getStars,
   getUsersToInviting,
-  getUsersOrganizations
+  getUsersOrganizations,
+  uploadPhoto,
+  deletePhoto
 } = require('../services/user.service');
 const { getReposData, getByUserAndReponame } = require('../services/repo.service');
 const { getCommitsAndCreatedRepoByDate } = require('../services/commit.service');
@@ -101,6 +103,18 @@ router.get('/:username/repos', (req, res, next) => {
 router.get('/:username/repos/:repo', (req, res, next) => {
   const { username, repo } = req.params;
   getByUserAndReponame({ owner: username, reponame: repo })
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.post('/image', (req, res, next) => {
+  uploadPhoto({ ...req.body })
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.delete('/image', (req, res, next) => {
+  deletePhoto({ ...req.body })
     .then(data => res.send(data))
     .catch(next);
 });

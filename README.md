@@ -127,6 +127,7 @@ _/client/.env_
 ```
 SKIP_PREFLIGHT_CHECK = true
 PORT = 3001  # default. has to be changed if it is different
+REACT_APP_URL = "http://localhost:3001"  # default. has to be changed if it is different
 REACT_APP_SERVER_URL = "http://localhost:3000"  # default. has to be changed if it is different
 
 ```
@@ -135,6 +136,7 @@ _/server/.env_
 
 ```
 APP_PORT = 3000
+APP_HOST = http://localhost:3000
 CLIENT_HOST = http://localhost:3001
 
 DB_NAME = depot # default. has to be changed to local DB name if it is different
@@ -153,6 +155,7 @@ AWS_SES_ACCESS_KEY = AKIAWBOCxxxxxxx # has to be replaced with actual aws ses ac
 AWS_SES_SECRET_KEY = EtKJdUrnWxxxxxxxxx # has to be replaced with actual aws ses secret key
 AWS_SES_REGION = us-east-1 # has to be replaced with actual aws region
 AWS_SES_SENDER = "Depotdepot.noreply@gmail.com" # default. has to be changed if it is different
+AWS_S3_BUCKET = xxxx-depot # has to be replaced with actual aws s3 bucket
 
 PUBLIC_KEY_PATH = /etc/ssh/ssh_host_rsa_key.pub # default for SSH server. Change to any public SSH key when running locally
 
