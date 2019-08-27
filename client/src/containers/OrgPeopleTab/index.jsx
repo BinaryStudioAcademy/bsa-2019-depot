@@ -43,7 +43,7 @@ class OrgPeopleTab extends React.Component {
         <div className={styles.memberListContainer}>
           <ul>
             {orgMembers.map(member => {
-              const {username, name , role} = member;
+              const { username, name, role } = member;
               return (
                 <li key={username} className={styles.memberItem}>
                   <div className={styles.memberImg}>

@@ -179,7 +179,24 @@ const modifyFile = async ({
     lastCommitOnBranch
   ]);
 
-  return repo.getCommit(commitId);
+  const commit = await repo.getCommit(commitId);
+
+  await repoHelper.syncDb(
+    [{
+      repoOwner: owner,
+      repoName,
+      sha: commit.sha(),
+      message,
+      userEmail: email,
+      createdAt: new Date()
+    }],
+    {
+      name: commitBranch,
+      newHeadSha: commit.sha(),
+    }
+  );
+
+  return commit;
 };
 
 const deleteFile = async ({
@@ -206,7 +223,24 @@ const deleteFile = async ({
     [lastCommitOnBranch]
   );
 
-  return repo.getCommit(commitId);
+  const commit = await repo.getCommit(commitId);
+
+  await repoHelper.syncDb(
+    [{
+      repoOwner: owner,
+      repoName,
+      sha: commit.sha(),
+      message: `Deleted ${filepath}`,
+      userEmail: email,
+      createdAt: new Date()
+    }],
+    {
+      name: branch,
+      newHeadSha: commit.sha(),
+    }
+  );
+
+  return commit;
 };
 
 const createCommit = async ({ ...commitData }) => {

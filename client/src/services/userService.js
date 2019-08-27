@@ -27,7 +27,7 @@ export const updateSettings = async request => {
   return response.json();
 };
 
-export const getKeys = async (userId) => {
+export const getKeys = async userId => {
   const response = await callWebApi({
     endpoint: `/api/users/${userId}/keys`,
     type: 'GET'

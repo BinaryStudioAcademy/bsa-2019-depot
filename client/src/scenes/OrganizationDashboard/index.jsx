@@ -56,12 +56,7 @@ class OrganizationDashboard extends React.Component {
   }
 
   render() {
-    const {
-      repositories,
-      orgMembers,
-      currentOrg,
-      isOwner
-    } = this.state;
+    const { repositories, orgMembers, currentOrg, isOwner } = this.state;
     return (
       <>
         <OrganizationHeader
