@@ -6,8 +6,14 @@ class IssueCommentRepository extends BaseRepository {
     return this.create(issueCommentData);
   }
 
-  updateIssueCommentById(id, { ...issueCommentData }) {
-    return this.updateById(id, issueCommentData);
+  async updateIssueCommentById(id, issueCommentData) {
+    const [, data] = await this.model.update(issueCommentData, {
+      where: { id },
+      returning: true,
+      plain: true
+    });
+
+    return data;
   }
 
   deleteIssueCommentById(id) {
@@ -24,6 +30,12 @@ class IssueCommentRepository extends BaseRepository {
         }
       ]
     });
+  }
+
+  async getAuthorId(id) {
+    const comment = await this.model.findOne({ where: { id } });
+    const { userId: authorId } = comment.get({ plain: true });
+    return authorId;
   }
 }
 
