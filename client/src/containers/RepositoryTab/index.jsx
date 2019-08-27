@@ -17,7 +17,6 @@ class RepositoryTab extends React.Component {
 
   async componentDidMount() {
     const {
-      fetchCurrentRepo,
       match: {
         params: { username, reponame }
       }
