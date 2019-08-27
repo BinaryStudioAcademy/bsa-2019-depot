@@ -50,7 +50,7 @@ class RepositoryPage extends React.Component {
       .filter(path => path)
       .map(param => `:${param}`)
       .join('/');
-      
+
     if (isLoading) {
       return <Spinner />;
     }
@@ -104,11 +104,13 @@ RepositoryPage.propTypes = {
 
 const mapStateToProps = ({
   currentRepo : {
-    currentRepoInfo: {
-      id,
-      issuesCount,
-      branches,
-      defaultBranch
+    repository: {
+      currentRepoInfo: {
+        id,
+        issuesCount,
+        branches,
+        defaultBranch
+      }
     }
   },
   isLoading
