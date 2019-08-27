@@ -75,8 +75,6 @@ class CreateIssuePage extends React.Component {
     const { body } = this.state;
     const {
       createIssue,
-      username,
-      reponame,
       repositoryId,
       userId,
       history,
@@ -86,8 +84,6 @@ class CreateIssuePage extends React.Component {
     createIssue({
       title,
       body,
-      username,
-      reponame,
       userId,
       repositoryId,
       isOpened: true

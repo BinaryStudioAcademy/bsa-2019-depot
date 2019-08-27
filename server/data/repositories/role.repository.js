@@ -5,6 +5,10 @@ class RoleRepository extends BaseRepository {
   getByName(name) {
     return this.model.findOne({ where: { name } });
   }
+
+  getRoleById(id) {
+    return this.model.findOne({ where: { id } });
+  }
 }
 
 module.exports = new RoleRepository(RoleModel);

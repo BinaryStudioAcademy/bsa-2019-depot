@@ -52,7 +52,6 @@ class OrgRepositoriesTab extends React.Component {
 OrgRepositoriesTab.propTypes = {
   orgMembers: PropTypes.any,
   orgInfo: PropTypes.any,
-  ownerId: PropTypes.any,
   isOwner: PropTypes.any,
   repositories: PropTypes.array
 };

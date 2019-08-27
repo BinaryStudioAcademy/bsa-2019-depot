@@ -111,5 +111,11 @@ router
       })
       .catch(next);
   });
+  .get('/:issueId/comments', (req, res, next) => {
+    const { issueId } = req.params;
+    getAllIssueComments({ issueId })
+      .then(result => res.send(result))
+      .catch(next);
+  });
 
 module.exports = router;

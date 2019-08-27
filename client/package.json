@@ -5,6 +5,9 @@
   "proxy": "http://localhost:3000",
   "dependencies": {
     "@primer/octicons-react": "^9.1.1",
+    "@uppy/aws-s3": "^1.2.0",
+    "@uppy/core": "^1.2.0",
+    "@uppy/react": "^1.2.0",
     "dotenv": "^8.0.0",
     "formik": "^1.5.8",
     "immutable": "^4.0.0-rc.12",
@@ -33,6 +36,7 @@
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.87.3",
     "showdown": "^1.9.0",
+    "socket.io-client": "^2.2.0",
     "yup": "^0.27.0"
   },
   "scripts": {
