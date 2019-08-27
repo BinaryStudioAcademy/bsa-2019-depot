@@ -27,8 +27,9 @@ class UserRepository extends BaseRepository {
     return this.model.findOne({ where: { username } });
   }
 
-  getUserById(id) {
-    return this.model.findOne({ where: { id } });
+  async getUserById(id) {
+    const user = await this.model.findOne({ where: { id } });
+    return user;
   }
 
   async setUserPassword(email, password) {

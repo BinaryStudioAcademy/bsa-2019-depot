@@ -6,9 +6,16 @@ const tokenHelper = require('../../helpers/token.helper');
 
 const getUserById = userId => UserRepository.getUserById(userId);
 
-const getUsersOrganizations = async userId => await OrgUserRepository.getUsersOrganizations(userId);
+const getUsersOrganizations = userId => OrgUserRepository.getUsersOrganizations(userId);
 
-const getUserDetailed = username => UserRepository.getUserDetailed(username);
+const getUserDetailed = async (username) => {
+  const user = await UserRepository.getUserDetailed(username);
+  if (!user) {
+    const errorObj = { status: 404, message: `User ${username} not found` };
+    return Promise.reject(errorObj);
+  }
+  return user;
+};
 
 const setUsername = async ({ id, username }) => {
   const data = await UserRepository.setUsernameById(id, username);
@@ -59,9 +66,7 @@ const getUsersToInviting = async ({ orgID, username }) => {
   const orgUsers = await OrgUserRepository.getAllOrganizationUsers(orgID);
   const usersIdInOrg = orgUsers.map(({ userId }) => userId);
 
-  const users = allUsers
-    .filter(({ id }) => !usersIdInOrg.includes(id))
-    .slice(0, 6);
+  const users = allUsers.filter(({ id }) => !usersIdInOrg.includes(id)).slice(0, 6);
   const usernames = users.map(user => user.username);
   return usernames;
 };

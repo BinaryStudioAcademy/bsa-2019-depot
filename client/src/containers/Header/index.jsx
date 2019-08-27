@@ -108,7 +108,7 @@ HeaderDesktopUnauth.propTypes = {
   sidebarOpened: PropTypes.bool.isRequired
 };
 
-const pullRequests = <a href="/">Pull requests</a>;
+const pullRequests = username => <a href={`/${username}/pull-requests`}>Pull requests</a>;
 const issues = username => <a href={`/${username}/issues`}>Issues</a>;
 
 const SidebarAuth = (closeSidebar, sidebarOpened, userName, avatar) => (
@@ -131,7 +131,7 @@ const SidebarAuth = (closeSidebar, sidebarOpened, userName, avatar) => (
     <Menu.Item as="div">
       <a href="/">Dashboard</a>
     </Menu.Item>
-    <Menu.Item as="div">{pullRequests}</Menu.Item>
+    <Menu.Item as="div">{pullRequests(userName)}</Menu.Item>
     <Menu.Item as="div">{issues(userName)}</Menu.Item>
     <Menu.Item as="div">
       <a href={`/${userName}`}>
@@ -186,7 +186,7 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
             <ul>
               <li>{logo}</li>
               <li>{SearchInp()}</li>
-              <li>{pullRequests}</li>
+              <li>{pullRequests(username)}</li>
               <li>{issues(username)}</li>
             </ul>
           </Responsive>
@@ -218,7 +218,7 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
               >
                 <Dropdown.Menu>
                   <Dropdown.Item href="/new">New repository</Dropdown.Item>
-                  <Dropdown.Item>Import repository</Dropdown.Item>
+                  <Dropdown.Item href="/import">Import repository</Dropdown.Item>
                   <Dropdown.Item href="/organizations/new">New organization</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
