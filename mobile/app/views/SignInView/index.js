@@ -1,10 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { View, TouchableOpacity, Text, StyleSheet, TextInput, Image, KeyboardAvoidingView } from 'react-native';
 
 import colors from '../../config/color.config';
 import imageLogo from '../../assets/depot-logo.png';
 
 class SignInView extends React.Component {
+  toSignUp = () => this.props.navigation.navigate('SignUp');
   render() {
     return (
       <KeyboardAvoidingView style={styles.container}>
@@ -18,7 +20,7 @@ class SignInView extends React.Component {
           <TouchableOpacity style={{ ...styles.button, ...styles.buttonGoogle }}>
             <Text style={{ ...styles.text, ...styles.textGoogle }}>{'Sign in with Google'}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.signUp}>
+          <TouchableOpacity style={styles.signIn} onPress={this.toSignUp}>
             <Text style={styles.textCreateAccount}>
               {'New to Depot? '}
               <Text style={{ ...styles.textCreateAccount, ...styles.link }}>Create an account</Text>
@@ -65,7 +67,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     width: '90%'
   },
-  signUp: {
+  signIn: {
     alignItems: 'center',
     borderColor: colors.white,
     borderRadius: 4,
@@ -96,5 +98,9 @@ const styles = StyleSheet.create({
     marginBottom: 20
   }
 });
+
+SignInView.propTypes = {
+  navigation: PropTypes.object
+};
 
 export default SignInView;
