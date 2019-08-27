@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import io from 'socket.io-client';
 import ReactMde from 'react-mde';
 import ReactMarkdown from 'react-markdown';
 import { CommitCommentItem } from '../CommitCommentItem';
@@ -81,11 +82,18 @@ class DiffCommitView extends Component {
   }
 
   async componentDidMount() {
+    this.initSocket();
     await this.fetchDiffs();
     const { id } = this.state.diffsData;
     if (id) {
       await this.fetchComments(id);
     }
+    this.socket.on('newCommitComment', async data => {
+      await this.setState({
+        ...this.state,
+        comments: [...this.state.comments, data]
+      });
+    });
   }
 
   onTabChange(selectedTab) {
@@ -94,6 +102,12 @@ class DiffCommitView extends Component {
 
   onBodyChange(body) {
     this.setState({ ...this.state, body });
+  }
+
+  initSocket() {
+    const { REACT_APP_SOCKET_SERVER, REACT_APP_SOCKET_SERVER_PORT } = process.env;
+    const address = `http://${REACT_APP_SOCKET_SERVER}:${REACT_APP_SOCKET_SERVER_PORT}`;
+    this.socket = io(address);
   }
 
   async onSubmit() {
@@ -105,6 +119,7 @@ class DiffCommitView extends Component {
       hash,
       body
     });
+    this.socket.emit('newCommitComment', newComment);
     await this.setState({
       ...this.state,
       comments: [...this.state.comments, newComment],

@@ -111,7 +111,7 @@ HeaderDesktopUnauth.propTypes = {
 const pullRequests = username => <a href={`/${username}/pull-requests`}>Pull requests</a>;
 const issues = username => <a href={`/${username}/issues`}>Issues</a>;
 
-const SidebarAuth = (closeSidebar, sidebarOpened, userName, avatar) => (
+const SidebarAuth = (closeSidebar, sidebarOpened, userName, imgUrl) => (
   <Sidebar
     as={Menu}
     animation="overlay"
@@ -135,7 +135,7 @@ const SidebarAuth = (closeSidebar, sidebarOpened, userName, avatar) => (
     <Menu.Item as="div">{issues(userName)}</Menu.Item>
     <Menu.Item as="div">
       <a href={`/${userName}`}>
-        {<img src={getUserImgLink(avatar)} alt="user" />}
+        {<img src={getUserImgLink(imgUrl)} alt="user" />}
         {userName}
       </a>
     </Menu.Item>
@@ -169,7 +169,7 @@ const StatusModal = (showStatusModal, hideModal) => {
   );
 };
 
-const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: { username, avatar } }) => {
+const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: { username, imgUrl } }) => {
   const [showStatusModal, setShowStatusModal] = useState(false);
   function showModal() {
     setShowStatusModal(true);
@@ -229,7 +229,7 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
                 icon={null}
                 trigger={
                   <div>
-                    {<img src={getUserImgLink(avatar)} alt="user" />}
+                    {<img src={getUserImgLink(imgUrl)} alt="user" />}
                     <Icon name="dropdown" />
                   </div>
                 }
@@ -258,7 +258,7 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
         </Grid.Column>
       </Grid>
 
-      {SidebarAuth(closeSidebar, sidebarOpened, username, avatar)}
+      {SidebarAuth(closeSidebar, sidebarOpened, username, imgUrl)}
       {StatusModal(showStatusModal, hideModal)}
     </div>
   );
@@ -270,23 +270,23 @@ HeaderDesktopAuth.propTypes = {
   sidebarOpened: PropTypes.bool.isRequired,
   options: PropTypes.exact({
     username: PropTypes.string,
-    avatar: PropTypes.string
+    imgUrl: PropTypes.string
   })
 };
 
-const Header = ({ isAuthorized, username, avatar }) => {
-  return isAuthorized ? WithSidebar(HeaderDesktopAuth, { username, avatar }) : WithSidebar(HeaderDesktopUnauth);
+const Header = ({ isAuthorized, username, imgUrl }) => {
+  return isAuthorized ? WithSidebar(HeaderDesktopAuth, { username, imgUrl }) : WithSidebar(HeaderDesktopUnauth);
 };
 
 const mapStateToProps = ({
   profile: {
     isAuthorized,
-    currentUser: { username, avatar }
+    currentUser: { username, imgUrl }
   }
 }) => ({
   isAuthorized,
   username,
-  avatar
+  imgUrl
 });
 
 export default connect(mapStateToProps)(Header);

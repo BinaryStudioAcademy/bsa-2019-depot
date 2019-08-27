@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import moment from 'moment';
 import Calendar from 'react-github-contribution-calendar';
 import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import { Container, Grid, Dropdown, Accordion } from 'semantic-ui-react';
-import Octicon, { Fold, Unfold, RepoPush } from '@primer/octicons-react';
+import Octicon, { Fold, Unfold, RepoPush, Repo } from '@primer/octicons-react';
 import * as commitsService from '../../services/commitsService';
 
 import styles from './styles.module.scss';
@@ -17,7 +17,7 @@ export class Overview extends React.Component {
       currentYear: moment().year(),
       userActivity: {
         userActivityByDate: {},
-        monthCommitsActivity: {}
+        userMonthActivity: {}
       }
     };
   }
@@ -27,7 +27,7 @@ export class Overview extends React.Component {
     this.setState({
       ...this.state,
       userActivity: {
-        monthCommitsActivity: monthActivity,
+        userMonthActivity: monthActivity,
         userActivityByDate: userActivitybyDate
       }
     });
@@ -87,7 +87,7 @@ export class Overview extends React.Component {
       }
     } = this.props;
     const {
-      userActivity: { userActivityByDate, monthCommitsActivity }
+      userActivity: { userActivityByDate, userMonthActivity }
     } = this.state;
     const { activeIndex, currentYear } = this.state;
     const currentYearContribution = this.currentYearContribution();
@@ -182,57 +182,98 @@ export class Overview extends React.Component {
                   </div>
                 </div>
               </Container>
-
-              {Object.entries(monthCommitsActivity).length > 0 &&
-                Object.entries(monthCommitsActivity).map(([date, monthActivityObject]) => {
-                  const monthAndYear = moment(date).format('MMMM YYYY');
-                  const commitCount = Object.keys(monthActivityObject).reduce(
-                    (acc, key) => acc + monthActivityObject[key],
-                    0
-                  );
-                  const numOfRepos = Object.keys(monthActivityObject).length;
-                  return (
-                    <>
-                      <Container className={styles.section_header}>
-                        <h2>Contribution activity</h2>
-                      </Container>
-                      <Container key={monthAndYear} className={styles.contribution_activity}>
-                        <h3>{monthAndYear}</h3>
-                        <div className={styles.contribution_activity_desc}>
-                          <span className={styles.contribution_activity_icon}>
-                            <Octicon icon={RepoPush} />
-                          </span>
-                          <Accordion>
-                            <Accordion.Title
-                              active={activeIndex === `commit-${monthAndYear}`}
-                              index={`commit-${monthAndYear}`}
-                              onClick={this.handleActivityState}
-                            >
-                              <p>
-                                Created {commitCount} commit{commitCount === 1 ? '' : 's'} in {numOfRepos} repositor
-                                {numOfRepos === 1 ? 'y' : 'ies'}
-                              </p>
-                              <Octicon icon={activeIndex === `commit-${monthAndYear}` ? Fold : Unfold} />
-                            </Accordion.Title>
-                            <Accordion.Content active={activeIndex === `commit-${monthAndYear}`}>
-                              {Object.entries(monthActivityObject).map(([repoName, repoCommits]) => {
-                                const link = `${username}/${repoName}`;
-                                return (
-                                  <div key={repoName}>
-                                    <Link to={link} className={styles.activity_link}>
-                                      {username}/{repoName}
-                                    </Link>{' '}
-                                    <span>{repoCommits} commits</span>
-                                  </div>
-                                );
-                              })}
-                            </Accordion.Content>
-                          </Accordion>
-                        </div>
-                      </Container>
-                    </>
-                  );
-                })}
+              <Container className={styles.section_header}>
+                <h2>Contribution activity</h2>
+              </Container>
+              {Object.entries(userMonthActivity).length > 0 &&
+                Object.entries(userMonthActivity)
+                  .sort((prev, next) => moment(next[0]).diff(moment(prev[0])))
+                  .map(([date, monthActivityObject]) => {
+                    const monthAndYear = moment(date).format('MMMM YYYY');
+                    const commitCount =
+                      monthActivityObject.commits &&
+                      Object.keys(monthActivityObject.commits).reduce((acc, key) => {
+                        return acc + monthActivityObject.commits[key];
+                      }, 0);
+                    const numOfCreatedRepos = monthActivityObject.createdRepos.length;
+                    const numOfCommittedRepos =
+                      monthActivityObject.commits && Object.keys(monthActivityObject.commits).length;
+                    return (
+                      <Fragment key={date}>
+                        <Container key={monthAndYear} className={styles.contribution_activity}>
+                          <h3>{monthAndYear}</h3>
+                          {monthActivityObject.commits && (
+                            <div className={styles.contribution_activity_desc}>
+                              <span className={styles.contribution_activity_icon}>
+                                <Octicon icon={RepoPush} />
+                              </span>
+                              <Accordion>
+                                <Accordion.Title
+                                  active={activeIndex === `commit-${monthAndYear}`}
+                                  index={`commit-${monthAndYear}`}
+                                  onClick={this.handleActivityState}
+                                >
+                                  <p>
+                                    Created {commitCount} commit{commitCount === 1 ? '' : 's'} in {numOfCommittedRepos}{' '}
+                                    repositor
+                                    {numOfCommittedRepos === 1 ? 'y' : 'ies'}
+                                  </p>
+                                  <Octicon icon={activeIndex === `commit-${monthAndYear}` ? Fold : Unfold} />
+                                </Accordion.Title>
+                                <Accordion.Content active={activeIndex === `commit-${monthAndYear}`}>
+                                  {Object.entries(monthActivityObject.commits).map(([repoName, repoCommits]) => {
+                                    const link = `${username}/${repoName}`;
+                                    return (
+                                      <div key={repoName}>
+                                        <Link to={link} className={styles.activity_link}>
+                                          {username}/{repoName}
+                                        </Link>{' '}
+                                        <span>
+                                          {repoCommits} commit{repoCommits === 1 ? '' : 's'}
+                                        </span>
+                                      </div>
+                                    );
+                                  })}
+                                </Accordion.Content>
+                              </Accordion>
+                            </div>
+                          )}
+                          {monthActivityObject.createdRepos && (
+                            <div className={styles.contribution_activity_desc}>
+                              <span className={styles.contribution_activity_icon}>
+                                <Octicon icon={Repo} />
+                              </span>
+                              <Accordion>
+                                <Accordion.Title
+                                  active={activeIndex === `repo-${monthAndYear}`}
+                                  index={`repo-${monthAndYear}`}
+                                  onClick={this.handleActivityState}
+                                >
+                                  <p>
+                                    Created {numOfCreatedRepos} repositor
+                                    {numOfCreatedRepos === 1 ? 'y' : 'ies'}
+                                  </p>
+                                  <Octicon icon={activeIndex === `repo-${monthAndYear}` ? Fold : Unfold} />
+                                </Accordion.Title>
+                                <Accordion.Content active={activeIndex === `repo-${monthAndYear}`}>
+                                  {monthActivityObject.createdRepos.map(repoName => {
+                                    const link = `${username}/${repoName}`;
+                                    return (
+                                      <div key={repoName}>
+                                        <Link to={link} className={styles.activity_link}>
+                                          {username}/{repoName}
+                                        </Link>{' '}
+                                      </div>
+                                    );
+                                  })}
+                                </Accordion.Content>
+                              </Accordion>
+                            </div>
+                          )}
+                        </Container>
+                      </Fragment>
+                    );
+                  })}
 
               {/* <Link to="" className={styles.load_more_activity}>
                 Show more activity
@@ -260,7 +301,7 @@ Overview.defaultProps = {
   panelColors: PropTypes.array,
   contributionValues: PropTypes.object.isRequired,
   userActivityByDate: {},
-  monthCommitsActivity: {}
+  userMonthActivity: {}
 };
 
 Overview.propTypes = {
@@ -271,7 +312,7 @@ Overview.propTypes = {
     url: PropTypes.string.isRequired
   }).isRequired,
   userActivityByDate: PropTypes.object.isRequired,
-  monthCommitsActivity: PropTypes.object.isRequired
+  userMonthActivity: PropTypes.object.isRequired
 };
 
 export default withRouter(Overview);

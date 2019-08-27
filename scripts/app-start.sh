@@ -1,4 +1,7 @@
 #!/bin/bash
+cd /home/git/bsa-2019-depot/scripts/git-hooks
+chmod u+x pre-receive
+chmod u+x update
 cd /home/git/
 . setEnv.sh
 cd /home/git/bsa-2019-depot/server/

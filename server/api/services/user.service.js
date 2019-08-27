@@ -61,6 +61,22 @@ const updateUserSettings = async ({ id, settings }) => {
 
 const getStars = async username => StarRepository.getStars(username);
 
+const uploadPhoto = async ({ id, imgUrl }) => {
+  await UserRepository.updateUserById(id, {
+    imgUrl
+  });
+  const data = await UserRepository.getById(id);
+  return data;
+};
+
+const deletePhoto = async ({ id }) => {
+  await UserRepository.updateUserById(id, {
+    imgUrl: null
+  });
+  const data = await UserRepository.getById(id);
+  return data;
+};
+
 const getUsersToInviting = async ({ orgID, username }) => {
   const allUsers = await UserRepository.findUserByLetter(username);
   const orgUsers = await OrgUserRepository.getAllOrganizationUsers(orgID);
@@ -80,5 +96,7 @@ module.exports = {
   getUserDetailed,
   getStars,
   getUsersToInviting,
-  getUsersOrganizations
+  getUsersOrganizations,
+  uploadPhoto,
+  deletePhoto
 };
