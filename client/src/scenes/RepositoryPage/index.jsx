@@ -16,6 +16,7 @@ import BranchesTab from '../../containers/BranchesTab/index';
 import CreateIssuePage from '../../containers/CreateIssuePage';
 import PrivateTab from '../../containers/PrivateTab';
 import { fetchCurrentRepo } from '../../routines/routines';
+import Spinner from '../../components/Spinner';
 
 class RepositoryPage extends React.Component {
   async componentDidMount() {
@@ -32,26 +33,34 @@ class RepositoryPage extends React.Component {
   render() {
     const {
       match,
-      issues,
-      location: { pathname }
+      issuesCount,
+      branches,
+      defaultBranch,
+      location: { pathname },
+      isLoading
     } = this.props;
     const { username, reponame } = match.params;
 
     const branchExists = pathname.match(/tree\/.+/);
     let branch = '';
     if (branchExists) branch = branchExists[0].split('/')[1]; // branchExists[0] has format 'tree/nameOfBranch/...'
-    const pathToDir = pathname.replace(`${match.url}/tree/${branch || 'master'}`, '').split('/');
+    branch = branch || defaultBranch || branches[0];
+    const pathToDir = pathname.replace(`${match.url}/tree/${branch}`, '').split('/');
     const params = pathToDir
       .filter(path => path)
       .map(param => `:${param}`)
       .join('/');
+      
+    if (isLoading) {
+      return <Spinner />;
+    }
 
     return (
       <>
         <RepositoryHeader
           owner={username}
           repoName={reponame}
-          issueCount={0}
+          issueCount={issuesCount}
           activePage={pathname.split('/')[3]}
           baseUrl={match.url}
         />
@@ -93,11 +102,29 @@ RepositoryPage.propTypes = {
   }).isRequired
 };
 
+const mapStateToProps = ({
+  currentRepo : {
+    currentRepoInfo: {
+      id,
+      issuesCount,
+      branches,
+      defaultBranch
+    }
+  },
+  isLoading
+}) => ({
+  id,
+  issuesCount,
+  branches,
+  defaultBranch,
+  isLoading
+});
+
 const mapDispatchToProps = {
   fetchCurrentRepo
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(RepositoryPage);

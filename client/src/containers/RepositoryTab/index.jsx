@@ -30,12 +30,7 @@ class RepositoryTab extends React.Component {
   }
 
   render() {
-    const {
-      history,
-      match: {
-        params: { username, reponame, branch }
-      }
-    } = this.props;
+    // history={history} username={username} reponame={reponame} branch={branch || null}
     const { isLoading, isEmpty } = this.state;
     if (isLoading) {
       return <Spinner />;
@@ -44,13 +39,12 @@ class RepositoryTab extends React.Component {
     return isEmpty ? (
       <EmptyRepositoryTab />
     ) : (
-      <CodeTab history={history} username={username} reponame={reponame} branch={branch || null} />
+      <CodeTab />
     );
   }
 }
 
 RepositoryTab.propTypes = {
-  fetchCurrentRepo: PropTypes.func.isRequired,
   history: PropTypes.any,
   match: PropTypes.shape({
     params: PropTypes.shape({
@@ -61,11 +55,4 @@ RepositoryTab.propTypes = {
   })
 };
 
-const mapDispatchToProps = {
-  fetchCurrentRepo
-};
-
-export default connect(
-  null,
-  mapDispatchToProps
-)(RepositoryTab);
+export default RepositoryTab;

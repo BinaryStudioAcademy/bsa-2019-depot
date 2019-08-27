@@ -468,11 +468,25 @@ class CodeTab extends React.Component {
   }
 }
 
-const mapStateToProps = ({ lastCommitData, branchesData, fileTreeData, profile }) => ({
+const mapStateToProps = ({
+  currentRepo: {
+    currentRepoInfo: {
+      id
+    }
+  },
   lastCommitData,
   branchesData,
   fileTreeData,
-  currentUser: profile.currentUser.username
+  profile: {
+    currentUser: {
+      username
+    }
+  }
+}) => ({
+  lastCommitData,
+  branchesData,
+  fileTreeData,
+  username
 });
 
 const mapDispatchToProps = {
