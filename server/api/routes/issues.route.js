@@ -7,7 +7,8 @@ const {
   closeIssueById,
   reopenIssueById,
   getAuthorId,
-  getRepoOwnerId
+  getRepoOwnerId,
+  getAllIssueComments
 } = require('../services/issue.service');
 
 const router = Router();
@@ -60,7 +61,7 @@ router
       .then(result => res.send(result))
       .catch(next);
   })
-  .get('/:id/close', async (req, res, next) => {
+  .put('/:id/close', async (req, res, next) => {
     const { id } = req.params;
     const userId = req.user.id;
     const authorId = getAuthorId(id);
@@ -72,10 +73,10 @@ router
     }
 
     closeIssueById(id)
-      .then(result => res.send(result))
+      .then(([, data]) => res.send(data))
       .catch(next);
   })
-  .get('/:id/reopen', async (req, res, next) => {
+  .put('/:id/reopen', async (req, res, next) => {
     const { id } = req.params;
     const userId = req.user.id;
     const authorId = getAuthorId(id);
@@ -87,7 +88,7 @@ router
     }
 
     reopenIssueById(id)
-      .then(result => res.send(result))
+      .then(([, data]) => res.send(data))
       .catch(next);
   })
   .delete('/:id', (req, res, next) => {
@@ -110,7 +111,7 @@ router
         }
       })
       .catch(next);
-  });
+  })
   .get('/:issueId/comments', (req, res, next) => {
     const { issueId } = req.params;
     getAllIssueComments({ issueId })
