@@ -1,8 +1,6 @@
 const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
-const {
-  IssueModel, UserModel, RepositoryModel, IssueCommentModel
-} = require('../models/index');
+const { IssueModel, UserModel, RepositoryModel } = require('../models/index');
 const sequelize = require('../db/connection');
 
 const { Op } = Sequelize;
@@ -18,7 +16,9 @@ const parseSortQuery = (sort) => {
   case 'updated_desc':
     return [['updatedAt', 'DESC']];
   case 'comments_desc':
-    return [[sequelize.literal('commentsCount'), 'DESC']];
+    return [[sequelize.literal('"commentsCount"'), 'DESC']];
+  case 'comments_asc':
+    return [[sequelize.literal('"commentsCount"'), 'ASC']];
   default:
     return [];
   }
@@ -95,7 +95,6 @@ class IssueRepository extends BaseRepository {
         repositoryId,
         ...(title ? { body: { [Op.substring]: title } } : {})
       },
-
       attributes: {
         include: [
           [
