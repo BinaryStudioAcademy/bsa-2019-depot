@@ -84,8 +84,7 @@ const createRepo = async (repoData) => {
       );
     })
     .catch(() => {
-      const errorObj = { status: 404, message: 'Error! Repos wasn`t created' };
-      Promise.reject(errorObj);
+      Promise.reject(new CustomError(404, 'Error! Repos wasn`t created'));
     });
 
   await repoRepository.create({
@@ -236,7 +235,7 @@ const forkRepo = async ({
 
     return { status: true, username };
   } catch (err) {
-    return { status: false, error: err.message };
+    return Promise.reject(new CustomError(500, err.message));
   }
 };
 
