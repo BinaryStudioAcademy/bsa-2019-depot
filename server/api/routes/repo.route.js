@@ -161,14 +161,12 @@ router
   .put('/:owner/:reponame/change-type', ownerOnlyMiddleware, (req, res, next) => {
     const { owner, reponame } = req.params;
     const { userId, repositoryId, isPublic } = req.body;
-
-    if (!isPublic) {
-      deleteStarsByRepoId(userId, repositoryId);
-    }
-
     updateByUserAndReponame({ owner, reponame, data: req.body })
       .then(data => res.send(data))
       .catch(next);
+    if (!isPublic) {
+      deleteStarsByRepoId(userId, repositoryId);
+    }
   })
   .put('/star', (req, res, next) => {
     const { userId, repositoryId } = req.body;
