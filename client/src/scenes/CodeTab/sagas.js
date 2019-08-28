@@ -9,6 +9,8 @@ function* branchRequest({ payload: { repoID, branch } }) {
     yield put(fetchBranch.success(response));
   } catch (error) {
     yield put(fetchBranch.failure(error.message));
+  } finally {
+    yield put(fetchBranch.fulfill());
   }
 }
 
