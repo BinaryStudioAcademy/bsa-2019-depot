@@ -19,7 +19,7 @@ exports.config = {
   suites: {
     //login: [testPattern]
   },
-  sync: false,
+  //sync: false,
   // Patterns to exclude.
   exclude: [
     // 'path/to/excluded/files'
