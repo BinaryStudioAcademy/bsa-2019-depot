@@ -26,14 +26,18 @@ class Issues extends Component {
   }
 
   async componentDidMount() {
-    await this.fetchIssues();
+    const {
+      match: {
+        params: { username }
+      }
+    } = this.props;
+    await this.fetchIssues(username);
   }
 
-  async fetchIssues(isOpened = true) {
-    const { userId } = this.props;
+  async fetchIssues(username, isOpened = true) {
     try {
       await this.setLoading(true);
-      const issuesData = await issuesService.getAllIssues(userId, isOpened);
+      const issuesData = await issuesService.getAllIssues(username, isOpened);
 
       if (isOpened) {
         this.setState({
@@ -52,12 +56,14 @@ class Issues extends Component {
       await this.setLoading(false);
     }
   }
+
   async setLoading(loading) {
     await this.setState({
       ...this.state,
       loading
     });
   }
+
   renderFilteredIssues = () => {
     const { issues } = this.props;
     const { filterByTitle } = this.state;
@@ -173,15 +179,13 @@ Issues.propTypes = {
   }),
   userId: PropTypes.string.isRequired,
   fetchIssues: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired
+  loading: PropTypes.bool.isRequired,
+  match: PropTypes.object.isRequired,
+  currentUser: PropTypes.object
 };
 
-const mapStateToProps = ({
-  profile: {
-    currentUser: { id }
-  }
-}) => ({
-  userId: id
+const mapStateToProps = ({ profile: { currentUser } }) => ({
+  currentUser
 });
 
 export default connect(mapStateToProps)(Issues);

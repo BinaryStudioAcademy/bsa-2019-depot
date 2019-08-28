@@ -10,6 +10,8 @@ const getUsersOrganizations = async userId => OrgUserRepository.getUsersOrganiza
 
 const getUserDetailed = username => UserRepository.getUserDetailed(username);
 
+const getUserByUsername= username => UserRepository.getByUsername(username);
+
 const setUsername = async ({ id, username }) => {
   const data = await UserRepository.setUsernameById(id, username);
   return {
@@ -80,6 +82,7 @@ const getUsersToInviting = async ({ orgID, username }) => {
 
 module.exports = {
   getUserById,
+  getUserByUsername,
   setUsername,
   checkUsernameExists,
   updateUserSettings,

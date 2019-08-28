@@ -2,8 +2,6 @@ const sequelize  = require ('../db/connection');
 const BaseRepository = require('./base.repository');
 const { IssueModel, UserModel, RepositoryModel } = require('../models/index');
 
-const openCase = bool => `CASE WHEN "issues"."isOpened" = ${bool} THEN 1 ELSE 0 END`;
-
 class IssueRepository extends BaseRepository {
   async addIssue({ ...issueData }) {
     const { repositoryId } = issueData;
