@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
       title: DataTypes.STRING,
       body: DataTypes.STRING,
       isOpened: DataTypes.BOOLEAN,
-      number: DataTypes.INTEGER,
+      number: DataTypes.INTEGER
     },
     {
       paranoid: true,

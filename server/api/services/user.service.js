@@ -6,7 +6,7 @@ const tokenHelper = require('../../helpers/token.helper');
 
 const getUserById = userId => UserRepository.getUserById(userId);
 
-const getUsersOrganizations = async userId => await OrgUserRepository.getUsersOrganizations(userId);
+const getUsersOrganizations = async userId => OrgUserRepository.getUsersOrganizations(userId);
 
 const getUserDetailed = username => UserRepository.getUserDetailed(username);
 
@@ -36,9 +36,7 @@ const resetPassword = async ({ token, password }) => {
 };
 
 const updateUserSettings = async ({ id, settings }) => {
-  const {
-    name, bio, url, company, location, imgUrl
-  } = settings;
+  const { name, bio, url, company, location, imgUrl } = settings;
   const data = await UserRepository.updateUserById(id, {
     name,
     bio,
@@ -54,14 +52,28 @@ const updateUserSettings = async ({ id, settings }) => {
 
 const getStars = async username => StarRepository.getStars(username);
 
+const uploadPhoto = async ({ id, imgUrl }) => {
+  await UserRepository.updateUserById(id, {
+    imgUrl
+  });
+  const data = await UserRepository.getById(id);
+  return data;
+};
+
+const deletePhoto = async ({ id }) => {
+  await UserRepository.updateUserById(id, {
+    imgUrl: null
+  });
+  const data = await UserRepository.getById(id);
+  return data;
+};
+
 const getUsersToInviting = async ({ orgID, username }) => {
   const allUsers = await UserRepository.findUserByLetter(username);
   const orgUsers = await OrgUserRepository.getAllOrganizationUsers(orgID);
   const usersIdInOrg = orgUsers.map(({ userId }) => userId);
 
-  const users = allUsers
-    .filter(({ id }) => !usersIdInOrg.includes(id))
-    .slice(0, 6);
+  const users = allUsers.filter(({ id }) => !usersIdInOrg.includes(id)).slice(0, 6);
   const usernames = users.map(user => user.username);
   return usernames;
 };
@@ -75,5 +87,7 @@ module.exports = {
   getUserDetailed,
   getStars,
   getUsersToInviting,
-  getUsersOrganizations
+  getUsersOrganizations,
+  uploadPhoto,
+  deletePhoto
 };

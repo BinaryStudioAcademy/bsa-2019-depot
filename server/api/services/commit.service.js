@@ -86,8 +86,10 @@ const getCommitsAndCreatedRepoByDate = async (data) => {
   return { userActivitybyDate, monthActivity };
 };
 
-const getCommits = async ({ user, name, branch }) => {
-  const pathToRepo = repoHelper.getPathToRepo(user, name);
+const getCommits = async (branch, repoId) => {
+  const { name, userId } = await RepoRepository.getById(repoId);
+  const { username } = await userRepository.getById(userId);
+  const pathToRepo = repoHelper.getPathToRepo(username, name);
   const allCommits = [];
   await NodeGit.Repository.open(pathToRepo)
     .then(repo => repo.getBranchCommit(branch))
@@ -179,7 +181,26 @@ const modifyFile = async ({
     lastCommitOnBranch
   ]);
 
-  return repo.getCommit(commitId);
+  const commit = await repo.getCommit(commitId);
+
+  await repoHelper.syncDb(
+    [
+      {
+        repoOwner: owner,
+        repoName,
+        sha: commit.sha(),
+        message,
+        userEmail: email,
+        createdAt: new Date()
+      }
+    ],
+    {
+      name: commitBranch,
+      newHeadSha: commit.sha()
+    }
+  );
+
+  return commit;
 };
 
 const deleteFile = async ({
@@ -206,7 +227,26 @@ const deleteFile = async ({
     [lastCommitOnBranch]
   );
 
-  return repo.getCommit(commitId);
+  const commit = await repo.getCommit(commitId);
+
+  await repoHelper.syncDb(
+    [
+      {
+        repoOwner: owner,
+        repoName,
+        sha: commit.sha(),
+        message: `Deleted ${filepath}`,
+        userEmail: email,
+        createdAt: new Date()
+      }
+    ],
+    {
+      name: branch,
+      newHeadSha: commit.sha()
+    }
+  );
+
+  return commit;
 };
 
 const createCommit = async ({ ...commitData }) => {

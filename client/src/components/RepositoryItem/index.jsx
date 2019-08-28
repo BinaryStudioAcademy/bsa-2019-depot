@@ -8,6 +8,7 @@ import { Button } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
 import { getCommits } from '../../services/commitsService';
 import { checkIfEmpty } from '../../services/repositoryService';
+import { getBranches } from '../../services/branchesService';
 import moment from 'moment';
 
 import styles from './styles.module.scss';
@@ -34,15 +35,26 @@ class RepositoryItem extends React.Component {
     await this.checkIfEmpty(username, name);
 
     const { isEmpty } = this.state;
+
     if (!isEmpty) {
-      //sometimes we have repository in DB, but don't have folder on the server, so
       try {
-        await this.getRepoCommits(username, name, 'master');
+        await this.getRepoBranches(username, name);
+        const { repoBranches } = this.state;
+        let allRepoCommits = [];
+        repoBranches.forEach(async branch => {
+          const allBranchCommits = this.getRepoCommits(username, name, branch);
+          allRepoCommits.push(allBranchCommits);
+        });
+        Promise.all(allRepoCommits).then(data => {
+          const allRepoCommitsSorted = data.flat().sort((a, b) => new Date(b.date) - new Date(a.date));
+          const lastCommitDate = moment(allRepoCommitsSorted[0].date).fromNow();
+          this.setState({ repoCommits: allRepoCommitsSorted, updatedAt: lastCommitDate });
+          const { repoCommits } = this.state;
+          this.groupCommitsByDay(repoCommits);
+        });
       } catch (error) {
         return error;
       }
-      const { repoCommits } = this.state;
-      this.groupCommitsByDay(repoCommits);
     }
   }
 
@@ -51,10 +63,13 @@ class RepositoryItem extends React.Component {
     this.setState({ isEmpty: data.isEmpty });
   }
 
-  async getRepoCommits(username, reponame, branch) {
-    const commits = await getCommits(username, reponame, branch);
-    const lastCommitDate = moment(commits[0].date).fromNow();
-    this.setState({ repoCommits: commits, updatedAt: lastCommitDate });
+  async getRepoBranches(username, reponame) {
+    const branches = await getBranches(username, reponame);
+    this.setState({ repoBranches: branches });
+  }
+
+  getRepoCommits(username, reponame, branch) {
+    return getCommits(username, reponame, branch);
   }
 
   starClickHandler() {
@@ -153,10 +168,6 @@ class RepositoryItem extends React.Component {
     );
   }
 }
-
-RepositoryItem.defaultProps = {
-  data: []
-};
 
 RepositoryItem.propTypes = {
   repo: PropTypes.object,

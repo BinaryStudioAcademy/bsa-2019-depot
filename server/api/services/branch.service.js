@@ -1,14 +1,10 @@
 const NodeGit = require('nodegit');
 const repoHelper = require('../../helpers/repo.helper');
+const branchRepository = require('../../data/repositories/branch.repository');
 
-const getBranches = async ({ user, repoName }) => {
-  const pathToRepo = repoHelper.getPathToRepo(user, repoName);
-  const repo = await NodeGit.Repository.open(pathToRepo);
-  const refNames = await repo.getReferenceNames(NodeGit.Reference.TYPE.LISTALL);
+const getBranches = repoId => branchRepository.getByRepoId(repoId);
 
-  // Cut the 'refs/heads/' from the reference name
-  return refNames.map(refName => refName.slice(11));
-};
+const getBranchInfo = (branchName, repoId) => branchRepository.getByNameAndRepoId(branchName, repoId);
 
 const getLastModifiedCommit = async ({
   user, name, branch, entry
@@ -97,19 +93,6 @@ const getBranchTree = async ({
   };
 };
 
-const getLastCommitOnBranch = async ({ user, name, branch }) => {
-  const pathToRepo = repoHelper.getPathToRepo(user, name);
-  const repo = await NodeGit.Repository.open(pathToRepo);
-  const lastCommitOnBranch = await repo.getBranchCommit(branch);
-
-  return {
-    sha: lastCommitOnBranch.sha(),
-    author: lastCommitOnBranch.author().name(),
-    date: lastCommitOnBranch.date(),
-    message: lastCommitOnBranch.message()
-  };
-};
-
 const getFileContent = async ({
   user, name, branch, filepath
 }) => {
@@ -127,7 +110,7 @@ const getFileContent = async ({
 
 module.exports = {
   getBranches,
+  getBranchInfo,
   getBranchTree,
-  getLastCommitOnBranch,
   getFileContent
 };

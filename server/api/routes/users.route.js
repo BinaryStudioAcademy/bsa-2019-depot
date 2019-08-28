@@ -9,7 +9,9 @@ const {
   getUserDetailed,
   getStars,
   getUsersToInviting,
-  getUsersOrganizations
+  getUsersOrganizations,
+  uploadPhoto,
+  deletePhoto
 } = require('../services/user.service');
 const { getReposData, getByUserAndReponame } = require('../services/repo.service');
 const { getCommitsAndCreatedRepoByDate } = require('../services/commit.service');
@@ -111,6 +113,18 @@ router.get('/:username/repos/:repo', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+});
+
+router.post('/image', (req, res, next) => {
+  uploadPhoto({ ...req.body })
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.delete('/image', (req, res, next) => {
+  deletePhoto({ ...req.body })
+    .then(data => res.send(data))
+    .catch(next);
 });
 
 module.exports = router;

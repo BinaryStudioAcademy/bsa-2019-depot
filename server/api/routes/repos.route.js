@@ -12,7 +12,7 @@ const {
 } = require('../services/repo.service');
 const { getCommits, getCommitDiff, getCommitCount } = require('../services/commit.service');
 const {
-  getBranches, getBranchTree, getLastCommitOnBranch, getFileContent
+  getBranches, getBranchTree, getFileContent, getBranchInfo
 } = require('../services/branch.service');
 const { getAllRepoIssues, getRepoIssueByNumber } = require('../services/issue.service');
 const ownerOnlyMiddleware = require('../middlewares/owner-only.middleware');
@@ -38,11 +38,39 @@ router
       })
       .catch(next);
   })
-  .get('/:owner/:repoName/:branchName/commits', (req, res, next) => {
-    const { owner, repoName, branchName } = req.params;
-    getCommits({ user: owner, name: repoName, branch: branchName })
+  .get('/:repoId/branches/:branch/commits', (req, res, next) => {
+    const { repoId, branch } = req.params;
+    getCommits(branch, repoId)
       .then(commits => res.send(commits))
       .catch(next);
+  })
+  .get('/:repoId/branches/:branch', async (req, res, next) => {
+    let response;
+    try {
+      const { repoId, branch: branchName } = req.params;
+      const branchInfo = await getBranchInfo(branchName, repoId);
+      const {
+        repository: { name: repoName },
+        headCommit: {
+          user: { username }
+        },
+        name
+      } = branchInfo.get({ plain: true });
+      const { pathToDir } = req.query;
+      const branchFileTree = await getBranchTree({
+        user: username,
+        name: repoName,
+        branch: name,
+        pathToDir
+      });
+      response = {
+        ...branchInfo.get({ plain: true }),
+        fileTree: branchFileTree
+      };
+    } catch (error) {
+      next(error);
+    }
+    return res.send(response);
   })
   .get('/:owner/:repoName/:branchName/count', (req, res, next) => {
     const { owner, repoName, branchName } = req.params;
@@ -50,28 +78,16 @@ router
       .then(count => res.send(count))
       .catch(next);
   })
-  .get('/:owner/:repoName/branches', (req, res, next) => {
-    const { owner, repoName } = req.params;
-    getBranches({ user: owner, repoName })
-      .then(branches => res.send(branches))
+  .get('/:repoId/branches', (req, res, next) => {
+    const { repoId } = req.params;
+    getBranches(repoId)
+      .then(branches => res.send(branches.map(branch => branch.name)))
       .catch(next);
   })
   .get('/:owner/:repoName/:hash/commit', (req, res, next) => {
     const { owner, repoName, hash } = req.params;
     getCommitDiff({ user: owner, name: repoName, hash })
       .then(data => res.send(data))
-      .catch(next);
-  })
-  .get('/:owner/:repoName/:branchName/tree', (req, res, next) => {
-    const { owner, repoName, branchName } = req.params;
-    const { pathToDir } = req.query;
-    getBranchTree({
-      user: owner,
-      name: repoName,
-      branch: branchName,
-      pathToDir
-    })
-      .then(tree => res.send(tree))
       .catch(next);
   })
   .get('/:owner/:repoName/:branchName/file', (req, res, next) => {
@@ -84,12 +100,6 @@ router
       filepath
     })
       .then(fileData => res.send(fileData))
-      .catch(next);
-  })
-  .get('/:owner/:repoName/:branchName/last-commit', (req, res, next) => {
-    const { owner, repoName, branchName } = req.params;
-    getLastCommitOnBranch({ user: owner, name: repoName, branch: branchName })
-      .then(commit => res.send(commit))
       .catch(next);
   })
   .get('/:owner/:repoName/settings', ownerOnlyMiddleware, (req, res) => {
