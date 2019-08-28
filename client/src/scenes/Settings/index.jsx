@@ -9,8 +9,6 @@ import KeysPage from '../../containers/KeysPage';
 import NewKeysPage from '../../containers/NewKeyPage';
 import OrganizationsPage from '../../containers/OrganizationsPage';
 
-import styles from './styles.module.scss';
-
 const redirectToProfile = () => <Redirect to="/settings/profile" />;
 
 const Settings = ({ match }) => {
@@ -19,7 +17,7 @@ const Settings = ({ match }) => {
       <Divider hidden />
       <Grid container>
         <Grid.Column computer={4} tablet={8} mobile={16}>
-          <Menu vertical className={styles.settingsMenu}>
+          <Menu vertical>
             <Menu.Item header>Personal settings</Menu.Item>
             <NavLink to={`${match.url}/profile`} activeClassName="active">
               <Menu.Item>
