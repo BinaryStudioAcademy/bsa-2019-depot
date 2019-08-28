@@ -70,6 +70,7 @@ class SignUpView extends React.Component {
             placeholder={'Password'}
             style={styles.textInput}
             onChangeText={this.handleChangePassword}
+            secureTextEntry={true}
           />
           <TouchableOpacity style={styles.button} onPress={this.OnSignUp}>
             <Text style={styles.text}>{'Sign Up for Depot'}</Text>

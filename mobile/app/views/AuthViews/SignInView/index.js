@@ -55,6 +55,7 @@ class SignInView extends React.Component {
             placeholder={'Password'}
             style={styles.textInput}
             onChangeText={this.handleChangePassword}
+            secureTextEntry={true}
           />
           <TouchableOpacity style={styles.button} onPress={this.onLogin}>
             <Text style={styles.text}>{'Sign In'}</Text>
