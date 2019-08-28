@@ -88,8 +88,16 @@ class IssueRepository extends BaseRepository {
     });
   }
 
+  getIssueByIdNumber(repositoryId, number) {
+    return this.model.findAll({
+      where: {
+        repositoryId,
+        number
+      }
+    });
+  }
+
   getIssues(repositoryId, sort, author, title) {
-    //
     return this.model.findAll({
       where: {
         repositoryId,
@@ -118,15 +126,10 @@ class IssueRepository extends BaseRepository {
     });
   }
 
-  getRepoIssueByNumber({ username, name, number }) {
+  getRepoIssueByNumber(name, number) {
     return this.model.findOne({
       where: { number },
       include: [
-        {
-          model: UserModel,
-          attributes: [],
-          where: { username }
-        },
         {
           model: RepositoryModel,
           attributes: [],

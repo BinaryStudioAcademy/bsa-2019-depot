@@ -12,12 +12,16 @@ const getAllRepoIssues = async (repositoryId) => {
 };
 
 const getRepoIssues = (repositoryId, sort, author, title) => issueRepository.getIssues(repositoryId, sort, author, title);
-const getRepoIssueByNumber = async (request) => {
-  const repoIssue = await issueRepository.getRepoIssueByNumber(request);
-  return repoIssue || Promise.reject(new CustomError(404, `Issue number ${request.number} not found`));
+
+const getRepoIssueByIdNumber = (repositoryId, number) => issueRepository.getIssueByIdNumber(repositoryId, number);
+
+const getRepoIssueByNumber = async (reponame, number) => {
+  const repoIssue = await issueRepository.getRepoIssueByNumber(reponame, number);
+  return repoIssue || Promise.reject(new CustomError(404, `Issue number ${number} not found`));
 };
 
 const getIssueById = id => issueRepository.getIssueById(id);
+
 const getAllIssueComments = async (issueId) => {
   const issueComments = await issueCommentRepository.getAllIssueComments(issueId);
   return issueComments || Promise.reject(new CustomError(404, `Issue number ${issueId} not found`));
@@ -43,5 +47,8 @@ module.exports = {
   deleteIssueById,
   closeIssueById,
   reopenIssueById,
-  getRepoIssues
+  getRepoIssues,
+  getRepoIssueByNumber,
+  getAllIssueComments,
+  getRepoIssueByIdNumber
 };
