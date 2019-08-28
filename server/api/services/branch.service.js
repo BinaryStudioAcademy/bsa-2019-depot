@@ -118,10 +118,43 @@ const getFileContent = async ({
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
   const entry = await lastCommitOnBranch.getEntry(filepath);
   const blob = await entry.getBlob();
-
   return {
     content: blob.isBinary() ? blob.content() : blob.toString(),
     size: blob.rawsize()
+  };
+};
+
+const getFileBlame = async ({
+  user, name, branch, filepath
+}) => {
+  const pathToRepo = repoHelper.getPathToRepo(user, name);
+  const repo = await NodeGit.Repository.open(pathToRepo);
+  const lastCommitOnBranch = await repo.getBranchCommit(branch);
+  const entry = await lastCommitOnBranch.getEntry(filepath);
+  const blob = await entry.getBlob();
+  const BlameArray = [];
+
+  await NodeGit.Blame.file(repo, filepath).then(async (blame) => {
+    for (let i = 0; i < blame.getHunkCount(); i += 1) {
+      const hunk = blame.getHunkByIndex(i);
+      for (let j = 0; j < hunk.linesInHunk(); j += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        const commit = await repo.getCommit(hunk.finalCommitId().toString());
+        const BlameObj = {
+          author: commit.author().email(),
+          date: commit.date(),
+          line: blob
+            .toString()
+            .split('\n')
+            .slice(j, j + 1)
+            .join('\n')
+        };
+        BlameArray.push(BlameObj);
+      }
+    }
+  });
+  return {
+    BlameArray
   };
 };
 
@@ -129,5 +162,6 @@ module.exports = {
   getBranches,
   getBranchTree,
   getLastCommitOnBranch,
-  getFileContent
+  getFileContent,
+  getFileBlame
 };

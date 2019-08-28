@@ -26,6 +26,7 @@ class FileViewPage extends React.Component {
 
     this.handleCopyPath = this.handleCopyPath.bind(this);
     this.handleEditFile = this.handleEditFile.bind(this);
+    this.handleBlameFile = this.handleBlameFile.bind(this);
     this.handleDeleteFile = this.handleDeleteFile.bind(this);
   }
 
@@ -49,6 +50,12 @@ class FileViewPage extends React.Component {
     const { history, location } = this.props;
 
     history.push(location.pathname.replace('/blob', '/edit'));
+  }
+
+  handleBlameFile() {
+    const { history, location } = this.props;
+
+    history.push(location.pathname.replace('/blob', '/blame'));
   }
 
   handleDeleteFile() {
@@ -128,6 +135,9 @@ class FileViewPage extends React.Component {
             </div>
             {username && username === owner && (
               <div className={styles.fileControls}>
+                <Button compact size="small" className={styles.copyButton} onClick={this.handleBlameFile}>
+                  Blame
+                </Button>
                 <Icon link name="pencil" onClick={this.handleEditFile} />
                 <Icon link name="trash alternate" onClick={this.handleDeleteFile} />
               </div>

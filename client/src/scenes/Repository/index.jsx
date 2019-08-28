@@ -14,6 +14,7 @@ import FileViewPage from '../../containers/FileViewPage';
 import FileEditPage from '../../containers/FileEditPage';
 import BranchesTab from '../../containers/BranchesTab/index';
 import CreateIssuePage from '../../containers/CreateIssuePage';
+import BlameViewPage from '../../containers/BlameViewPage';
 import PrivateTab from '../../containers/PrivateTab';
 
 import styles from './styles.module.scss';
@@ -58,6 +59,7 @@ class RepositoryPage extends React.Component {
               <Route exact path={`${match.path}/issues/:number`} component={IssueComments} />
               <PrivateTab exact path={`${match.path}/settings`} component={RepoSettings} />
               <Route exact path={`${match.path}/branches`} component={BranchesTab} />
+              <Route path={`${match.path}/blame/:branch`} component={BlameViewPage} />
               <PrivateTab path={[`${match.path}/new/:branch`, `${match.path}/edit/:branch`]} component={FileEditPage} />
               <Route path={`${match.path}/blob/:branch`} component={FileViewPage} />
             </Switch>

@@ -12,7 +12,11 @@ const {
 } = require('../services/repo.service');
 const { getCommits, getCommitDiff, getCommitCount } = require('../services/commit.service');
 const {
-  getBranches, getBranchTree, getLastCommitOnBranch, getFileContent
+  getBranches,
+  getBranchTree,
+  getLastCommitOnBranch,
+  getFileContent,
+  getFileBlame
 } = require('../services/branch.service');
 const { getAllRepoIssues, getRepoIssueByNumber } = require('../services/issue.service');
 const ownerOnlyMiddleware = require('../middlewares/owner-only.middleware');
@@ -78,6 +82,18 @@ router
     const { owner, repoName, branchName } = req.params;
     const { filepath } = req.query;
     getFileContent({
+      user: owner,
+      name: repoName,
+      branch: branchName,
+      filepath
+    })
+      .then(fileData => res.send(fileData))
+      .catch(next);
+  })
+  .get('/:owner/:repoName/:branchName/blame', (req, res, next) => {
+    const { owner, repoName, branchName } = req.params;
+    const { filepath } = req.query;
+    getFileBlame({
       user: owner,
       name: repoName,
       branch: branchName,
