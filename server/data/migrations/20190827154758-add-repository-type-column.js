@@ -5,7 +5,8 @@ module.exports = {
       'isPublic',
       {
         allowNull: false,
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        defaultValue: true
       },
       { transaction }
     )

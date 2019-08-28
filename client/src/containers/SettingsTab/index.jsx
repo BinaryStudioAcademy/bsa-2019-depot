@@ -8,7 +8,7 @@ import { InputError } from '../../components/InputError';
 import { fetchRepoSettings } from '../../routines/routines';
 import { renameRepo, deleteRepo } from './actions';
 import styles from './styles.module.scss';
-import { getRepositoryByOwnerAndName, updateRepositoryByOwnerAndName } from '../../services/repositoryService';
+import { getRepositoryByOwnerAndName, changeRepoType } from '../../services/repositoryService';
 
 const renderDangerField = (header, description, buttonName, clickHandler) => (
   <Message className={styles.dangerField}>
@@ -91,10 +91,19 @@ class RepoSettings extends React.Component {
   };
 
   onClickUpdateRepoType = async () => {
-    const { owner, name, repoInfo } = this.state;
+    const {
+      owner,
+      name,
+      repoInfo,
+      repoInfo: { id, userId }
+    } = this.state;
     const { history } = this.props;
     repoInfo.isPublic = !repoInfo.isPublic;
-    await updateRepositoryByOwnerAndName({ owner, reponame: name, request: { isPublic: repoInfo.isPublic } });
+    await changeRepoType({
+      owner,
+      reponame: name,
+      request: { isPublic: repoInfo.isPublic, repositoryId: id, userId }
+    });
     history.push(`/${owner}/${name}/settings`);
     window.location.reload();
   };
@@ -104,52 +113,51 @@ class RepoSettings extends React.Component {
     const { loading } = this.props.repoSettingsData;
     if (!repoInfo || loading) {
       return <Loader />;
-    } else {
-      const {
-        name,
-        repoInfo: { isPublic }
-      } = this.state;
-      return (
-        <Grid container stackable className={styles.box}>
-          <Grid.Column width={4} className={styles.first_column}>
-            <Menu vertical>
-              <Menu.Item>Options</Menu.Item>
-            </Menu>
-          </Grid.Column>
-          <Grid.Column width={12} className={styles.second_column}>
-            <Header as="h2">Settings</Header>
-            <Divider />
-            {repoInfo && <Header as="h4">Repository name</Header>}
-            <Formik initialValues={{ name }} onSubmit={this.onClickRename} validationSchema={this.validationSchema}>
-              {({ values: { name }, errors, handleChange, handleSubmit }) => (
-                <Form onSubmit={handleSubmit}>
-                  <Field name="name" value={name} className={styles.text_input} onChange={handleChange} />
-                  <Button className={styles.button_rename} disabled={errors.name} type="submit">
-                    Rename
-                  </Button>
-                  <InputError name="name" />
-                </Form>
-              )}
-            </Formik>
-            <Header as="h2">Danger Zone</Header>
-            <div className={styles.dangerZone}>
-              {renderDangerField(
-                isPublic ? 'Make this repository private' : 'Make this repository public',
-                isPublic ? 'Hide this repository from the public.' : 'Make this repository visible to anyone.',
-                isPublic ? 'Make private' : 'Make public',
-                this.onClickUpdateRepoType
-              )}
-              {renderDangerField(
-                'Delete this repository',
-                'Once you delete a repository, there is no going back. Please be certain.',
-                'Delete this repository',
-                this.onClickDelete
-              )}
-            </div>
-          </Grid.Column>
-        </Grid>
-      );
     }
+    const {
+      name,
+      repoInfo: { isPublic }
+    } = this.state;
+    return (
+      <Grid container stackable className={styles.box}>
+        <Grid.Column width={4} className={styles.first_column}>
+          <Menu vertical>
+            <Menu.Item>Options</Menu.Item>
+          </Menu>
+        </Grid.Column>
+        <Grid.Column width={12} className={styles.second_column}>
+          <Header as="h2">Settings</Header>
+          <Divider />
+          {repoInfo && <Header as="h4">Repository name</Header>}
+          <Formik initialValues={{ name }} onSubmit={this.onClickRename} validationSchema={this.validationSchema}>
+            {({ values: { name }, errors, handleChange, handleSubmit }) => (
+              <Form onSubmit={handleSubmit}>
+                <Field name="name" value={name} className={styles.text_input} onChange={handleChange} />
+                <Button className={styles.button_rename} disabled={errors.name} type="submit">
+                  Rename
+                </Button>
+                <InputError name="name" />
+              </Form>
+            )}
+          </Formik>
+          <Header as="h2">Danger Zone</Header>
+          <div className={styles.dangerZone}>
+            {renderDangerField(
+              isPublic ? 'Make this repository private' : 'Make this repository public',
+              isPublic ? 'Hide this repository from the public.' : 'Make this repository visible to anyone.',
+              isPublic ? 'Make private' : 'Make public',
+              this.onClickUpdateRepoType
+            )}
+            {renderDangerField(
+              'Delete this repository',
+              'Once you delete a repository, there is no going back. Please be certain.',
+              'Delete this repository',
+              this.onClickDelete
+            )}
+          </div>
+        </Grid.Column>
+      </Grid>
+    );
   }
 }
 
