@@ -47,6 +47,12 @@ export async function throwIfResponseFailed(res) {
   }
 }
 
+export function handleError(err) {
+  if (err.status === 404) {
+    window.location.href = '/not-found';
+  }
+}
+
 export default async function callWebApi(args) {
   try {
     const res = await fetch(getFetchUrl(args), getFetchArgs(args));
@@ -54,8 +60,6 @@ export default async function callWebApi(args) {
     return res;
   } catch (err) {
     toast.error(`Status: ${err.status}. ${err.message}`);
-    if (err.status === 404) {
-      window.location.href = '/not-found';
-    }
+    handleError(err);
   }
 }

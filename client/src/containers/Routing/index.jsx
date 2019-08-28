@@ -58,7 +58,6 @@ class Routing extends React.Component {
 
 Routing.propTypes = {
   loading: PropTypes.bool.isRequired,
-  history: PropTypes.object.isRequired,
   fetchCurrentUser: PropTypes.func.isRequired
 };
 
