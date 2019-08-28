@@ -1,3 +1,6 @@
 import { combineReducers } from 'redux';
+import profile from '../views/AuthViews/reducer';
 
-export default combineReducers({});
+export default combineReducers({
+  profile
+});
