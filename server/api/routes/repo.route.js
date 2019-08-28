@@ -11,6 +11,7 @@ const {
   updateByUserAndReponame
 } = require('../services/repo.service');
 const { getCommits, getCommitDiff, getCommitCount } = require('../services/commit.service');
+const { deleteStarsByRepoId } = require('../services/star.service');
 const {
   getBranches, getBranchTree, getLastCommitOnBranch, getFileContent
 } = require('../services/branch.service');
@@ -156,6 +157,18 @@ router
     updateByUserAndReponame({ owner, reponame, data: req.body })
       .then(data => res.send(data))
       .catch(next);
+  })
+  .put('/:owner/:reponame/change-type', ownerOnlyMiddleware, (req, res, next) => {
+    const { owner, reponame } = req.params;
+    const {
+      body: { userId, repositoryId, isPublic }
+    } = req;
+    updateByUserAndReponame({ owner, reponame, data: req.body })
+      .then(data => res.send(data))
+      .catch(next);
+    if (!isPublic) {
+      deleteStarsByRepoId(userId, repositoryId);
+    }
   })
   .put('/star', (req, res, next) => {
     const { userId, repositoryId } = req.body;

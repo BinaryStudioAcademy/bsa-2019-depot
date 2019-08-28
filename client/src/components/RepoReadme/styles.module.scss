@@ -23,3 +23,12 @@ $gray: #f7f7fb;
     opacity: 1;
   }
 }
+
+.markdownContainer > * {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.markdownContainer img {
+  max-width: 100%;
+}
