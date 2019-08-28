@@ -6,9 +6,9 @@ const router = Router();
 router
   .get('/', (req, res, next) => {
     const {
-      owner, reponame, branch, path
+      owner, reponame, branch, path, token
     } = req.query;
-    filesService.getFileContent(owner, reponame, branch, path)
+    filesService.getRawFileContent(owner, reponame, branch, path, token)
       .then(({ content }) => res.send(content))
       .catch(next);
   });

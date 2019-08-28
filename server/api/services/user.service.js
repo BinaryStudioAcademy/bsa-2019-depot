@@ -36,7 +36,9 @@ const resetPassword = async ({ token, password }) => {
 };
 
 const updateUserSettings = async ({ id, settings }) => {
-  const { name, bio, url, company, location, imgUrl } = settings;
+  const {
+    name, bio, url, company, location, imgUrl
+  } = settings;
   const data = await UserRepository.updateUserById(id, {
     name,
     bio,

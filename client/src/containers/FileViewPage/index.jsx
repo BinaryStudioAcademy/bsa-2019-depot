@@ -47,11 +47,11 @@ class FileViewPage extends React.Component {
   }
 
   handleOpenRaw() {
-    const { location, match } = this.props;
+    const { match } = this.props;
     const { username, reponame, branch } = match.params;
-    const filename = location.pathname.split('/').pop();
 
-    window.location.replace(`${process.env.REACT_APP_RAW_SERVER_URL}/${username}/${reponame}/${branch}/${this.filepath}`);
+    window.location
+      .replace(`${process.env.REACT_APP_RAW_SERVER_URL}/${username}/${reponame}/${branch}/${this.filepath}?token=${localStorage.getItem('token')}`);
   }
 
   handleEditFile() {

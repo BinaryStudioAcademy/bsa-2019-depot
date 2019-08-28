@@ -1,5 +1,8 @@
 const NodeGit = require('nodegit');
+const repoRepository = require('../../data/repositories/repository.repository');
+const userRepository = require('../../data/repositories/user.repository');
 const repoHelper = require('../../helpers/repo.helper');
+const tokenHelper = require('../../helpers/token.helper');
 
 const getFileContent = async (owner, reponame, branch, path) => {
   try {
@@ -20,4 +23,22 @@ const getFileContent = async (owner, reponame, branch, path) => {
   }
 };
 
-module.exports = { getFileContent };
+const getRawFileContent = async (owner, reponame, branch, path, token) => {
+  const { id: ownerId } = await userRepository.getByUsername(owner);
+  const { isPublic } = await repoRepository.getByUserAndReponame(ownerId, reponame);
+  if (!isPublic) {
+    try {
+      const { id: userId } = await tokenHelper.verifyToken(token);
+      if (userId !== ownerId) {
+        throw new Error('Unauthorized');
+      }
+    } catch (error) {
+      const errorObj = new Error('Unauthorized');
+      errorObj.status = 401;
+      throw errorObj;
+    }
+  }
+  return getFileContent(owner, reponame, branch, path);
+};
+
+module.exports = { getFileContent, getRawFileContent };

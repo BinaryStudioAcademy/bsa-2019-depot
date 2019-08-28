@@ -9,12 +9,11 @@ const serverHost = process.env.SERVER_HOST;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/:owner/:reponame/:branch*', (req, res) => {
-  const { owner, reponame, branch } = req.params;
-  const path = req.url
-    .split('/')
-    .slice(4)
-    .join('/');
+app.get('/:owner/:reponame/:branch/:path([^/]*)', (req, res) => {
+  const {
+    owner, reponame, branch, path
+  } = req.params;
+  const { token } = req.query;
 
   const wrapContent = (content) => {
     const escapedContent = content.replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -26,7 +25,8 @@ app.get('/:owner/:reponame/:branch*', (req, res) => {
       owner,
       reponame,
       branch,
-      path
+      path,
+      token
     }
   };
   axios
@@ -35,6 +35,8 @@ app.get('/:owner/:reponame/:branch*', (req, res) => {
     .catch(({ response: { status } }) => {
       if (status === 404) {
         res.send(wrapContent('404: Not Found'));
+      } else if (status === 401) {
+        res.send(wrapContent('401: Access denied'));
       }
     });
 });
