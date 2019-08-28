@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
@@ -22,11 +22,19 @@ const RepoNav = (props) => {
     OnDropdownClick
   } = props;
 
+  const [currentBranch, setBranch] = useState(branch)
+
+  const handleBranchChange = (event, data) => {
+    const { value }= data;
+    setBranch(value);
+    onBranchChange(value);
+  }
+
   return (<div className={styles.repoNav}>
     <div>
       <Dropdown
         button
-        text={`Branch: ${branch}`}
+        text={`Branch: ${currentBranch}`}
         floating
         width="seven"
         className={[styles.actionButton, styles.repoBranchesButton].join(' ')}
@@ -44,7 +52,7 @@ const RepoNav = (props) => {
             {branches.map((branch, index) => (
               <Dropdown.Item
                 key={index}
-                onClick={onBranchChange}
+                onClick={handleBranchChange}
                 value={branch}
                 className={styles.branchesMenuItem}
               >
@@ -62,7 +70,7 @@ const RepoNav = (props) => {
           <>
             <Button className={styles.actionButton} onClick={onCreateFile}>
               Create New File
-                  </Button>
+            </Button>
             <Button className={styles.actionButton}>Upload files</Button>
           </>
         )}
@@ -88,7 +96,7 @@ const RepoNav = (props) => {
             </div>
             <Link className={styles.link} to="">
               Use SSH
-                  </Link>
+            </Link>
           </Header>
           <p>Use Git or checkout with SVN using the web URL.</p>
           <Input
@@ -111,7 +119,7 @@ const RepoNav = (props) => {
                 </Button>
           <Button compact className={styles.repoPopupAction}>
             Download ZIP
-                </Button>
+          </Button>
         </Button.Group>
       </Popup>
     </div>
