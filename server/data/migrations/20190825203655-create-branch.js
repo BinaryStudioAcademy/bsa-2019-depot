@@ -36,7 +36,5 @@ module.exports = {
       { transaction }
     )
   ])),
-  down: queryInterface => queryInterface.sequelize.transaction(transaction => Promise.all([
-    queryInterface.dropTable('branches', { transaction })
-  ]))
+  down: queryInterface => queryInterface.sequelize.transaction(transaction => Promise.all([queryInterface.dropTable('branches', { transaction })]))
 };

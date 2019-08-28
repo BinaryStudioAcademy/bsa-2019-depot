@@ -21,18 +21,10 @@ module.exports = {
         }
       },
       { transaction }
-    ),
+    )
   ])),
   down: queryInterface => queryInterface.sequelize.transaction(transaction => Promise.all([
-    queryInterface.removeColumn(
-      'commits',
-      'message',
-      { transaction }
-    ),
-    queryInterface.removeColumn(
-      'commits',
-      'userId',
-      { transaction }
-    )
+    queryInterface.removeColumn('commits', 'message', { transaction }),
+    queryInterface.removeColumn('commits', 'userId', { transaction })
   ]))
 };
