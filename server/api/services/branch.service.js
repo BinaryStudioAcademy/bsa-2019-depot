@@ -142,6 +142,7 @@ const getFileBlame = async ({
         const commit = await repo.getCommit(hunk.finalCommitId().toString());
         const BlameObj = {
           author: commit.author().email(),
+          message: commit.message(),
           date: commit.date(),
           line: blob
             .toString()
@@ -153,9 +154,7 @@ const getFileBlame = async ({
       }
     }
   });
-  return {
-    BlameArray
-  };
+  return BlameArray;
 };
 
 module.exports = {

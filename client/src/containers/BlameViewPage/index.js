@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Breadcrumb, Button, Icon, Loader, Segment } from 'semantic-ui-react';
-import ReactMarkdown from 'react-markdown';
+import { Grid, Breadcrumb, Button, Icon, Loader, Segment } from 'semantic-ui-react';
 import FilePathBreadcrumbSections from '../../components/FilePathBreadcrumbSections';
-import FileViewer from '../../components/FileViewer';
+import { getFileBlame } from '../../services/branchesService';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 import styles from './styles.module.scss';
 
@@ -13,11 +13,29 @@ class BlameViewPage extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      blameData: {},
+      loading: true
+    };
+
     const { match, location } = this.props;
     this.filepath = location.pathname.replace(`${match.url}/`, '');
 
     //this.handleCopyPath = this.handleCopyPath.bind(this);
   }
+
+  componentDidMount() {
+    const { username, reponame, branch } = this.props.match.params;
+    getFileBlame(username, reponame, branch, {
+      filepath: this.filepath
+    }).then(blameData =>
+      this.setState({
+        blameData,
+        loading: false
+      })
+    );
+  }
+
 
   render() {
     const { match, location } = this.props;
@@ -27,7 +45,11 @@ class BlameViewPage extends React.Component {
     filepathDirs = this.filepath.split('/').slice(0, -1); // Remove file name
     filename = location.pathname.split('/').pop();
 
-    return (
+    const { blameData, loading, deleting } = this.state;
+    console.log(blameData);
+    return loading || deleting ? (
+      <Loader active inline="centered" />
+    ) : (
       <>
         <div className={styles.filePathRow}>
           <Breadcrumb size="big" className={styles.filePath}>
@@ -51,9 +73,20 @@ class BlameViewPage extends React.Component {
             </div>
           </Segment>
           <Segment >
-            <div >
-              <p>AAA</p>
-            </div>
+            { blameData.map( blameObj => (
+              <Grid>
+                <Grid.Row>
+                  <Grid.Column width={8}>
+                    <p>{blameObj.message}</p>
+                    <p>{blameObj.date}</p>
+                  </Grid.Column>
+                  <Grid.Column width={8}>
+                    <p>{blameObj.line}</p>
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
+            ))
+            }
           </Segment>
         </Segment.Group>
       </>
