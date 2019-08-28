@@ -1,7 +1,7 @@
-import { createStackNavigator, createAppContainer } from 'react-navigation';
-import SignInView from '../../views/SignInView';
-import SignUpView from '../../views/SignUpView';
-import SetUsernameView from '../../views/SetUsernameView';
+import { createStackNavigator } from 'react-navigation';
+import SignInView from '../../views/AuthViews/SignInView';
+import SignUpView from '../../views/AuthViews/SignUpView';
+import SetUsernameView from '../../views/AuthViews/SetUsernameView';
 
 const AuthNavigator = createStackNavigator({
   SignIn: {
@@ -24,4 +24,4 @@ const AuthNavigator = createStackNavigator({
   }
 });
 
-export default createAppContainer(AuthNavigator);
+export default AuthNavigator;
