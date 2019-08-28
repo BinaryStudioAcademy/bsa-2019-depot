@@ -1,0 +1,33 @@
+$gray: #f7f7fb;
+$black: #363a44;
+
+.ui.vertical.menu {
+  :not(.active) {
+    .item:hover {
+      background-color: $gray;
+    }
+  }
+
+  a:not(:last-child) {
+    .item {
+      border-bottom: 1px solid rgba(34, 36, 38, 0.15);
+    }
+  }
+
+  .item {
+    color: rgb(79, 96, 172);
+  }
+
+  .active {
+    .item {
+      border-left: 2px solid #e36209;
+      color: $black;
+    }
+  }
+
+  .header.item {
+    border-bottom: 1px solid rgba(34, 36, 38, 0.15);
+    background-color: $gray;
+    color: $black;
+  }
+}

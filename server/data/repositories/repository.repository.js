@@ -12,24 +12,11 @@ class RepositoryRepository extends BaseRepository {
     return this.model.findAll({ where: { userId } });
   }
 
-  getRepositoryById(id) {
-    return this.model.findOne(
-      {
-        where: { id },
-        include: [
-          {
-            model: UserModel,
-            attributes: ['id', 'username']
-          }
-        ]
-      }
-    );
-  }
-
-  getByUserWithOptions(userId, options = {}) {
+  getByUserWithOptions(userId, isOwner, options = {}) {
+    const whereStatement = isOwner ? { userId } : { userId, isPublic: true };
     const { filter, limit, sortByCreatedDateDesc } = options;
     const findOptions = {
-      where: { userId },
+      where: whereStatement,
       attributes: {
         include: [
           [

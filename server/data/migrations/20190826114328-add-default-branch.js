@@ -13,11 +13,5 @@ module.exports = {
       { transaction }
     )
   ])),
-  down: queryInterface => queryInterface.sequelize.transaction(transaction => Promise.all([
-    queryInterface.removeColumn(
-      'repositories',
-      'defaultBranchId',
-      { transaction }
-    )
-  ]))
+  down: queryInterface => queryInterface.sequelize.transaction(transaction => Promise.all([queryInterface.removeColumn('repositories', 'defaultBranchId', { transaction })]))
 };

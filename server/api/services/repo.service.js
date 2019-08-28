@@ -9,6 +9,8 @@ const starRepository = require('../../data/repositories/star.repository');
 const branchRepository = require('../../data/repositories/branch.repository');
 const commitRepository = require('../../data/repositories/commit.repository');
 
+const CustomError = require('../../helpers/error.helper');
+
 const initialCommit = async ({
   owner, email, repoName, files
 }) => {
@@ -42,24 +44,26 @@ const initialCommit = async ({
   await NodeGit.Branch.create(repo, 'master', commit, 1);
 
   await repoHelper.syncDb(
-    [{
-      repoOwner: owner,
-      repoName,
-      sha: commit.sha(),
-      message: 'Initial commit',
-      userEmail: email,
-      createdAt: new Date()
-    }],
+    [
+      {
+        repoOwner: owner,
+        repoName,
+        sha: commit.sha(),
+        message: 'Initial commit',
+        userEmail: email,
+        createdAt: new Date()
+      }
+    ],
     {
       name: 'master',
-      newHeadSha: commit.sha(),
+      newHeadSha: commit.sha()
     }
   );
 };
 
 const createRepo = async (repoData) => {
   const {
-    owner, name, userId, description
+    owner, name, userId, description, isPublic
   } = repoData;
   let result = 'Repo was created';
   const pathToRepo = repoHelper.getPathToRepo(owner, name);
@@ -70,18 +74,23 @@ const createRepo = async (repoData) => {
         url: pathToRepo
       };
 
-      await fs.copy(path.resolve(`${__dirname}/../../../scripts/git-hooks/pre-receive`), path.resolve(`${pathToRepo}/hooks/pre-receive`));
-      await fs.copy(path.resolve(`${__dirname}/../../../scripts/git-hooks/update`), path.resolve(`${pathToRepo}/hooks/update`));
+      await fs.copy(
+        path.resolve(`${__dirname}/../../../scripts/git-hooks/pre-receive`),
+        path.resolve(`${pathToRepo}/hooks/pre-receive`)
+      );
+      await fs.copy(
+        path.resolve(`${__dirname}/../../../scripts/git-hooks/update`),
+        path.resolve(`${pathToRepo}/hooks/update`)
+      );
     })
     .catch(() => {
-      const errorObj = { status: 404, message: 'Error! Repos wasn`t created' };
-      Promise.reject(errorObj);
+      Promise.reject(new CustomError(404, 'Error! Repos wasn`t created'));
     });
-
   await repoRepository.create({
     userId,
     name,
-    description
+    description,
+    isPublic
   });
 
   const initialData = repoHelper.generateInitialData({ ...repoData });
@@ -121,18 +130,31 @@ const isEmpty = async ({ owner, reponame }) => {
 };
 
 const getByUserAndReponame = async ({ owner, reponame }) => {
-  const { id } = await userRepository.getByUsername(owner);
-  return repoRepository.getByUserAndReponame(id, reponame);
+  const user = await userRepository.getByUsername(owner);
+  if (!user) {
+    return Promise.reject(new CustomError(404, `User ${owner} not found`));
+  }
+  const repository = await repoRepository.getByUserAndReponame(user.id, reponame);
+  if (!repository) {
+    return Promise.reject(new CustomError(404, `Repository ${reponame} not found`));
+  }
+  return repository;
 };
 
 const updateByUserAndReponame = async ({ owner, reponame, data }) => {
-  const { id } = await userRepository.getByUsername(owner);
-  return repoRepository.updateByUserAndReponame(id, reponame, data);
+  const user = await userRepository.getByUsername(owner);
+  if (!user) {
+    return Promise.reject(new CustomError(404, `User ${owner} not found`));
+  }
+  return repoRepository.updateByUserAndReponame(user.id, reponame, data);
 };
 
 const deleteByUserAndReponame = async ({ owner, reponame }) => {
-  const { id } = await userRepository.getByUsername(owner);
-  return repoRepository.deleteByUserAndReponame(id, reponame);
+  const user = await userRepository.getByUsername(owner);
+  if (!user) {
+    return Promise.reject(new CustomError(404, `User ${owner} not found`));
+  }
+  return repoRepository.deleteByUserAndReponame(user.id, reponame);
 };
 
 const renameRepo = async ({ repoName, newName, username }) => {
@@ -162,19 +184,25 @@ const deleteRepo = async ({ repoName, username }) => {
 };
 
 const getReposNames = async ({ user: username, filter, limit }) => {
-  const { id } = await userRepository.getByUsername(username);
+  const user = await userRepository.getByUsername(username);
+  if (!user) {
+    return Promise.reject(new CustomError(404, `User ${username} not found`));
+  }
   const findOptions = {
     filter,
     limit,
     sortByCreatedDateDesc: true
   };
-  const repos = await repoRepository.getByUserWithOptions(id, findOptions);
+  const repos = await repoRepository.getByUserWithOptions(user.id, findOptions);
   return repos.map(({ name }) => name);
 };
 
-const getReposData = async ({ username }) => {
-  const { id } = await userRepository.getByUsername(username);
-  return repoRepository.getByUserWithOptions(id);
+const getReposData = async ({ username, isOwner }) => {
+  const user = await userRepository.getByUsername(username);
+  if (!user) {
+    return Promise.reject(new CustomError(404, `User ${username} not found`));
+  }
+  return repoRepository.getByUserWithOptions(user.id, isOwner);
 };
 
 const forkRepo = async ({
@@ -207,7 +235,7 @@ const forkRepo = async ({
 
     return { status: true, username };
   } catch (err) {
-    return { status: false, error: err.message };
+    return Promise.reject(new CustomError(500, err.message));
   }
 };
 
