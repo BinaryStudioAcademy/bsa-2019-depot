@@ -3,22 +3,52 @@ import PropTypes from 'prop-types';
 import { View, TouchableOpacity, Text, TextInput, KeyboardAvoidingView } from 'react-native';
 import { signupRoutine } from '../../../routines/routines';
 import { connect } from 'react-redux';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
+import { checkUsernameExists } from '../../../services/userService';
 import styles from '../styles';
 
+const isUsernameValid = async username => {
+  const { usernameExists } = await checkUsernameExists(username);
+  return !usernameExists;
+};
+
+Yup.addMethod(Yup.string, 'validateUsername', function() {
+  return this.test('validateUsername', 'This username is already taken', function(value) {
+    return isUsernameValid(value);
+  });
+});
+
+const validationSchema = Yup.object().shape({
+  username: Yup.string()
+    .required('Username is required!')
+    .matches(
+      /^(([a-zA-Z0-9]+-)*[a-zA-Z0-9]+){1,39}$/,
+      'Username contains of only alphanumeric characters or single hyphens. Cannot have multiple consecutive hyphens'
+    )
+    .validateUsername('This username is already taken'),
+  email: Yup.string()
+    .email('Invalid email address!')
+    .matches(
+      /^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))@(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      'Invalid email address!'
+    )
+    .required('Email address is required!'),
+  password: Yup.string()
+    .matches(
+      /^(?:(?=\D*\d)(?=[^a-z]*[a-z]).{8,}|[a-zA-Z0-9]{15,})$/,
+      'Minimum length - 8 characters, and includes a number and a lowercase letter'
+    )
+    .required('Password is required')
+    .max(72)
+});
+
 class SignUpView extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: '',
-      username: '',
-      password: ''
-    };
-  }
   toSignIn = () => this.props.navigation.goBack();
 
-  OnSignUp = () => {
-    const { username, email, password } = this.state;
+  signUp = values => {
+    const { username, email, password } = values;
     const { signupRoutine } = this.props;
     const user = {
       username,
@@ -30,25 +60,8 @@ class SignUpView extends React.Component {
     });
   };
 
-  handleChangeEmail = value => {
-    this.setState({
-      email: value
-    });
-  };
-
-  handleChangePassword = value => {
-    this.setState({
-      password: value
-    });
-  };
-
-  handleChangeUsername = value => {
-    this.setState({
-      username: value
-    });
-  };
-
-  render() {
+  renderComponent = ({ errors, handleChange, handleSubmit, values }) => {
+    const { username, email, password } = values;
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding" keyboardVerticalOffset={-200}>
         <View style={styles.form}>
@@ -56,23 +69,29 @@ class SignUpView extends React.Component {
           <TextInput
             selectionColor={'blue'}
             placeholder={'Username'}
+            value={username}
             style={styles.textInput}
-            onChangeText={this.handleChangeUsername}
+            onChangeText={handleChange('username')}
           />
+          {errors.username && <Text style={styles.error}>{errors.username}</Text>}
           <TextInput
             selectionColor={'blue'}
             placeholder={'Email'}
+            value={email}
             style={styles.textInput}
-            onChangeText={this.handleChangeEmail}
+            onChangeText={handleChange('email')}
           />
+          {errors.email && <Text style={styles.error}>{errors.email}</Text>}
           <TextInput
             selectionColor={'blue'}
             placeholder={'Password'}
+            value={password}
             style={styles.textInput}
-            onChangeText={this.handleChangePassword}
+            onChangeText={handleChange('password')}
             secureTextEntry={true}
           />
-          <TouchableOpacity style={styles.button} onPress={this.OnSignUp}>
+          {errors.password && <Text style={styles.error}>{errors.password}</Text>}
+          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
             <Text style={styles.text}>{'Sign Up for Depot'}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{ ...styles.button, ...styles.buttonGoogle }}>
@@ -86,6 +105,21 @@ class SignUpView extends React.Component {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
+    );
+  };
+
+  render() {
+    return (
+      <Formik
+        initialValues={{
+          email: '',
+          password: '',
+          username: ''
+        }}
+        validationSchema={validationSchema}
+        onSubmit={this.signUp}
+        render={this.renderComponent}
+      />
     );
   }
 }

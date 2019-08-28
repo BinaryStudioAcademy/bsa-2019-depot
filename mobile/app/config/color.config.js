@@ -5,7 +5,8 @@ const colors = {
   greyBorder: '#BEBEBE',
   white: '#fff',
   black: '#000',
-  blueLink: '#4f60ac'
+  blueLink: '#4f60ac',
+  red: '#ed1a37'
 };
 
 export default colors;

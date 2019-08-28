@@ -3,33 +3,33 @@ import PropTypes from 'prop-types';
 import { View, TouchableOpacity, Text, TextInput, Image, KeyboardAvoidingView } from 'react-native';
 import { connect } from 'react-redux';
 import { authorizeUser } from '../../../routines/routines';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 import styles from '../styles';
 import imageLogo from '../../../assets/depot-logo.png';
 
+const validationSchema = Yup.object().shape({
+  email: Yup.string()
+    .email('Invalid email address!')
+    .matches(
+      /^(([^<>()\\.,;:\s@"]+(\.[^<>()\\.,;:\s@"]+)*)|(".+"))@(([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      'Invalid email address!'
+    )
+    .required('Email address is required!')
+    .max(100),
+  password: Yup.string()
+    .matches(
+      /^(?:(?=\D*\d)(?=[^a-z]*[a-z]).{8,}|[a-zA-Z0-9]{15,})$/,
+      'Minimum length - 8 characters, and includes a number and a lowercase letter'
+    )
+    .required('Password is required')
+    .max(72)
+});
+
 class SignInView extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: '',
-      password: ''
-    };
-  }
-
-  handleChangeEmail = value => {
-    this.setState({
-      email: value
-    });
-  };
-
-  handleChangePassword = value => {
-    this.setState({
-      password: value
-    });
-  };
-
-  onLogin = async () => {
-    const { email, password } = this.state;
+  login = async values => {
+    const { email, password } = values;
     const { authorizeUser } = this.props;
     authorizeUser({
       username: email,
@@ -39,7 +39,8 @@ class SignInView extends React.Component {
 
   toSignUp = () => this.props.navigation.navigate('SignUp');
 
-  render() {
+  renderComponent = ({ errors, handleChange, handleSubmit, values }) => {
+    const { email, password } = values;
     return (
       <KeyboardAvoidingView style={styles.container}>
         <Image source={imageLogo} style={styles.logo} />
@@ -48,16 +49,20 @@ class SignInView extends React.Component {
             selectionColor={'blue'}
             placeholder={'Email'}
             style={styles.textInput}
-            onChangeText={this.handleChangeEmail}
+            onChangeText={handleChange('email')}
+            value={email}
           />
+          {errors.email && <Text style={styles.error}>{errors.email}</Text>}
           <TextInput
             selectionColor={'blue'}
             placeholder={'Password'}
             style={styles.textInput}
-            onChangeText={this.handleChangePassword}
+            onChangeText={handleChange('password')}
             secureTextEntry={true}
+            value={password}
           />
-          <TouchableOpacity style={styles.button} onPress={this.onLogin}>
+          {errors.password && <Text style={styles.error}>{errors.password}</Text>}
+          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
             <Text style={styles.text}>{'Sign In'}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={{ ...styles.button, ...styles.buttonGoogle }}>
@@ -71,6 +76,20 @@ class SignInView extends React.Component {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
+    );
+  };
+
+  render() {
+    return (
+      <Formik
+        initialValues={{
+          email: '',
+          password: ''
+        }}
+        validationSchema={validationSchema}
+        onSubmit={this.login}
+        render={this.renderComponent}
+      />
     );
   }
 }

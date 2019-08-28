@@ -22,6 +22,11 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between'
   },
+  error: {
+    color: colors.red,
+    fontSize: 10,
+    marginTop: -14
+  },
   form: {
     flex: 1,
     justifyContent: 'center',
