@@ -45,7 +45,7 @@ class RepoPage {
     return $('div button[type="submit"]');
   }
   get createdFileName() {
-    return $$('tbody tr td a')[7];
+    return $$('tbody tr td a')[6];
   }
 }
 

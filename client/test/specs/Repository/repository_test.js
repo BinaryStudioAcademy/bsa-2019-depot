@@ -3,7 +3,7 @@ const repoSteps = require('../Repository/steps/repository_pa.js');
 const menuSteps = require('../DropdownMenu/steps/menu_pa.js');
 const credentials = require('../credentials');
 const assert = require('assert');
-
+const repoPage = require('./page/repository_po');
 describe('Repositories  ', () => {
   beforeEach(() => {
     help.loginWithDefaultUser();
@@ -21,7 +21,7 @@ describe('Repositories  ', () => {
     repoSteps.addGitignore();
     repoSteps.addLicense();
     repoSteps.submitCreateRepoBtn();
-    assert.strict(credentials.repo.repoName, repoSteps.createdRepoName());
+    assert.strictEqual(credentials.repo.repoName, repoPage.createdRepoName.getText());
     //postconditions
     repoSteps.navigateToRepoSettings();
     repoSteps.deleteRepo();
@@ -39,7 +39,7 @@ describe('Repositories  ', () => {
     repoSteps.enterNewFileName(credentials.newFileName);
     repoSteps.enterCommitMessage(credentials.commitMessage);
     repoSteps.submitCommit();
-    assert.strict(credentials.newFileName, repoSteps.createdFileName());
+    assert.strictEqual(credentials.newFileName, repoPage.createdFileName.getText());
     //postconditions
     repoSteps.navigateToRepoSettings();
     repoSteps.deleteRepo();
