@@ -11,7 +11,7 @@ import { invite } from '../../services/inviteCollaboratorService';
 import styles from './styles.module.scss';
 
 const permissionValidationSchema = Yup.object().shape({
-  Permission: Yup.string().required('Permission is required!')
+  permission: Yup.string().required('Permission is required!')
 });
 
 const initialState = {
@@ -26,7 +26,7 @@ class CollaboratorsPage extends React.Component {
     this.state = {
       ...initialState,
       collaborators: [],
-      repositoryId: null
+      repository: null
     };
   }
 
@@ -36,14 +36,16 @@ class CollaboratorsPage extends React.Component {
         params: { username, reponame }
       }
     } = this.props;
-    const { id } = await getRepositoryByOwnerAndName({ username, reponame });
+    const repository = await getRepositoryByOwnerAndName({ username, reponame });
     this.setState({
-      repositoryId: id
+      repository
     });
   }
 
   handleSearchChange = async (e, { value }) => {
-    const { repositoryId } = this.state;
+    const {
+      repository: { id: repositoryId }
+    } = this.state;
     const { userId } = this.props;
     this.setState({ isLoading: true, value });
     if (!value) return this.setState(initialState);
@@ -70,10 +72,19 @@ class CollaboratorsPage extends React.Component {
 
   submitCollaboratorAddition = values => {
     const { permission } = values;
-    const { userId } = this.props;
-    const { repositoryId } = this.state;
+    const {
+      match: {
+        params: { username: senderUsername }
+      }
+    } = this.props;
+    const {
+      repository: { name: reponame, id: repositoryId },
+      username
+    } = this.state;
     invite({
-      userId,
+      senderUsername,
+      username,
+      reponame,
       repositoryId,
       permission
     });

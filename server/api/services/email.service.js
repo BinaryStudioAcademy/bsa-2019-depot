@@ -40,9 +40,9 @@ async function sendInviteEmail({
 }
 
 async function sendInviteCollaboratorEmail({
-  email, url, username, reponame
+  email, url, senderUsername, reponame
 }) {
-  const message = createInviteCollaboratorEmail(email, url, username, reponame);
+  const message = createInviteCollaboratorEmail(email, url, senderUsername, reponame);
   await sendToQueue(emailQueue, message);
 }
 
