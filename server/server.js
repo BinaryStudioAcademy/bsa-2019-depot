@@ -22,7 +22,6 @@ const io = socketIO(socketServer);
 
 io.on('connection', socketHandlers);
 
-app.use(cors());
 app.use(express.json());
 app.use(passport.initialize());
 app.use(express.urlencoded({ extended: true }));
