@@ -7,6 +7,10 @@ class CollaboratorRepository extends BaseRepository {
       where: { id }
     });
   }
+
+  getUserRights(userId, repositoryId) {
+    return this.model.findAll({ where: { userId, repositoryId } });
+  }
 }
 
 module.exports = new CollaboratorRepository(CollaboratorModel);

@@ -73,6 +73,7 @@ class CollaboratorsPage extends React.Component {
   submitCollaboratorAddition = values => {
     const { permission } = values;
     const {
+      history,
       match: {
         params: { username: senderUsername }
       }
@@ -88,6 +89,7 @@ class CollaboratorsPage extends React.Component {
       repositoryId,
       permission
     });
+    history.push('/settings');
   };
 
   renderCollaboratorsPage = () => {
@@ -195,7 +197,6 @@ class CollaboratorsPage extends React.Component {
 
   render() {
     const { username } = this.state;
-
     return !username ? (
       this.renderCollaboratorsPage()
     ) : (
@@ -218,7 +219,8 @@ CollaboratorsPage.propTypes = {
     isExact: PropTypes.bool.isRequired,
     path: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired
-  }).isRequired
+  }).isRequired,
+  history: PropTypes.object
 };
 
 const mapStateToProps = ({

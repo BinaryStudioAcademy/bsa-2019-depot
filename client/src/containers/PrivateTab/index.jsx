@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { getUserRights } from '../../services/permissionService';
 
 const renderComponent = ({ Component, ...rest }) => <Component {...rest} />;
 
@@ -11,7 +12,20 @@ const PrivateTab = ({ username, location, ...props }) => {
     .filter(urlPart => urlPart)
     .slice(0, 2);
 
-  return username && username === owner ? (
+  const [isAccessGranted, setIsAccessGranted] = useState(true);
+
+  const getPermission = async () => {
+    const { userId } = props;
+    const access = Boolean((await getUserRights(owner, reponame, userId))[0]);
+    setIsAccessGranted(access);
+  };
+
+  useEffect(() => {
+    getPermission();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (username && username === owner) || isAccessGranted ? (
     <Route {...props} render={renderComponent} />
   ) : (
     <Redirect to={{ pathname: `/${owner}/${reponame}`, state: { from: location } }} />
@@ -19,6 +33,7 @@ const PrivateTab = ({ username, location, ...props }) => {
 };
 
 PrivateTab.propTypes = {
+  userId: PropTypes.string,
   username: PropTypes.string,
   location: PropTypes.exact({
     key: PropTypes.string.isRequired,
@@ -35,8 +50,8 @@ renderComponent.propTypes = {
 
 const mapStateToProps = ({
   profile: {
-    currentUser: { username }
+    currentUser: { id: userId, username }
   }
-}) => ({ username });
+}) => ({ userId, username });
 
 export default connect(mapStateToProps)(PrivateTab);

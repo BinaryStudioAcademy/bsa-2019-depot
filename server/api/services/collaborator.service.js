@@ -1,5 +1,6 @@
 const permissionRepository = require('../../data/repositories/permission.repository');
 const collaboratorRepository = require('../../data/repositories/collaborator.repository');
+const { getByUserAndReponame } = require('./repo.service');
 
 const { getUserDetailed } = require('./user.service');
 const { sendInviteCollaboratorEmail } = require('./email.service');
@@ -15,13 +16,20 @@ const addCollaborator = async ({ senderUsername, username, reponame, repositoryI
     permissionId,
     userId,
     repositoryId,
-    // isActivated: false
+    isActivated: false
   });
   return {
     status: true
   };
 };
 
+const getUserRights = async (username, reponame, userId) => {
+  console.log('username, reponame: ', username, reponame);
+  const { id: repositoryId } = await getByUserAndReponame({ owner: username, reponame });
+  return await collaboratorRepository.getUserRights(userId, repositoryId);
+};
+
 module.exports = {
-  addCollaborator
+  addCollaborator,
+  getUserRights
 };

@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import Octicon, { Repo } from '@primer/octicons-react';
 import { Icon, Label, Container } from 'semantic-ui-react';
 import ForkButton from '../ForkButton';
+import { getUserRights } from '../../services/permissionService';
 
 import styles from './styles.module.scss';
 
@@ -17,7 +18,10 @@ const RepositoryHeader = ({
   issueCount,
   activePage,
   baseUrl,
-  history
+  history,
+  match: {
+    params: { username: paramsUsername, reponame }
+  }
 }) => {
   let activeTab;
   switch (activePage) {
@@ -33,6 +37,18 @@ const RepositoryHeader = ({
   default:
     activeTab = 'code';
   }
+
+  const [isAccessGranted, setIsAccessGranted] = useState(false);
+
+  const getPermission = async () => {
+    const access = Boolean((await getUserRights(paramsUsername, repoName, userId))[0]);
+    setIsAccessGranted(access);
+  };
+
+  useEffect(() => {
+    getPermission();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const goToRootDir = (history, url) => () => {
     history.push(url);
@@ -89,7 +105,7 @@ const RepositoryHeader = ({
                 Issues<Label circular>{issueCount}</Label>
               </Link>
             </div>
-            {username && username === owner && (
+            {((username && username === owner) || isAccessGranted) && (
               <div className={`${activeTab === 'settings' && 'active'} item`}>
                 <Link to={`${baseUrl}/settings`}>
                   <Icon name="cog" /> Settings
@@ -118,6 +134,12 @@ RepositoryHeader.propTypes = {
         username: PropTypes.string
       })
     })
+  }).isRequired,
+  match: PropTypes.exact({
+    params: PropTypes.object.isRequired,
+    isExact: PropTypes.bool.isRequired,
+    path: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired
   }).isRequired,
   activePage: PropTypes.string,
   baseUrl: PropTypes.string.isRequired,
