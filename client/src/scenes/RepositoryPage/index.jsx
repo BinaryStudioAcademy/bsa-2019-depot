@@ -19,7 +19,7 @@ import { fetchCurrentRepo } from '../../routines/routines';
 import Spinner from '../../components/Spinner';
 
 class RepositoryPage extends React.Component {
-  async componentDidMount() {
+  componentDidMount() {
     const {
       fetchCurrentRepo,
       match: {
@@ -37,7 +37,7 @@ class RepositoryPage extends React.Component {
       branches,
       defaultBranch,
       location: { pathname },
-      isLoading
+      loading
     } = this.props;
     const { username, reponame } = match.params;
 
@@ -51,7 +51,7 @@ class RepositoryPage extends React.Component {
       .map(param => `:${param}`)
       .join('/');
 
-    if (isLoading) {
+    if (loading) {
       return <Spinner />;
     }
 
@@ -110,16 +110,16 @@ const mapStateToProps = ({
         issuesCount,
         branches,
         defaultBranch
-      }
+      },
+      loading
     }
-  },
-  isLoading
+  }
 }) => ({
   id,
   issuesCount,
   branches,
   defaultBranch,
-  isLoading
+  loading
 });
 
 const mapDispatchToProps = {
