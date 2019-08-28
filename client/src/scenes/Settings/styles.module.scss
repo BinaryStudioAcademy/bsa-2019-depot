@@ -1,0 +1,30 @@
+$gray: #f7f7fb;
+$black: #363a44;
+
+:global(.ui.vertical.menu):local(.settingsMenu) {
+  :global(.item),
+  :global(.active .item) {
+    &:hover {
+      background-color: $gray;
+    }
+  }
+
+  :global(.item) {
+    color: rgb(79, 96, 172);
+  }
+
+  :global(.active) {
+    :global(.item) {
+      border-left: 2px solid #e36209;
+      border-top: none !important;
+      background-color: $gray;
+      color: $black;
+    }
+  }
+
+  :global(.header.item) {
+    border-bottom: 1px solid rgba(34, 36, 38, 0.15);
+    background-color: $gray;
+    color: $black;
+  }
+}
