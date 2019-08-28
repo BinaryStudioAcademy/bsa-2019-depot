@@ -2,12 +2,18 @@ $gray: #f7f7fb;
 $black: #363a44;
 
 .ui.vertical.menu {
-  .item,
-  .active .item {
-    &:hover {
+  :not(.active) {
+    .item:hover {
       background-color: $gray;
     }
   }
+
+  a:not(:last-child) {
+    .item {
+      border-bottom: 1px solid rgba(34, 36, 38, 0.15);
+    }
+  }
+
 
   .item {
     color: rgb(79, 96, 172);
@@ -16,7 +22,6 @@ $black: #363a44;
   .active {
     .item {
       border-left: 2px solid #e36209;
-      background-color: $gray;
       color: $black;
     }
   }
