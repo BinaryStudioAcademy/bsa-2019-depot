@@ -62,14 +62,16 @@ const syncDb = async (commits, branch) => {
   const { id: userId } = await userRepository.getByUsername(commits[0].repoOwner);
   const { id: repositoryId } = await repoRepository.getByUserAndReponame(userId, commits[0].repoName);
   const commitAuthors = await Promise.all(commits.map(({ userEmail }) => userRepository.getByEmail(userEmail)));
-  const addedCommits = await Promise.all(commitAuthors.map(({ id: authorId }, index) => commitRepository.add({
-    sha: commits[index].sha,
-    message: commits[index].message,
-    userId: authorId,
-    createdAt: new Date(commits[index].createdAt),
-    updatedAt: new Date(commits[index].createdAt),
-    repositoryId
-  })));
+  const addedCommits = await Promise.all(
+    commitAuthors.map(({ id: authorId }, index) => commitRepository.add({
+      sha: commits[index].sha,
+      message: commits[index].message,
+      userId: authorId,
+      createdAt: new Date(commits[index].createdAt),
+      updatedAt: new Date(commits[index].createdAt),
+      repositoryId
+    }))
+  );
   const headCommitId = addedCommits.find(({ sha }) => sha === branch.newHeadSha).id;
 
   const existingBranch = await branchRepository.getByNameAndRepoId(branch.name, repositoryId);

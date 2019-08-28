@@ -10,7 +10,5 @@ module.exports = {
       { transaction }
     )
   ])),
-  down: queryInterface => queryInterface.sequelize.transaction(transaction => Promise.all([
-    queryInterface.removeConstraint('branches', 'unique_branchname_per_repo', { transaction })
-  ]))
+  down: queryInterface => queryInterface.sequelize.transaction(transaction => Promise.all([queryInterface.removeConstraint('branches', 'unique_branchname_per_repo', { transaction })]))
 };

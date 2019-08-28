@@ -2,13 +2,20 @@ const UserRepository = require('../../data/repositories/user.repository');
 const StarRepository = require('../../data/repositories/star.repository');
 const OrgUserRepository = require('../../data/repositories/org-user.repository');
 
+const CustomError = require('../../helpers/error.helper');
 const tokenHelper = require('../../helpers/token.helper');
 
-const getUserById = userId => UserRepository.getUserById(userId);
+const getUserById = async (userId) => {
+  const user = await UserRepository.getUserById(userId);
+  return user || Promise.reject(new CustomError(404, `User with id ${userId} not found`));
+};
 
-const getUsersOrganizations = async userId => OrgUserRepository.getUsersOrganizations(userId);
+const getUsersOrganizations = userId => OrgUserRepository.getUsersOrganizations(userId);
 
-const getUserDetailed = username => UserRepository.getUserDetailed(username);
+const getUserDetailed = async (username) => {
+  const user = await UserRepository.getUserDetailed(username);
+  return user || Promise.reject(new CustomError(404, `User ${username} not found`));
+};
 
 const getUserByUsername= username => UserRepository.getByUsername(username);
 
@@ -30,15 +37,16 @@ const resetPassword = async ({ token, password }) => {
   const result = { status: 200, message: 'Password updated' };
   const authorizedData = await tokenHelper.verifyToken(token);
   if (!authorizedData) {
-    const errorObj = { status: 401, message: 'Incorrect token' };
-    return Promise.reject(errorObj);
+    return Promise.reject(new CustomError(401, 'Incorrect token'));
   }
   await UserRepository.setUserPassword(authorizedData.data, password);
   return result;
 };
 
 const updateUserSettings = async ({ id, settings }) => {
-  const { name, bio, url, company, location, imgUrl } = settings;
+  const {
+    name, bio, url, company, location, imgUrl
+  } = settings;
   const data = await UserRepository.updateUserById(id, {
     name,
     bio,

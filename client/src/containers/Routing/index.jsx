@@ -33,6 +33,7 @@ class Routing extends React.Component {
         <div className="content">
           <Header />
           <Switch>
+            <Route exact path="/not-found" component={NotFound} />
             <PublicRoute exact path="/registration" component={Signup} />
             <PublicRoute exact path="/login" component={Login} />
             <PublicRoute exact path="/" component={MainPage} />
@@ -46,6 +47,7 @@ class Routing extends React.Component {
             <PrivateRoute exact path="/organizations/:orgname/repositories/new" component={CreateRepository} />
             <PrivateRoute exact path="/:username" component={Dashboard} />
             <PrivateRoute exact path="/:username/issues" component={Issues} />
+            <PrivateRoute exact path="/:username/pull-requests" component={NotFound} />
             <PrivateRoute path="/:username/:reponame" component={RepositoryPage} />
             <Route path="*" component={NotFound} />
           </Switch>

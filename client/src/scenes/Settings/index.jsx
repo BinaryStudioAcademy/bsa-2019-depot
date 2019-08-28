@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Link, Route, Redirect } from 'react-router-dom';
+import { Switch, NavLink, Route, Redirect } from 'react-router-dom';
 import { Grid, Menu, Divider } from 'semantic-ui-react';
 import PrivateRoute from '../../containers/PrivateRoute';
 import PropTypes from 'prop-types';
@@ -19,15 +19,21 @@ const Settings = ({ match }) => {
         <Grid.Column computer={4} tablet={8} mobile={16}>
           <Menu vertical>
             <Menu.Item header>Personal settings</Menu.Item>
-            <Menu.Item>
-              <Link to={`${match.url}/profile`}>Profile</Link>
-            </Menu.Item>
-            <Menu.Item>
-              <Link to={`${match.url}/keys`}>SSH Keys</Link>
-            </Menu.Item>
-            <Menu.Item>
-              <Link to={`${match.url}/organizations`}>Organizations</Link>
-            </Menu.Item>
+            <NavLink to={`${match.url}/profile`} activeClassName="active">
+              <Menu.Item>
+                Profile
+              </Menu.Item>
+            </NavLink>
+            <NavLink to={`${match.url}/keys`} activeClassName="active">
+              <Menu.Item>
+                SSH Keys
+              </Menu.Item>
+            </NavLink>
+            <NavLink to={`${match.url}/organizations`} activeClassName="active">
+              <Menu.Item>
+                Organizations
+              </Menu.Item>
+            </NavLink>
           </Menu>
         </Grid.Column>
         <Grid.Column computer={12} tablet={16} mobile={16}>
