@@ -50,6 +50,6 @@ function* watchDeleteRepo() {
   yield takeEvery(types.DELETE_REPO, deleteRepo);
 }
 
-export default function* repoSettingsSagas() {
+export default function* repoOptionsSagas() {
   yield all([watchSettingsRequest(), watchRenameRepo(), watchDeleteRepo()]);
 }

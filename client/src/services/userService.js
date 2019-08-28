@@ -27,7 +27,7 @@ export const updateSettings = async request => {
   return response.json();
 };
 
-export const getKeys = async (userId) => {
+export const getKeys = async userId => {
   const response = await callWebApi({
     endpoint: `/api/users/${userId}/keys`,
     type: 'GET'
@@ -86,6 +86,14 @@ export const getUsersToInviting = async (username, orgID) => {
 export const getUsersOrganizations = async userid => {
   const response = await callWebApi({
     endpoint: `/api/users/${userid}/organizations`,
+    type: 'GET'
+  });
+  return response.json();
+};
+
+export const getUsersForCollaboratorsAddition = async (username, repositoryId) => {
+  const response = await callWebApi({
+    endpoint: `/api/users/search/collaborators/${username}/${repositoryId}`,
     type: 'GET'
   });
   return response.json();

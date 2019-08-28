@@ -3,7 +3,7 @@ import { Grid, Menu } from 'semantic-ui-react';
 import { Switch, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import PrivateRoute from '../PrivateRoute';
-import RepositoryOptions from '../RepositoryOptions';
+// import RepositoryOptions from '../RepositoryOptions';
 import CollaboratorsPage from '../CollaboratorsPage';
 import styles from './styles.module.scss';
 
@@ -24,8 +24,8 @@ class RepoSettings extends React.Component {
         </Grid.Column>
         <Grid.Column width={12} className={styles.second_column}>
           <Switch>
-            <PrivateRoute path={`${match.path}`} component={RepositoryOptions} />
-            <PrivateRoute path={`${match.path}/collaborators`} component={CollaboratorsPage} />
+            {/* <PrivateRoute path={`${match.path}`} component={RepositoryOptions} /> */}
+            <PrivateRoute path={`${match.path}`} component={CollaboratorsPage} />
           </Switch>
         </Grid.Column>
       </Grid>

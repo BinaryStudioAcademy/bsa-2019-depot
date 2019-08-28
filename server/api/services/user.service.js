@@ -1,6 +1,7 @@
 const UserRepository = require('../../data/repositories/user.repository');
 const StarRepository = require('../../data/repositories/star.repository');
 const OrgUserRepository = require('../../data/repositories/org-user.repository');
+const CollaboratorRepository = require('../../data/repositories/collaborator.repository');
 
 const tokenHelper = require('../../helpers/token.helper');
 
@@ -66,6 +67,16 @@ const getUsersToInviting = async ({ orgID, username }) => {
   return usernames;
 };
 
+const getUsersForCollaboratorsAddition = async ({ username, repoId }) => {
+  const repos = (await CollaboratorRepository.findRepoById(repoId)).map(repo => repo.get({plain: true})).map(({ userId }) => userId);
+  const users = (await UserRepository.findUserByLetter(username))
+    .map(user => user.get({plain: true}))
+    .filter(({ id }) => !repos.includes(id))
+    .map(({ username }) => username)
+    .slice(0, 6);
+  return users;
+};
+
 module.exports = {
   getUserById,
   setUsername,
@@ -75,5 +86,6 @@ module.exports = {
   getUserDetailed,
   getStars,
   getUsersToInviting,
-  getUsersOrganizations
+  getUsersOrganizations,
+  getUsersForCollaboratorsAddition
 };

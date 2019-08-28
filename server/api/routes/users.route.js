@@ -9,7 +9,8 @@ const {
   getUserDetailed,
   getStars,
   getUsersToInviting,
-  getUsersOrganizations
+  getUsersOrganizations,
+  getUsersForCollaboratorsAddition
 } = require('../services/user.service');
 const { getReposData, getByUserAndReponame } = require('../services/repo.service');
 const { getCommitsAndCreatedRepoByDate } = require('../services/commit.service');
@@ -101,6 +102,13 @@ router.get('/:username/repos', (req, res, next) => {
 router.get('/:username/repos/:repo', (req, res, next) => {
   const { username, repo } = req.params;
   getByUserAndReponame({ owner: username, reponame: repo })
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.get('/search/collaborators/:username/:repoId', (req, res, next) => {
+  const { username, repoId } = req.params;
+  getUsersForCollaboratorsAddition({ username, repoId })
     .then(data => res.send(data))
     .catch(next);
 });
