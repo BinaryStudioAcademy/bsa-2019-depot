@@ -6,7 +6,12 @@ const set = async (key, value) => {
 
 const get = async key => await AsyncStorage.getItem(key);
 
+const clear = async () => {
+  await AsyncStorage.clear();
+};
+
 export default {
   set,
-  get
+  get,
+  clear
 };
