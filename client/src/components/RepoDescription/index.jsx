@@ -104,4 +104,11 @@ const RepoDescription = (props) => {
   )
 };
 
+RepoDescription.propTypes = {
+  isown: PropTypes.bool.isRequired,
+  description: PropTypes.string,
+  website: PropTypes.string,
+  onSubmit: PropTypes.func
+};
+
 export default RepoDescription;
