@@ -85,12 +85,6 @@ const createRepo = async (repoData) => {
       const errorObj = { status: 404, message: 'Error! Repos wasn`t created' };
       Promise.reject(errorObj);
     });
-  console.log({
-    userId,
-    name,
-    description,
-    isPublic
-  }); // isPublic presented
   await repoRepository.create({
     userId,
     name,
@@ -186,9 +180,9 @@ const getReposNames = async ({ user: username, filter, limit }) => {
   return repos.map(({ name }) => name);
 };
 
-const getReposData = async ({ username }) => {
+const getReposData = async ({ username, isOwner }) => {
   const { id } = await userRepository.getByUsername(username);
-  return repoRepository.getByUserWithOptions(id);
+  return repoRepository.getByUserWithOptions(id, isOwner);
 };
 
 const forkRepo = async ({

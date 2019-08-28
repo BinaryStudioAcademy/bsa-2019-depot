@@ -12,10 +12,14 @@ class RepositoryRepository extends BaseRepository {
     return this.model.findAll({ where: { userId } });
   }
 
-  getByUserWithOptions(userId, options = {}) {
+  getByUserWithOptions(userId, isOwner, options = {}) {
+    let whereStatement = { userId };
+    if (!isOwner) {
+      whereStatement = { userId, isPublic: true };
+    }
     const { filter, limit, sortByCreatedDateDesc } = options;
     const findOptions = {
-      where: { userId },
+      where: whereStatement,
       attributes: {
         include: [
           [
