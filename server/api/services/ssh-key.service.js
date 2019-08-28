@@ -2,6 +2,7 @@ const fs = require('fs');
 const SshKeyRepository = require('../../data/repositories/ssh-key.repository');
 const { generateFingerprint } = require('../../helpers/fingerprint.helper');
 const { sshKeysPath } = require('../../config/ssh-key.config');
+const CustomError = require('../../helpers/error.helper');
 
 const createKey = async (keyData) => {
   await new Promise((resolve, reject) => {
@@ -14,7 +15,10 @@ const createKey = async (keyData) => {
   return SshKeyRepository.create({ ...keyData, fingerprint });
 };
 
-const getKeysByUser = userId => SshKeyRepository.getByUser(userId);
+const getKeysByUser = async (userId) => {
+  const keys = await SshKeyRepository.getByUser(userId);
+  return keys || Promise.reject(new CustomError(404, `SSH keys for user id ${userId} not found`));
+};
 
 const deleteKey = async (keyId) => {
   const { value: key } = await SshKeyRepository.getById(keyId);
