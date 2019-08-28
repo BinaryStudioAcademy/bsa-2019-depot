@@ -76,6 +76,20 @@ class RepoSettings extends React.Component {
     history.push(`/${owner}`);
   };
 
+  onClickRename = ({ name }) => {
+    const { owner } = this.state;
+    const { oldName } = this;
+    const { renameRepo, history } = this.props;
+
+    renameRepo({
+      owner,
+      oldName,
+      name
+    });
+    history.push(`/${owner}/${name}/settings`);
+    window.location.reload();
+  };
+
   onClickUpdateRepoType = async () => {
     const { owner, name, repoInfo } = this.state;
     const { history } = this.props;
