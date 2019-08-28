@@ -9,6 +9,8 @@ const starRepository = require('../../data/repositories/star.repository');
 const branchRepository = require('../../data/repositories/branch.repository');
 const commitRepository = require('../../data/repositories/commit.repository');
 
+const CustomError = require('../../helpers/error.helper');
+
 const initialCommit = async ({
   owner, email, repoName, files
 }) => {
@@ -129,18 +131,31 @@ const isEmpty = async ({ owner, reponame }) => {
 };
 
 const getByUserAndReponame = async ({ owner, reponame }) => {
-  const { id } = await userRepository.getByUsername(owner);
-  return repoRepository.getByUserAndReponame(id, reponame);
+  const user = await userRepository.getByUsername(owner);
+  if (!user) {
+    return Promise.reject(new CustomError(404, `User ${owner} not found`));
+  }
+  const repository = await repoRepository.getByUserAndReponame(user.id, reponame);
+  if (!repository) {
+    return Promise.reject(new CustomError(404, `Repository ${reponame} not found`));
+  }
+  return repository;
 };
 
 const updateByUserAndReponame = async ({ owner, reponame, data }) => {
-  const { id } = await userRepository.getByUsername(owner);
-  return repoRepository.updateByUserAndReponame(id, reponame, data);
+  const user = await userRepository.getByUsername(owner);
+  if (!user) {
+    return Promise.reject(new CustomError(404, `User ${owner} not found`));
+  }
+  return repoRepository.updateByUserAndReponame(user.id, reponame, data);
 };
 
 const deleteByUserAndReponame = async ({ owner, reponame }) => {
-  const { id } = await userRepository.getByUsername(owner);
-  return repoRepository.deleteByUserAndReponame(id, reponame);
+  const user = await userRepository.getByUsername(owner);
+  if (!user) {
+    return Promise.reject(new CustomError(404, `User ${owner} not found`));
+  }
+  return repoRepository.deleteByUserAndReponame(user.id, reponame);
 };
 
 const renameRepo = async ({ repoName, newName, username }) => {
@@ -170,19 +185,25 @@ const deleteRepo = async ({ repoName, username }) => {
 };
 
 const getReposNames = async ({ user: username, filter, limit }) => {
-  const { id } = await userRepository.getByUsername(username);
+  const user = await userRepository.getByUsername(username);
+  if (!user) {
+    return Promise.reject(new CustomError(404, `User ${username} not found`));
+  }
   const findOptions = {
     filter,
     limit,
     sortByCreatedDateDesc: true
   };
-  const repos = await repoRepository.getByUserWithOptions(id, findOptions);
+  const repos = await repoRepository.getByUserWithOptions(user.id, findOptions);
   return repos.map(({ name }) => name);
 };
 
 const getReposData = async ({ username }) => {
-  const { id } = await userRepository.getByUsername(username);
-  return repoRepository.getByUserWithOptions(id);
+  const user = await userRepository.getByUsername(username);
+  if (!user) {
+    return Promise.reject(new CustomError(404, `User ${username} not found`));
+  }
+  return repoRepository.getByUserWithOptions(user.id);
 };
 
 const forkRepo = async ({
