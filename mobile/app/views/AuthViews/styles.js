@@ -1,25 +1,7 @@
-import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet, TextInput, KeyboardAvoidingView } from 'react-native';
-
+import { StyleSheet } from 'react-native';
 import colors from '../../config/color.config';
 
-class SignUpView extends React.Component {
-  render() {
-    return (
-      <KeyboardAvoidingView style={styles.container} behavior="padding" keyboardVerticalOffset={-200}>
-        <View style={styles.form}>
-          <Text style={styles.title}>{'Join Depot'}</Text>
-          <TextInput selectionColor={'blue'} placeholder={'Username'} style={styles.textInput} />
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.text}>{'Set Username'}</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
-    );
-  }
-}
-
-const styles = StyleSheet.create({
+export default StyleSheet.create({
   button: {
     alignItems: 'center',
     backgroundColor: colors.blueButton,
@@ -30,6 +12,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     paddingVertical: 12,
     width: '100%'
+  },
+  buttonGoogle: {
+    backgroundColor: colors.greyButton
   },
   container: {
     alignItems: 'center',
@@ -42,11 +27,32 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '80%'
   },
+  link: {
+    color: colors.blueLink
+  },
+  logo: {
+    alignSelf: 'center',
+    flex: 1,
+    resizeMode: 'contain',
+    width: '90%'
+  },
+  // eslint-disable-next-line react-native/no-color-literals
+  signInUp: {
+    backgroundColor: 'rgba(0, 0, 0, 0)'
+  },
   text: {
     color: colors.white,
     fontWeight: 'bold',
     height: 20,
     textAlign: 'center'
+  },
+  textCreateAccount: {
+    color: colors.black,
+    height: 20,
+    textAlign: 'center'
+  },
+  textGoogle: {
+    color: colors.greyText
   },
   textInput: {
     borderBottomWidth: StyleSheet.hairlineWidth,
@@ -62,5 +68,3 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   }
 });
-
-export default SignUpView;
