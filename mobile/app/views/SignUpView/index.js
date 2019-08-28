@@ -5,7 +5,7 @@ import { View, TouchableOpacity, Text, StyleSheet, TextInput, KeyboardAvoidingVi
 import colors from '../../config/color.config';
 
 class SignUpView extends React.Component {
-  toSignIn = () => this.props.navigation.navigate('SignIn');
+  toSignIn = () => this.props.navigation.goBack();
   render() {
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding" keyboardVerticalOffset={-200}>
