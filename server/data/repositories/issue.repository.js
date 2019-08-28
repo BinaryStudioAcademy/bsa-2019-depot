@@ -17,7 +17,7 @@ const parseSortQuery = (sort) => {
     return [['updatedAt', 'ASC']];
   case 'updated_desc':
     return [['updatedAt', 'DESC']];
-  case 'coments_desc':
+  case 'comments_desc':
     return [[sequelize.literal('commentsCount'), 'DESC']];
   default:
     return [];
@@ -88,9 +88,7 @@ class IssueRepository extends BaseRepository {
     });
   }
 
-  getIssues({
-    repositoryId, sort, author, title
-  }) {
+  getIssues(repositoryId, sort, author, title) {
     //
     return this.model.findAll({
       where: {

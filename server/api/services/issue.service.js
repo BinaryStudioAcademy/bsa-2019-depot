@@ -6,7 +6,7 @@ const updateIssueById = ({ id, ...issueData }) => issueRepository.updateIssueByI
 
 const getAllRepoIssues = repositoryId => issueRepository.getRepositoryIssues(repositoryId);
 
-const getRepoIssues = query => issueRepository.getIssues(query);
+const getRepoIssues = (repositoryId, sort, author, title) => issueRepository.getIssues(repositoryId, sort, author, title);
 
 const getIssueById = id => issueRepository.getIssueById(id);
 
