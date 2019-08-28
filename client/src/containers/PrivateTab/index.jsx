@@ -12,20 +12,25 @@ const PrivateTab = ({ username, location, ...props }) => {
     .filter(urlPart => urlPart)
     .slice(0, 2);
 
-  const [isAccessGranted, setIsAccessGranted] = useState(true);
+  const [accessPermissions, setAccessPermissions] = useState('ADMIN');
 
-  const getPermission = async () => {
+  const getPermissions = async () => {
     const { userId } = props;
-    const access = Boolean((await getUserRights(owner, reponame, userId))[0]);
-    setIsAccessGranted(access);
+    const response = (await getUserRights(owner, reponame, userId))[0];
+    if (response) {
+      const {
+        permission: { name }
+      } = response;
+      setAccessPermissions(name);
+    }
   };
 
   useEffect(() => {
-    getPermission();
+    getPermissions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (username && username === owner) || isAccessGranted ? (
+  return (username && username === owner) || accessPermissions === 'ADMIN' ? (
     <Route {...props} render={renderComponent} />
   ) : (
     <Redirect to={{ pathname: `/${owner}/${reponame}`, state: { from: location } }} />

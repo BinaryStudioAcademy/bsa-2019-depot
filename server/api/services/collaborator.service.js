@@ -24,7 +24,6 @@ const addCollaborator = async ({ senderUsername, username, reponame, repositoryI
 };
 
 const getUserRights = async (username, reponame, userId) => {
-  console.log('username, reponame: ', username, reponame);
   const { id: repositoryId } = await getByUserAndReponame({ owner: username, reponame });
   return await collaboratorRepository.getUserRights(userId, repositoryId);
 };

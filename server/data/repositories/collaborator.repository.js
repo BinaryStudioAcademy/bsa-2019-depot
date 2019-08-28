@@ -1,5 +1,5 @@
 const BaseRepository = require('./base.repository');
-const { CollaboratorModel } = require('../models/index');
+const { CollaboratorModel, PermissionModel } = require('../models/index');
 
 class CollaboratorRepository extends BaseRepository {
   findRepoById(id) {
@@ -9,7 +9,18 @@ class CollaboratorRepository extends BaseRepository {
   }
 
   getUserRights(userId, repositoryId) {
-    return this.model.findAll({ where: { userId, repositoryId } });
+    return this.model.findAll({
+      where: { 
+        userId, 
+        repositoryId 
+      },
+      include: [
+        {
+          model: PermissionModel,
+          attributes: ['name']
+        }
+      ]
+    });
   }
 }
 

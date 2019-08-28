@@ -38,15 +38,20 @@ const RepositoryHeader = ({
     activeTab = 'code';
   }
 
-  const [isAccessGranted, setIsAccessGranted] = useState(false);
+  const [accessPermissions, setAccessPermissions] = useState(null);
 
-  const getPermission = async () => {
-    const access = Boolean((await getUserRights(paramsUsername, repoName, userId))[0]);
-    setIsAccessGranted(access);
+  const getPermissions = async () => {
+    const response = (await getUserRights(paramsUsername, repoName, userId))[0];
+    if (response) {
+      const {
+        permission: { name }
+      } = response;
+      setAccessPermissions(name);
+    }
   };
 
   useEffect(() => {
-    getPermission();
+    getPermissions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -105,7 +110,7 @@ const RepositoryHeader = ({
                 Issues<Label circular>{issueCount}</Label>
               </Link>
             </div>
-            {((username && username === owner) || isAccessGranted) && (
+            {((username && username === owner) || accessPermissions === 'ADMIN') && (
               <div className={`${activeTab === 'settings' && 'active'} item`}>
                 <Link to={`${baseUrl}/settings`}>
                   <Icon name="cog" /> Settings
