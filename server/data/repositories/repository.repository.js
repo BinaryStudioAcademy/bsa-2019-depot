@@ -13,10 +13,7 @@ class RepositoryRepository extends BaseRepository {
   }
 
   getByUserWithOptions(userId, isOwner, options = {}) {
-    let whereStatement = { userId };
-    if (!isOwner) {
-      whereStatement = { userId, isPublic: true };
-    }
+    const whereStatement = isOwner ? { userId } : { userId, isPublic: true };
     const { filter, limit, sortByCreatedDateDesc } = options;
     const findOptions = {
       where: whereStatement,
