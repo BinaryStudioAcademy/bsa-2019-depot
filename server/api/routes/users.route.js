@@ -16,6 +16,7 @@ const {
 const { getReposData, getByUserAndReponame } = require('../services/repo.service');
 const { getCommitsAndCreatedRepoByDate } = require('../services/commit.service');
 const { getKeysByUser } = require('../services/ssh-key.service');
+const { getAllIssues, getAllIssuesCount } = require('../services/issue.service');
 const { clientUrl } = require('../../config/common.config');
 
 const router = Router();
@@ -118,5 +119,15 @@ router.delete('/image', (req, res, next) => {
     .then(data => res.send(data))
     .catch(next);
 });
+
+router.get('/:userId/issues', (req, res, next) => {
+    const { userId } = req.params;
+    const { isOpened } = req.query;
+    Promise.all([getAllIssuesCount(userId, true ), getAllIssuesCount(userId, false ),getAllIssues(userId, isOpened )])
+      .then(result => {
+        res.send({"open" : result[0] , "close" :  result[1], "issues" : result[2]} )
+      })
+      .catch(next);
+  });
 
 module.exports = router;

@@ -5,6 +5,10 @@ const addIssue = issueData => issueRepository.addIssue(issueData);
 
 const updateIssueById = ({ id, ...issueData }) => issueRepository.updateIssueById(id, { issueData });
 
+const getAllIssues = (userId, isOpened) => issueRepository.getAllIssues(userId, isOpened);
+
+const getAllIssuesCount = (userId, isOpened) => issueRepository.getAllIssuesCount(userId, isOpened);
+
 const getAllRepoIssues = repositoryId => issueRepository.getRepositoryIssues(repositoryId);
 
 const getRepoIssueByNumber = request => issueRepository.getRepoIssueByNumber(request);
@@ -20,6 +24,8 @@ const deleteIssueCommentById = issueCommentId => issueCommentRepository.deleteIs
 module.exports = {
   addIssue,
   updateIssueById,
+  getAllIssues,
+  getAllIssuesCount,
   getAllRepoIssues,
   getRepoIssueByNumber,
   getAllIssueComments,

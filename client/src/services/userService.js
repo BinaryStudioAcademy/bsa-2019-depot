@@ -27,7 +27,6 @@ export const updateSettings = async request => {
   return response.json();
 };
 
-
 export const uploadUserPhoto = async request => {
   const response = await callWebApi({
     endpoint: '/api/users/image',

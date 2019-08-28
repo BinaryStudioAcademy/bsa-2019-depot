@@ -1,5 +1,8 @@
+const sequelize  = require ('../db/connection');
 const BaseRepository = require('./base.repository');
 const { IssueModel, UserModel, RepositoryModel } = require('../models/index');
+
+const openCase = bool => `CASE WHEN "issues"."isOpened" = ${bool} THEN 1 ELSE 0 END`;
 
 class IssueRepository extends BaseRepository {
   async addIssue({ ...issueData }) {
@@ -36,6 +39,27 @@ class IssueRepository extends BaseRepository {
     });
   }
 
+  getAllIssues(userId, isOpened) {
+    return this.model.findAll({
+      where: { userId, isOpened },
+      include: [
+        {
+          model: RepositoryModel,
+          attributes: ['name']
+        },
+        {
+          model: UserModel,
+          where: {id: userId},
+          attributes: ['id', 'username']
+        }
+      ]
+    });
+  }
+  getAllIssuesCount(userId, isOpened) {
+    return this.model.count({
+      where: { userId, isOpened },
+    });
+  }
   getRepoIssueByNumber({ username, name, number }) {
     return this.model.findOne({
       where: { number },
