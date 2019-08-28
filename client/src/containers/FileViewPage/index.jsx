@@ -8,6 +8,7 @@ import FileViewer from '../../components/FileViewer';
 import { Link } from 'react-router-dom';
 import { getFileContent } from '../../services/branchesService';
 import { modifyFile } from '../../services/commitsService';
+import { rawServerUrl } from '../../app.config';
 
 import styles from './styles.module.scss';
 
@@ -51,7 +52,7 @@ class FileViewPage extends React.Component {
     const { username, reponame, branch } = match.params;
 
     window.location
-      .replace(`${process.env.REACT_APP_RAW_SERVER_URL}/${username}/${reponame}/${branch}/${this.filepath}?token=${localStorage.getItem('token')}`);
+      .replace(`${rawServerUrl}/${username}/${reponame}/${branch}/${this.filepath}?token=${localStorage.getItem('token')}`);
   }
 
   handleEditFile() {
