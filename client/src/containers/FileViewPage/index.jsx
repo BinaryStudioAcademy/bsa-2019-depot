@@ -8,6 +8,7 @@ import FileViewer from '../../components/FileViewer';
 import { Link } from 'react-router-dom';
 import { getFileContent } from '../../services/branchesService';
 import { modifyFile } from '../../services/commitsService';
+import { rawServerUrl } from '../../app.config';
 
 import styles from './styles.module.scss';
 
@@ -25,6 +26,7 @@ class FileViewPage extends React.Component {
     };
 
     this.handleCopyPath = this.handleCopyPath.bind(this);
+    this.handleOpenRaw = this.handleOpenRaw.bind(this);
     this.handleEditFile = this.handleEditFile.bind(this);
     this.handleDeleteFile = this.handleDeleteFile.bind(this);
   }
@@ -43,6 +45,15 @@ class FileViewPage extends React.Component {
 
   handleCopyPath() {
     navigator.clipboard.writeText(this.filepath);
+  }
+
+  handleOpenRaw() {
+    const { match } = this.props;
+    const { username, reponame, branch } = match.params;
+
+    window.location.replace(
+      `${rawServerUrl}/${username}/${reponame}/${branch}/${this.filepath}?token=${localStorage.getItem('token')}`
+    );
   }
 
   handleEditFile() {
@@ -116,7 +127,12 @@ class FileViewPage extends React.Component {
             <FilePathBreadcrumbSections owner={owner} reponame={reponame} branch={branch} filepath={filepathDirs} />
             <Breadcrumb.Section>{filename}</Breadcrumb.Section>
           </Breadcrumb>
-          <Button compact size="small" className={styles.copyButton} onClick={this.handleCopyPath}>
+          <Button
+            compact
+            size="small"
+            className={[styles.copyButton, styles.actionButton].join(' ')}
+            onClick={this.handleCopyPath}
+          >
             Copy path
           </Button>
         </div>
@@ -126,12 +142,22 @@ class FileViewPage extends React.Component {
               <code className={styles.lineCount}>{lineCount} lines</code>
               <code>{this.formatBytes(size)}</code>
             </div>
-            {username && username === owner && (
-              <div className={styles.fileControls}>
-                <Icon link name="pencil" onClick={this.handleEditFile} />
-                <Icon link name="trash alternate" onClick={this.handleDeleteFile} />
-              </div>
-            )}
+            <div className={styles.fileControls}>
+              <Button
+                compact
+                size="small"
+                className={[styles.rawButton, styles.actionButton].join(' ')}
+                onClick={this.handleOpenRaw}
+              >
+                Raw
+              </Button>
+              {username && username === owner && (
+                <>
+                  <Icon link name="pencil" onClick={this.handleEditFile} />
+                  <Icon link name="trash alternate" onClick={this.handleDeleteFile} />
+                </>
+              )}
+            </div>
           </Segment>
           <Segment className={styles.fileView}>
             {fileExtension === 'md' ? (
