@@ -51,7 +51,7 @@ class FileViewPage extends React.Component {
     const { username, reponame, branch } = match.params;
     const filename = location.pathname.split('/').pop();
 
-    window.location.replace(`${process.env.REACT_APP_RAW_SERVER_URL}/${username}/${reponame}/${branch}/${filename}`);
+    window.location.replace(`${process.env.REACT_APP_RAW_SERVER_URL}/${username}/${reponame}/${branch}/${this.filepath}`);
   }
 
   handleEditFile() {

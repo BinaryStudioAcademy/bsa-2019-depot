@@ -128,7 +128,7 @@ _/client/.env_
 SKIP_PREFLIGHT_CHECK = true
 PORT = 3001  # default. has to be changed if it is different
 REACT_APP_SERVER_URL = "http://localhost:3000"  # default. has to be changed if it is different
-REACT_APP_RAW_SERVER_URL = http://localhost:3002  # default. has to be changed if it is different
+REACT_APP_RAW_SERVER_URL = http://localhost:3003  # default. has to be changed if it is different
 ```
 
 _/server/.env_
@@ -170,7 +170,7 @@ SSH_KEYS = .ssh/authorized_keys # default path to 'authorized_keys' file to stor
 _/raw-server/.env_
 
 ```
-RAW_SERVER_PORT = 3002  # default. own preference might be used
+RAW_SERVER_PORT = 3003  # default. own preference might be used
 SERVER_HOST = http://localhost:3000  # default. should be changed to the actual one
 ```
 
