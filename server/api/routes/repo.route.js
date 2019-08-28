@@ -160,7 +160,9 @@ router
   })
   .put('/:owner/:reponame/change-type', ownerOnlyMiddleware, (req, res, next) => {
     const { owner, reponame } = req.params;
-    const { userId, repositoryId, isPublic } = req.body;
+    const {
+      body: { userId, repositoryId, isPublic }
+    } = req;
     updateByUserAndReponame({ owner, reponame, data: req.body })
       .then(data => res.send(data))
       .catch(next);
