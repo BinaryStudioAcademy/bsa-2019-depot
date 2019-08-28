@@ -42,24 +42,26 @@ const initialCommit = async ({
   await NodeGit.Branch.create(repo, 'master', commit, 1);
 
   await repoHelper.syncDb(
-    [{
-      repoOwner: owner,
-      repoName,
-      sha: commit.sha(),
-      message: 'Initial commit',
-      userEmail: email,
-      createdAt: new Date()
-    }],
+    [
+      {
+        repoOwner: owner,
+        repoName,
+        sha: commit.sha(),
+        message: 'Initial commit',
+        userEmail: email,
+        createdAt: new Date()
+      }
+    ],
     {
       name: 'master',
-      newHeadSha: commit.sha(),
+      newHeadSha: commit.sha()
     }
   );
 };
 
 const createRepo = async (repoData) => {
   const {
-    owner, name, userId, description
+    owner, name, userId, description, isPublic
   } = repoData;
   let result = 'Repo was created';
   const pathToRepo = repoHelper.getPathToRepo(owner, name);
@@ -70,18 +72,30 @@ const createRepo = async (repoData) => {
         url: pathToRepo
       };
 
-      await fs.copy(path.resolve(`${__dirname}/../../../scripts/git-hooks/pre-receive`), path.resolve(`${pathToRepo}/hooks/pre-receive`));
-      await fs.copy(path.resolve(`${__dirname}/../../../scripts/git-hooks/update`), path.resolve(`${pathToRepo}/hooks/update`));
+      await fs.copy(
+        path.resolve(`${__dirname}/../../../scripts/git-hooks/pre-receive`),
+        path.resolve(`${pathToRepo}/hooks/pre-receive`)
+      );
+      await fs.copy(
+        path.resolve(`${__dirname}/../../../scripts/git-hooks/update`),
+        path.resolve(`${pathToRepo}/hooks/update`)
+      );
     })
     .catch(() => {
       const errorObj = { status: 404, message: 'Error! Repos wasn`t created' };
       Promise.reject(errorObj);
     });
-
+  console.log({
+    userId,
+    name,
+    description,
+    isPublic
+  }); // isPublic presented
   await repoRepository.create({
     userId,
     name,
-    description
+    description,
+    isPublic
   });
 
   const initialData = repoHelper.generateInitialData({ ...repoData });
