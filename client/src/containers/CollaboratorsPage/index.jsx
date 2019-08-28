@@ -1,10 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Container, Divider, Form, Search, Button } from 'semantic-ui-react';
+import { Container, Divider, Form, Search, Button, Checkbox } from 'semantic-ui-react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { getRepositoryByOwnerAndName } from '../../services/repositoryService';
 import { getUsersForCollaboratorsAddition } from '../../services/userService';
+import { invite } from '../../services/inviteCollaboratorService';
 
 import styles from './styles.module.scss';
 
@@ -23,9 +25,6 @@ class CollaboratorsPage extends React.Component {
     super(props);
     this.state = {
       ...initialState,
-      // isLoading: false,
-      // results: [],
-      // value: '',
       collaborators: [],
       repositoryId: null
     };
@@ -45,15 +44,10 @@ class CollaboratorsPage extends React.Component {
 
   handleSearchChange = async (e, { value }) => {
     const { repositoryId } = this.state;
+    const { userId } = this.props;
     this.setState({ isLoading: true, value });
     if (!value) return this.setState(initialState);
-    // if (!value) return this.setState({
-    //   isLoading: false,
-    //   results: [],
-    //   value: ''
-    // });
-
-    const users = await getUsersForCollaboratorsAddition(value, repositoryId);
+    const users = await getUsersForCollaboratorsAddition(value, repositoryId, userId);
     const results = users.map(user => ({
       content: user
     }));
@@ -65,23 +59,28 @@ class CollaboratorsPage extends React.Component {
 
   resultRenderer = ({ content }) => <p>{content}</p>;
 
+  handleResultSelect = (e, { result }) => this.setState({ username: result.content });
+
+  handleChangeRadio = handleChange => (e, data) => {
+    const { name, value } = data;
+    e.target.name = name;
+    e.target.value = value;
+    handleChange(e);
+  };
+
   submitCollaboratorAddition = values => {
-    // console.log('id: ', id);
-    // const { history, match } = this.props;
-    // const { name } = match.params;
-    // const { username } = this.state;
-    // const { role } = values;
-    // invite({
-    //   orgName: name,
-    //   username,
-    //   role
-    // });
-    // history.push(`/${name}`);
+    const { permission } = values;
+    const { userId } = this.props;
+    const { repositoryId } = this.state;
+    invite({
+      userId,
+      repositoryId,
+      permission
+    });
   };
 
   renderCollaboratorsPage = () => {
     const { collaborators, isLoading, value, results } = this.state;
-    // const { name } = this.props.match.params;
 
     return (
       <Container>
@@ -127,48 +126,55 @@ class CollaboratorsPage extends React.Component {
   };
 
   renderChoosePermission = ({ errors, touched, handleChange, handleBlur, handleSubmit, values }) => {
-    // const { name } = this.props.match.params;
-    // const { username } = this.state;
-    // const { permission } = values;
-    // const handleChangeRadio = this.handleChangeRadio(handleChange);
-    // const rolesDescription = this.getRolesDescription();
+    const { permission } = values;
+    const handleChangeRadio = this.handleChangeRadio(handleChange);
 
     return (
       <Form className={styles.formField} onSubmit={handleSubmit}>
         <Container textAlign="left">
-          />
           <h2 className={styles.roleToOrgTitle}>Collaborator permission:</h2>
-          {/* {rolesDescription.map(role => role)} */}
-          {/* <Form.Field>
+          <Form.Field>
             <Checkbox
               radio
-              name="role"
-              label="Member"
-              value="MEMBER"
-              checked={role === 'MEMBER'}
+              name="permission"
+              label="Admin"
+              value="ADMIN"
+              checked={permission === 'ADMIN'}
               onChange={handleChangeRadio}
             />
             <p className={styles.note}>
-              Members can see all other members, and can be granted access to repositories. They can also create new
-              teams and repositories.{' '}
+              Can read, clone and push to this repository. Can also manage issues, pull requests, and repository
+              settings, including adding collaborators.{' '}
             </p>
           </Form.Field>
           <Form.Field>
             <Checkbox
               radio
-              name="role"
-              label="Owner"
-              value="OWNER"
-              checked={role === 'OWNER'}
+              name="permission"
+              label="Write"
+              value="WRITE"
+              checked={permission === 'WRITE'}
               onChange={handleChangeRadio}
             />
             <p className={styles.note}>
-              Owners have full administrative rights to the organization and have complete access to all repositories
-              and teams.{' '}
+              Can read and clone this repository. Can also manage issues and pull requests.{' '}
             </p>
-          </Form.Field> */}
+          </Form.Field>
+          <Form.Field>
+            <Checkbox
+              radio
+              name="permission"
+              label="Read"
+              value="READ"
+              checked={permission === 'READ'}
+              onChange={handleChangeRadio}
+            />
+            <p className={styles.note}>
+              Can read and clone this repository. Can also open and comment on issues and pull requests.{' '}
+            </p>
+          </Form.Field>
           <Divider />
-          <Button type="submit" positive fluid>
+          <Button type="submit" positive>
             Send invitation
           </Button>
         </Container>
@@ -195,6 +201,7 @@ class CollaboratorsPage extends React.Component {
 }
 
 CollaboratorsPage.propTypes = {
+  userId: PropTypes.string.isRequired,
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
     isExact: PropTypes.bool.isRequired,
@@ -203,4 +210,12 @@ CollaboratorsPage.propTypes = {
   }).isRequired
 };
 
-export default CollaboratorsPage;
+const mapStateToProps = ({
+  profile: {
+    currentUser: { id }
+  }
+}) => ({
+  userId: id
+});
+
+export default connect(mapStateToProps)(CollaboratorsPage);

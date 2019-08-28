@@ -89,10 +89,50 @@ const createInviteEmail = (email, url, orgName, username) => {
   return params;
 };
 
+const createInviteCollaboratorEmail = (email, url, username, reponame) => {
+  const params = {
+    Destination: {
+      /* required */
+      ToAddresses: [
+        email
+        /* more items */
+      ]
+    },
+    Message: {
+      /* required */
+      Body: {
+        /* required */
+        Html: {
+          Charset: 'UTF-8',
+          Data: `<html><body> 
+                    <p>Hi!</p>
+                    <p>@${username} has invited you to collaborate on the <b>${username}/${reponame}</b> repository
+                    <p>You can also visit <a href=${url}/${username}>@${url}/${username}</a> to learn a bit more about them.</p>
+                    <p><b>Note:</b> This invitation was intended for <a href="mailto:${email}">${email}</a>. If you were not expecting this invitation, you can ignore this email. </p>
+                    <p>Thanks,</p>
+                    <p>Your friends at Depot</p>
+                    </body></html>`
+        },
+        Text: {
+          Charset: 'UTF-8',
+          Data: 'TEXT_FORMAT_BODY'
+        }
+      },
+      Subject: {
+        Charset: 'UTF-8',
+        Data: `${username} invited you to ${username}/${reponame}`
+      }
+    },
+    Source: emailSender /* required */
+  };
+  return params;
+};
+
 const sendEmail = message => ses.sendEmail(message).promise();
 
 module.exports = {
   createTokenEmail,
   createInviteEmail,
+  createInviteCollaboratorEmail,
   sendEmail
 };

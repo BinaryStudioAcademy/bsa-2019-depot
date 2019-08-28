@@ -91,9 +91,9 @@ export const getUsersOrganizations = async userid => {
   return response.json();
 };
 
-export const getUsersForCollaboratorsAddition = async (username, repositoryId) => {
+export const getUsersForCollaboratorsAddition = async (username, repositoryId, userId) => {
   const response = await callWebApi({
-    endpoint: `/api/users/search/collaborators/${username}/${repositoryId}`,
+    endpoint: `/api/users/search/collaborators/${username}/${repositoryId}/${userId}`,
     type: 'GET'
   });
   return response.json();

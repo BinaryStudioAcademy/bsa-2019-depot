@@ -106,9 +106,9 @@ router.get('/:username/repos/:repo', (req, res, next) => {
     .catch(next);
 });
 
-router.get('/search/collaborators/:username/:repoId', (req, res, next) => {
-  const { username, repoId } = req.params;
-  getUsersForCollaboratorsAddition({ username, repoId })
+router.get('/search/collaborators/:username/:repoId/:userId', (req, res, next) => {
+  const { username, repoId, userId } = req.params;
+  getUsersForCollaboratorsAddition({ username, repoId, userId })
     .then(data => res.send(data))
     .catch(next);
 });
