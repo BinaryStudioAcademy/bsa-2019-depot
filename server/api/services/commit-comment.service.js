@@ -3,15 +3,18 @@ const CommitRepository = require('../../data/repositories/commit.repository');
 const CommitCommentRepository = require('../../data/repositories/commit-comment.repository');
 const UserRepository = require('../../data/repositories/user.repository');
 const RepoRepository = require('../../data/repositories/repository.repository');
+const CustomError = require('../../helpers/error.helper');
 
-const getCommitCommentById = commitCommentId => CommitCommentRepository.getCommitCommentById(commitCommentId);
+const getCommitCommentById = async (commitCommentId) => {
+  const commitComment = await CommitCommentRepository.getCommitCommentById(commitCommentId);
+  return commitComment || Promise.reject(new CustomError(404, `Comment with id ${commitCommentId} not found`));
+};
 
 const getCommitCommentsByCommitId = async (commitId) => {
   try {
     const commit = await CommitRepository.getById(commitId);
     if (!commit) {
-      const errorObj = { status: 404, error: `Commit with id ${commitId} does not exist in database` };
-      return Promise.reject(errorObj);
+      return Promise.reject(new CustomError(404, `Commit with id ${commitId} does not exist in database`));
     }
     const commitComments = await CommitCommentRepository.getByCommitId(commitId);
     if (!commitComments.length) {
@@ -43,7 +46,7 @@ const getCommitCommentsByCommitId = async (commitId) => {
     });
     return comments;
   } catch (err) {
-    return Promise.reject(new Error(err.message));
+    return Promise.reject(new CustomError(500, err.message));
   }
 };
 
@@ -99,13 +102,11 @@ const updateCommitComment = async (commitCommentData) => {
 
     const commitComment = await CommitCommentRepository.getCommitCommentById(id);
     if (!commitComment) {
-      const errorObj = { status: 400, message: `Comment with id ${id} does not exist.` };
-      return Promise.reject(errorObj);
+      return Promise.reject(new CustomError(400, `Comment with id ${id} does not exist.`));
     }
     const { userId: commentUserId } = commitComment;
     if (userId !== commentUserId) {
-      const errorObj = { status: 401, message: `User with id ${userId} is not allowed to update this comment.` };
-      return Promise.reject(errorObj);
+      return Promise.reject(new CustomError(401, `User with id ${userId} is not allowed to update this comment.`));
     }
 
     await CommitCommentRepository.updateCommitCommentById(id, {
@@ -143,22 +144,19 @@ const deleteCommitComment = async (id, userId) => {
   try {
     const comment = await CommitCommentRepository.getCommitCommentById(id);
     if (!comment) {
-      const errorObj = { status: 404, error: `Commit comment with ${id} does not exist.` };
-      return Promise.reject(errorObj);
+      return Promise.reject(new CustomError(404, `Commit comment with ${id} does not exist.`));
     }
     const { userId: commitUserId } = comment;
     if (commitUserId !== userId) {
-      const errorObj = { status: 400, error: `User with ${userId} is not allowed to delete comment ${id}.` };
-      return Promise.reject(errorObj);
+      return Promise.reject(new CustomError(400, `User with ${userId} is not allowed to delete comment ${id}.`));
     }
     const result = await CommitCommentRepository.deleteCommitCommentById(id);
     if (!result) {
-      const errorObj = { status: 400, error: `Cannot delete comment ${id}` };
-      return Promise.reject(errorObj);
+      return Promise.reject(new CustomError(400, `Cannot delete comment ${id}`));
     }
     return result;
   } catch (err) {
-    return Promise.reject(new Error(err.message));
+    return Promise.reject(new CustomError(500, err.message));
   }
 };
 

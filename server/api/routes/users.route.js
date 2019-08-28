@@ -10,7 +10,9 @@ const {
   getStars,
   getUsersToInviting,
   getUsersOrganizations,
-  getUsersForCollaboratorsAddition
+  getUsersForCollaboratorsAddition,
+  uploadPhoto,
+  deletePhoto
 } = require('../services/user.service');
 const { getReposData, getByUserAndReponame } = require('../services/repo.service');
 const { getCommitsAndCreatedRepoByDate } = require('../services/commit.service');
@@ -94,7 +96,8 @@ router.get('/:username/contribution-activity', (req, res, next) => {
 
 router.get('/:username/repos', (req, res, next) => {
   const { username } = req.params;
-  getReposData({ username })
+  const isOwner = req.user.get({ plain: true }).username === username;
+  getReposData({ username, isOwner })
     .then(repos => res.send(repos))
     .catch(next);
 });
@@ -109,6 +112,18 @@ router.get('/:username/repos/:repo', (req, res, next) => {
 router.get('/search/collaborators/:username/:repoId/:userId', (req, res, next) => {
   const { username, repoId, userId } = req.params;
   getUsersForCollaboratorsAddition({ username, repoId, userId })
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.post('/image', (req, res, next) => {
+  uploadPhoto({ ...req.body })
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.delete('/image', (req, res, next) => {
+  deletePhoto({ ...req.body })
     .then(data => res.send(data))
     .catch(next);
 });

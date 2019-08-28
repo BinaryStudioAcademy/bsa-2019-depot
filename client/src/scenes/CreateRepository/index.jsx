@@ -83,6 +83,7 @@ class CreateRepository extends React.Component {
 
   async onSubmit(values) {
     values.reponame = values.reponame.slice(0, 100);
+    values.isPublic = values.privacy === 'public';
     const result = await createRepository({
       ...values
     });

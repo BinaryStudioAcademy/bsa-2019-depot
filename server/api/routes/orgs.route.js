@@ -12,20 +12,12 @@ const {
   getOrganizationOwner
 } = require('../services/organization.service');
 
-const { getUserById } = require('../services/user.service');
-
 const router = Router();
 
 router.get('/:orgID/users', (req, res, next) => {
   const { orgID } = req.params;
   getOrganizationMembers(orgID)
-    .then((data) => {
-      const ids = data.map(record => record.dataValues.userId);
-      const users = ids.map(user => getUserById(user));
-      Promise.all(users).then((userData) => {
-        res.send(userData);
-      });
-    })
+    .then(data => res.send(data))
     .catch(next);
 });
 

@@ -3,16 +3,31 @@ const OrgUserRepository = require('../../data/repositories/org-user.repository')
 const RoleRepository = require('../../data/repositories/role.repository');
 
 const { sendInviteEmail } = require('./email.service');
+const CustomError = require('../../helpers/error.helper');
 
-const getOrganizationMembers = async orgId => OrgUserRepository.getAllOrganizationUsers(orgId);
+const getOrganizationMembers = async (orgId) => {
+  const orgUsers = await OrgUserRepository.getAllOrganizationUsers(orgId);
+  const userPromises = orgUsers.map((orgUser) => {
+    const { userId } = orgUser.get({ plain: true });
+    return userRepository.getUserById(userId);
+  });
+  const users = await Promise.all(userPromises);
+  const rolePromises = orgUsers.map((orgUser) => {
+    const { roleId } = orgUser.get({ plain: true });
+    return RoleRepository.getRoleById(roleId);
+  });
+  const roles = await Promise.all(rolePromises);
+  const members = users.map((user, index) => ({
+    ...user.dataValues,
+    role: roles[index].name
+  }));
+  return members;
+};
 
 const getOrganizationOwner = async (orgId) => {
-  const ownerRole = await RoleRepository.getByName('OWNER');
-  const ownerRoleId = ownerRole.get({ plain: true }).id;
   const orgMembers = await getOrganizationMembers(orgId);
-  const owner = orgMembers.filter(member => member.roleId === ownerRoleId);
-  const ownerId = owner[0].get({ plain: true }).userId;
-  return { ownerId };
+  const owners = orgMembers.filter(member => member.role === 'OWNER');
+  return owners;
 };
 
 const createOrganization = async (data) => {
@@ -20,7 +35,7 @@ const createOrganization = async (data) => {
   const found = await userRepository.getByUsername(username);
 
   if (found) {
-    return { status: false, error: 'such profile name already exists' };
+    return Promise.reject(new CustomError(400, `Organization ${username} already exists`));
   }
 
   const { id: roleId } = (await RoleRepository.getByName('OWNER')).get({ plain: true });
@@ -49,7 +64,7 @@ const addMember = async (data) => {
 
   const user = await userRepository.getByUsername(username);
   if (!user) {
-    return { status: false, error: 'Such user does not exist' };
+    return Promise.reject(new CustomError(404, `User ${username} not found`));
   }
 
   const { id: userId, email } = user;
@@ -77,10 +92,7 @@ const getRelationUserOrg = async (data) => {
 
   const org = await userRepository.getByUsername(orgname);
   if (!org) {
-    return {
-      result: false,
-      status: true
-    };
+    return Promise.reject(new CustomError(404, `Organization ${org} not found`));
   }
   const { id: orgId } = org;
   const result = await OrgUserRepository.findUserInOrg(userID, orgId);
