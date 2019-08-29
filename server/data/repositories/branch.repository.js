@@ -29,7 +29,21 @@ class BranchRepository extends BaseRepository {
   }
 
   getByRepoId(repositoryId) {
-    return this.model.findAll({ where: { repositoryId } });
+    return this.model.findAll({
+      where: { repositoryId },
+      include: [
+        {
+          model: CommitModel,
+          as: 'headCommit',
+          attributes: ['id', 'message', 'sha', 'createdAt'],
+          order: [['createdAt', 'DESC']],
+          include: {
+            model: UserModel,
+            attributes: ['id', 'username']
+          }
+        }
+      ]
+    });
   }
 
   deleteByRepoId(repositoryId) {
