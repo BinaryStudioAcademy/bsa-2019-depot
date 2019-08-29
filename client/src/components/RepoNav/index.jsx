@@ -28,7 +28,7 @@ const RepoNav = (props) => {
     const { value }= data;
     setBranch(value);
     onBranchChange(value);
-  }
+  };
 
   return (<div className={styles.repoNav}>
     <div>

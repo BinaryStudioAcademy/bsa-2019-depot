@@ -4,7 +4,7 @@ import issuesReducer from '../containers/IssuesTab/reducer';
 import { forgotReducer as forgot } from '../scenes/Forgot/reducer';
 import { resetReducer as reset } from '../scenes/Reset/reducer';
 import { commitsData } from '../containers/CommitsPage/reducer';
-import { branchReducer, newFileReducer } from '../scenes/CodeTab/reducer';
+import { branchReducer, fileTreeReducer, newFileReducer } from '../scenes/CodeTab/reducer';
 import { repoSettingsData } from '../containers/SettingsTab/reducer';
 // import { currentRepoReducer } from '../containers/RepositoryTab/reducer';
 import profile from '../containers/Profile/reducer';
@@ -14,7 +14,8 @@ import { currentRepoReducer } from '../scenes/RepositoryPage/reducer';
 
 const currentRepo = combineReducers({
   repository: currentRepoReducer,
-  branch: branchReducer
+  branch: branchReducer,
+  fileTreeData: fileTreeReducer
 });
 
 export default combineReducers({
