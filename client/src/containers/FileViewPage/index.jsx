@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { getFileContent } from '../../services/branchesService';
 import { modifyFile } from '../../services/commitsService';
 import { rawServerUrl } from '../../app.config';
+import { getUserRights } from '../../services/permissionService';
 
 import styles from './styles.module.scss';
 
@@ -22,7 +23,8 @@ class FileViewPage extends React.Component {
     this.state = {
       fileData: {},
       loading: true,
-      deleting: false
+      deleting: false,
+      accessPermissions: null
     };
 
     this.handleCopyPath = this.handleCopyPath.bind(this);
@@ -31,8 +33,9 @@ class FileViewPage extends React.Component {
     this.handleDeleteFile = this.handleDeleteFile.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { username, reponame, branch } = this.props.match.params;
+    const { userId } = this.props;
     getFileContent(username, reponame, branch, {
       filepath: this.filepath
     }).then(fileData =>
@@ -41,6 +44,16 @@ class FileViewPage extends React.Component {
         loading: false
       })
     );
+
+    const response = (await getUserRights(username, reponame, userId))[0];
+    if (response) {
+      const {
+        permission: { name }
+      } = response;
+      this.setState({
+        accessPermissions: name
+      });
+    }
   }
 
   handleCopyPath() {
@@ -101,7 +114,8 @@ class FileViewPage extends React.Component {
     const {
       fileData: { content, size },
       loading,
-      deleting
+      deleting,
+      accessPermissions
     } = this.state;
     const { username: owner, reponame, branch } = match.params;
     const editorStyles = { width: '100%' };
@@ -151,7 +165,7 @@ class FileViewPage extends React.Component {
               >
                 Raw
               </Button>
-              {username && username === owner && (
+              {((username && username === owner) || accessPermissions === ('WRITE' || 'ADMIN')) && (
                 <>
                   <Icon link name="pencil" onClick={this.handleEditFile} />
                   <Icon link name="trash alternate" onClick={this.handleDeleteFile} />
@@ -173,6 +187,7 @@ class FileViewPage extends React.Component {
 }
 
 FileViewPage.propTypes = {
+  userId: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
   history: PropTypes.object.isRequired,
@@ -193,11 +208,12 @@ FileViewPage.propTypes = {
 
 const mapStateToProps = ({
   profile: {
-    currentUser: { username, email }
+    currentUser: { username, email, id: userId }
   }
 }) => ({
   username,
-  email
+  email,
+  userId
 });
 
 export default connect(mapStateToProps)(FileViewPage);
