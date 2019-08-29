@@ -23,10 +23,14 @@ class Root extends React.Component {
     else NavigationService.navigate('Auth');
   }
 
-  componentDidUpdate(prevProps) {
-    const { isAuthorized } = this.props;
+  async componentDidUpdate(prevProps) {
+    const { isAuthorized, currentUser } = this.props;
     if (prevProps.isAuthorized !== isAuthorized && isAuthorized) {
-      NavigationService.navigate('Home');
+      if (!currentUser.username) {
+        NavigationService.navigate('SetUsername');
+      } else {
+        NavigationService.navigate('Home');
+      }
     }
   }
 
@@ -47,11 +51,13 @@ class Root extends React.Component {
 Root.propTypes = {
   isAuthorized: PropTypes.bool,
   fetchCurrentUser: PropTypes.func,
-  store: PropTypes.object
+  store: PropTypes.object,
+  currentUser: PropTypes.object
 };
 
-const mapStateToProps = ({ profile: { isAuthorized } }) => ({
-  isAuthorized
+const mapStateToProps = ({ profile: { isAuthorized, currentUser } }) => ({
+  isAuthorized,
+  currentUser
 });
 
 const mapDispatchToProps = { fetchCurrentUser };

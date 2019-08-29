@@ -20,7 +20,7 @@ class DashboardView extends React.Component {
   }
 
   render() {
-    const { username, email } = this.props.currentUser;
+    const { email, username } = this.props.currentUser;
     return (
       <View>
         <Text>{username}</Text>
