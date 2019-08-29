@@ -1,6 +1,7 @@
 const colors = {
   blueButton: '#2e53db',
   greyText: '#737373',
+  darkGrey: '#586069',
   greyButton: '#f0f0f0',
   greyBorder: '#BEBEBE',
   white: '#fff',
