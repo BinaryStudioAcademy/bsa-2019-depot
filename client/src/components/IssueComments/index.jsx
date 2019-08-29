@@ -68,10 +68,10 @@ class IssueComments extends React.Component {
 
     this.socket.emit('createRoom', id);
 
-    this.socket.on('newIssueComment', async data => {
-      const issueComments = await getIssueComments(data.issueId);
+    this.socket.on('newIssueComment', data => {
       this.setState({
-        issueComments
+        ...this.state,
+        issueComments: [...this.state.issueComments, data]
       });
     });
   }

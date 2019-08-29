@@ -10,9 +10,7 @@ router.post('/', (req, res, next) => {
     .then((data) => {
       const { issueId } = data;
       req.issuesNsp.to(issueId).emit('newIssueComment', data);
-      return res.send({
-        status: true
-      });
+      return res.send(data);
     })
     .catch(next);
 });
