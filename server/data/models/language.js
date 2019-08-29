@@ -4,6 +4,9 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: DataTypes.STRING,
       color: DataTypes.STRING
+    },
+    {
+      timestamps: false
     }
   );
   return Language;
