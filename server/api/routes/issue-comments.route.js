@@ -8,7 +8,8 @@ router.post('/', (req, res, next) => {
 
   addIssueComment({ userId, issueId, body })
     .then((data) => {
-      req.issuesNsp.emit('testEventFromRoute', data); // event emitted, but can't be catch on client. Why???
+      const { issueId } = data;
+      req.issuesNsp.to(issueId).emit('newIssueComment', data);
       return res.send({
         status: true
       });

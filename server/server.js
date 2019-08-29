@@ -13,24 +13,23 @@ const routes = require('./api/routes/index');
 const routesWhiteList = require('./config/routes-white-list.config');
 const authorizationMiddleware = require('./api/middlewares/authorization.middleware');
 const errorHandlerMiddleware = require('./api/middlewares/error-handler.middleware');
-const issuesSocketHandlers = require('./socket/issues-socket-handlers');
-const socketInjector = require('./socket/injector');
+const socketHandlers = require('./socket/socket-handlers');
+const { issuesSocketInjector, commitsSocketInjector } = require('./socket/injector');
 
 const app = express();
 app.use(cors());
 const socketServer = http.Server(app);
 const io = socketIO(socketServer);
 
-const issuesNsp = io.of('/issues');
-const commitsNsp = io.of('/commits');
-
-issuesNsp.on('connection', issuesSocketHandlers);
+const issuesNsp = io.of('/issues').on('connection', socketHandlers);
+const commitsNsp = io.of('/commits').on('connection', socketHandlers);
 
 app.use(express.json());
 app.use(passport.initialize());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/', authorizationMiddleware(routesWhiteList));
-app.use(socketInjector(io));
+app.use(issuesSocketInjector(issuesNsp));
+app.use(commitsSocketInjector(commitsNsp));
 
 const staticPath = path.resolve(`${__dirname}/../client/build`);
 app.use(express.static(staticPath));
@@ -51,4 +50,4 @@ app.listen(port, () => {
   console.log(`Server listening on port ${port}!`);
 });
 
-socketServer.listen(3002);
+socketServer.listen(process.env.SOCKET_PORT);

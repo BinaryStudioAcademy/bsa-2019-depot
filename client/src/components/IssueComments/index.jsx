@@ -53,24 +53,33 @@ class IssueComments extends React.Component {
     this.initSocket();
   }
 
-  socketHandlers(id) {
-    this.socket.emit('createRoom', id);
-    this.socket.on('testEventFromRoute', data => {
-      alert(data);
-    }); //-------------Does not work///from issues-comments-route.js file
-    this.socket.on('testEventFromServer', data => {
-      alert(data);
-    }); //----------WORK///from issues-socket-handler.js file
-  }
-
-  initSocket() {
+  componentWillUnmount() {
     const {
       currentIssue: { id }
     } = this.state;
+    this.socket.emit('leaveRoom', id);
+  }
+
+  socketHandlers() {
+    const {
+      currentIssue: { id }
+    } = this.state;
+
+    this.socket.emit('createRoom', id);
+
+    this.socket.on('newIssueComment', async data => {
+      const issueComments = await getIssueComments(data.issueId);
+      this.setState({
+        issueComments
+      });
+    });
+  }
+
+  initSocket() {
     const { REACT_APP_SOCKET_SERVER, REACT_APP_SOCKET_SERVER_PORT } = process.env;
     const address = `http://${REACT_APP_SOCKET_SERVER}:${REACT_APP_SOCKET_SERVER_PORT}`;
     this.socket = io(`${address}/issues`);
-    this.socketHandlers(id);
+    this.socketHandlers();
   }
 
   onCommentChange(comment) {
@@ -101,10 +110,8 @@ class IssueComments extends React.Component {
       issueId,
       userId
     });
-    const issueComments = await getIssueComments(issueId);
     this.setState({
-      comment: '',
-      issueComments
+      comment: ''
     });
   }
 

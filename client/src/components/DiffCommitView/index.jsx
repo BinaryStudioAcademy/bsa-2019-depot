@@ -82,18 +82,12 @@ class DiffCommitView extends Component {
   }
 
   async componentDidMount() {
-    this.initSocket();
     await this.fetchDiffs();
     const { id } = this.state.diffsData;
     if (id) {
       await this.fetchComments(id);
     }
-    this.socket.on('newCommitComment', async data => {
-      await this.setState({
-        ...this.state,
-        comments: [...this.state.comments, data]
-      });
-    });
+    this.initSocket();
   }
 
   onTabChange(selectedTab) {
@@ -104,25 +98,45 @@ class DiffCommitView extends Component {
     this.setState({ ...this.state, body });
   }
 
+  componentWillUnmount() {
+    const {
+      diffsData: { id }
+    } = this.state;
+    this.socket.emit('leaveRoom', id);
+  }
+
+  socketHandlers() {
+    const {
+      diffsData: { id }
+    } = this.state;
+
+    this.socket.emit('createRoom', id);
+
+    this.socket.on('newCommitComment', data => {
+      this.setState({
+        ...this.state,
+        comments: [...this.state.comments, data]
+      });
+    });
+  }
+
   initSocket() {
     const { REACT_APP_SOCKET_SERVER, REACT_APP_SOCKET_SERVER_PORT } = process.env;
     const address = `http://${REACT_APP_SOCKET_SERVER}:${REACT_APP_SOCKET_SERVER_PORT}`;
-    this.socket = io(address);
+    this.socket = io(`${address}/commits`);
+    this.socketHandlers();
   }
 
   async onSubmit() {
     const { body } = this.state;
     const { username, reponame, hash } = this.props.match.params;
-    const newComment = await commitsService.addCommitComment({
+    await commitsService.addCommitComment({
       username,
       reponame,
       hash,
       body
     });
-    this.socket.emit('newCommitComment', newComment);
-    await this.setState({
-      ...this.state,
-      comments: [...this.state.comments, newComment],
+    this.setState({
       body: ''
     });
   }
