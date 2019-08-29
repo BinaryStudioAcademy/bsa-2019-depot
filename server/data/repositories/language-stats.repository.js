@@ -10,7 +10,8 @@ class LanguageStatsRepository extends BaseRepository {
           model: LanguageModel,
           attributes: ['name', 'color']
         }
-      ]
+      ],
+      order: [['percentage', 'DESC']]
     });
   }
 

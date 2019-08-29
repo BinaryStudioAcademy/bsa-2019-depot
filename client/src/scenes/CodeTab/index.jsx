@@ -23,7 +23,6 @@ import {
   Form,
   Input,
   Popup,
-  Segment,
   Menu,
   Loader,
   Divider,
@@ -42,7 +41,8 @@ class CodeTab extends React.Component {
       website: '',
       editingInfo: false,
       infoLoading: true,
-      commitCount: 0
+      commitCount: 0,
+      displayLangs: false
     };
     this.onBranchChange = this.onBranchChange.bind(this);
   }
@@ -173,8 +173,12 @@ class CodeTab extends React.Component {
     this.setState(prevState => ({ editingInfo: !prevState.editingInfo }));
   };
 
+  toggleDisplayLangs = () => {
+    this.setState(prevState => ({ displayLangs: !prevState.displayLangs }));
+  };
+
   render() {
-    const { branch, description, website, infoLoading, editingInfo, commitCount } = this.state;
+    const { branch, description, website, infoLoading, editingInfo, commitCount, displayLangs } = this.state;
     const {
       username,
       currentUser,
@@ -190,6 +194,36 @@ class CodeTab extends React.Component {
     const { files, currentPath } = fileTreeData.tree;
     const readme = files && files.find(file => file.name === 'README.md');
     const branchesCount = branches ? branches.length : 0;
+
+    const languageStats = [
+      { id: 'e8ab9bf8-c225-436e-a9a4-9dad1fc2b515',
+        percentage: 33.3,
+        branchId: '508268e7-476c-4ffb-b1e8-9dbf47c82227',
+        languageId: 'b8a93075-20dd-443d-b65d-0166ff5f901d',
+        language: { name: 'JavaScript', color: '#f1e05a' } },
+      { id: 'e0073072-eb1a-4807-a3be-852845b34393',
+        percentage: 16.7,
+        branchId: '508268e7-476c-4ffb-b1e8-9dbf47c82227',
+        languageId: '51d77e1d-92ef-41e2-a220-64968658f3f6',
+        language: { name: 'Ruby', color: '#701516' } },
+      { id: '380041db-d39b-4f6d-be5b-4c4b9466b5fa',
+        percentage: 16.7,
+        branchId: '508268e7-476c-4ffb-b1e8-9dbf47c82227',
+        languageId: 'addf16c3-2b00-4f99-bc25-7340b6eb6a6e',
+        language: { name: 'CSS', color: '#563d7c' } },
+      { id: 'b82d1b6e-a9fc-49d4-89df-7b506772fb35',
+        percentage: 16.7,
+        branchId: '508268e7-476c-4ffb-b1e8-9dbf47c82227',
+        languageId: '3ee2c26a-bc3e-4fa3-a8b3-d72daa3ef203',
+        language: { name: 'Python', color: '#3572A5' } },
+      { id: '4645105a-790f-4a2f-86ee-0a4206b4cd67',
+        percentage: 16.7,
+        branchId: '508268e7-476c-4ffb-b1e8-9dbf47c82227',
+        languageId: '74f8e4e1-7a37-4ee5-b470-21884ccd8ebe',
+        language: { name: 'HTML', color: '#e34c26' } }
+    ];
+
+
 
     const rootDir = `/${username}/${reponame}/tree/${branch}`;
     const pathToDir = location.pathname
@@ -334,11 +368,22 @@ class CodeTab extends React.Component {
               </Link>
             </Menu.Item>
           </Menu>
-          <Segment.Group className={styles.languageSegments} attached="bottom" horizontal>
-            <Segment className={styles.languageSegment} inverted color="yellow" />
-            <Segment className={styles.languageSegment} inverted color="purple" />
-            <Segment className={styles.languageSegment} inverted color="red" />
-          </Segment.Group>
+          <div className={styles.languageStatColors} onClick={this.toggleDisplayLangs}>
+            {languageStats.map(({ percentage, language: { color }}) => (
+              <div key={color} className={styles.languageColorLine} style={{ backgroundColor: color, width: `${percentage}%` }} />
+            ))}
+          </div>
+          {displayLangs && (
+            <div className={styles.languageStats}>
+              {languageStats.map(({ percentage, language: { name, color } }) => (
+                <div key={name} className={styles.languageLegend}>
+                  <span className={styles.languageColorDot} style={{ backgroundColor: color }}/>
+                  <span className={styles.languageName}>{name}</span>
+                  <span>{percentage}%</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className={styles.repoNav}>
