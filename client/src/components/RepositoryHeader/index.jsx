@@ -107,7 +107,7 @@ RepositoryHeader.propTypes = {
   owner: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
   repoName: PropTypes.string.isRequired,
-  issueCount: PropTypes.number.isRequired,
+  issueCount: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
   currentRepoInfo: PropTypes.shape({
     userId: PropTypes.string,
