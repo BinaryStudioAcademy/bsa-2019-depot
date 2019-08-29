@@ -75,21 +75,24 @@ class CollaboratorsPage extends React.Component {
     const {
       history,
       match: {
-        params: { username: senderUsername }
+        params: { username }
       }
     } = this.props;
     const {
       repository: { name: reponame, id: repositoryId },
-      username
+      username: recipient
     } = this.state;
     invite({
-      senderUsername,
       username,
+      recipient,
       reponame,
       repositoryId,
       permission
     });
-    history.push('/settings');
+    this.setState({
+      username: ''
+    });
+    history.push(`/${username}/${reponame}/settings/collaboration`);
   };
 
   renderCollaboratorsPage = () => {

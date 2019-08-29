@@ -5,8 +5,8 @@ const { addCollaborator, getUserRights } = require('../services/collaborator.ser
 const router = Router();
 
 router.post('/invite', (req, res, next) => {
-  const { senderUsername, username, reponame, repositoryId, permission } = req.body;
-  addCollaborator({ senderUsername, username, reponame, repositoryId, permission, url: clientUrl })
+  const { recipient, username, reponame, repositoryId, permission } = req.body;
+  addCollaborator({ recipient, username, reponame, repositoryId, permission, url: clientUrl })
     .then(data => res.send(data))
     .catch(next);
 });

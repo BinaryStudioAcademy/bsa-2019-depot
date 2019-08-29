@@ -110,7 +110,7 @@ const RepositoryHeader = ({
                 Issues<Label circular>{issueCount}</Label>
               </Link>
             </div>
-            {((username && username === owner) || accessPermissions === 'ADMIN') && (
+            {((username && username === owner) || accessPermissions === ('WRITE' || 'ADMIN')) && (
               <div className={`${activeTab === 'settings' && 'active'} item`}>
                 <Link to={`${baseUrl}/settings`}>
                   <Icon name="cog" /> Settings
