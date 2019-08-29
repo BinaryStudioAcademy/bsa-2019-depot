@@ -8,7 +8,6 @@ import IssuesTab from '../../containers/IssuesTab/index';
 import IssueComments from '../../components/IssueComments/index';
 import CommitsPage from '../../containers/CommitsPage/index';
 import DiffCommitView from '../../components/DiffCommitView/index';
-import RepositoryTab from '../../containers/RepositoryTab';
 import RepoSettings from '../../containers/SettingsTab/index';
 import FileViewPage from '../../containers/FileViewPage';
 import FileEditPage from '../../containers/FileEditPage';
@@ -17,6 +16,7 @@ import CreateIssuePage from '../../containers/CreateIssuePage';
 import PrivateTab from '../../containers/PrivateTab';
 import { fetchCurrentRepo } from '../../routines/routines';
 import Spinner from '../../components/Spinner';
+import CodeTab from '../../scenes/CodeTab';
 
 class RepositoryPage extends React.Component {
   componentDidMount() {
@@ -66,9 +66,9 @@ class RepositoryPage extends React.Component {
         />
         <Container>
           <Switch>
-            <Route exact path={`${match.path}`} component={RepositoryTab} />
-            <Route exact path={`${match.path}/tree/:branch`} component={RepositoryTab} />
-            <Route exact path={`${match.path}/tree/:branch/${params}`} component={RepositoryTab} />
+            <Route exact path={`${match.path}`} component={CodeTab} />
+            <Route exact path={`${match.path}/tree/:branch`} component={CodeTab} />
+            <Route exact path={`${match.path}/tree/:branch/${params}`} component={CodeTab} />
             <Route exact path={`${match.path}/commits/:branch`} component={CommitsPage} />
             <Route exact path={`${match.path}/commit/:hash`} component={DiffCommitView} />
             <Route exact path={`${match.path}/issues`} component={IssuesTab} />

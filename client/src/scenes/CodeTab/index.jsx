@@ -11,6 +11,7 @@ import { newFile } from './actions';
 import RepoDescription from '../../components/RepoDescription';
 import CodeTabMenu from '../../components/CodeTabMenu';
 import RepoNav from '../../components/RepoNav';
+import EmptyRepositoryTab from '../../containers/EmptyRepositoryTab';
 
 import {
   Container,
@@ -21,6 +22,7 @@ import {
   Breadcrumb
 } from 'semantic-ui-react';
 import styles from './styles.module.scss';
+
 
 class CodeTab extends React.Component {
   constructor(props) {
@@ -46,6 +48,10 @@ class CodeTab extends React.Component {
     let { params: { branch } } = match;
     if (!branch) {
       branch = defaultBranch || branches[0];
+    }
+
+    if (!branches.length) {
+      return;
     }
 
     const defaultPath = `/${ownername}/${reponame}/tree/${branch}`;
@@ -160,6 +166,10 @@ class CodeTab extends React.Component {
       location,
       history
     } = this.props;
+
+    if (!branches.length) {
+      return <EmptyRepositoryTab />
+    }
 
     const { name: branch, headCommit, commitsCount } = currentBranchData;
     const { files } = fileTreeData.tree;
