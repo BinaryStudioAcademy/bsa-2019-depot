@@ -24,6 +24,8 @@ class IssueComment extends React.Component {
 
     this.onEdit = this.onEdit.bind(this);
     this.onCancel = this.onCancel.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.onDelete = this.onDelete.bind(this);
     this.onCommentChange = this.onCommentChange.bind(this);
     this.onTabChange = this.onTabChange.bind(this);
     this.renderPreview = this.renderPreview.bind(this);
@@ -35,6 +37,17 @@ class IssueComment extends React.Component {
 
   onCancel() {
     this.setState({ ...this.state, editing: false });
+  }
+
+  onSubmit() {
+    const { id } = this.props;
+    const { comment } = this.state;
+    this.props.onSubmit(id, comment);
+  }
+
+  onDelete() {
+    const { id } = this.props;
+    this.props.onDelete(id);
   }
 
   onCommentChange(comment) {
@@ -51,18 +64,7 @@ class IssueComment extends React.Component {
   }
 
   render() {
-    const {
-      id,
-      avatar,
-      username,
-      createdAt,
-      body,
-      dropdowns,
-      buttons,
-      onSubmit,
-      submitBtnTxt,
-      cancelBtnTxt
-    } = this.props;
+    const { id, avatar, username, createdAt, body, buttons, submitBtnTxt, cancelBtnTxt, onDelete } = this.props;
     const { comment, selectedTab, isDisabled } = this.state;
 
     return (
@@ -71,7 +73,7 @@ class IssueComment extends React.Component {
           <Image src={getUserImgLink(avatar)} />
         </div>
         {this.state.editing ? (
-          <Form className={styles.issueForm} onSubmit={this.onSubmit}>
+          <Form className={styles.issueForm}>
             <div className={styles.commentEditor}>
               <ReactMde
                 value={comment}
@@ -88,7 +90,7 @@ class IssueComment extends React.Component {
               floated="right"
               type="submit"
               disabled={isDisabled}
-              onClick={onSubmit}
+              onClick={this.onSubmit}
               className={styles.button}
             >
               {submitBtnTxt}
@@ -114,7 +116,7 @@ class IssueComment extends React.Component {
                   <Dropdown.Item text="Quote reply" />
                   <Divider />
                   <Dropdown.Item text="Edit" onClick={this.onEdit} />
-                  {dropdowns ? dropdowns.map(dropdown => dropdown) : null}
+                  {onDelete ? <Dropdown.Item text="Delete" onClick={this.onDelete} /> : null}
                 </Dropdown.Menu>
               </Dropdown>
             </div>
@@ -140,7 +142,8 @@ IssueComment.propTypes = {
   newComment: PropTypes.bool.isRequired,
   onSubmit: PropTypes.func.isRequired,
   submitBtnTxt: PropTypes.string,
-  cancelBtnTxt: PropTypes.string
+  cancelBtnTxt: PropTypes.string,
+  onDelete: PropTypes.func
 };
 
 export default IssueComment;

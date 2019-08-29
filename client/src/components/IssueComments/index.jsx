@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import io from 'socket.io-client';
 import moment from 'moment';
-import { Dropdown, Header, Button, Label, Icon, Loader } from 'semantic-ui-react';
+import { Header, Button, Label, Icon, Loader } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
-import { getIssueByNumber, getIssueComments, postIssueComment } from '../../services/issuesService';
+import { getIssueByNumber, getIssueComments } from '../../services/issuesService';
 import IssueComment from '../IssueComment';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 
@@ -23,7 +23,12 @@ class IssueComments extends React.Component {
       isDisabled: true
     };
 
-    this.onSubmit = this.onSubmit.bind(this);
+    this.onCommentCreate = this.onCommentCreate.bind(this);
+    this.onCommentUpdate = this.onCommentUpdate.bind(this);
+    this.onCommentDelete = this.onCommentDelete.bind(this);
+    this.onIssueUpdate = this.onIssueUpdate.bind(this);
+    this.onIssueDelete = this.onIssueDelete.bind(this);
+    this.onIssueToggle = this.onIssueToggle.bind(this);
   }
 
   async componentDidMount() {
@@ -55,29 +60,54 @@ class IssueComments extends React.Component {
     this.socket = io(address);
   }
 
-  async onSubmit() {
+  async onCommentUpdate(id, comment) {
+    console.warn('Comment updated!', { id, comment });
+  }
+
+  async onCommentDelete(id) {
+    console.warn('Comment deleted!', id);
+  }
+
+  async onIssueUpdate(id, comment) {
+    console.warn('Issue updated!', { id, comment });
+  }
+
+  async onIssueDelete() {
+    const { id } = this.state.currentIssue;
+    console.warn('Issue deleted!', id);
+  }
+
+  async onIssueToggle(i) {
+    const { id } = this.state.currentIssue;
+    console.warn('Issue closed/reopened!', id);
+  }
+
+  async onCommentCreate(id, comment) {
     this.setState({
       isDisabled: true
     });
-    const {
-      comment,
-      currentIssue: { id: issueId }
-    } = this.state;
-    if (!comment) return;
-    const { userId } = this.props;
-    await postIssueComment({
-      comment,
-      issueId,
-      userId
-    });
-    this.socket.emit('newIssueComment', {
-      issueId
-    });
-    const issueComments = await getIssueComments(issueId);
-    this.setState({
-      comment: '',
-      issueComments
-    });
+    // const {
+    //   comment,
+    //   currentIssue: { id: issueId }
+    // } = this.state;
+
+    console.warn('Issue create!', { id, comment });
+    return;
+    // if (!comment) return;
+    // const { userId } = this.props;
+    // await postIssueComment({
+    //   comment,
+    //   issueId,
+    //   userId
+    // });
+    // this.socket.emit('newIssueComment', {
+    //   issueId
+    // });
+    // const issueComments = await getIssueComments(issueId);
+    // this.setState({
+    //   comment: '',
+    //   issueComments
+    // });
   }
 
   render() {
@@ -123,7 +153,7 @@ class IssueComments extends React.Component {
           body={currentIssue.body}
           createdAt={currentIssue.createdAt}
           newComment={false}
-          onSubmit={this.onSubmit}
+          onSubmit={this.onIssueUpdate}
           submitBtnTxt="Update comment"
           cancelBtnTxt="Cancel"
         />
@@ -138,30 +168,30 @@ class IssueComments extends React.Component {
               body={issueComment.body}
               createdAt={issueComment.createdAt}
               newComment={false}
-              onSubmit={this.onSubmit}
+              onSubmit={this.onCommentUpdate}
               submitBtnTxt="Update comment"
               cancelBtnTxt="Cancel"
-              dropdowns={[<Dropdown.Item key="delete">Delete</Dropdown.Item>]}
+              onDelete={this.onCommentDelete}
             />
           ))}
         <IssueComment
           avatar={currentIssue.user.avatar}
           username={userName}
           newComment={true}
-          onSubmit={this.onSubmit}
+          onSubmit={this.onCommentCreate}
           submitBtnTxt="Comment"
           buttons={[
             currentIssue.isOpened ? (
-              <Button compact floated="right" secondary key="close">
+              <Button compact floated="right" secondary key="close" onClick={this.onIssueToggle}>
                 <Icon name="check circle outline" />
                 Close issue
               </Button>
             ) : (
-              <Button compact floated="right" secondary color="red" key="close">
+              <Button compact floated="right" secondary color="red" key="close" onClick={this.onIssueToggle}>
                 Reopen issue
               </Button>
             ),
-            <Button compact floated="right" basic color="grey" key="delete">
+            <Button compact floated="right" basic color="grey" key="delete" onClick={this.onIssueDelete}>
               <Icon name="exclamation" color="grey" />
               Delete issue
             </Button>
