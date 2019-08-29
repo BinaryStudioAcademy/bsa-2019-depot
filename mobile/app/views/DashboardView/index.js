@@ -2,11 +2,26 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import UserInfo from '../../components/UserInfo';
+import ReposList from '../../containers/ReposList';
+import Spinner from '../../components/Spinner';
 
+import { getUserDetailed } from '../../services/userService';
+import { getRepositories } from '../../services/repositoryService';
 import { fetchCurrentUser } from '../../routines/routines';
 import storageHelper from '../../helpers/storageHelper';
 
+import styles from './styles';
+
 class DashboardView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      userData: {},
+      repos: []
+    };
+  }
+
   logOut = async () => {
     const { navigation, fetchCurrentUser } = this.props;
     storageHelper.clear();
@@ -15,20 +30,33 @@ class DashboardView extends React.Component {
   };
 
   async componentDidMount() {
-    const { isAuthorized, navigation } = this.props;
-    if (!isAuthorized) navigation.navigate('Auth');
+    const { isAuthorized, navigation, currentUser } = this.props;
+    if (!isAuthorized) {
+      navigation.navigate('Auth');
+    } else {
+      const { username } = currentUser;
+      const userData = await getUserDetailed(username);
+      const repos = await getRepositories(username);
+      this.setState({
+        userData,
+        repos
+      });
+    }
   }
 
   render() {
-    const { email, username } = this.props.currentUser;
-    return (
-      <View>
-        <Text>{username}</Text>
-        <Text>{email}</Text>
-        <TouchableOpacity onPress={this.logOut}>
-          <Text>{'Log out'}</Text>
+    const { userData, repos } = this.state;
+    const { loading } = this.props;
+    return !loading ? (
+      <View style={styles.container}>
+        <UserInfo data={userData} />
+        <ReposList repos={repos} />
+        <TouchableOpacity style={styles.logOut} onPress={this.logOut}>
+          <Text style={styles.logOutText}>{'Log out'}</Text>
         </TouchableOpacity>
       </View>
+    ) : (
+      <Spinner />
     );
   }
 }
@@ -37,12 +65,14 @@ DashboardView.propTypes = {
   navigation: PropTypes.object,
   fetchCurrentUser: PropTypes.func,
   isAuthorized: PropTypes.bool,
-  currentUser: PropTypes.object
+  currentUser: PropTypes.object,
+  loading: PropTypes.bool
 };
 
-const mapStateToProps = ({ profile: { currentUser, isAuthorized } }) => ({
+const mapStateToProps = ({ profile: { currentUser, isAuthorized, loading } }) => ({
   currentUser,
-  isAuthorized
+  isAuthorized,
+  loading
 });
 
 const mapDispatchToProps = { fetchCurrentUser };
