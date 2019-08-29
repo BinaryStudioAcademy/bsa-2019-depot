@@ -20,7 +20,6 @@ function* watchBranchRequest() {
 
 function* fileTreeRequest({ payload: { username, reponame, branch, query } }) {
   try {
-    console.log(username);
     yield put(fetchFileTree.request());
 
     const response = yield call(branchesService.getFileTree, username, reponame, branch, query);

@@ -3,12 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import RepoFileTree from '../../components/RepoFileTree/index';
-import * as commitsService from '../../services/commitsService';
 import FilePathBreadcrumbSections from '../../components/FilePathBreadcrumbSections';
 import RepoReadme from '../../components/RepoReadme/index';
-import { fetchBranches, fetchBranch, fetchFileTree } from '../../routines/routines';
+import { fetchBranches, fetchBranch, fetchFileTree, fetchCurrentRepo } from '../../routines/routines';
 import * as repositoryService from '../../services/repositoryService';
-import * as branchesService from '../../services/branchesService';
 import { newFile } from './actions';
 import RepoDescription from '../../components/RepoDescription';
 import CodeTabMenu from '../../components/CodeTabMenu';
@@ -30,6 +28,7 @@ class CodeTab extends React.Component {
 
     this.onBranchChange = this.onBranchChange.bind(this);
     this.onCreateFile = this.onCreateFile.bind(this);
+    this.onSubmitInfo = this.onSubmitInfo.bind(this);
   }
 
   componentDidMount() {
@@ -54,7 +53,6 @@ class CodeTab extends React.Component {
 
     fetchBranch({ repoID, branch });
 
-
     const pathToDir = match.url
       .replace(`${defaultPath}`, '')
       .replace(`${ownername}/${reponame}`, '')
@@ -75,6 +73,11 @@ class CodeTab extends React.Component {
   onBranchChange = (branch) => {
     const { ownername, reponame, history } = this.props;
     history.push(`/${ownername}/${reponame}/tree/${branch}`);
+    this.props.fetchFileTree({
+      username: ownername,
+      reponame,
+      branch
+    });
   };
 
   onCreateFile = () => {
@@ -103,20 +106,21 @@ class CodeTab extends React.Component {
         tree: { currentPath }
       }
     } = this.props;
-    const { description } = this.state;
+    const { description } = this.props;
     const { username, reponame, branch } = match.params;
 
     this.props.newFile({ filename: 'README.md', content: `# ${reponame}\n\n${description}` });
     history.push(`/${username}/${reponame}/new/${branch}/${currentPath}`);
   };
 
-  onSubmitInfo = ({ description, website }) => {
+  async onSubmitInfo({ description, website }) {
     const { username: owner, reponame } = this.props.match.params;
 
-    this.setState({ infoLoading: true, editingInfo: false });
-    repositoryService
-      .updateRepositoryByOwnerAndName({ owner, reponame, request: { description, website } })
-      .then(() => this.setState({ infoLoading: false, description, website }));
+    await repositoryService
+      .updateRepositoryByOwnerAndName({ owner, reponame, request: { description, website } });
+
+    const { fetchCurrentRepo } = this.props;
+    fetchCurrentRepo({ username: owner, reponame });
   };
 
   renderReadMe(readme, isOwn) {
@@ -144,7 +148,6 @@ class CodeTab extends React.Component {
 
   render() {
     const {
-      repoID,
       reponame,
       ownername,
       description,
@@ -153,12 +156,13 @@ class CodeTab extends React.Component {
       currentBranchData,
       fileTreeData,
       currentUserName,
+      fetchFileTree,
       location,
       history
     } = this.props;
 
     const { name: branch } = currentBranchData;
-    const { files, currentPath } = fileTreeData.tree;
+    const { files } = fileTreeData.tree;
 
     const isOwn = currentUserName && currentUserName === ownername;
     const { headCommit, commitsCount } = currentBranchData;
@@ -178,8 +182,9 @@ class CodeTab extends React.Component {
     };
 
     const { loading: branchDataLoading } = currentBranchData;
+    const { loading: fileTreeLoading } = fileTreeData;
 
-    return branchDataLoading ? (
+    return branchDataLoading || fileTreeLoading ? (
       <div>
         <Loader active />
       </div>
@@ -190,6 +195,7 @@ class CodeTab extends React.Component {
           isOwn={isOwn}
           description={description}
           website={website}
+          onSubmit={this.onSubmitInfo}
         />
         <CodeTabMenu
           ownername={ownername}
@@ -272,7 +278,8 @@ const mapStateToProps = ({
 const mapDispatchToProps = {
   newFile,
   fetchBranch,
-  fetchFileTree
+  fetchFileTree,
+  fetchCurrentRepo
 };
 
 CodeTab.propTypes = {

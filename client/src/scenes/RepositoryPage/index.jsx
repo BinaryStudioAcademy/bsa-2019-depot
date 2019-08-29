@@ -81,7 +81,7 @@ class RepositoryPage extends React.Component {
           </Switch>
         </Container>
       </>
-    )
+    );
   }
 }
 
