@@ -28,7 +28,8 @@ class IssueCommentRepository extends BaseRepository {
           model: UserModel,
           attributes: ['username']
         }
-      ]
+      ],
+      order: [['createdAt', 'ASC']]
     });
   }
 
