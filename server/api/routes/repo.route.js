@@ -15,6 +15,7 @@ const {
   getBranches, getBranchTree, getLastCommitOnBranch, getFileContent
 } = require('../services/branch.service');
 const { getAllRepoIssues, getRepoIssueByNumber } = require('../services/issue.service');
+const { getLabelsByRepoId } = require('../services/label.service');
 const ownerOnlyMiddleware = require('../middlewares/owner-only.middleware');
 
 const router = Router();
@@ -161,6 +162,12 @@ router
     const { userId, repositoryId } = req.body;
     setStar(userId, repositoryId)
       .then(star => res.send(star))
+      .catch(next);
+  })
+  .get('/:repositoryId/labels', (req, res, next) => {
+    const { repositoryId } = req.params;
+    getLabelsByRepoId(repositoryId)
+      .then(labels => res.send(labels))
       .catch(next);
   });
 

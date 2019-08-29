@@ -1,9 +1,10 @@
+const { Op } = require('sequelize');
 const BaseRepository = require('./base.repository');
 const { LabelModel } = require('../models/index');
 
 class LabelRepository extends BaseRepository {
-  getLabelByName(name) {
-    return this.model.findOne({ where: { name } });
+  getLabelByRepositoryIdAndName(repositoryId, name) {
+    return this.model.findOne({ where: { repositoryId, name: { [Op.iLike]: `${name}` } } });
   }
 
   getLabelsByRepositoryId(repositoryId) {
@@ -18,7 +19,7 @@ class LabelRepository extends BaseRepository {
     return this.create(labelData);
   }
 
-  updateLabelById(id, { ...labelData }) {
+  updateLabelById(id, labelData) {
     return this.updateById(id, labelData);
   }
 

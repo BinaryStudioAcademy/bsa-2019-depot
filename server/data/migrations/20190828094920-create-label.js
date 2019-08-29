@@ -8,16 +8,18 @@ module.exports = {
       defaultValue: Sequelize.literal('gen_random_uuid()')
     },
     name: {
+      allowNull: false,
       type: Sequelize.STRING
     },
     description: {
       type: Sequelize.STRING
     },
     color: {
+      allowNull: false,
       type: Sequelize.STRING
     },
     repositoryId: {
-      allowNull: false,
+      allowNull: true,
       type: Sequelize.UUID,
       references: {
         model: 'repositories',
