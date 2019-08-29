@@ -6,7 +6,7 @@ import RepoFileTree from '../../components/RepoFileTree/index';
 import * as commitsService from '../../services/commitsService';
 import FilePathBreadcrumbSections from '../../components/FilePathBreadcrumbSections';
 import RepoReadme from '../../components/RepoReadme/index';
-import { fetchBranches, fetchLastCommitOnBranch, fetchBranch } from '../../routines/routines';
+import { fetchBranches, fetchBranch, fetchFileTree } from '../../routines/routines';
 import * as repositoryService from '../../services/repositoryService';
 import * as branchesService from '../../services/branchesService';
 import { newFile } from './actions';
@@ -29,6 +29,7 @@ class CodeTab extends React.Component {
     super(props);
 
     this.onBranchChange = this.onBranchChange.bind(this);
+    this.onCreateFile = this.onCreateFile.bind(this);
   }
 
   componentDidMount() {
@@ -37,6 +38,7 @@ class CodeTab extends React.Component {
       ownername,
       reponame,
       fetchBranch,
+      fetchFileTree,
       branches,
       defaultBranch,
       match,
@@ -46,10 +48,12 @@ class CodeTab extends React.Component {
     if (!branch) {
       branch = defaultBranch || branches[0];
     }
+
     const defaultPath = `/${ownername}/${reponame}/tree/${branch}`;
     history.push(defaultPath);
 
     fetchBranch({ repoID, branch });
+
 
     const pathToDir = match.url
       .replace(`${defaultPath}`, '')
@@ -58,14 +62,14 @@ class CodeTab extends React.Component {
       .filter(path => path)
       .join('/');
 
-    // this.props.fetchFileTree({
-    //   username,
-    //   reponame,
-    //   branch: actualBranch,
-    //   query: { pathToDir }
-    // });
-    // history.push(`${defaultPath}${pathToDir ? `/${pathToDir}` : ''}`);
+    fetchFileTree({
+      username: ownername,
+      reponame,
+      branch,
+      query: { pathToDir }
+    });
 
+    history.push(`${defaultPath}${pathToDir ? `/${pathToDir}` : ''}`);
   }
 
   onBranchChange = (branch) => {
@@ -147,21 +151,17 @@ class CodeTab extends React.Component {
       website,
       branches,
       currentBranchData,
+      fileTreeData,
       currentUserName,
       location,
       history
     } = this.props;
 
-    const {
-      fileTree: {
-        files,
-        currentPath
-      },
-      name: branch
-    } = currentBranchData;
+    const { name: branch } = currentBranchData;
+    const { files, currentPath } = fileTreeData.tree;
 
     const isOwn = currentUserName && currentUserName === ownername;
-    const { fileTree, commitsCount } = currentBranchData;
+    const { headCommit, commitsCount } = currentBranchData;
 
     const readme = files && files.find(file => file.name === 'README.md');
     const branchesCount = branches ? branches.length : 0;
@@ -198,9 +198,11 @@ class CodeTab extends React.Component {
           branchesCount={branchesCount}
         />
         <RepoNav
+          isOwn={isOwn}
           branch={branch}
           branches={branches}
           onBranchChange={this.onBranchChange}
+          onCreateFile={this.onCreateFile}
         />
         {currentDir ? (
           <div className={styles.filePathRow}>
@@ -216,14 +218,15 @@ class CodeTab extends React.Component {
             </Breadcrumb>
           </div>
         ) : null}
-        {/* <RepoFileTree
-          lastCommitData={{headCommit: {}}}
-          fileTreeData={fileTree}
+        <RepoFileTree
+          lastCommitData={headCommit}
+          fileTreeData={fileTreeData}
           username={ownername}
           reponame={reponame}
           branch={branch}
           history={history}
-        /> */}
+          fetchFileTree={fetchFileTree}
+        />
         {this.renderReadMe(readme, isOwn)}
       </Container>
     );
@@ -245,7 +248,8 @@ const mapStateToProps = ({
         }
       }
     },
-    branch: currentBranchData
+    branch: currentBranchData,
+    fileTreeData
   },
   profile: {
     currentUser: {
@@ -261,14 +265,14 @@ const mapStateToProps = ({
   branches,
   defaultBranch,
   currentUserName,
-  currentBranchData
+  currentBranchData,
+  fileTreeData
 });
 
 const mapDispatchToProps = {
-  fetchLastCommitOnBranch,
-  fetchBranches,
   newFile,
-  fetchBranch
+  fetchBranch,
+  fetchFileTree
 };
 
 CodeTab.propTypes = {
