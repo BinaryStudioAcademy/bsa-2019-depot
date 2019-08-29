@@ -26,10 +26,11 @@ export const signup = async request => {
   return response.json();
 };
 
-export const googleSignup = async () => {
+export const googleSignup = async request => {
   const response = await callWebApi({
-    endpoint: 'http://10.0.2.2:3000/api/auth/google',
-    type: 'GET'
+    endpoint: 'http://10.0.2.2:3000/api/auth/google/mobile',
+    type: 'POST',
+    request
   });
   return response.json();
 };
@@ -40,7 +41,7 @@ export const setUsername = async (username, profile) => {
     profile
   };
   const response = await callWebApi({
-    endpoint: 'http://10.0.2.2:3000/api/user/username',
+    endpoint: 'http://10.0.2.2:3000/api/users/username',
     type: 'POST',
     request
   });
@@ -49,7 +50,7 @@ export const setUsername = async (username, profile) => {
 
 export const checkUsername = async username => {
   const response = await callWebApi({
-    endpoint: 'http://10.0.2.2:3000/api/user/username-exists',
+    endpoint: 'http://10.0.2.2:3000/api/users/username-exists',
     type: 'GET',
     query: {
       username

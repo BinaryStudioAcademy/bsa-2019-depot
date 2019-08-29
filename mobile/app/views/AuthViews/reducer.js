@@ -19,6 +19,7 @@ export default (state = initialState, action) => {
   case fetchCurrentUser.TRIGGER:
   case signupRoutine.TRIGGER:
   case setUsernameRoutine.TRIGGER:
+  case loginGoogleRoutine.TRIGGER:
     return {
       ...state,
       loading: true,
@@ -28,6 +29,7 @@ export default (state = initialState, action) => {
   case authorizeUser.SUCCESS:
   case fetchCurrentUser.SUCCESS:
   case signupRoutine.SUCCESS:
+  case loginGoogleRoutine.SUCCESS:
     return {
       ...state,
       currentUser: action.payload,
@@ -61,22 +63,11 @@ export default (state = initialState, action) => {
   case fetchCurrentUser.FULFILL:
   case signupRoutine.FULFILL:
   case setUsernameRoutine.FULFILL:
+  case loginGoogleRoutine.FULFILL:
     return {
       ...state,
       loading: false
     };
-
-  case loginGoogleRoutine.TRIGGER: {
-    const { user } = action.payload;
-    const currentUser = user;
-    return {
-      ...state,
-      currentUser,
-      error: null,
-      isAuthorized: true
-    };
-  }
-
   default:
     return state;
   }

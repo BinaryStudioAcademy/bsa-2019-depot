@@ -49,8 +49,12 @@ function* watchCurrentUserRequest() {
   yield takeEvery(fetchCurrentUser.TRIGGER, currentUserRequest);
 }
 
-function* loginGoogle({ payload: { user } }) {
+function* loginGoogle({ payload }) {
   try {
+    yield put(loginGoogleRoutine.request());
+    const user = yield call(authService.googleSignup, payload);
+    yield apply(storageHelper, storageHelper.set, ['token', user.token]);
+    delete user.password;
     yield put(loginGoogleRoutine.success(user));
   } catch (error) {
     yield put(loginGoogleRoutine.failure(error.message));
@@ -61,7 +65,7 @@ function* watchLoginGoogleRequest() {
   yield takeEvery(loginGoogleRoutine.TRIGGER, loginGoogle);
 }
 
-function* signup({ payload: { user, history } }) {
+function* signup({ payload: { user } }) {
   try {
     yield put(signupRoutine.request());
     const response = yield call(authService.signup, user);
@@ -82,8 +86,11 @@ function* watchSignupRequest() {
 
 function* setUsername({ payload: { username, user } }) {
   try {
+    yield put(setUsernameRoutine.request());
+    alert(user);
     const response = yield call(authService.setUsername, username, user);
     const { status } = response;
+    alert(status);
     if (status) {
       yield put(setUsernameRoutine.success(username));
     } else {
