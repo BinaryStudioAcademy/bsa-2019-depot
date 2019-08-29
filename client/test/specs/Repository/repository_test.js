@@ -4,9 +4,12 @@ const menuSteps = require('../DropdownMenu/steps/menu_pa.js');
 const credentials = require('../credentials');
 const assert = require('assert');
 const repoPage = require('./page/repository_po');
+const wait = require('../../helpers/waiters');
+
 describe('Repositories  ', () => {
   beforeEach(() => {
     help.loginWithDefaultUser();
+    wait.forSpinner();
   });
 
   afterEach(() => {
@@ -15,6 +18,7 @@ describe('Repositories  ', () => {
 
   it('should create repository', () => {
     menuSteps.navigateToNewRepository();
+    wait.forSpinner();
     repoSteps.enterRepoName(credentials.repo.repoName);
     repoSteps.enterDescription(credentials.repo.repoDescription);
     repoSteps.selectReadme();
@@ -29,6 +33,7 @@ describe('Repositories  ', () => {
 
   it('should create new file in repository', () => {
     menuSteps.navigateToNewRepository();
+    wait.forSpinner();
     repoSteps.enterRepoName(credentials.repo.repoName);
     repoSteps.enterDescription(credentials.repo.repoDescription);
     repoSteps.selectReadme();

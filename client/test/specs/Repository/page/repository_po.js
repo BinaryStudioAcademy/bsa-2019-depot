@@ -30,7 +30,7 @@ class RepoPage {
     return $$('div.false a')[1];
   }
   get deleteBtn() {
-    return $('button[type=button]');
+    return $$('button[type=button]')[1];
   }
   get createNewFileBtn() {
     return $$('div.ui.buttons button')[0];

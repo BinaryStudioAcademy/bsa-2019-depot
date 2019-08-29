@@ -39,9 +39,8 @@ class RepoSteps {
   }
 
   deleteRepo() {
-    repoPage.deleteBtn.waitForDisplayed(2000);
-    repoPage.deleteBtn.click();
     browser.pause(500);
+    repoPage.deleteBtn.click();
   }
 
   createNewFileBtn() {
