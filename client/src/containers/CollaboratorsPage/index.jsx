@@ -1,12 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Container, Divider, Form, Search, Button, Checkbox } from 'semantic-ui-react';
+import { Container, Divider, Form, Search, Button, Checkbox, Grid, Image } from 'semantic-ui-react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import CancelInvitation from '../../components/CancelInvitationButton';
 import { getRepositoryByOwnerAndName } from '../../services/repositoryService';
 import { getUsersForCollaboratorsAddition } from '../../services/userService';
-import { invite } from '../../services/inviteCollaboratorService';
+import { invite, getRepositoryCollaborators, removeRepositoryCollaborator } from '../../services/collaboratorService';
+import { getUserImgLink } from '../../helpers/imageHelper';
 
 import styles from './styles.module.scss';
 
@@ -37,8 +39,10 @@ class CollaboratorsPage extends React.Component {
       }
     } = this.props;
     const repository = await getRepositoryByOwnerAndName({ username, reponame });
+    const collaborators = await getRepositoryCollaborators(repository.id);
     this.setState({
-      repository
+      repository,
+      collaborators
     });
   }
 
@@ -70,10 +74,9 @@ class CollaboratorsPage extends React.Component {
     handleChange(e);
   };
 
-  submitCollaboratorAddition = values => {
+  submitCollaboratorAddition = async values => {
     const { permission } = values;
     const {
-      history,
       match: {
         params: { username }
       }
@@ -82,7 +85,7 @@ class CollaboratorsPage extends React.Component {
       repository: { name: reponame, id: repositoryId },
       username: recipient
     } = this.state;
-    invite({
+    const collaborators = await invite({
       username,
       recipient,
       reponame,
@@ -90,9 +93,18 @@ class CollaboratorsPage extends React.Component {
       permission
     });
     this.setState({
-      username: ''
+      username: '',
+      collaborators
     });
-    history.push(`/${username}/${reponame}/settings/collaboration`);
+  };
+
+  removeCollaborator = async id => {
+    const { status } = await removeRepositoryCollaborator(id);
+    if (status) {
+      this.setState({
+        collaborators: this.state.collaborators.filter(collaborator => collaborator.id !== id)
+      });
+    }
   };
 
   renderCollaboratorsPage = () => {
@@ -111,7 +123,28 @@ class CollaboratorsPage extends React.Component {
 
           <div className={styles.collaborators_list}>
             {collaborators.length ? (
-              <ul></ul>
+              <ul>
+                {collaborators.map(({ id, isActivated, user: { username, imgUrl } }) => {
+                  return (
+                    <Grid key={id}>
+                      <Grid.Column width={2}>
+                        <Image src={getUserImgLink(imgUrl)} size="mini" />
+                      </Grid.Column>
+                      <Grid.Column width={7}>{!isActivated ? `Awaiting ${username}'s response` : null}</Grid.Column>
+                      <Grid.Column width={4}>
+                        {!isActivated ? <Button basic size="tiny" content="Copy invite link" /> : null}
+                      </Grid.Column>
+                      <Grid.Column width={3}>
+                        {!isActivated ? (
+                          <CancelInvitation type={'button'} id={id} onClick={this.removeCollaborator} />
+                        ) : (
+                          <CancelInvitation type={'icon'} id={id} onClick={this.removeCollaborator} />
+                        )}
+                      </Grid.Column>
+                    </Grid>
+                  );
+                })}
+              </ul>
             ) : (
               <p>This repository doesn’t have any collaborators yet. Use the form below to add a collaborator.</p>
             )}

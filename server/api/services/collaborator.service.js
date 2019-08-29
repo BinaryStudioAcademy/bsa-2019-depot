@@ -18,9 +18,16 @@ const addCollaborator = async ({ recipient, username, reponame, repositoryId, ur
     repositoryId,
     isActivated: false
   });
+  return await getRepositoryCollaborators(repositoryId);
+};
+
+const getRepositoryCollaborators = repositoryId => collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId);
+
+const removeRepositoryCollaborator = async (collaboratorId) => {
+  await collaboratorRepository.deleteById(collaboratorId);
   return {
     status: true
-  };
+  }
 };
 
 const getUserRights = async (username, reponame, userId) => {
@@ -30,5 +37,7 @@ const getUserRights = async (username, reponame, userId) => {
 
 module.exports = {
   addCollaborator,
-  getUserRights
+  getUserRights,
+  getRepositoryCollaborators,
+  removeRepositoryCollaborator
 };

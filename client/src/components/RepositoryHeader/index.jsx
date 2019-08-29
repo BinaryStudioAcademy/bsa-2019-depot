@@ -20,7 +20,7 @@ const RepositoryHeader = ({
   baseUrl,
   history,
   match: {
-    params: { username: paramsUsername, reponame }
+    params: { username: paramsUsername }
   }
 }) => {
   let activeTab;
