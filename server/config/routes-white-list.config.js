@@ -3,6 +3,7 @@ module.exports = [
   '/auth/register',
   '/auth/google',
   '/auth/google/callback',
+  '/auth/google/mobile',
   '/repos',
   '/commit',
   '/users/username-exists',
