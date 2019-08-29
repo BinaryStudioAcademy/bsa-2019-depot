@@ -50,7 +50,7 @@ class RepoFileTree extends React.Component {
   render() {
     const {
       lastCommitData: {
-        commit: { sha, message, author, date }
+        sha, message, author, date
       },
       fileTreeData: {
         tree: { files, directories, currentPath }
