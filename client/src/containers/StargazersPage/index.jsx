@@ -19,40 +19,32 @@ class StargazersPage extends React.Component {
   render() {
     return (
       <Container>
-        <Header as='h2'>Stargazers</Header>
-        <Grid>
-          <Grid.Row columns={3}>
+        <Header as='h2' className={styles.stargazerHeader}>Stargazers</Header>
+        <Grid columns={3}>
+          <Grid.Row>
             <Grid.Column className={styles.stargazerBox}>
-              <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' className={styles.stargazerImage} />
-              <Link className={styles.profileLink} to="">PashaNaumencko</Link>
-              <Octicon className={styles.icon} icon={getIconByName('clock')} />
-              <span className={styles.stargazerDate}>Joined on July 11, 2019</span>
+              <Image src="https://avatars1.githubusercontent.com/u/43038168?s=60&v=4" width="75" height="75" className={styles.stargazerImage} />
+              <div className={styles.stargazerInfo}>
+                <Link className={styles.profileLink} to="">PashaNaumencko</Link>
+                <Octicon className={styles.icon} icon={getIconByName('clock')} />
+                <span className={styles.stargazerDate}>Joined on July 11, 2019</span>
+              </div>
             </Grid.Column>
             <Grid.Column className={styles.stargazerBox}>
-              <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' className={styles.stargazerImage} />
-              <Link className={styles.profileLink} to="">PashaNaumencko</Link>
-              <Octicon className={styles.icon} icon={getIconByName('clock')} />
-              <span className={styles.stargazerDate}>Joined on July 11, 2019</span>
+              <Image src="https://avatars1.githubusercontent.com/u/43038168?s=60&v=4" width="75" height="75" className={styles.stargazerImage} />
+              <div className={styles.stargazerInfo}>
+                <Link className={styles.profileLink} to="">PashaNaumencko</Link>
+                <Octicon className={styles.icon} icon={getIconByName('clock')} />
+                <span className={styles.stargazerDate}>Joined on July 11, 2019</span>
+              </div>
             </Grid.Column>
             <Grid.Column className={styles.stargazerBox}>
-              <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' className={styles.stargazerImage} />
-              <Link className={styles.profileLink} to="">PashaNaumencko</Link>
-              <Octicon className={styles.icon} icon={getIconByName('clock')} />
-              <span className={styles.stargazerDate}>Joined on July 11, 2019</span>
-            </Grid.Column>
-          </Grid.Row>
-          <Grid.Row columns={3}>
-            <Grid.Column className={styles.stargazerBox}>
-              <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' className={styles.stargazerImage} />
-              <Link className={styles.profileLink} to="">PashaNaumencko</Link>
-              <Octicon className={styles.icon} icon={getIconByName('clock')} />
-              <span className={styles.stargazerDate}>Joined on July 11, 2019</span>
-            </Grid.Column>
-            <Grid.Column className={styles.stargazerBox}>
-              <Image src='https://react.semantic-ui.com/images/wireframe/paragraph.png' className={styles.stargazerImage} />
-              <Link className={styles.profileLink} to="">PashaNaumencko</Link>
-              <Octicon className={styles.icon} icon={getIconByName('clock')} />
-              <span className={styles.stargazerDate}>Joined on July 11, 2019</span>
+              <Image src="https://avatars1.githubusercontent.com/u/43038168?s=60&v=4" width="75" height="75" className={styles.stargazerImage} />
+              <div className={styles.stargazerInfo}>
+                <Link className={styles.profileLink} to="">PashaNaumencko</Link>
+                <Octicon className={styles.icon} icon={getIconByName('clock')} />
+                <span className={styles.stargazerDate}>Joined on July 11, 2019</span>
+              </div>
             </Grid.Column>
           </Grid.Row>
         </Grid>

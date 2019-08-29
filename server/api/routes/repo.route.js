@@ -11,10 +11,8 @@ const {
   updateByUserAndReponame
 } = require('../services/repo.service');
 const { getCommits, getCommitDiff, getCommitCount } = require('../services/commit.service');
-const { deleteStarsByRepoId } = require('../services/star.service');
-const {
-  getBranches, getBranchTree, getLastCommitOnBranch
-} = require('../services/branch.service');
+const { deleteStarsByRepoId, getStargazers } = require('../services/star.service');
+const { getBranches, getBranchTree, getLastCommitOnBranch } = require('../services/branch.service');
 const { getAllRepoIssues, getRepoIssueByNumber } = require('../services/issue.service');
 const { getFileContent } = require('../services/files.service');
 const ownerOnlyMiddleware = require('../middlewares/owner-only.middleware');
@@ -165,6 +163,12 @@ router
     if (!isPublic) {
       deleteStarsByRepoId(userId, repositoryId);
     }
+  })
+  .get('/:repoId/stargazers', (req, res, next) => {
+    const { repoId } = req.params;
+    getStargazers(repoId)
+      .then(stargazers => res.send(stargazers))
+      .catch(next);
   })
   .put('/star', (req, res, next) => {
     const { userId, repositoryId } = req.body;

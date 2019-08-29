@@ -1,15 +1,37 @@
-:global(.column):local(.stargazerBox) {
+:global(.ui.container > .ui[class*="three column"].grid > .row > .column){
+    width: 30%;
+}
+
+:global(.ui.grid > .row > .column):local(.stargazerBox) {
+    display: flex;
     height: 100px;
-    margin-bottom: 20px;
-    margin-right: 20px;
+    margin: 0 20px 20px 0;
     padding-bottom: 20px;
-    width: 305px;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+:global(.ui.header:first-child):local(.stargazerHeader) {
+    margin: 1.3em 0 0.7em 0; 
+}
+
+:local(.stargazerInfo) {
+    margin-left: 1.3em;
 }
 
 :global(a):local(.profileLink) {
-    font-weight: normal;
+    display: block;
+    font-weight: 400;
+    font-size: 1.4em;
+    color: #24292e;
     &:hover {
+        color: #24292e;
         text-decoration: underline;
     }
 }
   
+
+:local(.stargazerDate) {
+    color: #586069;
+    font-size: 0.75em;
+    margin-left: .4em;
+}
