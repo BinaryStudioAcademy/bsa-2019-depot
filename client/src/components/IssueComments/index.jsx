@@ -32,7 +32,6 @@ class IssueComments extends React.Component {
   }
 
   async componentDidMount() {
-    this.initSocket();
     const {
       match: {
         params: { username, reponame, number }
@@ -44,24 +43,34 @@ class IssueComments extends React.Component {
       number
     });
     const { id } = currentIssue;
+
     const issueComments = await getIssueComments(id);
     this.setState({
       currentIssue,
       issueComments,
       loading: false
     });
-    this.socket.on('newIssueComment', async data => {
-      const issueComments = await getIssueComments(data.issueId);
-      this.setState({
-        issueComments
-      });
-    });
+    this.initSocket();
+  }
+
+  socketHandlers(id) {
+    this.socket.emit('createRoom', id);
+    this.socket.on('testEventFromRoute', data => {
+      alert(data);
+    }); //-------------Does not work///from issues-comments-route.js file
+    this.socket.on('testEventFromServer', data => {
+      alert(data);
+    }); //----------WORK///from issues-socket-handler.js file
   }
 
   initSocket() {
+    const {
+      currentIssue: { id }
+    } = this.state;
     const { REACT_APP_SOCKET_SERVER, REACT_APP_SOCKET_SERVER_PORT } = process.env;
     const address = `http://${REACT_APP_SOCKET_SERVER}:${REACT_APP_SOCKET_SERVER_PORT}`;
-    this.socket = io(address);
+    this.socket = io(`${address}/issues`);
+    this.socketHandlers(id);
   }
 
   onCommentChange(comment) {
@@ -91,9 +100,6 @@ class IssueComments extends React.Component {
       comment,
       issueId,
       userId
-    });
-    this.socket.emit('newIssueComment', {
-      issueId
     });
     const issueComments = await getIssueComments(issueId);
     this.setState({
