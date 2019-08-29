@@ -49,23 +49,9 @@ router
     try {
       const { repoId, branch: branchName } = req.params;
       const branchInfo = await getBranchInfo(branchName, repoId);
-      const {
-        repository: { name: repoName },
-        headCommit: {
-          user: { username }
-        },
-        name
-      } = branchInfo.get({ plain: true });
-      const { pathToDir } = req.query;
-      const branchFileTree = await getBranchTree({
-        user: username,
-        name: repoName,
-        branch: name,
-        pathToDir
-      });
+
       response = {
-        ...branchInfo.get({ plain: true }),
-        fileTree: branchFileTree
+        ...branchInfo.get({ plain: true })
       };
     } catch (error) {
       next(error);
