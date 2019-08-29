@@ -50,4 +50,4 @@ app.listen(port, () => {
   console.log(`Server listening on port ${port}!`);
 });
 
-socketServer.listen(process.env.SOCKET_PORT);
+socketServer.listen(3002);

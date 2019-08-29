@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import io from 'socket.io-client';
 import moment from 'moment';
 import { Dropdown, Header, Button, Divider, Form, Label, Icon, Image, Loader } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
@@ -9,6 +8,7 @@ import { getUserImgLink } from '../../helpers/imageHelper';
 import { getIssueByNumber, getIssueComments, postIssueComment } from '../../services/issuesService';
 import ReactMde from 'react-mde';
 import ReactMarkdown from 'react-markdown';
+import { socketInit } from '../../helpers/socketInitHelper';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 
 import styles from './styles.module.scss';
@@ -60,7 +60,8 @@ class IssueComments extends React.Component {
     this.socket.emit('leaveRoom', id);
   }
 
-  socketHandlers() {
+  initSocket() {
+    socketInit('issues');
     const {
       currentIssue: { id }
     } = this.state;
@@ -73,13 +74,6 @@ class IssueComments extends React.Component {
         issueComments
       });
     });
-  }
-
-  initSocket() {
-    const { REACT_APP_SOCKET_SERVER, REACT_APP_SOCKET_SERVER_PORT } = process.env;
-    const address = `http://${REACT_APP_SOCKET_SERVER}:${REACT_APP_SOCKET_SERVER_PORT}`;
-    this.socket = io(`${address}/issues`);
-    this.socketHandlers();
   }
 
   onCommentChange(comment) {
