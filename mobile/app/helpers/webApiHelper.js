@@ -7,13 +7,13 @@ function getFetchUrl(args) {
   return args.endpoint + (args.query ? `?${queryString.stringify(args.query)}` : '');
 }
 
-function getFetchArgs(args) {
+async function getFetchArgs(args) {
   const headers = {};
   if (!args.attachment) {
     headers['Content-Type'] = 'application/json';
     headers.Accept = 'application/json';
   }
-  const token = storageHelper.get('token');
+  const token = await storageHelper.get('token');
   if (token && !args.skipAuthorization) {
     headers.Authorization = `Bearer ${token}`;
   }
@@ -51,7 +51,7 @@ export async function throwIfResponseFailed(res) {
 
 export default async function callWebApi(args) {
   try {
-    const res = await fetch(getFetchUrl(args), getFetchArgs(args));
+    const res = await fetch(getFetchUrl(args), await getFetchArgs(args));
     if (args.endpoint !== '/api/auth/users') await throwIfResponseFailed(res);
     return res;
   } catch (err) {
