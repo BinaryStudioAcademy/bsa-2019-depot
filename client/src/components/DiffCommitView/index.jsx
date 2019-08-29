@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import io from 'socket.io-client';
 import ReactMde from 'react-mde';
 import ReactMarkdown from 'react-markdown';
 import { CommitCommentItem } from '../CommitCommentItem';
@@ -10,6 +9,7 @@ import { connect } from 'react-redux';
 import { parseDiff, Diff, Hunk, Decoration } from 'react-diff-view';
 import * as commitsService from '../../services/commitsService';
 import { getUserImgLink } from '../../helpers/imageHelper';
+import { socketInit } from '../../helpers/socketInitHelper';
 
 import './styles.module.scss';
 
@@ -105,7 +105,8 @@ class DiffCommitView extends Component {
     this.socket.emit('leaveRoom', id);
   }
 
-  socketHandlers() {
+  initSocket() {
+    this.socket = socketInit('commits');
     const {
       diffsData: { id }
     } = this.state;
@@ -118,13 +119,6 @@ class DiffCommitView extends Component {
         comments: [...this.state.comments, data]
       });
     });
-  }
-
-  initSocket() {
-    const { REACT_APP_SOCKET_SERVER, REACT_APP_SOCKET_SERVER_PORT } = process.env;
-    const address = `http://${REACT_APP_SOCKET_SERVER}:${REACT_APP_SOCKET_SERVER_PORT}`;
-    this.socket = io(`${address}/commits`);
-    this.socketHandlers();
   }
 
   async onSubmit() {

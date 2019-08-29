@@ -61,7 +61,7 @@ class IssueComments extends React.Component {
   }
 
   initSocket() {
-    socketInit('issues');
+    this.socket = socketInit('issues');
     const {
       currentIssue: { id }
     } = this.state;
