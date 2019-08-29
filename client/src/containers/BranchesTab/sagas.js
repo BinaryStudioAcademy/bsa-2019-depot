@@ -2,18 +2,12 @@ import { takeEvery, put, call, all } from 'redux-saga/effects';
 import * as branchesService from '../../services/branchesService';
 import { fetchBranches } from '../../routines/routines';
 
-function* branchesRequest({ payload: { owner, repoName } }) {
+function* branchesRequest({ payload: { repoID } }) {
   try {
     yield put(fetchBranches.request());
-    const branches = yield call(branchesService.getBranches, owner, repoName);
-    let lastCommits = {};
-    let lastCommitList = [];
-    if (branches && branches.length) {
-      lastCommitList = yield all(branches.map(branch => call(branchesService.getLastCommit, owner, repoName, branch)));
-    }
-    lastCommitList.forEach((commit, idx) => (lastCommits[branches[idx]] = lastCommitList[idx]));
+    const branches = yield call(branchesService.getBranches, repoID);
 
-    yield put(fetchBranches.success({ branches, lastCommits }));
+    yield put(fetchBranches.success({ branches }));
   } catch (error) {
     yield put(fetchBranches.failure(error.message));
   } finally {
