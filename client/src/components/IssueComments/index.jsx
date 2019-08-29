@@ -3,11 +3,18 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import io from 'socket.io-client';
 import moment from 'moment';
-import { Header, Button, Label, Icon, Loader } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
-import { getIssueByNumber, getIssueComments } from '../../services/issuesService';
+import { Button, Label, Icon, Loader } from 'semantic-ui-react';
+import {
+  getIssueByNumber,
+  getIssueComments,
+  updateIssue,
+  closeIssue,
+  reopenIssue,
+  deleteIssue
+} from '../../services/issuesService';
 import { createIssueComment, updateIssueComment, deleteIssueComment } from '../../services/issueCommentsService';
 import IssueComment from '../IssueComment';
+import IssueHeader from '../IssueHeader';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 
 import styles from './styles.module.scss';
@@ -21,15 +28,19 @@ class IssueComments extends React.Component {
       loading: true,
       comment: '',
       selectedTab: 'write',
-      isDisabled: true
+      isDisabled: true,
+      isOwnIssue: false,
+      issuesBaseUrl: this.props.match.url.replace(/\/[^/]+$/, '')
     };
 
     this.onCommentCreate = this.onCommentCreate.bind(this);
     this.onCommentUpdate = this.onCommentUpdate.bind(this);
     this.onCommentDelete = this.onCommentDelete.bind(this);
-    this.onIssueUpdate = this.onIssueUpdate.bind(this);
+    this.onIssueUpdateBody = this.onIssueUpdateBody.bind(this);
+    this.onIssueUpdateTitle = this.onIssueUpdateTitle.bind(this);
     this.onIssueDelete = this.onIssueDelete.bind(this);
     this.onIssueToggle = this.onIssueToggle.bind(this);
+    this.redirectToCreateNewIssue = this.redirectToCreateNewIssue.bind(this);
   }
 
   async componentDidMount() {
@@ -42,6 +53,7 @@ class IssueComments extends React.Component {
     const currentIssue = await getIssueByNumber(reponame, number);
     const { id } = currentIssue;
     const issueComments = await getIssueComments(id);
+
     this.setState({
       currentIssue,
       issueComments,
@@ -91,18 +103,40 @@ class IssueComments extends React.Component {
     }
   }
 
-  async onIssueUpdate(id, comment) {
-    console.warn('Issue updated!', { id, comment });
+  async onIssueUpdateBody(id, body) {
+    const { title } = this.state.currentIssue;
+    return await updateIssue({ id, title, body });
+  }
+
+  async onIssueUpdateTitle(title) {
+    const { id, body } = this.state.currentIssue;
+    return await updateIssue({ id, title, body });
   }
 
   async onIssueDelete() {
+    if (!window.confirm('Are you sure you want to delete this?')) {
+      return;
+    }
+
     const { id } = this.state.currentIssue;
-    console.warn('Issue deleted!', id);
+    const result = await deleteIssue({ id });
+    if (result) {
+      this.props.history.push(this.state.issuesBaseUrl);
+    }
   }
 
-  async onIssueToggle(i) {
-    const { id } = this.state.currentIssue;
-    console.warn('Issue closed/reopened!', id);
+  async onIssueToggle() {
+    const { id, isOpened } = this.state.currentIssue;
+    const result = isOpened ? await closeIssue({ id }) : await reopenIssue({ id });
+    if (result) {
+      this.setState({
+        ...this.state,
+        currentIssue: {
+          ...this.state.currentIssue,
+          isOpened: !this.state.currentIssue.isOpened
+        }
+      });
+    }
   }
 
   async onCommentCreate(id, comment) {
@@ -137,31 +171,31 @@ class IssueComments extends React.Component {
     }
   }
 
+  isOwnIssue() {
+    const { userId } = this.props;
+    const { userId: issueUserId } = this.state.currentIssue;
+    return userId === issueUserId;
+  }
+
+  redirectToCreateNewIssue() {
+    this.props.history.push(this.state.issuesBaseUrl + '/new');
+  }
+
   render() {
     const { currentIssue, issueComments, loading } = this.state;
-    const {
-      match: { url },
-      userImg,
-      userName
-    } = this.props;
-    const newIssueUrl = url
-      .split('/')
-      .slice(0, -1)
-      .join('/');
+    const { userImg, userName, userId } = this.props;
 
     return loading ? (
       <Loader active />
     ) : (
       <>
-        <div className={styles.header_row}>
-          <Header as="h2">
-            {currentIssue.title}
-            <span>{` #${currentIssue.number}`}</span>
-          </Header>
-          <Link to={`${newIssueUrl}/new`}>
-            <Button compact positive content="New Issue" primary />
-          </Link>
-        </div>
+        <IssueHeader
+          title={currentIssue.title}
+          number={currentIssue.number}
+          canEdit={this.isOwnIssue()}
+          onNewIssue={this.redirectToCreateNewIssue}
+          onSubmit={this.onIssueUpdateTitle}
+        />
         <div>
           <Label color={currentIssue.isOpened ? 'green' : 'red'} className={styles.issue_label}>
             <Icon name="exclamation circle" /> {currentIssue.isOpened ? 'Open' : 'Closed'}
@@ -180,27 +214,39 @@ class IssueComments extends React.Component {
           body={currentIssue.body}
           createdAt={currentIssue.createdAt}
           newComment={false}
-          onSubmit={this.onIssueUpdate}
+          onSubmit={this.onIssueUpdateBody}
           submitBtnTxt="Update comment"
           cancelBtnTxt="Cancel"
+          ownComment={this.isOwnIssue()}
         />
 
         {issueComments.length > 0 &&
-          issueComments.map(issueComment => (
-            <IssueComment
-              key={issueComment.id}
-              id={issueComment.id}
-              avatar={currentIssue.user.avatar}
-              username={issueComment.user.username}
-              body={issueComment.body}
-              createdAt={issueComment.createdAt}
-              newComment={false}
-              onSubmit={this.onCommentUpdate}
-              submitBtnTxt="Update comment"
-              cancelBtnTxt="Cancel"
-              onDelete={this.onCommentDelete}
-            />
-          ))}
+          issueComments.map(issueComment => {
+            const {
+              id,
+              user: { username },
+              body,
+              createdAt,
+              userId: commentUserId
+            } = issueComment;
+
+            return (
+              <IssueComment
+                key={id}
+                id={id}
+                avatar={currentIssue.user.avatar}
+                username={username}
+                body={body}
+                createdAt={createdAt}
+                newComment={false}
+                onSubmit={this.onCommentUpdate}
+                submitBtnTxt="Update comment"
+                cancelBtnTxt="Cancel"
+                onDelete={this.onCommentDelete}
+                ownComment={userId === commentUserId}
+              />
+            );
+          })}
         <IssueComment
           avatar={currentIssue.user.avatar}
           username={userName}
@@ -208,22 +254,26 @@ class IssueComments extends React.Component {
           onSubmit={this.onCommentCreate}
           submitBtnTxt="Comment"
           createdAt={currentIssue.createdAt}
-          buttons={[
-            currentIssue.isOpened ? (
-              <Button compact floated="right" secondary key="close" onClick={this.onIssueToggle}>
-                <Icon name="check circle outline" />
-                Close issue
-              </Button>
-            ) : (
-              <Button compact floated="right" secondary color="red" key="close" onClick={this.onIssueToggle}>
-                Reopen issue
-              </Button>
-            ),
-            <Button compact floated="right" basic color="grey" key="delete" onClick={this.onIssueDelete}>
-              <Icon name="exclamation" color="grey" />
-              Delete issue
-            </Button>
-          ]}
+          buttons={
+            this.isOwnIssue()
+              ? [
+                currentIssue.isOpened ? (
+                  <Button compact floated="right" secondary key="close" onClick={this.onIssueToggle}>
+                    <Icon name="check circle outline" />
+                      Close issue
+                  </Button>
+                ) : (
+                  <Button compact floated="right" secondary color="red" key="close" onClick={this.onIssueToggle}>
+                      Reopen issue
+                  </Button>
+                ),
+                <Button compact floated="right" basic color="grey" key="delete" onClick={this.onIssueDelete}>
+                  <Icon name="exclamation" color="grey" />
+                    Delete issue
+                </Button>
+              ]
+              : null
+          }
         />
       </>
     );
@@ -239,7 +289,10 @@ IssueComments.propTypes = {
   }).isRequired,
   userId: PropTypes.string.isRequired,
   userImg: PropTypes.string,
-  userName: PropTypes.string.isRequired
+  userName: PropTypes.string.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired
+  }).isRequired
 };
 
 const mapStateToProps = ({

@@ -12,10 +12,6 @@
   }
 }
 
-:global(.ui.button) {
-  margin-left: 0.4em !important;
-}
-
 :global(.ui.divider):local(.divide) {
   margin: 0rem 0rem;
 }
@@ -66,7 +62,7 @@
   margin-bottom: 0.5em;
 }
 
-:global(.ui.form) {
+:local(.mde) {
   flex: 1;
 }
 

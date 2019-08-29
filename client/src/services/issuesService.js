@@ -28,6 +28,42 @@ export const createIssue = async request => {
   return response.json();
 };
 
+export const updateIssue = async request => {
+  const response = await callWebApi({
+    endpoint: '/api/issues',
+    type: 'PUT',
+    request
+  });
+  return response.json();
+};
+
+export const closeIssue = async request => {
+  const { id } = request;
+  const response = await callWebApi({
+    endpoint: `/api/issues/${id}/close`,
+    type: 'PUT'
+  });
+  return response.json();
+};
+
+export const reopenIssue = async request => {
+  const { id } = request;
+  const response = await callWebApi({
+    endpoint: `/api/issues/${id}/reopen`,
+    type: 'PUT'
+  });
+  return response.json();
+};
+
+export const deleteIssue = async request => {
+  const { id } = request;
+  const response = await callWebApi({
+    endpoint: `/api/issues/${id}`,
+    type: 'DELETE'
+  });
+  return response ? true : false;
+};
+
 export const getIssueComments = async issueId => {
   const response = await callWebApi({
     endpoint: `/api/issues/${issueId}/comments`,

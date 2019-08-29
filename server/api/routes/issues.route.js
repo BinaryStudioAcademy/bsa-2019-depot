@@ -87,12 +87,11 @@ router
       .then(([, data]) => res.send(data))
       .catch(next);
   })
-  .delete('/:id', (req, res, next) => {
+  .delete('/:id', async (req, res, next) => {
     const { id } = req.params;
 
     const userId = req.user.id;
-    const authorId = issueService.getAuthorId(id);
-
+    const authorId = await issueService.getAuthorId(id);
     if (userId !== authorId) {
       res.status(401).send('Only issue author can update it');
       return;
