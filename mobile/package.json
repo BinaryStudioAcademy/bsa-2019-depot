@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "react-native start",
+    "start": "react-native start --reset-cache",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "test": "jest",
@@ -11,8 +11,23 @@
     "prettify": "prettier --write \"**/*.{css,scss,sass,js,jsx,json,md}\""
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.6.1",
+    "formik": "^1.5.8",
+    "prop-types": "^15.7.2",
+    "query-string": "^6.8.2",
     "react": "16.8.6",
-    "react-native": "0.60.5"
+    "react-dom": "^16.9.0",
+    "react-native": "0.60.5",
+    "react-native-gesture-handler": "^1.4.1",
+    "react-native-reanimated": "^1.2.0",
+    "react-navigation": "^3.12.1",
+    "react-redux": "^7.1.0",
+    "react-toastify": "^5.3.2",
+    "redux": "^4.0.4",
+    "redux-saga": "^1.0.5",
+    "redux-saga-routines": "^3.2.0",
+    "yup": "^0.27.0",
+    "react-native-oauth": "^2.1.18"
   },
   "devDependencies": {
     "@babel/core": "7.5.5",
@@ -33,6 +48,7 @@
     "lint-staged": "^9.2.3",
     "metro-react-native-babel-preset": "0.54.1",
     "prettier": "^1.18.2",
+    "react-native-dotenv": "^0.2.0",
     "react-test-renderer": "16.8.6"
   },
   "jest": {
