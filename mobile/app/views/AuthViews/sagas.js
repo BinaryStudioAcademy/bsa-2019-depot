@@ -87,10 +87,8 @@ function* watchSignupRequest() {
 function* setUsername({ payload: { username, user } }) {
   try {
     yield put(setUsernameRoutine.request());
-    alert(user);
     const response = yield call(authService.setUsername, username, user);
     const { status } = response;
-    alert(status);
     if (status) {
       yield put(setUsernameRoutine.success(username));
     } else {
