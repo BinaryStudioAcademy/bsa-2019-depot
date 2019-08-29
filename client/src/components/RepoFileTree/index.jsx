@@ -50,7 +50,10 @@ class RepoFileTree extends React.Component {
   render() {
     const {
       lastCommitData: {
-        sha, message, author, date
+        sha, message, createdAt,
+        user: {
+          username: author
+        }
       },
       fileTreeData: {
         tree: { files, directories, currentPath }
@@ -82,7 +85,7 @@ class RepoFileTree extends React.Component {
             <Link className={styles.sha} to={lastCommitLink}>
               {sha.slice(0, 8)}
             </Link>
-            {moment(date).fromNow()}
+            {moment(createdAt).fromNow()}
           </div>
         </Message>
         <Table attached="bottom" selectable singleLine unstackable>
@@ -147,15 +150,13 @@ class RepoFileTree extends React.Component {
 }
 
 RepoFileTree.propTypes = {
-  lastCommitData: PropTypes.exact({
-    loading: PropTypes.bool.isRequired,
-    error: PropTypes.string,
-    commit: PropTypes.exact({
-      sha: PropTypes.string.isRequired,
-      author: PropTypes.string.isRequired,
-      message: PropTypes.string.isRequired,
-      date: PropTypes.string.isRequired
-    })
+  lastCommitData: PropTypes.shape({
+    sha: PropTypes.string.isRequired,
+    message: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
+    user: {
+      author: PropTypes.isRequired
+    }
   }).isRequired,
   fileTreeData: PropTypes.exact({
     loading: PropTypes.bool.isRequired,

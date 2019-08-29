@@ -5,7 +5,7 @@ import { Link, withRouter } from 'react-router-dom';
 import RepoFileTree from '../../components/RepoFileTree/index';
 import FilePathBreadcrumbSections from '../../components/FilePathBreadcrumbSections';
 import RepoReadme from '../../components/RepoReadme/index';
-import { fetchBranches, fetchBranch, fetchFileTree, fetchCurrentRepo } from '../../routines/routines';
+import { fetchBranch, fetchFileTree, fetchCurrentRepo } from '../../routines/routines';
 import * as repositoryService from '../../services/repositoryService';
 import { newFile } from './actions';
 import RepoDescription from '../../components/RepoDescription';
@@ -161,11 +161,10 @@ class CodeTab extends React.Component {
       history
     } = this.props;
 
-    const { name: branch } = currentBranchData;
+    const { name: branch, headCommit, commitsCount } = currentBranchData;
     const { files } = fileTreeData.tree;
 
     const isOwn = currentUserName && currentUserName === ownername;
-    const { headCommit, commitsCount } = currentBranchData;
 
     const readme = files && files.find(file => file.name === 'README.md');
     const branchesCount = branches ? branches.length : 0;
@@ -283,23 +282,11 @@ const mapDispatchToProps = {
 };
 
 CodeTab.propTypes = {
-  branchesData: PropTypes.exact({
-    loading: PropTypes.bool.isRequired,
-    error: PropTypes.string,
-    branches: PropTypes.array,
-    lastCommits: PropTypes.object
-  }),
-  lastCommitData: PropTypes.exact({
-    loading: PropTypes.bool.isRequired,
-    error: PropTypes.string,
-    commit: PropTypes.object
-  }).isRequired,
   fileTreeData: PropTypes.exact({
     loading: PropTypes.bool.isRequired,
     error: PropTypes.string,
     tree: PropTypes.object
   }).isRequired,
-  fetchLastCommitOnBranch: PropTypes.func.isRequired,
   newFile: PropTypes.func.isRequired,
   history: PropTypes.object,
   location: PropTypes.object,
@@ -307,7 +294,23 @@ CodeTab.propTypes = {
   currentUser: PropTypes.string,
   username: PropTypes.string,
   reponame: PropTypes.string,
-  branch: PropTypes.string
+  branch: PropTypes.string,
+  repoID: PropTypes.string.isRequired,
+  ownername: PropTypes.string,
+  fetchBranch: PropTypes.func,
+  fetchFileTree: PropTypes.func,
+  fetchCurrentRepo: PropTypes.func,
+  branches: PropTypes.array,
+  defaultBranch: PropTypes.string,
+  description: PropTypes.string,
+  website: PropTypes.string,
+  currentBranchData: PropTypes.shape({
+    name: PropTypes.string,
+    headCommit: PropTypes.object,
+    commitsCount: PropTypes.string,
+    loading: PropTypes.bool
+  }),
+  currentUserName: PropTypes.string
 };
 
 export default connect(

@@ -18,29 +18,31 @@ const RepoDescription = (props) => {
       .max(255)
   });
 
-  const toggleEdit = () => setEdit(!edit);
+  function toggleEdit() {
+    setEdit(!edit);
+  }
 
   let infoContent, descriptionContent, websiteContent;
-    if (!(description || website)) {
-      infoContent = <i>No description or website provided</i>;
-    } else {
-      if (description) {
-        descriptionContent = description;
-      }
-      if (website) {
-        websiteContent = (
-          <a className={styles.link} href={website}>
-            {website}
-          </a>
-        );
-      }
-      infoContent = (
-        <>
-          {descriptionContent}
-          {websiteContent}
-        </>
+  if (!(description || website)) {
+    infoContent = <i>No description or website provided</i>;
+  } else {
+    if (description) {
+      descriptionContent = description;
+    }
+    if (website) {
+      websiteContent = (
+        <a className={styles.link} href={website}>
+          {website}
+        </a>
       );
     }
+    infoContent = (
+      <>
+        {descriptionContent}
+        {websiteContent}
+      </>
+    );
+  }
 
   return (
     <div className={styles.repoDescription}>
@@ -78,7 +80,7 @@ const RepoDescription = (props) => {
               <InputError name="website" />
               <Button type="submit" disabled={errors.description || errors.website} className={styles.actionButton}>
                 Save
-                </Button>
+              </Button>
               <Button onClick={toggleEdit} className={styles.actionButton}>
                 Cancel
               </Button>
@@ -105,7 +107,7 @@ const RepoDescription = (props) => {
 };
 
 RepoDescription.propTypes = {
-  isown: PropTypes.bool.isRequired,
+  isOwn: PropTypes.bool.isRequired,
   description: PropTypes.string,
   website: PropTypes.string,
   onSubmit: PropTypes.func
