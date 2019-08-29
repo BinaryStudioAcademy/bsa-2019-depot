@@ -45,14 +45,11 @@ export const postIssueComment = async request => {
   return response.json();
 };
 
-export const getAllIssues = async (username, isOpened, sort) => {
+export const getAllIssues = async (username, params) => {
   const response = await callWebApi({
     endpoint: `/api/users/${username}/issues`,
     type: 'GET',
-    query: {
-      isOpened,
-      sort
-    }
+    query: params
   });
   return response.json();
 };

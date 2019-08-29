@@ -1,6 +1,6 @@
 const sequelize = require('../db/connection');
 const BaseRepository = require('./base.repository');
-const {IssueModel, UserModel, RepositoryModel, IssueCommentModel} = require('../models/index');
+const {IssueModel, UserModel, RepositoryModel} = require('../models/index');
 
 const mapSort = (sort) => {
   switch (sort) {
@@ -51,23 +51,31 @@ class IssueRepository extends BaseRepository {
         {
           model: UserModel,
           attributes: ['username']
+        },
+        {
+          model: RepositoryModel,
+          attributes: ['name']
         }
       ]
     });
   }
 
-  getAllIssues(userId, isOpened, sort) {
-    return this.model.findAll({
+  getAllIssues(userId, options = {}) {
+    const {isOpened, sort, owner} = options;
+    let ownerWhere = {};
+    if (owner) {
+      ownerWhere = {username: owner.split(",")};
+    }
+    const findOptions = {
       where: {userId, isOpened},
-      order: [mapSort(sort)],
       attributes: {
         include: [
           [
             sequelize.literal(`
-                (SELECT COUNT(*)
-                FROM "issueComments"
-                WHERE "issueComments"."issueId" = "issue"."id"  
-                AND "issueComments"."deletedAt" IS NULL)`
+                  (SELECT COUNT(*)
+                  FROM "issueComments"
+                  WHERE "issueComments"."issueId" = "issue"."id"  
+                  AND "issueComments"."deletedAt" IS NULL)`
             ),
             'commentCount'
           ]
@@ -76,7 +84,16 @@ class IssueRepository extends BaseRepository {
       include: [
         {
           model: RepositoryModel,
-          attributes: ['name']
+          attributes: ['name'],
+          required: true,
+          include: [
+            {
+              model: UserModel,
+              where: ownerWhere,
+              required: true,
+              attributes: ['id', 'username', 'imgUrl']
+            }
+          ]
         },
         {
           model: UserModel,
@@ -84,12 +101,56 @@ class IssueRepository extends BaseRepository {
           attributes: ['id', 'username']
         }
       ]
-    });
+    };
+
+    if (sort) {
+      findOptions.order = [mapSort(sort)];
+    }
+
+    return this.model.findAll(findOptions);
+
   }
 
-  getAllIssuesCount(userId, isOpened) {
-    return this.model.count({
+  getAllIssuesCount(userId, p) {
+    const {isOpened , owner} = p;
+    let ownerWhere = {};
+    if (owner) {
+      ownerWhere = {username: owner.split(",")};
+    }
+    const findOptions = {
       where: {userId, isOpened},
+      include: [
+        {
+          model: RepositoryModel,
+          attributes: [],
+          required: true,
+          include: [
+            {
+              model: UserModel,
+              where: ownerWhere,
+              required: true,
+            }
+          ]
+        }
+      ]
+    };
+
+    return this.model.count(findOptions);
+  }
+
+  getAllIssuesOwners(userId) {
+    return UserModel.findAll({
+      attributes: ['username'],
+      include: [{
+        model: RepositoryModel,
+        attributes: [],
+        include: [{
+          attributes: [],
+          model: this.model,
+          where: {userId}
+        }
+        ]
+      }]
     });
   }
 

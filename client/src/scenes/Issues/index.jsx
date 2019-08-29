@@ -8,35 +8,73 @@ import * as issuesService from '../../services/issuesService';
 
 import styles from './styles.module.scss';
 
+const DEFAULT_SORT = 'createdAt_DESC';
+const DEFAULT_IS_OPENED = true;
+const DEFAULT_OWNER = null;
+
+const sortOptions = [
+  {
+    key: 'createdAt_DESC',
+    text: 'Newest',
+    value: 'createdAt_DESC'
+  },
+  {
+    key: 'createdAt_ASC',
+    text: 'Oldest',
+    value: 'createdAt_ASC'
+  },
+  {
+    key: 'commentCount_DESC',
+    text: 'Most commented',
+    value: 'commentCount_DESC'
+  },
+  {
+    key: 'commentCount_ASC',
+    text: 'Least commented',
+    value: 'commentCount_ASC'
+  },
+  {
+    key: 'updatedAt_DESC',
+    text: 'Recently update',
+    value: 'updatedAt_DESC'
+  },
+  {
+    key: 'updatedAt_ASC',
+    text: 'Least recently update',
+    value: 'updatedAt_ASC'
+  }
+];
+
 class Issues extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       issues: [],
+      owners: [],
       openIssuesCount: 0,
       closedIssuesCount: 0,
       filterByTitle: '',
-      isOpened: true,
       filter: {
         title: '',
         opened: true
       },
       loading: false,
       error: '',
-      sort: 'createdAt_DESC'
+      isOpened: DEFAULT_IS_OPENED,
+      sort: DEFAULT_SORT,
+      owner: DEFAULT_OWNER
     };
   }
 
   async componentDidMount() {
-    const {
-      match: {
-        params: { username }
-      }
-    } = this.props;
-    const isOpened = this.getIsOpenedFromQuery();
-    const sort = this.getSortFromQuery();
-    await this.fetchIssues(username, isOpened, sort);
+    await this.setState({
+      ...this.state,
+      isOpened: this.getIsOpenedFromQuery(),
+      sort: this.getSortFromQuery(),
+      owner: this.getOwnerFromQuery()
+    });
+    await this.fetchIssues();
   }
 
   getIsOpenedFromQuery = () => {
@@ -44,8 +82,7 @@ class Issues extends Component {
       return true;
     }
     const isOpenedString = queryString.parse(this.props.location.search, { ignoreQueryPrefix: true }).isOpened;
-
-    return isOpenedString ? JSON.parse(isOpenedString) : true;
+    return isOpenedString ? isOpenedString : this.state.isOpened;
   };
 
   getSortFromQuery = () => {
@@ -53,22 +90,33 @@ class Issues extends Component {
       return 'createdAt_DESC';
     }
     const sortString = queryString.parse(this.props.location.search, { ignoreQueryPrefix: true }).sort;
-
-    return sortString ? JSON.parse(sortString) : 'createdAt_DESC';
+    return sortString ? sortString : this.state.sort;
+  };
+  getOwnerFromQuery = () => {
+    if (!this.props.location.search) {
+      return null;
+    }
+    const ownerString = queryString.parse(this.props.location.search, { ignoreQueryPrefix: true }).owner;
+    return ownerString ? ownerString : null;
   };
 
-  async fetchIssues(username, isOpened = true, sort = 'createdAt_DESC') {
+  async fetchIssues() {
+    const {
+      match: {
+        params: { username }
+      }
+    } = this.props;
+    const { isOpened, sort, owner } = this.state;
     try {
       await this.setLoading(true);
-      const issuesData = await issuesService.getAllIssues(username, isOpened, sort);
-      const { issues, open, close } = issuesData;
+      const issuesData = await issuesService.getAllIssues(username, { isOpened, sort, owner });
+      const { issues, open, close, owners } = issuesData;
       this.setState({
         ...this.state,
         issues,
+        owners,
         openIssuesCount: open,
-        closedIssuesCount: close,
-        isOpened,
-        sort
+        closedIssuesCount: close
       });
     } catch (err) {
       await this.setError(err);
@@ -103,69 +151,68 @@ class Issues extends Component {
     });
   };
 
-  getOpened = () => {
+  handleGetOpened = () => {
     this.changeTab(true);
   };
 
-  getClosed = () => {
+  handleGetClosed = () => {
     this.changeTab(false);
   };
 
-  changeTab = open => {
-    const {
-      location,
-      history,
-      match: {
-        params: { username }
-      }
-    } = this.props;
-    this.fetchIssues(username, open);
-    history.push(`${location.pathname}?isOpened=${open}`);
+  changeTab = async isOpened => {
+    await this.setState({
+      ...this.state,
+      isOpened
+    });
+    this.fetchIssues();
+    this.updateLink();
   };
 
-  render() {
-    const { match } = this.props;
-    const { loading, issues, filterByTitle, openIssuesCount, closedIssuesCount } = this.state;
+  handleOwnerChange = async (e, data) => {
+    const owner = data.value.length > 0 ? data.value.join(',') : null;
+    await this.setState({
+      ...this.state,
+      owner
+    });
+    this.fetchIssues();
+    this.updateLink();
+  };
+  handleSortChange = async (e, data) => {
+    const sort = data.value;
+    await this.setState({
+      ...this.state,
+      sort
+    });
+    this.fetchIssues();
+    this.updateLink();
+  };
 
-    // const authorList = issues.reduce((acc, {user}) => {
-    //   return !acc.includes(user.username) ? [...acc, user.username] : acc;
-    // }, []);
+  updateLink() {
+    const { location, history } = this.props;
+    const { isOpened, sort, owner } = this.state;
+    const queryParams = [];
+    if (DEFAULT_IS_OPENED !== isOpened) queryParams.push(`isOpened=${isOpened}`);
+    if (DEFAULT_SORT !== sort) queryParams.push(`sort=${sort}`);
+    if (owner) queryParams.push(`owner=${owner}`);
+    if (queryParams.length > 0) {
+      const queryParamsStr = queryParams.join('&');
+      history.push(`${location.pathname}?${queryParamsStr}`);
+    } else {
+      history.push(`${location.pathname}`);
+    }
+  }
+
+  render() {
+    const { loading, issues, owners, filterByTitle, openIssuesCount, closedIssuesCount, isOpened, owner } = this.state;
+
+    const ownerMapper = username => {
+      return { key: username, text: username, value: username };
+    };
+
+    const ownerValues = owner ? owner.split(',') : [];
+    const ownersList = owners.map(owner => owner.username).map(ownerMapper);
 
     const filteredIssues = filterByTitle ? this.renderFilteredIssues() : issues;
-
-    // Mock data
-    const sortOptions = [
-      {
-        key: 'createdAt_DESC',
-        text: 'Newest',
-        value: 'createdAt_DESC'
-      },
-      {
-        key: 'createdAt_ASC',
-        text: 'Oldest',
-        value: 'createdAt_ASC'
-      },
-      {
-        key: 'commentCount_DESC',
-        text: 'Most commented',
-        value: 'commentCount_DESC'
-      },
-      {
-        key: 'commentCount_ASC',
-        text: 'Least commented',
-        value: 'commentCount_ASC'
-      },
-      {
-        key: 'updatedAt_DESC',
-        text: 'Recently update',
-        value: 'updatedAt_DESC'
-      },
-      {
-        key: 'updatedAt_ASC',
-        text: 'Least recently update',
-        value: 'updatedAt_ASC'
-      }
-    ];
 
     return loading ? (
       <Loader active />
@@ -182,42 +229,27 @@ class Issues extends Component {
         <div className={styles.issuesContainer}>
           <div className={styles.issuesHeader}>
             <div className="issues-counters">
-              <span className={`${styles.openedIssues}`} onClick={this.getOpened}>
+              <span className={styles.openedIssues + (isOpened ? ' active' : '')} onClick={this.handleGetOpened}>
                 <Icon name="info" /> {openIssuesCount} Open
               </span>
-              <span className={`${styles.closedIssues}`} onClick={this.getClosed}>
+              <span className={styles.closedIssues + (!isOpened ? ' active' : '')} onClick={this.handleGetClosed}>
                 <Icon name="check" /> {closedIssuesCount} Closed
               </span>
             </div>
             <div className={styles.issueFilters}>
-              <Dropdown text="Orgainzation" icon="caret down">
-                <Dropdown.Menu>
-                  <Input
-                    icon="search"
-                    iconPosition="left"
-                    className="search"
-                    placeholder="Filter by organization or owner"
-                  />
-                  {/* <Dropdown.Menu scrolling>
-                    {issues
-                      .map(issue => issue.assignees)
-                      .flat()
-                      .map(assignee => (
-                        <Dropdown.Item key={assignee.username} text={assignee.username} value={assignee.username} />
-                      ))}
-                  </Dropdown.Menu> */}
-                </Dropdown.Menu>
-              </Dropdown>
-              <Dropdown text="Sort" icon="caret down">
-                <Dropdown.Menu>
-                  {sortOptions.map(({ key, text, value }) => (
-                    <Dropdown.Item key={key} text={text} value={value} />
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
+              <Dropdown
+                value={ownerValues}
+                text="Orgainzation"
+                options={ownersList}
+                onChange={this.handleOwnerChange}
+                multiple
+                search
+                selection
+              ></Dropdown>
+              <Dropdown text="Sort" icon="caret down" onChange={this.handleSortChange} options={sortOptions}></Dropdown>
             </div>
           </div>
-          <IssuesList issues={filteredIssues} match={match} />
+          <IssuesList issues={filteredIssues} />
         </div>
       </div>
     );
@@ -226,11 +258,11 @@ class Issues extends Component {
 
 Issues.propTypes = {
   error: PropTypes.string,
+  match: PropTypes.object,
   issues: PropTypes.array,
   fetchIssues: PropTypes.func,
   loading: PropTypes.bool,
   location: PropTypes.object.isRequired,
-  match: PropTypes.object.isRequired,
   currentUser: PropTypes.object,
   history: PropTypes.object
 };
