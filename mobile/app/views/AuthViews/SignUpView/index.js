@@ -126,13 +126,13 @@ class SignUpView extends React.Component {
           <TouchableOpacity style={styles.button} onPress={handleSubmit}>
             <Text style={styles.text}>{'Sign Up for Depot'}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ ...styles.button, ...styles.buttonGoogle }} onPress={this.googleLogin}>
-            <Text style={{ ...styles.text, ...styles.textGoogle }}>{'Sign up with Google'}</Text>
+          <TouchableOpacity style={[styles.button, styles.buttonGoogle]} onPress={this.googleLogin}>
+            <Text style={[styles.text, styles.textGoogle]}>{'Sign up with Google'}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ ...styles.button, ...styles.signInUp }} onPress={this.toSignIn}>
+          <TouchableOpacity style={[styles.button, styles.signInUp]} onPress={this.toSignIn}>
             <Text style={styles.textCreateAccount}>
               {'Already have an account? '}
-              <Text style={{ ...styles.textCreateAccount, ...styles.link }}>Sign in</Text>
+              <Text style={[styles.textCreateAccount, styles.link]}>Sign in</Text>
             </Text>
           </TouchableOpacity>
         </View>
