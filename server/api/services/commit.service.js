@@ -6,6 +6,7 @@ const { getReposNames, isEmpty } = require('./repo.service');
 const CommitRepository = require('../../data/repositories/commit.repository');
 const userRepository = require('../../data/repositories/user.repository');
 const RepoRepository = require('../../data/repositories/repository.repository');
+const CustomError = require('../../helpers/error.helper');
 
 const getCommitsAndCreatedRepoByDate = async (data) => {
   const { user } = data;
@@ -35,7 +36,11 @@ const getCommitsAndCreatedRepoByDate = async (data) => {
 
   const allCommits = await Promise.all(promises).then(() => Promise.resolve(globalCommits));
   const username = user;
-  const { id } = await userRepository.getByUsername(username);
+  const dbUser = await userRepository.getByUsername(username);
+  if (!dbUser) {
+    return Promise.reject(new CustomError(404, `User ${username} not found`));
+  }
+  const { id } = dbUser;
   const repos = await RepoRepository.getByUserWithOptions(id);
   const userRepos = repos.map(repo => repo.get({ plain: true }));
   const userActivitybyDate = {};

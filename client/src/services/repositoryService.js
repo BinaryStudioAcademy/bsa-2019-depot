@@ -34,6 +34,15 @@ export const updateRepositoryByOwnerAndName = async ({ owner, reponame, request 
   return response.json();
 };
 
+export const changeRepoType = async ({ owner, reponame, request }) => {
+  const response = await callWebApi({
+    endpoint: `/api/repo/${owner}/${reponame}/change-type`,
+    type: 'PUT',
+    request
+  });
+  return response.json();
+};
+
 export const checkName = async ({ owner, reponame }) => {
   if (!owner || !reponame) return 'invalid data';
 
