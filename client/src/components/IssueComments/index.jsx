@@ -6,6 +6,7 @@ import moment from 'moment';
 import { Header, Button, Label, Icon, Loader } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { getIssueByNumber, getIssueComments } from '../../services/issuesService';
+import { createIssueComment, updateIssueComment, deleteIssueComment } from '../../services/issueCommentsService';
 import IssueComment from '../IssueComment';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 
@@ -61,11 +62,33 @@ class IssueComments extends React.Component {
   }
 
   async onCommentUpdate(id, comment) {
-    console.warn('Comment updated!', { id, comment });
+    const result = updateIssueComment({ id, comment });
+
+    if (result) {
+      const issueComments = await getIssueComments(this.state.currentIssue.id);
+      this.setState({
+        comment: '',
+        issueComments
+      });
+      return result;
+    }
   }
 
   async onCommentDelete(id) {
-    console.warn('Comment deleted!', id);
+    if (!window.confirm('Are you sure you want to delete this?')) {
+      return;
+    }
+
+    const result = await deleteIssueComment({ id });
+
+    if (result) {
+      const issueComments = await getIssueComments(this.state.currentIssue.id);
+      this.setState({
+        ...this.state,
+        issueComments
+      });
+      return result;
+    }
   }
 
   async onIssueUpdate(id, comment) {
@@ -86,28 +109,32 @@ class IssueComments extends React.Component {
     this.setState({
       isDisabled: true
     });
-    // const {
-    //   comment,
-    //   currentIssue: { id: issueId }
-    // } = this.state;
+    const {
+      currentIssue: { id: issueId }
+    } = this.state;
 
-    console.warn('Issue create!', { id, comment });
-    return;
-    // if (!comment) return;
-    // const { userId } = this.props;
-    // await postIssueComment({
-    //   comment,
-    //   issueId,
-    //   userId
-    // });
-    // this.socket.emit('newIssueComment', {
-    //   issueId
-    // });
-    // const issueComments = await getIssueComments(issueId);
-    // this.setState({
-    //   comment: '',
-    //   issueComments
-    // });
+    if (!comment) return;
+
+    const { userId } = this.props;
+    const result = await createIssueComment({
+      comment,
+      issueId,
+      userId
+    });
+
+    if (result) {
+      this.socket.emit('newIssueComment', {
+        issueId
+      });
+
+      const issueComments = await getIssueComments(issueId);
+      this.setState({
+        comment: '',
+        issueComments
+      });
+
+      return result;
+    }
   }
 
   render() {
@@ -180,6 +207,7 @@ class IssueComments extends React.Component {
           newComment={true}
           onSubmit={this.onCommentCreate}
           submitBtnTxt="Comment"
+          createdAt={currentIssue.createdAt}
           buttons={[
             currentIssue.isOpened ? (
               <Button compact floated="right" secondary key="close" onClick={this.onIssueToggle}>
@@ -210,7 +238,7 @@ IssueComments.propTypes = {
     url: PropTypes.string.isRequired
   }).isRequired,
   userId: PropTypes.string.isRequired,
-  userImg: PropTypes.string.isRequired,
+  userImg: PropTypes.string,
   userName: PropTypes.string.isRequired
 };
 

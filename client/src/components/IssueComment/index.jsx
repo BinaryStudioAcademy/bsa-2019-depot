@@ -40,9 +40,16 @@ class IssueComment extends React.Component {
   }
 
   onSubmit() {
-    const { id } = this.props;
+    const { id, newComment } = this.props;
     const { comment } = this.state;
-    this.props.onSubmit(id, comment);
+    const result = this.props.onSubmit(id, comment);
+    if (result) {
+      if (newComment) {
+        this.setState({ ...this.state, comment: '', isDisabled: true });
+      } else {
+        this.setState({ ...this.state, editing: false });
+      }
+    }
   }
 
   onDelete() {
@@ -64,7 +71,7 @@ class IssueComment extends React.Component {
   }
 
   render() {
-    const { id, avatar, username, createdAt, body, buttons, submitBtnTxt, cancelBtnTxt, onDelete } = this.props;
+    const { id, avatar, username, createdAt, buttons, submitBtnTxt, cancelBtnTxt, onDelete } = this.props;
     const { comment, selectedTab, isDisabled } = this.state;
 
     return (
@@ -73,7 +80,7 @@ class IssueComment extends React.Component {
           <Image src={getUserImgLink(avatar)} />
         </div>
         {this.state.editing ? (
-          <Form className={styles.issueForm}>
+          <Form className={styles.issueForm} onSubmit={this.onSubmit}>
             <div className={styles.commentEditor}>
               <ReactMde
                 value={comment}
@@ -84,15 +91,7 @@ class IssueComment extends React.Component {
               />
             </div>
 
-            <Button
-              positive
-              compact
-              floated="right"
-              type="submit"
-              disabled={isDisabled}
-              onClick={this.onSubmit}
-              className={styles.button}
-            >
+            <Button positive compact floated="right" type="submit" disabled={isDisabled} className={styles.button}>
               {submitBtnTxt}
             </Button>
             {cancelBtnTxt ? (
@@ -122,7 +121,7 @@ class IssueComment extends React.Component {
             </div>
             <Divider className={styles.divide} />
             <div className={styles.issue_comment_desc}>
-              {body ? <ReactMarkdown source={body} /> : 'No description provided.'}
+              {comment ? <ReactMarkdown source={comment} /> : 'No description provided.'}
             </div>
           </div>
         )}
