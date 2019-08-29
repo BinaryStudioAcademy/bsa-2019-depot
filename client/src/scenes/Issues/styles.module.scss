@@ -1,6 +1,13 @@
 :local(.container) {
   max-width: 1200px;
-  margin: auto;
+  width: 100%;
+  margin: 0 auto;
+  :local(.issuesContainer) {
+    width: 100%;
+    margin-top: 10px;
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+  }
 }
 
 :local(.filterRow) {
@@ -8,12 +15,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-:local(.issuesContainer) {
-  margin-top: 10px;
-  border: 1px solid lightgrey;
-  border-radius: 5px;
+  :global(.ui.active.button) {
+    color: #fff;
+    background-color: #2e53db;
+  }
 }
 
 :local(.issuesHeader) {
@@ -31,7 +36,9 @@
 :global(.ui.dropdown) {
   color: #575757;
   cursor: pointer;
-
+  &:global(.active) {
+    color: #000000;
+  }
   &:hover {
     color: #000000;
   }

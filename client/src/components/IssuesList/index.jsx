@@ -16,7 +16,7 @@ const IssuesList = props => {
     issues.length > 0 && (
       <List divided verticalAlign="middle">
         {issues.map(issue => (
-          <List.Item key={issue.number}>
+          <List.Item key={issue.id}>
             <List.Content floated="right">
               <Icon name="comments outline" /> {issue.commentCount}
             </List.Content>
@@ -71,7 +71,7 @@ IssuesList.propTypes = {
         })
       ),
       isOpened: PropTypes.bool.isRequired,
-      commentCount: PropTypes.number,
+      commentCount: PropTypes.string,
       createdAt: PropTypes.string.isRequired
     })
   ).isRequired,

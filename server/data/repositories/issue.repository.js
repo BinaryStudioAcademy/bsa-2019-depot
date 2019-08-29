@@ -1,10 +1,29 @@
-const sequelize  = require ('../db/connection');
+const sequelize = require('../db/connection');
 const BaseRepository = require('./base.repository');
-const { IssueModel, UserModel, RepositoryModel } = require('../models/index');
+const {IssueModel, UserModel, RepositoryModel, IssueCommentModel} = require('../models/index');
+
+const mapSort = (sort) => {
+  switch (sort) {
+    case 'createdAt_DESC':
+    case 'createdAt_ASC':
+    case 'updatedAt_DESC':
+    case 'updatedAt_ASC':
+      return sort.split('_');
+      break;
+    case 'commentCount_DESC':
+      return [[sequelize.col('commentCount'), 'DESC']];
+      break;
+    case 'commentCount_ASC':
+      return [[sequelize.col('commentCount'), 'ASC']];
+      break;
+    default:
+      return ['createdAt', 'DESC'];
+  }
+};
 
 class IssueRepository extends BaseRepository {
-  async addIssue({ ...issueData }) {
-    const { repositoryId } = issueData;
+  async addIssue({...issueData}) {
+    const {repositoryId} = issueData;
     const number = ((await this.getMaxIssueRepoNumber(repositoryId)) || 0) + 1;
     const issueDataWithNumber = {
       ...issueData,
@@ -14,20 +33,20 @@ class IssueRepository extends BaseRepository {
   }
 
   getMaxIssueRepoNumber(repositoryId) {
-    return this.model.max('number', { where: { repositoryId } });
+    return this.model.max('number', {where: {repositoryId}});
   }
 
   getIssueById(id) {
-    return this.model.findOne({ where: { id } });
+    return this.model.findOne({where: {id}});
   }
 
-  updateIssueById(id, { ...issueData }) {
+  updateIssueById(id, {...issueData}) {
     return this.updateById(id, issueData);
   }
 
-  getRepositoryIssues({ repositoryId }) {
+  getRepositoryIssues({repositoryId}) {
     return this.model.findAll({
-      where: { repositoryId },
+      where: {repositoryId},
       include: [
         {
           model: UserModel,
@@ -37,9 +56,23 @@ class IssueRepository extends BaseRepository {
     });
   }
 
-  getAllIssues(userId, isOpened) {
+  getAllIssues(userId, isOpened, sort) {
     return this.model.findAll({
-      where: { userId, isOpened },
+      where: {userId, isOpened},
+      order: [mapSort(sort)],
+      attributes: {
+        include: [
+          [
+            sequelize.literal(`
+                (SELECT COUNT(*)
+                FROM "issueComments"
+                WHERE "issueComments"."issueId" = "issue"."id"  
+                AND "issueComments"."deletedAt" IS NULL)`
+            ),
+            'commentCount'
+          ]
+        ]
+      },
       include: [
         {
           model: RepositoryModel,
@@ -53,24 +86,26 @@ class IssueRepository extends BaseRepository {
       ]
     });
   }
+
   getAllIssuesCount(userId, isOpened) {
     return this.model.count({
-      where: { userId, isOpened },
+      where: {userId, isOpened},
     });
   }
-  getRepoIssueByNumber({ username, name, number }) {
+
+  getRepoIssueByNumber({username, name, number}) {
     return this.model.findOne({
-      where: { number },
+      where: {number},
       include: [
         {
           model: UserModel,
           attributes: [],
-          where: { username }
+          where: {username}
         },
         {
           model: RepositoryModel,
           attributes: [],
-          where: { name }
+          where: {name}
         },
         {
           model: UserModel,
@@ -79,6 +114,8 @@ class IssueRepository extends BaseRepository {
       ]
     });
   }
+
+
 }
 
 module.exports = new IssueRepository(IssueModel);

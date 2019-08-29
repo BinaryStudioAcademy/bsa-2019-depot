@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Loader, Icon, Input, Dropdown } from 'semantic-ui-react';
+import * as queryString from 'query-string';
+import { Loader, Icon, Input, Dropdown, Button } from 'semantic-ui-react';
 import IssuesList from '../../components/IssuesList';
 import * as issuesService from '../../services/issuesService';
 
@@ -12,16 +13,18 @@ class Issues extends Component {
     super(props);
 
     this.state = {
-      issues: {},
-      openIssues: 0,
-      closedIssues: 0,
+      issues: [],
+      openIssuesCount: 0,
+      closedIssuesCount: 0,
       filterByTitle: '',
+      isOpened: true,
       filter: {
         title: '',
-        author: '',
-        assignees: [],
         opened: true
-      }
+      },
+      loading: false,
+      error: '',
+      sort: 'createdAt_DESC'
     };
   }
 
@@ -31,25 +34,42 @@ class Issues extends Component {
         params: { username }
       }
     } = this.props;
-    await this.fetchIssues(username);
+    const isOpened = this.getIsOpenedFromQuery();
+    const sort = this.getSortFromQuery();
+    await this.fetchIssues(username, isOpened, sort);
   }
 
-  async fetchIssues(username, isOpened = true) {
+  getIsOpenedFromQuery = () => {
+    if (!this.props.location.search) {
+      return true;
+    }
+    const isOpenedString = queryString.parse(this.props.location.search, { ignoreQueryPrefix: true }).isOpened;
+
+    return isOpenedString ? JSON.parse(isOpenedString) : true;
+  };
+
+  getSortFromQuery = () => {
+    if (!this.props.location.search) {
+      return 'createdAt_DESC';
+    }
+    const sortString = queryString.parse(this.props.location.search, { ignoreQueryPrefix: true }).sort;
+
+    return sortString ? JSON.parse(sortString) : 'createdAt_DESC';
+  };
+
+  async fetchIssues(username, isOpened = true, sort = 'createdAt_DESC') {
     try {
       await this.setLoading(true);
-      const issuesData = await issuesService.getAllIssues(username, isOpened);
-
-      if (isOpened) {
-        this.setState({
-          ...this.state,
-          issues: { ...this.state.issues, open: { issuesData } }
-        });
-      } else {
-        this.setState({
-          ...this.state,
-          issues: { ...this.state.issues, closed: { issuesData } }
-        });
-      }
+      const issuesData = await issuesService.getAllIssues(username, isOpened, sort);
+      const { issues, open, close } = issuesData;
+      this.setState({
+        ...this.state,
+        issues,
+        openIssuesCount: open,
+        closedIssuesCount: close,
+        isOpened,
+        sort
+      });
     } catch (err) {
       await this.setError(err);
     } finally {
@@ -64,9 +84,15 @@ class Issues extends Component {
     });
   }
 
+  async setError(err) {
+    await this.setState({
+      ...this.state,
+      error: err
+    });
+  }
+
   renderFilteredIssues = () => {
-    const { issues } = this.props;
-    const { filterByTitle } = this.state;
+    const { filterByTitle, issues } = this.state;
     return issues.filter(({ title }) => title.includes(filterByTitle));
   };
 
@@ -77,12 +103,33 @@ class Issues extends Component {
     });
   };
 
-  render() {
-    const { loading, issues, filterByTitle, openIssues, closedIssues } = this.state;
+  getOpened = () => {
+    this.changeTab(true);
+  };
 
-    const authorList = issues.reduce((acc, { user }) => {
-      return !acc.includes(user.username) ? [...acc, user.username] : acc;
-    }, []);
+  getClosed = () => {
+    this.changeTab(false);
+  };
+
+  changeTab = open => {
+    const {
+      location,
+      history,
+      match: {
+        params: { username }
+      }
+    } = this.props;
+    this.fetchIssues(username, open);
+    history.push(`${location.pathname}?isOpened=${open}`);
+  };
+
+  render() {
+    const { match } = this.props;
+    const { loading, issues, filterByTitle, openIssuesCount, closedIssuesCount } = this.state;
+
+    // const authorList = issues.reduce((acc, {user}) => {
+    //   return !acc.includes(user.username) ? [...acc, user.username] : acc;
+    // }, []);
 
     const filteredIssues = filterByTitle ? this.renderFilteredIssues() : issues;
 
@@ -97,53 +144,60 @@ class Issues extends Component {
         key: 'createdAt_ASC',
         text: 'Oldest',
         value: 'createdAt_ASC'
-      }
-    ];
-
-    const filterOptions = [
+      },
       {
-        key: 0,
-        text: 'Your Issues',
-        value: 'Your Issues'
+        key: 'commentCount_DESC',
+        text: 'Most commented',
+        value: 'commentCount_DESC'
+      },
+      {
+        key: 'commentCount_ASC',
+        text: 'Least commented',
+        value: 'commentCount_ASC'
+      },
+      {
+        key: 'updatedAt_DESC',
+        text: 'Recently update',
+        value: 'updatedAt_DESC'
+      },
+      {
+        key: 'updatedAt_ASC',
+        text: 'Least recently update',
+        value: 'updatedAt_ASC'
       }
     ];
 
     return loading ? (
       <Loader active />
     ) : (
-      <>
+      <div className={styles.container}>
         <div className={styles.filterRow}>
-          <Input
-            label={<Dropdown text="Filters" options={filterOptions} />}
-            labelPosition="left"
-            placeholder="Filter by title"
-            onChange={this.filterIssues}
-          />
+          <Button.Group>
+            <Button active>Created</Button>
+            <Button disabled>Assigned</Button>
+            <Button disabled>Mentioned</Button>
+          </Button.Group>
+          <Input labelPosition="left" placeholder="Filter by title" onChange={this.filterIssues} />
         </div>
         <div className={styles.issuesContainer}>
           <div className={styles.issuesHeader}>
             <div className="issues-counters">
-              <span className={styles.openedIssues}>
-                <Icon name="info" /> {openIssues} Open
+              <span className={`${styles.openedIssues}`} onClick={this.getOpened}>
+                <Icon name="info" /> {openIssuesCount} Open
               </span>
-              <span className={styles.closedIssues}>
-                <Icon name="check" /> {closedIssues} Closed
+              <span className={`${styles.closedIssues}`} onClick={this.getClosed}>
+                <Icon name="check" /> {closedIssuesCount} Closed
               </span>
             </div>
             <div className={styles.issueFilters}>
-              <Dropdown text="Author" icon="filter">
+              <Dropdown text="Orgainzation" icon="caret down">
                 <Dropdown.Menu>
-                  <Input icon="search" iconPosition="left" className="search" placeholder="Filter authors" />
-                  <Dropdown.Menu scrolling>
-                    {authorList.map((author, index) => (
-                      <Dropdown.Item key={index} text={author} value={author} />
-                    ))}
-                  </Dropdown.Menu>
-                </Dropdown.Menu>
-              </Dropdown>
-              <Dropdown text="Assignee" icon="filter">
-                <Dropdown.Menu>
-                  <Input icon="search" iconPosition="left" className="search" placeholder="Filter assignees" />
+                  <Input
+                    icon="search"
+                    iconPosition="left"
+                    className="search"
+                    placeholder="Filter by organization or owner"
+                  />
                   {/* <Dropdown.Menu scrolling>
                     {issues
                       .map(issue => issue.assignees)
@@ -154,7 +208,7 @@ class Issues extends Component {
                   </Dropdown.Menu> */}
                 </Dropdown.Menu>
               </Dropdown>
-              <Dropdown text="Sort" icon="filter">
+              <Dropdown text="Sort" icon="caret down">
                 <Dropdown.Menu>
                   {sortOptions.map(({ key, text, value }) => (
                     <Dropdown.Item key={key} text={text} value={value} />
@@ -163,25 +217,22 @@ class Issues extends Component {
               </Dropdown>
             </div>
           </div>
-          <IssuesList issues={filteredIssues} match={{}} />
+          <IssuesList issues={filteredIssues} match={match} />
         </div>
-      </>
+      </div>
     );
   }
 }
 
 Issues.propTypes = {
-  issues: PropTypes.array.isRequired,
-  issuesData: PropTypes.exact({
-    loading: PropTypes.bool.isRequired,
-    error: PropTypes.string,
-    issues: PropTypes.array
-  }),
-  userId: PropTypes.string.isRequired,
-  fetchIssues: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
+  error: PropTypes.string,
+  issues: PropTypes.array,
+  fetchIssues: PropTypes.func,
+  loading: PropTypes.bool,
+  location: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
-  currentUser: PropTypes.object
+  currentUser: PropTypes.object,
+  history: PropTypes.object
 };
 
 const mapStateToProps = ({ profile: { currentUser } }) => ({
