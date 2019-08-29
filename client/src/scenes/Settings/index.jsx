@@ -20,19 +20,13 @@ const Settings = ({ match }) => {
           <Menu vertical>
             <Menu.Item header>Personal settings</Menu.Item>
             <NavLink to={`${match.url}/profile`} activeClassName="active">
-              <Menu.Item>
-                Profile
-              </Menu.Item>
+              <Menu.Item>Profile</Menu.Item>
             </NavLink>
             <NavLink to={`${match.url}/keys`} activeClassName="active">
-              <Menu.Item>
-                SSH Keys
-              </Menu.Item>
+              <Menu.Item>SSH Keys</Menu.Item>
             </NavLink>
             <NavLink to={`${match.url}/organizations`} activeClassName="active">
-              <Menu.Item>
-                Organizations
-              </Menu.Item>
+              <Menu.Item>Organizations</Menu.Item>
             </NavLink>
           </Menu>
         </Grid.Column>

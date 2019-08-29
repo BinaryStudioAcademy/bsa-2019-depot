@@ -8,6 +8,7 @@ const sshKeysRoutes = require('./ssh-keys.route');
 const issuesRoutes = require('./issues.route');
 const issueCommentsRoutes = require('./issue-comments.route');
 const labelRoutes = require('./labels.route');
+const filesRoutes = require('./files.route');
 
 module.exports = (app) => {
   app.use('/api/auth', authRoutes);
@@ -20,4 +21,5 @@ module.exports = (app) => {
   app.use('/api/issues', issuesRoutes);
   app.use('/api/issue-comments', issueCommentsRoutes);
   app.use('/api/labels', labelRoutes);
+  app.use('/api/files', filesRoutes);
 };
