@@ -67,7 +67,7 @@ router
   .get('/:repoId/branches', (req, res, next) => {
     const { repoId } = req.params;
     getBranches(repoId)
-      .then(branches => res.send(branches.map(branch => branch.name)))
+      .then(branches => res.send(branches))
       .catch(next);
   })
   .get('/:owner/:repoName/:hash/commit', (req, res, next) => {
