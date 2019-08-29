@@ -17,7 +17,6 @@ const { getReposData, getByUserAndReponame } = require('../services/repo.service
 const { getCommitsAndCreatedRepoByDate } = require('../services/commit.service');
 const { getKeysByUser } = require('../services/ssh-key.service');
 const { clientUrl } = require('../../config/common.config');
-const branchService = require('../services/branch.service');
 
 const router = Router();
 
@@ -105,11 +104,7 @@ router.get('/:username/repos/:repo', async (req, res, next) => {
   try {
     const { username, repo } = req.params;
     const repoData = await getByUserAndReponame({ owner: username, reponame: repo });
-    const branches = await branchService.getBranches({ user: username, repoName: repo });
-    res.send({
-      ...repoData.get({ plain: true }),
-      branches
-    });
+    res.send(repoData);
   } catch (error) {
     next(error);
   }

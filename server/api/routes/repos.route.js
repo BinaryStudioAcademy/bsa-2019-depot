@@ -90,6 +90,18 @@ router
       .then(data => res.send(data))
       .catch(next);
   })
+  .get('/:owner/:repoName/:branchName/tree', (req, res, next) => {
+    const { owner, repoName, branchName } = req.params;
+    const { pathToDir } = req.query;
+    getBranchTree({
+      user: owner,
+      name: repoName,
+      branch: branchName,
+      pathToDir
+    })
+      .then(tree => res.send(tree))
+      .catch(next);
+  })
   .get('/:owner/:repoName/:branchName/file', (req, res, next) => {
     const { owner, repoName, branchName } = req.params;
     const { filepath } = req.query;

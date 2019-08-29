@@ -42,17 +42,19 @@ const initialCommit = async ({
   await NodeGit.Branch.create(repo, 'master', commit, 1);
 
   await repoHelper.syncDb(
-    [{
-      repoOwner: owner,
-      repoName,
-      sha: commit.sha(),
-      message: 'Initial commit',
-      userEmail: email,
-      createdAt: new Date()
-    }],
+    [
+      {
+        repoOwner: owner,
+        repoName,
+        sha: commit.sha(),
+        message: 'Initial commit',
+        userEmail: email,
+        createdAt: new Date()
+      }
+    ],
     {
       name: 'master',
-      newHeadSha: commit.sha(),
+      newHeadSha: commit.sha()
     }
   );
 };
@@ -70,8 +72,14 @@ const createRepo = async (repoData) => {
         url: pathToRepo
       };
 
-      await fs.copy(path.resolve(`${__dirname}/../../../scripts/git-hooks/pre-receive`), path.resolve(`${pathToRepo}/hooks/pre-receive`));
-      await fs.copy(path.resolve(`${__dirname}/../../../scripts/git-hooks/update`), path.resolve(`${pathToRepo}/hooks/update`));
+      await fs.copy(
+        path.resolve(`${__dirname}/../../../scripts/git-hooks/pre-receive`),
+        path.resolve(`${pathToRepo}/hooks/pre-receive`)
+      );
+      await fs.copy(
+        path.resolve(`${__dirname}/../../../scripts/git-hooks/update`),
+        path.resolve(`${pathToRepo}/hooks/update`)
+      );
     })
     .catch(() => {
       const errorObj = { status: 404, message: 'Error! Repos wasn`t created' };
@@ -122,7 +130,21 @@ const isEmpty = async ({ owner, reponame }) => {
 
 const getByUserAndReponame = async ({ owner, reponame }) => {
   const { id } = await userRepository.getByUsername(owner);
-  return repoRepository.getByUserAndReponame(id, reponame);
+  const repoData = await repoRepository.getByUserAndReponame(id, reponame);
+
+  const { id: repoId } = repoData.get({ plain: true });
+  const branches = await branchRepository.getByRepoId(repoId);
+  const branchesNames = branches.map((branch) => {
+    const { name } = branch.get({ plain: true });
+    return name;
+  });
+
+  const data = {
+    ...repoData.get({ plain: true }),
+    branches: branchesNames
+  };
+
+  return data;
 };
 
 const updateByUserAndReponame = async ({ owner, reponame, data }) => {
