@@ -1,0 +1,15 @@
+:global(.column):local(.stargazerBox) {
+    height: 100px;
+    margin-bottom: 20px;
+    margin-right: 20px;
+    padding-bottom: 20px;
+    width: 305px;
+}
+
+:global(a):local(.profileLink) {
+    font-weight: normal;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+  
