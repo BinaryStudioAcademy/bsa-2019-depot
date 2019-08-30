@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
@@ -22,11 +22,8 @@ const RepoNav = (props) => {
     OnDropdownClick
   } = props;
 
-  const [currentBranch, setBranch] = useState(branch)
-
-  const handleBranchChange = (event, data) => {
+  function handleBranchChange(event, data) {
     const { value }= data;
-    setBranch(value);
     onBranchChange(value);
   };
 
@@ -34,7 +31,7 @@ const RepoNav = (props) => {
     <div>
       <Dropdown
         button
-        text={`Branch: ${currentBranch}`}
+        text={`Branch: ${branch}`}
         floating
         width="seven"
         className={[styles.actionButton, styles.repoBranchesButton].join(' ')}
@@ -116,7 +113,7 @@ const RepoNav = (props) => {
         <Button.Group className={styles.repoPopupActions} attached="bottom">
           <Button compact className={styles.repoPopupAction}>
             Open in Desktop
-                </Button>
+          </Button>
           <Button compact className={styles.repoPopupAction}>
             Download ZIP
           </Button>
@@ -125,6 +122,15 @@ const RepoNav = (props) => {
     </div>
   </div>
   );
+};
+
+RepoNav.propTypes = {
+  isOwn: PropTypes.bool,
+  branch: PropTypes.string,
+  branches: PropTypes.array,
+  onBranchChange: PropTypes.func.isRequired,
+  onCreateFile: PropTypes.func.isRequired,
+  OnDropdownClick: PropTypes.func
 };
 
 export default RepoNav;
