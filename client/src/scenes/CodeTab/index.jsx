@@ -86,12 +86,13 @@ class CodeTab extends React.Component {
   }
 
   onBranchChange = (branch) => {
-    const { ownername, reponame, history } = this.props;
+    const { ownername, repoID, reponame, history, fetchBranch } = this.props;
     history.push(`/${ownername}/${reponame}/tree/${branch}`);
     this.setState({
       ...this.state,
       branch
     });
+    fetchBranch({ repoID, branch });
     this.props.fetchFileTree({
       username: ownername,
       reponame,
@@ -187,7 +188,7 @@ class CodeTab extends React.Component {
     const { headCommit, commitsCount: { count } } = currentBranchData;
     const { files } = fileTreeData.tree;
 
-    const branch = this.state.branch;
+    const { branch } = this.state;
 
     const isOwn = currentUserName && currentUserName === ownername;
 
@@ -213,7 +214,7 @@ class CodeTab extends React.Component {
         <Loader active />
       </div>
     ) : (
-      <Container>
+      <Container className={styles.contentContainer}>
         <Divider hidden />
         <RepoDescription
           isOwn={isOwn}
