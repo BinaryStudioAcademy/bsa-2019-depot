@@ -13,7 +13,7 @@ const initialFileTreeState = {
 };
 
 const initialBranchState = {
-  commitsCount: null,
+  commitsCount: { count: 0 },
   headCommit: {},
   loading: true,
   error: null

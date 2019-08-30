@@ -120,8 +120,8 @@ const getCommits = async (branch, repoId) => {
   return allCommits;
 };
 
-const getCommitCount = async ({ user, name, branch }) => {
-  const commitListForBranch = await getCommits({ user, name, branch });
+const getCommitCount = async (branch, repoId) => {
+  const commitListForBranch = await getCommits(branch, repoId);
   return { count: commitListForBranch.length };
 };
 

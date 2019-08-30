@@ -49,20 +49,16 @@ router
     try {
       const { repoId, branch: branchName } = req.params;
       const branchInfo = await getBranchInfo(branchName, repoId);
+      const commitsCount = await getCommitCount(branchName, repoId);
 
       response = {
-        ...branchInfo.get({ plain: true })
+        ...branchInfo.get({ plain: true }),
+        commitsCount
       };
     } catch (error) {
       next(error);
     }
     return res.send(response);
-  })
-  .get('/:owner/:repoName/:branchName/count', (req, res, next) => {
-    const { owner, repoName, branchName } = req.params;
-    getCommitCount({ user: owner, name: repoName, branch: branchName })
-      .then(count => res.send(count))
-      .catch(next);
   })
   .get('/:repoId/branches', (req, res, next) => {
     const { repoId } = req.params;

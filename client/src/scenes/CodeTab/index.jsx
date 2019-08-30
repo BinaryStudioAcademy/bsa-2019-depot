@@ -168,10 +168,10 @@ class CodeTab extends React.Component {
     } = this.props;
 
     if (!branches.length) {
-      return <EmptyRepositoryTab />
+      return <EmptyRepositoryTab />;
     }
 
-    const { name: branch, headCommit, commitsCount } = currentBranchData;
+    const { name: branch, headCommit, commitsCount: { count } } = currentBranchData;
     const { files } = fileTreeData.tree;
 
     const isOwn = currentUserName && currentUserName === ownername;
@@ -209,7 +209,7 @@ class CodeTab extends React.Component {
         <CodeTabMenu
           ownername={ownername}
           reponame={reponame}
-          commitsCount={commitsCount}
+          commitsCount={count}
           branchesCount={branchesCount}
         />
         <RepoNav
