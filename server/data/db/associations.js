@@ -1,6 +1,17 @@
 module.exports = (models) => {
   const {
-    User, SshKey, Repository, Branch, Commit, CommitComment, OrgUser, Role, Issue, IssueComment, Star
+    User,
+    SshKey,
+    Repository,
+    Branch,
+    Commit,
+    CommitComment,
+    OrgUser,
+    Role,
+    Issue,
+    IssueComment,
+    Star,
+    Label
   } = models;
 
   SshKey.belongsTo(User);
@@ -50,4 +61,7 @@ module.exports = (models) => {
 
   Star.belongsTo(Repository);
   Star.belongsTo(User);
+
+  Repository.hasMany(Label);
+  Label.belongsTo(Repository);
 };

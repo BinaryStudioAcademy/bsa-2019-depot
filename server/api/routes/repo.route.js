@@ -12,10 +12,9 @@ const {
 } = require('../services/repo.service');
 const { getCommits, getCommitDiff, getCommitCount } = require('../services/commit.service');
 const { deleteStarsByRepoId } = require('../services/star.service');
-const {
-  getBranches, getBranchTree, getLastCommitOnBranch
-} = require('../services/branch.service');
+const { getBranches, getBranchTree, getLastCommitOnBranch } = require('../services/branch.service');
 const { getAllRepoIssues, getRepoIssueByNumber } = require('../services/issue.service');
+const { getLabelsByRepoId } = require('../services/label.service');
 const { getFileContent } = require('../services/files.service');
 const ownerOnlyMiddleware = require('../middlewares/owner-only.middleware');
 
@@ -170,6 +169,12 @@ router
     const { userId, repositoryId } = req.body;
     setStar(userId, repositoryId)
       .then(star => res.send(star))
+      .catch(next);
+  })
+  .get('/:repositoryId/labels', (req, res, next) => {
+    const { repositoryId } = req.params;
+    getLabelsByRepoId(repositoryId)
+      .then(labels => res.send(labels))
       .catch(next);
   });
 

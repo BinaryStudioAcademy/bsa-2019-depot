@@ -129,7 +129,7 @@ router.get('/:username/issues', (req, res, next) => {
 
     getUserByUsername(username).then(data => {
       const { id } = data;
-      Promise.all([getAllIssuesCount(id, {owner, isOpened:true} ), getAllIssuesCount(id,  {owner, isOpened:false} ),  getAllIssuesOwners(id ), getAllIssues(id, {isOpened, sort, owner} )])
+      Promise.all([getAllIssuesCount(id, {owner, isOpened:true} ), getAllIssuesCount(id,  {owner, isOpened:false} ),  getAllIssuesOwners(id), getAllIssues(id, {isOpened, sort, owner} )])
         .then(result => {
           res.send({"open" : result[0] , "close" :  result[1], "owners": result[2], "issues" : result[3]} )
         })
