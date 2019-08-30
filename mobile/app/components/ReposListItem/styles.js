@@ -4,10 +4,11 @@ import colors from '../../config/color.config';
 export default StyleSheet.create({
   container: {
     borderBottomColor: colors.greyBorder,
-    borderBottomWidth: 2,
+    borderBottomWidth: 1,
     padding: 6
   },
   descriptionText: {
+    color: colors.greyText,
     fontSize: 12
   },
   descriptionView: {
@@ -17,6 +18,9 @@ export default StyleSheet.create({
     height: 10,
     marginRight: 4,
     width: 10
+  },
+  starText: {
+    color: colors.greyText
   },
   starsView: {
     flex: 1,

@@ -19,7 +19,7 @@ const ReposListItem = ({ data: { name, description, starsCount, isPublic, websit
       <View style={styles.descriptionView}>{desc ? <Text style={styles.descriptionText}>{desc}</Text> : null}</View>
       <View style={styles.starsView}>
         <Image style={styles.starIcon} source={starIcon} />
-        <Text>{starsCount}</Text>
+        <Text style={styles.starText}>{starsCount}</Text>
       </View>
     </View>
   );
