@@ -15,6 +15,7 @@ import BranchesTab from '../../containers/BranchesTab/index';
 import CreateIssuePage from '../../containers/CreateIssuePage';
 import PrivateTab from '../../containers/PrivateTab';
 import { fetchCurrentRepo } from '../../routines/routines';
+import { clearRepoState } from './actions';
 import Spinner from '../../components/Spinner';
 import CodeTab from '../../scenes/CodeTab';
 
@@ -28,6 +29,10 @@ class RepositoryPage extends React.Component {
     } = this.props;
 
     fetchCurrentRepo({ username, reponame });
+  }
+
+  componentWillUnmount() {
+    this.props.clearRepoState();
   }
 
   render() {
@@ -87,6 +92,7 @@ class RepositoryPage extends React.Component {
 
 RepositoryPage.propTypes = {
   fetchCurrentRepo: PropTypes.func.isRequired,
+  clearRepoState: PropTypes.func.isRequired,
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
     isExact: PropTypes.bool.isRequired,
@@ -123,7 +129,8 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = {
-  fetchCurrentRepo
+  fetchCurrentRepo,
+  clearRepoState
 };
 
 export default connect(
