@@ -68,6 +68,31 @@ $black: #363a44;
   margin: 0px 0px 10px 0px;
   overflow: hidden;
 }
+:local(.repoDescription) {
+  margin: 0.35em 0em 1em;
+  line-height: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  :local(.link) {
+    margin-left: 10px;
+  }
+
+  .editButton {
+    align-self: flex-start;
+  }
+
+  :global(.ui.form) {
+    width: 100%;
+    :global(.fields) {
+      margin-bottom: 0;
+    }
+    :local(.actionButton) {
+      font-size: 90%;
+    }
+  }
+}
 
 :local(.repoDescriptionText) {
   line-height: 1.5;

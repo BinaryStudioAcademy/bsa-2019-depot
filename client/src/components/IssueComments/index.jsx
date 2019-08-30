@@ -1,14 +1,20 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import io from 'socket.io-client';
 import moment from 'moment';
-import { Dropdown, Header, Button, Divider, Form, Label, Icon, Image, Loader } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
-import { getUserImgLink } from '../../helpers/imageHelper';
-import { getIssueByNumber, getIssueComments, postIssueComment } from '../../services/issuesService';
-import ReactMde from 'react-mde';
-import ReactMarkdown from 'react-markdown';
+import { Button, Label, Icon, Loader } from 'semantic-ui-react';
+import {
+  getIssueByNumber,
+  getIssueComments,
+  updateIssue,
+  closeIssue,
+  reopenIssue,
+  deleteIssue
+} from '../../services/issuesService';
+import { createIssueComment, updateIssueComment, deleteIssueComment } from '../../services/issueCommentsService';
+import IssueComment from '../IssueComment';
+import IssueHeader from '../IssueHeader';
+import { socketInit } from '../../helpers/socketInitHelper';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 
 import styles from './styles.module.scss';
@@ -22,111 +28,190 @@ class IssueComments extends React.Component {
       loading: true,
       comment: '',
       selectedTab: 'write',
-      isDisabled: true
+      isDisabled: true,
+      isOwnIssue: false,
+      issuesBaseUrl: this.props.match.url.replace(/\/[^/]+$/, '')
     };
 
-    this.onCommentChange = this.onCommentChange.bind(this);
-    this.onTabChange = this.onTabChange.bind(this);
-    this.renderPreview = this.renderPreview.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.onCommentCreate = this.onCommentCreate.bind(this);
+    this.onCommentUpdate = this.onCommentUpdate.bind(this);
+    this.onCommentDelete = this.onCommentDelete.bind(this);
+    this.onIssueUpdateBody = this.onIssueUpdateBody.bind(this);
+    this.onIssueUpdateTitle = this.onIssueUpdateTitle.bind(this);
+    this.onIssueDelete = this.onIssueDelete.bind(this);
+    this.onIssueToggle = this.onIssueToggle.bind(this);
+    this.redirectToCreateNewIssue = this.redirectToCreateNewIssue.bind(this);
   }
 
   async componentDidMount() {
-    this.initSocket();
     const {
       match: {
         params: { username, reponame, number }
       }
     } = this.props;
-    const currentIssue = await getIssueByNumber({
-      username,
-      reponame,
-      number
-    });
+    console.warn(this.props.match.params);
+
+    const currentIssue = await getIssueByNumber(username, reponame, number);
     const { id } = currentIssue;
+
     const issueComments = await getIssueComments(id);
+
     this.setState({
       currentIssue,
       issueComments,
       loading: false
     });
-    this.socket.on('newIssueComment', async data => {
-      const issueComments = await getIssueComments(data.issueId);
+    this.initSocket();
+  }
+
+  componentWillUnmount() {
+    const {
+      currentIssue: { id }
+    } = this.state;
+    this.socket.emit('leaveRoom', id);
+  }
+
+  initSocket() {
+    this.socket = socketInit('issues');
+    const {
+      currentIssue: { id }
+    } = this.state;
+
+    this.socket.emit('createRoom', id);
+
+    this.socket.on('newIssueComment', data => {
       this.setState({
-        issueComments
+        ...this.state,
+        issueComments: [...this.state.issueComments, data]
       });
     });
   }
 
-  initSocket() {
-    const { REACT_APP_SOCKET_SERVER, REACT_APP_SOCKET_SERVER_PORT } = process.env;
-    const address = `http://${REACT_APP_SOCKET_SERVER}:${REACT_APP_SOCKET_SERVER_PORT}`;
-    this.socket = io(address);
+  async onCommentUpdate(id, comment) {
+    const result = updateIssueComment({ id, comment });
+
+    if (result) {
+      const issueComments = await getIssueComments(this.state.currentIssue.id);
+      this.setState({
+        comment: '',
+        issueComments
+      });
+      return result;
+    }
   }
 
-  onCommentChange(comment) {
-    const isDisabled = !comment;
-    this.setState({ ...this.state, comment, isDisabled });
+  async onCommentDelete(id) {
+    if (!window.confirm('Are you sure you want to delete this?')) {
+      return;
+    }
+
+    const result = await deleteIssueComment({ id });
+
+    if (result) {
+      const issueComments = await getIssueComments(this.state.currentIssue.id);
+      this.setState({
+        ...this.state,
+        issueComments
+      });
+      return result;
+    }
   }
 
-  onTabChange(selectedTab) {
-    this.setState({ ...this.state, selectedTab });
+  async onIssueUpdateBody(id, body) {
+    const { title } = this.state.currentIssue;
+    return await updateIssue({ id, title, body });
   }
 
-  renderPreview(markdown) {
-    return Promise.resolve(<ReactMarkdown source={markdown} />);
+  async onIssueUpdateTitle(title) {
+    const { id, body } = this.state.currentIssue;
+    return await updateIssue({ id, title, body });
   }
 
-  async onSubmit() {
+  async onIssueDelete() {
+    if (!window.confirm('Are you sure you want to delete this?')) {
+      return;
+    }
+
+    const { id } = this.state.currentIssue;
+    const result = await deleteIssue({ id });
+    if (result) {
+      this.props.history.push(this.state.issuesBaseUrl);
+    }
+  }
+
+  async onIssueToggle() {
+    const { id, isOpened } = this.state.currentIssue;
+    const result = isOpened ? await closeIssue({ id }) : await reopenIssue({ id });
+    if (result) {
+      this.setState({
+        ...this.state,
+        currentIssue: {
+          ...this.state.currentIssue,
+          isOpened: !this.state.currentIssue.isOpened
+        }
+      });
+    }
+  }
+
+  async onCommentCreate(id, comment) {
     this.setState({
       isDisabled: true
     });
     const {
-      comment,
       currentIssue: { id: issueId }
     } = this.state;
+
     if (!comment) return;
+
     const { userId } = this.props;
-    await postIssueComment({
+    const result = await createIssueComment({
       comment,
       issueId,
       userId
     });
-    this.socket.emit('newIssueComment', {
-      issueId
-    });
-    const issueComments = await getIssueComments(issueId);
-    this.setState({
-      comment: '',
-      issueComments
-    });
+
+    if (result) {
+      this.socket.emit('newIssueComment', {
+        issueId
+      });
+
+      const issueComments = await getIssueComments(issueId);
+      this.setState({
+        comment: '',
+        issueComments
+      });
+
+      return result;
+    }
+  }
+
+  isOwnIssue() {
+    const { userId } = this.props;
+    const { userId: issueUserId } = this.state.currentIssue;
+    return userId === issueUserId;
+  }
+
+  redirectToCreateNewIssue() {
+    this.props.history.push(this.state.issuesBaseUrl + '/new');
   }
 
   render() {
-    const { currentIssue, issueComments, comment, selectedTab, isDisabled, loading } = this.state;
-    const {
-      match: { url }
-    } = this.props;
-    const newIssueUrl = url
-      .split('/')
-      .slice(0, -1)
-      .join('/');
+    const { currentIssue, issueComments, loading } = this.state;
+    const { userImg, userName, userId } = this.props;
 
     return loading ? (
       <Loader active />
     ) : (
       <>
-        <div className={styles.header_row}>
-          <Header as="h2">
-            {currentIssue.title}
-            <span>{` #${currentIssue.number}`}</span>
-          </Header>
-          <Link to={`${newIssueUrl}/new`}>
-            <Button compact positive content="New Issue" primary />
-          </Link>
-        </div>
+        <IssueHeader
+          title={currentIssue.title}
+          number={currentIssue.number}
+          canEdit={this.isOwnIssue()}
+          onNewIssue={this.redirectToCreateNewIssue}
+          onSubmit={this.onIssueUpdateTitle}
+        />
         <div>
-          <Label color={currentIssue.isOpened ? 'green' : 'red'}>
+          <Label color={currentIssue.isOpened ? 'green' : 'red'} className={styles.issue_label}>
             <Icon name="exclamation circle" /> {currentIssue.isOpened ? 'Open' : 'Closed'}
           </Label>
           <span className={styles.comment_author_name}>
@@ -136,90 +221,74 @@ class IssueComments extends React.Component {
             } comments`}</span>
           </span>
         </div>
-
-        <div className={styles.issue_comment_wrapper}>
-          <div className={styles.comment_author_avatar}>
-            <Image src={getUserImgLink(currentIssue.user.avatar)} />
-          </div>
-
-          <div className={styles.issue_comment_container}>
-            <div className={styles.issue_comment_header}>
-              <span className={styles.comment_author_name}>
-                {`${currentIssue.user.username} `}
-                <span>{`commented ${moment(currentIssue.createdAt).fromNow()}`}</span>
-              </span>
-              <Dropdown className={styles.dropdown_header} icon="ellipsis horizontal">
-                <Dropdown.Menu>
-                  <Link to="">
-                    <Dropdown.Item text="Copy link" />
-                  </Link>
-                  <Link to="">
-                    <Dropdown.Item text="Quote reply" />
-                  </Link>
-                  <Divider />
-                  <Link to="">
-                    <Dropdown.Item text="Edit" />
-                  </Link>
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
-            <Divider className={styles.divide} />
-            <div className={styles.issue_comment_desc}>
-              {currentIssue.body ? currentIssue.body : 'No description provided.'}
-            </div>
-          </div>
-        </div>
+        <IssueComment
+          id={currentIssue.id}
+          avatar={userImg}
+          username={currentIssue.user.username}
+          body={currentIssue.body}
+          createdAt={currentIssue.createdAt}
+          newComment={false}
+          onSubmit={this.onIssueUpdateBody}
+          submitBtnTxt="Update comment"
+          cancelBtnTxt="Cancel"
+          ownComment={this.isOwnIssue()}
+        />
 
         {issueComments.length > 0 &&
-          issueComments.map(issueComment => (
-            <div className={styles.issue_comment_wrapper} key={issueComment.id}>
-              <div className={styles.comment_author_avatar}>
-                <Image src={getUserImgLink(currentIssue.user.avatar)} />
-              </div>
+          issueComments.map(issueComment => {
+            const {
+              id,
+              user: { username },
+              body,
+              createdAt,
+              userId: commentUserId
+            } = issueComment;
 
-              <div className={styles.issue_comment_container}>
-                <div className={styles.issue_comment_header}>
-                  <span className={styles.comment_author_name}>
-                    {`${issueComment.user.username} `}
-                    <span>{`commented ${moment(issueComment.createdAt).fromNow()}`}</span>
-                  </span>
-
-                  <Dropdown className={styles.dropdown_header} icon="ellipsis horizontal">
-                    <Dropdown.Menu>
-                      <Link to="">
-                        <Dropdown.Item text="Copy link" />
-                      </Link>
-                      <Link to="">
-                        <Dropdown.Item text="Quote reply" />
-                      </Link>
-                      <Divider />
-                      <Link to="">
-                        <Dropdown.Item text="Edit" />
-                      </Link>
-                    </Dropdown.Menu>
-                  </Dropdown>
-                </div>
-                <Divider className={styles.divide} />
-                <div className={styles.issue_comment_desc}>
-                  {issueComment.body ? <ReactMarkdown source={issueComment.body} /> : 'No description provided.'}
-                </div>
-              </div>
-            </div>
-          ))}
-        <Form className={styles.issueForm} onSubmit={this.onSubmit}>
-          <div className={styles.commentEditor}>
-            <ReactMde
-              value={comment}
-              onChange={this.onCommentChange}
-              selectedTab={selectedTab}
-              onTabChange={this.onTabChange}
-              generateMarkdownPreview={this.renderPreview}
-            />
-          </div>
-          <Button positive floated="right" type="submit" disabled={isDisabled}>
-            Comment
-          </Button>
-        </Form>
+            return (
+              <IssueComment
+                key={id}
+                id={id}
+                avatar={currentIssue.user.avatar}
+                username={username}
+                body={body}
+                createdAt={createdAt}
+                newComment={false}
+                onSubmit={this.onCommentUpdate}
+                submitBtnTxt="Update comment"
+                cancelBtnTxt="Cancel"
+                onDelete={this.onCommentDelete}
+                ownComment={userId === commentUserId}
+              />
+            );
+          })}
+        <IssueComment
+          avatar={currentIssue.user.avatar}
+          username={userName}
+          newComment={true}
+          onSubmit={this.onCommentCreate}
+          submitBtnTxt="Comment"
+          createdAt={currentIssue.createdAt}
+          buttons={
+            this.isOwnIssue()
+              ? [
+                currentIssue.isOpened ? (
+                  <Button compact floated="right" secondary key="close" onClick={this.onIssueToggle}>
+                    <Icon name="check circle outline" />
+                      Close issue
+                  </Button>
+                ) : (
+                  <Button compact floated="right" secondary color="red" key="close" onClick={this.onIssueToggle}>
+                      Reopen issue
+                  </Button>
+                ),
+                <Button compact floated="right" basic color="grey" key="delete" onClick={this.onIssueDelete}>
+                  <Icon name="exclamation" color="grey" />
+                    Delete issue
+                </Button>
+              ]
+              : null
+          }
+        />
       </>
     );
   }
@@ -232,15 +301,22 @@ IssueComments.propTypes = {
     path: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired
   }).isRequired,
-  userId: PropTypes.string.isRequired
+  userId: PropTypes.string.isRequired,
+  userImg: PropTypes.string,
+  userName: PropTypes.string.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired
+  }).isRequired
 };
 
 const mapStateToProps = ({
   profile: {
-    currentUser: { id }
+    currentUser: { id, imgUrl, username }
   }
 }) => ({
-  userId: id
+  userId: id,
+  userImg: imgUrl,
+  userName: username
 });
 
 export default connect(mapStateToProps)(IssueComments);

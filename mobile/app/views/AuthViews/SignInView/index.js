@@ -10,17 +10,7 @@ import * as Yup from 'yup';
 import styles from '../styles';
 import imageLogo from '../../../assets/depot-logo.png';
 
-import OAuthManager from 'react-native-oauth';
-import { callback_url, client_id, client_secret, scope, google_api } from '../../../config/google.config';
-
-const manager = new OAuthManager('mobile');
-manager.configure({
-  google: {
-    callback_url,
-    client_id,
-    client_secret
-  }
-});
+import { scope, google_api, GoogleManager } from '../../../config/google.config';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -54,21 +44,19 @@ class SignInView extends React.Component {
 
   googleLogin = () => {
     const { loginGoogleRoutine } = this.props;
-    manager.authorize('google', { scopes: scope }).then(resp => {
+    GoogleManager.authorize('google', { scopes: scope }).then(resp => {
       const token = resp.response.credentials.accessToken;
       const googleUrl = google_api;
-      manager
-        .makeRequest('google', googleUrl, {
-          method: 'get',
-          params: {
-            alt: 'json',
-            access_token: token
-          }
-        })
-        .then(resp => {
-          const { email } = resp.data;
-          loginGoogleRoutine({ email });
-        });
+      GoogleManager.makeRequest('google', googleUrl, {
+        method: 'get',
+        params: {
+          alt: 'json',
+          access_token: token
+        }
+      }).then(resp => {
+        const { email } = resp.data;
+        loginGoogleRoutine({ email });
+      });
     });
   };
 
@@ -98,13 +86,13 @@ class SignInView extends React.Component {
           <TouchableOpacity style={styles.button} onPress={handleSubmit}>
             <Text style={styles.text}>{'Sign In'}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ ...styles.button, ...styles.buttonGoogle }} onPress={this.googleLogin}>
-            <Text style={{ ...styles.text, ...styles.textGoogle }}>{'Sign in with Google'}</Text>
+          <TouchableOpacity style={[styles.button, styles.buttonGoogle]} onPress={this.googleLogin}>
+            <Text style={[styles.text, styles.textGoogle]}>{'Sign in with Google'}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{ ...styles.button, ...styles.signInUp }} onPress={this.toSignUp}>
+          <TouchableOpacity style={[styles.button, styles.signInUp]} onPress={this.toSignUp}>
             <Text style={styles.textCreateAccount}>
               {'New to Depot? '}
-              <Text style={{ ...styles.textCreateAccount, ...styles.link }}>Create an account</Text>
+              <Text style={[styles.textCreateAccount, styles.link]}>Create an account</Text>
             </Text>
           </TouchableOpacity>
         </View>

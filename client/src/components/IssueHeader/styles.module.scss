@@ -1,0 +1,15 @@
+:local(.header_row) {
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+:local(.issue_header) {
+  margin-right: auto !important;
+}
+
+:local(.input) {
+  margin-right: 0.6em;
+  flex: 1;
+}

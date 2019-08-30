@@ -7,3 +7,11 @@ export const checkUsernameExists = async username => {
   });
   return response.json();
 };
+
+export const getUserDetailed = async username => {
+  const response = await callWebApi({
+    endpoint: `http://10.0.2.2:3000/api/users/${username}/overview`,
+    type: 'GET'
+  });
+  return response.json();
+};

@@ -12,10 +12,15 @@ const {
 } = require('../services/repo.service');
 const { getCommits, getCommitDiff, getCommitCount } = require('../services/commit.service');
 const { deleteStarsByRepoId } = require('../services/star.service');
-const { getBranches, getBranchTree, getBranchInfo } = require('../services/branch.service');
+const {
+  getBranches, getBranchTree, getBranchInfo, getLastCommitOnBranch
+} = require('../services/branch.service');
 const { getAllRepoIssues, getRepoIssueByNumber } = require('../services/issue.service');
+const { getLabelsByRepoId } = require('../services/label.service');
 const { getFileContent } = require('../services/files.service');
+const { getStatsByBranch } = require('../services/language-stats.service');
 const ownerOnlyMiddleware = require('../middlewares/owner-only.middleware');
+const issueService = require('../services/issue.service');
 
 const router = Router();
 
@@ -91,6 +96,18 @@ router
       .then(fileData => res.send(fileData))
       .catch(next);
   })
+  .get('/:owner/:repoName/:branchName/last-commit', (req, res, next) => {
+    const { owner, repoName, branchName } = req.params;
+    getLastCommitOnBranch({ user: owner, name: repoName, branch: branchName })
+      .then(commit => res.send(commit))
+      .catch(next);
+  })
+  .get('/:repoId/branches/:branch/stats', (req, res, next) => {
+    const { repoId, branch } = req.params;
+    getStatsByBranch(repoId, branch)
+      .then(stats => res.send(stats))
+      .catch(next);
+  })
   .get('/:owner/:repoName/settings', ownerOnlyMiddleware, (req, res) => {
     res.sendStatus(200);
     /* Can be used in future to get settings data from DB
@@ -144,12 +161,12 @@ router
       .then(result => res.send(result))
       .catch(next);
   })
-  .get('/:owner/:repoName/issues/:number', (req, res, next) => {
-    const { owner: username, repoName: name, number } = req.params;
-    getRepoIssueByNumber({ username, name, number })
-      .then(result => res.send(result))
-      .catch(next);
-  })
+  // .get('/:owner/:repoName/issues/:number', (req, res, next) => {
+  //   const { owner: username, repoName: name, number } = req.params;
+  //   getRepoIssueByNumber({ username, name, number })
+  //     .then(result => res.send(result))
+  //     .catch(next);
+  // })
   .put('/:owner/:reponame', ownerOnlyMiddleware, (req, res, next) => {
     const { owner, reponame } = req.params;
     updateByUserAndReponame({ owner, reponame, data: req.body })
@@ -172,6 +189,26 @@ router
     const { userId, repositoryId } = req.body;
     setStar(userId, repositoryId)
       .then(star => res.send(star))
+      .catch(next);
+  })
+  .get('/:repositoryId/labels', (req, res, next) => {
+    const { repositoryId } = req.params;
+    getLabelsByRepoId(repositoryId)
+      .then(labels => res.send(labels))
+      .catch(next);
+  })
+  .get('/:repositoryId/issues', (req, res, next) => {
+    const { repositoryId } = req.params;
+    const { sort, author, title } = req.query;
+    issueService
+      .getRepoIssues(repositoryId, sort, author, title)
+      .then(result => res.send(result))
+      .catch(next);
+  })
+  .get('/:reponame/issues/:number', (req, res, next) => {
+    const { reponame, number } = req.params;
+    getRepoIssueByNumber(reponame, number)
+      .then(data => res.send(data))
       .catch(next);
   });
 
