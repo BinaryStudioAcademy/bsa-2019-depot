@@ -1,8 +1,8 @@
 import callWebApi from '../helpers/webApiHelper';
 
-export const getCommits = async (owner, repoName, branch) => {
+export const getCommits = async (repoId, branchName) => {
   const response = await callWebApi({
-    endpoint: `/api/repos/${owner}/${repoName}/${branch}/commits`,
+    endpoint: `/api/repos/${repoId}/branches/${branchName}/commits`,
     type: 'GET'
   });
   return response.json();

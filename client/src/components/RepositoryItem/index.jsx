@@ -42,7 +42,7 @@ class RepositoryItem extends React.Component {
         const { repoBranches } = this.state;
         let allRepoCommits = [];
         repoBranches.forEach(async branch => {
-          const allBranchCommits = this.getRepoCommits(username, name, branch);
+          const allBranchCommits = this.getRepoCommits(repoId, branch.name);
           allRepoCommits.push(allBranchCommits);
         });
         Promise.all(allRepoCommits).then(data => {
@@ -68,8 +68,8 @@ class RepositoryItem extends React.Component {
     this.setState({ repoBranches: branches });
   }
 
-  getRepoCommits(username, reponame, branch) {
-    return getCommits(username, reponame, branch);
+  getRepoCommits(repoId, branchName) {
+    return getCommits(repoId, branchName);
   }
 
   starClickHandler() {
