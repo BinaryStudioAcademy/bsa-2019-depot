@@ -102,7 +102,7 @@ class LabelItem extends React.Component {
   renderEditForm() {
     const { isEditing, name, description, color } = this.state;
     const { labelObject } = this.props;
-    const isNewLabel = Boolean(!labelObject.id);
+    const isNewLabel = !labelObject.id;
     const submitButtonText = isNewLabel ? 'Create Label' : 'Save Changes';
     return isEditing ? (
       <Formik
@@ -182,7 +182,7 @@ class LabelItem extends React.Component {
 
   render() {
     const { labelObject } = this.props;
-    const isNewLabel = Boolean(!labelObject.id);
+    const isNewLabel = !labelObject.id;
     const { isEditing, name, color } = this.state;
     const labelText = isEditing ? name || 'Label Preview' : labelObject.name;
     const labelColor = isEditing && color.match(/^#[0-9a-fA-F]{6}$/) ? color : labelObject.color;

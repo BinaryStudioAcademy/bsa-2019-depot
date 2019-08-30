@@ -15,7 +15,7 @@ class LabelsTab extends React.Component {
       loading: false,
       labels: [],
       searchText: '',
-      isisCreatingNewLabel: false,
+      isCreatingNewLabel: false,
       repositoryId: ''
     };
     this.onCreateLabel = this.onCreateLabel.bind(this);
