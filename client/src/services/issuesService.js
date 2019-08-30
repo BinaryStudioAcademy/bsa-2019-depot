@@ -11,9 +11,9 @@ export const getIssues = async ({ username: owner, reponame, repositoryId }) => 
   return response.json();
 };
 
-export const getIssueByNumber = async (reponame, number) => {
+export const getIssueByNumber = async (username, reponame, number) => {
   const response = await callWebApi({
-    endpoint: `/api/repos/${reponame}/issues/${number}`,
+    endpoint: `/api/users/${username}/repos/${reponame}/issues/${number}`,
     type: 'GET'
   });
   return response.json();

@@ -36,7 +36,10 @@ class IssueRepository extends BaseRepository {
   }
 
   getMaxIssueRepoNumber(repositoryId) {
-    return this.model.max('number', { where: { repositoryId } });
+    return this.model.max('number', {
+      where: { repositoryId },
+      paranoid: false
+    });
   }
 
   getIssueById(id) {
@@ -126,14 +129,21 @@ class IssueRepository extends BaseRepository {
     });
   }
 
-  getRepoIssueByNumber(name, number) {
+  getRepoIssueByNumber(username, reponame, number) {
     return this.model.findOne({
       where: { number },
       include: [
         {
           model: RepositoryModel,
           attributes: [],
-          where: { name }
+          where: { name: reponame },
+          include: [
+            {
+              model: UserModel,
+              attributes: [],
+              where: { username }
+            }
+          ]
         },
         {
           model: UserModel,

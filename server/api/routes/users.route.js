@@ -16,6 +16,7 @@ const {
 const { getReposData, getByUserAndReponame } = require('../services/repo.service');
 const { getCommitsAndCreatedRepoByDate } = require('../services/commit.service');
 const { getKeysByUser } = require('../services/ssh-key.service');
+const { getRepoIssueByNumber } = require('../services/issue.service');
 const { clientUrl } = require('../../config/common.config');
 
 const router = Router();
@@ -117,6 +118,13 @@ router.post('/image', (req, res, next) => {
 router.delete('/image', (req, res, next) => {
   deletePhoto({ ...req.body })
     .then(data => res.send(data))
+    .catch(next);
+});
+
+router.get('/:username/repos/:reponame/issues/:number', (req, res, next) => {
+  const { username, reponame, number } = req.params;
+  getRepoIssueByNumber(username, reponame, number)
+    .then(result => res.send(result))
     .catch(next);
 });
 

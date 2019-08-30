@@ -15,8 +15,8 @@ const getRepoIssues = (repositoryId, sort, author, title) => issueRepository.get
 
 const getRepoIssueByIdNumber = (repositoryId, number) => issueRepository.getIssueByIdNumber(repositoryId, number);
 
-const getRepoIssueByNumber = async (reponame, number) => {
-  const repoIssue = await issueRepository.getRepoIssueByNumber(reponame, number);
+const getRepoIssueByNumber = async (username, reponame, number) => {
+  const repoIssue = await issueRepository.getRepoIssueByNumber(username, reponame, number);
   return repoIssue || Promise.reject(new CustomError(404, `Issue number ${number} not found`));
 };
 

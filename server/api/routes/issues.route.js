@@ -58,7 +58,7 @@ router
   .put('/:id/close', async (req, res, next) => {
     const { id } = req.params;
     const userId = req.user.id;
-    const authorId = issueService.getAuthorId(id);
+    const authorId = await issueService.getAuthorId(id);
     const repoOwnerId = await issueService.getRepoOwnerId(id);
 
     if (userId !== authorId && userId !== repoOwnerId) {
@@ -74,7 +74,7 @@ router
   .put('/:id/reopen', async (req, res, next) => {
     const { id } = req.params;
     const userId = req.user.id;
-    const authorId = issueService.getAuthorId(id);
+    const authorId = await issueService.getAuthorId(id);
     const repoOwnerId = await issueService.getRepoOwnerId(id);
 
     if (userId !== authorId && userId !== repoOwnerId) {

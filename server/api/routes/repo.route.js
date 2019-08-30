@@ -142,12 +142,12 @@ router
       .then(result => res.send(result))
       .catch(next);
   })
-  .get('/:owner/:repoName/issues/:number', (req, res, next) => {
-    const { owner: username, repoName: name, number } = req.params;
-    getRepoIssueByNumber({ username, name, number })
-      .then(result => res.send(result))
-      .catch(next);
-  })
+  // .get('/:owner/:repoName/issues/:number', (req, res, next) => {
+  //   const { owner: username, repoName: name, number } = req.params;
+  //   getRepoIssueByNumber({ username, name, number })
+  //     .then(result => res.send(result))
+  //     .catch(next);
+  // })
   .put('/:owner/:reponame', ownerOnlyMiddleware, (req, res, next) => {
     const { owner, reponame } = req.params;
     updateByUserAndReponame({ owner, reponame, data: req.body })

@@ -47,10 +47,12 @@ class IssueComments extends React.Component {
     this.initSocket();
     const {
       match: {
-        params: { reponame, number }
+        params: { username, reponame, number }
       }
     } = this.props;
-    const currentIssue = await getIssueByNumber(reponame, number);
+    console.warn(this.props.match.params);
+
+    const currentIssue = await getIssueByNumber(username, reponame, number);
     const { id } = currentIssue;
     const issueComments = await getIssueComments(id);
 
