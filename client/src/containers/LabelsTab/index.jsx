@@ -14,10 +14,15 @@ class LabelsTab extends React.Component {
     this.state = {
       loading: false,
       labels: [],
-      searchText: ''
+      searchText: '',
+      isisCreatingNewLabel: false,
+      repositoryId: ''
     };
+    this.onCreateLabel = this.onCreateLabel.bind(this);
     this.onDeleteLabel = this.onDeleteLabel.bind(this);
     this.onEditLabel = this.onEditLabel.bind(this);
+    this.sortLabels = this.sortLabels.bind(this);
+    this.startCreateLabel = this.startCreateLabel.bind(this);
   }
 
   async componentDidMount() {
@@ -35,7 +40,8 @@ class LabelsTab extends React.Component {
     await this.setState({
       ...this.state,
       labels,
-      loading: false
+      loading: false,
+      repositoryId
     });
   }
 
@@ -52,17 +58,40 @@ class LabelsTab extends React.Component {
     });
   };
 
-  // onCreateLabel = () => {};
-
   renderLabelsList = displayedLabels => {
+    const newLabel = { id: '', name: '', description: '', color: '' };
+    const { isCreatingNewLabel } = this.state;
+
     return (
       <List divided verticalAlign="middle">
+        {isCreatingNewLabel ? <LabelItem key={0} labelObject={newLabel} onEdit={this.onCreateLabel} /> : null}
         {displayedLabels.map((label, idx) => (
-          <LabelItem key={idx} labelObject={label} onDelete={this.onDeleteLabel} onEdit={this.onEditLabel} />
+          <LabelItem key={idx + 1} labelObject={label} onDelete={this.onDeleteLabel} onEdit={this.onEditLabel} />
         ))}
       </List>
     );
   };
+
+  startCreateLabel = () => {
+    this.setState({
+      ...this.state,
+      isCreatingNewLabel: true
+    });
+  };
+
+  async onCreateLabel(labelObject) {
+    try {
+      const { labels, repositoryId } = this.state;
+      const addedLabel = await createLabel({ repositoryId, ...labelObject });
+      await this.setState({
+        ...this.state,
+        labels: [addedLabel, ...labels],
+        isCreatingNewLabel: false
+      });
+    } catch (e) {
+      return;
+    }
+  }
 
   async onDeleteLabel(labelId) {
     try {
@@ -91,6 +120,18 @@ class LabelsTab extends React.Component {
     }
   }
 
+  sortLabels = (e, { value }) => {
+    const { labels } = this.state;
+    const sortedLabels = labels.sort((label, prevLabel) => {
+      if (value === 'name_ASC') return label.name > prevLabel.name ? 1 : -1;
+      if (value === 'name_DESC') return label.name > prevLabel.name ? -1 : 1;
+    });
+    this.setState({
+      ...this.state,
+      labels: sortedLabels
+    });
+  };
+
   render() {
     const { loading } = this.state;
     if (loading) {
@@ -113,12 +154,14 @@ class LabelsTab extends React.Component {
       {
         key: 'issues_DESC',
         text: 'Most Issues',
-        value: 'issues_DESC'
+        value: 'issues_DESC',
+        disabled: true
       },
       {
         key: 'issues_ASC',
         text: 'Fewest Issues',
-        value: 'issues_ASC'
+        value: 'issues_ASC',
+        disabled: true
       }
     ];
 
@@ -141,7 +184,7 @@ class LabelsTab extends React.Component {
               onChange={this.setSearchText}
             />
           </div>
-          <Button content="New Label" positive onClick={this.onCreateLabel} />
+          <Button content="New Label" positive onClick={this.startCreateLabel} />
         </div>
 
         <div className={styles.labelsContainer}>
@@ -155,8 +198,8 @@ class LabelsTab extends React.Component {
               <Dropdown text="Sort">
                 <Dropdown.Menu>
                   <Dropdown.Header content="Sort" />
-                  {sortOptions.map(({ key, text, value }) => (
-                    <Dropdown.Item key={key} text={text} value={value} />
+                  {sortOptions.map(({ key, text, value, disabled }) => (
+                    <Dropdown.Item key={key} text={text} value={value} disabled={disabled} onClick={this.sortLabels} />
                   ))}
                 </Dropdown.Menu>
               </Dropdown>

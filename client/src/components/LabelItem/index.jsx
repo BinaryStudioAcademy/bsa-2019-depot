@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { List, Button, Label, Form, Grid } from 'semantic-ui-react';
-import { Formik, Field } from 'formik';
+import { Formik } from 'formik';
 import { InputError } from '../../components/InputError';
 import * as Yup from 'yup';
 
 import styles from './styles.module.scss';
-// import { renderers } from 'react-markdown';
 
 const validationSchema = Yup.object().shape({
   name: Yup.string()
@@ -32,7 +31,18 @@ class LabelItem extends React.Component {
     this.finishEditing = this.finishEditing.bind(this);
     this.cancelEditing = this.cancelEditing.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
-    this.passChangeToState = this.passChangeToState.bind(this);
+    this.handleKeyUp = this.handleKeyUp.bind(this);
+  }
+
+  componentDidMount(props) {
+    const { labelObject } = this.props;
+    const newLabel = Boolean(!labelObject.id);
+    if (newLabel) {
+      this.setState({
+        ...this.state,
+        isEditing: true
+      });
+    }
   }
 
   handleDelete() {
@@ -80,20 +90,23 @@ class LabelItem extends React.Component {
     });
   }
 
-  async passChangeToState({ name, color, description }) {
+  async handleKeyUp({ target }) {
+    const targetName = target.getAttribute('name');
+    const value = target.getAttribute('value');
     await this.setState({
       ...this.state,
-      name,
-      color,
-      description
+      [targetName]: value
     });
   }
 
   renderEditForm() {
     const { isEditing, name, description, color } = this.state;
+    const { labelObject } = this.props;
+    const isNewLabel = Boolean(!labelObject.id);
+    const submitButtonText = isNewLabel ? 'Create Label' : 'Save Changes';
     return isEditing ? (
       <Formik
-        isInitialValid
+        isInitialValid={Boolean(labelObject.id)}
         enableReinitialize={false}
         initialValues={{ name, description, color }}
         onSubmit={this.finishEditing}
@@ -101,7 +114,7 @@ class LabelItem extends React.Component {
       >
         {({ isValid, touched, values, handleChange, handleBlur, handleSubmit, errors }) => {
           return (
-            <Form className={styles.labelForm} onSubmit={handleSubmit} onChange={() => this.passChangeToState(values)}>
+            <Form className={styles.labelForm} onSubmit={handleSubmit}>
               <Form.Group>
                 <Form.Input
                   label="Name"
@@ -114,6 +127,7 @@ class LabelItem extends React.Component {
                   onBlur={handleBlur}
                   error={!!errors.name}
                   fluid
+                  onKeyUp={this.handleKeyUp}
                 />
                 <Form.Input
                   label="Description"
@@ -126,6 +140,7 @@ class LabelItem extends React.Component {
                   onBlur={handleBlur}
                   error={!!errors.description}
                   fluid
+                  onKeyUp={this.handleKeyUp}
                 />
                 <Form.Input
                   label="Color"
@@ -138,10 +153,11 @@ class LabelItem extends React.Component {
                   onBlur={handleBlur}
                   error={!!errors.color}
                   fluid
+                  onKeyUp={this.handleKeyUp}
                 />
                 <div className={styles.editButtons} width={2} floated="right">
                   <Button basic content="Cancel" onClick={this.cancelEditing} />
-                  <Button type="submit" disabled={!isValid && touched} color="blue" content="Save Changes" />
+                  <Button type="submit" disabled={!isValid} color="blue" content={submitButtonText} />
                 </div>
               </Form.Group>
               <Grid>
@@ -166,31 +182,35 @@ class LabelItem extends React.Component {
 
   render() {
     const { labelObject } = this.props;
+    const isNewLabel = Boolean(!labelObject.id);
     const { isEditing, name, color } = this.state;
     const labelText = isEditing ? name || 'Label Preview' : labelObject.name;
     const labelColor = isEditing && color.match(/^#[0-9a-fA-F]{6}$/) ? color : labelObject.color;
-    console.log(labelColor);
 
     return (
       <>
         <List.Item className={styles.labelItem}>
-          <List.Content floated="left" className={styles.leftGroup}>
-            <div className={styles.nameContainer}>
-              <Label horizontal style={{ backgroundColor: labelColor }} className={styles.labelName}>
-                {labelText}
-              </Label>
-            </div>
-            <div className={styles.labelDescription}>{isEditing ? '' : labelObject.description}</div>
-          </List.Content>
-          <List.Content floated="right" className={styles.labelButtons}>
-            <Button
-              content="Edit"
-              icon="pencil alternate"
-              className={styles.actionButton}
-              onClick={this.startEditing}
-            />
-            <Button content="Delete" icon="times" className={styles.actionButton} onClick={this.handleDelete} />
-          </List.Content>
+          {isNewLabel && !isEditing ? null : (
+            <List.Content floated="left" className={styles.leftGroup}>
+              <div className={styles.nameContainer}>
+                <Label horizontal style={{ backgroundColor: labelColor }} className={styles.labelName}>
+                  {labelText}
+                </Label>
+              </div>
+              <div className={styles.labelDescription}>{isEditing ? '' : labelObject.description}</div>
+            </List.Content>
+          )}
+          {isNewLabel ? null : (
+            <List.Content floated="right" className={styles.labelButtons}>
+              <Button
+                content="Edit"
+                icon="pencil alternate"
+                className={styles.actionButton}
+                onClick={this.startEditing}
+              />
+              <Button content="Delete" icon="times" className={styles.actionButton} onClick={this.handleDelete} />
+            </List.Content>
+          )}
         </List.Item>
         {this.renderEditForm()}
       </>
