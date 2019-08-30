@@ -31,5 +31,4 @@ describe('Organizations  ', () => {
     OrgSteps.createrepofororgbutton();
     assert.strict(credentials.org.orgreponame, OrgSteps.createdRepoofOrg());
   });
-
 });

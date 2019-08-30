@@ -144,6 +144,7 @@ class IssueRepository extends BaseRepository {
       include: [{
         model: RepositoryModel,
         attributes: [],
+        required: true,
         include: [{
           attributes: [],
           model: this.model,

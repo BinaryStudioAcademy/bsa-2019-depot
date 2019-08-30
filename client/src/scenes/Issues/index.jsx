@@ -239,7 +239,7 @@ class Issues extends Component {
             <div className={styles.issueFilters}>
               <Dropdown
                 value={ownerValues}
-                text="Orgainzation"
+                text="Organization"
                 options={ownersList}
                 onChange={this.handleOwnerChange}
                 multiple
