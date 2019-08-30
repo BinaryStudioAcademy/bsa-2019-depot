@@ -6,6 +6,7 @@ import { Container } from 'semantic-ui-react';
 import RepositoryHeader from '../../components/RepositoryHeader';
 import IssuesTab from '../../containers/IssuesTab/index';
 import IssueComments from '../../components/IssueComments/index';
+import LabelsTab from '../../containers/LabelsTab/index';
 import CommitsPage from '../../containers/CommitsPage/index';
 import DiffCommitView from '../../components/DiffCommitView/index';
 import RepositoryTab from '../../containers/RepositoryTab';
@@ -56,6 +57,7 @@ class RepositoryPage extends React.Component {
               <Route exact path={`${match.path}/issues`} component={IssuesTab} />
               <Route exact path={`${match.path}/issues/new`} component={CreateIssuePage} />
               <Route exact path={`${match.path}/issues/:number`} component={IssueComments} />
+              <Route exact path={`${match.path}/labels`} component={LabelsTab} />
               <PrivateTab exact path={`${match.path}/settings`} component={RepoSettings} />
               <Route exact path={`${match.path}/branches`} component={BranchesTab} />
               <PrivateTab path={[`${match.path}/new/:branch`, `${match.path}/edit/:branch`]} component={FileEditPage} />
