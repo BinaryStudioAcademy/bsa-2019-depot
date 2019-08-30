@@ -4,56 +4,56 @@
 }
 
 :local(.filterRow) {
+  min-width: 950px;
   margin: 10px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-:local(.issuesContainer) {
+:local(.labelsContainer) {
+  min-width: 950px;
   margin-top: 10px;
   border: 1px solid lightgrey;
   border-radius: 5px;
 }
 
-:local(.issuesHeader) {
+:local(.labelsHeader) {
   padding: 15px;
   display: flex;
-  // justify-content: space-between;
   align-items: center;
   background-color: #f6f6f6;
   border-bottom: 1px solid lightgrey;
   border-radius: 5px 5px 0 0;
 }
 
-:local(.openedIssues),
-:local(.closedIssues),
+:local(.labelsCount),
 :global(.ui.dropdown) {
   color: #575757;
-  cursor: pointer;
 
   &:hover {
-    color: #000000;
+    color: #575757;
   }
+  pointer-events: auto;
 }
 
-:local(.openedIssues) {
-  margin-right: 15px;
+:local(.labelsCount) {
+  flex-grow: 1;
+  margin-right: 0.5em;
 }
 
-:local(.issueFilters) > :not(:last-child) {
-  margin-right: 10px;
+:local(.labelsSort) {
+  cursor: pointer;
 }
 
 :local(.leftGroup) {
   display: flex;
 }
 
-:local(.labelButton):global(.ui.basic.button) {
+:local(.labelButton):global(.ui.blue.button) {
   display: flex;
   padding: 0.65em 0.75em;
   align-items: center;
-  margin-left: 0.75em;
 }
 
 :local(.labelButtonIcon):global(.content) {
@@ -62,4 +62,14 @@
 
 :local(.labelButtonText):global(.content) {
   margin-right: 0.5em;
+}
+
+:local(.search):global(.ui.input) {
+  margin-left: 0.25em;
+}
+
+:local(.labelsList) {
+  min-width: 950px;
+  border: 1px solid #eaecef;
+  border-radius: 0 0 5px 5px;
 }

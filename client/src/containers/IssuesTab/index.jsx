@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Loader, Icon, Input, Dropdown, Button } from 'semantic-ui-react';
+import { Loader, Icon, Input, Dropdown, Button, Label } from 'semantic-ui-react';
 import { fetchIssues, fetchCurrentRepo } from '../../routines/routines';
 import IssuesList from '../../components/IssuesList';
 
@@ -71,6 +71,12 @@ class IssuesTab extends React.Component {
     history.push(`${location.pathname}/new`);
   };
 
+  onShowLabels = () => {
+    const { history, match } = this.props;
+    const { username, reponame } = match.params;
+    history.push(`/${username}/${reponame}/labels`);
+  };
+
   render() {
     const { loading, issues, match } = this.props;
     const { filterByTitle } = this.state;
@@ -110,12 +116,24 @@ class IssuesTab extends React.Component {
     ) : (
       <>
         <div className={styles.filterRow}>
-          <Input
-            label={<Dropdown text="Filters" options={filterOptions} />}
-            labelPosition="left"
-            placeholder="Filter by title"
-            onChange={this.filterIssues}
-          />
+          <div className={styles.leftGroup}>
+            <Input
+              label={<Dropdown text="Filters" options={filterOptions} />}
+              labelPosition="left"
+              placeholder="Filter by title"
+              onChange={this.filterIssues}
+            />
+            <Button basic className={styles.labelButton} onClick={this.onShowLabels}>
+              <Button.Content className={styles.labelButtonIcon}>
+                <Icon name="tag" />
+              </Button.Content>
+
+              <Button.Content className={styles.labelButtonText}>Labels</Button.Content>
+              <Button.Content className={styles.labelButtonContent}>
+                <Label circular>8</Label>
+              </Button.Content>
+            </Button>
+          </div>
           <Button content="New Issue" positive onClick={this.onCreateIssue} />
         </div>
         <div className={styles.issuesContainer}>

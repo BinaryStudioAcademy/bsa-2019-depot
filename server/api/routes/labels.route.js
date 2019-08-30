@@ -30,7 +30,7 @@ router.put('/', (req, res, next) => {
 router.delete('/:labelId', (req, res, next) => {
   const { labelId } = req.params;
   deleteLabelById(labelId)
-    .then(() => res.sendStatus(200))
+    .then(() => res.send({ id: labelId }))
     .catch(next);
 });
 
