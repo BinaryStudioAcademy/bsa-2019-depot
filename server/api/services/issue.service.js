@@ -6,6 +6,12 @@ const addIssue = issueData => issueRepository.addIssue(issueData);
 
 const updateIssueById = ({ id, ...issueData }) => issueRepository.updateIssueById(id, issueData);
 
+const getAllIssues = (userId, params) => issueRepository.getAllIssues(userId, params);
+
+const getAllIssuesCount = (userId, params) => issueRepository.getAllIssuesCount(userId, params);
+
+const getAllIssuesOwners = (userId) => issueRepository.getAllIssuesOwners(userId);
+
 const getAllRepoIssues = async (repositoryId) => {
   const issues = await issueRepository.getRepositoryIssues(repositoryId);
   return issues || Promise.reject(new CustomError(404, `Repository with id ${repositoryId} not found`));
@@ -40,6 +46,9 @@ const reopenIssueById = id => issueRepository.setIsOpenedById(id, true);
 module.exports = {
   addIssue,
   updateIssueById,
+  getAllIssues,
+  getAllIssuesCount,
+  getAllIssuesOwners,
   getAllRepoIssues,
   getIssueById,
   getAuthorId,
