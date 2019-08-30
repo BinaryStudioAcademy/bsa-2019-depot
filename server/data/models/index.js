@@ -14,6 +14,9 @@ const OrgUser = orm.import('./orgUser');
 const Role = orm.import('./role');
 const Permission = orm.import('./permission');
 const Collaborator = orm.import('./collaborator');
+const Language = orm.import('./language');
+const LanguageStats = orm.import('./languageStats');
+const Label = orm.import('./label');
 
 associate({
   User,
@@ -28,7 +31,10 @@ associate({
   OrgUser,
   Role,
   Permission,
-  Collaborator
+  Collaborator,
+  Language,
+  LanguageStats,
+  Label
 });
 
 module.exports = {
@@ -44,5 +50,8 @@ module.exports = {
   OrgUserModel: OrgUser,
   RoleModel: Role,
   PermissionModel: Permission,
-  CollaboratorModel: Collaborator
+  CollaboratorModel: Collaborator,
+  LanguageModel: Language,
+  LanguageStatsModel: LanguageStats,
+  LabelModel: Label
 };

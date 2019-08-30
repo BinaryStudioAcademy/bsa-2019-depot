@@ -66,19 +66,6 @@ $black: #363a44;
   }
 }
 
-:global(.ui.horizontal.segments):local(.languageSegments) {
-  border-radius: 0px 0px 4px 4px;
-  box-shadow: none;
-  border: none;
-  width: calc(100% + 2px);
-  margin: 0px 0px 10px 0px;
-  overflow: hidden;
-}
-
-:global(.ui.segment):local(.languageSegment) {
-  padding: 0.25em;
-}
-
 :local(.repoDescription) {
   margin: 0.35em 0em 1em;
   line-height: 22px;

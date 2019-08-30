@@ -9,6 +9,7 @@ import * as commitsService from '../../services/commitsService';
 import FilePathBreadcrumbSections from '../../components/FilePathBreadcrumbSections';
 import RepoReadme from '../../components/RepoReadme/index';
 import { InputError } from '../../components/InputError';
+import LanguageStats from '../../containers/LanguageStats';
 import { fetchBranches, fetchFileTree, fetchLastCommitOnBranch } from '../../routines/routines';
 import * as repositoryService from '../../services/repositoryService';
 import * as branchesService from '../../services/branchesService';
@@ -23,7 +24,6 @@ import {
   Form,
   Input,
   Popup,
-  Segment,
   Menu,
   Loader,
   Divider,
@@ -334,11 +334,7 @@ class CodeTab extends React.Component {
               </Link>
             </Menu.Item>
           </Menu>
-          <Segment.Group className={styles.languageSegments} attached="bottom" horizontal>
-            <Segment className={styles.languageSegment} inverted color="yellow" />
-            <Segment className={styles.languageSegment} inverted color="purple" />
-            <Segment className={styles.languageSegment} inverted color="red" />
-          </Segment.Group>
+          <LanguageStats branch={branch} />
         </div>
 
         <div className={styles.repoNav}>

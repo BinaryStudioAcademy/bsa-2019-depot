@@ -6,8 +6,6 @@ branches:
   - develop
 notifications:
   slack: binary-academy-2019:zu0JzpVwZUPF9GSv8vPwHcI1
-env:
-  - SKIP_PREFLIGHT_CHECK=true
 install:
   - . scripts/install.sh
 script:

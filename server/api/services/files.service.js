@@ -17,7 +17,7 @@ const getFileContent = async (owner, reponame, branch, path) => {
       size: blob.rawsize()
     };
   } catch (error) {
-    const errorObj = new Error('Can\'t find the file');
+    const errorObj = new Error("Can't find the file");
     errorObj.status = 404;
     throw errorObj;
   }

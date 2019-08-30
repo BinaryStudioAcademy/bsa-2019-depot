@@ -18,6 +18,8 @@ const getUserDetailed = async (username) => {
   return user || Promise.reject(new CustomError(404, `User ${username} not found`));
 };
 
+const getUserByUsername= username => UserRepository.getByUsername(username);
+
 const setUsername = async ({ id, username }) => {
   const data = await UserRepository.setUsernameById(id, username);
   return {
@@ -101,6 +103,7 @@ const getUsersForCollaboratorsAddition = async ({ username, repoId, userId }) =>
 
 module.exports = {
   getUserById,
+  getUserByUsername,
   setUsername,
   checkUsernameExists,
   updateUserSettings,
