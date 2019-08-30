@@ -29,7 +29,6 @@
     "language-detect": "^1.1.0",
     "language-map": "^1.4.0",
     "nodegit": "^0.24.3",
-    "nodemon": "^1.19.1",
     "passport": "^0.4.0",
     "passport-google-oauth2": "^0.2.0",
     "passport-jwt": "^4.0.0",
@@ -44,6 +43,7 @@
     "uuid": "^3.3.3"
   },
   "devDependencies": {
+    "nodemon": "^1.19.1",
     "eslint": "5.16.0",
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-plugin-import": "^2.18.2",

@@ -1,5 +1,17 @@
 import React, { Component } from 'react';
-import { Grid, Header, Divider, Image, Input, Modal, Button, TextArea, Icon, Segment, Dropdown } from 'semantic-ui-react';
+import {
+  Grid,
+  Header,
+  Divider,
+  Image,
+  Input,
+  Modal,
+  Button,
+  TextArea,
+  Icon,
+  Segment,
+  Dropdown
+} from 'semantic-ui-react';
 import { Formik, Form, Field } from 'formik';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -37,12 +49,12 @@ const validationSchema = Yup.object().shape({
 });
 
 class SettingsProfile extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
       isUploadModalOpen: false,
-      isDeleteModalOpen: false,
+      isDeleteModalOpen: false
     };
 
     this.uppy = Uppy({
@@ -51,18 +63,17 @@ class SettingsProfile extends Component {
       restrictions: {
         maxFileSize: 4000000,
         maxNumberOfFiles: 1,
-        minNumberOfFiles: 1,
+        minNumberOfFiles: 1
       }
-    })
-      .use(AwsS3, {
-        limit: 2,
-        timeout: ms('1 minute'),
-        host: appUrl,
-        companionUrl: serverUrl
-      });
+    }).use(AwsS3, {
+      limit: 2,
+      timeout: ms('1 minute'),
+      host: appUrl,
+      companionUrl: serverUrl
+    });
 
     this.uppy.on('upload-success', (file, data) => {
-      this.props.uploadUserPhoto({imgUrl: data.uploadURL, id: this.props.currentUser.id});
+      this.props.uploadUserPhoto({ imgUrl: data.uploadURL, id: this.props.currentUser.id });
       this.uppy.close();
     });
   }
@@ -129,15 +140,15 @@ class SettingsProfile extends Component {
   };
 
   openModal = () => {
-    this.setState({isDeleteModalOpen: true });
+    this.setState({ isDeleteModalOpen: true });
   };
 
   closeModal = () => {
-    this.setState({isDeleteModalOpen: false });
+    this.setState({ isDeleteModalOpen: false });
   };
 
   onRemovePhoto = () => {
-    this.props.deleteUserPhoto({id: this.props.currentUser.id});
+    this.props.deleteUserPhoto({ id: this.props.currentUser.id });
   };
 
   imgEditBtn = (
@@ -169,7 +180,7 @@ class SettingsProfile extends Component {
                       open={this.state.isUploadModalOpen}
                       onRequestClose={this.handleClose}
                     />
-                    <Modal size='tiny' open={this.state.isDeleteModalOpen} onClose={this.closeModal}>
+                    <Modal size="tiny" open={this.state.isDeleteModalOpen} onClose={this.closeModal}>
                       <Modal.Content>
                         <p>Are you sure you want to reset your current avatar?</p>
                       </Modal.Content>
@@ -177,9 +188,9 @@ class SettingsProfile extends Component {
                         <Button onClick={this.closeModal}>No</Button>
                         <Button
                           positive
-                          icon='checkmark'
-                          labelPosition='right'
-                          content='Yes'
+                          icon="checkmark"
+                          labelPosition="right"
+                          content="Yes"
                           onClick={this.onRemovePhoto}
                         />
                       </Modal.Actions>

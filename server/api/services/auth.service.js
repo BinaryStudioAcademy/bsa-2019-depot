@@ -21,6 +21,23 @@ const googleLogin = async ({ id, email, username }) => {
   return { ...data };
 };
 
+const googleLoginMobile = async (email) => {
+  let user = await userRepository.getByEmail(email);
+  if (!user) {
+    user = await userRepository.addUser({ email });
+  }
+  const { id, username } = user;
+  const token = tokenHelper.createToken({ id, email });
+
+  const data = {
+    token,
+    id,
+    email,
+    username
+  };
+  return { ...data };
+};
+
 const register = async (userData) => {
   const newUser = await userRepository.addUser({
     ...userData
@@ -31,5 +48,6 @@ const register = async (userData) => {
 module.exports = {
   login,
   register,
-  googleLogin
+  googleLogin,
+  googleLoginMobile
 };
