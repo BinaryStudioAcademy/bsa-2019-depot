@@ -17,7 +17,7 @@ const getUserDetailed = async (username) => {
   return user || Promise.reject(new CustomError(404, `User ${username} not found`));
 };
 
-const getUserByUsername= username => UserRepository.getByUsername(username);
+const getUserByUsername = username => UserRepository.getByUsername(username);
 
 const setUsername = async ({ id, username }) => {
   const data = await UserRepository.setUsernameById(id, username);

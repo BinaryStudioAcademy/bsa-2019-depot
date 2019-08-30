@@ -12,8 +12,10 @@ const {
 } = require('../services/repo.service');
 const { getCommits, getCommitDiff, getCommitCount } = require('../services/commit.service');
 const { deleteStarsByRepoId } = require('../services/star.service');
-const { getBranches, getBranchTree, getLastCommitOnBranch } = require('../services/branch.service');
-const { getAllRepoIssues, getRepoIssueByNumber } = require('../services/issue.service');
+const {
+  getBranches, getBranchTree, getLastCommitOnBranch, checkFileExists
+} = require('../services/branch.service');
+const { getAllRepoIssues } = require('../services/issue.service');
 const { getLabelsByRepoId } = require('../services/label.service');
 const { getFileContent } = require('../services/files.service');
 const { getStatsByBranch } = require('../services/language-stats.service');
@@ -93,6 +95,13 @@ router
     const { repoId, branch } = req.params;
     getStatsByBranch(repoId, branch)
       .then(stats => res.send(stats))
+      .catch(next);
+  })
+  .get('/:owner/:repoName/:branch/file-exist', (req, res, next) => {
+    const { owner, repoName, branch } = req.params;
+    const { filepath } = req.query;
+    checkFileExists(owner, repoName, branch, filepath)
+      .then(result => res.send(result))
       .catch(next);
   })
   .get('/:owner/:repoName/settings', ownerOnlyMiddleware, (req, res) => {

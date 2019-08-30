@@ -110,8 +110,21 @@ const getLastCommitOnBranch = async ({ user, name, branch }) => {
   };
 };
 
+const checkFileExists = async (owner, repoName, branch, filepath) => {
+  const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
+  const repo = await NodeGit.Repository.open(pathToRepo);
+  const lastCommitOnBranch = await repo.getBranchCommit(branch);
+  const tree = await lastCommitOnBranch.getTree();
+  const index = await repo.index();
+  await index.readTree(tree);
+
+  const file = index.getByPath(filepath, 0); // 0 === NodeGit.Index.STAGE.NORMAL, but this Enum doesn't work for some reason
+  return { isFilenameUnique: !file };
+};
+
 module.exports = {
   getBranches,
   getBranchTree,
-  getLastCommitOnBranch
+  getLastCommitOnBranch,
+  checkFileExists
 };
