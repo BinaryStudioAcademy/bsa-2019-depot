@@ -1,6 +1,6 @@
 import { takeEvery, put, all, call } from 'redux-saga/effects';
 import * as userService from '../../services/userService';
-import {  updateUserSettings, uploadUserPhoto, deleteUserPhoto } from '../../routines/routines';
+import { updateUserSettings, uploadUserPhoto, deleteUserPhoto } from '../../routines/routines';
 import { fetchCurrentUser } from '../../routines/routines';
 
 function* updateSettings({ payload }) {
@@ -60,9 +60,5 @@ function* watchDeletePhoto() {
 }
 
 export default function* profileSettingsSagas() {
-  yield all([
-    watchUpdateUserSettings(),
-    watchUploadPhoto(),
-    watchDeletePhoto()
-  ]);
+  yield all([watchUpdateUserSettings(), watchUploadPhoto(), watchDeletePhoto()]);
 }

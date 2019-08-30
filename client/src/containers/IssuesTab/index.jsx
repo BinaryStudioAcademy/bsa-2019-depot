@@ -78,7 +78,7 @@ class IssuesTab extends React.Component {
   };
 
   render() {
-    const { loading, issues, match } = this.props;
+    const { loading, issues } = this.props;
     const { filterByTitle } = this.state;
 
     const authorList = issues.reduce((acc, { user }) => {
@@ -179,7 +179,7 @@ class IssuesTab extends React.Component {
               </Dropdown>
             </div>
           </div>
-          <IssuesList issues={filteredIssues} match={match} />
+          <IssuesList issues={filteredIssues} />
         </div>
       </>
     );
