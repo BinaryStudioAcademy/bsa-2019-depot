@@ -18,25 +18,25 @@ const CodeTabMenu = ({
         <Octicon icon={getIconByName('history')} />
         <Link className={styles.repoMetaDataLinks} to={`/${ownername}/${reponame}/commits/${branch}`}>
           <b>{commitsCount}</b> commits
-              </Link>
+        </Link>
       </Menu.Item>
       <Menu.Item>
         <Octicon icon={getIconByName('git-branch')} />
         <Link className={styles.repoMetaDataLinks} to={`/${ownername}/${reponame}/branches`}>
           <b>{branchesCount}</b> branches
-              </Link>
+        </Link>
       </Menu.Item>
       <Menu.Item>
         <Octicon icon={getIconByName('tag')} />
         <Link className={styles.repoMetaDataLinks} to="">
           <b>77</b> releases
-              </Link>
+        </Link>
       </Menu.Item>
       <Menu.Item>
         <Octicon icon={getIconByName('organization')} />
         <Link className={styles.repoMetaDataLinks} to="">
           <b>10</b> contributors
-              </Link>
+        </Link>
       </Menu.Item>
     </Menu>
     <Segment.Group className={styles.languageSegments} attached="bottom" horizontal>
@@ -45,6 +45,6 @@ const CodeTabMenu = ({
       <Segment className={styles.languageSegment} inverted color="red" />
     </Segment.Group>
   </>
-)
+);
 
 export default CodeTabMenu;

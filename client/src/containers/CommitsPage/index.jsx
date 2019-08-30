@@ -15,32 +15,23 @@ class CommitsPage extends React.Component {
   }
 
   componentDidMount() {
-    const { username, reponame, branch } = this.props.match.params;
+    const { branch } = this.props.match.params;
+    const { repoId } = this.props;
 
-    this.props.fetchBranches({
-      owner: username,
-      repoName: reponame
-    });
     this.props.fetchCommits({
-      username,
-      reponame,
+      repoId,
       branch
     });
   }
 
   handleBranchChange(event, data) {
-    const { match, history } = this.props;
-    const { username, reponame } = match.params;
+    const { username, reponame } = this.props.match.params;
+    const { repoId, history } = this.props;
 
     history.push(`/${username}/${reponame}/commits/${data.value}`);
 
-    this.props.fetchBranches({
-      owner: username,
-      repoName: reponame
-    });
     this.props.fetchCommits({
-      username,
-      reponame,
+      repoId,
       branch: data.value
     });
   }
@@ -53,18 +44,15 @@ class CommitsPage extends React.Component {
         params: { branch }
       }
     } = this.props;
+    
+    const branchOptions = branchesData.map((branch, index) => ({
+      key: index,
+      text: branch,
+      value: branch
+    }));
+    branchOptions.sort(({ text: textA }, { text: textB }) => (textA > textB ? 1 : -1));
 
-    let branchOptions;
-    if (!branchesData.loading) {
-      branchOptions = branchesData.branches.map((branch, index) => ({
-        key: index,
-        text: branch,
-        value: branch
-      }));
-      branchOptions.sort(({ text: textA }, { text: textB }) => (textA > textB ? 1 : -1));
-    }
-
-    return commitsData.loading || branchesData.loading ? (
+    return commitsData.loading ? (
       <Loader active />
     ) : (
       <div className={styles.commitsContainer}>
@@ -96,7 +84,8 @@ CommitsPage.propTypes = {
   history: PropTypes.object
 };
 
-const mapStateToProps = ({ commitsData, branchesData }) => ({
+const mapStateToProps = ({ currentRepo: { repository: { currentRepoInfo : { id: repoId, branches: branchesData } } }, commitsData }) => ({
+  repoId,
   commitsData,
   branchesData
 });

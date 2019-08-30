@@ -208,6 +208,7 @@ class CodeTab extends React.Component {
         />
         <CodeTabMenu
           ownername={ownername}
+          branch={branch}
           reponame={reponame}
           commitsCount={count}
           branchesCount={branchesCount}
