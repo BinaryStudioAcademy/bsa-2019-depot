@@ -60,6 +60,9 @@ exports.config = {
     ui: 'bdd',
     timeout: 90000
   },
+  onPrepare: function(config, capabilities) {
+    require('./clearSettingsData.js')();
+  },
   afterTest: function(test) {
     if (test.passed) {
       return;

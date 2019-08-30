@@ -33,23 +33,18 @@ class RepoSteps {
     browser.pause(500);
   }
 
-  createdRepoName() {
-    repoPage.createdRepoName.getText();
-  }
-
   navigateToRepoSettings() {
     repoPage.repoSettings.waitForDisplayed(2000);
     repoPage.repoSettings.click();
   }
 
   deleteRepo() {
-    repoPage.deleteBtn.waitForDisplayed(2000);
-    repoPage.deleteBtn.click();
     browser.pause(500);
+    repoPage.deleteBtn.click();
   }
 
   createNewFileBtn() {
-    repoPage.createNewFileBtn.waitForDisplayed(2000);
+    repoPage.createNewFileBtn.scrollIntoView();
     repoPage.createNewFileBtn.click();
   }
 
@@ -67,10 +62,6 @@ class RepoSteps {
     repoPage.commitFileBtn.scrollIntoView();
     repoPage.commitFileBtn.click();
     browser.pause(500);
-  }
-
-  createdFileName() {
-    repoPage.createdFileName.getText();
   }
 }
 
