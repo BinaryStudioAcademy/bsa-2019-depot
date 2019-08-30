@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import io from 'socket.io-client';
 import moment from 'moment';
 import { Dropdown, Header, Button, Divider, Form, Label, Icon, Image, Loader } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
@@ -9,6 +8,7 @@ import { getUserImgLink } from '../../helpers/imageHelper';
 import { getIssueByNumber, getIssueComments, postIssueComment } from '../../services/issuesService';
 import ReactMde from 'react-mde';
 import ReactMarkdown from 'react-markdown';
+import { socketInit } from '../../helpers/socketInitHelper';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 
 import styles from './styles.module.scss';
@@ -32,7 +32,6 @@ class IssueComments extends React.Component {
   }
 
   async componentDidMount() {
-    this.initSocket();
     const {
       match: {
         params: { username, reponame, number }
@@ -44,24 +43,37 @@ class IssueComments extends React.Component {
       number
     });
     const { id } = currentIssue;
+
     const issueComments = await getIssueComments(id);
     this.setState({
       currentIssue,
       issueComments,
       loading: false
     });
-    this.socket.on('newIssueComment', async data => {
-      const issueComments = await getIssueComments(data.issueId);
-      this.setState({
-        issueComments
-      });
-    });
+    this.initSocket();
+  }
+
+  componentWillUnmount() {
+    const {
+      currentIssue: { id }
+    } = this.state;
+    this.socket.emit('leaveRoom', id);
   }
 
   initSocket() {
-    const { REACT_APP_SOCKET_SERVER, REACT_APP_SOCKET_SERVER_PORT } = process.env;
-    const address = `http://${REACT_APP_SOCKET_SERVER}:${REACT_APP_SOCKET_SERVER_PORT}`;
-    this.socket = io(address);
+    this.socket = socketInit('issues');
+    const {
+      currentIssue: { id }
+    } = this.state;
+
+    this.socket.emit('createRoom', id);
+
+    this.socket.on('newIssueComment', data => {
+      this.setState({
+        ...this.state,
+        issueComments: [...this.state.issueComments, data]
+      });
+    });
   }
 
   onCommentChange(comment) {
@@ -92,13 +104,8 @@ class IssueComments extends React.Component {
       issueId,
       userId
     });
-    this.socket.emit('newIssueComment', {
-      issueId
-    });
-    const issueComments = await getIssueComments(issueId);
     this.setState({
-      comment: '',
-      issueComments
+      comment: ''
     });
   }
 
