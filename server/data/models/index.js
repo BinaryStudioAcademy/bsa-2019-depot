@@ -12,6 +12,8 @@ const IssueComment = orm.import('./issueComment');
 const Star = orm.import('./star');
 const OrgUser = orm.import('./orgUser');
 const Role = orm.import('./role');
+const Language = orm.import('./language');
+const LanguageStats = orm.import('./languageStats');
 const Label = orm.import('./label');
 
 associate({
@@ -26,6 +28,8 @@ associate({
   Star,
   OrgUser,
   Role,
+  Language,
+  LanguageStats,
   Label
 });
 
@@ -41,5 +45,7 @@ module.exports = {
   StarModel: Star,
   OrgUserModel: OrgUser,
   RoleModel: Role,
+  LanguageModel: Language,
+  LanguageStatsModel: LanguageStats,
   LabelModel: Label
 };
