@@ -1,17 +1,45 @@
 const { Router } = require('express');
-const { addIssueComment } = require('../services/issue.service');
+const issueCommentService = require('../services/issue-comment.service');
 
 const router = Router();
 
+router.get('/:id', (req, res, next) => {
+  const { id } = req.params;
+  issueCommentService
+    .getIssueCommentById(id)
+    .then(data => res.send(data))
+    .catch(next);
+});
+
 router.post('/', (req, res, next) => {
   const { issueId, userId, comment: body } = req.body;
-
-  addIssueComment({ userId, issueId, body })
+  issueCommentService
+    .addIssueComment({ userId, issueId, body })
     .then((data) => {
-      const { issueId } = data;
-      req.issuesNsp.to(issueId).emit('newIssueComment', data);
+      const { issueId: id } = data;
+      req.issuesNsp.to(id).emit('newIssueComment', data);
       return res.send(data);
     })
+    .catch(next);
+});
+
+router.put('/', (req, res, next) => {
+  const { id, comment: body } = req.body;
+  const {
+    user: { id: userId }
+  } = req;
+  issueCommentService
+    .updateIssueCommentById(id, userId, { body })
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.delete('/:id', (req, res, next) => {
+  const { id } = req.params;
+  const userId = req.user.id;
+  issueCommentService
+    .deleteIssueCommentById(id, userId)
+    .then(() => res.status(204).send({}))
     .catch(next);
 });
 

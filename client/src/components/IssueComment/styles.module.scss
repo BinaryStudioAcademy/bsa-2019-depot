@@ -5,7 +5,7 @@
   align-items: center;
 }
 
-:global(h2.ui.header) {
+:local(h2.ui.header) {
   margin: 0;
   > span {
     font-weight: normal;
@@ -58,7 +58,12 @@
 }
 
 :local(.commentEditor) {
-  margin-top: 20px;
+  margin-left: 0.7em;
+  margin-bottom: 0.5em;
+}
+
+:local(.mde) {
+  flex: 1;
 }
 
 :local(.comment_author_name) {
@@ -72,12 +77,4 @@
   width: 40px;
   height: 40px;
   object-fit: contain;
-}
-
-:local(.issue_label) {
-  margin-right: 0.8em !important;
-}
-
-:local(.issue_header) {
-  margin-right: auto !important;
 }

@@ -1,29 +1,51 @@
-const sequelize = require('../db/connection');
+const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
-const {IssueModel, UserModel, RepositoryModel} = require('../models/index');
+const { IssueModel, UserModel, RepositoryModel } = require('../models/index');
+const sequelize = require('../db/connection');
+
+const { Op } = Sequelize;
+
+const parseSortQuery = (sort) => {
+  switch (sort) {
+  case 'created_asc':
+    return [['createdAt', 'ASC']];
+  case 'created_desc':
+    return [['createdAt', 'DESC']];
+  case 'updated_asc':
+    return [['updatedAt', 'ASC']];
+  case 'updated_desc':
+    return [['updatedAt', 'DESC']];
+  case 'comments_desc':
+    return [[sequelize.literal('"commentsCount"'), 'DESC']];
+  case 'comments_asc':
+    return [[sequelize.literal('"commentsCount"'), 'ASC']];
+  default:
+    return [];
+  }
+};
 
 const mapSort = (sort) => {
   switch (sort) {
-    case 'createdAt_DESC':
-    case 'createdAt_ASC':
-    case 'updatedAt_DESC':
-    case 'updatedAt_ASC':
-      return sort.split('_');
-      break;
-    case 'commentCount_DESC':
-      return [[sequelize.col('commentCount'), 'DESC']];
-      break;
-    case 'commentCount_ASC':
-      return [[sequelize.col('commentCount'), 'ASC']];
-      break;
-    default:
-      return ['createdAt', 'DESC'];
+  case 'createdAt_DESC':
+  case 'createdAt_ASC':
+  case 'updatedAt_DESC':
+  case 'updatedAt_ASC':
+    return sort.split('_');
+
+  case 'commentCount_DESC':
+    return [[sequelize.col('commentCount'), 'DESC']];
+
+  case 'commentCount_ASC':
+    return [[sequelize.col('commentCount'), 'ASC']];
+
+  default:
+    return ['createdAt', 'DESC'];
   }
 };
 
 class IssueRepository extends BaseRepository {
-  async addIssue({...issueData}) {
-    const {repositoryId} = issueData;
+  async addIssue({ ...issueData }) {
+    const { repositoryId } = issueData;
     const number = ((await this.getMaxIssueRepoNumber(repositoryId)) || 0) + 1;
     const issueDataWithNumber = {
       ...issueData,
@@ -33,20 +55,52 @@ class IssueRepository extends BaseRepository {
   }
 
   getMaxIssueRepoNumber(repositoryId) {
-    return this.model.max('number', {where: {repositoryId}});
+    return this.model.max('number', {
+      where: { repositoryId },
+      paranoid: false
+    });
   }
 
   getIssueById(id) {
-    return this.model.findOne({where: {id}});
+    return this.model.findOne({ where: { id } });
   }
 
-  updateIssueById(id, {...issueData}) {
-    return this.updateById(id, issueData);
+  async getAuthorId(issueId) {
+    const issue = await this.getIssueById(issueId);
+    const { userId: authorId } = issue.get({ plain: true });
+    return authorId;
   }
 
-  getRepositoryIssues({repositoryId}) {
+  async getRepoOwnerId(issueId) {
+    const issue = await this.getIssueById(issueId);
+    const { repositoryId } = issue.get({ plain: true });
+    const repo = await RepositoryModel.findOne({ where: { id: repositoryId } });
+    const { userId } = repo.get({ plain: true });
+    return userId;
+  }
+
+  updateIssueById(id, data) {
+    return this.model.update(data, {
+      where: { id },
+      returning: true,
+      plain: true
+    });
+  }
+
+  setIsOpenedById(id, isOpened) {
+    return this.model.update(
+      { isOpened },
+      {
+        where: { id },
+        returning: true,
+        plain: true
+      }
+    );
+  }
+
+  getRepositoryIssues({ repositoryId }) {
     return this.model.findAll({
-      where: {repositoryId},
+      where: { repositoryId },
       include: [
         {
           model: UserModel,
@@ -61,13 +115,13 @@ class IssueRepository extends BaseRepository {
   }
 
   getAllIssues(userId, options = {}) {
-    const {isOpened, sort, owner} = options;
+    const { isOpened, sort, owner } = options;
     let ownerWhere = {};
     if (owner) {
-      ownerWhere = {username: owner.split(",")};
+      ownerWhere = { username: owner.split(',') };
     }
     const findOptions = {
-      where: {userId, isOpened},
+      where: { userId, isOpened },
       attributes: {
         include: [
           [
@@ -75,8 +129,7 @@ class IssueRepository extends BaseRepository {
                   (SELECT COUNT(*)
                   FROM "issueComments"
                   WHERE "issueComments"."issueId" = "issue"."id"  
-                  AND "issueComments"."deletedAt" IS NULL)::integer`
-            ),
+                  AND "issueComments"."deletedAt" IS NULL)::integer`),
             'commentCount'
           ]
         ]
@@ -97,7 +150,7 @@ class IssueRepository extends BaseRepository {
         },
         {
           model: UserModel,
-          where: {id: userId},
+          where: { id: userId },
           attributes: ['id', 'username']
         }
       ]
@@ -108,17 +161,16 @@ class IssueRepository extends BaseRepository {
     }
 
     return this.model.findAll(findOptions);
-
   }
 
   getAllIssuesCount(userId, p) {
-    const {isOpened , owner} = p;
+    const { isOpened, owner } = p;
     let ownerWhere = {};
     if (owner) {
-      ownerWhere = {username: owner.split(",")};
+      ownerWhere = { username: owner.split(',') };
     }
     const findOptions = {
-      where: {userId, isOpened},
+      where: { userId, isOpened },
       include: [
         {
           model: RepositoryModel,
@@ -128,7 +180,7 @@ class IssueRepository extends BaseRepository {
             {
               model: UserModel,
               where: ownerWhere,
-              required: true,
+              required: true
             }
           ]
         }
@@ -141,33 +193,75 @@ class IssueRepository extends BaseRepository {
   getAllIssuesOwners(userId) {
     return UserModel.findAll({
       attributes: ['username'],
-      include: [{
-        model: RepositoryModel,
-        attributes: [],
-        required: true,
-        include: [{
+      include: [
+        {
+          model: RepositoryModel,
           attributes: [],
-          model: this.model,
-          where: {userId}
+          include: [
+            {
+              attributes: [],
+              model: this.model,
+              where: { userId }
+            }
+          ]
         }
-        ]
-      }]
+      ]
     });
   }
 
-  getRepoIssueByNumber({username, name, number}) {
-    return this.model.findOne({
-      where: {number},
+  getIssueByIdNumber(repositoryId, number) {
+    return this.model.findAll({
+      where: {
+        repositoryId,
+        number
+      }
+    });
+  }
+
+  getIssues(repositoryId, sort, author, title) {
+    return this.model.findAll({
+      where: {
+        repositoryId,
+        ...(title ? { body: { [Op.substring]: title } } : {})
+      },
+      attributes: {
+        include: [
+          [
+            sequelize.literal(`
+          (SELECT COUNT(*)
+          FROM "issueComments"
+          WHERE "issue"."id" = "issueComments"."issueId"
+          AND "issueComments"."deletedAt" IS NULL)`),
+            'commentsCount'
+          ]
+        ]
+      },
       include: [
         {
           model: UserModel,
           attributes: [],
-          where: {username}
-        },
+          ...(author ? { where: { username: author } } : {})
+        }
+      ],
+      order: parseSortQuery(sort)
+    });
+  }
+
+  getRepoIssueByNumber(username, reponame, number) {
+    return this.model.findOne({
+      where: { number },
+      include: [
         {
           model: RepositoryModel,
           attributes: [],
-          where: {name}
+          where: { name: reponame },
+          include: [
+            {
+              model: UserModel,
+              attributes: [],
+              where: { username }
+            }
+          ]
         },
         {
           model: UserModel,
@@ -176,8 +270,6 @@ class IssueRepository extends BaseRepository {
       ]
     });
   }
-
-
 }
 
 module.exports = new IssueRepository(IssueModel);
