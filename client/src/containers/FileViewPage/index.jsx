@@ -23,8 +23,8 @@ class FileViewPage extends React.Component {
     this.state = {
       fileData: {},
       loading: true,
-      deleting: false,
-      accessPermissions: null
+      deleting: false
+      // accessPermissions: null
     };
 
     this.handleCopyPath = this.handleCopyPath.bind(this);
@@ -114,8 +114,8 @@ class FileViewPage extends React.Component {
     const {
       fileData: { content, size },
       loading,
-      deleting,
-      accessPermissions
+      deleting
+      // accessPermissions
     } = this.state;
     const { username: owner, reponame, branch } = match.params;
     const editorStyles = { width: '100%' };
@@ -165,7 +165,8 @@ class FileViewPage extends React.Component {
               >
                 Raw
               </Button>
-              {((username && username === owner) || accessPermissions === ('WRITE' || 'ADMIN')) && (
+              {/* {((username && username === owner) || accessPermissions === ('WRITE' || 'ADMIN')) && ( */}
+              {username && username === owner && (
                 <>
                   <Icon link name="pencil" onClick={this.handleEditFile} />
                   <Icon link name="trash alternate" onClick={this.handleDeleteFile} />

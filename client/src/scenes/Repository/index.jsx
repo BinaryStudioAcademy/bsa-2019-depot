@@ -15,6 +15,7 @@ import FileEditPage from '../../containers/FileEditPage';
 import BranchesTab from '../../containers/BranchesTab/index';
 import CreateIssuePage from '../../containers/CreateIssuePage';
 import PrivateTab from '../../containers/PrivateTab';
+import CollaboratorInvitation from '../../containers/CollaboratorInvitation';
 
 import styles from './styles.module.scss';
 
@@ -60,6 +61,7 @@ class RepositoryPage extends React.Component {
               <Route exact path={`${match.path}/branches`} component={BranchesTab} />
               <PrivateTab path={[`${match.path}/new/:branch`, `${match.path}/edit/:branch`]} component={FileEditPage} />
               <Route path={`${match.path}/blob/:branch`} component={FileViewPage} />
+              <Route exact path={`${match.path}/invitations`} component={CollaboratorInvitation} />
             </Switch>
           </div>
         </Container>

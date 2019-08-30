@@ -107,7 +107,7 @@ const createInviteCollaboratorEmail = (email, url, username, reponame) => {
           Data: `<html><body> 
                     <p>Hi!</p>
                     <p>@${username} has invited you to collaborate on the <b>${username}/${reponame}</b> repository.
-                    <p>You can also visit <a href=${url}/${username}>@${url}/${username}</a> to learn a bit more about them.</p>
+                    <p>You can <a href=${url}/${username}/${reponame}/invitations>accept or decline</a> this invitation. You can also visit <a href=${url}/${username}>@${url}/${username}</a> to learn a bit more about them.</p>
                     <p><b>Note:</b> This invitation was intended for <a href="mailto:${email}">${email}</a>. If you were not expecting this invitation, you can ignore this email. </p>
                     <p>Thanks,</p>
                     <p>Your friends at Depot</p>

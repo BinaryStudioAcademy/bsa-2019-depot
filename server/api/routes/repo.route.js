@@ -138,8 +138,8 @@ router
       .then(result => res.send(result))
       .catch(next);
   })
-  .get('/:owner/:repoName/issues', isReaderMiddleware, (req, res, next) => {
-    const { repositoryId } = req.query;
+  .get('/:repositoryId/issues', isReaderMiddleware, (req, res, next) => {
+    const { repositoryId } = req.params;
     getAllRepoIssues({ repositoryId })
       .then(result => res.send(result))
       .catch(next);
