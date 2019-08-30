@@ -16,8 +16,8 @@ router.post('/', (req, res, next) => {
   issueCommentService
     .addIssueComment({ userId, issueId, body })
     .then((data) => {
-      const { issueId } = data;
-      req.issuesNsp.to(issueId).emit('newIssueComment', data);
+      const { issueId: id } = data;
+      req.issuesNsp.to(id).emit('newIssueComment', data);
       return res.send(data);
     })
     .catch(next);
