@@ -22,7 +22,7 @@ class BlameViewPage extends React.Component {
     const { match, location } = this.props;
     this.filepath = location.pathname.replace(`${match.url}/`, '');
 
-    //this.handleCopyPath = this.handleCopyPath.bind(this);
+    this.onNormalView = this.onNormalView.bind(this);
   }
 
   componentDidMount() {
@@ -37,6 +37,12 @@ class BlameViewPage extends React.Component {
     );
   }
 
+  onNormalView() {
+    const { history, location } = this.props;
+
+    history.push(location.pathname.replace('/blame', '/blob'));
+  };
+
 
   render() {
     const { match, location } = this.props;
@@ -45,21 +51,18 @@ class BlameViewPage extends React.Component {
     let filepathDirs, filename;
     filepathDirs = this.filepath.split('/').slice(0, -1); // Remove file name
     filename = location.pathname.split('/').pop();
-
     const { blameData, loading, deleting } = this.state;
 
     let blamesRaws;
     let nextCommit;
     let isMultiRawCommit = false;
+
     if (!loading) {
       blamesRaws = blameData.map( (blameObj, i) => {
-
         try {
           nextCommit = blameData[i+1].commitId;
         } catch (e) {
-
         }
-
         if (blameObj.commitId !== nextCommit && isMultiRawCommit !== true) {
           isMultiRawCommit = false;
           return (
@@ -100,7 +103,6 @@ class BlameViewPage extends React.Component {
           );
         }
         if (blameObj.commitId === nextCommit && isMultiRawCommit === true) {
-
           return (
             <>
               <Grid className={styles.blameGrid} stretched={true}>
@@ -210,12 +212,6 @@ class BlameViewPage extends React.Component {
       });
     }
 
-
-
-    // const articleElements = articles.map((article) => <li key={article.id}>
-    //   <NavLink activeStyle={{color: 'red'}} to={`/articles/${article.id}`}>{article.title}</NavLink>
-    // </li>)
-
     return loading || deleting ? (
       <Loader active inline="centered" />
     ) : (
@@ -235,59 +231,18 @@ class BlameViewPage extends React.Component {
         </div>
         <Segment.Group className={styles.fileViewContainer}>
           <Segment className={styles.fileViewHeader}>
+            <div className={styles.fileMetaData}>
+              <p>{blameData.length} lines</p>
+            </div>
             <div className={styles.fileControls}>
-              <Button compact size="small" className={styles.copyButton} >
+              <Button compact size="small" className={styles.copyButton} onClick={this.onNormalView} >
                   Normal View
               </Button>
             </div>
           </Segment>
-
-
-
-
           <Segment className={styles.blameSegment}>
             {blamesRaws}
-            {/*{ blameData.map( (blameObj, i) => (*/}
-            {/*  <>*/}
-            {/*  <Grid className={styles.blameGrid} stretched={true}>*/}
-            {/*    <Grid.Row className={styles.blameRow} stretched={true}>*/}
-            {/*      <Grid.Column width={8} className={styles.blameMain} >*/}
-            {/*        <div className={styles.blame}>*/}
-            {/*          <div className={styles.blameData}>*/}
-            {/*            <div className={styles.blameAvatar}>*/}
-            {/*              <Image src={getUserImgLink(blameObj.imgUrl)} avatar />*/}
-            {/*            </div>*/}
-            {/*            <div className={styles.blameMessage}>*/}
-            {/*              <p>{blameObj.message}</p>*/}
-            {/*            </div>*/}
-            {/*          </div>*/}
-            {/*          <div className={styles.blameDate}>*/}
-            {/*            <p>{moment(blameObj.date).fromNow()}</p>*/}
-            {/*          </div>*/}
-            {/*        </div>*/}
-            {/*      </Grid.Column>*/}
-            {/*      <Grid.Column width={8} className={styles.blobMain} stretched={true}>*/}
-            {/*        <div className={styles.blob}>*/}
-            {/*          <div className={styles.blobLineNumber}>*/}
-            {/*            {i}*/}
-            {/*          </div>*/}
-            {/*          <div className={styles.blobLineData}>*/}
-            {/*            <p>{blameObj.line}</p>*/}
-            {/*          </div>*/}
-            {/*        </div>*/}
-            {/*      </Grid.Column>*/}
-            {/*    </Grid.Row>*/}
-            {/*  </Grid>*/}
-            {/*    <Grid >*/}
-            {/*      <div className={styles.blameDivider}></div>*/}
-            {/*    </Grid>*/}
-            {/*  </>*/}
-
-            {/*))*/}
-            {/*}*/}
-
           </Segment>
-
         </Segment.Group>
       </>
     );

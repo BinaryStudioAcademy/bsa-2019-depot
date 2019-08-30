@@ -1,9 +1,18 @@
+
+
+
 .repoContentContainer  {
-  max-width: 1500px !important;
+  //max-width: 1500px;
+  background-color: #1e6823!important;
 }
+
+:local(.repoContentContainer) {
+  background-color: #1e6823!important;
+}
+
 :global(.repoContentContainer) {
   max-width: 1500px !important;
-  background-color: #1e6823;
+  background-color: #1e6823!important;
 }
 
 :global(.repoContentContainer):local(.repoContentContainer) {
@@ -13,7 +22,7 @@
 :local(.styles) {
   .repoContentContainer  {
     max-width: 1500px !important;
-    background: #44a340;
+    background: #44a340!important;
   }
 }
 
@@ -59,6 +68,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-left: -10px;
 }
 
 .blameDate {
