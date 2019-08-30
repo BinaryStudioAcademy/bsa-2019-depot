@@ -25,9 +25,7 @@ const getRepositoryCollaborators = repositoryId => collaboratorRepository.getCol
 
 const removeRepositoryCollaborator = async (collaboratorId) => {
   await collaboratorRepository.deleteById(collaboratorId);
-  return {
-    status: true
-  }
+  return true;
 };
 
 const getUserRights = async (username, reponame, userId) => {

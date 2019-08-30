@@ -96,6 +96,7 @@ class CollaboratorsPage extends React.Component {
       username: '',
       collaborators
     });
+    window.location.reload();
   };
 
   removeCollaborator = async id => {
@@ -130,10 +131,10 @@ class CollaboratorsPage extends React.Component {
                       <Grid.Column width={2}>
                         <Image src={getUserImgLink(imgUrl)} size="mini" />
                       </Grid.Column>
-                      <Grid.Column width={7}>{!isActivated ? `Awaiting ${username}'s response` : null}</Grid.Column>
-                      <Grid.Column width={4}>
+                      <Grid.Column width={11}>{!isActivated ? `Awaiting ${username}'s response` : null}</Grid.Column>
+                      {/* <Grid.Column width={4}>
                         {!isActivated ? <Button basic size="tiny" content="Copy invite link" /> : null}
-                      </Grid.Column>
+                      </Grid.Column> */}
                       <Grid.Column width={3}>
                         {!isActivated ? (
                           <CancelInvitation type={'button'} id={id} onClick={this.removeCollaborator} />

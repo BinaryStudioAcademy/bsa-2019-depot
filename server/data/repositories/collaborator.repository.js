@@ -42,6 +42,20 @@ class CollaboratorRepository extends BaseRepository {
       ]
     });
   }
+
+  getCollaboratorWithPermissions({ userId, repositoryId, name }) {
+    return this.model.findOne({
+      where: {
+        userId,
+        repositoryId,
+        deletedAt: null
+      },
+      include: [{
+        model: PermissionModel,
+        where: { name }
+      }]
+    });
+  }
 }
 
 module.exports = new CollaboratorRepository(CollaboratorModel);
