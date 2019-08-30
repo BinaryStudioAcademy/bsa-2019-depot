@@ -35,11 +35,11 @@ class RepositoryItem extends React.Component {
     await this.checkIfEmpty(username, name);
 
     const { isEmpty } = this.state;
-
-    if (!isEmpty) {
+    const { repoBranches } = this.state;
+    if (!isEmpty || (repoBranches && repoBranches.length)) {
       try {
         await this.getRepoBranches(repoId);
-        const { repoBranches } = this.state;
+
         let allRepoCommits = [];
         repoBranches.forEach(async branch => {
           const allBranchCommits = this.getRepoCommits(repoId, branch.name);
