@@ -28,6 +28,10 @@ class CodeTab extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      branch: ''
+    };
+
     this.onBranchChange = this.onBranchChange.bind(this);
     this.onCreateFile = this.onCreateFile.bind(this);
     this.onSubmitInfo = this.onSubmitInfo.bind(this);
@@ -49,6 +53,11 @@ class CodeTab extends React.Component {
     if (!branch) {
       branch = defaultBranch || branches[0];
     }
+
+    this.setState({
+      ...this.state,
+      branch
+    });
 
     if (!branches.length) {
       return;
@@ -79,6 +88,10 @@ class CodeTab extends React.Component {
   onBranchChange = (branch) => {
     const { ownername, reponame, history } = this.props;
     history.push(`/${ownername}/${reponame}/tree/${branch}`);
+    this.setState({
+      ...this.state,
+      branch
+    });
     this.props.fetchFileTree({
       username: ownername,
       reponame,
@@ -171,8 +184,10 @@ class CodeTab extends React.Component {
       return <EmptyRepositoryTab />;
     }
 
-    const { name: branch, headCommit, commitsCount: { count } } = currentBranchData;
+    const { headCommit, commitsCount: { count } } = currentBranchData;
     const { files } = fileTreeData.tree;
+
+    const branch = this.state.branch;
 
     const isOwn = currentUserName && currentUserName === ownername;
 
