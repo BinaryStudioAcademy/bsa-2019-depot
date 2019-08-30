@@ -92,6 +92,17 @@ $gray: #f7f7fb;
   }
 }
 
+:local(.repoTypeLabel) {
+  display: inline-block;
+  margin: -1px 0 4px 10px;
+  border: 1px solid rgba(27, 31, 35, 0.15);
+  color: #586069;
+  font-weight: 400;
+  font-size: 60%;
+  padding: 3px 4px;
+  line-height: 1em;
+}
+
 @media (max-width: 1024px) {
   :global(.thirteen.wide.column):local(.contribution_years) {
     width: 100%;
