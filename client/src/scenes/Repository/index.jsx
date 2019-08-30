@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Switch, Route } from 'react-router-dom';
-import { Container } from 'semantic-ui-react';
+import { Container , Segment } from 'semantic-ui-react';
 import RepositoryHeader from '../../components/RepositoryHeader';
 import IssuesTab from '../../containers/IssuesTab/index';
 import IssueComments from '../../components/IssueComments/index';
@@ -46,8 +46,9 @@ class RepositoryPage extends React.Component {
           activePage={pathname.split('/')[3]}
           baseUrl={match.url}
         />
-        <Container>
-          <div className={styles.repoContentContainer}>
+        <Container padded fluid>
+          <Segment className={styles.repoContentContainer} basic>
+          {/*<div className={styles.repoContentContainer}>*/}
             <Switch>
               <Route exact path={`${match.path}`} component={RepositoryTab} />
               <Route exact path={`${match.path}/tree/:branch`} component={RepositoryTab} />
@@ -63,7 +64,8 @@ class RepositoryPage extends React.Component {
               <PrivateTab path={[`${match.path}/new/:branch`, `${match.path}/edit/:branch`]} component={FileEditPage} />
               <Route path={`${match.path}/blob/:branch`} component={FileViewPage} />
             </Switch>
-          </div>
+          {/*</div>*/}
+          </Segment>
         </Container>
       </>
     );

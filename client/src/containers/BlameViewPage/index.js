@@ -69,7 +69,7 @@ class BlameViewPage extends React.Component {
             <>
             <Grid className={styles.blameGrid} stretched={true}>
               <Grid.Row className={styles.blameRow} stretched={true}>
-                <Grid.Column width={8} className={styles.blameMain} >
+                <Grid.Column className={styles.blameMain} >
                   <div className={styles.blame}>
                     <div className={styles.blameData}>
                       <div className={styles.blameAvatar}>
@@ -84,7 +84,7 @@ class BlameViewPage extends React.Component {
                     </div>
                   </div>
                 </Grid.Column>
-                <Grid.Column width={8} className={styles.blobMain} stretched={true}>
+                <Grid.Column className={styles.blobMain} >
                   <div className={styles.blob}>
                     <div className={styles.blobLineNumber}>
                       {i}
@@ -107,7 +107,7 @@ class BlameViewPage extends React.Component {
             <>
               <Grid className={styles.blameGrid} stretched={true}>
                 <Grid.Row className={styles.blameRow} stretched={true}>
-                  <Grid.Column width={8} className={styles.blameMain} >
+                  <Grid.Column  className={styles.blameMain} >
                     <div className={styles.blame}>
                       <div className={styles.blameData}>
                         <div className={styles.blameAvatar}>
@@ -119,7 +119,7 @@ class BlameViewPage extends React.Component {
                       </div>
                     </div>
                   </Grid.Column>
-                  <Grid.Column width={8} className={styles.blobMain} stretched={true}>
+                  <Grid.Column className={styles.blobMain} >
                     <div className={styles.blob}>
                       <div className={styles.blobLineNumber}>
                         {i}
@@ -141,7 +141,7 @@ class BlameViewPage extends React.Component {
             <>
               <Grid className={styles.blameGrid} stretched={true}>
                 <Grid.Row className={styles.blameRow} stretched={true}>
-                  <Grid.Column width={8} className={styles.blameMain} >
+                  <Grid.Column  className={styles.blameMain} >
                     <div className={styles.blame}>
                       <div className={styles.blameData}>
                         <div className={styles.blameAvatar}>
@@ -153,7 +153,7 @@ class BlameViewPage extends React.Component {
                       </div>
                     </div>
                   </Grid.Column>
-                  <Grid.Column width={8} className={styles.blobMain} stretched={true}>
+                  <Grid.Column  className={styles.blobMain} >
                     <div className={styles.blob}>
                       <div className={styles.blobLineNumber}>
                         {i}
@@ -178,7 +178,7 @@ class BlameViewPage extends React.Component {
             <>
               <Grid className={styles.blameGrid} stretched={true}>
                 <Grid.Row className={styles.blameRow} stretched={true}>
-                  <Grid.Column width={8} className={styles.blameMain} >
+                  <Grid.Column className={styles.blameMain} >
                     <div className={styles.blame}>
                       <div className={styles.blameData}>
                         <div className={styles.blameAvatar}>
@@ -193,7 +193,7 @@ class BlameViewPage extends React.Component {
                       </div>
                     </div>
                   </Grid.Column>
-                  <Grid.Column width={8} className={styles.blobMain} stretched={true}>
+                  <Grid.Column  className={styles.blobMain} >
                     <div className={styles.blob}>
                       <div className={styles.blobLineNumber}>
                         {i}
