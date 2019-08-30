@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import Octicon, { Repo } from '@primer/octicons-react';
-import { Icon, Label, Container } from 'semantic-ui-react';
+import { Icon, Label, Container, Segment } from 'semantic-ui-react';
 import ForkButton from '../ForkButton';
 
 import styles from './styles.module.scss';
@@ -17,6 +17,7 @@ const RepositoryHeader = ({
   issueCount,
   activePage,
   baseUrl,
+  isBlamePage,
   history
 }) => {
   let activeTab;
@@ -58,8 +59,8 @@ const RepositoryHeader = ({
   };
   return (
     <header className={styles.repoHeader}>
-      <Container>
-        <div className={styles.repoHeaderContainer}>
+      <Container fluid={isBlamePage}>
+        <Segment basic>
           <div className={styles.repoNameRow}>
             <div className={styles.repoName}>
               <Octicon icon={Repo} />
@@ -97,7 +98,7 @@ const RepositoryHeader = ({
               </div>
             )}
           </div>
-        </div>
+        </Segment>
       </Container>
     </header>
   );
@@ -121,7 +122,8 @@ RepositoryHeader.propTypes = {
   }).isRequired,
   activePage: PropTypes.string,
   baseUrl: PropTypes.string.isRequired,
-  history: PropTypes.object
+  history: PropTypes.object,
+  isBlamePage: PropTypes.bool
 };
 
 const mapStateToProps = ({

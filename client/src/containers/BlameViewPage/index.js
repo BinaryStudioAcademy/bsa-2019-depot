@@ -73,17 +73,9 @@ class BlameViewPage extends React.Component {
                         <div className={styles.blameAvatar}>
                           <Image src={getUserImgLink(blameObj.imgUrl)} avatar />
                         </div>
-                        <div className={styles.blameMessage}>
-                          <p>
-                            {blameObj.message.length > 55
-                              ? (blameObj.message.slice(0, 55) + '...').replace(/\s+(?=\...)/, '')
-                              : blameObj.message}
-                          </p>
-                        </div>
+                        <div className={styles.blameMessage}>{blameObj.message}</div>
                       </div>
-                      <div className={styles.blameDate}>
-                        <p>{moment(blameObj.date).fromNow()}</p>
-                      </div>
+                      <div className={styles.blameDate}>{moment(blameObj.date).fromNow()}</div>
                     </div>
                   </Grid.Column>
                   <Grid.Column className={styles.blobMain}>
@@ -174,17 +166,9 @@ class BlameViewPage extends React.Component {
                         <div className={styles.blameAvatar}>
                           <Image src={getUserImgLink(blameObj.imgUrl)} avatar />
                         </div>
-                        <div className={styles.blameMessage}>
-                          <p>
-                            {blameObj.message.length > 55
-                              ? (blameObj.message.slice(0, 55) + '...').replace(/\s+(?=\...)/, '')
-                              : blameObj.message}
-                          </p>
-                        </div>
+                        <div className={styles.blameMessage}>{blameObj.message}</div>
                       </div>
-                      <div className={styles.blameDate}>
-                        <p>{moment(blameObj.date).fromNow()}</p>
-                      </div>
+                      <div className={styles.blameDate}>{moment(blameObj.date).fromNow()}</div>
                     </div>
                   </Grid.Column>
                   <Grid.Column className={styles.blobMain}>
