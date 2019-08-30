@@ -10,6 +10,7 @@ import { getUserDetailed } from '../../services/userService';
 import { getRepositories } from '../../services/repositoryService';
 import { fetchCurrentUser } from '../../routines/routines';
 import storageHelper from '../../helpers/storageHelper';
+import { GoogleManager } from '../../config/google.config';
 
 import styles from './styles';
 
@@ -25,6 +26,7 @@ class DashboardView extends React.Component {
   logOut = async () => {
     const { navigation, fetchCurrentUser } = this.props;
     storageHelper.clear();
+    GoogleManager.deauthorize('google');
     await fetchCurrentUser();
     navigation.navigate('Auth');
   };
