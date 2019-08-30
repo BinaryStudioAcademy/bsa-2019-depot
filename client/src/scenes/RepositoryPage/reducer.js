@@ -53,10 +53,7 @@ export const currentRepoReducer = (state = initialCurrentRepoState, action) => {
       loading: false
     };
   case CLEAR_REPO_STATE:
-    return {
-      ...initialCurrentRepoState,
-      loading: false
-    };
+    return initialCurrentRepoState;
   default:
     return state;
   }
