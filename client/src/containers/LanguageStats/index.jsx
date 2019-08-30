@@ -61,7 +61,11 @@ LanguageStats.propTypes = {
   repoId: PropTypes.string.isRequired
 };
 
-const mapStateToProps = ({ currentRepo: { currentRepoInfo: { id } } }) => ({
+const mapStateToProps = ({ currentRepo:
+  {
+    repository: { currentRepoInfo: { id } }
+  }
+}) => ({
   repoId: id
 });
 

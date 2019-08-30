@@ -1,7 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Octicon, { getIconByName } from '@primer/octicons-react';
-import { Segment, Menu } from 'semantic-ui-react';
+import { Menu } from 'semantic-ui-react';
+import LanguageStats from '../../containers/LanguageStats';
 
 import styles from './styles.module.scss';
 
@@ -39,11 +40,7 @@ const CodeTabMenu = ({
         </Link>
       </Menu.Item>
     </Menu>
-    <Segment.Group className={styles.languageSegments} attached="bottom" horizontal>
-      <Segment className={styles.languageSegment} inverted color="yellow" />
-      <Segment className={styles.languageSegment} inverted color="purple" />
-      <Segment className={styles.languageSegment} inverted color="red" />
-    </Segment.Group>
+    <LanguageStats branch={branch}/>
   </>
 );
 
