@@ -41,3 +41,12 @@ export const getBranch = async (repoID, branch) => {
   });
   return response.json();
 };
+
+export const checkFilename = async (owner, repoName, branch, query) => {
+  const response = await callWebApi({
+    endpoint: `/api/repo/${owner}/${repoName}/${branch}/file-exist`,
+    type: 'GET',
+    query
+  });
+  return response.json();
+};
