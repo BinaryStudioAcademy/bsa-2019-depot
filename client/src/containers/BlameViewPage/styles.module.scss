@@ -1,3 +1,159 @@
+.repoContentContainer  {
+  max-width: 1500px !important;
+}
+:global(.repoContentContainer) {
+  max-width: 1500px !important;
+  background-color: #1e6823;
+}
+
+:global(.repoContentContainer):local(.repoContentContainer) {
+  max-width: 1500px !important;
+}
+
+:local(.styles) {
+  .repoContentContainer  {
+    max-width: 1500px !important;
+    background: #44a340;
+  }
+}
+
+.blameWrapper {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+
+.blameSegment {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.blameDivider{
+  width: 100%;
+  height: 1px;
+  border-bottom: 1px solid #e1e4e8;
+}
+
+.blameGrid {
+
+}
+
+.blameRow {
+  padding-top: 0px!important;
+  padding-bottom: 0px!important;
+
+}
+
+.blameMain {
+  border-right: 2px solid rgba(246,106,10,.2);
+}
+
+.blame {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 3px;
+}
+
+.blameData {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.blameDate {
+  display: flex;
+  align-items: center;
+}
+
+.blameMessage {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.blobMain {
+  display: flex;
+  flex-direction: column;
+  min-height: 35px;
+  overflow: visible;
+}
+
+.blob {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+
+}
+
+.blobLineNumber {
+  min-width: 50px;
+  background-color: #fafbfc!important;
+  line-height: 20px;
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 5px;
+  color: rgba(27,31,35,.3);
+}
+
+.blobLineData {
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+  //white-space: nowrap;
+  overflow: visible;
+  white-space: pre;
+}
+
+
 :global(.ui.button):local(.copyButton) {
   margin-right: 0;
 }
+
+:global(.ui.segments):local(.fileViewContainer) {
+  margin-top: 0;
+}
+
+:global(.ui.segment):local(.fileView) {
+  padding: 0;
+}
+
+:global(.ui.segment):local(.fileViewHeader) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filePathRow {
+  margin-bottom: 10px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  :global(.ui.breadcrumb):local(.filePath) {
+    margin: 0;
+  }
+}
+
+.fileInfo {
+  display: flex;
+
+  .lineCount {
+    margin-right: 15px;
+  }
+}
+
+.fileControls {
+  :global(.icon.pencil) {
+    margin-right: 10px;
+  }
+}
+
+.markdownContainer {
+  padding: 20px;
+}
+
+

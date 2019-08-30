@@ -1,5 +1,6 @@
 const NodeGit = require('nodegit');
 const repoHelper = require('../../helpers/repo.helper');
+const userRepository = require('../../data/repositories/user.repository');
 
 const getBranches = async ({ user, repoName }) => {
   const pathToRepo = repoHelper.getPathToRepo(user, repoName);
@@ -135,25 +136,34 @@ const getFileBlame = async ({
   const BlameArray = [];
 
   await NodeGit.Blame.file(repo, filepath).then(async (blame) => {
+    let count = 0;
     for (let i = 0; i < blame.getHunkCount(); i += 1) {
       const hunk = blame.getHunkByIndex(i);
       for (let j = 0; j < hunk.linesInHunk(); j += 1) {
         // eslint-disable-next-line no-await-in-loop
         const commit = await repo.getCommit(hunk.finalCommitId().toString());
+        // eslint-disable-next-line no-await-in-loop
+        const userData = await userRepository.getByEmail(commit.author().email());
         const BlameObj = {
           author: commit.author().email(),
+          username: userData.username,
+          commitId: commit.sha(),
+          name: userData.name,
+          imgUrl: userData.imgUrl,
           message: commit.message(),
           date: commit.date(),
           line: blob
             .toString()
             .split('\n')
-            .slice(j, j + 1)
+            .slice(count, count + 1)
             .join('\n')
         };
         BlameArray.push(BlameObj);
+        count += 1;
       }
     }
   });
+
   return BlameArray;
 };
 

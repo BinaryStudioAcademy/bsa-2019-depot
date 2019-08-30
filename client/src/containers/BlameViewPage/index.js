@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Grid, Breadcrumb, Button, Icon, Loader, Segment } from 'semantic-ui-react';
+import { Grid, Breadcrumb, Button, Image, Loader, Segment } from 'semantic-ui-react';
 import FilePathBreadcrumbSections from '../../components/FilePathBreadcrumbSections';
 import { getFileBlame } from '../../services/branchesService';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 
 import styles from './styles.module.scss';
+import { getUserImgLink } from '../../helpers/imageHelper';
 
 class BlameViewPage extends React.Component {
   constructor(props) {
@@ -46,7 +47,175 @@ class BlameViewPage extends React.Component {
     filename = location.pathname.split('/').pop();
 
     const { blameData, loading, deleting } = this.state;
-    console.log(blameData);
+
+    let blamesRaws;
+    let nextCommit;
+    let isMultiRawCommit = false;
+    if (!loading) {
+      blamesRaws = blameData.map( (blameObj, i) => {
+
+        try {
+          nextCommit = blameData[i+1].commitId;
+        } catch (e) {
+
+        }
+
+        if (blameObj.commitId !== nextCommit && isMultiRawCommit !== true) {
+          isMultiRawCommit = false;
+          return (
+            <>
+            <Grid className={styles.blameGrid} stretched={true}>
+              <Grid.Row className={styles.blameRow} stretched={true}>
+                <Grid.Column width={8} className={styles.blameMain} >
+                  <div className={styles.blame}>
+                    <div className={styles.blameData}>
+                      <div className={styles.blameAvatar}>
+                        <Image src={getUserImgLink(blameObj.imgUrl)} avatar />
+                      </div>
+                      <div className={styles.blameMessage}>
+                        <p>{ blameObj.message.length > 55 ? ((blameObj.message.slice(0, 55) + '...').replace(/\s+(?=\...)/, '')) : blameObj.message}</p>
+                      </div>
+                    </div>
+                    <div className={styles.blameDate}>
+                      <p>{moment(blameObj.date).fromNow()}</p>
+                    </div>
+                  </div>
+                </Grid.Column>
+                <Grid.Column width={8} className={styles.blobMain} stretched={true}>
+                  <div className={styles.blob}>
+                    <div className={styles.blobLineNumber}>
+                      {i}
+                    </div>
+                    <div className={styles.blobLineData}>
+                      <p>{blameObj.line}</p>
+                    </div>
+                  </div>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+            <Grid >
+              <div className={styles.blameDivider}></div>
+            </Grid>
+          </>
+          );
+        }
+        if (blameObj.commitId === nextCommit && isMultiRawCommit === true) {
+
+          return (
+            <>
+              <Grid className={styles.blameGrid} stretched={true}>
+                <Grid.Row className={styles.blameRow} stretched={true}>
+                  <Grid.Column width={8} className={styles.blameMain} >
+                    <div className={styles.blame}>
+                      <div className={styles.blameData}>
+                        <div className={styles.blameAvatar}>
+                        </div>
+                        <div className={styles.blameMessage}>
+                        </div>
+                      </div>
+                      <div className={styles.blameDate}>
+                      </div>
+                    </div>
+                  </Grid.Column>
+                  <Grid.Column width={8} className={styles.blobMain} stretched={true}>
+                    <div className={styles.blob}>
+                      <div className={styles.blobLineNumber}>
+                        {i}
+                      </div>
+                      <div className={styles.blobLineData}>
+                        <p>{blameObj.line}</p>
+                      </div>
+                    </div>
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
+            </>
+          );
+        }
+
+        if (blameObj.commitId !== nextCommit && isMultiRawCommit === true) {
+          isMultiRawCommit = false;
+          return (
+            <>
+              <Grid className={styles.blameGrid} stretched={true}>
+                <Grid.Row className={styles.blameRow} stretched={true}>
+                  <Grid.Column width={8} className={styles.blameMain} >
+                    <div className={styles.blame}>
+                      <div className={styles.blameData}>
+                        <div className={styles.blameAvatar}>
+                        </div>
+                        <div className={styles.blameMessage}>
+                        </div>
+                      </div>
+                      <div className={styles.blameDate}>
+                      </div>
+                    </div>
+                  </Grid.Column>
+                  <Grid.Column width={8} className={styles.blobMain} stretched={true}>
+                    <div className={styles.blob}>
+                      <div className={styles.blobLineNumber}>
+                        {i}
+                      </div>
+                      <div className={styles.blobLineData}>
+                        <p>{blameObj.line}</p>
+                      </div>
+                    </div>
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
+              <Grid >
+                <div className={styles.blameDivider}></div>
+              </Grid>
+            </>
+          );
+        }
+
+        if (blameObj.commitId === nextCommit && isMultiRawCommit !== true) {
+          isMultiRawCommit = true;
+          return (
+            <>
+              <Grid className={styles.blameGrid} stretched={true}>
+                <Grid.Row className={styles.blameRow} stretched={true}>
+                  <Grid.Column width={8} className={styles.blameMain} >
+                    <div className={styles.blame}>
+                      <div className={styles.blameData}>
+                        <div className={styles.blameAvatar}>
+                          <Image src={getUserImgLink(blameObj.imgUrl)} avatar />
+                        </div>
+                        <div className={styles.blameMessage}>
+                          <p>{ blameObj.message.length > 55 ? ((blameObj.message.slice(0, 55) + '...').replace(/\s+(?=\...)/, '')) : blameObj.message}</p>
+                        </div>
+                      </div>
+                      <div className={styles.blameDate}>
+                        <p>{moment(blameObj.date).fromNow()}</p>
+                      </div>
+                    </div>
+                  </Grid.Column>
+                  <Grid.Column width={8} className={styles.blobMain} stretched={true}>
+                    <div className={styles.blob}>
+                      <div className={styles.blobLineNumber}>
+                        {i}
+                      </div>
+                      <div className={styles.blobLineData}>
+                        <p>{blameObj.line}</p>
+                      </div>
+                    </div>
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
+            </>
+          );
+        }
+        return nextCommit;
+      });
+    }
+
+
+
+    // const articleElements = articles.map((article) => <li key={article.id}>
+    //   <NavLink activeStyle={{color: 'red'}} to={`/articles/${article.id}`}>{article.title}</NavLink>
+    // </li>)
+
     return loading || deleting ? (
       <Loader active inline="centered" />
     ) : (
@@ -72,22 +241,53 @@ class BlameViewPage extends React.Component {
               </Button>
             </div>
           </Segment>
-          <Segment >
-            { blameData.map( blameObj => (
-              <Grid>
-                <Grid.Row>
-                  <Grid.Column width={8}>
-                    <p>{blameObj.message}</p>
-                    <p>{blameObj.date}</p>
-                  </Grid.Column>
-                  <Grid.Column width={8}>
-                    <p>{blameObj.line}</p>
-                  </Grid.Column>
-                </Grid.Row>
-              </Grid>
-            ))
-            }
+
+
+
+
+          <Segment className={styles.blameSegment}>
+            {blamesRaws}
+            {/*{ blameData.map( (blameObj, i) => (*/}
+            {/*  <>*/}
+            {/*  <Grid className={styles.blameGrid} stretched={true}>*/}
+            {/*    <Grid.Row className={styles.blameRow} stretched={true}>*/}
+            {/*      <Grid.Column width={8} className={styles.blameMain} >*/}
+            {/*        <div className={styles.blame}>*/}
+            {/*          <div className={styles.blameData}>*/}
+            {/*            <div className={styles.blameAvatar}>*/}
+            {/*              <Image src={getUserImgLink(blameObj.imgUrl)} avatar />*/}
+            {/*            </div>*/}
+            {/*            <div className={styles.blameMessage}>*/}
+            {/*              <p>{blameObj.message}</p>*/}
+            {/*            </div>*/}
+            {/*          </div>*/}
+            {/*          <div className={styles.blameDate}>*/}
+            {/*            <p>{moment(blameObj.date).fromNow()}</p>*/}
+            {/*          </div>*/}
+            {/*        </div>*/}
+            {/*      </Grid.Column>*/}
+            {/*      <Grid.Column width={8} className={styles.blobMain} stretched={true}>*/}
+            {/*        <div className={styles.blob}>*/}
+            {/*          <div className={styles.blobLineNumber}>*/}
+            {/*            {i}*/}
+            {/*          </div>*/}
+            {/*          <div className={styles.blobLineData}>*/}
+            {/*            <p>{blameObj.line}</p>*/}
+            {/*          </div>*/}
+            {/*        </div>*/}
+            {/*      </Grid.Column>*/}
+            {/*    </Grid.Row>*/}
+            {/*  </Grid>*/}
+            {/*    <Grid >*/}
+            {/*      <div className={styles.blameDivider}></div>*/}
+            {/*    </Grid>*/}
+            {/*  </>*/}
+
+            {/*))*/}
+            {/*}*/}
+
           </Segment>
+
         </Segment.Group>
       </>
     );
