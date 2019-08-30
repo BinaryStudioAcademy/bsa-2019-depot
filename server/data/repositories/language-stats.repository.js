@@ -15,6 +15,10 @@ class LanguageStatsRepository extends BaseRepository {
     });
   }
 
+  upsertStats(branchId, languageId, data) {
+    this.model.upsert(data, { where: { branchId, languageId } });
+  }
+
   deleteByBranchId(branchId) {
     return this.model.destroy({ where: { branchId } });
   }

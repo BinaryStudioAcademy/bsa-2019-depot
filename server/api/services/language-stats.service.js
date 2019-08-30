@@ -11,8 +11,8 @@ const getBranchId = async (reponame, owner, branch) => {
   return branchId;
 };
 
-const getStatsByBranch = async (reponame, owner, branch) => {
-  const branchId = await getBranchId(reponame, owner, branch);
+const getStatsByBranch = async (repoId, branch) => {
+  const { id: branchId } = await branchRepository.getByNameAndRepoId(branch, repoId);
   return languageStatsRepository.getByBranchId(branchId);
 };
 
@@ -20,7 +20,7 @@ const upsertStats = async (langStats, reponame, owner, branch) => {
   const branchId = await getBranchId(reponame, owner, branch);
   await languageStatsRepository.deleteByBranchId(branchId);
   return Promise.all(langStats.map(([langName, percentage]) => languageRepository.getByName(langName)
-    .then(({ id: languageId }) => languageStatsRepository.create({ branchId, languageId, percentage }))));
+    .then(({ id: languageId }) => languageStatsRepository.upsertStats(branchId, languageId, { branchId, languageId, percentage }))));
 };
 
 const deleteStats = async (reponame, owner, branch) => {

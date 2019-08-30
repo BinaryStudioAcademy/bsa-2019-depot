@@ -7,7 +7,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       paranoid: true,
-      timestamps: true
+      timestamps: false,
+      indexes: [
+        {
+          unique: true,
+          fields: ['branchId', 'languageId']
+        }
+      ]
     }
   );
   return LanguageStats;

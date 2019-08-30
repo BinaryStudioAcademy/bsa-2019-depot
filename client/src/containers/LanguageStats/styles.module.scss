@@ -1,0 +1,44 @@
+.languageStatColors {
+  display: flex;
+  border-radius: 0px 0px 4px 4px;
+  box-shadow: none;
+  border: none;
+  width: calc(100% + 2px);
+  margin: 0px 0px 10px -1px;
+  overflow: hidden;
+  cursor: pointer;
+
+  .languageColorLine {
+    padding: 0.25em;
+  }
+}
+
+.languageStats {
+  margin-bottom: 10px;
+  padding: 5px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+
+  .languageLegend {
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .languageColorDot {
+      height: 10px;
+      width: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 5px;
+    }
+
+    .languageName {
+      font-weight: bold;
+      margin-right: 3px;
+    }
+  }
+}
