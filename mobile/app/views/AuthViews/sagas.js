@@ -58,6 +58,8 @@ function* loginGoogle({ payload }) {
     yield put(loginGoogleRoutine.success(user));
   } catch (error) {
     yield put(loginGoogleRoutine.failure(error.message));
+  } finally {
+    yield put(fetchCurrentUser.fulfill());
   }
 }
 
