@@ -6,7 +6,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     backgroundColor: colors.white,
     flex: 1,
-    justifyContent: 'space-between'
+    justifyContent: 'flex-start'
   },
   logOut: {
     backgroundColor: colors.blueButton,
@@ -15,7 +15,12 @@ export default StyleSheet.create({
   logOutText: {
     alignSelf: 'center',
     color: colors.white,
+    fontSize: 20,
     fontWeight: 'bold'
+  },
+  menu: {
+    flex: 1,
+    justifyContent: 'flex-end'
   },
   spinner: {
     flex: 1,

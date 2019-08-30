@@ -2,6 +2,7 @@ import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import SideMenu from 'react-native-side-menu';
 import UserInfo from '../../components/UserInfo';
 import ReposList from '../../containers/ReposList';
 import Spinner from '../../components/Spinner';
@@ -46,17 +47,26 @@ class DashboardView extends React.Component {
     }
   }
 
-  render() {
-    const { userData, repos } = this.state;
-    const { loading } = this.props;
-    return !loading ? (
-      <View style={styles.container}>
-        <UserInfo data={userData} />
-        <ReposList repos={repos} />
+  renderMenuComponent = () => {
+    return (
+      <View style={styles.menu}>
         <TouchableOpacity style={styles.logOut} onPress={this.logOut}>
           <Text style={styles.logOutText}>{'Log out'}</Text>
         </TouchableOpacity>
       </View>
+    );
+  };
+
+  render() {
+    const { userData, repos } = this.state;
+    const { loading } = this.props;
+    return !loading ? (
+      <SideMenu menu={this.renderMenuComponent()} openMenuOffset={200}>
+        <View style={styles.container}>
+          <UserInfo data={userData} />
+          <ReposList repos={repos} />
+        </View>
+      </SideMenu>
     ) : (
       <Spinner />
     );
