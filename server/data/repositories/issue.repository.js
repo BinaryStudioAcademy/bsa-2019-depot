@@ -75,7 +75,7 @@ class IssueRepository extends BaseRepository {
                   (SELECT COUNT(*)
                   FROM "issueComments"
                   WHERE "issueComments"."issueId" = "issue"."id"  
-                  AND "issueComments"."deletedAt" IS NULL)`
+                  AND "issueComments"."deletedAt" IS NULL)::integer`
             ),
             'commentCount'
           ]

@@ -70,7 +70,7 @@ IssuesList.propTypes = {
         })
       ),
       isOpened: PropTypes.bool.isRequired,
-      commentCount: PropTypes.string,
+      commentCount: PropTypes.number,
       createdAt: PropTypes.string.isRequired
     })
   ).isRequired

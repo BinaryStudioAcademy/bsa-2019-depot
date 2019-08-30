@@ -51,8 +51,9 @@ class FileViewPage extends React.Component {
     const { match } = this.props;
     const { username, reponame, branch } = match.params;
 
-    window.location
-      .replace(`${rawServerUrl}/${username}/${reponame}/${branch}/${this.filepath}?token=${localStorage.getItem('token')}`);
+    window.location.replace(
+      `${rawServerUrl}/${username}/${reponame}/${branch}/${this.filepath}?token=${localStorage.getItem('token')}`
+    );
   }
 
   handleEditFile() {
@@ -126,7 +127,12 @@ class FileViewPage extends React.Component {
             <FilePathBreadcrumbSections owner={owner} reponame={reponame} branch={branch} filepath={filepathDirs} />
             <Breadcrumb.Section>{filename}</Breadcrumb.Section>
           </Breadcrumb>
-          <Button compact size="small" className={[styles.copyButton, styles.actionButton].join(' ')} onClick={this.handleCopyPath}>
+          <Button
+            compact
+            size="small"
+            className={[styles.copyButton, styles.actionButton].join(' ')}
+            onClick={this.handleCopyPath}
+          >
             Copy path
           </Button>
         </div>
@@ -137,7 +143,12 @@ class FileViewPage extends React.Component {
               <code>{this.formatBytes(size)}</code>
             </div>
             <div className={styles.fileControls}>
-              <Button compact size="small" className={[styles.rawButton, styles.actionButton].join(' ')} onClick={this.handleOpenRaw}>
+              <Button
+                compact
+                size="small"
+                className={[styles.rawButton, styles.actionButton].join(' ')}
+                onClick={this.handleOpenRaw}
+              >
                 Raw
               </Button>
               {username && username === owner && (

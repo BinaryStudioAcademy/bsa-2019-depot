@@ -82,7 +82,7 @@ class Issues extends Component {
       return true;
     }
     const isOpenedString = queryString.parse(this.props.location.search, { ignoreQueryPrefix: true }).isOpened;
-    return isOpenedString ? isOpenedString : this.state.isOpened;
+    return isOpenedString || this.state.isOpened;
   };
 
   getSortFromQuery = () => {
@@ -90,14 +90,14 @@ class Issues extends Component {
       return 'createdAt_DESC';
     }
     const sortString = queryString.parse(this.props.location.search, { ignoreQueryPrefix: true }).sort;
-    return sortString ? sortString : this.state.sort;
+    return sortString || this.state.sort;
   };
   getOwnerFromQuery = () => {
     if (!this.props.location.search) {
       return null;
     }
     const ownerString = queryString.parse(this.props.location.search, { ignoreQueryPrefix: true }).owner;
-    return ownerString ? ownerString : null;
+    return ownerString || null;
   };
 
   async fetchIssues() {
