@@ -13,19 +13,23 @@ const routes = require('./api/routes/index');
 const routesWhiteList = require('./config/routes-white-list.config');
 const authorizationMiddleware = require('./api/middlewares/authorization.middleware');
 const errorHandlerMiddleware = require('./api/middlewares/error-handler.middleware');
-const socketHandlers = require('./socket/handlers');
+const socketHandlers = require('./socket/socket-handlers');
+const { issuesSocketInjector, commitsSocketInjector } = require('./socket/injector');
 
 const app = express();
 app.use(cors());
 const socketServer = http.Server(app);
 const io = socketIO(socketServer);
 
-io.on('connection', socketHandlers);
+const issuesNsp = io.of('/issues').on('connection', socketHandlers);
+const commitsNsp = io.of('/commits').on('connection', socketHandlers);
 
 app.use(express.json());
 app.use(passport.initialize());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/', authorizationMiddleware(routesWhiteList));
+app.use(issuesSocketInjector(issuesNsp));
+app.use(commitsSocketInjector(commitsNsp));
 
 const staticPath = path.resolve(`${__dirname}/../client/build`);
 app.use(express.static(staticPath));
