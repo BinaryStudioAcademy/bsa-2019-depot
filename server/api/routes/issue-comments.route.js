@@ -25,7 +25,9 @@ router.post('/', (req, res, next) => {
 
 router.put('/', (req, res, next) => {
   const { id, comment: body } = req.body;
-  const userId = req.user.id;
+  const {
+    user: { id: userId }
+  } = req;
   issueCommentService
     .updateIssueCommentById(id, userId, { body })
     .then(data => res.send(data))
