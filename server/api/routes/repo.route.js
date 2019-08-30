@@ -16,6 +16,7 @@ const { getBranches, getBranchTree, getLastCommitOnBranch } = require('../servic
 const { getAllRepoIssues, getRepoIssueByNumber } = require('../services/issue.service');
 const { getLabelsByRepoId } = require('../services/label.service');
 const { getFileContent } = require('../services/files.service');
+const { getStatsByBranch } = require('../services/language-stats.service');
 const ownerOnlyMiddleware = require('../middlewares/owner-only.middleware');
 
 const router = Router();
@@ -86,6 +87,12 @@ router
     const { owner, repoName, branchName } = req.params;
     getLastCommitOnBranch({ user: owner, name: repoName, branch: branchName })
       .then(commit => res.send(commit))
+      .catch(next);
+  })
+  .get('/:repoId/branches/:branch/stats', (req, res, next) => {
+    const { repoId, branch } = req.params;
+    getStatsByBranch(repoId, branch)
+      .then(stats => res.send(stats))
       .catch(next);
   })
   .get('/:owner/:repoName/settings', ownerOnlyMiddleware, (req, res) => {
