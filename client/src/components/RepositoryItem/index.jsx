@@ -23,7 +23,7 @@ class RepositoryItem extends React.Component {
 
   async componentDidMount() {
     const {
-      repo: { name, createdAt },
+      repo: { id: repoId, name, createdAt },
       match: {
         params: { username }
       }
@@ -38,7 +38,7 @@ class RepositoryItem extends React.Component {
 
     if (!isEmpty) {
       try {
-        await this.getRepoBranches(username, name);
+        await this.getRepoBranches(repoId);
         const { repoBranches } = this.state;
         let allRepoCommits = [];
         repoBranches.forEach(async branch => {
@@ -63,8 +63,8 @@ class RepositoryItem extends React.Component {
     this.setState({ isEmpty: data.isEmpty });
   }
 
-  async getRepoBranches(username, reponame) {
-    const branches = await getBranches(username, reponame);
+  async getRepoBranches(repoId) {
+    const branches = await getBranches(repoId);
     this.setState({ repoBranches: branches });
   }
 
