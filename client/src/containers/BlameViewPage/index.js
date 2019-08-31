@@ -39,14 +39,73 @@ class BlameViewPage extends React.Component {
 
   onNormalView() {
     const { history, location } = this.props;
-
     history.push(location.pathname.replace('/blame', '/blob'));
+  }
+
+  blameRaw(blameObj, i) {
+    return (
+      <Grid className={styles.blameGrid} stretched={true}>
+        <Grid.Row className={styles.blameRow} stretched={true}>
+          <Grid.Column width={4} className={styles.blameMain}>
+            <div className={styles.blame}>
+              <div className={styles.blameData}>
+                <div className={styles.blameAvatar}>
+                  <Image src={getUserImgLink(blameObj.imgUrl)} avatar />
+                </div>
+                <div className={styles.blameMessage}>
+                  <p>
+                    {blameObj.message}
+                  </p>
+                </div>
+              </div>
+              <div className={styles.blameDate}>
+                <p>{moment(blameObj.date).fromNow()}</p>
+              </div>
+            </div>
+          </Grid.Column>
+          <Grid.Column className={styles.blobMain}>
+            <div className={styles.blob}>
+              <div className={styles.blobLineNumber}>{i}</div>
+              <div className={styles.blobLineData}>
+                <p>{blameObj.line}</p>
+              </div>
+            </div>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    );
+  }
+
+  blameMultiRaw(blameObj, i) {
+    return (
+      <Grid className={styles.blameGrid} stretched={true}>
+        <Grid.Row className={styles.blameRow} stretched={true}>
+          <Grid.Column width={4} className={styles.blameMain}>
+            <div className={styles.blame}>
+              <div className={styles.blameData}>
+                <div className={styles.blameAvatar}></div>
+                <div className={styles.blameMessage}></div>
+              </div>
+              <div className={styles.blameDate}></div>
+            </div>
+          </Grid.Column>
+          <Grid.Column className={styles.blobMain}>
+            <div className={styles.blob}>
+              <div className={styles.blobLineNumber}>{i}</div>
+              <div className={styles.blobLineData}>
+                <p>{blameObj.line}</p>
+              </div>
+            </div>
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    );
   }
 
   render() {
     const { match, location } = this.props;
-
     const { username: owner, reponame, branch } = match.params;
+
     let filepathDirs, filename;
     filepathDirs = this.filepath.split('/').slice(0, -1); // Remove file name
     filename = location.pathname.split('/').pop();
@@ -61,72 +120,23 @@ class BlameViewPage extends React.Component {
         try {
           nextCommit = blameData[i + 1].commitId;
         } catch (e) {}
+
         if (blameObj.commitId !== nextCommit && isMultiRawCommit !== true) {
           isMultiRawCommit = false;
           return (
             <>
-              <Grid className={styles.blameGrid} stretched={true}>
-                <Grid.Row className={styles.blameRow} stretched={true}>
-                  <Grid.Column width={4} className={styles.blameMain}>
-                    <div className={styles.blame}>
-                      <div className={styles.blameData}>
-                        <div className={styles.blameAvatar}>
-                          <Image src={getUserImgLink(blameObj.imgUrl)} avatar />
-                        </div>
-                        <div className={styles.blameMessage}>
-                          <p>
-                            {/*{blameObj.message.length > 45*/}
-                            {/*  ? (blameObj.message.slice(0, 45) + '...').replace(/\s+(?=\...)/, '')*/}
-                            {/*  : blameObj.message}*/}
-                            {blameObj.message}
-                          </p>
-                        </div>
-                      </div>
-                      <div className={styles.blameDate}>
-                        <p>{moment(blameObj.date).fromNow()}</p>
-                      </div>
-                    </div>
-                  </Grid.Column>
-                  <Grid.Column className={styles.blobMain}>
-                    <div className={styles.blob}>
-                      <div className={styles.blobLineNumber}>{i}</div>
-                      <div className={styles.blobLineData}>
-                        <p>{blameObj.line}</p>
-                      </div>
-                    </div>
-                  </Grid.Column>
-                </Grid.Row>
-              </Grid>
+              {this.blameRaw(blameObj, i)}
               <Grid>
                 <div className={styles.blameDivider}></div>
               </Grid>
             </>
           );
         }
+
         if (blameObj.commitId === nextCommit && isMultiRawCommit === true) {
           return (
             <>
-              <Grid className={styles.blameGrid} stretched={true}>
-                <Grid.Row className={styles.blameRow} stretched={true}>
-                  <Grid.Column width={4} className={styles.blameMain}>
-                    <div className={styles.blame}>
-                      <div className={styles.blameData}>
-                        <div className={styles.blameAvatar}></div>
-                        <div className={styles.blameMessage}></div>
-                      </div>
-                      <div className={styles.blameDate}></div>
-                    </div>
-                  </Grid.Column>
-                  <Grid.Column className={styles.blobMain}>
-                    <div className={styles.blob}>
-                      <div className={styles.blobLineNumber}>{i}</div>
-                      <div className={styles.blobLineData}>
-                        <p>{blameObj.line}</p>
-                      </div>
-                    </div>
-                  </Grid.Column>
-                </Grid.Row>
-              </Grid>
+              {this.blameMultiRaw(blameObj, i)}
             </>
           );
         }
@@ -135,27 +145,7 @@ class BlameViewPage extends React.Component {
           isMultiRawCommit = false;
           return (
             <>
-              <Grid className={styles.blameGrid} stretched={true}>
-                <Grid.Row className={styles.blameRow} stretched={true}>
-                  <Grid.Column width={4} className={styles.blameMain}>
-                    <div className={styles.blame}>
-                      <div className={styles.blameData}>
-                        <div className={styles.blameAvatar}></div>
-                        <div className={styles.blameMessage}></div>
-                      </div>
-                      <div className={styles.blameDate}></div>
-                    </div>
-                  </Grid.Column>
-                  <Grid.Column className={styles.blobMain}>
-                    <div className={styles.blob}>
-                      <div className={styles.blobLineNumber}>{i}</div>
-                      <div className={styles.blobLineData}>
-                        <p>{blameObj.line}</p>
-                      </div>
-                    </div>
-                  </Grid.Column>
-                </Grid.Row>
-              </Grid>
+              {this.blameMultiRaw(blameObj, i)}
               <Grid>
                 <div className={styles.blameDivider}></div>
               </Grid>
@@ -167,38 +157,7 @@ class BlameViewPage extends React.Component {
           isMultiRawCommit = true;
           return (
             <>
-              <Grid className={styles.blameGrid} stretched={true}>
-                <Grid.Row className={styles.blameRow} stretched={true}>
-                  <Grid.Column width={4} className={styles.blameMain}>
-                    <div className={styles.blame}>
-                      <div className={styles.blameData}>
-                        <div className={styles.blameAvatar}>
-                          <Image src={getUserImgLink(blameObj.imgUrl)} avatar />
-                        </div>
-                        <div className={styles.blameMessage}>
-                          <p>
-                            {/*{blameObj.message.length > 45*/}
-                            {/*  ? (blameObj.message.slice(0, 45) + '...').replace(/\s+(?=\...)/, '')*/}
-                            {/*  : blameObj.message}*/}
-                            {blameObj.message}
-                          </p>
-                        </div>
-                      </div>
-                      <div className={styles.blameDate}>
-                        <p>{moment(blameObj.date).fromNow()}</p>
-                      </div>
-                    </div>
-                  </Grid.Column>
-                  <Grid.Column className={styles.blobMain}>
-                    <div className={styles.blob}>
-                      <div className={styles.blobLineNumber}>{i}</div>
-                      <div className={styles.blobLineData}>
-                        <p>{blameObj.line}</p>
-                      </div>
-                    </div>
-                  </Grid.Column>
-                </Grid.Row>
-              </Grid>
+              {this.blameRaw(blameObj, i)}
             </>
           );
         }
