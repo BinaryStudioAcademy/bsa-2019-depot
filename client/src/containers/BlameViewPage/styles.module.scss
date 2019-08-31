@@ -64,22 +64,29 @@
   padding: 3px;
 }
 
+.blameAvatar {
+  min-width: 35px;
+}
+
 .blameData {
   display: flex;
   flex-direction: row;
   align-items: center;
   margin-left: -10px;
+  width: 70%;
 }
 
 .blameDate {
   display: flex;
   align-items: center;
+  white-space: nowrap;
+
 }
 
 .blameMessage {
+  text-overflow: ellipsis;
+  overflow: hidden;
   white-space: nowrap;
-  //overflow: hidden;
-  //text-overflow: ellipsis;
 }
 
 .blobMain {

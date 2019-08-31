@@ -53,13 +53,11 @@ class BlameViewPage extends React.Component {
                   <Image src={getUserImgLink(blameObj.imgUrl)} avatar />
                 </div>
                 <div className={styles.blameMessage}>
-                  <p>
-                    {blameObj.message}
-                  </p>
+                  {blameObj.message}
                 </div>
               </div>
               <div className={styles.blameDate}>
-                <p>{moment(blameObj.date).fromNow()}</p>
+                {moment(blameObj.date).fromNow()}
               </div>
             </div>
           </Grid.Column>
