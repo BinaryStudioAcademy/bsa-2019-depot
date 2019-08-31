@@ -59,7 +59,7 @@ class RepositoryPage extends React.Component {
               <Route exact path={`${match.path}/issues/new`} component={CreateIssuePage} />
               <Route exact path={`${match.path}/issues/:number`} component={IssueComments} />
               <Route exact path={`${match.path}/labels`} component={LabelsTab} />
-              <PrivateTab exact path={`${match.path}/settings`} component={RepoSettings} />
+              <PrivateTab path={`${match.path}/settings`} component={RepoSettings} />
               <Route exact path={`${match.path}/branches`} component={BranchesTab} />
               <PrivateTab path={[`${match.path}/new/:branch`, `${match.path}/edit/:branch`]} component={FileEditPage} />
               <Route path={`${match.path}/blob/:branch`} component={FileViewPage} />

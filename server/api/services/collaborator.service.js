@@ -1,5 +1,6 @@
 const permissionRepository = require('../../data/repositories/permission.repository');
 const collaboratorRepository = require('../../data/repositories/collaborator.repository');
+const repositoryRepository = require('../../data/repositories/repository.repository');
 const { getByUserAndReponame } = require('./repo.service');
 
 const { getUserDetailed } = require('./user.service');
@@ -23,10 +24,13 @@ const addCollaborator = async ({ recipient, username, reponame, repositoryId, ur
 
 const getRepositoryCollaborators = repositoryId => collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId);
 
-const getUserInvitationStatus = (username, reponame, userId) => collaboratorRepository.getUserInvitationStatus(username, reponame, userId);
+const getUserInvitationStatus = async (username, reponame, userId) => {
+  const { id: repositoryId } = await repositoryRepository.getByUsernameAndReponame(username, reponame);
+  return await collaboratorRepository.getUserInvitationStatus(userId, repositoryId);
+};
 
 const acceptInvitation = async (username, reponame, userId) => {
-  const { id } = await getUserInvitationStatus(username, reponame, userId);
+  const [{ id }] = await getUserInvitationStatus(username, reponame, userId);
   await collaboratorRepository.updateById(id, {
     isActivated: true
   });
@@ -36,7 +40,7 @@ const acceptInvitation = async (username, reponame, userId) => {
 };
 
 const declineInvitation = async (username, reponame, userId) => {
-  const { id } = await getUserInvitationStatus(username, reponame, userId);
+  const [{ id }] = await getUserInvitationStatus(username, reponame, userId);
   await collaboratorRepository.deleteById(id);
   return {
     status: true

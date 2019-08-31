@@ -5,9 +5,14 @@ const { CollaboratorModel, PermissionModel, UserModel, RepositoryModel } = requi
 const Op = Sequelize.Op;
 
 class CollaboratorRepository extends BaseRepository {
-  findRepoById(id) {
+  findRepoById(repositoryId) {
     return this.model.findAll({
-      where: { id }
+      where: { 
+        repositoryId,
+        deletedAt: {
+          [Op.is]: null
+        }
+      }
     });
   };
 
@@ -41,25 +46,15 @@ class CollaboratorRepository extends BaseRepository {
     });
   };
 
-  getUserInvitationStatus(username, reponame, userId) {
+  getUserInvitationStatus(userId, repositoryId) {
     return this.model.findAll({
       where: { 
         userId,
+        repositoryId,
         deletedAt: {
           [Op.is]: null
         }
-      },
-      include: [{
-        model: UserModel,
-        where: {
-          username
-        },
-      }, {
-        model: RepositoryModel,
-        where: {
-          name: reponame
-        }
-      }]
+      }
     });
   };
 

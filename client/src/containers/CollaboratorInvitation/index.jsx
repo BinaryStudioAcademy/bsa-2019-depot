@@ -41,15 +41,15 @@ class CollaboratorInvitation extends React.Component {
   acceptInvitation = async () => {
     const { userId, match, history } = this.props;
     const { username, reponame } = match.params;
-    await acceptInvitation(username, reponame, userId);
+    await acceptInvitation({ username, reponame, userId });
     history.push(`/${username}/${reponame}`);
   };
 
   declineInvitation = async () => {
     const { userId, match, history } = this.props;
     const { username, reponame } = match.params;
-    await declineInvitation(username, reponame, userId);
-    history.push('/dashboard');
+    await declineInvitation({ username, reponame, userId });
+    history.push('/');
   };
 
   renderHaveInviteComponent = () => {
@@ -64,7 +64,7 @@ class CollaboratorInvitation extends React.Component {
           repository.
         </p>
         <Button type="button" positive onClick={this.acceptInvitation}>
-          Join {username / reponame}
+          Join {username}/{reponame}
         </Button>
         <Button type="button" onClick={this.declineInvitation}>
           Decline

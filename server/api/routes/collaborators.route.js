@@ -19,7 +19,7 @@ router.get('/:username/:reponame/:userId', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  const { username, reponame, userId } = req.params;
+  const { username, reponame, userId } = req.body;
   acceptInvitation(username, reponame, userId)
     .then(data => res.send(data))
     .catch(next);

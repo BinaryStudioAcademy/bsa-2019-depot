@@ -90,15 +90,16 @@ const getUsersToInviting = async ({ orgID, username }) => {
 };
 
 const getUsersForCollaboratorsAddition = async ({ username, repoId, userId }) => {
-  const repos = (await CollaboratorRepository.findRepoById(repoId))
-    .map(repo => repo.get({plain: true}))
-    .map(({ userId }) => userId);
   const users = (await UserRepository.findUserByLetter(username))
-    .map(user => user.get({plain: true}))
-    .filter(({ id }) => !repos.includes(id) && id !== userId)
+    .filter(({ id }) => id !== userId);
+  
+  const repos = (await CollaboratorRepository.findRepoById(repoId))
+    .map(({ userId }) => userId);
+
+  return users
+    .filter(({ id }) => !repos.includes(id))
     .map(({ username }) => username)
     .slice(0, 6);
-  return users;
 };
 
 module.exports = {
