@@ -18,8 +18,15 @@ import { fetchCurrentRepo } from '../../routines/routines';
 import { clearRepoState } from './actions';
 import Spinner from '../../components/Spinner';
 import CodeTab from '../../scenes/CodeTab';
+import { socketInit } from '../../helpers/socketInitHelper';
 
 class RepositoryPage extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.onChangeToPivate = this.onChangeToPivate.bind(this);
+  }
+
   componentDidMount() {
     const {
       fetchCurrentRepo,
@@ -29,10 +36,38 @@ class RepositoryPage extends React.Component {
     } = this.props;
 
     fetchCurrentRepo({ username, reponame });
+    this.initSocket();
   }
 
   componentWillUnmount() {
     this.props.clearRepoState();
+    const { id } = this.props;
+    this.socket.emit('leaveRoom', id);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.id !== prevProps.id) {
+      const { id } = this.props;
+      this.socket.emit('createRoom', id);
+    }
+  }
+
+  onChangeToPivate(changedRepoId) {
+    const {
+      id: repoId,
+      userId,
+      owner: { username: repoOwnerName, id: repoOwnerId }
+    } = this.props;
+
+    if (changedRepoId === repoId && repoOwnerId !== userId) {
+      this.props.history.push(`/${repoOwnerName}`);
+    }
+  }
+
+  initSocket() {
+    this.socket = socketInit('repos');
+
+    this.socket.on('changedToPrivate', this.onChangeToPivate);
   }
 
   render() {
@@ -100,33 +135,33 @@ RepositoryPage.propTypes = {
     url: PropTypes.string.isRequired
   }).isRequired,
   location: PropTypes.exact({
-    key: PropTypes.string.isRequired,
+    key: PropTypes.string,
     pathname: PropTypes.string.isRequired,
     search: PropTypes.string.isRequired,
     hash: PropTypes.string.isRequired,
     state: PropTypes.array
-  }).isRequired
+  }).isRequired,
+  id: PropTypes.string.isRequired,
+  issuesCount: PropTypes.string,
+  branches: PropTypes.array.isRequired,
+  defaultBranch: PropTypes.string,
+  loading: PropTypes.bool.isRequired,
+  userId: PropTypes.string,
+  owner: PropTypes.object,
+  history: PropTypes.object
 };
 
 const mapStateToProps = ({
-  currentRepo : {
+  currentRepo: {
     repository: {
-      currentRepoInfo: {
-        id,
-        issuesCount,
-        branches,
-        defaultBranch
-      },
+      currentRepoInfo: { id, issuesCount, branches, defaultBranch, user: owner },
       loading
     }
+  },
+  profile: {
+    currentUser: { id: userId }
   }
-}) => ({
-  id,
-  issuesCount,
-  branches,
-  defaultBranch,
-  loading
-});
+}) => ({ id, issuesCount, branches, defaultBranch, loading, owner, userId });
 
 const mapDispatchToProps = {
   fetchCurrentRepo,
