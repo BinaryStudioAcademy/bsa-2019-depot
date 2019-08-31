@@ -52,14 +52,14 @@ class RepositoryPage extends React.Component {
     }
   }
 
-  onChangeToPivate(data) {
+  onChangeToPivate(changedRepoId) {
     const {
       id: repoId,
       userId,
       owner: { username: repoOwnerName, id: repoOwnerId }
     } = this.props;
 
-    if (data === repoId && repoOwnerId !== userId) {
+    if (changedRepoId === repoId && repoOwnerId !== userId) {
       this.props.history.push(`/${repoOwnerName}`);
     }
   }
