@@ -64,11 +64,12 @@ const updateLanguageStats = async (owner, reponame, branch) => {
     };
   });
 
-  const langs = await Promise.all(filesData.map(({ filename, fileId }) => repo.getBlob(fileId)
-    .then((blob) => {
+  const langs = await Promise.all(
+    filesData.map(({ filename, fileId }) => repo.getBlob(fileId).then((blob) => {
       const content = blob.toString();
       return detect.contents(filename, content);
-    })));
+    }))
+  );
 
   let fileCount = 0;
   const statCount = langs.reduce((map, langName) => {
@@ -91,7 +92,10 @@ const updateLanguageStats = async (owner, reponame, branch) => {
     return updatedMap;
   }, []);
 
-  const statPercentage = statCount.map(([langName, langCount]) => [langName, ((langCount / fileCount) * 100).toFixed(1)]);
+  const statPercentage = statCount.map(([langName, langCount]) => [
+    langName,
+    ((langCount / fileCount) * 100).toFixed(1)
+  ]);
   return languageStatsService.upsertStats(statPercentage, reponame, owner, branch);
 };
 

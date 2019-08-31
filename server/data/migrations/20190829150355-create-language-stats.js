@@ -1,4 +1,3 @@
-
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.sequelize.transaction(transaction => Promise.all([
     queryInterface.createTable(
@@ -35,7 +34,5 @@ module.exports = {
       { transaction }
     )
   ])),
-  down: queryInterface => queryInterface.sequelize.transaction(transaction => Promise.all([
-    queryInterface.dropTable('languageStats', { transaction })
-  ]))
+  down: queryInterface => queryInterface.sequelize.transaction(transaction => Promise.all([queryInterface.dropTable('languageStats', { transaction })]))
 };

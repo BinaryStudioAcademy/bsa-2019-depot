@@ -19,6 +19,7 @@ const BranchesList = ({ branches, username, reponame }) => {
       </List>
     );
   }
+  // return (<div>fasfasf</div>);
   return (
     <List divided className={styles.branchesList} verticalAlign="middle">
       {branches.map((branch, idx) => {

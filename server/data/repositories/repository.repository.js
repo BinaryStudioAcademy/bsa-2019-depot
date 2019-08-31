@@ -72,6 +72,22 @@ class RepositoryRepository extends BaseRepository {
             WHERE "repository"."id" = "repositories"."forkedFromRepoId"
             AND "repository"."deletedAt" IS NULL)`),
             'forkedCount'
+          ],
+          [
+            sequelize.literal(`
+            (SELECT COUNT(*)
+            FROM "stars"
+            WHERE "repository"."id" = "stars"."repositoryId"
+            AND "stars"."deletedAt" IS NULL)`),
+            'starsCount'
+          ],
+          [
+            sequelize.literal(`
+            (SELECT COUNT(*)
+            FROM "issues"
+            WHERE "repository"."id" = "issues"."repositoryId"
+            AND "issues"."deletedAt" IS NULL)`),
+            'issuesCount'
           ]
         ]
       },
@@ -86,6 +102,10 @@ class RepositoryRepository extends BaseRepository {
               attributes: ['id', 'username']
             }
           ]
+        },
+        {
+          model: UserModel,
+          attributes: ['id', 'username']
         }
       ]
     });
