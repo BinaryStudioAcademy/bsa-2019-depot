@@ -1,8 +1,9 @@
 const collaboratorService = require('../api/services/collaborator.service');
+const commitService = require('../api/services/commit.service');
 const issueService = require('../api/services/issue.service');
 const permissionLevel = require('../helpers/permission.level.helper');
 
-const checkPermissions = async (issueId, userId) => {
+const checkIssuePermissions = async (issueId, userId) => {
   const { repository: { id: repositoryId } } = await issueService.getRepoByIssueId(issueId);
   const [collaborator] = await collaboratorService.getUserRightsByUserIdAndRepositoryId(userId, repositoryId);
   let permissionName;
@@ -12,4 +13,17 @@ const checkPermissions = async (issueId, userId) => {
   return Boolean(permissionName === (permissionLevel.admin || permissionLevel.write));
 };
 
-module.exports = { checkPermissions };
+const checkCommitCommentPermissions = async (commitId, userId) => {
+  const { repository: { id: repositoryId } } = await commitService.getRepoByCommitId(commitId);
+  const [collaborator] = await collaboratorService.getUserRightsByUserIdAndRepositoryId(userId, repositoryId);
+  let permissionName;
+  if(collaborator) {
+    permissionName = collaborator.permission.name;
+  }
+  return Boolean(permissionName === (permissionLevel.admin || permissionLevel.write));
+};
+
+module.exports = { 
+  checkIssuePermissions,
+  checkCommitCommentPermissions
+ };

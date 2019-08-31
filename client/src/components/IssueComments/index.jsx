@@ -32,7 +32,7 @@ class IssueComments extends React.Component {
       isDisabled: true,
       isOwnIssue: false,
       issuesBaseUrl: this.props.match.url.replace(/\/[^/]+$/, ''),
-      accessPermissions: null
+      isAccessGranted: false
     };
 
     this.onCommentCreate = this.onCommentCreate.bind(this);
@@ -64,11 +64,12 @@ class IssueComments extends React.Component {
     if (userPermissions) {
       accessPermissions = userPermissions.permission.name;
     }
+    const isAccessGranted = Boolean(accessPermissions === ('ADMIN' || 'WRITE'));
 
     this.setState({
       currentIssue,
       issueComments,
-      accessPermissions,
+      isAccessGranted,
       loading: false
     });
     this.initSocket();
@@ -198,10 +199,10 @@ class IssueComments extends React.Component {
   isOwnIssue() {
     const { userId } = this.props;
     const {
-      accessPermissions,
+      isAccessGranted,
       currentIssue: { userId: issueUserId }
     } = this.state;
-    return userId === issueUserId || accessPermissions === ('ADMIN' || 'WRITE');
+    return userId === issueUserId || isAccessGranted;
   }
 
   redirectToCreateNewIssue() {

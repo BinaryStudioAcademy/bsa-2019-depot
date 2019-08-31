@@ -263,6 +263,14 @@ const createCommit = async ({ ...commitData }) => {
   }
 };
 
+const getRepoByCommitId = async (commitId)  => {
+  try {
+    return await CommitRepository.getRepoByCommitId(commitId);
+  } catch (err) {
+    return Promise.reject(new Error(err.message));
+  }
+};
+
 module.exports = {
   getCommits,
   getCommitDiff,
@@ -270,5 +278,6 @@ module.exports = {
   modifyFile,
   deleteFile,
   createCommit,
-  getCommitCount
+  getCommitCount,
+  getRepoByCommitId
 };

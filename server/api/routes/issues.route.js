@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const issueService = require('../services/issue.service');
 const issueCommentService = require('../services/issue-comment.service');
-const { checkPermissions } = require('../../helpers/check.permission.level.helper');
+const { checkIssuePermissions } = require('../../helpers/check.permission.level.helper');
 
 const router = Router();
 
@@ -33,7 +33,7 @@ router
 
     const userId = req.user.id;
     const authorId = await issueService.getAuthorId(id);
-    const isAccessGranted = checkPermissions(id, userId);
+    const isAccessGranted = checkIssuePermissions(id, userId);
 
     if (userId !== authorId && !isAccessGranted) {
       res.status(401).send('Only issue author can update it');
@@ -62,7 +62,7 @@ router
     const userId = req.user.id;
     const authorId = await issueService.getAuthorId(id);
     const repoOwnerId = await issueService.getRepoOwnerId(id);
-    const isAccessGranted = checkPermissions(id, userId);
+    const isAccessGranted = checkIssuePermissions(id, userId);
     if (userId !== authorId && userId !== repoOwnerId && !isAccessGranted) {
       res.status(401).send('Only issue author or repo owner can close it');
       return;
@@ -78,7 +78,7 @@ router
     const userId = req.user.id;
     const authorId = await issueService.getAuthorId(id);
     const repoOwnerId = await issueService.getRepoOwnerId(id);
-    const isAccessGranted = checkPermissions(id, userId);
+    const isAccessGranted = checkIssuePermissions(id, userId);
 
     if (userId !== authorId && userId !== repoOwnerId && !isAccessGranted) {
       res.status(401).send('Only issue author or repo owner can reopen it');
@@ -94,7 +94,7 @@ router
     const { id } = req.params;
     const userId = req.user.id;
     const authorId = await issueService.getAuthorId(id);
-    const isAccessGranted = checkPermissions(id, userId);
+    const isAccessGranted = checkIssuePermissions(id, userId);
     if (userId !== authorId && !isAccessGranted) {
       res.status(401).send('Only issue author can update it');
       return;
