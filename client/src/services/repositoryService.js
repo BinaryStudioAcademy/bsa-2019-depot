@@ -77,3 +77,11 @@ export const setStar = async request => {
   });
   return response.json();
 };
+
+export const getStargazers = async repoId => {
+  const response = await callWebApi({
+    endpoint: `/api/repos/${repoId}/stargazers`,
+    type: 'GET'
+  });
+  return response.json();
+};
