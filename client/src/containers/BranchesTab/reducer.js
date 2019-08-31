@@ -2,7 +2,6 @@ import { fetchBranches } from '../../routines/routines';
 
 const initialState = {
   branches: [],
-  lastCommits: {},
   loading: false,
   error: null
 };
@@ -15,11 +14,10 @@ export const branchesData = (state = initialState, action) => {
       loading: true
     };
   case fetchBranches.SUCCESS:
-    const { branches, lastCommits } = action.payload;
+    const { branches } = action.payload;
     return {
       ...state,
-      branches,
-      lastCommits
+      branches
     };
   case fetchBranches.FAILURE:
     return {

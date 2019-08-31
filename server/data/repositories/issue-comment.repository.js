@@ -3,11 +3,28 @@ const { IssueCommentModel, UserModel } = require('../models/index');
 
 class IssueCommentRepository extends BaseRepository {
   addIssueComment({ ...issueCommentData }) {
-    return this.create(issueCommentData);
+    return this.create(issueCommentData).then(data => {
+      const { id } = data.get({ plain: true });
+      return this.model.findOne({
+        where: { id },
+        include: [
+          {
+            model: UserModel,
+            attributes: ['username']
+          }
+        ]
+      });
+    });
   }
 
-  updateIssueCommentById(id, { ...issueCommentData }) {
-    return this.updateById(id, issueCommentData);
+  async updateIssueCommentById(id, issueCommentData) {
+    const [, data] = await this.model.update(issueCommentData, {
+      where: { id },
+      returning: true,
+      plain: true
+    });
+
+    return data;
   }
 
   deleteIssueCommentById(id) {
@@ -22,8 +39,15 @@ class IssueCommentRepository extends BaseRepository {
           model: UserModel,
           attributes: ['username']
         }
-      ]
+      ],
+      order: [['createdAt', 'ASC']]
     });
+  }
+
+  async getAuthorId(id) {
+    const comment = await this.model.findOne({ where: { id } });
+    const { userId: authorId } = comment.get({ plain: true });
+    return authorId;
   }
 }
 

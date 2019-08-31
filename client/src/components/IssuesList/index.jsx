@@ -8,15 +8,12 @@ import { Link } from 'react-router-dom';
 import './styles.module.scss';
 
 const IssuesList = props => {
-  const {
-    issues,
-    match: { url }
-  } = props;
+  const { issues } = props;
   return (
     issues.length > 0 && (
       <List divided verticalAlign="middle">
         {issues.map(issue => (
-          <List.Item key={issue.number}>
+          <List.Item key={issue.id}>
             <List.Content floated="right">
               <Icon name="comments outline" /> {issue.commentCount}
             </List.Content>
@@ -35,7 +32,9 @@ const IssuesList = props => {
             <Icon name={issue.isOpened ? 'info circle' : 'check'} color={issue.isOpened ? 'green' : 'red'} />
             <List.Content>
               <List.Header>
-                <Link to={`${url}/${issue.number}`}>{issue.title}</Link>
+                <Link to={`/${issue.user.username}/${issue.repository.name}/issues/${issue.number}`}>
+                  {issue.title}
+                </Link>
               </List.Header>
               <List.Description>
                 {`#${issue.number} opened ${moment(issue.createdAt).fromNow()} by ${issue.user.username}`}
@@ -74,13 +73,7 @@ IssuesList.propTypes = {
       commentCount: PropTypes.number,
       createdAt: PropTypes.string.isRequired
     })
-  ).isRequired,
-  match: PropTypes.exact({
-    params: PropTypes.object.isRequired,
-    isExact: PropTypes.bool.isRequired,
-    path: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired
-  }).isRequired
+  ).isRequired
 };
 
 export default IssuesList;

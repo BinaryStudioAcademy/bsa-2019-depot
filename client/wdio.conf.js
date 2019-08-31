@@ -19,7 +19,7 @@ exports.config = {
   suites: {
     //login: [testPattern]
   },
-  sync: false,
+  //sync: false,
   // Patterns to exclude.
   exclude: [
     // 'path/to/excluded/files'
@@ -59,6 +59,9 @@ exports.config = {
   mochaOpts: {
     ui: 'bdd',
     timeout: 90000
+  },
+  onPrepare: function(config, capabilities) {
+    require('./clearSettingsData.js')();
   },
   afterTest: function(test) {
     if (test.passed) {

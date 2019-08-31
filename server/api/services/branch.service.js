@@ -1,19 +1,13 @@
 const NodeGit = require('nodegit');
 const repoHelper = require('../../helpers/repo.helper');
 const userRepository = require('../../data/repositories/user.repository');
+const branchRepository = require('../../data/repositories/branch.repository');
 
-const getBranches = async ({ user, repoName }) => {
-  const pathToRepo = repoHelper.getPathToRepo(user, repoName);
-  const repo = await NodeGit.Repository.open(pathToRepo);
-  const refNames = await repo.getReferenceNames(NodeGit.Reference.TYPE.LISTALL);
+const getBranches = repoId => branchRepository.getByRepoId(repoId);
 
-  // Cut the 'refs/heads/' from the reference name
-  return refNames.map(refName => refName.replace('refs/heads/', ''));
-};
+const getBranchInfo = (branchName, repoId) => branchRepository.getByNameAndRepoId(branchName, repoId);
 
-const getLastModifiedCommit = async ({
-  user, name, branch, entry
-}) => {
+const getLastModifiedCommit = async ({ user, name, branch, entry }) => {
   const pathToRepo = repoHelper.getPathToRepo(user, name);
   const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
@@ -69,9 +63,7 @@ const traverseFileTree = async (user, name, branch, tree) => {
   return fileTree;
 };
 
-const getBranchTree = async ({
-  user, name, branch, pathToDir
-}) => {
+const getBranchTree = async ({ user, name, branch, pathToDir }) => {
   const pathToRepo = repoHelper.getPathToRepo(user, name);
   const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
@@ -111,10 +103,8 @@ const getLastCommitOnBranch = async ({ user, name, branch }) => {
   };
 };
 
-const getFileContent = async ({
-  user, name, branch, filepath
-}) => {
-  const pathToRepo = repoHelper.getPathToRepo(user, name);
+const checkFileExists = async (owner, repoName, branch, filepath) => {
+  const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
   const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
   const entry = await lastCommitOnBranch.getEntry(filepath);
@@ -125,9 +115,7 @@ const getFileContent = async ({
   };
 };
 
-const getFileBlame = async ({
-  user, name, branch, filepath
-}) => {
+const getFileBlame = async ({ user, name, branch, filepath }) => {
   const pathToRepo = repoHelper.getPathToRepo(user, name);
   const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
@@ -135,7 +123,7 @@ const getFileBlame = async ({
   const blob = await entry.getBlob();
   const BlameArray = [];
 
-  await NodeGit.Blame.file(repo, filepath).then(async (blame) => {
+  await NodeGit.Blame.file(repo, filepath).then(async blame => {
     let count = 0;
     for (let i = 0; i < blame.getHunkCount(); i += 1) {
       const hunk = blame.getHunkByIndex(i);
@@ -169,8 +157,9 @@ const getFileBlame = async ({
 
 module.exports = {
   getBranches,
+  getBranchInfo,
   getBranchTree,
   getLastCommitOnBranch,
-  getFileContent,
-  getFileBlame
+  getFileBlame,
+  checkFileExists
 };

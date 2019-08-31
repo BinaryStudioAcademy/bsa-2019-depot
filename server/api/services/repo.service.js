@@ -10,10 +10,10 @@ const branchRepository = require('../../data/repositories/branch.repository');
 const commitRepository = require('../../data/repositories/commit.repository');
 
 const CustomError = require('../../helpers/error.helper');
+const { defaultLabels } = require('../../config/labels.config');
+const { createLabel } = require('./label.service');
 
-const initialCommit = async ({
-  owner, email, repoName, files
-}) => {
+const initialCommit = async ({ owner, email, repoName, files }) => {
   const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
   const repo = await NodeGit.Repository.open(pathToRepo);
   const treeBuilder = await NodeGit.Treebuilder.create(repo, null);
@@ -61,10 +61,8 @@ const initialCommit = async ({
   );
 };
 
-const createRepo = async (repoData) => {
-  const {
-    owner, name, userId, description
-  } = repoData;
+const createRepo = async repoData => {
+  const { owner, name, userId, description, isPublic } = repoData;
   let result = 'Repo was created';
   const pathToRepo = repoHelper.getPathToRepo(owner, name);
   await NodeGit.Repository.init(pathToRepo, 1)
@@ -86,12 +84,16 @@ const createRepo = async (repoData) => {
     .catch(() => {
       Promise.reject(new CustomError(404, 'Error! Repos wasn`t created'));
     });
-
-  await repoRepository.create({
+  const repository = await repoRepository.create({
     userId,
     name,
-    description
+    description,
+    isPublic
   });
+
+  // add default labels for repository
+  const { id } = repository;
+  await Promise.all(defaultLabels.map(label => createLabel({ repositoryId: id, ...label })));
 
   const initialData = repoHelper.generateInitialData({ ...repoData });
   // Initial data has to contain 'email' (of user) and 'files' in form of [ { filename, content }, {... ]
@@ -116,7 +118,7 @@ const isEmpty = async ({ owner, reponame }) => {
   try {
     let result;
     const pathToRepo = repoHelper.getPathToRepo(owner, reponame);
-    await NodeGit.Repository.open(pathToRepo).then((repo) => {
+    await NodeGit.Repository.open(pathToRepo).then(repo => {
       result = repo.isEmpty();
     });
     return {
@@ -134,11 +136,19 @@ const getByUserAndReponame = async ({ owner, reponame }) => {
   if (!user) {
     return Promise.reject(new CustomError(404, `User ${owner} not found`));
   }
-  const repository = await repoRepository.getByUserAndReponame(user.id, reponame);
+  const repository = await repoRepository.getByUserAndReponame(user.get({ plain: true }).id, reponame);
   if (!repository) {
     return Promise.reject(new CustomError(404, `Repository ${reponame} not found`));
   }
-  return repository;
+  const branches = await branchRepository.getByRepoId(repository.get({ plain: true }).id);
+  const branchesNames = branches.map(branch => {
+    const { name } = branch.get({ plain: true });
+    return name;
+  });
+  return {
+    ...repository.get({ plain: true }),
+    branches: branchesNames
+  };
 };
 
 const updateByUserAndReponame = async ({ owner, reponame, data }) => {
@@ -197,17 +207,15 @@ const getReposNames = async ({ user: username, filter, limit }) => {
   return repos.map(({ name }) => name);
 };
 
-const getReposData = async ({ username }) => {
+const getReposData = async ({ username, isOwner }) => {
   const user = await userRepository.getByUsername(username);
   if (!user) {
     return Promise.reject(new CustomError(404, `User ${username} not found`));
   }
-  return repoRepository.getByUserWithOptions(user.id);
+  return repoRepository.getByUserWithOptions(user.id, isOwner);
 };
 
-const forkRepo = async ({
-  userId, username, owner, name, website, description, forkedFromRepoId
-}) => {
+const forkRepo = async ({ userId, username, owner, name, website, description, forkedFromRepoId }) => {
   try {
     const source = repoHelper.getPathToRepo(owner, name);
     const target = repoHelper.getPathToRepo(username, name);
@@ -221,7 +229,7 @@ const forkRepo = async ({
         mode: true,
         cover: true
       },
-      (err) => {
+      err => {
         if (err) throw err;
       }
     );
@@ -249,6 +257,8 @@ const setStar = async (userId, repositoryId) => {
   return Number.isInteger(result) ? {} : starRepository.getStar(userId, repositoryId);
 };
 
+const getRepoData = async repositoryId => repoRepository.getRepositoryById(repositoryId);
+
 module.exports = {
   createRepo,
   renameRepo,
@@ -260,5 +270,6 @@ module.exports = {
   getReposData,
   setStar,
   getByUserAndReponame,
-  updateByUserAndReponame
+  updateByUserAndReponame,
+  getRepoData
 };

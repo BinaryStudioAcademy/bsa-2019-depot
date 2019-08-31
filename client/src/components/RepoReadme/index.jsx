@@ -21,7 +21,7 @@ const RepoReadme = ({ content, showEdit, onReadmeEdit }) => {
         )}
       </Header>
       <Segment padded>
-        <ReactMarkdown source={content} />
+        <ReactMarkdown source={content} className={styles.markdownContainer} />
       </Segment>
     </Segment.Group>
   );

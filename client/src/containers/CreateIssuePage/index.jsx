@@ -188,7 +188,9 @@ const mapStateToProps = ({
   },
   issuesData: { issues },
   currentRepo: {
-    currentRepoInfo: { id, name }
+    repository: {
+      currentRepoInfo: { id, name }
+    }
   }
 }) => ({
   userId,

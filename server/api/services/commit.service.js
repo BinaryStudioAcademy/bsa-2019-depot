@@ -8,20 +8,20 @@ const userRepository = require('../../data/repositories/user.repository');
 const RepoRepository = require('../../data/repositories/repository.repository');
 const CustomError = require('../../helpers/error.helper');
 
-const getCommitsAndCreatedRepoByDate = async (data) => {
+const getCommitsAndCreatedRepoByDate = async data => {
   const { user } = data;
   const repoList = await getReposNames(data);
   let globalCommits = [];
-  const promises = repoList.map((repoName) => {
+  const promises = repoList.map(repoName => {
     const pathToRepo = repoHelper.getPathToRepo(user, repoName);
-    return NodeGit.Repository.open(pathToRepo).then((repo) => {
+    return NodeGit.Repository.open(pathToRepo).then(repo => {
       isEmpty({ owner: user, reponame: repo });
       const walker = NodeGit.Revwalk.create(repo);
       walker.pushGlob('refs/heads/*');
       walker.sorting(NodeGit.Revwalk.SORT.TIME);
       return walker
         .getCommitsUntil(commit => commit)
-        .then((commits) => {
+        .then(commits => {
           const repoCommits = commits.map(commit => ({
             sha: commit.sha(),
             author: commit.author().name(),
@@ -91,15 +91,17 @@ const getCommitsAndCreatedRepoByDate = async (data) => {
   return { userActivitybyDate, monthActivity };
 };
 
-const getCommits = async ({ user, name, branch }) => {
-  const pathToRepo = repoHelper.getPathToRepo(user, name);
+const getCommits = async (branch, repoId) => {
+  const { name, userId } = await RepoRepository.getById(repoId);
+  const { username } = await userRepository.getById(userId);
+  const pathToRepo = repoHelper.getPathToRepo(username, name);
   const allCommits = [];
   await NodeGit.Repository.open(pathToRepo)
     .then(repo => repo.getBranchCommit(branch))
-    .then((firstCommitOnMaster) => {
+    .then(firstCommitOnMaster => {
       const history = firstCommitOnMaster.history(NodeGit.Revwalk.SORT.TIME);
-      const commitPromise = new Promise((resolve) => {
-        history.on('commit', (commit) => {
+      const commitPromise = new Promise(resolve => {
+        history.on('commit', commit => {
           const commitObject = {
             sha: commit.sha(),
             author: commit.author().name(),
@@ -118,8 +120,8 @@ const getCommits = async ({ user, name, branch }) => {
   return allCommits;
 };
 
-const getCommitCount = async ({ user, name, branch }) => {
-  const commitListForBranch = await getCommits({ user, name, branch });
+const getCommitCount = async (branch, repoId) => {
+  const commitListForBranch = await getCommits(branch, repoId);
   return { count: commitListForBranch.length };
 };
 
@@ -206,9 +208,7 @@ const modifyFile = async ({
   return commit;
 };
 
-const deleteFile = async ({
-  owner, repoName, branch, author, email, filepath
-}) => {
+const deleteFile = async ({ owner, repoName, branch, author, email, filepath }) => {
   const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
   const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(branch);

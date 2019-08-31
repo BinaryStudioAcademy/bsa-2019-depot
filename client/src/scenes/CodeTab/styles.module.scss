@@ -48,12 +48,6 @@ $black: #363a44;
   }
 }
 
-:local(.readmeHeader) {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 :global(.ui.dropdown .menu > .item):local(.branchesMenuItem) {
   border-bottom: 1px solid #eaecef;
   padding: 8px 8px 8px 30px;
@@ -74,11 +68,6 @@ $black: #363a44;
   margin: 0px 0px 10px 0px;
   overflow: hidden;
 }
-
-:global(.ui.segment):local(.languageSegment) {
-  padding: 0.25em;
-}
-
 :local(.repoDescription) {
   margin: 0.35em 0em 1em;
   line-height: 22px;
@@ -113,110 +102,8 @@ $black: #363a44;
   color: $black;
 }
 
-:local(.repoNav) {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-:global(.ui.button):local(.repoBranchesButton) {
-  margin-right: 6px;
-  text-overflow: ellipsis;
-  &:active,
-  &:focus {
-    background-color: #e9ecef;
-    background-image: none;
-    border-color: rgba(27, 31, 35, 0.35);
-    box-shadow: inset 0 0.15em 0.3em rgba(27, 31, 35, 0.15);
-  }
-}
-
-:global(.ui.button):local(.cloneRepoButton) {
-  margin-left: 6px;
-  margin-right: 0;
-  background-color: $blue;
-  background-image: none;
-  color: #fff;
-  &:hover {
-    background-color: $blue;
-    border-color: rgba(27, 31, 35, 0.5);
-    color: #fff;
-    background-image: none;
-  }
-  &:active {
-    background-color: $blue;
-    color: #fff;
-    border-color: rgba(27, 31, 35, 0.5);
-    box-shadow: inset 0 0.15em 0.3em rgba(27, 31, 35, 0.15);
-  }
-}
-
 :local(.repoLinkInput) {
   width: 100%;
-}
-
-:global(.ui.popup):local(.repoPopup) {
-  padding: 0;
-  height: initial;
-  :local(.repoPopupBody) {
-    padding: 0.833em 1em;
-  }
-}
-
-:global(.ui.buttons .button:first-child):local(.repoPopupAction) {
-  border-left: 1px solid #e1e4e8;
-}
-
-:global(.ui.button):local(.repoPopupAction) {
-  box-shadow: none;
-  border: 1px solid #e1e4e8;
-  border-bottom-left-radius: 3px;
-  background-color: #fff;
-  background-image: none;
-  color: $blue;
-  padding: 10px 0;
-  text-align: center;
-  &:hover {
-    background-color: $blue;
-    background-image: none;
-    border-color: $blue;
-    color: #fff;
-  }
-  &:active,
-  &:focus {
-    background-color: #fff;
-    background-image: none;
-    color: $blue;
-  }
-}
-
-:global(.ui.dropdown input):local(.searchBranchInput) {
-  border: 1px solid #dfe2e5;
-  border-radius: 3px;
-  display: block;
-  max-width: 100%;
-  padding: 10px 5px;
-  width: 100%;
-  font-size: 87.5%;
-}
-:global(.ui.floating.dropdown > .menu):local(.searchBranchList) {
-  min-width: 300px;
-  min-height: 300px;
-  padding: 0.833em 0.2em;
-  background-color: #fff;
-  border: 1px solid rgba(27, 31, 35, 0.15);
-  border-radius: 3px;
-  box-shadow: 0 3px 12px rgba(27, 31, 35, 0.15);
-  color: #586069;
-  font-size: 75%;
-}
-
-.repoActions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
 }
 
 :global(.ui.message):local(.readmeTip) {
@@ -225,4 +112,8 @@ $black: #363a44;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+:global(.ui.container):local(.contentContainer) {
+  max-width: 1000px !important;
 }

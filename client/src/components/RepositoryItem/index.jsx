@@ -23,7 +23,7 @@ class RepositoryItem extends React.Component {
 
   async componentDidMount() {
     const {
-      repo: { name, createdAt },
+      repo: { id: repoId, name, createdAt },
       match: {
         params: { username }
       }
@@ -35,14 +35,14 @@ class RepositoryItem extends React.Component {
     await this.checkIfEmpty(username, name);
 
     const { isEmpty } = this.state;
-
-    if (!isEmpty) {
+    const { repoBranches } = this.state;
+    if (!isEmpty || (repoBranches && repoBranches.length)) {
       try {
-        await this.getRepoBranches(username, name);
-        const { repoBranches } = this.state;
+        await this.getRepoBranches(repoId);
+
         let allRepoCommits = [];
         repoBranches.forEach(async branch => {
-          const allBranchCommits = this.getRepoCommits(username, name, branch);
+          const allBranchCommits = this.getRepoCommits(repoId, branch.name);
           allRepoCommits.push(allBranchCommits);
         });
         Promise.all(allRepoCommits).then(data => {
@@ -63,13 +63,13 @@ class RepositoryItem extends React.Component {
     this.setState({ isEmpty: data.isEmpty });
   }
 
-  async getRepoBranches(username, reponame) {
-    const branches = await getBranches(username, reponame);
+  async getRepoBranches(repoId) {
+    const branches = await getBranches(repoId);
     this.setState({ repoBranches: branches });
   }
 
-  getRepoCommits(username, reponame, branch) {
-    return getCommits(username, reponame, branch);
+  getRepoCommits(repoId, branchName) {
+    return getCommits(repoId, branchName);
   }
 
   starClickHandler() {
@@ -124,17 +124,21 @@ class RepositoryItem extends React.Component {
 
   render() {
     const {
-      repo: { name, isStar },
+      repo: { name, isStar, isPublic },
       username,
       type
     } = this.props;
     const { updatedAt, isEmpty, commitsPerYear } = this.state;
     const starsCount = Number(this.props.repo.starsCount);
+    const repoType = isPublic ? '' : 'Private';
 
     return (
       <div className={styles.repo_item}>
         <div className={styles.repo_item_left}>
-          <h3>{this.getRepoLink({ username, name, type })}</h3>
+          <h3>
+            {this.getRepoLink({ username, name, type })}
+            {!isPublic && <span className={styles.repoTypeLabel}>{repoType}</span>}
+          </h3>
           <div className="repo-info">
             <span className={styles.repo_info_item}>
               <span className={styles.repo_item_lang}>
