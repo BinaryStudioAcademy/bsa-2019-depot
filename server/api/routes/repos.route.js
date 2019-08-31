@@ -183,6 +183,7 @@ router
       .catch(next);
     if (!isPublic) {
       deleteStarsByRepoId(userId, repositoryId);
+      req.reposNsp.to(repositoryId).emit('changedToPrivate', repositoryId);
     }
   })
   .put('/star', (req, res, next) => {
