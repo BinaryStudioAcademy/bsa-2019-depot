@@ -1,6 +1,7 @@
 import { createRoutine } from 'redux-saga-routines';
 
 export const fetchIssues = createRoutine('ISSUES');
+export const fetchPullRequests = createRoutine('PULLS');
 export const signupRoutine = createRoutine('SIGNUP');
 export const fillProfileRoutine = createRoutine('FILL_PROFILE');
 export const loginGoogleRoutine = createRoutine('LOGIN_GOOGLE');
