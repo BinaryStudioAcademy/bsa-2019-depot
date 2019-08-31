@@ -1,31 +1,3 @@
-
-
-
-.repoContentContainer  {
-  //max-width: 1500px;
-  background-color: #1e6823!important;
-}
-
-:local(.repoContentContainer) {
-  background-color: #1e6823!important;
-}
-
-:global(.repoContentContainer) {
-  max-width: 1500px !important;
-  background-color: #1e6823!important;
-}
-
-:global(.repoContentContainer):local(.repoContentContainer) {
-  max-width: 1500px !important;
-}
-
-:local(.styles) {
-  .repoContentContainer  {
-    max-width: 1500px !important;
-    background: #44a340!important;
-  }
-}
-
 .blameWrapper {
   overflow-x: auto;
   overflow-y: hidden;
