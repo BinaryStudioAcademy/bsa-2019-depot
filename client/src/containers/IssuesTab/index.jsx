@@ -84,7 +84,7 @@ IssuesTab.propTypes = {
 const mapStateToProps = ({
   issuesData: { loading, issues },
   currentRepo: {
-    currentRepoInfo: { id, name }
+    repository: { currentRepoInfo: { id, name } }
   }
 }) => ({
   loading,

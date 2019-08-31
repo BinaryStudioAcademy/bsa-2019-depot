@@ -47,7 +47,7 @@ const RepositoryHeader = ({
     if (originalRepo) {
       const {
         name: forkedRepoName,
-        user: { username: forkedRepoOwner }
+        owner: forkedRepoOwner
       } = originalRepo;
       if (forkedRepoName && forkedRepoOwner) {
         return (
@@ -121,7 +121,7 @@ RepositoryHeader.propTypes = {
   userId: PropTypes.string.isRequired,
   currentRepoInfo: PropTypes.shape({
     userId: PropTypes.string,
-    forkedCount: PropTypes.string,
+    forksCount: PropTypes.string,
     originalRepo: PropTypes.shape({
       name: PropTypes.string,
       user: PropTypes.shape({
@@ -138,7 +138,7 @@ const mapStateToProps = ({
   profile: {
     currentUser: { id, username }
   },
-  currentRepo: { currentRepoInfo }
+  currentRepo: { repository: { currentRepoInfo } }
 }) => ({
   userId: id,
   username,

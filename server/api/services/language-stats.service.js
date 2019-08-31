@@ -19,8 +19,11 @@ const getStatsByBranch = async (repoId, branch) => {
 const upsertStats = async (langStats, reponame, owner, branch) => {
   const branchId = await getBranchId(reponame, owner, branch);
   await languageStatsRepository.deleteByBranchId(branchId);
-  return Promise.all(langStats.map(([langName, percentage]) => languageRepository.getByName(langName)
-    .then(({ id: languageId }) => languageStatsRepository.upsertStats(branchId, languageId, { branchId, languageId, percentage }))));
+  return Promise.all(
+    langStats.map(([langName, percentage]) => languageRepository
+      .getByName(langName)
+      .then(({ id: languageId }) => languageStatsRepository.upsertStats(branchId, languageId, { branchId, languageId, percentage })))
+  );
 };
 
 const deleteStats = async (reponame, owner, branch) => {

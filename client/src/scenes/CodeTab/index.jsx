@@ -2,29 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
 import RepoFileTree from '../../components/RepoFileTree/index';
-import * as commitsService from '../../services/commitsService';
 import FilePathBreadcrumbSections from '../../components/FilePathBreadcrumbSections';
 import RepoReadme from '../../components/RepoReadme/index';
-import { InputError } from '../../components/InputError';
-import LanguageStats from '../../containers/LanguageStats';
-import { fetchBranches, fetchFileTree, fetchLastCommitOnBranch } from '../../routines/routines';
+import { fetchBranch, fetchFileTree, fetchCurrentRepo } from '../../routines/routines';
 import * as repositoryService from '../../services/repositoryService';
-import * as branchesService from '../../services/branchesService';
 import { newFile } from './actions';
+import RepoDescription from '../../components/RepoDescription';
+import CodeTabMenu from '../../components/CodeTabMenu';
+import RepoNav from '../../components/RepoNav';
+import EmptyRepositoryTab from '../../containers/EmptyRepositoryTab';
 
-import Octicon, { getIconByName } from '@primer/octicons-react';
 import {
   Container,
   Button,
-  Header,
-  Dropdown,
-  Form,
-  Input,
-  Popup,
-  Menu,
   Loader,
   Divider,
   Message,
@@ -32,99 +23,81 @@ import {
 } from 'semantic-ui-react';
 import styles from './styles.module.scss';
 
+
 class CodeTab extends React.Component {
   constructor(props) {
     super(props);
-    const { branch } = this.props;
+
     this.state = {
-      branch,
-      description: '',
-      website: '',
-      editingInfo: false,
-      infoLoading: true,
-      commitCount: 0
+      branch: ''
     };
+
     this.onBranchChange = this.onBranchChange.bind(this);
+    this.onCreateFile = this.onCreateFile.bind(this);
+    this.onSubmitInfo = this.onSubmitInfo.bind(this);
   }
 
-  async componentDidMount() {
-    const { username, reponame, history, match } = this.props;
-    const { branch } = this.state;
-    this.props.fetchBranches({ owner: username, repoName: reponame });
-    const branchNames = await branchesService.getBranches(username, reponame);
-    let actualBranch = branch;
-    const firstBranch = branchNames.sort()[0];
-
-    if (!branchNames.includes(branch)) {
-      actualBranch = firstBranch;
-      this.setState({
-        branch: firstBranch
-      });
-    }
-    history.push(`/${username}/${reponame}/tree/${actualBranch}`);
-    commitsService
-      .getCommitCount(username, reponame, actualBranch)
-      .then(count => this.setState({ commitCount: count.count }));
-    this.props.fetchLastCommitOnBranch({
-      username,
+  componentDidMount() {
+    const {
+      repoID,
+      ownername,
       reponame,
-      branch: actualBranch
+      fetchBranch,
+      fetchFileTree,
+      branches,
+      defaultBranch,
+      match,
+      history
+    } = this.props;
+    let { params: { branch } } = match;
+    if (!branch) {
+      branch = defaultBranch || branches[0];
+    }
+
+    this.setState({
+      ...this.state,
+      branch
     });
 
-    const defaultPath = `/${username}/${reponame}/tree/${actualBranch}`;
+    if (!branches.length) {
+      return;
+    }
+
+    const defaultPath = `/${ownername}/${reponame}/tree/${branch}`;
+    history.push(defaultPath);
+
+    fetchBranch({ repoID, branch });
+
     const pathToDir = match.url
       .replace(`${defaultPath}`, '')
-      .replace(`${username}/${reponame}`, '')
+      .replace(`${ownername}/${reponame}`, '')
       .split('/')
       .filter(path => path)
       .join('/');
 
-    this.props.fetchFileTree({
-      username,
+    fetchFileTree({
+      username: ownername,
       reponame,
-      branch: actualBranch,
+      branch,
       query: { pathToDir }
     });
-    history.push(`${defaultPath}${pathToDir ? `/${pathToDir}` : ''}`);
 
-    repositoryService.getRepositoryByOwnerAndName({ username, reponame }).then(({ description, website }) => {
-      this.setState({ description, website, infoLoading: false });
-    });
+    history.push(`${defaultPath}${pathToDir ? `/${pathToDir}` : ''}`);
   }
 
-  infoValidationSchema = Yup.object().shape({
-    description: Yup.string(),
-    website: Yup.string()
-      .url('Invalid URL')
-      .max(255)
-  });
-
-  onBranchChange = (event, data) => {
-    this.setState(
-      {
-        branch: data.value
-      },
-      () => {
-        const { match, history } = this.props;
-        const { username, reponame } = match.params;
-        const { branch } = this.state;
-        history.push(`/${username}/${reponame}/tree/${data.value}`);
-
-        commitsService
-          .getCommitCount(username, reponame, branch)
-          .then(count => this.setState({ commitCount: count.count }));
-        this.props.fetchLastCommitOnBranch({
-          username,
-          reponame,
-          branch
-        });
-        this.props.fetchFileTree({
-          username,
-          reponame,
-          branch
-        });
-      }
-    );
+  onBranchChange = (branch) => {
+    const { ownername, repoID, reponame, history, fetchBranch } = this.props;
+    history.push(`/${ownername}/${reponame}/tree/${branch}`);
+    this.setState({
+      ...this.state,
+      branch
+    });
+    fetchBranch({ repoID, branch });
+    this.props.fetchFileTree({
+      username: ownername,
+      reponame,
+      branch
+    });
   };
 
   onCreateFile = () => {
@@ -153,45 +126,76 @@ class CodeTab extends React.Component {
         tree: { currentPath }
       }
     } = this.props;
-    const { description } = this.state;
+    const { description } = this.props;
     const { username, reponame, branch } = match.params;
 
     this.props.newFile({ filename: 'README.md', content: `# ${reponame}\n\n${description}` });
     history.push(`/${username}/${reponame}/new/${branch}/${currentPath}`);
   };
 
-  onSubmitInfo = ({ description, website }) => {
+  async onSubmitInfo({ description, website }) {
     const { username: owner, reponame } = this.props.match.params;
 
-    this.setState({ infoLoading: true, editingInfo: false });
-    repositoryService
-      .updateRepositoryByOwnerAndName({ owner, reponame, request: { description, website } })
-      .then(() => this.setState({ infoLoading: false, description, website }));
+    await repositoryService
+      .updateRepositoryByOwnerAndName({ owner, reponame, request: { description, website } });
+
+    const { fetchCurrentRepo } = this.props;
+    fetchCurrentRepo({ username: owner, reponame });
   };
 
-  toggleEditingDescription = () => {
-    this.setState(prevState => ({ editingInfo: !prevState.editingInfo }));
-  };
+  renderReadMe(readme, isOwn) {
+    if (readme) {
+      return (
+        <RepoReadme
+          content={readme.content}
+          showEdit={isOwn}
+          onReadmeEdit={this.onReadmeEdit}
+        />
+      );
+    } else if (isOwn) {
+      return (
+        <Message color="blue" className={styles.readmeTip}>
+          Help people interested in this repository understand your project by adding a README.
+          <Button className={styles.addReadme} size="small" compact positive onClick={this.onAddReadme}>
+            Add a README
+          </Button>
+        </Message>
+      );
+    }
+
+    return null;
+  }
 
   render() {
-    const { branch, description, website, infoLoading, editingInfo, commitCount } = this.state;
     const {
-      username,
-      currentUser,
       reponame,
-      lastCommitData,
-      branchesData,
+      ownername,
+      description,
+      website,
+      branches,
+      currentBranchData,
       fileTreeData,
-      history,
+      currentUserName,
       fetchFileTree,
-      location
+      location,
+      history
     } = this.props;
-    const { branches } = branchesData;
-    const { files, currentPath } = fileTreeData.tree;
+
+    if (!branches.length) {
+      return <EmptyRepositoryTab />;
+    }
+
+    const { headCommit, commitsCount: { count } } = currentBranchData;
+    const { files } = fileTreeData.tree;
+
+    const { branch } = this.state;
+
+    const isOwn = currentUserName && currentUserName === ownername;
+
     const readme = files && files.find(file => file.name === 'README.md');
     const branchesCount = branches ? branches.length : 0;
 
-    const rootDir = `/${username}/${reponame}/tree/${branch}`;
+    const rootDir = `/${ownername}/${reponame}/tree/${branch}`;
     const pathToDir = location.pathname
       .replace(rootDir, '')
       .split('/')
@@ -202,239 +206,36 @@ class CodeTab extends React.Component {
       window.location.reload();
     };
 
-    let readmeSection;
-    if (readme) {
-      readmeSection = (
-        <RepoReadme
-          content={readme.content}
-          showEdit={currentUser && currentUser === username}
-          onReadmeEdit={this.onReadmeEdit}
-        />
-      );
-    } else if (!currentPath && username === currentUser) {
-      readmeSection = (
-        <Message color="blue" className={styles.readmeTip}>
-          Help people interested in this repository understand your project by adding a README.
-          <Button className={styles.addReadme} size="small" compact positive onClick={this.onAddReadme}>
-            Add a README
-          </Button>
-        </Message>
-      );
-    }
+    const { loading: branchDataLoading } = currentBranchData;
+    const { loading: fileTreeLoading } = fileTreeData;
 
-    let infoContent, descriptionContent, websiteContent;
-    if (!(description || website)) {
-      infoContent = <i>No description or website provided</i>;
-    } else {
-      if (description) {
-        descriptionContent = description;
-      }
-      if (website) {
-        websiteContent = (
-          <a className={styles.link} href={website}>
-            {website}
-          </a>
-        );
-      }
-      infoContent = (
-        <>
-          {descriptionContent}
-          {websiteContent}
-        </>
-      );
-    }
-
-    return lastCommitData.loading || fileTreeData.loading || branchesData.loading || infoLoading ? (
+    return branchDataLoading || fileTreeLoading ? (
       <div>
         <Loader active />
       </div>
     ) : (
-      <Container>
+      <Container className={styles.contentContainer}>
         <Divider hidden />
-        <div className={styles.repoDescription}>
-          {editingInfo ? (
-            <Formik
-              initialValues={{
-                description: description || '',
-                website: website || ''
-              }}
-              validationSchema={this.infoValidationSchema}
-              onSubmit={this.onSubmitInfo}
-            >
-              {({ values, errors, handleChange, handleBlur, handleSubmit }) => (
-                <Form onSubmit={handleSubmit}>
-                  <Form.Input
-                    name="description"
-                    placeholder="Short description"
-                    label="Description"
-                    error={!!errors.description}
-                    value={values.description}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                  />
-                  <InputError name="description" />
-                  <Form.Input
-                    name="website"
-                    placeholder="Website"
-                    label="Website"
-                    width={7}
-                    error={!!errors.website}
-                    value={values.website}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                  />
-                  <InputError name="website" />
-                  <Button type="submit" disabled={errors.description || errors.website} className={styles.actionButton}>
-                    Save
-                  </Button>
-                  <Button onClick={this.toggleEditingDescription} className={styles.actionButton}>
-                    Cancel
-                  </Button>
-                </Form>
-              )}
-            </Formik>
-          ) : (
-            <>
-              <div className={styles.repoDescriptionText}>{infoContent}</div>
-              {username === currentUser && (
-                <Button
-                  className={[styles.actionButton, styles.editButton].join(' ')}
-                  onClick={this.toggleEditingDescription}
-                >
-                  Edit
-                </Button>
-              )}
-            </>
-          )}
-        </div>
-        <div>
-          <Menu borderless attached="top" widths={4}>
-            <Menu.Item>
-              <Octicon icon={getIconByName('history')} />
-              <Link className={styles.repoMetaDataLinks} to={`/${username}/${reponame}/commits/${branch}`}>
-                <b>{commitCount} </b> commits
-              </Link>
-            </Menu.Item>
-            <Menu.Item>
-              <Octicon icon={getIconByName('git-branch')} />
-              <Link className={styles.repoMetaDataLinks} to={`/${username}/${reponame}/branches`}>
-                <b>{branchesCount} </b> branches
-              </Link>
-            </Menu.Item>
-            <Menu.Item>
-              <Octicon icon={getIconByName('tag')} />
-              <Link className={styles.repoMetaDataLinks} to="">
-                <b>77 </b> releases
-              </Link>
-            </Menu.Item>
-            <Menu.Item>
-              <Octicon icon={getIconByName('organization')} />
-              <Link className={styles.repoMetaDataLinks} to="">
-                <b>10 </b> contributors
-              </Link>
-            </Menu.Item>
-          </Menu>
-          <LanguageStats branch={branch}/>
-        </div>
-
-        <div className={styles.repoNav}>
-          <div>
-            <Dropdown
-              button
-              text={`Branch: ${branch}`}
-              floating
-              width="seven"
-              className={[styles.actionButton, styles.repoBranchesButton].join(' ')}
-              position="bottom left"
-            >
-              <Dropdown.Menu className={styles.searchBranchList}>
-                {branchesData.loading ? (
-                  <Loader active />
-                ) : (
-                  <React.Fragment>
-                    <Dropdown.SearchInput
-                      type="text"
-                      className={styles.searchBranchInput}
-                      placeholder="Find or create a branch"
-                    />
-                    <Dropdown.Divider />
-                    <Dropdown.Header content="branch" as="h4" />
-                    {branchesData.branches.map((branch, index) => (
-                      <Dropdown.Item
-                        key={index}
-                        onClick={this.onBranchChange}
-                        value={branch}
-                        className={styles.branchesMenuItem}
-                      >
-                        {branch}
-                      </Dropdown.Item>
-                    ))}
-                  </React.Fragment>
-                )}
-              </Dropdown.Menu>
-            </Dropdown>
-            <Button className={styles.actionButton}>New pull request</Button>
-          </div>
-          <div className={styles.repoActions}>
-            <Button.Group>
-              {currentUser && currentUser === username && (
-                <>
-                  <Button className={styles.actionButton} onClick={this.onCreateFile}>
-                    Create New File
-                  </Button>
-                  <Button className={styles.actionButton}>Upload files</Button>
-                </>
-              )}
-              <Button className={styles.actionButton}>Find file</Button>
-            </Button.Group>
-            <Popup
-              trigger={
-                <Dropdown
-                  button
-                  text="Clone or download"
-                  className={[styles.actionButton, styles.cloneRepoButton].join(' ')}
-                />
-              }
-              flowing
-              on="click"
-              position="bottom right"
-              className={styles.repoPopup}
-            >
-              <div className={styles.repoPopupBody}>
-                <Header className={styles.readmeHeader} as="h4">
-                  <div>
-                    Clone with HTTPS <Octicon className={styles.actionButton} icon={getIconByName('question')} />
-                  </div>
-                  <Link className={styles.link} to="">
-                    Use SSH
-                  </Link>
-                </Header>
-                <p>Use Git or checkout with SVN using the web URL.</p>
-                <Input
-                  type="text"
-                  action={
-                    <Button className={styles.actionButton}>
-                      <Octicon verticalAlign="middle" icon={getIconByName('clippy')} />
-                    </Button>
-                  }
-                  onClick={this.OnDropdownClick}
-                  size="small"
-                  className={styles.repoLinkInput}
-                  defaultValue="https://github.com/BinaryStudioAcademy/bsa-2019-depot.git"
-                />
-              </div>
-
-              <Button.Group className={styles.repoPopupActions} attached="bottom">
-                <Button compact className={styles.repoPopupAction}>
-                  Open in Desktop
-                </Button>
-                <Button compact className={styles.repoPopupAction}>
-                  Download ZIP
-                </Button>
-              </Button.Group>
-            </Popup>
-          </div>
-        </div>
+        <RepoDescription
+          isOwn={isOwn}
+          description={description}
+          website={website}
+          onSubmit={this.onSubmitInfo}
+        />
+        <CodeTabMenu
+          ownername={ownername}
+          branch={branch}
+          reponame={reponame}
+          commitsCount={count}
+          branchesCount={branchesCount}
+        />
+        <RepoNav
+          isOwn={isOwn}
+          branch={branch}
+          branches={branches}
+          onBranchChange={this.onBranchChange}
+          onCreateFile={this.onCreateFile}
+        />
         {currentDir ? (
           <div className={styles.filePathRow}>
             <Breadcrumb size="big" className={styles.filePath}>
@@ -444,68 +245,101 @@ class CodeTab extends React.Component {
                 </Link>
               </Breadcrumb.Section>
               <Breadcrumb.Divider />
-              <FilePathBreadcrumbSections owner={username} reponame={reponame} branch={branch} filepath={pathToDir} />
+              <FilePathBreadcrumbSections owner={ownername} reponame={reponame} branch={branch} filepath={pathToDir} />
               <Breadcrumb.Section>{currentDir}</Breadcrumb.Section>
             </Breadcrumb>
           </div>
         ) : null}
         <RepoFileTree
-          lastCommitData={lastCommitData}
+          lastCommitData={headCommit}
           fileTreeData={fileTreeData}
-          username={username}
+          username={ownername}
           reponame={reponame}
           branch={branch}
           history={history}
           fetchFileTree={fetchFileTree}
         />
-        {readmeSection}
+        {this.renderReadMe(readme, isOwn)}
       </Container>
     );
   }
 }
 
-const mapStateToProps = ({ lastCommitData, branchesData, fileTreeData, profile }) => ({
-  lastCommitData,
-  branchesData,
-  fileTreeData,
-  currentUser: profile.currentUser.username
+const mapStateToProps = ({
+  currentRepo: {
+    repository: {
+      currentRepoInfo: {
+        id: repoID,
+        name: reponame,
+        branches,
+        defaultBranch,
+        description,
+        website,
+        user: {
+          username: ownername
+        }
+      }
+    },
+    branch: currentBranchData,
+    fileTreeData
+  },
+  profile: {
+    currentUser: {
+      username: currentUserName
+    }
+  }
+}) => ({
+  repoID,
+  reponame,
+  ownername,
+  description,
+  website,
+  branches,
+  defaultBranch,
+  currentUserName,
+  currentBranchData,
+  fileTreeData
 });
 
 const mapDispatchToProps = {
-  fetchLastCommitOnBranch,
-  fetchBranches,
+  newFile,
+  fetchBranch,
   fetchFileTree,
-  newFile
+  fetchCurrentRepo
 };
 
 CodeTab.propTypes = {
-  branchesData: PropTypes.exact({
-    loading: PropTypes.bool.isRequired,
-    error: PropTypes.string,
-    branches: PropTypes.array,
-    lastCommits: PropTypes.object
-  }).isRequired,
-  lastCommitData: PropTypes.exact({
-    loading: PropTypes.bool.isRequired,
-    error: PropTypes.string,
-    commit: PropTypes.object
-  }).isRequired,
   fileTreeData: PropTypes.exact({
     loading: PropTypes.bool.isRequired,
     error: PropTypes.string,
     tree: PropTypes.object
   }).isRequired,
-  fetchLastCommitOnBranch: PropTypes.func.isRequired,
-  fetchBranches: PropTypes.func.isRequired,
-  fetchFileTree: PropTypes.func.isRequired,
   newFile: PropTypes.func.isRequired,
   history: PropTypes.object,
-  location: PropTypes.object.isRequired,
+  location: PropTypes.object,
   match: PropTypes.object,
   currentUser: PropTypes.string,
-  username: PropTypes.string.isRequired,
-  reponame: PropTypes.string.isRequired,
-  branch: PropTypes.string.isRequired
+  username: PropTypes.string,
+  reponame: PropTypes.string,
+  branch: PropTypes.string,
+  repoID: PropTypes.string.isRequired,
+  ownername: PropTypes.string,
+  fetchBranch: PropTypes.func,
+  fetchFileTree: PropTypes.func,
+  fetchCurrentRepo: PropTypes.func,
+  branches: PropTypes.array,
+  defaultBranch: PropTypes.string,
+  description: PropTypes.string,
+  website: PropTypes.string,
+  currentBranchData: PropTypes.shape({
+    name: PropTypes.string,
+    headCommit: PropTypes.object,
+    commitsCount: {
+      count: PropTypes.number
+    },
+    loading: PropTypes.bool
+  }),
+  currentUserName: PropTypes.string
 };
 
 export default connect(

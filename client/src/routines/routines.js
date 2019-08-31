@@ -22,3 +22,4 @@ export const fetchCurrentRepo = createRoutine('CURRENT_REPO');
 export const fetchIssueComments = createRoutine('ISSUE_COMMENTS');
 export const createIssueComment = createRoutine('CREATE_ISSUE_COMMENTS');
 export const createOrg = createRoutine('CREATE_ORG');
+export const fetchBranch = createRoutine('FETCH_BRANCH');

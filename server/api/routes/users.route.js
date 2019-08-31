@@ -104,11 +104,14 @@ router.get('/:username/repos', (req, res, next) => {
     .catch(next);
 });
 
-router.get('/:username/repos/:repo', (req, res, next) => {
-  const { username, repo } = req.params;
-  getByUserAndReponame({ owner: username, reponame: repo })
-    .then(data => res.send(data))
-    .catch(next);
+router.get('/:username/repos/:repo', async (req, res, next) => {
+  try {
+    const { username, repo } = req.params;
+    const repoData = await getByUserAndReponame({ owner: username, reponame: repo });
+    res.send(repoData);
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.post('/image', (req, res, next) => {
@@ -124,19 +127,30 @@ router.delete('/image', (req, res, next) => {
 });
 
 router.get('/:username/issues', (req, res, next) => {
-    const { username } = req.params;
-    const { isOpened, sort, owner } = req.query;
+  const { username } = req.params;
+  const { isOpened, sort, owner } = req.query;
 
-    getUserByUsername(username).then(data => {
+  getUserByUsername(username)
+    .then((data) => {
       const { id } = data;
-      Promise.all([getAllIssuesCount(id, {owner, isOpened:true} ), getAllIssuesCount(id,  {owner, isOpened:false} ),  getAllIssuesOwners(id), getAllIssues(id, {isOpened, sort, owner} )])
-        .then(result => {
-          res.send({"open" : result[0] , "close" :  result[1], "owners": result[2], "issues" : result[3]} )
+      Promise.all([
+        getAllIssuesCount(id, { owner, isOpened: true }),
+        getAllIssuesCount(id, { owner, isOpened: false }),
+        getAllIssuesOwners(id),
+        getAllIssues(id, { isOpened, sort, owner })
+      ])
+        .then((result) => {
+          res.send({
+            open: result[0],
+            close: result[1],
+            owners: result[2],
+            issues: result[3]
+          });
         })
         .catch(next);
-    }).catch(next);
-
-  });
+    })
+    .catch(next);
+});
 
 router.get('/:username/repos/:reponame/issues/:number', (req, res, next) => {
   const { username, reponame, number } = req.params;

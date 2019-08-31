@@ -2,7 +2,7 @@ import callWebApi from '../helpers/webApiHelper';
 
 export const getSettings = async ({ owner, name }) => {
   const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/${name}/settings`,
+    endpoint: `/api/repos/${owner}/${name}/settings`,
     type: 'GET'
   });
   return response.json();
@@ -10,7 +10,7 @@ export const getSettings = async ({ owner, name }) => {
 
 export const renameRepo = async ({ owner, name, oldName }) => {
   const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/${oldName}/settings/rename`,
+    endpoint: `/api/repos/${owner}/${oldName}/settings/rename`,
     type: 'post',
     request: {
       newName: name
@@ -21,7 +21,7 @@ export const renameRepo = async ({ owner, name, oldName }) => {
 
 export const deleteRepo = async ({ owner, name }) => {
   const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/${name}/settings`,
+    endpoint: `/api/repos/${owner}/${name}/settings`,
     type: 'delete'
   });
   return response.json();

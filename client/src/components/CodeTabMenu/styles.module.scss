@@ -1,0 +1,11 @@
+$blue: #2e53db;
+$gray: #f7f7fb;
+$black: #363a44;
+
+:local(.repoMetaDataLinks) {
+  color: $black;
+}
+
+:global(.ui.segment):local(.languageSegment) {
+  padding: 0.25em;
+}
