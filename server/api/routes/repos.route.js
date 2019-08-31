@@ -21,6 +21,7 @@ const { getFileContent } = require('../services/files.service');
 const { getStatsByBranch } = require('../services/language-stats.service');
 const ownerOnlyMiddleware = require('../middlewares/owner-only.middleware');
 const issueService = require('../services/issue.service');
+const pullsService = require('../services/pulls.service');
 
 const router = Router();
 
@@ -210,6 +211,14 @@ router
     getRepoIssueByNumber(reponame, number)
       .then(data => res.send(data))
       .catch(next);
+  })
+  .get('/:repoId/pulls/diffs', (req, res, next) => {
+    const { repoId } = req.params;
+    const { fromBranch, toBranch } = req.query;
+    pullsService.getBranchDiffs(repoId, fromBranch, toBranch)
+      .then(data => res.send(data))
+      .catch(next);
   });
+
 
 module.exports = router;

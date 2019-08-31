@@ -101,9 +101,9 @@ const RepoDescription = (props) => {
               </Button>
             )}
           </>
-        )}
+      )}
     </div>
-  )
+  );
 };
 
 RepoDescription.propTypes = {

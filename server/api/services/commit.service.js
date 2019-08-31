@@ -140,7 +140,6 @@ const getCommitDiff = async ({ user, name, hash }) => {
   if (commit) {
     response.id = commit.id;
   }
-  console.log(response);
   return response;
 };
 

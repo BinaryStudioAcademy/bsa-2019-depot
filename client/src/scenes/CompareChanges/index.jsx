@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Button, Segment } from 'semantic-ui-react';
-import Octicon, { GitPullRequest } from '@primer/octicons-react';
 import SelectCompareBranches from '../../components/SelectCompareBranches';
 
 import styles from './styles.module.scss';
