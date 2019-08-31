@@ -18,7 +18,7 @@ export const getRepositoryByOwnerAndName = async ({ username: owner, reponame })
 
 export const createRepository = async request => {
   const response = await callWebApi({
-    endpoint: '/api/repo',
+    endpoint: '/api/repos',
     type: 'POST',
     request
   });
@@ -27,7 +27,7 @@ export const createRepository = async request => {
 
 export const updateRepositoryByOwnerAndName = async ({ owner, reponame, request }) => {
   const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/${reponame}`,
+    endpoint: `/api/repos/${owner}/${reponame}`,
     type: 'PUT',
     request
   });
@@ -36,7 +36,7 @@ export const updateRepositoryByOwnerAndName = async ({ owner, reponame, request 
 
 export const changeRepoType = async ({ owner, reponame, request }) => {
   const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/${reponame}/change-type`,
+    endpoint: `/api/repos/${owner}/${reponame}/change-type`,
     type: 'PUT',
     request
   });
@@ -47,7 +47,7 @@ export const checkName = async ({ owner, reponame }) => {
   if (!owner || !reponame) return 'invalid data';
 
   const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/${reponame}/check-name`,
+    endpoint: `/api/repos/${owner}/${reponame}/check-name`,
     type: 'GET'
   });
   return response.json();
@@ -55,14 +55,14 @@ export const checkName = async ({ owner, reponame }) => {
 
 export const checkIfEmpty = async ({ owner, reponame }) => {
   const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/${reponame}/is-empty`,
+    endpoint: `/api/repos/${owner}/${reponame}/is-empty`,
     type: 'GET'
   });
   return response.json();
 };
 export const forkRepo = async request => {
   const response = await callWebApi({
-    endpoint: '/api/repo/fork',
+    endpoint: '/api/repos/fork',
     type: 'POST',
     request
   });
@@ -71,7 +71,7 @@ export const forkRepo = async request => {
 
 export const setStar = async request => {
   const response = await callWebApi({
-    endpoint: '/api/repo/star',
+    endpoint: '/api/repos/star',
     type: 'PUT',
     request
   });

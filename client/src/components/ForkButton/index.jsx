@@ -114,7 +114,11 @@ ForkButton.defaultProps = {
   forkedCount: 0
 };
 
-const mapStateToProps = ({ currentRepo: { currentRepoInfo } }) => ({
+const mapStateToProps = ({
+  currentRepo: {
+    repository: { currentRepoInfo }
+  }
+}) => ({
   currentRepoInfo
 });
 

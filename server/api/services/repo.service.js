@@ -140,11 +140,19 @@ const getByUserAndReponame = async ({ owner, reponame }) => {
   if (!user) {
     return Promise.reject(new CustomError(404, `User ${owner} not found`));
   }
-  const repository = await repoRepository.getByUserAndReponame(user.id, reponame);
+  const repository = await repoRepository.getByUserAndReponame(user.get({ plain: true }).id, reponame);
   if (!repository) {
     return Promise.reject(new CustomError(404, `Repository ${reponame} not found`));
   }
-  return repository;
+  const branches = await branchRepository.getByRepoId(repository.get({ plain: true }).id);
+  const branchesNames = branches.map((branch) => {
+    const { name } = branch.get({ plain: true });
+    return name;
+  });
+  return {
+    ...repository.get({ plain: true }),
+    branches: branchesNames
+  };
 };
 
 const updateByUserAndReponame = async ({ owner, reponame, data }) => {

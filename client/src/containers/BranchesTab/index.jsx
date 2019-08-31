@@ -26,12 +26,10 @@ class BranchesTab extends React.Component {
   componentDidMount() {
     const {
       branchesData: { branches },
-      match: {
-        params: { username, reponame }
-      }
+      repoID
     } = this.props;
     if (!(branches && branches.length)) {
-      this.props.fetchBranches({ owner: username, repoName: reponame });
+      this.props.fetchBranches({ repoID });
     }
   }
 
@@ -122,7 +120,7 @@ class BranchesTab extends React.Component {
 
   render() {
     const {
-      branchesData: { loading, branches, lastCommits },
+      branchesData: { loading, branches },
       username,
       match: {
         params: { reponame }
@@ -130,7 +128,7 @@ class BranchesTab extends React.Component {
     } = this.props;
 
     const displayBranches = branches.map((branch, idx) => ({
-      name: branch,
+      name: branch.name,
       // generate mock PR status
       merged:
         idx % 2
@@ -139,10 +137,10 @@ class BranchesTab extends React.Component {
             number: idx * 3,
             status: idx % 4 === 1 ? 'Merged' : 'Open'
           },
-      status: this.getBranchStatus(lastCommits[branch].date),
-      ownedByCurrentUser: username === lastCommits[branch].author,
-      author: lastCommits[branch].author,
-      date: lastCommits[branch].date
+      status: this.getBranchStatus(branch.headCommit.createdAt),
+      ownedByCurrentUser: username === branch.headCommit.user.username,
+      author: branch.headCommit.user.username,
+      date: branch.headCommit.createdAt
     }));
 
     const { filter } = this.state;
@@ -174,9 +172,9 @@ BranchesTab.propTypes = {
   branchesData: PropTypes.exact({
     loading: PropTypes.bool.isRequired,
     error: PropTypes.string,
-    branches: PropTypes.array,
-    lastCommits: PropTypes.object.isRequired
+    branches: PropTypes.array
   }).isRequired,
+  repoID: PropTypes.string.isRequired,
   fetchBranches: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
   username: PropTypes.string
@@ -186,10 +184,16 @@ const mapStateToProps = ({
   branchesData,
   profile: {
     currentUser: { username }
+  },
+  currentRepo: {
+    repository: {
+      currentRepoInfo: { id: repoID }
+    }
   }
 }) => ({
   branchesData,
-  username
+  username,
+  repoID
 });
 
 const mapDispatchToProps = {

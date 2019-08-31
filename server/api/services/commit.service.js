@@ -91,8 +91,10 @@ const getCommitsAndCreatedRepoByDate = async (data) => {
   return { userActivitybyDate, monthActivity };
 };
 
-const getCommits = async ({ user, name, branch }) => {
-  const pathToRepo = repoHelper.getPathToRepo(user, name);
+const getCommits = async (branch, repoId) => {
+  const { name, userId } = await RepoRepository.getById(repoId);
+  const { username } = await userRepository.getById(userId);
+  const pathToRepo = repoHelper.getPathToRepo(username, name);
   const allCommits = [];
   await NodeGit.Repository.open(pathToRepo)
     .then(repo => repo.getBranchCommit(branch))
@@ -118,8 +120,8 @@ const getCommits = async ({ user, name, branch }) => {
   return allCommits;
 };
 
-const getCommitCount = async ({ user, name, branch }) => {
-  const commitListForBranch = await getCommits({ user, name, branch });
+const getCommitCount = async (branch, repoId) => {
+  const commitListForBranch = await getCommits(branch, repoId);
   return { count: commitListForBranch.length };
 };
 

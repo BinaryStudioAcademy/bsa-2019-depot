@@ -10,7 +10,7 @@ const getAllIssues = (userId, params) => issueRepository.getAllIssues(userId, pa
 
 const getAllIssuesCount = (userId, params) => issueRepository.getAllIssuesCount(userId, params);
 
-const getAllIssuesOwners = (userId) => issueRepository.getAllIssuesOwners(userId);
+const getAllIssuesOwners = userId => issueRepository.getAllIssuesOwners(userId);
 
 const getAllRepoIssues = async (repositoryId) => {
   const issues = await issueRepository.getRepositoryIssues(repositoryId);

@@ -21,6 +21,10 @@ class LanguageStats extends React.Component {
   componentDidMount() {
     const { repoId, branch } = this.props;
 
+    if (!branch || !repoId) {
+      return;
+    }
+
     getLanguageStats(repoId, branch).then(languageStats => {
       this.setState({ languageStats, loading: false });
     });
@@ -67,7 +71,9 @@ LanguageStats.propTypes = {
 
 const mapStateToProps = ({
   currentRepo: {
-    currentRepoInfo: { id }
+    repository: {
+      currentRepoInfo: { id }
+    }
   }
 }) => ({
   repoId: id

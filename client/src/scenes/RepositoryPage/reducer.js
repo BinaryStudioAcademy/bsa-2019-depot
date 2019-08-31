@@ -1,15 +1,30 @@
 import { fetchCurrentRepo } from '../../routines/routines';
+import { CLEAR_REPO_STATE } from './actionTypes';
 
 const initialCurrentRepoState = {
   currentRepoInfo: {
-    originalRepo: {
-      name: '',
-      user: {
-        username: ''
-      }
+    'id': '',
+    'name': '',
+    'owner': {
+      'id': '',
+      'username': ''
+    },
+    'description': '',
+    'website': '',
+    'createdAt': '',
+    'updatedAt': '',
+    'starsCount': null,
+    'forksCount': null,
+    'issuesCount': null,
+    'branches': [],
+    'defaultBranch': 'master',
+    'originalRepo': {
+      'id': '',
+      'name': '',
+      'owner': ''
     }
   },
-  loading: false,
+  loading: true,
   error: null
 };
 
@@ -37,6 +52,8 @@ export const currentRepoReducer = (state = initialCurrentRepoState, action) => {
       ...state,
       loading: false
     };
+  case CLEAR_REPO_STATE:
+    return initialCurrentRepoState;
   default:
     return state;
   }

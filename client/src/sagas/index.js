@@ -10,8 +10,9 @@ import profileSettingsSagas from '../containers/SettingsProfile/sagas';
 import repoOptionsSagas from '../containers/RepositoryOptions/sagas';
 import branchesSagas from '../containers/BranchesTab/sagas';
 import createIssueSagas from '../containers/CreateIssuePage/sagas';
-import repositoryTabSagas from '../containers/RepositoryTab/sagas';
+// import repositoryTabSagas from '../containers/RepositoryTab/sagas';
 import createOrganizationSagas from '../scenes/CreateOrganization/sagas';
+import repositoryPageSagas from '../scenes/RepositoryPage/sagas';
 
 export default function* rootSaga() {
   yield all([
@@ -25,7 +26,8 @@ export default function* rootSaga() {
     profileSettingsSagas(),
     branchesSagas(),
     createIssueSagas(),
-    repositoryTabSagas(),
-    createOrganizationSagas()
+    // repositoryTabSagas(),
+    createOrganizationSagas(),
+    repositoryPageSagas()
   ]);
 }

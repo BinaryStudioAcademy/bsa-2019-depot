@@ -10,6 +10,7 @@ import FileViewer from '../../components/FileViewer';
 import FilePathBreadcrumbSections from '../../components/FilePathBreadcrumbSections';
 import { getFileContent } from '../../services/branchesService';
 import { modifyFile } from '../../services/commitsService';
+import { checkFilename } from '../../services/branchesService';
 
 import styles from './styles.module.scss';
 
@@ -40,13 +41,17 @@ class FileEditPage extends React.Component {
       filename: filename,
       oldFilename: filename,
       toEdit,
-      loading: toEdit
+      loading: toEdit,
+      isFilenameUnique: true,
+      checkFilenameTimer: null,
+      checkingFilename: false
     };
 
     this.handleChangeFilename = this.handleChangeFilename.bind(this);
     this.handleContentChange = this.handleContentChange.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.handleCommitFile = this.handleCommitFile.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
   }
 
   componentDidMount() {
@@ -66,7 +71,11 @@ class FileEditPage extends React.Component {
   }
 
   handleChangeFilename(event, { value }) {
-    this.setState({ filename: value });
+    this.setState({ filename: value }, () => {
+      if (!this.state.toEdit) {
+        this.checkFilenameExist();
+      }
+    });
   }
 
   handleContentChange(content) {
@@ -126,6 +135,44 @@ class FileEditPage extends React.Component {
       });
   }
 
+  checkFilenameExist() {
+    if (!this.state.checkFilenameTimer) {
+      const { username, reponame, branch } = this.props.match.params;
+      const { filename } = this.state;
+
+      const resetTimer = () => {
+        clearTimeout(this.state.checkFilenameTimer);
+        this.setState({ checkFilenameTimer: null });
+      };
+
+      this.setState({ checkingFilename: true });
+      checkFilename(username, reponame, branch, {
+        filepath: `${this.filepath}${this.filepath ? '/' : ''}${filename.trim()}`
+      }).then(({ isFilenameUnique }) => {
+        this.setState({
+          isFilenameUnique,
+          checkingFilename: false,
+          checkFilenameTimer: setTimeout(resetTimer, 500)
+        });
+      });
+    }
+  }
+
+  handleBlur() {
+    const { username, reponame, branch } = this.props.match.params;
+    const { filename } = this.state;
+
+    this.setState({ checkingFilename: true });
+    checkFilename(username, reponame, branch, {
+      filepath: `${this.filepath}${this.filepath ? '/' : ''}${filename.trim()}`
+    }).then(({ isFilenameUnique }) => {
+      this.setState({
+        isFilenameUnique,
+        checkingFilename: false
+      });
+    });
+  }
+
   render() {
     const { match, avatar } = this.props;
     const {
@@ -134,7 +181,9 @@ class FileEditPage extends React.Component {
       filename,
       oldFilename,
       toEdit,
-      loading
+      loading,
+      isFilenameUnique,
+      checkingFilename
     } = this.state;
     const { username: ownerUsername, reponame, branch } = match.params;
 
@@ -206,25 +255,33 @@ class FileEditPage extends React.Component {
             branch={branch}
             filepath={filepathDirs}
           />
-          <Breadcrumb.Section>
+          <Breadcrumb.Section className={styles.fileNameSection}>
             <Input
               className={styles.fileNameInput}
               value={filename}
               focus
               size="mini"
               placeholder="Name your file..."
+              error={!isFilenameUnique}
               onChange={this.handleChangeFilename}
+              onBlur={this.handleBlur}
             />
             <Button className={styles.newButton} basic onClick={this.handleCancel}>
               Cancel
             </Button>
+            {!isFilenameUnique && <div className={styles.error_wrapper}>A file with the same name already exists</div>}
           </Breadcrumb.Section>
         </Breadcrumb>
         <Tab className={styles.editorArea} panes={panes} />
         <CommitFileForm
           avatar={avatar}
           initialBranch={branch}
-          disabled={!filename || (content === oldContent && filename === oldFilename && toEdit)}
+          disabled={
+            !filename ||
+            (content === oldContent && filename === oldFilename && toEdit) ||
+            checkingFilename ||
+            !isFilenameUnique
+          }
           onSubmit={this.handleCommitFile}
           onCancel={this.handleCancel}
         />
