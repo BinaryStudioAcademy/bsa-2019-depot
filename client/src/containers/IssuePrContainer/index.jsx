@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { Icon, Input, Dropdown, Button, Label } from 'semantic-ui-react';
-import IssuesList from '../../components/IssuesList';
+import DataList from '../../components/DataList';
 
 import styles from './styles.module.scss';
 
@@ -150,7 +150,7 @@ class IssuePrContainer extends React.Component {
               </Dropdown>
             </div>
           </div>
-          {isIssues ? <IssuesList issues={filteredData} /> : /*<PullRequestsList pullRequests={filteredData} />*/ null}
+          <DataList data={filteredData} isPull={!isIssues} />
         </div>
       </>
     );

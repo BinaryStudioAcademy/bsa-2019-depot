@@ -5,6 +5,7 @@ import { Switch, Route } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 import RepositoryHeader from '../../components/RepositoryHeader';
 import IssuesTab from '../../containers/IssuesTab/index';
+import PullRequstsTab from '../../containers/PullRequestsTab/index';
 import IssueComments from '../../components/IssueComments/index';
 import LabelsTab from '../../containers/LabelsTab/index';
 import CommitsPage from '../../containers/CommitsPage/index';
@@ -24,11 +25,13 @@ class RepositoryPage extends React.Component {
     const {
       match,
       issues,
+      pulls,
       location: { pathname }
     } = this.props;
     const { username, reponame } = match.params;
 
     const issueCount = issues.length;
+    const pullCount = pulls.length;
     const branchExists = pathname.match(/tree\/.+/);
     let branch = '';
     if (branchExists) branch = branchExists[0].split('/')[1]; // branchExists[0] has format 'tree/nameOfBranch/...'
@@ -43,6 +46,7 @@ class RepositoryPage extends React.Component {
           owner={username}
           repoName={reponame}
           issueCount={issueCount}
+          pullCount={pullCount}
           activePage={pathname.split('/')[3]}
           baseUrl={match.url}
         />
@@ -55,6 +59,7 @@ class RepositoryPage extends React.Component {
               <Route exact path={`${match.path}/commits/:branch`} component={CommitsPage} />
               <Route exact path={`${match.path}/commit/:hash`} component={DiffCommitView} />
               <Route exact path={`${match.path}/issues`} component={IssuesTab} />
+              <Route exact path={`${match.path}/pulls`} component={PullRequstsTab} />
               <Route exact path={`${match.path}/issues/new`} component={CreateIssuePage} />
               <Route exact path={`${match.path}/issues/:number`} component={IssueComments} />
               <Route exact path={`${match.path}/labels`} component={LabelsTab} />
@@ -84,11 +89,13 @@ RepositoryPage.propTypes = {
     hash: PropTypes.string.isRequired,
     state: PropTypes.array
   }).isRequired,
-  issues: PropTypes.array.isRequired
+  issues: PropTypes.array.isRequired,
+  pulls: PropTypes.array.isRequired
 };
 
-const mapStateToProps = ({ issuesData: { issues } }) => ({
-  issues
+const mapStateToProps = ({ issuesData: { issues }, pullsData: { pulls } }) => ({
+  issues,
+  pulls
 });
 
 export default connect(mapStateToProps)(RepositoryPage);

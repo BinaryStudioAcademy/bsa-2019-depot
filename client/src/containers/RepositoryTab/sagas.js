@@ -1,6 +1,6 @@
 import { takeEvery, put, call, all } from 'redux-saga/effects';
 import * as repositoryService from '../../services/repositoryService';
-import { fetchCurrentRepo, fetchIssues } from '../../routines/routines';
+import { fetchCurrentRepo, fetchIssues, fetchPullRequests } from '../../routines/routines';
 
 function* currentRepoRequest({ payload }) {
   try {
@@ -12,6 +12,7 @@ function* currentRepoRequest({ payload }) {
     if (repositoryId) {
       yield put(fetchCurrentRepo.success(response));
       yield put(fetchIssues.trigger({ repositoryId, filter: '' }));
+      yield put(fetchPullRequests.trigger({ repositoryId }));
     } else {
       yield put(fetchCurrentRepo.failure(response.error.message));
     }

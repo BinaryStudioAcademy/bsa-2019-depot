@@ -15,6 +15,7 @@ const RepositoryHeader = ({
   username,
   repoName,
   issueCount,
+  pullCount,
   activePage,
   baseUrl,
   history
@@ -23,6 +24,9 @@ const RepositoryHeader = ({
   switch (activePage) {
   case 'issues':
     activeTab = 'issues';
+    break;
+  case 'pulls':
+    activeTab = 'pulls';
     break;
   case 'commits':
     activeTab = 'code';
@@ -89,6 +93,11 @@ const RepositoryHeader = ({
                 Issues<Label circular>{issueCount}</Label>
               </Link>
             </div>
+            <div className={`${activeTab === 'pulls' && 'active'} item`}>
+              <Link to={`${baseUrl}/pulls`}>
+                Pull Requests<Label circular>{pullCount}</Label>
+              </Link>
+            </div>
             {username && username === owner && (
               <div className={`${activeTab === 'settings' && 'active'} item`}>
                 <Link to={`${baseUrl}/settings`}>
@@ -108,6 +117,7 @@ RepositoryHeader.propTypes = {
   username: PropTypes.string.isRequired,
   repoName: PropTypes.string.isRequired,
   issueCount: PropTypes.number.isRequired,
+  pullCount: PropTypes.number.isRequired,
   userId: PropTypes.string.isRequired,
   currentRepoInfo: PropTypes.shape({
     userId: PropTypes.string,
