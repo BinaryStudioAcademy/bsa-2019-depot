@@ -6,8 +6,8 @@ import { CommitCommentItem } from '../CommitCommentItem';
 import { Container, Grid, Form, Button, Message, Item, Loader } from 'semantic-ui-react';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 import { connect } from 'react-redux';
-import { parseDiff, Diff, Hunk, Decoration } from 'react-diff-view';
 import * as commitsService from '../../services/commitsService';
+import DiffList from '../DiffList';
 import { getUserImgLink } from '../../helpers/imageHelper';
 import { socketInit } from '../../helpers/socketInitHelper';
 
@@ -187,11 +187,6 @@ class DiffCommitView extends Component {
     }
 
     const { match, currentUser } = this.props;
-    let files = [];
-
-    if (diffsData.diffs) {
-      files = parseDiff(diffsData.diffs);
-    }
 
     const pageError = error ? <div>{error}</div> : null;
 
@@ -210,34 +205,10 @@ class DiffCommitView extends Component {
       </Item.Group>
     ) : null;
 
-    const renderHunk = (newPath, hunk) => [
-      <Decoration key={hunk.content} className="diff-filename">
-        {newPath}
-      </Decoration>,
-      <Decoration key={`decoration-${hunk.content}`}>{hunk.content}</Decoration>,
-      <Hunk key={hunk.content + Math.random()} hunk={hunk} />
-    ];
-    const renderFile = ({ newPath, oldRevision, newRevision, type, hunks }) =>
-      type === 'new' ? (
-        <div key={newPath} className="diff-content">
-          <p className="diff-filename">{`new empty file ${newPath}`}</p>
-        </div>
-      ) : (
-        <Diff
-          key={`${oldRevision}-${newRevision}`}
-          viewType="unified"
-          diffType={type}
-          hunks={hunks}
-          className="diff-content"
-        >
-          {hunks => hunks.flatMap(h => renderHunk(newPath, h))}
-        </Diff>
-      );
-
     return (
       <div>
         {pageError}
-        {files.map(renderFile)}
+        <DiffList diffs={diffsData.diffs}/>
         <div className="comments-count">
           {`${comments ? comments.length : 0} comments on commit`}{' '}
           <Message compact>{match.params.hash.slice(0, 7)}</Message>

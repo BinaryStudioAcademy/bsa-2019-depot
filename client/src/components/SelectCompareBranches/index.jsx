@@ -5,7 +5,7 @@ import Octicon, { GitCompare, ArrowLeft, GitPullRequest } from '@primer/octicons
 
 import styles from './styles.module.scss';
 
-const SelectCompareBranches = ({ branches, toBranch, fromBranch, onBranchChange, onCreatePullRequest }) => {
+const SelectCompareBranches = ({ branches, toBranch, fromBranch, onToBranchChange, onFromBranchChange, onCreatePullRequest }) => {
   return (
     <Segment className={styles.selectBranchesContainer}>
       <div>
@@ -23,7 +23,7 @@ const SelectCompareBranches = ({ branches, toBranch, fromBranch, onBranchChange,
             {branches.map((branch, index) => (
               <Dropdown.Item
                 key={index}
-                onClick={onBranchChange}
+                onClick={onToBranchChange}
                 value={branch}
               >
                 {branch}
@@ -45,7 +45,7 @@ const SelectCompareBranches = ({ branches, toBranch, fromBranch, onBranchChange,
             {branches.map((branch, index) => (
               <Dropdown.Item
                 key={index}
-                onClick={onBranchChange}
+                onClick={onFromBranchChange}
                 value={branch}
               >
                 {branch}
@@ -71,7 +71,9 @@ SelectCompareBranches.propTypes = {
   branches: PropTypes.array.isRequired,
   toBranch: PropTypes.string.isRequired,
   fromBranch: PropTypes.string.isRequired,
-  onBranchChange: PropTypes.func// .isRequired
+  onToBranchChange: PropTypes.func.isRequired,
+  onFromBranchChange: PropTypes.func.isRequired,
+  onCreatePullRequest: PropTypes.func.isRequired
 };
 
 export default SelectCompareBranches;

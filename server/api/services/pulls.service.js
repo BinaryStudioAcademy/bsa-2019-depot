@@ -5,8 +5,8 @@ const userRepository = require('../../data/repositories/user.repository');
 const repoHelper = require('../../helpers/repo.helper');
 
 const getBranchDiffs = async (repoId, fromBranch, toBranch) => {
-  const { name: reponame, userId } = repoRepository.getById(repoId);
-  const { username: owner } = userRepository.getUserById(userId);
+  const { userId, name: reponame } = await repoRepository.getById(repoId);
+  const { username: owner } = await userRepository.getUserById(userId);
 
   const pathToRepo = repoHelper.getPathToRepo(owner, reponame);
 

@@ -10,3 +10,15 @@
     margin-top: 0.2em;
   }
 }
+
+.diffInfo {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  h3 {
+    margin-bottom: 10px;
+  }
+}
