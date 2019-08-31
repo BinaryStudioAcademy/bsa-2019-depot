@@ -36,7 +36,7 @@ export const updateRepositoryByOwnerAndName = async ({ owner, reponame, request 
 
 export const changeRepoType = async ({ owner, reponame, request }) => {
   const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/${reponame}/change-type`,
+    endpoint: `/api/repos/${owner}/${reponame}/change-type`,
     type: 'PUT',
     request
   });
