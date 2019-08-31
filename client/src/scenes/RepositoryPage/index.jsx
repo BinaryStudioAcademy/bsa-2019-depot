@@ -13,6 +13,7 @@ import FileViewPage from '../../containers/FileViewPage';
 import FileEditPage from '../../containers/FileEditPage';
 import BranchesTab from '../../containers/BranchesTab/index';
 import CreateIssuePage from '../../containers/CreateIssuePage';
+import CompareChanges from '../CompareChanges';
 import PrivateTab from '../../containers/PrivateTab';
 import { fetchCurrentRepo } from '../../routines/routines';
 import { clearRepoState } from './actions';
@@ -83,6 +84,7 @@ class RepositoryPage extends React.Component {
             <Route exact path={`${match.path}/branches`} component={BranchesTab} />
             <PrivateTab path={[`${match.path}/new/:branch`, `${match.path}/edit/:branch`]} component={FileEditPage} />
             <Route path={`${match.path}/blob/:branch`} component={FileViewPage} />
+            <Route path={`${match.path}/compare`} component={CompareChanges}/>
           </Switch>
         </Container>
       </>
