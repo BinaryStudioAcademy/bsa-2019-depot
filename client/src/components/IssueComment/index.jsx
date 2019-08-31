@@ -32,6 +32,13 @@ class IssueComment extends React.Component {
     this.renderPreview = this.renderPreview.bind(this);
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.body !== prevProps.body) {
+      const { body } = this.props;
+      this.setState({ ...this.state, comment: body });
+    }
+  }
+
   onEdit() {
     this.setState({ ...this.state, editing: true, initialValue: this.state.comment });
   }
@@ -74,7 +81,6 @@ class IssueComment extends React.Component {
   render() {
     const { id, avatar, username, createdAt, buttons, submitBtnTxt, cancelBtnTxt, onDelete, ownComment } = this.props;
     const { comment, selectedTab, isDisabled } = this.state;
-
     return (
       <div className={styles.issue_comment_wrapper} key={id}>
         <div className={styles.comment_author_avatar}>
