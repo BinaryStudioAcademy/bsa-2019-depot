@@ -59,6 +59,8 @@ const getUserRights = async (username, reponame, userId) => {
   return await collaboratorRepository.getUserRights(userId, repositoryId);
 };
 
+const getUserRightsByUserIdAndRepositoryId = (userId, repositoryId) => collaboratorRepository.getUserRights(userId, repositoryId);
+
 module.exports = {
   addCollaborator,
   getUserRights,
@@ -66,5 +68,6 @@ module.exports = {
   getUserInvitationStatus,
   acceptInvitation,
   declineInvitation,
-  removeRepositoryCollaborator
+  removeRepositoryCollaborator,
+  getUserRightsByUserIdAndRepositoryId
 };

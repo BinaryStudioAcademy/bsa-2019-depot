@@ -270,6 +270,18 @@ class IssueRepository extends BaseRepository {
       ]
     });
   }
+
+  getRepoByIssueId(id) {
+    return this.model.findOne({
+      where: { id },
+      include: [
+        {
+          model: RepositoryModel,
+          attributes: ['id']
+        }
+      ]
+    });
+  }
 }
 
 module.exports = new IssueRepository(IssueModel);

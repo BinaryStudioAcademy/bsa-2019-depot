@@ -18,6 +18,7 @@ import { fetchCurrentRepo } from '../../routines/routines';
 import { clearRepoState } from './actions';
 import Spinner from '../../components/Spinner';
 import CodeTab from '../../scenes/CodeTab';
+import CollaboratorInvitation from '../../containers/CollaboratorInvitation';
 
 class RepositoryPage extends React.Component {
   componentDidMount() {
@@ -79,10 +80,11 @@ class RepositoryPage extends React.Component {
             <Route exact path={`${match.path}/issues`} component={IssuesTab} />
             <Route exact path={`${match.path}/issues/new`} component={CreateIssuePage} />
             <Route exact path={`${match.path}/issues/:number`} component={IssueComments} />
-            <PrivateTab exact path={`${match.path}/settings`} component={RepoSettings} />
+            <PrivateTab path={`${match.path}/settings`} component={RepoSettings} />
             <Route exact path={`${match.path}/branches`} component={BranchesTab} />
             <PrivateTab path={[`${match.path}/new/:branch`, `${match.path}/edit/:branch`]} component={FileEditPage} />
             <Route path={`${match.path}/blob/:branch`} component={FileViewPage} />
+            <Route exact path={`${match.path}/invitations`} component={CollaboratorInvitation} />
           </Switch>
         </Container>
       </>

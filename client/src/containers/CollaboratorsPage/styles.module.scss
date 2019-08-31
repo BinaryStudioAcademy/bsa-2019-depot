@@ -6,8 +6,9 @@
 :global(.ui.dividing.header):local(.headerWrapper) {
   padding-bottom: 1em;
 }
-:local(.orgList) {
-  margin-top: 1em;
+
+:global(i.icon):local(.cross) {
+  cursor: pointer;
 }
 
 :local(.collaborators_container) {

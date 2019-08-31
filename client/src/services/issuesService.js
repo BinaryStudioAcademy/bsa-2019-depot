@@ -1,9 +1,12 @@
 import callWebApi from '../helpers/webApiHelper';
 
-export const getIssues = async ({ repositoryId }) => {
+export const getIssues = async ({ username: owner, reponame, repositoryId }) => {
   const response = await callWebApi({
-    endpoint: `/api/repo/${repositoryId}/issues`,
-    type: 'GET'
+    endpoint: `/api/repos/${owner}/${reponame}/issues`,
+    type: 'GET',
+    query: {
+      repositoryId
+    }
   });
   return response.json();
 };

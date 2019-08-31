@@ -131,15 +131,22 @@ class CollaboratorsPage extends React.Component {
                       <Grid.Column width={2}>
                         <Image src={getUserImgLink(imgUrl)} size="mini" />
                       </Grid.Column>
-                      <Grid.Column width={11}>{!isActivated ? `Awaiting ${username}'s response` : null}</Grid.Column>
+                      <Grid.Column width={12}>
+                        {!isActivated ? `Awaiting ${username}'s response` : `${username}`}
+                      </Grid.Column>
                       {/* <Grid.Column width={4}>
                         {!isActivated ? <Button basic size="tiny" content="Copy invite link" /> : null}
                       </Grid.Column> */}
-                      <Grid.Column width={3}>
+                      <Grid.Column width={2}>
                         {!isActivated ? (
                           <CancelInvitation type={'button'} id={id} onClick={this.removeCollaborator} />
                         ) : (
-                          <CancelInvitation type={'icon'} id={id} onClick={this.removeCollaborator} />
+                          <CancelInvitation
+                            className={styles.cross}
+                            type={'icon'}
+                            id={id}
+                            onClick={this.removeCollaborator}
+                          />
                         )}
                       </Grid.Column>
                     </Grid>
