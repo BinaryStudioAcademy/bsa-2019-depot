@@ -1,6 +1,19 @@
 module.exports = (models) => {
   const {
-    User, SshKey, Repository, Branch, Commit, CommitComment, OrgUser, Role, Issue, IssueComment, Star
+    User,
+    SshKey,
+    Repository,
+    Branch,
+    Commit,
+    CommitComment,
+    OrgUser,
+    Role,
+    Issue,
+    IssueComment,
+    Star,
+    Label,
+    Language,
+    LanguageStats
   } = models;
 
   SshKey.belongsTo(User);
@@ -11,7 +24,7 @@ module.exports = (models) => {
   User.hasMany(Issue);
   User.hasMany(IssueComment);
   Repository.hasMany(Issue, { foreignKey: 'repositoryId' });
-  Issue.hasMany(IssueComment);
+  Issue.hasMany(IssueComment, { onDelete: 'cascade' });
 
   User.hasMany(OrgUser, { foreignKey: 'userId' });
   User.hasMany(OrgUser, { foreignKey: 'orgId' });
@@ -25,6 +38,7 @@ module.exports = (models) => {
   Repository.hasMany(Branch);
   Branch.belongsTo(Repository);
   Branch.belongsTo(Commit, { foreignKey: 'headCommitId', as: 'headCommit' }); // 'headCommitId' will be added to Branch
+  Branch.hasMany(LanguageStats);
   Repository.hasMany(Commit, { foreignKey: 'repositoryId' });
   Commit.hasMany(CommitComment, { foreignKey: 'commitId' });
   Commit.belongsTo(User);
@@ -50,4 +64,12 @@ module.exports = (models) => {
 
   Star.belongsTo(Repository);
   Star.belongsTo(User);
+
+  Language.hasMany(LanguageStats);
+
+  LanguageStats.belongsTo(Language);
+  LanguageStats.belongsTo(Branch);
+
+  Repository.hasMany(Label);
+  Label.belongsTo(Repository);
 };

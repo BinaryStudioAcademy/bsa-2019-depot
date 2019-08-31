@@ -10,6 +10,8 @@ const branchRepository = require('../../data/repositories/branch.repository');
 const commitRepository = require('../../data/repositories/commit.repository');
 
 const CustomError = require('../../helpers/error.helper');
+const { defaultLabels } = require('../../config/labels.config');
+const { createLabel } = require('./label.service');
 
 const initialCommit = async ({
   owner, email, repoName, files
@@ -86,12 +88,16 @@ const createRepo = async (repoData) => {
     .catch(() => {
       Promise.reject(new CustomError(404, 'Error! Repos wasn`t created'));
     });
-  await repoRepository.create({
+  const repository = await repoRepository.create({
     userId,
     name,
     description,
     isPublic
   });
+
+  // add default labels for repository
+  const { id } = repository;
+  await Promise.all(defaultLabels.map(label => createLabel({ repositoryId: id, ...label })));
 
   const initialData = repoHelper.generateInitialData({ ...repoData });
   // Initial data has to contain 'email' (of user) and 'files' in form of [ { filename, content }, {... ]
@@ -134,11 +140,19 @@ const getByUserAndReponame = async ({ owner, reponame }) => {
   if (!user) {
     return Promise.reject(new CustomError(404, `User ${owner} not found`));
   }
-  const repository = await repoRepository.getByUserAndReponame(user.id, reponame);
+  const repository = await repoRepository.getByUserAndReponame(user.get({ plain: true }).id, reponame);
   if (!repository) {
     return Promise.reject(new CustomError(404, `Repository ${reponame} not found`));
   }
-  return repository;
+  const branches = await branchRepository.getByRepoId(repository.get({ plain: true }).id);
+  const branchesNames = branches.map((branch) => {
+    const { name } = branch.get({ plain: true });
+    return name;
+  });
+  return {
+    ...repository.get({ plain: true }),
+    branches: branchesNames
+  };
 };
 
 const updateByUserAndReponame = async ({ owner, reponame, data }) => {

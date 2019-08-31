@@ -10,10 +10,12 @@ import Settings from '../../scenes/Settings';
 import CreateOrganization from '../../scenes/CreateOrganization';
 import { fetchCurrentUser } from '../../routines/routines';
 import OrganizationPeople from '../../scenes/OrganizationPeople';
-import RepositoryPage from '../../scenes/Repository';
 import Header from '../Header';
 import Footer from '../../components/Footer';
 import Invitation from '../../scenes/Invitation';
+import RepositoryPage from '../../scenes/RepositoryPage';
+import Issues from '../../scenes/Issues';
+
 import './styles.module.scss';
 
 class Routing extends React.Component {
@@ -44,7 +46,7 @@ class Routing extends React.Component {
             <PrivateRoute exact path="/new" component={CreateRepository} />
             <PrivateRoute exact path="/organizations/:orgname/repositories/new" component={CreateRepository} />
             <PrivateRoute exact path="/:username" component={Dashboard} />
-            <PrivateRoute exact path="/:username/issues" component={NotFound} />
+            <PrivateRoute exact path="/:username/issues" component={Issues} />
             <PrivateRoute exact path="/:username/pull-requests" component={NotFound} />
             <PrivateRoute path="/:username/:reponame" component={RepositoryPage} />
             <Route path="*" component={NotFound} />

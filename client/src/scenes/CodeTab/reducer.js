@@ -1,16 +1,5 @@
-import { fetchLastCommitOnBranch, fetchFileTree } from '../../routines/routines';
+import { fetchFileTree, fetchBranch } from '../../routines/routines';
 import { NEW_FILE } from './actionTypes';
-
-const initialLastCommitState = {
-  commit: {
-    sha: '',
-    author: '',
-    date: '',
-    message: ''
-  },
-  loading: false,
-  error: null
-};
 
 const initialFileTreeState = {
   tree: {
@@ -20,6 +9,13 @@ const initialFileTreeState = {
     currentPath: ''
   },
   loading: false,
+  error: null
+};
+
+const initialBranchState = {
+  commitsCount: { count: 0 },
+  headCommit: {},
+  loading: true,
   error: null
 };
 
@@ -41,24 +37,24 @@ export const newFileReducer = (state = initialEditFileState, action) => {
   }
 };
 
-export const lastCommitReducer = (state = initialLastCommitState, action) => {
+export const branchReducer = (state = initialBranchState, action) => {
   switch (action.type) {
-  case fetchLastCommitOnBranch.TRIGGER:
+  case fetchBranch.TRIGGER:
     return {
       ...state,
       loading: true
     };
-  case fetchLastCommitOnBranch.SUCCESS:
+  case fetchBranch.SUCCESS:
     return {
       ...state,
-      commit: action.payload
+      ...action.payload
     };
-  case fetchLastCommitOnBranch.FAILURE:
+  case fetchBranch.FAILURE:
     return {
       ...state,
       error: action.payload
     };
-  case fetchLastCommitOnBranch.FULFILL:
+  case fetchBranch.FULFILL:
     return {
       ...state,
       loading: false

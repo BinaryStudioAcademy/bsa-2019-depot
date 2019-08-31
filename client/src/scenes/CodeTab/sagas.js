@@ -1,23 +1,21 @@
 import { takeEvery, put, call, all } from 'redux-saga/effects';
 import * as branchesService from '../../services/branchesService';
-import { fetchLastCommitOnBranch, fetchFileTree } from '../../routines/routines';
+import { fetchBranch, fetchFileTree } from '../../routines/routines';
 
-function* lastCommitRequest({ payload: { username, reponame, branch } }) {
+function* branchRequest({ payload: { repoID, branch } }) {
   try {
-    yield put(fetchLastCommitOnBranch.request());
-
-    const response = yield call(branchesService.getLastCommit, username, reponame, branch);
-
-    yield put(fetchLastCommitOnBranch.success(response));
+    yield put(fetchBranch.request());
+    const response = yield call(branchesService.getBranch, repoID, branch);
+    yield put(fetchBranch.success(response));
   } catch (error) {
-    yield put(fetchLastCommitOnBranch.failure(error.message));
+    yield put(fetchBranch.failure(error.message));
   } finally {
-    yield put(fetchLastCommitOnBranch.fulfill());
+    yield put(fetchBranch.fulfill());
   }
 }
 
-function* watchLastCommitRequest() {
-  yield takeEvery(fetchLastCommitOnBranch.TRIGGER, lastCommitRequest);
+function* watchBranchRequest() {
+  yield takeEvery(fetchBranch.TRIGGER, branchRequest);
 }
 
 function* fileTreeRequest({ payload: { username, reponame, branch, query } }) {
@@ -39,5 +37,5 @@ function* watchFileTreeRequest() {
 }
 
 export default function* codeTabSagas() {
-  yield all([watchLastCommitRequest(), watchFileTreeRequest()]);
+  yield all([watchBranchRequest(), watchFileTreeRequest()]);
 }
