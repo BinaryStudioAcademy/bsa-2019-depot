@@ -1,12 +1,33 @@
 const { Router } = require('express');
 const { clientUrl } = require('../../config/common.config');
-const { addCollaborator, getUserRights, getRepositoryCollaborators, removeRepositoryCollaborator } = require('../services/collaborator.service');
+const { getRepositoryCollaborators, getUserInvitationStatus, acceptInvitation, declineInvitation, removeRepositoryCollaborator, addCollaborator, getUserRights } = require('../services/collaborator.service');
 
 const router = Router();
 
 router.get('/:repositoryId', (req, res, next) => {
   const { repositoryId } = req.params;
   getRepositoryCollaborators(repositoryId)
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.get('/:username/:reponame/:userId', (req, res, next) => {
+  const { username, reponame, userId } = req.params;
+  getUserInvitationStatus(username, reponame, userId)
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.post('/', (req, res, next) => {
+  const { username, reponame, userId } = req.params;
+  acceptInvitation(username, reponame, userId)
+    .then(data => res.send(data))
+    .catch(next);
+});
+
+router.delete('/', (req, res, next) => {
+  const { username, reponame, userId } = req.body;
+  declineInvitation(username, reponame, userId)
     .then(data => res.send(data))
     .catch(next);
 });

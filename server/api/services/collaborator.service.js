@@ -23,9 +23,31 @@ const addCollaborator = async ({ recipient, username, reponame, repositoryId, ur
 
 const getRepositoryCollaborators = repositoryId => collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId);
 
+const getUserInvitationStatus = (username, reponame, userId) => collaboratorRepository.getUserInvitationStatus(username, reponame, userId);
+
+const acceptInvitation = async (username, reponame, userId) => {
+  const { id } = await getUserInvitationStatus(username, reponame, userId);
+  await collaboratorRepository.updateById(id, {
+    isActivated: true
+  });
+  return {
+    status: true
+  };
+};
+
+const declineInvitation = async (username, reponame, userId) => {
+  const { id } = await getUserInvitationStatus(username, reponame, userId);
+  await collaboratorRepository.deleteById(id);
+  return {
+    status: true
+  };
+};
+
 const removeRepositoryCollaborator = async (collaboratorId) => {
   await collaboratorRepository.deleteById(collaboratorId);
-  return true;
+  return {
+    status: true
+  };
 };
 
 const getUserRights = async (username, reponame, userId) => {
@@ -37,5 +59,8 @@ module.exports = {
   addCollaborator,
   getUserRights,
   getRepositoryCollaborators,
+  getUserInvitationStatus,
+  acceptInvitation,
+  declineInvitation,
   removeRepositoryCollaborator
 };

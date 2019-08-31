@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Container, Button, Icon } from 'semantic-ui-react';
-import { acceptInvitation, cancelInvitation } from '../../services/inviteMemberService';
+import { Container, Button, Icon, Loader } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import { getUserInvitationStatus, acceptInvitation, declineInvitation } from '../../services/collaboratorService';
 
 import styles from './styles.module.scss';
 
@@ -13,51 +14,43 @@ class CollaboratorInvitation extends React.Component {
 
     this.state = {
       invited: false,
-      isActivated: false
+      isActivated: false,
+      loading: true
     };
   }
 
   async componentDidMount() {
-    // const { id, match } = this.props;
-    // const { name } = match.params;
-    // const { result } = await getRelationUserOrg(name, id);
-    // const invited = Boolean(result);
-    // if (invited) {
-    //   const { isActivated } = result;
-    //   this.setState({
-    //     invited,
-    //     isActivated
-    //   });
-    // }
+    const { userId, match } = this.props;
+    const { username, reponame } = match.params;
+    const [response] = await getUserInvitationStatus(username, reponame, userId);
+    const invited = Boolean(response);
+    if (invited) {
+      const { isActivated } = response;
+      this.setState({
+        invited,
+        isActivated,
+        loading: false
+      });
+    } else {
+      this.setState({
+        loading: false
+      });
+    }
   }
 
   acceptInvitation = async () => {
-    const { id: userId, match, history } = this.props;
+    const { userId, match, history } = this.props;
     const { username, reponame } = match.params;
-
-    await acceptInvitation({
-      userId,
-      reponame
-    });
+    await acceptInvitation(username, reponame, userId);
     history.push(`/${username}/${reponame}`);
   };
 
   declineInvitation = async () => {
-    const { id, match, history } = this.props;
-    const { name } = match.params;
-
-    await cancelInvitation({
-      userId: id,
-      orgName: name
-    });
+    const { userId, match, history } = this.props;
+    const { username, reponame } = match.params;
+    await declineInvitation(username, reponame, userId);
     history.push('/dashboard');
   };
-
-  // goToProfileOrg = () => {
-  //   const { history, match } = this.props;
-  //   const { name } = match.params;
-  //   history.push(`/${name}`);
-  // };
 
   renderHaveInviteComponent = () => {
     const { username, reponame } = this.props.match.params;
@@ -81,23 +74,25 @@ class CollaboratorInvitation extends React.Component {
   };
 
   renderNotInvitedComponent = () => {
-    const { username } = this.props.match.params;
+    const { ownUsername } = this.props;
     return (
       <Container textAlign="center" className={styles.form}>
         <Icon name="warning sign" size="big" />
         <h3 className={styles.notFoundTitle}>Invitation not found</h3>
         <p className={styles.note}>We’ve looked all over but couldn’t find your invitation. </p>
-        <Button inverted primary className={styles.goToBtn} onClick={this.goToUserProfile}>
-          Go to {username}`s profile
-        </Button>
+        <Link to={`/${ownUsername}`}>
+          <Button inverted primary className={styles.goToBtn}>
+            Return to your profile
+          </Button>
+        </Link>
       </Container>
     );
   };
 
   render() {
     const { username, reponame } = this.props.match.params;
-    const { invited, isActivated } = this.state;
-
+    const { invited, isActivated, loading } = this.state;
+    if (loading) return <Loader active />;
     if (invited && !isActivated) return this.renderHaveInviteComponent();
     if (!invited) return this.renderNotInvitedComponent();
     return <Redirect to={`/${username}/${reponame}`} />;
@@ -107,13 +102,14 @@ class CollaboratorInvitation extends React.Component {
 CollaboratorInvitation.propTypes = {
   match: PropTypes.object,
   history: PropTypes.object,
-  id: PropTypes.string
+  userId: PropTypes.string.isRequired,
+  ownUsername: PropTypes.string.isRequired
 };
 
 const mapStateToProps = ({
   profile: {
-    currentUser: { id }
+    currentUser: { id: userId, username: ownUsername }
   }
-}) => ({ id });
+}) => ({ userId, ownUsername });
 
 export default connect(mapStateToProps)(CollaboratorInvitation);

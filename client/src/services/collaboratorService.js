@@ -24,3 +24,29 @@ export const invite = async request => {
   });
   return response.json();
 };
+
+export const getUserInvitationStatus = async (username, reponame, userId) => {
+  const response = await callWebApi({
+    endpoint: `/api/collaborators/${username}/${reponame}/${userId}`,
+    type: 'GET'
+  });
+  return response.json();
+};
+
+export const acceptInvitation = async request => {
+  const response = await callWebApi({
+    endpoint: '/api/collaborators',
+    type: 'POST',
+    request
+  });
+  return response.json();
+};
+
+export const declineInvitation = async request => {
+  const response = await callWebApi({
+    endpoint: '/api/collaborators',
+    type: 'DELETE',
+    request
+  });
+  return response.json();
+};

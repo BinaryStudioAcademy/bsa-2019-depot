@@ -24,7 +24,7 @@ const isWriterMiddleware = require('../middlewares/is-writer.middleware');
 const router = Router();
 
 router
-  .post('/', ownerOnlyMiddleware, (req, res) => {
+  .post('/', (req, res) => {
     const { reponame, ownerID } = req.body;
     createRepo({ userId: ownerID, name: reponame, ...req.body }).then(data => res.send(data));
   })

@@ -4,7 +4,7 @@ import { Grid, Menu, Divider } from 'semantic-ui-react';
 import PrivateRoute from '../../containers/PrivateRoute';
 import PropTypes from 'prop-types';
 import RepositoryOptions from '../RepositoryOptions';
-import CollaboratorsPage from '../CollaboratorsPage/index';
+import CollaboratorsPage from '../CollaboratorsPage';
 
 const RepoSettings = ({ match }) => {
   return (
