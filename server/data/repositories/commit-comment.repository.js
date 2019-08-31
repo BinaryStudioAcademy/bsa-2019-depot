@@ -19,7 +19,10 @@ class CommitCommentRepository extends BaseRepository {
   }
 
   getByCommitId(commitId) {
-    return this.model.findAll({ where: { commitId } });
+    return this.model.findAll({
+      where: { commitId },
+      order: [['createdAt', 'ASC']]
+    });
   }
 }
 
