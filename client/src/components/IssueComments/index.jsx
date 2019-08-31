@@ -101,15 +101,6 @@ class IssueComments extends React.Component {
     }
 
     return await deleteIssueComment({ id });
-
-    // if (result) {
-    //   const issueComments = await getIssueComments(this.state.currentIssue.id);
-    //   this.setState({
-    //     ...this.state,
-    //     issueComments
-    //   });
-    //   return result;
-    // }
   }
 
   async onIssueUpdateBody(id, body) {
@@ -266,21 +257,21 @@ class IssueComments extends React.Component {
           buttons={
             this.isOwnIssue()
               ? [
-                  currentIssue.isOpened ? (
-                    <Button compact floated="right" secondary key="close" onClick={this.onIssueToggle}>
-                      <Icon name="check circle outline" />
+                currentIssue.isOpened ? (
+                  <Button compact floated="right" secondary key="close" onClick={this.onIssueToggle}>
+                    <Icon name="check circle outline" />
                       Close issue
-                    </Button>
-                  ) : (
-                    <Button compact floated="right" secondary color="red" key="close" onClick={this.onIssueToggle}>
-                      Reopen issue
-                    </Button>
-                  ),
-                  <Button compact floated="right" basic color="grey" key="delete" onClick={this.onIssueDelete}>
-                    <Icon name="exclamation" color="grey" />
-                    Delete issue
                   </Button>
-                ]
+                ) : (
+                  <Button compact floated="right" secondary color="red" key="close" onClick={this.onIssueToggle}>
+                      Reopen issue
+                  </Button>
+                ),
+                <Button compact floated="right" basic color="grey" key="delete" onClick={this.onIssueDelete}>
+                  <Icon name="exclamation" color="grey" />
+                    Delete issue
+                </Button>
+              ]
               : null
           }
         />
