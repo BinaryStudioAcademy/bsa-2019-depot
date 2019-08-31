@@ -6,5 +6,9 @@ const commitsSocketInjector = commitsNsp => (req, res, next) => {
   req.commitsNsp = commitsNsp;
   next();
 };
+const reposSocketInjector = reposNsp => (req, res, next) => {
+  req.reposNsp = reposNsp;
+  next();
+};
 
-module.exports = { issuesSocketInjector, commitsSocketInjector };
+module.exports = { issuesSocketInjector, commitsSocketInjector, reposSocketInjector };
