@@ -20,6 +20,7 @@ import Spinner from '../../components/Spinner';
 import CodeTab from '../../scenes/CodeTab';
 import CollaboratorInvitation from '../../containers/CollaboratorInvitation';
 import { getAllUserPermissions } from '../../helpers/checkPermissionsHelper';
+import { socketInit } from '../../helpers/socketInitHelper';
 
 class RepositoryPage extends React.Component {
   constructor(props) {
@@ -27,6 +28,7 @@ class RepositoryPage extends React.Component {
     this.state = {
       isAccessGranted: false
     };
+    this.onChangeToPrivate = this.onChangeToPrivate.bind(this);
   }
 
   async componentDidMount() {
@@ -43,10 +45,38 @@ class RepositoryPage extends React.Component {
     this.setState({
       isAccessGranted
     });
+    this.initSocket();
   }
 
   componentWillUnmount() {
     this.props.clearRepoState();
+    const { id } = this.props;
+    this.socket.emit('leaveRoom', id);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.id !== prevProps.id) {
+      const { id } = this.props;
+      this.socket.emit('createRoom', id);
+    }
+  }
+
+  onChangeToPrivate(changedRepoId) {
+    const {
+      id: repoId,
+      userId,
+      owner: { username: repoOwnerName, id: repoOwnerId }
+    } = this.props;
+
+    if (changedRepoId === repoId && repoOwnerId !== userId) {
+      this.props.history.push(`/${repoOwnerName}`);
+    }
+  }
+
+  initSocket() {
+    this.socket = socketInit('repos');
+
+    this.socket.on('changedToPrivate', this.onChangeToPrivate);
   }
 
   render() {
@@ -56,7 +86,7 @@ class RepositoryPage extends React.Component {
       branches,
       defaultBranch,
       location: { pathname },
-      owner,
+      currentUserName,
       isPublic,
       loading
     } = this.props;
@@ -77,7 +107,7 @@ class RepositoryPage extends React.Component {
       return <Spinner />;
     }
 
-    return username === owner || isPublic || isAccessGranted ? (
+    return username === currentUserName || isPublic || isAccessGranted ? (
       <>
         <RepositoryHeader
           owner={username}
@@ -120,7 +150,7 @@ RepositoryPage.propTypes = {
     url: PropTypes.string.isRequired
   }).isRequired,
   location: PropTypes.exact({
-    key: PropTypes.string.isRequired,
+    key: PropTypes.string,
     pathname: PropTypes.string.isRequired,
     search: PropTypes.string.isRequired,
     hash: PropTypes.string.isRequired,
@@ -132,23 +162,27 @@ RepositoryPage.propTypes = {
   loading: PropTypes.bool.isRequired,
   isPublic: PropTypes.bool.isRequired,
   userId: PropTypes.string.isRequired,
-  owner: PropTypes.string.isRequired
+  id: PropTypes.string.isRequired,
+  currentUserName: PropTypes.string.isRequired,
+  owner: PropTypes.object,
+  history: PropTypes.object
 };
 
 const mapStateToProps = ({
   currentRepo: {
     repository: {
-      currentRepoInfo: { id, issuesCount, branches, defaultBranch, isPublic },
+      currentRepoInfo: { id, issuesCount, branches, defaultBranch, user: owner, isPublic },
       loading
     }
   },
   profile: {
-    currentUser: { id: userId, username: owner }
+    currentUser: { id: userId, username: currentUserName }
   }
 }) => ({
   id,
   userId,
   owner,
+  currentUserName,
   issuesCount,
   branches,
   defaultBranch,

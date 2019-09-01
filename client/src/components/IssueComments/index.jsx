@@ -52,7 +52,6 @@ class IssueComments extends React.Component {
         params: { username, reponame, number }
       }
     } = this.props;
-    console.warn(this.props.match.params);
 
     const currentIssue = await getIssueByNumber(username, reponame, number);
     const { id } = currentIssue;
@@ -87,23 +86,23 @@ class IssueComments extends React.Component {
 
     this.socket.on('newIssueComment', data => {
       this.setState({
-        ...this.state,
         issueComments: [...this.state.issueComments, data]
       });
+    });
+
+    this.socket.on('changedIssueComments', async () => {
+      const issueComments = await getIssueComments(this.state.currentIssue.id);
+      this.setState({ issueComments });
+    });
+
+    this.socket.on('changedIssue', async () => {
+      // const currentIssue = await getIssueByNumber(username, reponame, number);
+      // this.setState({ currentIssue });
     });
   }
 
   async onCommentUpdate(id, comment) {
-    const result = updateIssueComment({ id, comment });
-
-    if (result) {
-      const issueComments = await getIssueComments(this.state.currentIssue.id);
-      this.setState({
-        comment: '',
-        issueComments
-      });
-      return result;
-    }
+    return updateIssueComment({ id, comment });
   }
 
   async onCommentDelete(id) {
@@ -111,16 +110,7 @@ class IssueComments extends React.Component {
       return;
     }
 
-    const result = await deleteIssueComment({ id });
-
-    if (result) {
-      const issueComments = await getIssueComments(this.state.currentIssue.id);
-      this.setState({
-        ...this.state,
-        issueComments
-      });
-      return result;
-    }
+    return await deleteIssueComment({ id });
   }
 
   async onIssueUpdateBody(id, body) {
@@ -150,7 +140,6 @@ class IssueComments extends React.Component {
     const result = isOpened ? await closeIssue({ id }) : await reopenIssue({ id });
     if (result) {
       this.setState({
-        ...this.state,
         currentIssue: {
           ...this.state.currentIssue,
           isOpened: !this.state.currentIssue.isOpened
