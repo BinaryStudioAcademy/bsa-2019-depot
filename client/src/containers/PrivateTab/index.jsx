@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-// import { getUserRights } from '../../services/permissionService';
+import { getUserPermissions } from '../../helpers/checkPermissionsHelper';
 
 const renderComponent = ({ Component, ...rest }) => <Component {...rest} />;
 
@@ -12,17 +12,12 @@ const PrivateTab = ({ username, location, ...props }) => {
     .filter(urlPart => urlPart)
     .slice(0, 2);
 
-  // const [accessPermissions, setAccessPermissions] = useState('ADMIN');
+  const [accessPermissions, setAccessPermissions] = useState(true);
 
   const getPermissions = async () => {
-    // const { userId } = props;
-    // const response = (await getUserRights(owner, reponame, userId))[0];
-    // if (response) {
-    //   const {
-    //     permission: { name }
-    //   } = response;
-    // setAccessPermissions(name);
-    // }
+    const { userId } = props;
+    const isAccessGranted = await getUserPermissions(owner, reponame, userId);
+    setAccessPermissions(isAccessGranted);
   };
 
   useEffect(() => {
@@ -30,8 +25,7 @@ const PrivateTab = ({ username, location, ...props }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // return (username && username === owner) || accessPermissions === 'ADMIN' ? (
-  return username && username === owner ? (
+  return (username && username === owner) || accessPermissions ? (
     <Route {...props} render={renderComponent} />
   ) : (
     <Redirect to={{ pathname: `/${owner}/${reponame}`, state: { from: location } }} />

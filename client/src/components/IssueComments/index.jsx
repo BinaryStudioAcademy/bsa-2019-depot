@@ -12,10 +12,10 @@ import {
   deleteIssue
 } from '../../services/issuesService';
 import { createIssueComment, updateIssueComment, deleteIssueComment } from '../../services/issueCommentsService';
-import { getUserRights } from '../../services/permissionService';
 import IssueComment from '../IssueComment';
 import IssueHeader from '../IssueHeader';
 import { socketInit } from '../../helpers/socketInitHelper';
+import { getUserPermissions } from '../../helpers/checkPermissionsHelper';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 
 import styles from './styles.module.scss';
@@ -59,12 +59,7 @@ class IssueComments extends React.Component {
 
     const issueComments = await getIssueComments(id);
 
-    const userPermissions = (await getUserRights(username, reponame, userId))[0];
-    let accessPermissions;
-    if (userPermissions) {
-      accessPermissions = userPermissions.permission.name;
-    }
-    const isAccessGranted = Boolean(accessPermissions === ('ADMIN' || 'WRITE'));
+    const isAccessGranted = await getUserPermissions(username, reponame, userId);
 
     this.setState({
       currentIssue,

@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import { getFileContent } from '../../services/branchesService';
 import { modifyFile } from '../../services/commitsService';
 import { rawServerUrl } from '../../app.config';
-import { getUserRights } from '../../services/permissionService';
+import { getUserPermissions } from '../../helpers/checkPermissionsHelper';
 
 import styles from './styles.module.scss';
 
@@ -23,8 +23,8 @@ class FileViewPage extends React.Component {
     this.state = {
       fileData: {},
       loading: true,
-      deleting: false
-      // accessPermissions: null
+      deleting: false,
+      isAccessGranted: false
     };
 
     this.handleCopyPath = this.handleCopyPath.bind(this);
@@ -45,15 +45,10 @@ class FileViewPage extends React.Component {
       })
     );
 
-    const response = (await getUserRights(username, reponame, userId))[0];
-    if (response) {
-      const {
-        permission: { name }
-      } = response;
-      this.setState({
-        accessPermissions: name
-      });
-    }
+    const isAccessGranted = await getUserPermissions(username, reponame, userId);
+    this.setState({
+      isAccessGranted
+    });
   }
 
   handleCopyPath() {
@@ -114,8 +109,8 @@ class FileViewPage extends React.Component {
     const {
       fileData: { content, size },
       loading,
-      deleting
-      // accessPermissions
+      deleting,
+      isAccessGranted
     } = this.state;
     const { username: owner, reponame, branch } = match.params;
     const editorStyles = { width: '100%' };
@@ -165,8 +160,7 @@ class FileViewPage extends React.Component {
               >
                 Raw
               </Button>
-              {/* {((username && username === owner) || accessPermissions === ('WRITE' || 'ADMIN')) && ( */}
-              {username && username === owner && (
+              {((username && username === owner) || isAccessGranted) && (
                 <>
                   <Icon link name="pencil" onClick={this.handleEditFile} />
                   <Icon link name="trash alternate" onClick={this.handleDeleteFile} />
