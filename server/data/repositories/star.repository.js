@@ -10,17 +10,6 @@ class StarRepository extends BaseRepository {
     });
   }
 
-  getStarsByRepositoryId(repositoryId) {
-    return this.model.findAll({
-      where: { repositoryId },
-      attributes: ['id'],
-      include: {
-        model: UserModel,
-        attributes: ['id', 'username', 'imgUrl', 'location', 'createdAt']
-      }
-    });
-  }
-
   getStars(username) {
     return this.model.findAll({
       attributes: [],
