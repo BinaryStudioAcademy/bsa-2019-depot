@@ -1,19 +1,12 @@
 :local(.stargazersGrid) {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    // grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
     grid-gap: 20px;
-    // align-items: stretch;
 }
-
-// :global(.ui.container > .ui[class*="three column"].grid > .column:not(.row)){
-//     width: 30%;
-// }
 
 :local(.stargazerBox) {
     display: flex;
     height: 100px;
-    // margin: 0 20px 20px 0;
     padding: 0 0 20px 0;
     border-bottom: 1px solid #e1e4e8;
 }
@@ -32,6 +25,7 @@
     font-weight: 400;
     font-size: 1.4em;
     color: #24292e;
+    margin-bottom: 3px;
     &:hover {
         color: #24292e;
         text-decoration: underline;
