@@ -7,6 +7,19 @@ import { Link } from 'react-router-dom';
 
 import styles from './styles.module.scss';
 
+const renderIcon = (status) => {
+  switch(status) {
+  case 'OPEN':
+    return <Icon name={'info circle'} color={'green'} />;
+  case 'CLOSED':
+    return <Icon name={'check'} color={'red'} />;
+  case 'MERGED':
+    return <Icon name={'check'} color={'green'} />;
+  default:
+    return null;
+  }
+};
+
 const DataList = props => {
   const { data, isPull } = props;
   return (
@@ -29,7 +42,11 @@ const DataList = props => {
                     />
                   ))}
             </List.Content>
-            <Icon name={item.isOpened ? 'info circle' : 'check'} color={item.isOpened ? 'green' : 'red'} />
+            {isPull ? 
+              renderIcon(item.prstatus.name)
+              : (
+                <Icon name={item.isOpened ? 'info circle' : 'check'} color={item.isOpened ? 'green' : 'red'} />
+              )}
             <List.Content>
               <List.Header>
                 <Link
@@ -71,7 +88,8 @@ DataList.propTypes = {
           color: PropTypes.string.isRequired
         })
       ),
-      isOpened: PropTypes.bool.isRequired,
+      isOpened: PropTypes.bool,
+      prstatus: PropTypes.object,
       commentCount: PropTypes.number,
       createdAt: PropTypes.string.isRequired
     })

@@ -16,14 +16,18 @@ class IssuePrContainer extends React.Component {
   }
 
   countOpenData = () => {
-    const { data } = this.props;
-    const counter = data.filter(dataItem => dataItem.isOpened);
+    const { data, isIssues } = this.props;
+    const counter = isIssues
+      ? data.filter(dataItem => dataItem.isOpened)
+      : data.filter(dataItem => dataItem.prstatus.name === 'OPEN');
     return counter.length;
   };
 
   countClosedData = () => {
-    const { data } = this.props;
-    const counter = data.filter(dataItem => !dataItem.isOpened);
+    const { data, isIssues } = this.props;
+    const counter = isIssues
+      ? data.filter(dataItem => dataItem.isOpened)
+      : data.filter(dataItem => dataItem.prstatus.name !== 'OPEN');
     return counter.length;
   };
 
@@ -33,9 +37,8 @@ class IssuePrContainer extends React.Component {
     return data.filter(({ title }) => title.includes(filterByTitle));
   };
 
-  filterData = ({target}) => {
+  filterData = ({ target }) => {
     this.setState({
-      ...this.state,
       filterByTitle: target.value
     });
   };
