@@ -2,6 +2,7 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const repoRepository = require('../../data/repositories/repository.repository');
 const userRepository = require('../../data/repositories/user.repository');
+const pullRepository = require('../../data/repositories/pull-request.repository');
 const repoHelper = require('../../helpers/repo.helper');
 
 const getBranchDiffs = async (repoId, fromBranch, toBranch) => {
@@ -19,4 +20,11 @@ const getBranchDiffs = async (repoId, fromBranch, toBranch) => {
   return { diffs: diffsData };
 };
 
-module.exports = { getBranchDiffs };
+const getPulls = async (repoId) => {
+  const pulls = await pullRepository.getRepositoryPulls(repoId);
+  return pulls;
+};
+
+const addPull = pullData => pullRepository.addPull(pullData);
+
+module.exports = { getBranchDiffs, getPulls, addPull };
