@@ -80,7 +80,6 @@ class IssueComments extends React.Component {
 
     this.socket.on('newIssueComment', data => {
       this.setState({
-        ...this.state,
         issueComments: [...this.state.issueComments, data]
       });
     });
@@ -135,7 +134,6 @@ class IssueComments extends React.Component {
     const result = isOpened ? await closeIssue({ id }) : await reopenIssue({ id });
     if (result) {
       this.setState({
-        ...this.state,
         currentIssue: {
           ...this.state.currentIssue,
           isOpened: !this.state.currentIssue.isOpened
