@@ -3,23 +3,39 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { getUserImgLink } from '../../helpers/imageHelper';
 import { List, Icon, Image, Popup } from 'semantic-ui-react';
+import { PullRequestOutline} from '@ant-design/icons';
+import AntdIcon from '@ant-design/icons-react';
 import { Link } from 'react-router-dom';
 
-import './styles.module.scss';
+import styles from './styles.module.scss';
+AntdIcon.add(PullRequestOutline);
 
-const IssuesList = props => {
-  const { issues } = props;
+const renderIcon = (status) => {
+  switch(status) {
+  case 'OPEN':
+    return <Icon><AntdIcon type={PullRequestOutline} style={{color: '#28a745'}} /></Icon>;
+  case 'CLOSED':
+    return <Icon><AntdIcon type={PullRequestOutline} style={{color: '#ED1A37'}} /></Icon>;
+  case 'MERGED':
+    return <Icon><AntdIcon type={PullRequestOutline} style={{color: '#6f42c1'}} /></Icon>;
+  default:
+    return null;
+  }
+};
+
+const DataList = props => {
+  const { data, isPull } = props;
   return (
-    issues.length > 0 && (
+    data.length > 0 && (
       <List divided verticalAlign="middle">
-        {issues.map(issue => (
-          <List.Item key={issue.id}>
+        {data.map(item => (
+          <List.Item key={item.id} className={styles.container}>
             <List.Content floated="right">
-              <Icon name="comments outline" /> {issue.commentCount}
+              <Icon name="comments outline" /> {item.commentCount}
             </List.Content>
             <List.Content floated="right">
-              {issue.assignees &&
-                issue.assignees
+              {item.assignees &&
+                item.assignees
                   .slice(0, 3)
                   .map(assignee => (
                     <Popup
@@ -29,15 +45,21 @@ const IssuesList = props => {
                     />
                   ))}
             </List.Content>
-            <Icon name={issue.isOpened ? 'info circle' : 'check'} color={issue.isOpened ? 'green' : 'red'} />
+            {isPull ? 
+              renderIcon(item.prstatus.name)
+              : (
+                <Icon name={item.isOpened ? 'info circle' : 'check'} color={item.isOpened ? 'green' : 'red'} />
+              )}
             <List.Content>
               <List.Header>
-                <Link to={`/${issue.user.username}/${issue.repository.name}/issues/${issue.number}`}>
-                  {issue.title}
+                <Link
+                  to={`/${item.user.username}/${item.repository.name}/${isPull ? 'pulls' : 'issues'}/${item.number}`}
+                >
+                  {item.title}
                 </Link>
               </List.Header>
               <List.Description>
-                {`#${issue.number} opened ${moment(issue.createdAt).fromNow()} by ${issue.user.username}`}
+                {`#${item.number} opened ${moment(item.createdAt).fromNow()} by ${item.user.username}`}
               </List.Description>
             </List.Content>
           </List.Item>
@@ -47,8 +69,8 @@ const IssuesList = props => {
   );
 };
 
-IssuesList.propTypes = {
-  issues: PropTypes.arrayOf(
+DataList.propTypes = {
+  data: PropTypes.arrayOf(
     PropTypes.shape({
       number: PropTypes.number.isRequired,
       title: PropTypes.string.isRequired,
@@ -69,11 +91,13 @@ IssuesList.propTypes = {
           color: PropTypes.string.isRequired
         })
       ),
-      isOpened: PropTypes.bool.isRequired,
+      isOpened: PropTypes.bool,
+      prstatus: PropTypes.object,
       commentCount: PropTypes.number,
       createdAt: PropTypes.string.isRequired
     })
-  ).isRequired
+  ).isRequired,
+  isPull: PropTypes.bool
 };
 
-export default IssuesList;
+export default DataList;

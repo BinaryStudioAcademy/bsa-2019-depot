@@ -88,6 +88,14 @@ class RepositoryRepository extends BaseRepository {
             WHERE "repository"."id" = "issues"."repositoryId"
             AND "issues"."deletedAt" IS NULL)`),
             'issuesCount'
+          ],
+          [
+            sequelize.literal(`
+            (SELECT COUNT(*)
+            FROM "pullrequests"
+            WHERE "repository"."id" = "pullrequests"."repositoryId"
+            AND "pullrequests"."deletedAt" IS NULL)`),
+            'pullCount'
           ]
         ]
       },

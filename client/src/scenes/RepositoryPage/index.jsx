@@ -5,6 +5,8 @@ import { Switch, Route } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 import RepositoryHeader from '../../components/RepositoryHeader';
 import IssuesTab from '../../containers/IssuesTab/index';
+import PullRequestsTab from '../../containers/PullRequestsTab';
+import CompareChanges from '../CompareChanges';
 import IssueComments from '../../components/IssueComments/index';
 import CommitsPage from '../../containers/CommitsPage/index';
 import DiffCommitView from '../../components/DiffCommitView/index';
@@ -13,14 +15,20 @@ import FileViewPage from '../../containers/FileViewPage';
 import FileEditPage from '../../containers/FileEditPage';
 import BranchesTab from '../../containers/BranchesTab/index';
 import CreateIssuePage from '../../containers/CreateIssuePage';
-import CompareChanges from '../CompareChanges';
 import PrivateTab from '../../containers/PrivateTab';
 import { fetchCurrentRepo } from '../../routines/routines';
 import { clearRepoState } from './actions';
 import Spinner from '../../components/Spinner';
 import CodeTab from '../../scenes/CodeTab';
+import { socketInit } from '../../helpers/socketInitHelper';
 
 class RepositoryPage extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.onChangeToPivate = this.onChangeToPivate.bind(this);
+  }
+
   componentDidMount() {
     const {
       fetchCurrentRepo,
@@ -30,16 +38,45 @@ class RepositoryPage extends React.Component {
     } = this.props;
 
     fetchCurrentRepo({ username, reponame });
+    this.initSocket();
   }
 
   componentWillUnmount() {
     this.props.clearRepoState();
+    const { id } = this.props;
+    this.socket.emit('leaveRoom', id);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.id !== prevProps.id) {
+      const { id } = this.props;
+      this.socket.emit('createRoom', id);
+    }
+  }
+
+  onChangeToPivate(changedRepoId) {
+    const {
+      id: repoId,
+      userId,
+      owner: { username: repoOwnerName, id: repoOwnerId }
+    } = this.props;
+
+    if (changedRepoId === repoId && repoOwnerId !== userId) {
+      this.props.history.push(`/${repoOwnerName}`);
+    }
+  }
+
+  initSocket() {
+    this.socket = socketInit('repos');
+
+    this.socket.on('changedToPrivate', this.onChangeToPivate);
   }
 
   render() {
     const {
       match,
       issuesCount,
+      pullCount,
       branches,
       defaultBranch,
       location: { pathname },
@@ -67,6 +104,7 @@ class RepositoryPage extends React.Component {
           owner={username}
           repoName={reponame}
           issueCount={issuesCount}
+          pullCount={pullCount}
           activePage={pathname.split('/')[3]}
           baseUrl={match.url}
         />
@@ -78,20 +116,20 @@ class RepositoryPage extends React.Component {
             <Route exact path={`${match.path}/commits/:branch`} component={CommitsPage} />
             <Route exact path={`${match.path}/commit/:hash`} component={DiffCommitView} />
             <Route exact path={`${match.path}/issues`} component={IssuesTab} />
+            <Route exact path={`${match.path}/pulls`} component={PullRequestsTab} />
+            <Route exact path={`${match.path}/compare`} component={CompareChanges}/>
             <Route exact path={`${match.path}/issues/new`} component={CreateIssuePage} />
             <Route exact path={`${match.path}/issues/:number`} component={IssueComments} />
             <PrivateTab exact path={`${match.path}/settings`} component={RepoSettings} />
             <Route exact path={`${match.path}/branches`} component={BranchesTab} />
             <PrivateTab path={[`${match.path}/new/:branch`, `${match.path}/edit/:branch`]} component={FileEditPage} />
             <Route path={`${match.path}/blob/:branch`} component={FileViewPage} />
-            <Route path={`${match.path}/compare`} component={CompareChanges}/>
           </Switch>
         </Container>
       </>
     );
   }
 }
-
 RepositoryPage.propTypes = {
   fetchCurrentRepo: PropTypes.func.isRequired,
   clearRepoState: PropTypes.func.isRequired,
@@ -102,39 +140,36 @@ RepositoryPage.propTypes = {
     url: PropTypes.string.isRequired
   }).isRequired,
   location: PropTypes.exact({
-    key: PropTypes.string.isRequired,
+    key: PropTypes.string,
     pathname: PropTypes.string.isRequired,
     search: PropTypes.string.isRequired,
     hash: PropTypes.string.isRequired,
     state: PropTypes.array
-  }).isRequired
+  }).isRequired,
+  id: PropTypes.string.isRequired,
+  issuesCount: PropTypes.string,
+  branches: PropTypes.array.isRequired,
+  defaultBranch: PropTypes.string,
+  loading: PropTypes.bool.isRequired,
+  userId: PropTypes.string,
+  owner: PropTypes.object,
+  history: PropTypes.object
 };
-
 const mapStateToProps = ({
-  currentRepo : {
+  currentRepo: {
     repository: {
-      currentRepoInfo: {
-        id,
-        issuesCount,
-        branches,
-        defaultBranch
-      },
+      currentRepoInfo: { id, issuesCount, pullCount, branches, defaultBranch, user: owner },
       loading
     }
+  },
+  profile: {
+    currentUser: { id: userId }
   }
-}) => ({
-  id,
-  issuesCount,
-  branches,
-  defaultBranch,
-  loading
-});
-
+}) => ({ id, issuesCount, pullCount, branches, defaultBranch, loading, owner, userId });
 const mapDispatchToProps = {
   fetchCurrentRepo,
   clearRepoState
 };
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps

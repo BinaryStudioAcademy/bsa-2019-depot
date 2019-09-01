@@ -218,6 +218,12 @@ router
     pullsService.getPullData(repoId, fromBranch, toBranch)
       .then(data => res.send(data))
       .catch(next);
+  })
+  .get('/:repoId/pulls', (req, res, next) => {
+    const { repoId } = req.params;
+    pullsService.getPulls(repoId)
+      .then(data => res.send(data))
+      .catch(next);
   });
 
 
