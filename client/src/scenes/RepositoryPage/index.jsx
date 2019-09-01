@@ -156,6 +156,7 @@ RepositoryPage.propTypes = {
     hash: PropTypes.string.isRequired,
     state: PropTypes.array
   }).isRequired,
+  id: PropTypes.string.isRequired,
   issuesCount: PropTypes.number.isRequired,
   branches: PropTypes.array.isRequired,
   defaultBranch: PropTypes.string.isRequired,
@@ -164,6 +165,7 @@ RepositoryPage.propTypes = {
   userId: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
   currentUserName: PropTypes.string.isRequired,
+  userId: PropTypes.string,
   owner: PropTypes.object,
   history: PropTypes.object
 };
