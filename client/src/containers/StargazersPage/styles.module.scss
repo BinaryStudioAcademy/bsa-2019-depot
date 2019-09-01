@@ -1,16 +1,25 @@
-:global(.ui.container > .ui[class*="three column"].grid > .row > .column){
-    width: 30%;
+:local(.stargazersGrid) {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    // grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 20px;
+    // align-items: stretch;
 }
 
-:global(.ui.grid > .row > .column):local(.stargazerBox) {
+// :global(.ui.container > .ui[class*="three column"].grid > .column:not(.row)){
+//     width: 30%;
+// }
+
+:local(.stargazerBox) {
     display: flex;
     height: 100px;
-    margin: 0 20px 20px 0;
-    padding-bottom: 20px;
+    // margin: 0 20px 20px 0;
+    padding: 0 0 20px 0;
     border-bottom: 1px solid #e1e4e8;
 }
 
 :global(.ui.header:first-child):local(.stargazerHeader) {
+    font-weight: 500;
     margin: 1.3em 0 0.7em 0; 
 }
 
@@ -29,7 +38,6 @@
     }
 }
   
-
 :local(.stargazerDate) {
     color: #586069;
     font-size: 0.75em;

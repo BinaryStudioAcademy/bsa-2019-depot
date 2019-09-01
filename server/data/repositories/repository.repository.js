@@ -106,6 +106,16 @@ class RepositoryRepository extends BaseRepository {
         {
           model: UserModel,
           attributes: ['id', 'username']
+        },
+        {
+          model: StarModel,
+          attributes: ['id'],
+          include: [
+            {
+              model: UserModel,
+              attributes: ['id', 'username', 'imgUrl', 'location', 'createdAt']
+            }
+          ]
         }
       ]
     });

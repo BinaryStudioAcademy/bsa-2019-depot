@@ -1,7 +1,6 @@
 $gray: #f7f7fb;
 
-
-:global(.ui.button):local(.forkButton) {
+:global(.ui.button):local(.repo_item_stars) {
   display: flex;
   align-items: center;
   font-size: 0.85rem;
@@ -15,7 +14,7 @@ $gray: #f7f7fb;
   vertical-align: middle;
   white-space: nowrap;
 
-  & .forkButtonIcon {
+  & .star_icon {
     margin-right: 5px;
   }
 
