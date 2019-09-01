@@ -113,11 +113,20 @@ class DiffCommitView extends Component {
 
     this.socket.emit('createRoom', id);
 
-    this.socket.on('newCommitComment', data => {
-      this.setState({
-        ...this.state,
-        comments: [...this.state.comments, data]
-      });
+    this.socket.on('newCommitComment', async data => {
+      const {
+        diffsData: { id }
+      } = this.state;
+      const comments = await commitsService.getCommitComments(id);
+      this.setState({ comments });
+    });
+
+    this.socket.on('changedCommitComment', async () => {
+      const {
+        diffsData: { id }
+      } = this.state;
+      const comments = await commitsService.getCommitComments(id);
+      this.setState({ comments });
     });
   }
 
