@@ -90,7 +90,6 @@ const getCommitsAndCreatedRepoByDate = async (data) => {
     const monthAndYear = stringifiedDate.slice(1, 8);
     monthActivity[monthAndYear].createdRepos.push(name);
   });
-  console.log(userActivitybyDate, monthActivity);
   return { userActivitybyDate, monthActivity };
 };
 
