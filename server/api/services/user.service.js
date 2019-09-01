@@ -12,8 +12,8 @@ const getUserById = async (userId) => {
 
 const getUsersOrganizations = userId => OrgUserRepository.getUsersOrganizations(userId);
 
-const getUserDetailed = async (username) => {
-  const user = await UserRepository.getUserDetailed(username);
+const getUserDetailed = async (username, isOwner) => {
+  const user = await UserRepository.getUserDetailed(username, isOwner);
   return user || Promise.reject(new CustomError(404, `User ${username} not found`));
 };
 

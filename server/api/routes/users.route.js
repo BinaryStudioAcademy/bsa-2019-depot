@@ -57,7 +57,8 @@ router.get('/:userId/keys', (req, res, next) => {
 
 router.get('/:username/overview', (req, res, next) => {
   const { username } = req.params;
-  getUserDetailed(username)
+  const isOwner = req.user.username === username;
+  getUserDetailed(username, isOwner)
     .then(data => res.send(data))
     .catch(next);
 });
@@ -91,7 +92,8 @@ router.get('/:userid/organizations', (req, res, next) => {
 
 router.get('/:username/contribution-activity', (req, res, next) => {
   const { username } = req.params;
-  getCommitsAndCreatedRepoByDate({ user: username })
+  const isOwner = req.user.username === username;
+  getCommitsAndCreatedRepoByDate({ user: username, isOwner })
     .then(commits => res.send(commits))
     .catch(next);
 });

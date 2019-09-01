@@ -197,7 +197,9 @@ const deleteRepo = async ({ repoName, username }) => {
   }
 };
 
-const getReposNames = async ({ user: username, filter, limit }) => {
+const getReposNames = async ({
+  user: username, isOwner, filter, limit
+}) => {
   const user = await userRepository.getByUsername(username);
   if (!user) {
     return Promise.reject(new CustomError(404, `User ${username} not found`));
@@ -207,7 +209,7 @@ const getReposNames = async ({ user: username, filter, limit }) => {
     limit,
     sortByCreatedDateDesc: true
   };
-  const repos = await repoRepository.getByUserWithOptions(user.id, findOptions);
+  const repos = await repoRepository.getByUserWithOptions(user.id, isOwner, findOptions);
   return repos.map(({ name }) => name);
 };
 
