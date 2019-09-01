@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import Octicon, { Repo } from '@primer/octicons-react';
 import { Icon, Label, Container } from 'semantic-ui-react';
 import ForkButton from '../ForkButton';
-// import { getUserRights } from '../../services/permissionService';
 
 import styles from './styles.module.scss';
 
@@ -18,10 +17,7 @@ const RepositoryHeader = ({
   issueCount,
   activePage,
   baseUrl,
-  history,
-  match: {
-    params: { username: paramsUsername }
-  }
+  history
 }) => {
   let activeTab;
   switch (activePage) {
@@ -37,23 +33,6 @@ const RepositoryHeader = ({
   default:
     activeTab = 'code';
   }
-
-  // const [accessPermissions, setAccessPermissions] = useState(null);
-
-  const getPermissions = async () => {
-    // const response = (await getUserRights(paramsUsername, repoName, userId))[0];
-    // if (response) {
-    //   const {
-    //     permission: { name }
-    //   } = response;
-    // setAccessPermissions(name);
-    // }
-  };
-
-  useEffect(() => {
-    getPermissions();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const goToRootDir = (history, url) => () => {
     history.push(url);
@@ -107,7 +86,6 @@ const RepositoryHeader = ({
                 Issues<Label circular>{issueCount}</Label>
               </Link>
             </div>
-            {/* {((username && username === owner) || accessPermissions === ('WRITE' || 'ADMIN')) && ( */}
             {username && username === owner && (
               <div className={`${activeTab === 'settings' && 'active'} item`}>
                 <Link to={`${baseUrl}/settings`}>
