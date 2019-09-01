@@ -2,37 +2,42 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { Icon, Input, Dropdown, Button, Label } from 'semantic-ui-react';
+import { PullRequestOutline} from '@ant-design/icons';
+import AntdIcon from '@ant-design/icons-react';
 import DataList from '../../components/DataList';
 
 import styles from './styles.module.scss';
+AntdIcon.add(PullRequestOutline);
 
 class IssuePrContainer extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      filterByTitle: ''
+      filterByTitle: '',
+      showOpenData: true
     };
   }
 
-  countOpenData = () => {
+  openData = () => {
     const { data, isIssues } = this.props;
-    const counter = isIssues
+    const openData = isIssues
       ? data.filter(dataItem => dataItem.isOpened)
       : data.filter(dataItem => dataItem.prstatus.name === 'OPEN');
-    return counter.length;
+    return openData;
   };
 
-  countClosedData = () => {
+  closedData = () => {
     const { data, isIssues } = this.props;
-    const counter = isIssues
-      ? data.filter(dataItem => dataItem.isOpened)
+    const closedData = isIssues
+      ? data.filter(dataItem => !dataItem.isOpened)
       : data.filter(dataItem => dataItem.prstatus.name !== 'OPEN');
-    return counter.length;
+    return closedData;
   };
 
   renderFilteredData = () => {
-    const { data } = this.props;
+    const { showOpenData } = this.state;
+    const data = showOpenData ? this.openData() : this.closedData();
     const { filterByTitle } = this.state;
     return data.filter(({ title }) => title.includes(filterByTitle));
   };
@@ -54,17 +59,28 @@ class IssuePrContainer extends React.Component {
     history.push(`/${username}/${reponame}/labels`);
   };
 
+  showOpenData = () => {
+    this.setState({
+      showOpenData: true
+    });
+  };
+
+  showClosedData = () => {
+    this.setState({
+      showOpenData: false
+    });
+  };
+
   render() {
     const { data, isIssues } = this.props;
-    const { filterByTitle } = this.state;
 
     const authorList = data.reduce((acc, { user }) => {
       return !acc.includes(user.username) ? [...acc, user.username] : acc;
     }, []);
 
-    const openData = this.countOpenData();
-    const closedData = this.countClosedData();
-    const filteredData = filterByTitle ? this.renderFilteredData() : data;
+    const openData = this.openData();
+    const closedData = this.closedData();
+    const filteredData = this.renderFilteredData();
 
     const sortOptions = [
       {
@@ -113,11 +129,11 @@ class IssuePrContainer extends React.Component {
         <div className={styles.dataContainer}>
           <div className={styles.dataHeader}>
             <div>
-              <span className={styles.openedData}>
-                <Icon name="info" /> {openData} Open
+              <span className={styles.openedData} onClick={this.showOpenData}>
+                {isIssues ? <Icon name="info" /> : <Icon><AntdIcon type={PullRequestOutline} /></Icon>} {openData.length} Open
               </span>
-              <span className={styles.closedData}>
-                <Icon name="check" /> {closedData} Closed
+              <span className={styles.closedData} onClick={this.showClosedData}>
+                <Icon name="check" /> {closedData.length} Closed
               </span>
             </div>
             <div className={styles.dataFilters}>

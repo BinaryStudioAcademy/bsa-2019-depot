@@ -3,18 +3,21 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { getUserImgLink } from '../../helpers/imageHelper';
 import { List, Icon, Image, Popup } from 'semantic-ui-react';
+import { PullRequestOutline} from '@ant-design/icons';
+import AntdIcon from '@ant-design/icons-react';
 import { Link } from 'react-router-dom';
 
 import styles from './styles.module.scss';
+AntdIcon.add(PullRequestOutline);
 
 const renderIcon = (status) => {
   switch(status) {
   case 'OPEN':
-    return <Icon name={'info circle'} color={'green'} />;
+    return <Icon><AntdIcon type={PullRequestOutline} style={{color: '#28a745'}} /></Icon>;
   case 'CLOSED':
-    return <Icon name={'check'} color={'red'} />;
+    return <Icon><AntdIcon type={PullRequestOutline} style={{color: '#ED1A37'}} /></Icon>;
   case 'MERGED':
-    return <Icon name={'check'} color={'green'} />;
+    return <Icon><AntdIcon type={PullRequestOutline} style={{color: '#6f42c1'}} /></Icon>;
   default:
     return null;
   }
