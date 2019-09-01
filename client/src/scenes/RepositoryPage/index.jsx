@@ -11,6 +11,7 @@ import DiffCommitView from '../../components/DiffCommitView/index';
 import RepoSettings from '../../containers/SettingsTab/index';
 import FileViewPage from '../../containers/FileViewPage';
 import FileEditPage from '../../containers/FileEditPage';
+import StargazersPage from '../../containers/StargazersPage/index';
 import BranchesTab from '../../containers/BranchesTab/index';
 import CreateIssuePage from '../../containers/CreateIssuePage';
 import PrivateTab from '../../containers/PrivateTab';
@@ -19,6 +20,8 @@ import { clearRepoState } from './actions';
 import Spinner from '../../components/Spinner';
 import CodeTab from '../../scenes/CodeTab';
 import { socketInit } from '../../helpers/socketInitHelper';
+
+import styles from './styles.module.scss';
 
 class RepositoryPage extends React.Component {
   constructor(props) {
@@ -104,7 +107,7 @@ class RepositoryPage extends React.Component {
           activePage={pathname.split('/')[3]}
           baseUrl={match.url}
         />
-        <Container>
+        <Container className={styles.contentContainer}>
           <Switch>
             <Route exact path={`${match.path}`} component={CodeTab} />
             <Route exact path={`${match.path}/tree/:branch`} component={CodeTab} />
@@ -114,6 +117,7 @@ class RepositoryPage extends React.Component {
             <Route exact path={`${match.path}/issues`} component={IssuesTab} />
             <Route exact path={`${match.path}/issues/new`} component={CreateIssuePage} />
             <Route exact path={`${match.path}/issues/:number`} component={IssueComments} />
+            <Route exact path={`${match.path}/stargazers`} component={StargazersPage} />
             <PrivateTab exact path={`${match.path}/settings`} component={RepoSettings} />
             <Route exact path={`${match.path}/branches`} component={BranchesTab} />
             <PrivateTab path={[`${match.path}/new/:branch`, `${match.path}/edit/:branch`]} component={FileEditPage} />
