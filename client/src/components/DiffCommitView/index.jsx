@@ -118,7 +118,7 @@ class DiffCommitView extends Component {
         diffsData: { id }
       } = this.state;
       const comments = await commitsService.getCommitComments(id);
-      this.setState({ ...this.state, comments });
+      this.setState({ comments });
     });
 
     this.socket.on('changedCommitComment', async () => {
@@ -126,7 +126,7 @@ class DiffCommitView extends Component {
         diffsData: { id }
       } = this.state;
       const comments = await commitsService.getCommitComments(id);
-      this.setState({ ...this.state, comments });
+      this.setState({ comments });
     });
   }
 

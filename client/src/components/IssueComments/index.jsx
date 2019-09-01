@@ -87,7 +87,12 @@ class IssueComments extends React.Component {
 
     this.socket.on('changedIssueComments', async () => {
       const issueComments = await getIssueComments(this.state.currentIssue.id);
-      this.setState({ ...this.state, issueComments: [...issueComments] });
+      this.setState({ issueComments });
+    });
+
+    this.socket.on('changedIssue', async () => {
+      // const currentIssue = await getIssueByNumber(username, reponame, number);
+      // this.setState({ currentIssue });
     });
   }
 
