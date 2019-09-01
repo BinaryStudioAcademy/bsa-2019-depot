@@ -1,10 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Octicon, { Star } from '@primer/octicons-react';
 import { LineChart, Line } from 'recharts';
 import StarLink from '../../components/StarLink';
+import StarButton from '../../components/StarButton';
 import PropTypes from 'prop-types';
-import { Button } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
 import { getCommits } from '../../services/commitsService';
 import { checkIfEmpty } from '../../services/repositoryService';
@@ -157,10 +156,7 @@ class RepositoryItem extends React.Component {
         </div>
         <div className={styles.repo_item_right}>
           <div>
-            <Button compact className={styles.repo_item_stars} onClick={this.starClickHandler}>
-              <Octicon className={styles.star_icon} icon={Star} />
-              {isStar ? 'Unstar' : 'Star'}
-            </Button>
+            <StarButton starClickHandler={this.starClickHandler} isStar={isStar} />
           </div>
           {!isEmpty && (
             <LineChart width={155} height={25} data={commitsPerYear}>
