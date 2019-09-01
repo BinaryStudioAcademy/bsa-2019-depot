@@ -1,4 +1,3 @@
-const { getUserById } = require('./user.service');
 const CommitRepository = require('../../data/repositories/commit.repository');
 const CommitCommentRepository = require('../../data/repositories/commit-comment.repository');
 const UserRepository = require('../../data/repositories/user.repository');
@@ -20,31 +19,7 @@ const getCommitCommentsByCommitId = async (commitId) => {
     if (!commitComments.length) {
       return [];
     }
-    const users = await Promise.all(commitComments.map(comment => getUserById(comment.userId)));
-    const comments = commitComments.map((item, idx) => {
-      const {
-        id, body, createdAt, updatedAt
-      } = item;
-      const comment = {
-        id,
-        commitId,
-        author: {},
-        body,
-        createdAt,
-        updatedAt
-      };
-      const {
-        id: userId, username, name, imgUrl
-      } = users[idx];
-      comment.author = {
-        id: userId,
-        username,
-        name,
-        imgUrl
-      };
-      return comment;
-    });
-    return comments;
+    return commitComments;
   } catch (err) {
     return Promise.reject(new CustomError(500, err.message));
   }

@@ -17,7 +17,15 @@ class CommitRepository extends BaseRepository {
   getByHash(hash) {
     return this.model.findOne({
       where: { sha: hash },
-      include: [UserModel, CommitCommentModel]
+      include: [
+        {
+          model: UserModel
+        },
+        {
+          model: CommitCommentModel,
+          include: [UserModel]
+        }
+      ]
     });
   }
 

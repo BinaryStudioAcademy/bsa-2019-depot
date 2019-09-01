@@ -1,5 +1,5 @@
 const BaseRepository = require('./base.repository');
-const { CommitCommentModel } = require('../models/index');
+const { CommitCommentModel, UserModel } = require('../models/index');
 
 class CommitCommentRepository extends BaseRepository {
   addCommitComment({ ...commitCommentData }) {
@@ -19,7 +19,10 @@ class CommitCommentRepository extends BaseRepository {
   }
 
   getByCommitId(commitId) {
-    return this.model.findAll({ where: { commitId } });
+    return this.model.findAll({
+      where: { commitId },
+      include: [UserModel]
+    });
   }
 }
 

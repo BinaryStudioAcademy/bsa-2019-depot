@@ -66,8 +66,8 @@ export class CommitCommentItem extends Component {
 
   render() {
     const { comment, hash, userId } = this.props;
-    const { body, author, createdAt } = comment;
-    const { id: authorId, name, username, imgUrl } = author;
+    const { body, user, createdAt } = comment;
+    const { id: authorId, name, username, imgUrl } = user;
     const { text, isEditing, selectedTab } = this.state;
     const authorTitle = name || username;
 
@@ -127,7 +127,7 @@ CommitCommentItem.defaultProps = {};
 CommitCommentItem.propTypes = {
   comment: PropTypes.shape({
     id: PropTypes.string.isRequired,
-    author: PropTypes.shape({
+    user: PropTypes.shape({
       id: PropTypes.string.isRequired,
       imgUrl: PropTypes.string,
       username: PropTypes.string,

@@ -22,3 +22,21 @@
     margin-bottom: 10px;
   }
 }
+
+:global(.ui.segment):local(.pullStats) {
+  margin-left: 0;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+
+  :global(.octicon) {
+    margin-right: 5px;
+  }
+}
+
+.commentsInfo {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
