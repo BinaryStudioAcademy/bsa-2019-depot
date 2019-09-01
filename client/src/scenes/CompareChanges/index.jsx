@@ -7,7 +7,9 @@ import SelectCompareBranches from '../../components/SelectCompareBranches';
 import CommitList from '../../components/CommitsList';
 import { CommitCommentItem } from '../../components/CommitCommentItem';
 import DiffList from '../../components/DiffList';
+import CreateIssuePrForm from '../../components/CreateIssuePrForm';
 import { getBranchDiffs } from '../../services/pullsService';
+import { createPull } from '../../services/pullsService';
 
 import styles from './styles.module.scss';
 
@@ -17,8 +19,8 @@ class CompareChanges extends React.Component {
 
     this.state = {
       loading: true,
-      fromBranch: this.props.branches[0],
-      toBranch: this.props.branches[0],
+      fromBranch: this.props.branches[0].name,
+      toBranch: this.props.branches[0].name,
       diffs: null,
       commits: null,
       commitComments: null,
@@ -30,6 +32,7 @@ class CompareChanges extends React.Component {
 
     this.onToBranchChange = this.onToBranchChange.bind(this);
     this.onFromBranchChange = this.onFromBranchChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -76,6 +79,38 @@ class CompareChanges extends React.Component {
     });
   }
 
+  onSubmit(title, body) {
+    const { userId, repositoryId, branches, history, match } = this.props;
+    const { username, reponame } = match.params;
+    const { fromBranch, toBranch } = this.state;
+
+    const { id: fromBranchId, headCommitId: fromCommitId } = branches.find(({ name }) => name === fromBranch);
+    const { id: toBranchId, headCommitId: toCommitId }  = branches.find(({ name }) => name === toBranch);
+
+    const request = {
+      title,
+      body,
+      userId,
+      repositoryId,
+      fromBranchId,
+      toBranchId,
+      fromCommitId,
+      toCommitId
+    };
+
+    this.setState({ loading: true });
+    createPull(request)
+      .then(() => {
+        this.setState({ loading: false });
+        history.push(`/${username}/${reponame}/pulls`);
+      });
+    // title, userId, repositoryId, fromBranchId, toBranchId, fromCommitId, toCommitId
+  }
+
+  getNounEnding(quantity) {
+    return quantity === 1 ? '' : 's';
+  }
+
   render() {
     const {
       diffs,
@@ -117,7 +152,7 @@ class CompareChanges extends React.Component {
         <SelectCompareBranches
           fromBranch={fromBranch}
           toBranch={toBranch}
-          branches={branches}
+          branches={branches.map(({ name }) => name)}
           onToBranchChange={this.onToBranchChange}
           onFromBranchChange={this.onFromBranchChange}
         />
@@ -126,11 +161,12 @@ class CompareChanges extends React.Component {
           : (diffs && diffs.length
             ? (
               <>
+                <CreateIssuePrForm isIssues={false} onSubmit={this.onSubmit}/>
                 <Segment className={styles.pullStats}>
-                  <div className={styles.pullStatSection}><Octicon icon={GitCommit}/><b>{numOfCommits}</b> commits</div>
-                  <div className={styles.pullStatSection}><Octicon icon={Diff}/><b>{numOfFiles}</b> files changed</div>
-                  <div className={styles.pullStatSection}><Octicon icon={Comment}/><b>{numOfCommitComments}</b> commit comments</div>
-                  <div className={styles.pullStatSection}><Octicon icon={Organization}/><b>{numOfContributors}</b> contributors</div>
+                  <div className={styles.pullStatSection}><Octicon icon={GitCommit}/><b>{numOfCommits}</b> commit{this.getNounEnding(numOfCommits)}</div>
+                  <div className={styles.pullStatSection}><Octicon icon={Diff}/><b>{numOfFiles}</b> file{this.getNounEnding(numOfFiles)} changed</div>
+                  <div className={styles.pullStatSection}><Octicon icon={Comment}/><b>{numOfCommitComments}</b> commit comment{this.getNounEnding(numOfCommitComments)}</div>
+                  <div className={styles.pullStatSection}><Octicon icon={Organization}/><b>{numOfContributors}</b> contributor{this.getNounEnding(numOfContributors)}</div>
                 </Segment>
                 <CommitList commits={commits}/>
                 <DiffList diffs={diffs}/>
@@ -160,12 +196,24 @@ class CompareChanges extends React.Component {
 }
 
 CompareChanges.propTypes = {
+  userId: PropTypes.string.isRequired,
   repositoryId: PropTypes.string.isRequired,
-  branches: PropTypes.arrayOf(PropTypes.string).isRequired
+  branches: PropTypes.arrayOf(PropTypes.object).isRequired,
+  history: PropTypes.object,
+  match: PropTypes.exact({
+    params: PropTypes.object.isRequired,
+    isExact: PropTypes.bool.isRequired,
+    path: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired
+  }).isRequired
 };
 
-const mapStateToProps = ({ currentRepo: { repository: { currentRepoInfo: { id, branches } } } }) => ({
-  repositoryId: id,
+const mapStateToProps = ({
+  currentRepo: { repository: { currentRepoInfo: { id: repositoryId, branches } } },
+  profile: { currentUser: { id: userId } }
+}) => ({
+  userId,
+  repositoryId,
   branches
 });
 

@@ -145,13 +145,10 @@ const getByUserAndReponame = async ({ owner, reponame }) => {
     return Promise.reject(new CustomError(404, `Repository ${reponame} not found`));
   }
   const branches = await branchRepository.getByRepoId(repository.get({ plain: true }).id);
-  const branchesNames = branches.map((branch) => {
-    const { name } = branch.get({ plain: true });
-    return name;
-  });
+  const branchesObjects = branches.map(branch => branch.get({ plain: true }));
   return {
     ...repository.get({ plain: true }),
-    branches: branchesNames
+    branches: branchesObjects
   };
 };
 

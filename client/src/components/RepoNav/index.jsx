@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -25,7 +25,13 @@ const RepoNav = (props) => {
   function handleBranchChange(event, data) {
     const { value }= data;
     onBranchChange(value);
-  };
+  }
+
+  function handleCreatePull() {
+    const { match, history } = props;
+    const { username, reponame } = match.params;
+    history.push(`/${username}/${reponame}/compare`);
+  }
 
   return (<div className={styles.repoNav}>
     <div>
@@ -59,7 +65,7 @@ const RepoNav = (props) => {
           </React.Fragment>
         </Dropdown.Menu>
       </Dropdown>
-      <Button className={styles.actionButton}>New pull request</Button>
+      <Button className={styles.actionButton} onClick={handleCreatePull}>New pull request</Button>
     </div>
     <div className={styles.repoActions}>
       <Button.Group>
@@ -130,7 +136,14 @@ RepoNav.propTypes = {
   branches: PropTypes.array,
   onBranchChange: PropTypes.func.isRequired,
   onCreateFile: PropTypes.func.isRequired,
-  OnDropdownClick: PropTypes.func
+  OnDropdownClick: PropTypes.func,
+  match: PropTypes.exact({
+    params: PropTypes.object.isRequired,
+    isExact: PropTypes.bool.isRequired,
+    path: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired
+  }).isRequired,
+  history: PropTypes.object
 };
 
-export default RepoNav;
+export default withRouter(RepoNav);

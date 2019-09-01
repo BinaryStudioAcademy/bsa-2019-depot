@@ -13,7 +13,7 @@ const {
 const { getCommits, getCommitDiff, getCommitCount } = require('../services/commit.service');
 const { deleteStarsByRepoId } = require('../services/star.service');
 const {
-  getBranches, getBranchTree, getBranchInfo, getLastCommitOnBranch
+  getBranches, getBranchTree, getBranchInfo, getLastCommitOnBranch, checkFileExists
 } = require('../services/branch.service');
 const { getAllRepoIssues, getRepoIssueByNumber } = require('../services/issue.service');
 const { getLabelsByRepoId } = require('../services/label.service');
@@ -95,6 +95,13 @@ router
     const { filepath } = req.query;
     getFileContent(owner, repoName, branchName, filepath)
       .then(fileData => res.send(fileData))
+      .catch(next);
+  })
+  .get('/:owner/:repoName/:branch/file-exist', (req, res, next) => {
+    const { owner, repoName, branch } = req.params;
+    const { filepath } = req.query;
+    checkFileExists(owner, repoName, branch, filepath)
+      .then(result => res.send(result))
       .catch(next);
   })
   .get('/:owner/:repoName/:branchName/last-commit', (req, res, next) => {

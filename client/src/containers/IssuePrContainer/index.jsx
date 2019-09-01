@@ -49,8 +49,14 @@ class IssuePrContainer extends React.Component {
   };
 
   onCreateDataItem = () => {
-    const { location, history } = this.props;
-    history.push(`${location.pathname}/new`);
+    const { isIssues, location, match, history } = this.props;
+    const { username, reponame } = match.params;
+
+    if (isIssues) {
+      history.push(`${location.pathname}/new`);
+    } else {
+      history.push(`/${username}/${reponame}/compare`);
+    }
   };
 
   onShowLabels = () => {

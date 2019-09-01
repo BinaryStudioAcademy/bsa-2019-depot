@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Dropdown, Segment } from 'semantic-ui-react';
-import Octicon, { GitCompare, ArrowLeft, GitPullRequest } from '@primer/octicons-react';
+import { Dropdown, Segment } from 'semantic-ui-react';
+import Octicon, { GitCompare, ArrowLeft } from '@primer/octicons-react';
 
 import styles from './styles.module.scss';
 
-const SelectCompareBranches = ({ branches, toBranch, fromBranch, onToBranchChange, onFromBranchChange, onCreatePullRequest }) => {
+const SelectCompareBranches = ({ branches, toBranch, fromBranch, onToBranchChange, onFromBranchChange }) => {
   return (
     <Segment className={styles.selectBranchesContainer}>
       <div>
@@ -54,15 +54,6 @@ const SelectCompareBranches = ({ branches, toBranch, fromBranch, onToBranchChang
           </Dropdown.Menu>
         </Dropdown>
       </div>
-      <Button
-        compact
-        primary
-        className={styles.createPullRequest}
-        onClick={onCreatePullRequest}
-      >
-        <Octicon icon={GitPullRequest}/>
-        Create pull request
-      </Button>
     </Segment>
   );
 };
@@ -72,8 +63,7 @@ SelectCompareBranches.propTypes = {
   toBranch: PropTypes.string.isRequired,
   fromBranch: PropTypes.string.isRequired,
   onToBranchChange: PropTypes.func.isRequired,
-  onFromBranchChange: PropTypes.func.isRequired,
-  onCreatePullRequest: PropTypes.func.isRequired
+  onFromBranchChange: PropTypes.func.isRequired
 };
 
 export default SelectCompareBranches;
