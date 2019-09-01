@@ -104,7 +104,6 @@ class CompareChanges extends React.Component {
         this.setState({ loading: false });
         history.push(`/${username}/${reponame}/pulls`);
       });
-    // title, userId, repositoryId, fromBranchId, toBranchId, fromCommitId, toCommitId
   }
 
   getNounEnding(quantity) {
