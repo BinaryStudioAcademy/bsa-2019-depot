@@ -1,7 +1,6 @@
 import { all, call } from 'redux-saga/effects';
 
 import issuesSagas from '../containers/IssuesTab/sagas';
-import pullRequestsSagas from '../containers/PullRequestsTab/sagas';
 import { watchForgotPassword } from '../scenes/Forgot/saga/watchers';
 import { watchResetPassword } from '../scenes/Reset/saga/watchers';
 import commitPageSagas from '../containers/CommitsPage/sagas';
@@ -18,7 +17,6 @@ import repositoryPageSagas from '../scenes/RepositoryPage/sagas';
 export default function* rootSaga() {
   yield all([
     issuesSagas(),
-    pullRequestsSagas(),
     call(watchForgotPassword),
     watchResetPassword(),
     commitPageSagas(),

@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
 
 import issuesReducer from '../containers/IssuesTab/reducer';
-import pullRequestsReducer from '../containers/PullRequestsTab/reducer';
 import { forgotReducer as forgot } from '../scenes/Forgot/reducer';
 import { resetReducer as reset } from '../scenes/Reset/reducer';
 import { commitsData } from '../containers/CommitsPage/reducer';
@@ -24,7 +23,6 @@ export default combineReducers({
   forgot,
   reset,
   issuesData: issuesReducer,
-  pullsData: pullRequestsReducer,
   commitsData,
   branchesData,
   newFile: newFileReducer,

@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Loader } from 'semantic-ui-react';
-import { fetchPullRequests, fetchCurrentRepo } from '../../routines/routines';
+import { fetchCurrentRepo } from '../../routines/routines';
+import { getPulls } from '../../services/pullRequestsService';
 import IssuePrContainer from '../IssuePrContainer';
 
 class PullRequestsTab extends React.Component {
@@ -15,27 +16,26 @@ class PullRequestsTab extends React.Component {
         author: '',
         assignees: [],
         opened: true
-      }
+      },
+      pulls: []
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const {
       repositoryId,
-      fetchPullRequests,
       fetchCurrentRepo,
       match: {
         params: { username, reponame }
       }
     } = this.props;
-    const { filter } = this.state;
     if (!repositoryId) {
       fetchCurrentRepo({ username, reponame });
     } else {
-      fetchPullRequests({
-        repositoryId,
-        filter
+      const pulls = await getPulls({
+        repositoryId
       });
+      this.setState({ pulls });
     }
   }
 
@@ -46,8 +46,8 @@ class PullRequestsTab extends React.Component {
   };
 
   render() {
-    const { loading, pulls } = this.props;
-    const { onChangeFilter } = this.state;
+    const { loading } = this.props;
+    const { onChangeFilter, pulls } = this.state;
 
     return loading ? (
       <Loader active />
@@ -60,19 +60,12 @@ class PullRequestsTab extends React.Component {
 PullRequestsTab.propTypes = {
   reponame: PropTypes.string,
   repositoryId: PropTypes.string,
-  pulls: PropTypes.array,
-  pullsData: PropTypes.exact({
-    loading: PropTypes.bool.isRequired,
-    error: PropTypes.string,
-    pulls: PropTypes.array
-  }),
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
     isExact: PropTypes.bool.isRequired,
     path: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired
   }).isRequired,
-  fetchPullRequests: PropTypes.func.isRequired,
   fetchCurrentRepo: PropTypes.func.isRequired,
   history: PropTypes.object,
   location: PropTypes.object.isRequired,
@@ -80,18 +73,18 @@ PullRequestsTab.propTypes = {
 };
 
 const mapStateToProps = ({
-  pullsData: { loading, pulls },
   currentRepo: {
-    currentRepoInfo: { id }
+    repository: {
+      currentRepoInfo: { id },
+      loading
+    }
   }
 }) => ({
-  loading,
-  pulls,
-  repositoryId: id
+  repositoryId: id,
+  loading
 });
 
 const mapDispatchToProps = {
-  fetchPullRequests,
   fetchCurrentRepo
 };
 
