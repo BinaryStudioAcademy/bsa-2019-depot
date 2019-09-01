@@ -215,7 +215,7 @@ router
   .get('/:repoId/pulls/diffs', (req, res, next) => {
     const { repoId } = req.params;
     const { fromBranch, toBranch } = req.query;
-    pullsService.getBranchDiffs(repoId, fromBranch, toBranch)
+    pullsService.getPullData(repoId, fromBranch, toBranch)
       .then(data => res.send(data))
       .catch(next);
   });
