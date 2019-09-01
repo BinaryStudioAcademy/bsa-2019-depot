@@ -43,6 +43,11 @@ const RepositoryHeader = ({
     window.location.reload();
   };
 
+  const stargazersLinkClickHandler = useCallback(
+    () => history.push(`/${owner}/${repoName}/stargazers`),
+    [owner, repoName, history]
+  );
+
   const starClickHandler = useCallback(
     () => {
       const updatedStarCount = isStar ? Number(starCount) - 1 : Number(starCount) + 1;
@@ -92,7 +97,7 @@ const RepositoryHeader = ({
             <div>
               <Button size="small" as="div" compact labelPosition="right">
                 <StarButton starClickHandler={starClickHandler} isStar={isStar} />
-                <Label as="a" basic>
+                <Label as="a" basic onClick={stargazersLinkClickHandler}>
                   {starCount}
                 </Label>
               </Button>
