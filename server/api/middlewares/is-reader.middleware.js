@@ -3,8 +3,7 @@ const CollaboratorRepository = require('../../data/repositories/collaborator.rep
 
 module.exports = async (req, res, next) => {
   if(req.params.owner === req.user.username) {
-    next();
-    return;
+    return next();
   };
   const reponame = req.params.repoName || req.params.reponame;
   const username = req.params.owner;
@@ -12,9 +11,8 @@ module.exports = async (req, res, next) => {
     ? await RepositoryRepository.getById(req.params.repositoryId)
     : await RepositoryRepository.getByUsernameAndReponame(username, reponame);
 
-  if(repo.userId === req.user.id) {
-    next();
-    return;
+  if(repo.userId === req.user.id || repo.isPublic) {
+    return next();
   };
 
   const collaborator = await CollaboratorRepository.findOne({
@@ -25,7 +23,7 @@ module.exports = async (req, res, next) => {
     }
   });
   
-  return (repo.isPublic || Boolean(collaborator)) 
+  return Boolean(collaborator) 
     ? next() 
-    : res.redirect(`${process.env.CLIENT_HOST}/login`)
+    : next(new CustomError(403, `User ${req.user.username} doesn't have permission to access this page`));
 }

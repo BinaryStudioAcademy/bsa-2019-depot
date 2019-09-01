@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 import RepositoryHeader from '../../components/RepositoryHeader';
 import IssuesTab from '../../containers/IssuesTab/index';
@@ -19,17 +19,30 @@ import { clearRepoState } from './actions';
 import Spinner from '../../components/Spinner';
 import CodeTab from '../../scenes/CodeTab';
 import CollaboratorInvitation from '../../containers/CollaboratorInvitation';
+import { getAllUserPermissions } from '../../helpers/checkPermissionsHelper';
 
 class RepositoryPage extends React.Component {
-  componentDidMount() {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isAccessGranted: false
+    };
+  }
+
+  async componentDidMount() {
     const {
       fetchCurrentRepo,
       match: {
         params: { username, reponame }
-      }
+      },
+      userId
     } = this.props;
 
+    const isAccessGranted = await getAllUserPermissions(username, reponame, userId);
     fetchCurrentRepo({ username, reponame });
+    this.setState({
+      isAccessGranted
+    });
   }
 
   componentWillUnmount() {
@@ -43,8 +56,11 @@ class RepositoryPage extends React.Component {
       branches,
       defaultBranch,
       location: { pathname },
+      owner,
+      isPublic,
       loading
     } = this.props;
+    const { isAccessGranted } = this.state;
     const { username, reponame } = match.params;
 
     const branchExists = pathname.match(/tree\/.+/);
@@ -61,7 +77,7 @@ class RepositoryPage extends React.Component {
       return <Spinner />;
     }
 
-    return (
+    return username === owner || isPublic || isAccessGranted ? (
       <>
         <RepositoryHeader
           owner={username}
@@ -88,6 +104,8 @@ class RepositoryPage extends React.Component {
           </Switch>
         </Container>
       </>
+    ) : (
+      <Redirect to={`/${username}`} />
     );
   }
 }
@@ -111,21 +129,30 @@ RepositoryPage.propTypes = {
   issuesCount: PropTypes.number.isRequired,
   branches: PropTypes.array.isRequired,
   defaultBranch: PropTypes.string.isRequired,
-  loading: PropTypes.bool.isRequired
+  loading: PropTypes.bool.isRequired,
+  isPublic: PropTypes.bool.isRequired,
+  userId: PropTypes.string.isRequired,
+  owner: PropTypes.string.isRequired
 };
 
 const mapStateToProps = ({
   currentRepo: {
     repository: {
-      currentRepoInfo: { id, issuesCount, branches, defaultBranch },
+      currentRepoInfo: { id, issuesCount, branches, defaultBranch, isPublic },
       loading
     }
+  },
+  profile: {
+    currentUser: { id: userId, username: owner }
   }
 }) => ({
   id,
+  userId,
+  owner,
   issuesCount,
   branches,
   defaultBranch,
+  isPublic,
   loading
 });
 

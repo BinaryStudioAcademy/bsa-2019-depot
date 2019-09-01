@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import { getFileContent } from '../../services/branchesService';
 import { modifyFile } from '../../services/commitsService';
 import { rawServerUrl } from '../../app.config';
-import { getUserPermissions } from '../../helpers/checkPermissionsHelper';
+import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 
 import styles from './styles.module.scss';
 
@@ -45,7 +45,7 @@ class FileViewPage extends React.Component {
       })
     );
 
-    const isAccessGranted = await getUserPermissions(username, reponame, userId);
+    const isAccessGranted = await getWriteUserPermissions(username, reponame, userId);
     this.setState({
       isAccessGranted
     });

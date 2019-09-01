@@ -8,7 +8,7 @@ import 'react-mde/lib/styles/css/react-mde-all.css';
 import { connect } from 'react-redux';
 import { parseDiff, Diff, Hunk, Decoration } from 'react-diff-view';
 import * as commitsService from '../../services/commitsService';
-import { getUserPermissions } from '../../helpers/checkPermissionsHelper';
+import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 import { getUserImgLink } from '../../helpers/imageHelper';
 import { socketInit } from '../../helpers/socketInitHelper';
 
@@ -97,7 +97,7 @@ class DiffCommitView extends Component {
     }
     this.initSocket();
 
-    const isAccessGranted = await getUserPermissions(username, reponame, userId);
+    const isAccessGranted = await getWriteUserPermissions(username, reponame, userId);
     this.setState({
       isAccessGranted
     });

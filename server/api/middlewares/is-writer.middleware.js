@@ -4,8 +4,7 @@ const { permissionLevel } = require('../../helpers/permission.level.helper');
 
 module.exports = async(req, res, next) => {
   if(req.params.owner === req.user.username) {
-    next();
-    return;
+    return next();
   };
   const reponame = req.params.repoName || req.params.reponame;
   const username = req.params.owner;
@@ -14,8 +13,7 @@ module.exports = async(req, res, next) => {
     : await RepositoryRepository.getByUsernameAndReponame(username, reponame);
 
   if(repo.userId === req.user.id) {
-    next();
-    return;
+    return next();
   };
 
   const collaborator = await CollaboratorRepository.getCollaboratorWithPermissions({ 
@@ -26,5 +24,5 @@ module.exports = async(req, res, next) => {
 
   return collaborator
     ? next() 
-    : next({ status: 403, message: "You don\'t have permission to access this page" });
+    : next(new CustomError(403, `User ${req.user.username} doesn't have permission to access this page`));
 }

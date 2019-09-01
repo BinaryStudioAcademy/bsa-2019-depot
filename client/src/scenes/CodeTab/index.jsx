@@ -12,7 +12,7 @@ import RepoDescription from '../../components/RepoDescription';
 import CodeTabMenu from '../../components/CodeTabMenu';
 import RepoNav from '../../components/RepoNav';
 import EmptyRepositoryTab from '../../containers/EmptyRepositoryTab';
-import { getUserPermissions } from '../../helpers/checkPermissionsHelper';
+import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 
 import { Container, Button, Loader, Divider, Message, Breadcrumb } from 'semantic-ui-react';
 import styles from './styles.module.scss';
@@ -51,7 +51,7 @@ class CodeTab extends React.Component {
       branch = defaultBranch || branches[0];
     }
 
-    const isAccessGranted = await getUserPermissions(ownername, reponame, userId);
+    const isAccessGranted = await getWriteUserPermissions(ownername, reponame, userId);
     this.setState({
       ...this.state,
       branch,

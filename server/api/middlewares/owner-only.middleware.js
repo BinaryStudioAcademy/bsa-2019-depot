@@ -3,15 +3,18 @@ const UserRepository = require('../../data/repositories/user.repository');
 const OrgUserRepository = require('../../data/repositories/org-user.repository');
 
 module.exports = async(req, res, next) => {
-  const name = req.params.repoName || req.params.reponame;
+  if(req.params.owner === req.user.username) {
+    return next();
+  };
+  const reponame = req.params.repoName || req.params.reponame;
   const username = req.params.owner;
   const repo = req.params.repositoryId 
     ? await RepositoryRepository.getById(req.params.repositoryId)
-    : await RepositoryRepository.getByUsernameAndReponame(username, name);
+    : await RepositoryRepository.getByUsernameAndReponame(username, reponame);
 
   if (req.user.id === repo.userId) {
     return next();
-  }
+  };
 
   const org = username 
     ? await UserRepository.findOne({ 
@@ -25,17 +28,14 @@ module.exports = async(req, res, next) => {
           id: req.params.userId,
           type: 'ORG'
         }
-      })
+      });
 
   const orgUser = OrgUserRepository.getUserWithOwnerRole({ 
     userId: req.user.id,
     orgId: org.id,
-  })
+  });
   
   return orgUser
     ? next() 
-    : Promise.reject({
-        status: 403,
-        message: 'Permission denied'
-      });
+    : next(new CustomError(403, `User ${req.user.username} doesn't have permission to access this page`));
 };
