@@ -8,6 +8,7 @@ const userRepository = require('../../data/repositories/user.repository');
 const starRepository = require('../../data/repositories/star.repository');
 const branchRepository = require('../../data/repositories/branch.repository');
 const commitRepository = require('../../data/repositories/commit.repository');
+const collaboratorRepository = require('../../data/repositories/collaborator.repository');
 
 const CustomError = require('../../helpers/error.helper');
 const { defaultLabels } = require('../../config/labels.config');
@@ -267,6 +268,8 @@ const setStar = async (userId, repositoryId) => {
 
 const getRepoData = async repositoryId => repoRepository.getRepositoryById(repositoryId);
 
+const getRepositoryCollaborators = repositoryId => collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId);
+
 module.exports = {
   createRepo,
   renameRepo,
@@ -279,5 +282,6 @@ module.exports = {
   setStar,
   getByUserAndReponame,
   updateByUserAndReponame,
-  getRepoData
+  getRepoData,
+  getRepositoryCollaborators
 };
