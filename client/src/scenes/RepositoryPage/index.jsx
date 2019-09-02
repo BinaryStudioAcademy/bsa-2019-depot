@@ -167,9 +167,7 @@ RepositoryPage.propTypes = {
   loading: PropTypes.bool.isRequired,
   isPublic: PropTypes.bool.isRequired,
   userId: PropTypes.string.isRequired,
-  id: PropTypes.string.isRequired,
   currentUserName: PropTypes.string.isRequired,
-  userId: PropTypes.string,
   owner: PropTypes.object,
   history: PropTypes.object
 };
