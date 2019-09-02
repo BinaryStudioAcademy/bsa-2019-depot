@@ -27,7 +27,7 @@ class OrgUserRepository extends BaseRepository {
 
   getUserWithOwnerRole({ userId, orgId }) {
     return this.model.findOne({
-      where: { 
+      where: {
         userId,
         orgId,
         deletedAt: null

@@ -48,7 +48,7 @@ class CodeTab extends React.Component {
       params: { branch }
     } = match;
     if (!branch) {
-      branch = defaultBranch || branches[0];
+      branch = defaultBranch || (branches[0] && branches[0].name);
     }
 
     const isAccessGranted = await getWriteUserPermissions(ownername, reponame, userId);
@@ -221,8 +221,8 @@ class CodeTab extends React.Component {
         />
         <RepoNav
           isOwn={isOwn}
-          branch={branch}
-          branches={branches}
+          branch={branch}z
+          branches={branches.map(({ name }) => name)}
           onBranchChange={this.onBranchChange}
           onCreateFile={this.onCreateFile}
         />
