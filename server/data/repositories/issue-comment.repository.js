@@ -37,7 +37,7 @@ class IssueCommentRepository extends BaseRepository {
       include: [
         {
           model: UserModel,
-          attributes: ['username']
+          attributes: ['username', 'imgUrl']
         }
       ],
       order: [['createdAt', 'ASC']]
