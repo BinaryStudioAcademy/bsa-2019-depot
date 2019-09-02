@@ -16,12 +16,6 @@ const Footer = ({ isAuthorized }) =>
               <Grid.Column mobile={7}>
                 <ul className={styles.menuLeft}>
                   <li className={styles.copy}>&copy; 2019 Depot</li>
-                  <li>
-                    <a href="/api">API</a>
-                  </li>
-                  <li>
-                    <a href="/about">About</a>
-                  </li>
                 </ul>
               </Grid.Column>
               <Grid.Column computer={2} className={styles.logo}>
@@ -35,9 +29,6 @@ const Footer = ({ isAuthorized }) =>
                 <ul className={styles.menuRight}>
                   <li>
                     <a href="/mobile">Mobile App</a>
-                  </li>
-                  <li>
-                    <a href="/status">Status</a>
                   </li>
                 </ul>
               </Grid.Column>
