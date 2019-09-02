@@ -125,6 +125,19 @@ class RepositoryRepository extends BaseRepository {
     return this.model.update(data, { where: { name: reponame, userId } });
   }
 
+  getByUsernameAndReponame(username, name) {
+    return this.model.findOne({ 
+      where: { name },
+      include: [
+        {
+          model: UserModel,
+          where: { username },
+          attributes: []
+        }
+      ]
+    });
+  }
+
   deleteByUserAndReponame(userId, reponame) {
     return this.model.destroy({ where: { name: reponame, userId } });
   }

@@ -19,6 +19,7 @@ const PrivateTab = ({ username, location, ...props }) => {
 };
 
 PrivateTab.propTypes = {
+  userId: PropTypes.string,
   username: PropTypes.string,
   location: PropTypes.exact({
     key: PropTypes.string.isRequired,
@@ -35,8 +36,8 @@ renderComponent.propTypes = {
 
 const mapStateToProps = ({
   profile: {
-    currentUser: { username }
+    currentUser: { id: userId, username }
   }
-}) => ({ username });
+}) => ({ userId, username });
 
 export default connect(mapStateToProps)(PrivateTab);

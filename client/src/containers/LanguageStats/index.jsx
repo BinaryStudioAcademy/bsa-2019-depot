@@ -32,7 +32,7 @@ class LanguageStats extends React.Component {
 
   toggleDisplayLangs() {
     this.setState(prevState => ({ displayLangs: !prevState.displayLangs }));
-  };
+  }
 
   render() {
     const { displayLangs, languageStats } = this.state;
@@ -40,15 +40,19 @@ class LanguageStats extends React.Component {
     return (
       <>
         <div className={styles.languageStatColors} onClick={this.toggleDisplayLangs}>
-          {languageStats.map(({ percentage, language: { color }}) => (
-            <div key={color} className={styles.languageColorLine} style={{ backgroundColor: color, width: `${percentage}%` }} />
+          {languageStats.map(({ percentage, language: { color } }) => (
+            <div
+              key={color}
+              className={styles.languageColorLine}
+              style={{ backgroundColor: color, width: `${percentage}%` }}
+            />
           ))}
         </div>
         {displayLangs && (
           <div className={styles.languageStats}>
             {languageStats.map(({ percentage, language: { name, color } }) => (
               <div key={name} className={styles.languageLegend}>
-                <span className={styles.languageColorDot} style={{ backgroundColor: color }}/>
+                <span className={styles.languageColorDot} style={{ backgroundColor: color }} />
                 <span className={styles.languageName}>{name}</span>
                 <span>{percentage}%</span>
               </div>
@@ -65,9 +69,11 @@ LanguageStats.propTypes = {
   repoId: PropTypes.string.isRequired
 };
 
-const mapStateToProps = ({ currentRepo:
-  {
-    repository: { currentRepoInfo: { id } }
+const mapStateToProps = ({
+  currentRepo: {
+    repository: {
+      currentRepoInfo: { id }
+    }
   }
 }) => ({
   repoId: id

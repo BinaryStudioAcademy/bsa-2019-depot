@@ -174,6 +174,7 @@ BranchesTab.propTypes = {
     error: PropTypes.string,
     branches: PropTypes.array
   }).isRequired,
+  repoID: PropTypes.string.isRequired,
   fetchBranches: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
   username: PropTypes.string
@@ -186,9 +187,7 @@ const mapStateToProps = ({
   },
   currentRepo: {
     repository: {
-      currentRepoInfo: {
-        id: repoID
-      }
+      currentRepoInfo: { id: repoID }
     }
   }
 }) => ({

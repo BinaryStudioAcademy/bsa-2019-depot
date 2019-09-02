@@ -15,6 +15,7 @@ import { createIssueComment, updateIssueComment, deleteIssueComment } from '../.
 import IssueComment from '../IssueComment';
 import IssueHeader from '../IssueHeader';
 import { socketInit } from '../../helpers/socketInitHelper';
+import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 
 import styles from './styles.module.scss';
@@ -30,7 +31,8 @@ class IssueComments extends React.Component {
       selectedTab: 'write',
       isDisabled: true,
       isOwnIssue: false,
-      issuesBaseUrl: this.props.match.url.replace(/\/[^/]+$/, '')
+      issuesBaseUrl: this.props.match.url.replace(/\/[^/]+$/, ''),
+      isAccessGranted: false
     };
 
     this.onCommentCreate = this.onCommentCreate.bind(this);
@@ -45,6 +47,7 @@ class IssueComments extends React.Component {
 
   async componentDidMount() {
     const {
+      userId,
       match: {
         params: { username, reponame, number }
       }
@@ -55,9 +58,12 @@ class IssueComments extends React.Component {
 
     const issueComments = await getIssueComments(id);
 
+    const isAccessGranted = await getWriteUserPermissions(username, reponame, userId);
+
     this.setState({
       currentIssue,
       issueComments,
+      isAccessGranted,
       loading: false
     });
     this.initSocket();
@@ -176,8 +182,11 @@ class IssueComments extends React.Component {
 
   isOwnIssue() {
     const { userId } = this.props;
-    const { userId: issueUserId } = this.state.currentIssue;
-    return userId === issueUserId;
+    const {
+      isAccessGranted,
+      currentIssue: { userId: issueUserId }
+    } = this.state;
+    return userId === issueUserId || isAccessGranted;
   }
 
   redirectToCreateNewIssue() {

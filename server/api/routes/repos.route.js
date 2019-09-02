@@ -20,6 +20,9 @@ const { getLabelsByRepoId } = require('../services/label.service');
 const { getFileContent } = require('../services/files.service');
 const { getStatsByBranch } = require('../services/language-stats.service');
 const ownerOnlyMiddleware = require('../middlewares/owner-only.middleware');
+const isReaderMiddleware = require('../middlewares/is-reader.middleware');
+const isAdminMiddleware = require('../middlewares/is-admin.middleware');
+
 const issueService = require('../services/issue.service');
 
 const router = Router();
@@ -29,13 +32,13 @@ router
     const { reponame, ownerID } = req.body;
     createRepo({ userId: ownerID, name: reponame, ...req.body }).then(data => res.send(data));
   })
-  .get('/:owner/:reponame/check-name', (req, res, next) => {
+  .get('/:owner/:reponame/check-name', isReaderMiddleware, (req, res, next) => {
     const { owner, reponame } = req.params;
     checkName({ owner, reponame })
       .then(result => res.send({ exists: result }))
       .catch(next);
   })
-  .get('/:owner/:reponame/is-empty', (req, res, next) => {
+  .get('/:owner/:reponame/is-empty', isReaderMiddleware, (req, res, next) => {
     const { owner, reponame } = req.params;
     isEmpty({ owner, reponame })
       .then((result) => {
@@ -43,13 +46,13 @@ router
       })
       .catch(next);
   })
-  .get('/:repoId/branches/:branch/commits', (req, res, next) => {
+  .get('/:repoId/branches/:branch/commits', isReaderMiddleware, (req, res, next) => {
     const { repoId, branch } = req.params;
     getCommits(branch, repoId)
       .then(commits => res.send(commits))
       .catch(next);
   })
-  .get('/:repoId/branches/:branch', async (req, res, next) => {
+  .get('/:repoId/branches/:branch', isReaderMiddleware, async (req, res, next) => {
     let response;
     try {
       const { repoId, branch: branchName } = req.params;
@@ -65,19 +68,19 @@ router
     }
     return res.send(response);
   })
-  .get('/:repoId/branches', (req, res, next) => {
+  .get('/:repoId/branches', isReaderMiddleware, (req, res, next) => {
     const { repoId } = req.params;
     getBranches(repoId)
       .then(branches => res.send(branches))
       .catch(next);
   })
-  .get('/:owner/:repoName/:hash/commit', (req, res, next) => {
+  .get('/:owner/:repoName/:hash/commit', isReaderMiddleware, (req, res, next) => {
     const { owner, repoName, hash } = req.params;
     getCommitDiff({ user: owner, name: repoName, hash })
       .then(data => res.send(data))
       .catch(next);
   })
-  .get('/:owner/:repoName/:branchName/tree', (req, res, next) => {
+  .get('/:owner/:repoName/:branchName/tree', isReaderMiddleware, (req, res, next) => {
     const { owner, repoName, branchName } = req.params;
     const { pathToDir } = req.query;
     getBranchTree({
@@ -89,20 +92,20 @@ router
       .then(tree => res.send(tree))
       .catch(next);
   })
-  .get('/:owner/:repoName/:branchName/file', (req, res, next) => {
+  .get('/:owner/:repoName/:branchName/file', isReaderMiddleware, (req, res, next) => {
     const { owner, repoName, branchName } = req.params;
     const { filepath } = req.query;
     getFileContent(owner, repoName, branchName, filepath)
       .then(fileData => res.send(fileData))
       .catch(next);
   })
-  .get('/:owner/:repoName/:branchName/last-commit', (req, res, next) => {
+  .get('/:owner/:repoName/:branchName/last-commit', isReaderMiddleware, (req, res, next) => {
     const { owner, repoName, branchName } = req.params;
     getLastCommitOnBranch({ user: owner, name: repoName, branch: branchName })
       .then(commit => res.send(commit))
       .catch(next);
   })
-  .get('/:repoId/branches/:branch/stats', (req, res, next) => {
+  .get('/:repoId/branches/:branch/stats', isReaderMiddleware, (req, res, next) => {
     const { repoId, branch } = req.params;
     getStatsByBranch(repoId, branch)
       .then(stats => res.send(stats))
@@ -117,7 +120,7 @@ router
       .catch(next);
     */
   })
-  .post('/:owner/:repoName/settings/rename', ownerOnlyMiddleware, (req, res, next) => {
+  .post('/:owner/:repoName/settings/rename', isAdminMiddleware, (req, res, next) => {
     const { repoName } = req.params;
     const { newName } = req.body;
     renameRepo({ repoName, newName, username: req.user.username })
@@ -130,7 +133,7 @@ router
       .then(result => res.send(result))
       .catch(next);
   })
-  .post('/fork', (req, res, next) => {
+  .post('/fork', isAdminMiddleware, (req, res, next) => {
     const {
       body: {
         owner,
@@ -155,7 +158,7 @@ router
       .then(result => res.send(result))
       .catch(next);
   })
-  .get('/:owner/:repoName/issues', (req, res, next) => {
+  .get('/:owner/:repoName/issues', isReaderMiddleware, (req, res, next) => {
     const { repositoryId } = req.query;
     getAllRepoIssues({ repositoryId })
       .then(result => res.send(result))
@@ -167,13 +170,13 @@ router
   //     .then(result => res.send(result))
   //     .catch(next);
   // })
-  .put('/:owner/:reponame', ownerOnlyMiddleware, (req, res, next) => {
+  .put('/:owner/:reponame', isAdminMiddleware, (req, res, next) => {
     const { owner, reponame } = req.params;
     updateByUserAndReponame({ owner, reponame, data: req.body })
       .then(data => res.send(data))
       .catch(next);
   })
-  .put('/:owner/:reponame/change-type', ownerOnlyMiddleware, (req, res, next) => {
+  .put('/:owner/:reponame/change-type', isAdminMiddleware, (req, res, next) => {
     const { owner, reponame } = req.params;
     const {
       body: { userId, repositoryId, isPublic }
@@ -186,19 +189,19 @@ router
       req.reposNsp.to(repositoryId).emit('changedToPrivate', repositoryId);
     }
   })
-  .put('/star', (req, res, next) => {
+  .put('/star', isReaderMiddleware, (req, res, next) => {
     const { userId, repositoryId } = req.body;
     setStar(userId, repositoryId)
       .then(star => res.send(star))
       .catch(next);
   })
-  .get('/:repositoryId/labels', (req, res, next) => {
+  .get('/:repositoryId/labels', isReaderMiddleware, (req, res, next) => {
     const { repositoryId } = req.params;
     getLabelsByRepoId(repositoryId)
       .then(labels => res.send(labels))
       .catch(next);
   })
-  .get('/:repositoryId/issues', (req, res, next) => {
+  .get('/:repositoryId/issues', isReaderMiddleware, (req, res, next) => {
     const { repositoryId } = req.params;
     const { sort, author, title } = req.query;
     issueService
@@ -206,7 +209,7 @@ router
       .then(result => res.send(result))
       .catch(next);
   })
-  .get('/:reponame/issues/:number', (req, res, next) => {
+  .get('/:reponame/issues/:number', isReaderMiddleware, (req, res, next) => {
     const { reponame, number } = req.params;
     getRepoIssueByNumber(reponame, number)
       .then(data => res.send(data))

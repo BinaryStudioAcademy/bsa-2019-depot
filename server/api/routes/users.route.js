@@ -10,6 +10,7 @@ const {
   getStars,
   getUsersToInviting,
   getUsersOrganizations,
+  getUsersForCollaboratorsAddition,
   uploadPhoto,
   deletePhoto
 } = require('../services/user.service');
@@ -114,6 +115,13 @@ router.get('/:username/repos/:repo', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+});
+
+router.get('/search/collaborators/:username/:repoId/:userId', (req, res, next) => {
+  const { username, repoId, userId } = req.params;
+  getUsersForCollaboratorsAddition({ username, repoId, userId })
+    .then(data => res.send(data))
+    .catch(next);
 });
 
 router.post('/image', (req, res, next) => {

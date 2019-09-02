@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 import RepositoryHeader from '../../components/RepositoryHeader';
 import IssuesTab from '../../containers/IssuesTab/index';
@@ -19,6 +19,8 @@ import { fetchCurrentRepo } from '../../routines/routines';
 import { clearRepoState } from './actions';
 import Spinner from '../../components/Spinner';
 import CodeTab from '../../scenes/CodeTab';
+import CollaboratorInvitation from '../../containers/CollaboratorInvitation';
+import { getAllUserPermissions } from '../../helpers/checkPermissionsHelper';
 import { socketInit } from '../../helpers/socketInitHelper';
 
 import styles from './styles.module.scss';
@@ -26,19 +28,26 @@ import styles from './styles.module.scss';
 class RepositoryPage extends React.Component {
   constructor(props) {
     super(props);
-
-    this.onChangeToPivate = this.onChangeToPivate.bind(this);
+    this.state = {
+      isAccessGranted: false
+    };
+    this.onChangeToPrivate = this.onChangeToPrivate.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const {
       fetchCurrentRepo,
       match: {
         params: { username, reponame }
-      }
+      },
+      userId
     } = this.props;
 
+    const isAccessGranted = await getAllUserPermissions(username, reponame, userId);
     fetchCurrentRepo({ username, reponame });
+    this.setState({
+      isAccessGranted
+    });
     this.initSocket();
   }
 
@@ -55,7 +64,7 @@ class RepositoryPage extends React.Component {
     }
   }
 
-  onChangeToPivate(changedRepoId) {
+  onChangeToPrivate(changedRepoId) {
     const {
       id: repoId,
       userId,
@@ -70,7 +79,7 @@ class RepositoryPage extends React.Component {
   initSocket() {
     this.socket = socketInit('repos');
 
-    this.socket.on('changedToPrivate', this.onChangeToPivate);
+    this.socket.on('changedToPrivate', this.onChangeToPrivate);
   }
 
   render() {
@@ -80,8 +89,11 @@ class RepositoryPage extends React.Component {
       branches,
       defaultBranch,
       location: { pathname },
+      currentUserName,
+      isPublic,
       loading
     } = this.props;
+    const { isAccessGranted } = this.state;
     const { username, reponame } = match.params;
 
     const branchExists = pathname.match(/tree\/.+/);
@@ -98,7 +110,7 @@ class RepositoryPage extends React.Component {
       return <Spinner />;
     }
 
-    return (
+    return username === currentUserName || isPublic || isAccessGranted ? (
       <>
         <RepositoryHeader
           owner={username}
@@ -117,14 +129,17 @@ class RepositoryPage extends React.Component {
             <Route exact path={`${match.path}/issues`} component={IssuesTab} />
             <Route exact path={`${match.path}/issues/new`} component={CreateIssuePage} />
             <Route exact path={`${match.path}/issues/:number`} component={IssueComments} />
+            <PrivateTab path={`${match.path}/settings`} component={RepoSettings} />
             <Route exact path={`${match.path}/stargazers`} component={StargazersPage} />
-            <PrivateTab exact path={`${match.path}/settings`} component={RepoSettings} />
             <Route exact path={`${match.path}/branches`} component={BranchesTab} />
             <PrivateTab path={[`${match.path}/new/:branch`, `${match.path}/edit/:branch`]} component={FileEditPage} />
             <Route path={`${match.path}/blob/:branch`} component={FileViewPage} />
+            <Route exact path={`${match.path}/invitations`} component={CollaboratorInvitation} />
           </Switch>
         </Container>
       </>
+    ) : (
+      <Redirect to={`/${username}`} />
     );
   }
 }
@@ -146,10 +161,14 @@ RepositoryPage.propTypes = {
     state: PropTypes.array
   }).isRequired,
   id: PropTypes.string.isRequired,
-  issuesCount: PropTypes.string,
+  issuesCount: PropTypes.number.isRequired,
   branches: PropTypes.array.isRequired,
-  defaultBranch: PropTypes.string,
+  defaultBranch: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,
+  isPublic: PropTypes.bool.isRequired,
+  userId: PropTypes.string.isRequired,
+  id: PropTypes.string.isRequired,
+  currentUserName: PropTypes.string.isRequired,
   userId: PropTypes.string,
   owner: PropTypes.object,
   history: PropTypes.object
@@ -158,14 +177,24 @@ RepositoryPage.propTypes = {
 const mapStateToProps = ({
   currentRepo: {
     repository: {
-      currentRepoInfo: { id, issuesCount, branches, defaultBranch, user: owner },
+      currentRepoInfo: { id, issuesCount, branches, defaultBranch, user: owner, isPublic },
       loading
     }
   },
   profile: {
-    currentUser: { id: userId }
+    currentUser: { id: userId, username: currentUserName }
   }
-}) => ({ id, issuesCount, branches, defaultBranch, loading, owner, userId });
+}) => ({
+  id,
+  userId,
+  owner,
+  currentUserName,
+  issuesCount,
+  branches,
+  defaultBranch,
+  isPublic,
+  loading
+});
 
 const mapDispatchToProps = {
   fetchCurrentRepo,

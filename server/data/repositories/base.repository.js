@@ -7,6 +7,10 @@ class BaseRepository {
     return this.model.findAll();
   }
 
+  findOne({ where }) {
+    return this.model.findOne({ where });
+  }
+
   getById(id) {
     return this.model.findByPk(id);
   }

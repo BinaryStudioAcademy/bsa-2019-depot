@@ -44,7 +44,7 @@ class CommitsPage extends React.Component {
         params: { branch }
       }
     } = this.props;
-    
+
     const branchOptions = branchesData.map((branch, index) => ({
       key: index,
       text: branch,
@@ -78,13 +78,21 @@ CommitsPage.propTypes = {
     lastCommits: PropTypes.object
   }).isRequired,
   fetchCommits: PropTypes.func.isRequired,
+  repoId: PropTypes.string.isRequired,
   fetchBranches: PropTypes.func.isRequired,
   username: PropTypes.string,
   match: PropTypes.object,
   history: PropTypes.object
 };
 
-const mapStateToProps = ({ currentRepo: { repository: { currentRepoInfo : { id: repoId, branches: branchesData } } }, commitsData }) => ({
+const mapStateToProps = ({
+  currentRepo: {
+    repository: {
+      currentRepoInfo: { id: repoId, branches: branchesData }
+    }
+  },
+  commitsData
+}) => ({
   repoId,
   commitsData,
   branchesData

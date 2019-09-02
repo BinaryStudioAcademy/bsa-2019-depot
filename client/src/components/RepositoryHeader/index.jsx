@@ -62,10 +62,7 @@ const RepositoryHeader = ({
 
   const renderOrignalRepoLink = () => {
     if (originalRepo) {
-      const {
-        name: forkedRepoName,
-        owner: forkedRepoOwner
-      } = originalRepo;
+      const { name: forkedRepoName, owner: forkedRepoOwner } = originalRepo;
       if (forkedRepoName && forkedRepoOwner) {
         return (
           <div className={styles.originalRepoLink}>
@@ -155,6 +152,12 @@ RepositoryHeader.propTypes = {
       })
     })
   }).isRequired,
+  match: PropTypes.exact({
+    params: PropTypes.object.isRequired,
+    isExact: PropTypes.bool.isRequired,
+    path: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired
+  }).isRequired,
   activePage: PropTypes.string,
   baseUrl: PropTypes.string.isRequired,
   history: PropTypes.object
@@ -164,7 +167,9 @@ const mapStateToProps = ({
   profile: {
     currentUser: { id, username }
   },
-  currentRepo: { repository: { currentRepoInfo } }
+  currentRepo: {
+    repository: { currentRepoInfo }
+  }
 }) => ({
   userId: id,
   username,

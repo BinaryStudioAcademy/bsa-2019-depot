@@ -13,7 +13,9 @@ module.exports = (models) => {
     Star,
     Label,
     Language,
-    LanguageStats
+    LanguageStats,
+    Permission, 
+    Collaborator
   } = models;
 
   SshKey.belongsTo(User);
@@ -30,6 +32,7 @@ module.exports = (models) => {
   User.hasMany(OrgUser, { foreignKey: 'orgId' });
   Role.hasMany(OrgUser, { foreignKey: 'roleId' });
   User.hasMany(Star);
+  User.hasMany(Collaborator, { foreignKey: 'userId' });
 
   OrgUser.belongsTo(User, { foreignKey: 'orgId' });
   OrgUser.belongsTo(Role, { foreignKey: 'roleId' });
@@ -43,6 +46,7 @@ module.exports = (models) => {
   Commit.hasMany(CommitComment, { foreignKey: 'commitId' });
   Commit.belongsTo(User);
   CommitComment.belongsTo(Commit);
+  Commit.belongsTo(Repository);
 
   User.hasMany(CommitComment, { foreignKey: 'userId' });
   CommitComment.belongsTo(User);
@@ -56,6 +60,8 @@ module.exports = (models) => {
     as: 'originalRepo'
   });
   Repository.belongsTo(User);
+  Repository.hasMany(Collaborator, { foreignKey: 'repositoryId' });
+
   Issue.belongsTo(User);
   Issue.belongsTo(Repository);
   IssueComment.belongsTo(User);
@@ -65,6 +71,11 @@ module.exports = (models) => {
   Star.belongsTo(Repository);
   Star.belongsTo(User);
 
+  Permission.hasMany(Collaborator, { foreignKey: 'permissionId' });
+  Collaborator.belongsTo(User);
+  Collaborator.belongsTo(Repository);
+  Collaborator.belongsTo(Permission);
+  
   Language.hasMany(LanguageStats);
 
   LanguageStats.belongsTo(Language);
