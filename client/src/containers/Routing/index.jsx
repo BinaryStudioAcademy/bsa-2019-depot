@@ -34,10 +34,7 @@ class Routing extends React.Component {
           <Header />
           <Switch>
             <PrivateRoute exact path="/not-found" component={NotFound} />
-            <Route exact path="/api" component={NotFound} />
-            <Route exact path="/about" component={NotFound} />
             <Route exact path="/mobile" component={NotFound} />
-            <Route exact path="/status" component={NotFound} />
             <PublicRoute exact path="/registration" component={Signup} />
             <PublicRoute exact path="/login" component={Login} />
             <PublicRoute exact path="/" component={MainPage} />
