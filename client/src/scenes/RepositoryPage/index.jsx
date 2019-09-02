@@ -22,6 +22,7 @@ import { clearRepoState } from './actions';
 import Spinner from '../../components/Spinner';
 import CodeTab from '../../scenes/CodeTab';
 import CollaboratorInvitation from '../../containers/CollaboratorInvitation';
+import LabelTab from '../../containers/LabelsTab';
 import { getAllUserPermissions } from '../../helpers/checkPermissionsHelper';
 import { socketInit } from '../../helpers/socketInitHelper';
 
@@ -136,6 +137,7 @@ class RepositoryPage extends React.Component {
             <Route exact path={`${match.path}/compare`} component={CompareChanges}/>
             <Route exact path={`${match.path}/issues/new`} component={CreateIssuePage} />
             <Route exact path={`${match.path}/issues/:number`} component={IssueComments} />
+            <Route exact path={`${match.path}/labels`} component={LabelTab} />
             <PrivateTab path={`${match.path}/settings`} component={RepoSettings} />
             <Route exact path={`${match.path}/stargazers`} component={StargazersPage} />
             <Route exact path={`${match.path}/branches`} component={BranchesTab} />

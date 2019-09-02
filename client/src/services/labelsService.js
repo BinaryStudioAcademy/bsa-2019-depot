@@ -2,7 +2,7 @@ import callWebApi from '../helpers/webApiHelper';
 
 export const getLabels = async repositoryId => {
   const response = await callWebApi({
-    endpoint: `/api/repo/${repositoryId}/labels`,
+    endpoint: `/api/repos/${repositoryId}/labels`,
     type: 'GET'
   });
   return response.json();
