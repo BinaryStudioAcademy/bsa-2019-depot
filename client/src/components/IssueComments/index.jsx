@@ -221,7 +221,7 @@ class IssueComments extends React.Component {
         </div>
         <IssueComment
           id={currentIssue.id}
-          avatar={userImg}
+          avatar={currentIssue.user.imgUrl}
           username={currentIssue.user.username}
           body={currentIssue.body}
           createdAt={currentIssue.createdAt}
@@ -236,17 +236,16 @@ class IssueComments extends React.Component {
           issueComments.map(issueComment => {
             const {
               id,
-              user: { username },
+              user: { username, imgUrl },
               body,
               createdAt,
               userId: commentUserId
             } = issueComment;
-
             return (
               <IssueComment
                 key={id}
                 id={id}
-                avatar={currentIssue.user.avatar}
+                avatar={imgUrl}
                 username={username}
                 body={body}
                 createdAt={createdAt}
@@ -260,7 +259,7 @@ class IssueComments extends React.Component {
             );
           })}
         <IssueComment
-          avatar={currentIssue.user.avatar}
+          avatar={userImg}
           username={userName}
           newComment={true}
           onSubmit={this.onCommentCreate}
