@@ -132,12 +132,6 @@ router
   })
   .get('/:username/:reponame/settings', ownerOnlyMiddleware, (req, res) => {
     res.sendStatus(200);
-    /* Can be used in future to get settings data from DB
-    const { reponame } = req.params;
-    getSettings({ ownerID: req.user.id, reponame })
-      .then(settings => res.send(settings))
-      .catch(next);
-    */
   })
   .post('/:username/:reponame/settings/rename', isAdminMiddleware, (req, res, next) => {
     const { reponame } = req.params;
