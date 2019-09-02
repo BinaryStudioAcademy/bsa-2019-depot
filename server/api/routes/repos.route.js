@@ -228,16 +228,16 @@ router
       .then(data => res.send(data))
       .catch(next);
   })
-  .get('/:repoId/pulls/diffs', (req, res, next) => {
-    const { repoId } = req.params;
+  .get('/:repositoryId/pulls/diffs', (req, res, next) => {
+    const { repositoryId } = req.params;
     const { fromBranch, toBranch } = req.query;
-    pullsService.getPullData(repoId, fromBranch, toBranch)
+    pullsService.getPullData(repositoryId, fromBranch, toBranch)
       .then(data => res.send(data))
       .catch(next);
   })
-  .get('/:repoId/pulls', (req, res, next) => {
-    const { repoId } = req.params;
-    pullsService.getPulls(repoId)
+  .get('/:repositoryId/pulls', (req, res, next) => {
+    const { repositoryId } = req.params;
+    pullsService.getPulls(repositoryId)
       .then(data => res.send(data))
       .catch(next);
   });
