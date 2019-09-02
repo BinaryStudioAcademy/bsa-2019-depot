@@ -31,11 +31,11 @@ const getDiffCommits = async (pathToRepo, fromBranch, toBranch) => {
 
   let filteredShas;
   const commonCommitSha = toBranchShas.find(sha => fromBranchShas.includes(sha));
-  if (!commonCommitSha) {
-    filteredShas = fromBranchShas;
-  } else {
+  if (commonCommitSha) {
     const commonCommitIndex = fromBranchShas.findIndex(sha => sha === commonCommitSha);
     filteredShas = fromBranchShas.slice(0, commonCommitIndex);
+  } else {
+    filteredShas = fromBranchShas;
   }
 
   return Promise.all(filteredShas.map(sha => commitRepository.getByHash(sha)));
