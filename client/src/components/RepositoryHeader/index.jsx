@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import Octicon, { Repo } from '@primer/octicons-react';
-import { Icon, Label, Container, Segment } from 'semantic-ui-react';
+import { Icon, Label, Container, Segment, Button } from 'semantic-ui-react';
 import ForkButton from '../ForkButton';
 import StarButton from '../../components/StarButton';
 import { setStar } from '../../services/repositoryService';
