@@ -117,9 +117,9 @@ router.get('/:username/repos/:repo', async (req, res, next) => {
   }
 });
 
-router.get('/search/collaborators/:username/:repoId/:userId', (req, res, next) => {
-  const { username, repoId, userId } = req.params;
-  getUsersForCollaboratorsAddition({ username, repoId, userId })
+router.get('/search/collaborators/:username/:repositoryId/:userId', (req, res, next) => {
+  const { username, repositoryId, userId } = req.params;
+  getUsersForCollaboratorsAddition({ username, repositoryId, userId })
     .then(data => res.send(data))
     .catch(next);
 });

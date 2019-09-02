@@ -14,9 +14,9 @@ const { defaultLabels } = require('../../config/labels.config');
 const { createLabel } = require('./label.service');
 
 const initialCommit = async ({
-  owner, email, repoName, files
+  owner, email, reponame, files
 }) => {
-  const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
+  const pathToRepo = repoHelper.getPathToRepo(owner, reponame);
   const repo = await NodeGit.Repository.open(pathToRepo);
   const treeBuilder = await NodeGit.Treebuilder.create(repo, null);
   const authorSignature = NodeGit.Signature.now(owner, email);
@@ -49,7 +49,7 @@ const initialCommit = async ({
     [
       {
         repoOwner: owner,
-        repoName,
+        reponame,
         sha: commit.sha(),
         message: 'Initial commit',
         userEmail: email,
@@ -104,7 +104,7 @@ const createRepo = async (repoData) => {
   if (initialData) {
     await initialCommit({
       owner,
-      repoName: name,
+      reponame: name,
       ...initialData
     });
   }
@@ -168,24 +168,24 @@ const deleteByUserAndReponame = async ({ owner, reponame }) => {
   return repoRepository.deleteByUserAndReponame(user.id, reponame);
 };
 
-const renameRepo = async ({ repoName, newName, username }) => {
+const renameRepo = async ({ reponame, newName, username }) => {
   try {
-    const oldDirectory = repoHelper.getPathToRepo(username, repoName);
+    const oldDirectory = repoHelper.getPathToRepo(username, reponame);
     const newDirectory = repoHelper.getPathToRepo(username, newName);
     fs.renameSync(oldDirectory, newDirectory);
-    await updateByUserAndReponame({ owner: username, reponame: repoName, data: { name: newName } });
+    await updateByUserAndReponame({ owner: username, reponame, data: { name: newName } });
     return true;
   } catch (e) {
     return e;
   }
 };
 
-const deleteRepo = async ({ repoName, username }) => {
+const deleteRepo = async ({ reponame, username }) => {
   try {
-    const directory = repoHelper.getPathToRepo(username, repoName);
+    const directory = repoHelper.getPathToRepo(username, reponame);
     await fs.remove(directory);
-    const { id: repositoryId } = await getByUserAndReponame({ owner: username, reponame: repoName });
-    await deleteByUserAndReponame({ owner: username, reponame: repoName });
+    const { id: repositoryId } = await getByUserAndReponame({ owner: username, reponame });
+    await deleteByUserAndReponame({ owner: username, reponame });
     await branchRepository.deleteByRepoId(repositoryId);
     await commitRepository.deleteByRepoId(repositoryId);
     return true;
