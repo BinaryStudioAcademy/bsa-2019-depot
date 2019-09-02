@@ -7,6 +7,8 @@ const { getByUserAndReponame } = require('./repo.service');
 const { getUserDetailed } = require('./user.service');
 const { sendInviteCollaboratorEmail } = require('./email.service');
 
+const getRepositoryCollaborators = repositoryId => collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId);
+
 const addCollaborator = async ({
   recipient, username, reponame, repositoryId, url, permission
 }) => {
@@ -22,15 +24,13 @@ const addCollaborator = async ({
     repositoryId,
     isActivated: false
   });
-  return await getRepositoryCollaborators(repositoryId);
+  return getRepositoryCollaborators(repositoryId);
 };
-
-const getRepositoryCollaborators = repositoryId => collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId);
 
 const getUserInvitationStatus = async (username, reponame, userId) => {
   const { id: ownerId } = await userRepository.getByUsername(username);
   const { id: repositoryId } = await repositoryRepository.getByUserAndReponame(ownerId, reponame);
-  return await collaboratorRepository.getUserInvitationStatus(userId, repositoryId);
+  return collaboratorRepository.getUserInvitationStatus(userId, repositoryId);
 };
 
 const acceptInvitation = async (username, reponame, userId) => {
@@ -60,7 +60,7 @@ const removeRepositoryCollaborator = async (collaboratorId) => {
 
 const getUserRights = async (username, reponame, userId) => {
   const { id: repositoryId } = await getByUserAndReponame({ owner: username, reponame });
-  return await collaboratorRepository.getUserRights(userId, repositoryId);
+  return collaboratorRepository.getUserRights(userId, repositoryId);
 };
 
 const getUserRightsByUserIdAndRepositoryId = (userId, repositoryId) => collaboratorRepository.getUserRights(userId, repositoryId);
