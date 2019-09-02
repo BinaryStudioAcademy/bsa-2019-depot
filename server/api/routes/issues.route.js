@@ -7,9 +7,7 @@ const router = Router();
 
 router
   .post('/', (req, res, next) => {
-    const {
-      userId, repositoryId, title, body
-    } = req.body;
+    const { userId, repositoryId, title, body } = req.body;
     issueService
       .addIssue({
         userId,
@@ -18,9 +16,11 @@ router
         body,
         isOpened: true
       })
-      .then(data => res.send({
-        data
-      }))
+      .then(data =>
+        res.send({
+          data
+        })
+      )
       .catch(next);
   })
   .put('/', async (req, res, next) => {
@@ -102,7 +102,7 @@ router
 
     issueService
       .deleteIssueById(id)
-      .then((result) => {
+      .then(result => {
         if (result) {
           res.status(204).send({});
         } else {

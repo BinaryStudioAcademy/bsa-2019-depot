@@ -5,41 +5,41 @@ const sequelize = require('../db/connection');
 
 const { Op } = Sequelize;
 
-const parseSortQuery = (sort) => {
+const parseSortQuery = sort => {
   switch (sort) {
-  case 'created_asc':
-    return [['createdAt', 'ASC']];
-  case 'created_desc':
-    return [['createdAt', 'DESC']];
-  case 'updated_asc':
-    return [['updatedAt', 'ASC']];
-  case 'updated_desc':
-    return [['updatedAt', 'DESC']];
-  case 'comments_desc':
-    return [[sequelize.literal('"commentsCount"'), 'DESC']];
-  case 'comments_asc':
-    return [[sequelize.literal('"commentsCount"'), 'ASC']];
-  default:
-    return [];
+    case 'created_asc':
+      return [['createdAt', 'ASC']];
+    case 'created_desc':
+      return [['createdAt', 'DESC']];
+    case 'updated_asc':
+      return [['updatedAt', 'ASC']];
+    case 'updated_desc':
+      return [['updatedAt', 'DESC']];
+    case 'comments_desc':
+      return [[sequelize.literal('"commentsCount"'), 'DESC']];
+    case 'comments_asc':
+      return [[sequelize.literal('"commentsCount"'), 'ASC']];
+    default:
+      return [];
   }
 };
 
-const mapSort = (sort) => {
+const mapSort = sort => {
   switch (sort) {
-  case 'createdAt_DESC':
-  case 'createdAt_ASC':
-  case 'updatedAt_DESC':
-  case 'updatedAt_ASC':
-    return sort.split('_');
+    case 'createdAt_DESC':
+    case 'createdAt_ASC':
+    case 'updatedAt_DESC':
+    case 'updatedAt_ASC':
+      return sort.split('_');
 
-  case 'commentCount_DESC':
-    return [[sequelize.col('commentCount'), 'DESC']];
+    case 'commentCount_DESC':
+      return [[sequelize.col('commentCount'), 'DESC']];
 
-  case 'commentCount_ASC':
-    return [[sequelize.col('commentCount'), 'ASC']];
+    case 'commentCount_ASC':
+      return [[sequelize.col('commentCount'), 'ASC']];
 
-  default:
-    return ['createdAt', 'DESC'];
+    default:
+      return ['createdAt', 'DESC'];
   }
 };
 

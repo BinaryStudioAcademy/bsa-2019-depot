@@ -30,6 +30,7 @@ class FileViewPage extends React.Component {
     this.handleCopyPath = this.handleCopyPath.bind(this);
     this.handleOpenRaw = this.handleOpenRaw.bind(this);
     this.handleEditFile = this.handleEditFile.bind(this);
+    this.handleBlameFile = this.handleBlameFile.bind(this);
     this.handleDeleteFile = this.handleDeleteFile.bind(this);
   }
 
@@ -68,6 +69,12 @@ class FileViewPage extends React.Component {
     const { history, location } = this.props;
 
     history.push(location.pathname.replace('/blob', '/edit'));
+  }
+
+  handleBlameFile() {
+    const { history, location } = this.props;
+
+    history.push(location.pathname.replace('/blob', '/blame'));
   }
 
   handleDeleteFile() {
@@ -159,6 +166,14 @@ class FileViewPage extends React.Component {
                 onClick={this.handleOpenRaw}
               >
                 Raw
+              </Button>
+              <Button
+                compact
+                size="small"
+                className={[styles.rawButton, styles.actionButton].join(' ')}
+                onClick={this.handleBlameFile}
+              >
+                Blame
               </Button>
               {((username && username === owner) || isAccessGranted) && (
                 <>

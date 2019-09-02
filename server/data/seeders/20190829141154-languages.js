@@ -1,7 +1,7 @@
 const langMap = require('language-map');
 
 module.exports = {
-  up: (queryInterface) => {
+  up: queryInterface => {
     const languages = Object.entries(langMap).map(([langName, { color }]) => ({
       name: langName,
       color: color || '#eeeeee'

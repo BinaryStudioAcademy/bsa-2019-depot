@@ -63,10 +63,8 @@ const initialCommit = async ({
   );
 };
 
-const createRepo = async (repoData) => {
-  const {
-    owner, name, userId, description, isPublic
-  } = repoData;
+const createRepo = async repoData => {
+  const { owner, name, userId, description, isPublic } = repoData;
   let result = 'Repo was created';
   const pathToRepo = repoHelper.getPathToRepo(owner, name);
   await NodeGit.Repository.init(pathToRepo, 1)
@@ -122,7 +120,7 @@ const isEmpty = async ({ owner, reponame }) => {
   try {
     let result;
     const pathToRepo = repoHelper.getPathToRepo(owner, reponame);
-    await NodeGit.Repository.open(pathToRepo).then((repo) => {
+    await NodeGit.Repository.open(pathToRepo).then(repo => {
       result = repo.isEmpty();
     });
     return {
@@ -145,7 +143,10 @@ const getByUserAndReponame = async ({ owner, reponame }) => {
     return Promise.reject(new CustomError(404, `Repository ${reponame} not found`));
   }
   const branches = await branchRepository.getByRepoId(repository.get({ plain: true }).id);
-  const branchesObjects = branches.map(branch => branch.get({ plain: true }));
+  const branchesNames = branches.map(branch => {
+    const { name } = branch.get({ plain: true });
+    return name;
+  });
   return {
     ...repository.get({ plain: true }),
     branches: branchesObjects
@@ -218,9 +219,7 @@ const getReposData = async ({ username, isOwner }) => {
   return repoRepository.getByUserWithOptions(user.id, isOwner);
 };
 
-const forkRepo = async ({
-  userId, username, owner, name, website, description, forkedFromRepoId
-}) => {
+const forkRepo = async ({ userId, username, owner, name, website, description, forkedFromRepoId }) => {
   try {
     const source = repoHelper.getPathToRepo(owner, name);
     const target = repoHelper.getPathToRepo(username, name);
@@ -234,7 +233,7 @@ const forkRepo = async ({
         mode: true,
         cover: true
       },
-      (err) => {
+      err => {
         if (err) throw err;
       }
     );

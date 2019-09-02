@@ -21,7 +21,7 @@ const googleLogin = async ({ id, email, username }) => {
   return { ...data };
 };
 
-const googleLoginMobile = async (email) => {
+const googleLoginMobile = async email => {
   let user = await userRepository.getByEmail(email);
   if (!user) {
     user = await userRepository.addUser({ email });
@@ -38,7 +38,7 @@ const googleLoginMobile = async (email) => {
   return { ...data };
 };
 
-const register = async (userData) => {
+const register = async userData => {
   const newUser = await userRepository.addUser({
     ...userData
   });

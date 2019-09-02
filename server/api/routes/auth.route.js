@@ -3,9 +3,7 @@ const { Router } = require('express');
 const authenticationMiddleware = require('../middlewares/authentication.middleware');
 const { googleMiddleware, googleCallbackMiddleware } = require('../middlewares/google-authentication.middleware');
 const registrationMiddleware = require('../middlewares/registration.middleware');
-const {
-  login, register, googleLogin, googleLoginMobile
-} = require('../services/auth.service');
+const { login, register, googleLogin, googleLoginMobile } = require('../services/auth.service');
 const { getUserById } = require('../services/user.service');
 const { clientUrl } = require('../../config/common.config');
 
@@ -21,7 +19,7 @@ router.get('/google', googleMiddleware);
 
 router.get('/google/callback', googleCallbackMiddleware, (req, res, next) => {
   googleLogin(req.user)
-    .then((data) => {
+    .then(data => {
       const stringData = JSON.stringify(data);
       res.redirect(`${clientUrl}/login/?user=${stringData}`);
     })
@@ -30,7 +28,7 @@ router.get('/google/callback', googleCallbackMiddleware, (req, res, next) => {
 
 router.post('/google/mobile', (req, res, next) => {
   googleLoginMobile(req.body.email)
-    .then((data) => {
+    .then(data => {
       res.send(data);
     })
     .catch(next);

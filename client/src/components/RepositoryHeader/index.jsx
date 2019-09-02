@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import Octicon, { Repo } from '@primer/octicons-react';
-import { Icon, Label, Container, Button } from 'semantic-ui-react';
+import { Icon, Label, Container, Segment } from 'semantic-ui-react';
 import ForkButton from '../ForkButton';
 import StarButton from '../../components/StarButton';
 import { setStar } from '../../services/repositoryService';
@@ -20,6 +20,7 @@ const RepositoryHeader = ({
   pullCount,
   activePage,
   baseUrl,
+  isBlamePage,
   history
 }) => {
   const [isStar, setIsStar] = useState(Boolean(stars.find(star => star.user.id === userId)));
@@ -81,8 +82,8 @@ const RepositoryHeader = ({
 
   return (
     <header className={styles.repoHeader}>
-      <Container>
-        <div className={styles.repoHeaderContainer}>
+      <Container fluid={isBlamePage}>
+        <Segment basic>
           <div className={styles.repoNameRow}>
             <div className={styles.repoName}>
               <Octicon icon={Repo} />
@@ -135,7 +136,7 @@ const RepositoryHeader = ({
               </div>
             )}
           </div>
-        </div>
+        </Segment>
       </Container>
     </header>
   );
@@ -170,7 +171,8 @@ RepositoryHeader.propTypes = {
   }).isRequired,
   activePage: PropTypes.string,
   baseUrl: PropTypes.string.isRequired,
-  history: PropTypes.object
+  history: PropTypes.object,
+  isBlamePage: PropTypes.bool
 };
 
 const mapStateToProps = ({

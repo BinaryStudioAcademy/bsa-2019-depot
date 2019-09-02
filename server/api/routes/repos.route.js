@@ -15,6 +15,7 @@ const { deleteStarsByRepoId } = require('../services/star.service');
 const {
   getBranches,
   getBranchTree,
+  getFileBlame
   getBranchInfo,
   getLastCommitOnBranch,
   checkFileExists
@@ -101,6 +102,18 @@ router
     const { username, reponame, branchName } = req.params;
     const { filepath } = req.query;
     getFileContent(username, reponame, branchName, filepath)
+      .then(fileData => res.send(fileData))
+      .catch(next);
+  })
+  .get('/:owner/:repoName/:branchName/blame', (req, res, next) => {
+    const { owner, repoName, branchName } = req.params;
+    const { filepath } = req.query;
+    getFileBlame({
+      user: owner,
+      name: repoName,
+      branch: branchName,
+      filepath
+    })
       .then(fileData => res.send(fileData))
       .catch(next);
   })

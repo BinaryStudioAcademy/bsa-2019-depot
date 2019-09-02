@@ -2,12 +2,12 @@ const LabelRepository = require('../../data/repositories/label.repository');
 const RepoRepository = require('../../data/repositories/repository.repository');
 const CustomError = require('../../helpers/error.helper');
 
-const getLabelById = async (id) => {
+const getLabelById = async id => {
   const label = await LabelRepository.getById(id);
   return label || Promise.reject(new CustomError(404, `Label with id ${id} not found`));
 };
 
-const getLabelsByRepoId = async (repositoryId) => {
+const getLabelsByRepoId = async repositoryId => {
   const repo = await RepoRepository.getById(repositoryId);
   if (!repo) {
     return Promise.reject(new CustomError(404, `Repository with id ${repositoryId} not found`));
@@ -15,7 +15,7 @@ const getLabelsByRepoId = async (repositoryId) => {
   return LabelRepository.getLabelsByRepositoryId(repositoryId);
 };
 
-const createLabel = async (labelData) => {
+const createLabel = async labelData => {
   const { repositoryId, name } = labelData;
   const label = await LabelRepository.getLabelByRepositoryIdAndName(repositoryId, name);
   if (label) {

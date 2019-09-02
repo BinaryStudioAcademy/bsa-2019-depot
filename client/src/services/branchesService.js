@@ -50,3 +50,12 @@ export const checkFilename = async (owner, repoName, branch, query) => {
   });
   return response.json();
 };
+
+export const getFileBlame = async (owner, repoName, branch, query) => {
+  const response = await callWebApi({
+    endpoint: `/api/repo/${owner}/${repoName}/${branch}/blame`,
+    type: 'GET',
+    query
+  });
+  return response.json();
+};

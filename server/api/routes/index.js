@@ -12,7 +12,7 @@ const labelRoutes = require('./labels.route');
 const filesRoutes = require('./files.route');
 const pullsRoutes = require('./pulls.route');
 
-module.exports = (app) => {
+module.exports = app => {
   app.use('/api/auth', authRoutes);
   app.use('/api/users', userRoutes);
   app.use('/api/commits', commitRoutes);
