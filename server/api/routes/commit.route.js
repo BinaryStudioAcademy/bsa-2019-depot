@@ -12,14 +12,14 @@ const ownerOnlyMiddleware = require('../middlewares/owner-only.middleware');
 const router = Router();
 
 router
-  .post('/:owner/:repoName/:branchName', ownerOnlyMiddleware, (req, res, next) => {
-    const { owner, repoName, branchName: branch } = req.params;
+  .post('/:owner/:reponame/:branchName', ownerOnlyMiddleware, (req, res, next) => {
+    const { owner, reponame, branchName: branch } = req.params;
     const { toDelete, ...commitArgs } = req.body;
     if (toDelete) {
       deleteFile({
         ...commitArgs,
         owner,
-        repoName,
+        reponame,
         branch
       })
         .then(newCommit => res.send({ sha: newCommit.sha() }))
@@ -28,7 +28,7 @@ router
       modifyFile({
         ...commitArgs,
         owner,
-        repoName,
+        reponame,
         baseBranch: branch
       })
         .then(newCommit => res.send({ sha: newCommit.sha() }))

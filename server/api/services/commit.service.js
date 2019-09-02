@@ -13,8 +13,8 @@ const getCommitsAndCreatedRepoByDate = async (data) => {
   const repoList = await getReposNames(data);
 
   let globalCommits = [];
-  const promises = repoList.map((repoName) => {
-    const pathToRepo = repoHelper.getPathToRepo(user, repoName);
+  const promises = repoList.map((reponame) => {
+    const pathToRepo = repoHelper.getPathToRepo(user, reponame);
     return NodeGit.Repository.open(pathToRepo).then((repo) => {
       isEmpty({ owner: user, reponame: repo });
       const walker = NodeGit.Revwalk.create(repo);
@@ -28,7 +28,7 @@ const getCommitsAndCreatedRepoByDate = async (data) => {
             author: commit.author().name(),
             date: commit.date(),
             message: commit.message().split('\n')[0],
-            repo: repoName
+            repo: reponame
           }));
           globalCommits = globalCommits.concat(repoCommits);
         });
@@ -147,7 +147,7 @@ const getCommitDiff = async ({ user, name, hash }) => {
 
 const modifyFile = async ({
   owner,
-  repoName,
+  reponame,
   author,
   email,
   baseBranch,
@@ -157,7 +157,7 @@ const modifyFile = async ({
   filepath,
   fileData
 }) => {
-  const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
+  const pathToRepo = repoHelper.getPathToRepo(owner, reponame);
   const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(baseBranch);
   const lastCommitTree = await lastCommitOnBranch.getTree();
@@ -194,7 +194,7 @@ const modifyFile = async ({
     [
       {
         repoOwner: owner,
-        repoName,
+        reponame,
         sha: commit.sha(),
         message,
         userEmail: email,
@@ -211,9 +211,9 @@ const modifyFile = async ({
 };
 
 const deleteFile = async ({
-  owner, repoName, branch, author, email, filepath
+  owner, reponame, branch, author, email, filepath
 }) => {
-  const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
+  const pathToRepo = repoHelper.getPathToRepo(owner, reponame);
   const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
   const lastCommitTree = await lastCommitOnBranch.getTree();
@@ -240,7 +240,7 @@ const deleteFile = async ({
     [
       {
         repoOwner: owner,
-        repoName,
+        reponame,
         sha: commit.sha(),
         message: `Deleted ${filepath}`,
         userEmail: email,
@@ -265,7 +265,7 @@ const createCommit = async ({ ...commitData }) => {
   }
 };
 
-const getRepoByCommitId = async (commitId)  => {
+const getRepoByCommitId = async (commitId) => {
   try {
     return await CommitRepository.getRepoByCommitId(commitId);
   } catch (err) {
