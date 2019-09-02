@@ -28,6 +28,7 @@ const isReaderMiddleware = require('../middlewares/is-reader.middleware');
 const isAdminMiddleware = require('../middlewares/is-admin.middleware');
 
 const issueService = require('../services/issue.service');
+const pullsService = require('../services/pulls.service');
 
 const router = Router();
 
@@ -101,6 +102,13 @@ router
     const { filepath } = req.query;
     getFileContent(username, reponame, branchName, filepath)
       .then(fileData => res.send(fileData))
+      .catch(next);
+  })
+  .get('/:owner/:repoName/:branch/file-exist', (req, res, next) => {
+    const { owner, repoName, branch } = req.params;
+    const { filepath } = req.query;
+    checkFileExists(owner, repoName, branch, filepath)
+      .then(result => res.send(result))
       .catch(next);
   })
   .get('/:username/:reponame/:branchName/last-commit', isReaderMiddleware, (req, res, next) => {
@@ -219,6 +227,20 @@ router
     getRepoIssueByNumber(reponame, number)
       .then(data => res.send(data))
       .catch(next);
+  })
+  .get('/:repositoryId/pulls/diffs', (req, res, next) => {
+    const { repositoryId } = req.params;
+    const { fromBranch, toBranch } = req.query;
+    pullsService.getPullData(repositoryId, fromBranch, toBranch)
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .get('/:repositoryId/pulls', (req, res, next) => {
+    const { repositoryId } = req.params;
+    pullsService.getPulls(repositoryId)
+      .then(data => res.send(data))
+      .catch(next);
   });
+
 
 module.exports = router;

@@ -5,6 +5,8 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 import RepositoryHeader from '../../components/RepositoryHeader';
 import IssuesTab from '../../containers/IssuesTab/index';
+import PullRequestsTab from '../../containers/PullRequestsTab';
+import CompareChanges from '../CompareChanges';
 import IssueComments from '../../components/IssueComments/index';
 import CommitsPage from '../../containers/CommitsPage/index';
 import DiffCommitView from '../../components/DiffCommitView/index';
@@ -28,6 +30,7 @@ import styles from './styles.module.scss';
 class RepositoryPage extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       isAccessGranted: false
     };
@@ -86,6 +89,7 @@ class RepositoryPage extends React.Component {
     const {
       match,
       issuesCount,
+      pullCount,
       branches,
       defaultBranch,
       location: { pathname },
@@ -99,7 +103,7 @@ class RepositoryPage extends React.Component {
     const branchExists = pathname.match(/tree\/.+/);
     let branch = '';
     if (branchExists) branch = branchExists[0].split('/')[1]; // branchExists[0] has format 'tree/nameOfBranch/...'
-    branch = branch || defaultBranch || branches[0];
+    branch = branch || defaultBranch || (branches[0] && branches[0].name);
     const pathToDir = pathname.replace(`${match.url}/tree/${branch}`, '').split('/');
     const params = pathToDir
       .filter(path => path)
@@ -116,6 +120,7 @@ class RepositoryPage extends React.Component {
           owner={username}
           repoName={reponame}
           issueCount={issuesCount}
+          pullCount={pullCount}
           activePage={pathname.split('/')[3]}
           baseUrl={match.url}
         />
@@ -127,6 +132,8 @@ class RepositoryPage extends React.Component {
             <Route exact path={`${match.path}/commits/:branch`} component={CommitsPage} />
             <Route exact path={`${match.path}/commit/:hash`} component={DiffCommitView} />
             <Route exact path={`${match.path}/issues`} component={IssuesTab} />
+            <Route exact path={`${match.path}/pulls`} component={PullRequestsTab} />
+            <Route exact path={`${match.path}/compare`} component={CompareChanges}/>
             <Route exact path={`${match.path}/issues/new`} component={CreateIssuePage} />
             <Route exact path={`${match.path}/issues/:number`} component={IssueComments} />
             <PrivateTab path={`${match.path}/settings`} component={RepoSettings} />
@@ -143,7 +150,6 @@ class RepositoryPage extends React.Component {
     );
   }
 }
-
 RepositoryPage.propTypes = {
   fetchCurrentRepo: PropTypes.func.isRequired,
   clearRepoState: PropTypes.func.isRequired,
@@ -162,6 +168,7 @@ RepositoryPage.propTypes = {
   }).isRequired,
   id: PropTypes.string.isRequired,
   issuesCount: PropTypes.number.isRequired,
+  pullCount: PropTypes.number,
   branches: PropTypes.array.isRequired,
   defaultBranch: PropTypes.string.isRequired,
   loading: PropTypes.bool.isRequired,
@@ -171,11 +178,10 @@ RepositoryPage.propTypes = {
   owner: PropTypes.object,
   history: PropTypes.object
 };
-
 const mapStateToProps = ({
   currentRepo: {
     repository: {
-      currentRepoInfo: { id, issuesCount, branches, defaultBranch, user: owner, isPublic },
+      currentRepoInfo: { id, issuesCount, pullCount, branches, defaultBranch, user: owner, isPublic },
       loading
     }
   },
@@ -188,6 +194,7 @@ const mapStateToProps = ({
   owner,
   currentUserName,
   issuesCount,
+  pullCount,
   branches,
   defaultBranch,
   isPublic,
@@ -198,7 +205,6 @@ const mapDispatchToProps = {
   fetchCurrentRepo,
   clearRepoState
 };
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps

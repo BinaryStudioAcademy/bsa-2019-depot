@@ -66,6 +66,7 @@ class CommitsPage extends React.Component {
 }
 
 CommitsPage.propTypes = {
+  repoId: PropTypes.string.isRequired,
   commitsData: PropTypes.exact({
     loading: PropTypes.bool.isRequired,
     error: PropTypes.string,

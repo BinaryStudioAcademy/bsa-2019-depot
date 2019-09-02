@@ -36,29 +36,24 @@ class UserRepository extends BaseRepository {
     return this.updateById(user.id, { password: cryptoHelper.encryptSync(password) });
   }
 
-  getUserDetailed(username, isOwner) {
-    const literalStatement = isOwner
-      ? `
-    (SELECT COUNT(*)
-    FROM "repositories"
-    WHERE "repositories"."userId" = "user"."id"
-    AND "repositories"."deletedAt" IS NULL)`
-      : `
-    (SELECT COUNT(*)
-    FROM "repositories"
-    WHERE "repositories"."userId" = "user"."id"
-    AND "repositories"."isPublic" = true
-    AND "repositories"."deletedAt" IS NULL)`;
+  getUserDetailed(username) {
     return this.model.findOne({
       where: { username },
       attributes: {
         include: [
-          [sequelize.literal(literalStatement), 'repositoriesCount'],
+          [
+            sequelize.literal(`
+            (SELECT COUNT(*)
+            FROM "repositories"
+            WHERE "repositories"."userId" = "user"."id" 
+            AND "repositories"."deletedAt" IS NULL)`),
+            'repositoriesCount'
+          ],
           [
             sequelize.literal(`
             (SELECT COUNT(*)
             FROM "stars", "repositories"
-            WHERE "user"."id" = "stars"."userId"
+            WHERE "user"."id" = "stars"."userId" 
             AND "repositories"."id" = "stars"."repositoryId"
             AND "stars"."deletedAt" IS NULL
             AND "repositories"."deletedAt" IS NULL)`),

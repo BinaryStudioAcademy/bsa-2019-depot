@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Loader } from 'semantic-ui-react';
-import { fetchIssues, fetchCurrentRepo } from '../../routines/routines';
+import { fetchCurrentRepo } from '../../routines/routines';
+import { getPulls } from '../../services/pullsService';
 import IssuePrContainer from '../IssuePrContainer';
 
-class IssuesTab extends React.Component {
+class PullRequestsTab extends React.Component {
   constructor(props) {
     super(props);
 
@@ -15,29 +16,26 @@ class IssuesTab extends React.Component {
         author: '',
         assignees: [],
         opened: true
-      }
+      },
+      pulls: []
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const {
       repositoryId,
-      fetchIssues,
       fetchCurrentRepo,
       match: {
         params: { username, reponame }
       }
     } = this.props;
-    const { filter } = this.state;
     if (!repositoryId) {
       fetchCurrentRepo({ username, reponame });
     } else {
-      fetchIssues({
-        username,
-        reponame,
-        repositoryId,
-        filter
+      const pulls = await getPulls({
+        repositoryId
       });
+      this.setState({ pulls });
     }
   }
 
@@ -48,33 +46,26 @@ class IssuesTab extends React.Component {
   };
 
   render() {
-    const { loading, issues } = this.props;
-    const { onChangeFilter } = this.state;
+    const { loading } = this.props;
+    const { onChangeFilter, pulls } = this.state;
 
     return loading ? (
       <Loader active />
     ) : (
-      <IssuePrContainer data={issues} isIssues={true} onChangeFilter={onChangeFilter} />
+      <IssuePrContainer data={pulls} isIssues={false} onChangeFilter={onChangeFilter} />
     );
   }
 }
 
-IssuesTab.propTypes = {
+PullRequestsTab.propTypes = {
   reponame: PropTypes.string,
   repositoryId: PropTypes.string,
-  issues: PropTypes.array.isRequired,
-  issuesData: PropTypes.exact({
-    loading: PropTypes.bool.isRequired,
-    error: PropTypes.string,
-    issues: PropTypes.array
-  }),
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
     isExact: PropTypes.bool.isRequired,
     path: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired
   }).isRequired,
-  fetchIssues: PropTypes.func.isRequired,
   fetchCurrentRepo: PropTypes.func.isRequired,
   history: PropTypes.object,
   location: PropTypes.object.isRequired,
@@ -82,24 +73,22 @@ IssuesTab.propTypes = {
 };
 
 const mapStateToProps = ({
-  issuesData: { loading, issues },
   currentRepo: {
     repository: {
-      currentRepoInfo: { id, name }
+      currentRepoInfo: { id },
+      loading
     }
   }
 }) => ({
-  loading,
-  issues,
-  repositoryId: id
+  repositoryId: id,
+  loading
 });
 
 const mapDispatchToProps = {
-  fetchIssues,
   fetchCurrentRepo
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(IssuesTab);
+)(PullRequestsTab);

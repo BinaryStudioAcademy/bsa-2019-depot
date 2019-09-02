@@ -97,20 +97,14 @@ const getCommits = async (branch, repoId) => {
   const { name, userId } = await RepoRepository.getById(repoId);
   const { username } = await userRepository.getById(userId);
   const pathToRepo = repoHelper.getPathToRepo(username, name);
-  const allCommits = [];
+  const commitShas = [];
   await NodeGit.Repository.open(pathToRepo)
     .then(repo => repo.getBranchCommit(branch))
     .then((firstCommitOnMaster) => {
       const history = firstCommitOnMaster.history(NodeGit.Revwalk.SORT.TIME);
       const commitPromise = new Promise((resolve) => {
         history.on('commit', (commit) => {
-          const commitObject = {
-            sha: commit.sha(),
-            author: commit.author().name(),
-            date: commit.date(),
-            message: commit.message()
-          };
-          allCommits.push(commitObject);
+          commitShas.push(commit.sha());
         });
         history.on('end', () => {
           resolve();
@@ -119,7 +113,7 @@ const getCommits = async (branch, repoId) => {
       history.start();
       return commitPromise;
     });
-  return allCommits;
+  return Promise.all(commitShas.map(sha => CommitRepository.getByHash(sha)));
 };
 
 const getCommitCount = async (branch, repoId) => {

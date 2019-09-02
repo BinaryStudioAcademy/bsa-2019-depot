@@ -4,6 +4,8 @@
   "private": true,
   "proxy": "http://localhost:3000",
   "dependencies": {
+    "@ant-design/icons": "^2.1.1",
+    "@ant-design/icons-react": "^2.0.1",
     "@primer/octicons-react": "^9.1.1",
     "@uppy/aws-s3": "^1.2.0",
     "@uppy/core": "^1.2.0",

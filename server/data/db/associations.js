@@ -14,7 +14,9 @@ module.exports = (models) => {
     Label,
     Language,
     LanguageStats,
-    Permission, 
+    PullRequest,
+    PRStatus,
+    Permission,
     Collaborator
   } = models;
 
@@ -25,7 +27,9 @@ module.exports = (models) => {
   User.hasMany(Commit);
   User.hasMany(Issue);
   User.hasMany(IssueComment);
+  User.hasMany(PullRequest);
   Repository.hasMany(Issue, { foreignKey: 'repositoryId' });
+  Repository.hasMany(PullRequest, { foreignKey: 'repositoryId' });
   Issue.hasMany(IssueComment, { onDelete: 'cascade' });
 
   User.hasMany(OrgUser, { foreignKey: 'userId' });
@@ -67,7 +71,14 @@ module.exports = (models) => {
   IssueComment.belongsTo(User);
   IssueComment.belongsTo(Issue);
   Repository.hasMany(Star);
-
+  PullRequest.belongsTo(User);
+  PullRequest.belongsTo(Repository);
+  PullRequest.belongsTo(PullRequest, { foreignKey: 'parentId' });
+  PullRequest.belongsTo(PRStatus, { foreignKey: 'statusId' });
+  PullRequest.belongsTo(Commit, { foreignKey: 'toCommitId' });
+  PullRequest.belongsTo(Commit, { foreignKey: 'fromCommitId' });
+  PullRequest.belongsTo(Branch, { foreignKey: 'fromBranchId' });
+  PullRequest.belongsTo(Branch, { foreignKey: 'toBranchId' });
   Star.belongsTo(Repository);
   Star.belongsTo(User);
 
@@ -75,7 +86,7 @@ module.exports = (models) => {
   Collaborator.belongsTo(User);
   Collaborator.belongsTo(Repository);
   Collaborator.belongsTo(Permission);
-  
+
   Language.hasMany(LanguageStats);
 
   LanguageStats.belongsTo(Language);

@@ -88,6 +88,14 @@ class RepositoryRepository extends BaseRepository {
             WHERE "repository"."id" = "issues"."repositoryId"
             AND "issues"."deletedAt" IS NULL)`),
             'issuesCount'
+          ],
+          [
+            sequelize.literal(`
+            (SELECT COUNT(*)
+            FROM "pullrequests"
+            WHERE "repository"."id" = "pullrequests"."repositoryId"
+            AND "pullrequests"."deletedAt" IS NULL)`),
+            'pullCount'
           ]
         ]
       },
@@ -109,13 +117,7 @@ class RepositoryRepository extends BaseRepository {
         },
         {
           model: StarModel,
-          attributes: ['id'],
-          include: [
-            {
-              model: UserModel,
-              attributes: ['id', 'username', 'imgUrl', 'location', 'createdAt']
-            }
-          ]
+          include: [UserModel]
         }
       ]
     });
@@ -126,7 +128,7 @@ class RepositoryRepository extends BaseRepository {
   }
 
   getByUsernameAndReponame(username, name) {
-    return this.model.findOne({ 
+    return this.model.findOne({
       where: { name },
       include: [
         {
