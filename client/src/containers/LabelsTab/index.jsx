@@ -224,7 +224,9 @@ LabelsTab.propTypes = {
 
 const mapStateToProps = ({
   currentRepo: {
-    currentRepoInfo: { id }
+    repository: {
+      currentRepoInfo: { id }
+    }
   }
 }) => ({
   repositoryId: id
