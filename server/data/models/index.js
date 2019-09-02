@@ -19,6 +19,7 @@ const LanguageStats = orm.import('./languageStats');
 const Label = orm.import('./label');
 const PullRequest = orm.import('./pullrequest');
 const PRStatus = orm.import('./prstatus');
+const PullComment = orm.import('./pullComment');
 
 associate({
   User,
@@ -38,7 +39,8 @@ associate({
   LanguageStats,
   Label,
   PullRequest,
-  PRStatus
+  PRStatus,
+  PullComment
 });
 
 module.exports = {
@@ -59,5 +61,6 @@ module.exports = {
   LanguageStatsModel: LanguageStats,
   LabelModel: Label,
   PullRequestModel: PullRequest,
-  PRStatusModel: PRStatus
+  PRStatusModel: PRStatus,
+  PullCommentModel: PullComment
 };

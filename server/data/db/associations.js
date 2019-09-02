@@ -1,4 +1,4 @@
-module.exports = models => {
+module.exports = (models) => {
   const {
     User,
     SshKey,
@@ -16,6 +16,7 @@ module.exports = models => {
     LanguageStats,
     PullRequest,
     PRStatus,
+    PullComment,
     Permission,
     Collaborator
   } = models;
@@ -28,9 +29,11 @@ module.exports = models => {
   User.hasMany(Issue);
   User.hasMany(IssueComment);
   User.hasMany(PullRequest);
+  User.hasMany(PullComment);
   Repository.hasMany(Issue, { foreignKey: 'repositoryId' });
   Repository.hasMany(PullRequest, { foreignKey: 'repositoryId' });
   Issue.hasMany(IssueComment, { onDelete: 'cascade' });
+  PullRequest.hasMany(PullComment, { onDelete: 'cascade' });
 
   User.hasMany(OrgUser, { foreignKey: 'userId' });
   User.hasMany(OrgUser, { foreignKey: 'orgId' });
@@ -70,6 +73,7 @@ module.exports = models => {
   Issue.belongsTo(Repository);
   IssueComment.belongsTo(User);
   IssueComment.belongsTo(Issue);
+
   Repository.hasMany(Star);
   PullRequest.belongsTo(User);
   PullRequest.belongsTo(Repository);
@@ -79,6 +83,8 @@ module.exports = models => {
   PullRequest.belongsTo(Commit, { foreignKey: 'fromCommitId' });
   PullRequest.belongsTo(Branch, { foreignKey: 'fromBranchId' });
   PullRequest.belongsTo(Branch, { foreignKey: 'toBranchId' });
+  PullComment.belongsTo(User);
+  PullComment.belongsTo(PullRequest);
   Star.belongsTo(Repository);
   Star.belongsTo(User);
 

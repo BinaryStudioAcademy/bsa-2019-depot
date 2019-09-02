@@ -11,8 +11,9 @@ const collaborators = require('./collaborators.route');
 const labelRoutes = require('./labels.route');
 const filesRoutes = require('./files.route');
 const pullsRoutes = require('./pulls.route');
+const pullCommentsRoutes = require('./pull-comments.route');
 
-module.exports = app => {
+module.exports = (app) => {
   app.use('/api/auth', authRoutes);
   app.use('/api/users', userRoutes);
   app.use('/api/commits', commitRoutes);
@@ -26,4 +27,5 @@ module.exports = app => {
   app.use('/api/labels', labelRoutes);
   app.use('/api/files', filesRoutes);
   app.use('/api/pulls', pullsRoutes);
+  app.use('/api/pull-comments', pullCommentsRoutes);
 };

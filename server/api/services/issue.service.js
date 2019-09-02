@@ -12,13 +12,12 @@ const getAllIssuesCount = (userId, params) => issueRepository.getAllIssuesCount(
 
 const getAllIssuesOwners = userId => issueRepository.getAllIssuesOwners(userId);
 
-const getAllRepoIssues = async repositoryId => {
+const getAllRepoIssues = async (repositoryId) => {
   const issues = await issueRepository.getRepositoryIssues(repositoryId);
   return issues || Promise.reject(new CustomError(404, `Repository with id ${repositoryId} not found`));
 };
 
-const getRepoIssues = (repositoryId, sort, author, title) =>
-  issueRepository.getIssues(repositoryId, sort, author, title);
+const getRepoIssues = (repositoryId, sort, author, title) => issueRepository.getIssues(repositoryId, sort, author, title);
 
 const getRepoIssueByIdNumber = (repositoryId, number) => issueRepository.getIssueByIdNumber(repositoryId, number);
 
@@ -29,7 +28,7 @@ const getRepoIssueByNumber = async (username, reponame, number) => {
 
 const getIssueById = id => issueRepository.getIssueById(id);
 
-const getAllIssueComments = async issueId => {
+const getAllIssueComments = async (issueId) => {
   const issueComments = await issueCommentRepository.getAllIssueComments(issueId);
   return issueComments || Promise.reject(new CustomError(404, `Issue number ${issueId} not found`));
 };

@@ -1,7 +1,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.sequelize.transaction(transaction => Promise.all([
     queryInterface.createTable(
-      'languageStats',
+      'pullComments',
       {
         id: {
           allowNull: false,
@@ -10,29 +10,32 @@ module.exports = {
           type: Sequelize.UUID,
           defaultValue: Sequelize.literal('gen_random_uuid()')
         },
-        branchId: {
+        body: {
+          allowNull: false,
+          type: Sequelize.TEXT
+        },
+        userId: {
           allowNull: false,
           type: Sequelize.UUID,
           references: {
-            model: 'branches',
+            model: 'users',
             key: 'id'
           }
         },
-        languageId: {
+        pullId: {
           allowNull: false,
           type: Sequelize.UUID,
           references: {
-            model: 'languages',
+            model: 'pullrequests',
             key: 'id'
           }
         },
-        percentage: {
-          allowNull: false,
-          type: Sequelize.FLOAT
-        }
+        createdAt: Sequelize.DATE,
+        updatedAt: Sequelize.DATE,
+        deletedAt: Sequelize.DATE
       },
       { transaction }
     )
   ])),
-  down: queryInterface => queryInterface.sequelize.transaction(transaction => Promise.all([queryInterface.dropTable('languageStats', { transaction })]))
+  down: queryInterface => queryInterface.sequelize.transaction(transaction => Promise.all([queryInterface.dropTable('pullComments', { transaction })]))
 };
