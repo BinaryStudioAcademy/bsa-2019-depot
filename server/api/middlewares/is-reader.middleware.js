@@ -3,11 +3,12 @@ const CollaboratorRepository = require('../../data/repositories/collaborator.rep
 const CustomError = require('../../helpers/error.helper');
 
 module.exports = async (req, res, next) => {
-  if (req.params.owner === req.user.username) {
+  if (req.params.username === req.user.username) {
     return next();
   }
-  const { reponame } = req.params;
-  const username = req.params.owner;
+
+  const { username, reponame } = req.params;
+
   const repo = req.params.repositoryId
     ? await RepositoryRepository.getById(req.params.repositoryId)
     : await RepositoryRepository.getByUsernameAndReponame(username, reponame);
