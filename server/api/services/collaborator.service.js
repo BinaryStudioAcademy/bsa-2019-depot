@@ -22,7 +22,8 @@ const addCollaborator = async ({
     repositoryId,
     isActivated: false
   });
-  return await getRepositoryCollaborators(repositoryId);
+  const result = await getRepositoryCollaborators(repositoryId);
+  return result;
 };
 
 const getRepositoryCollaborators = repositoryId => collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId);
@@ -30,7 +31,8 @@ const getRepositoryCollaborators = repositoryId => collaboratorRepository.getCol
 const getUserInvitationStatus = async (username, reponame, userId) => {
   const { id: ownerId } = await userRepository.getByUsername(username);
   const { id: repositoryId } = await repositoryRepository.getByUserAndReponame(ownerId, reponame);
-  return await collaboratorRepository.getUserInvitationStatus(userId, repositoryId);
+  const result = await collaboratorRepository.getUserInvitationStatus(userId, repositoryId);
+  return result;
 };
 
 const acceptInvitation = async (username, reponame, userId) => {
@@ -60,7 +62,8 @@ const removeRepositoryCollaborator = async (collaboratorId) => {
 
 const getUserRights = async (username, reponame, userId) => {
   const { id: repositoryId } = await getByUserAndReponame({ owner: username, reponame });
-  return await collaboratorRepository.getUserRights(userId, repositoryId);
+  const result = await collaboratorRepository.getUserRights(userId, repositoryId);
+  return result;
 };
 
 const getUserRightsByUserIdAndRepositoryId = (userId, repositoryId) => collaboratorRepository.getUserRights(userId, repositoryId);

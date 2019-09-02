@@ -15,7 +15,7 @@ const { deleteStarsByRepoId } = require('../services/star.service');
 const {
   getBranches,
   getBranchTree,
-  getFileBlame
+  getFileBlame,
   getBranchInfo,
   getLastCommitOnBranch,
   checkFileExists
