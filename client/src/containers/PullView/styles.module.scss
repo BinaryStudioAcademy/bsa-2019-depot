@@ -1,0 +1,31 @@
+:local(.header_row) {
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+:local(.pull_header) {
+  margin-right: auto !important;
+}
+
+:local(.input) {
+  margin-right: 0.6em;
+  flex: 1;
+}
+
+:local(.comment_author_name) {
+  font-weight: bold;
+  span {
+    font-weight: normal;
+  }
+}
+
+:local(.pull_label) {
+  margin-right: 0.8em !important;
+}
+
+:global(.ui.container):local(.contentContainer) {
+    max-width: 1000px !important;
+}
+
