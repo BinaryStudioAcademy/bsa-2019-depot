@@ -50,18 +50,18 @@ router
       })
       .catch(next);
   })
-  .get('/:repoId/branches/:branch/commits', isReaderMiddleware, (req, res, next) => {
-    const { repoId, branch } = req.params;
-    getCommits(branch, repoId)
+  .get('/:repositoryId/branches/:branch/commits', isReaderMiddleware, (req, res, next) => {
+    const { repositoryId, branch } = req.params;
+    getCommits(branch, repositoryId)
       .then(commits => res.send(commits))
       .catch(next);
   })
-  .get('/:repoId/branches/:branch', isReaderMiddleware, async (req, res, next) => {
+  .get('/:repositoryId/branches/:branch', isReaderMiddleware, async (req, res, next) => {
     let response;
     try {
-      const { repoId, branch: branchName } = req.params;
-      const branchInfo = await getBranchInfo(branchName, repoId);
-      const commitsCount = await getCommitCount(branchName, repoId);
+      const { repositoryId, branch: branchName } = req.params;
+      const branchInfo = await getBranchInfo(branchName, repositoryId);
+      const commitsCount = await getCommitCount(branchName, repositoryId);
 
       response = {
         ...branchInfo.get({ plain: true }),
@@ -72,9 +72,9 @@ router
     }
     return res.send(response);
   })
-  .get('/:repoId/branches', isReaderMiddleware, (req, res, next) => {
-    const { repoId } = req.params;
-    getBranches(repoId)
+  .get('/:repositoryId/branches', isReaderMiddleware, (req, res, next) => {
+    const { repositoryId } = req.params;
+    getBranches(repositoryId)
       .then(branches => res.send(branches))
       .catch(next);
   })
@@ -109,9 +109,9 @@ router
       .then(commit => res.send(commit))
       .catch(next);
   })
-  .get('/:repoId/branches/:branch/stats', isReaderMiddleware, (req, res, next) => {
-    const { repoId, branch } = req.params;
-    getStatsByBranch(repoId, branch)
+  .get('/:repositoryId/branches/:branch/stats', isReaderMiddleware, (req, res, next) => {
+    const { repositoryId, branch } = req.params;
+    getStatsByBranch(repositoryId, branch)
       .then(stats => res.send(stats))
       .catch(next);
   })

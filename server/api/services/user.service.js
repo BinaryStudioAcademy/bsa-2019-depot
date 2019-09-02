@@ -89,16 +89,14 @@ const getUsersToInviting = async ({ orgID, username }) => {
   return usernames;
 };
 
-const getUsersForCollaboratorsAddition = async ({ username, repoId, userId }) => {
-  const users = (await UserRepository.findUserByLetter(username))
-    .filter(({ id }) => id !== userId);
-  
-  const repos = (await CollaboratorRepository.findRepoById(repoId))
-    .map(({ userId }) => userId);
+const getUsersForCollaboratorsAddition = async ({ username, repositoryId, userId }) => {
+  const users = (await UserRepository.findUserByLetter(username)).filter(({ id }) => id !== userId);
+
+  const repos = (await CollaboratorRepository.findRepoById(repositoryId)).map(data => data.userId);
 
   return users
     .filter(({ id }) => !repos.includes(id))
-    .map(({ username }) => username)
+    .map(data => data.username)
     .slice(0, 6);
 };
 
