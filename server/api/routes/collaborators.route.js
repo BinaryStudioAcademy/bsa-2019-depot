@@ -23,21 +23,21 @@ router.get('/:username/:reponame/:userId', (req, res, next) => {
 router.post('/', (req, res, next) => {
   const { username, reponame, userId } = req.body;
   acceptInvitation(username, reponame, userId)
-    .then(data => res.send(data))
+    .then(() => res.sendStatus(200))
     .catch(next);
 });
 
 router.delete('/', (req, res, next) => {
   const { username, reponame, userId } = req.body;
   declineInvitation(username, reponame, userId)
-    .then(data => res.send(data))
+    .then(() => res.sendStatus(200))
     .catch(next);
 });
 
 router.delete('/:collaboratorId', (req, res, next) => {
   const { collaboratorId } = req.params;
   removeRepositoryCollaborator(collaboratorId)
-    .then(data => res.send(data))
+    .then(() => res.sendStatus(200))
     .catch(next);
 });
 

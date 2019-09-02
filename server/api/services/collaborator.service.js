@@ -7,14 +7,12 @@ const { getByUserAndReponame } = require('./repo.service');
 const { getUserDetailed } = require('./user.service');
 const { sendInviteCollaboratorEmail } = require('./email.service');
 
-const getRepositoryCollaborators = repositoryId => collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId);
-
 const addCollaborator = async ({
   recipient, username, reponame, repositoryId, url, permission
 }) => {
   const { email, id: userId } = await getUserDetailed(recipient);
 
-  // await sendInviteCollaboratorEmail({ email, url, username, reponame });
+  await sendInviteCollaboratorEmail({ email, url, username, reponame });
 
   const { id: permissionId } = await permissionRepository.getPermissionByName(permission);
 
@@ -35,27 +33,18 @@ const getUserInvitationStatus = async (username, reponame, userId) => {
 
 const acceptInvitation = async (username, reponame, userId) => {
   const [{ id }] = await getUserInvitationStatus(username, reponame, userId);
-  await collaboratorRepository.updateById(id, {
+  collaboratorRepository.updateById(id, {
     isActivated: true
   });
-  return {
-    status: true
-  };
 };
 
 const declineInvitation = async (username, reponame, userId) => {
   const [{ id }] = await getUserInvitationStatus(username, reponame, userId);
-  await collaboratorRepository.deleteById(id);
-  return {
-    status: true
-  };
+  collaboratorRepository.deleteById(id);
 };
 
-const removeRepositoryCollaborator = async (collaboratorId) => {
-  await collaboratorRepository.deleteById(collaboratorId);
-  return {
-    status: true
-  };
+const removeRepositoryCollaborator = (collaboratorId) => {
+  collaboratorRepository.deleteById(collaboratorId);
 };
 
 const getUserRights = async (username, reponame, userId) => {
