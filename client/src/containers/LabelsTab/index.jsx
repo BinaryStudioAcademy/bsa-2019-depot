@@ -123,8 +123,14 @@ class LabelsTab extends React.Component {
   sortLabels = (e, { value }) => {
     const { labels } = this.state;
     const sortedLabels = labels.sort((label, prevLabel) => {
-      if (value === 'name_ASC') return label.name > prevLabel.name ? 1 : -1;
-      if (value === 'name_DESC') return label.name > prevLabel.name ? -1 : 1;
+      let comparedLabelNames;
+      if (value === 'name_ASC') {
+        comparedLabelNames = label.name > prevLabel.name ? 1 : -1;
+      } 
+      if (value === 'name_DESC') {
+        comparedLabelNames = label.name > prevLabel.name ? -1 : 1;
+      } 
+      return comparedLabelNames;
     });
     this.setState({
       ...this.state,
