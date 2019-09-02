@@ -265,7 +265,7 @@ class IssueRepository extends BaseRepository {
         },
         {
           model: UserModel,
-          attributes: ['username']
+          attributes: ['username', 'imgUrl']
         }
       ]
     });
