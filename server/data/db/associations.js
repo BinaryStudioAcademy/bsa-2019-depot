@@ -81,8 +81,8 @@ module.exports = (models) => {
   PullRequest.belongsTo(PRStatus, { foreignKey: 'statusId' });
   PullRequest.belongsTo(Commit, { foreignKey: 'toCommitId' });
   PullRequest.belongsTo(Commit, { foreignKey: 'fromCommitId' });
-  PullRequest.belongsTo(Branch, { foreignKey: 'fromBranchId' });
-  PullRequest.belongsTo(Branch, { foreignKey: 'toBranchId' });
+  PullRequest.belongsTo(Branch, { as: 'fromBranch', foreignKey: 'fromBranchId' });
+  PullRequest.belongsTo(Branch, { as: 'toBranch', foreignKey: 'toBranchId' });
   PullComment.belongsTo(User);
   PullComment.belongsTo(PullRequest);
   Star.belongsTo(Repository);
