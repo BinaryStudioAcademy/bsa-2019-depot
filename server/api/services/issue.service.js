@@ -44,6 +44,8 @@ const closeIssueById = id => issueRepository.setIsOpenedById(id, false);
 
 const reopenIssueById = id => issueRepository.setIsOpenedById(id, true);
 
+const getRepoByIssueId = id => issueRepository.getRepoByIssueId(id);
+
 module.exports = {
   addIssue,
   updateIssueById,
@@ -60,5 +62,6 @@ module.exports = {
   getRepoIssues,
   getRepoIssueByNumber,
   getAllIssueComments,
-  getRepoIssueByIdNumber
+  getRepoIssueByIdNumber,
+  getRepoByIssueId
 };

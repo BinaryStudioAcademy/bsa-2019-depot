@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as repositoryService from '../../services/repositoryService';
-import { Button, Label, Icon, Modal, Loader } from 'semantic-ui-react';
+import { Button, Label, Modal, Loader } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
+import Octicon, { getIconByName } from '@primer/octicons-react';
 import styles from './styles.module.scss';
 
 class ForkButton extends Component {
@@ -49,21 +50,21 @@ class ForkButton extends Component {
         trigger={
           isOwnRepo ? (
             <Button disabled size="small" as="div" compact labelPosition="right" onClick={this.handleOpen}>
-              <Button size="small" compact className={styles.forkButton}>
-                <Icon name="fork" />
+              <Button compact className={styles.forkButton}>
+                <Octicon className={styles.forkButtonIcon} icon={getIconByName('repo-forked')} />
                 Fork
               </Button>
-              <Label as="a" basic pointing="left">
+              <Label as="a" basic>
                 {forkedCount}
               </Label>
             </Button>
           ) : (
             <Button size="small" as="div" compact labelPosition="right" onClick={this.handleOpen}>
-              <Button size="small" compact className={styles.forkButton}>
-                <Icon name="fork" />
+              <Button compact className={styles.forkButton}>
+                <Octicon className={styles.forkButtonIcon} icon={getIconByName('repo-forked')} />
                 Fork
               </Button>
-              <Label as="a" basic pointing="left">
+              <Label as="a" basic>
                 {forkedCount}
               </Label>
             </Button>
@@ -114,7 +115,11 @@ ForkButton.defaultProps = {
   forkedCount: 0
 };
 
-const mapStateToProps = ({ currentRepo: { repository: { currentRepoInfo } } }) => ({
+const mapStateToProps = ({
+  currentRepo: {
+    repository: { currentRepoInfo }
+  }
+}) => ({
   currentRepoInfo
 });
 

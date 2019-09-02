@@ -1,6 +1,7 @@
 const UserRepository = require('../../data/repositories/user.repository');
 const StarRepository = require('../../data/repositories/star.repository');
 const OrgUserRepository = require('../../data/repositories/org-user.repository');
+const CollaboratorRepository = require('../../data/repositories/collaborator.repository');
 
 const CustomError = require('../../helpers/error.helper');
 const tokenHelper = require('../../helpers/token.helper');
@@ -12,8 +13,8 @@ const getUserById = async userId => {
 
 const getUsersOrganizations = userId => OrgUserRepository.getUsersOrganizations(userId);
 
-const getUserDetailed = async username => {
-  const user = await UserRepository.getUserDetailed(username);
+const getUserDetailed = async (username, isOwner) => {
+  const user = await UserRepository.getUserDetailed(username, isOwner);
   return user || Promise.reject(new CustomError(404, `User ${username} not found`));
 };
 
@@ -86,6 +87,17 @@ const getUsersToInviting = async ({ orgID, username }) => {
   return usernames;
 };
 
+const getUsersForCollaboratorsAddition = async ({ username, repositoryId, userId }) => {
+  const users = (await UserRepository.findUserByLetter(username)).filter(({ id }) => id !== userId);
+
+  const repos = (await CollaboratorRepository.findRepoById(repositoryId)).map(data => data.userId);
+
+  return users
+    .filter(({ id }) => !repos.includes(id))
+    .map(data => data.username)
+    .slice(0, 6);
+};
+
 module.exports = {
   getUserById,
   getUserByUsername,
@@ -97,6 +109,7 @@ module.exports = {
   getStars,
   getUsersToInviting,
   getUsersOrganizations,
+  getUsersForCollaboratorsAddition,
   uploadPhoto,
   deletePhoto
 };

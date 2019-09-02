@@ -13,7 +13,11 @@ module.exports = models => {
     Star,
     Label,
     Language,
-    LanguageStats
+    LanguageStats,
+    PullRequest,
+    PRStatus,
+    Permission,
+    Collaborator
   } = models;
 
   SshKey.belongsTo(User);
@@ -23,13 +27,16 @@ module.exports = models => {
   User.hasMany(Commit);
   User.hasMany(Issue);
   User.hasMany(IssueComment);
+  User.hasMany(PullRequest);
   Repository.hasMany(Issue, { foreignKey: 'repositoryId' });
+  Repository.hasMany(PullRequest, { foreignKey: 'repositoryId' });
   Issue.hasMany(IssueComment, { onDelete: 'cascade' });
 
   User.hasMany(OrgUser, { foreignKey: 'userId' });
   User.hasMany(OrgUser, { foreignKey: 'orgId' });
   Role.hasMany(OrgUser, { foreignKey: 'roleId' });
   User.hasMany(Star);
+  User.hasMany(Collaborator, { foreignKey: 'userId' });
 
   OrgUser.belongsTo(User, { foreignKey: 'orgId' });
   OrgUser.belongsTo(Role, { foreignKey: 'roleId' });
@@ -43,6 +50,7 @@ module.exports = models => {
   Commit.hasMany(CommitComment, { foreignKey: 'commitId' });
   Commit.belongsTo(User);
   CommitComment.belongsTo(Commit);
+  Commit.belongsTo(Repository);
 
   User.hasMany(CommitComment, { foreignKey: 'userId' });
   CommitComment.belongsTo(User);
@@ -56,14 +64,28 @@ module.exports = models => {
     as: 'originalRepo'
   });
   Repository.belongsTo(User);
+  Repository.hasMany(Collaborator, { foreignKey: 'repositoryId' });
+
   Issue.belongsTo(User);
   Issue.belongsTo(Repository);
   IssueComment.belongsTo(User);
   IssueComment.belongsTo(Issue);
   Repository.hasMany(Star);
-
+  PullRequest.belongsTo(User);
+  PullRequest.belongsTo(Repository);
+  PullRequest.belongsTo(PullRequest, { foreignKey: 'parentId' });
+  PullRequest.belongsTo(PRStatus, { foreignKey: 'statusId' });
+  PullRequest.belongsTo(Commit, { foreignKey: 'toCommitId' });
+  PullRequest.belongsTo(Commit, { foreignKey: 'fromCommitId' });
+  PullRequest.belongsTo(Branch, { foreignKey: 'fromBranchId' });
+  PullRequest.belongsTo(Branch, { foreignKey: 'toBranchId' });
   Star.belongsTo(Repository);
   Star.belongsTo(User);
+
+  Permission.hasMany(Collaborator, { foreignKey: 'permissionId' });
+  Collaborator.belongsTo(User);
+  Collaborator.belongsTo(Repository);
+  Collaborator.belongsTo(Permission);
 
   Language.hasMany(LanguageStats);
 

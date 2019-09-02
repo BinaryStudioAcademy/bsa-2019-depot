@@ -15,8 +15,8 @@ const CommitsList = ({ commits, match: { params } }) => {
     <List divided verticalAlign="middle">
       {commits.map((commit, index, array) => {
         let divider;
-        if (index === 0 || !moment(commit.date).isSame(array[index - 1].date, 'day')) {
-          divider = <Divider horizontal>{moment(commit.date).format('MMM D, YYYY')}</Divider>;
+        if (index === 0 || !moment(commit.createdAt).isSame(array[index - 1].createdAt, 'day')) {
+          divider = <Divider horizontal>{moment(commit.createdAt).format('MMM D, YYYY')}</Divider>;
         }
         return (
           <Fragment key={`${commit.sha}`}>
@@ -42,8 +42,8 @@ const CommitsList = ({ commits, match: { params } }) => {
               <List.Content>
                 <List.Header>{commit.message}</List.Header>
                 <List.Description>
-                  <Image src={getUserImgLink(commit.author.avatar)} avatar />
-                  {` ${commit.author} committed ${moment(commit.date).fromNow()}`}
+                  <Image src={getUserImgLink(commit.user.imgUrl)} avatar />
+                  {` ${commit.user.username} committed ${moment(commit.createdAt).fromNow()}`}
                 </List.Description>
               </List.Content>
             </List.Item>
@@ -55,14 +55,7 @@ const CommitsList = ({ commits, match: { params } }) => {
 };
 
 CommitsList.propTypes = {
-  commits: PropTypes.arrayOf(
-    PropTypes.exact({
-      sha: PropTypes.string.isRequired,
-      author: PropTypes.string.isRequired,
-      date: PropTypes.string.isRequired,
-      message: PropTypes.string.isRequired
-    })
-  ).isRequired,
+  commits: PropTypes.arrayOf(PropTypes.object).isRequired,
   match: PropTypes.object.isRequired
 };
 

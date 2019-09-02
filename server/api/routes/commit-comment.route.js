@@ -4,7 +4,8 @@ const {
   createCommitComment,
   updateCommitComment,
   getCommitCommentsByCommitId,
-  deleteCommitComment
+  deleteCommitComment,
+  getCommitCommentById
 } = require('../services/commit-comment.service');
 
 const router = Router();
@@ -21,7 +22,11 @@ router.post('/', (req, res, next) => {
 
 router.put('/', (req, res, next) => {
   updateCommitComment({ ...req.body })
-    .then(data => res.send(data))
+    .then((data) => {
+      const { commitId } = data;
+      req.commitsNsp.to(commitId).emit('changedCommitComment');
+      return res.send(data);
+    })
     .catch(next);
 });
 
@@ -32,11 +37,16 @@ router.get('/:commitId', (req, res, next) => {
     .catch(next);
 });
 
-router.delete('/:commentId', (req, res, next) => {
+router.delete('/:commentId', async (req, res, next) => {
   const { commentId } = req.params;
   const { userId } = req.body;
+  const comment = await getCommitCommentById(commentId);
+  const { commitId } = comment.get({ plain: true });
   deleteCommitComment(commentId, userId)
-    .then(() => res.send({ id: commentId }))
+    .then(() => {
+      req.commitsNsp.to(commitId).emit('changedCommitComment');
+      return res.send({ id: commentId });
+    })
     .catch(next);
 });
 

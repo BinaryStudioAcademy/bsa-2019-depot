@@ -195,7 +195,8 @@ export class Overview extends React.Component {
                       Object.keys(monthActivityObject.commits).reduce((acc, key) => {
                         return acc + monthActivityObject.commits[key];
                       }, 0);
-                    const numOfCreatedRepos = monthActivityObject.createdRepos.length;
+                    const numOfCreatedRepos =
+                      monthActivityObject.createdRepos && monthActivityObject.createdRepos.length;
                     const numOfCommittedRepos =
                       monthActivityObject.commits && Object.keys(monthActivityObject.commits).length;
                     return (

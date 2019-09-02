@@ -104,7 +104,7 @@ const updateLanguageStats = async (owner, reponame, branch) => {
 /* syncDb takes commits in form of:
  {
     repoOwner,
-    repoName,
+    reponame,
     sha,
     message,
     userEmail, // Email of the commit's author
@@ -118,9 +118,9 @@ const updateLanguageStats = async (owner, reponame, branch) => {
  }
 */
 const syncDb = async (commits, branch) => {
-  const { repoOwner, repoName } = commits[0];
+  const { repoOwner, reponame } = commits[0];
   const { id: userId } = await userRepository.getByUsername(repoOwner);
-  const { id: repositoryId } = await repoRepository.getByUserAndReponame(userId, repoName);
+  const { id: repositoryId } = await repoRepository.getByUserAndReponame(userId, reponame);
   const commitAuthors = await Promise.all(commits.map(({ userEmail }) => userRepository.getByEmail(userEmail)));
   const addedCommits = await Promise.all(
     commitAuthors.map(({ id: authorId }, index) =>
@@ -150,7 +150,7 @@ const syncDb = async (commits, branch) => {
     });
   }
 
-  await updateLanguageStats(repoOwner, repoName, branch.name);
+  await updateLanguageStats(repoOwner, reponame, branch.name);
 };
 
 module.exports = {

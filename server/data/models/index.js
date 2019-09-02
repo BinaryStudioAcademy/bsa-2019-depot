@@ -12,9 +12,13 @@ const IssueComment = orm.import('./issueComment');
 const Star = orm.import('./star');
 const OrgUser = orm.import('./orgUser');
 const Role = orm.import('./role');
+const Permission = orm.import('./permission');
+const Collaborator = orm.import('./collaborator');
 const Language = orm.import('./language');
 const LanguageStats = orm.import('./languageStats');
 const Label = orm.import('./label');
+const PullRequest = orm.import('./pullrequest');
+const PRStatus = orm.import('./prstatus');
 
 associate({
   User,
@@ -28,9 +32,13 @@ associate({
   Star,
   OrgUser,
   Role,
+  Permission,
+  Collaborator,
   Language,
   LanguageStats,
-  Label
+  Label,
+  PullRequest,
+  PRStatus
 });
 
 module.exports = {
@@ -45,7 +53,11 @@ module.exports = {
   StarModel: Star,
   OrgUserModel: OrgUser,
   RoleModel: Role,
+  PermissionModel: Permission,
+  CollaboratorModel: Collaborator,
   LanguageModel: Language,
   LanguageStatsModel: LanguageStats,
-  LabelModel: Label
+  LabelModel: Label,
+  PullRequestModel: PullRequest,
+  PRStatusModel: PRStatus
 };

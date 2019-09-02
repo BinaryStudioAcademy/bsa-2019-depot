@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Octicon, { getIconByName } from '@primer/octicons-react';
 import { Menu } from 'semantic-ui-react';
@@ -6,13 +7,7 @@ import LanguageStats from '../../containers/LanguageStats';
 
 import styles from './styles.module.scss';
 
-const CodeTabMenu = ({
-  ownername,
-  reponame,
-  branch,
-  branchesCount,
-  commitsCount
-}) => (
+const CodeTabMenu = ({ ownername, reponame, branch, branchesCount, commitsCount }) => (
   <>
     <Menu borderless attached="top" widths={4}>
       <Menu.Item>
@@ -40,8 +35,16 @@ const CodeTabMenu = ({
         </Link>
       </Menu.Item>
     </Menu>
-    <LanguageStats branch={branch}/>
+    <LanguageStats branch={branch} />
   </>
 );
+
+CodeTabMenu.propTypes = {
+  ownername: PropTypes.string.isRequired,
+  reponame: PropTypes.string.isRequired,
+  branch: PropTypes.string.isRequired,
+  branchesCount: PropTypes.number.isRequired,
+  commitsCount: PropTypes.number.isRequired
+};
 
 export default CodeTabMenu;

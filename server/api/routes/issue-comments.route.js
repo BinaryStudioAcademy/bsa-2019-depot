@@ -30,16 +30,25 @@ router.put('/', (req, res, next) => {
   } = req;
   issueCommentService
     .updateIssueCommentById(id, userId, { body })
-    .then(data => res.send(data))
+    .then((data) => {
+      const { issueId } = data;
+      req.issuesNsp.to(issueId).emit('changedIssueComments');
+      return res.send(data);
+    })
     .catch(next);
 });
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', async (req, res, next) => {
   const { id } = req.params;
   const userId = req.user.id;
+  const comment = await issueCommentService.getIssueCommentById(id);
+  const { issueId } = comment.get({ plain: true });
   issueCommentService
     .deleteIssueCommentById(id, userId)
-    .then(() => res.status(204).send({}))
+    .then(() => {
+      req.issuesNsp.to(issueId).emit('changedIssueComments');
+      res.status(204).send({});
+    })
     .catch(next);
 });
 

@@ -103,8 +103,8 @@ const getLastCommitOnBranch = async ({ user, name, branch }) => {
   };
 };
 
-const checkFileExists = async (owner, repoName, branch, filepath) => {
-  const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
+const checkFileExists = async (owner, reponame, branch, filepath) => {
+  const pathToRepo = repoHelper.getPathToRepo(owner, reponame);
   const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
   const entry = await lastCommitOnBranch.getEntry(filepath);

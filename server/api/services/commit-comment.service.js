@@ -1,9 +1,9 @@
-const { getUserById } = require('./user.service');
 const CommitRepository = require('../../data/repositories/commit.repository');
 const CommitCommentRepository = require('../../data/repositories/commit-comment.repository');
 const UserRepository = require('../../data/repositories/user.repository');
 const RepoRepository = require('../../data/repositories/repository.repository');
 const CustomError = require('../../helpers/error.helper');
+const { checkCommitCommentPermissions } = require('../../helpers/check.permission.level.helper');
 
 const getCommitCommentById = async (commitCommentId) => {
   const commitComment = await CommitCommentRepository.getCommitCommentById(commitCommentId);
@@ -20,31 +20,7 @@ const getCommitCommentsByCommitId = async (commitId) => {
     if (!commitComments.length) {
       return [];
     }
-    const users = await Promise.all(commitComments.map(comment => getUserById(comment.userId)));
-    const comments = commitComments.map((item, idx) => {
-      const {
-        id, body, createdAt, updatedAt
-      } = item;
-      const comment = {
-        id,
-        commitId,
-        author: {},
-        body,
-        createdAt,
-        updatedAt
-      };
-      const {
-        id: userId, username, name, imgUrl
-      } = users[idx];
-      comment.author = {
-        id: userId,
-        username,
-        name,
-        imgUrl
-      };
-      return comment;
-    });
-    return comments;
+    return commitComments;
   } catch (err) {
     return Promise.reject(new CustomError(500, err.message));
   }
@@ -101,11 +77,13 @@ const updateCommitComment = async (commitCommentData) => {
     } = commitCommentData;
 
     const commitComment = await CommitCommentRepository.getCommitCommentById(id);
+    const isAccessGranted = checkCommitCommentPermissions(commitId, userId);
+
     if (!commitComment) {
       return Promise.reject(new CustomError(400, `Comment with id ${id} does not exist.`));
     }
     const { userId: commentUserId } = commitComment;
-    if (userId !== commentUserId) {
+    if (userId !== commentUserId && !isAccessGranted) {
       return Promise.reject(new CustomError(401, `User with id ${userId} is not allowed to update this comment.`));
     }
 
@@ -147,7 +125,9 @@ const deleteCommitComment = async (id, userId) => {
       return Promise.reject(new CustomError(404, `Commit comment with ${id} does not exist.`));
     }
     const { userId: commitUserId } = comment;
-    if (commitUserId !== userId) {
+    const isAccessGranted = checkCommitCommentPermissions(id, userId);
+
+    if (commitUserId !== userId && !isAccessGranted) {
       return Promise.reject(new CustomError(400, `User with ${userId} is not allowed to delete comment ${id}.`));
     }
     const result = await CommitCommentRepository.deleteCommitCommentById(id);

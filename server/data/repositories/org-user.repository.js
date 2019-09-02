@@ -1,5 +1,6 @@
 const BaseRepository = require('./base.repository');
 const { OrgUserModel, UserModel, RoleModel } = require('../models/index');
+const { orgRole } = require('../../helpers/role.helper');
 
 class OrgUserRepository extends BaseRepository {
   findUserInOrg(userId, orgId) {
@@ -21,6 +22,20 @@ class OrgUserRepository extends BaseRepository {
           model: RoleModel
         }
       ]
+    });
+  }
+
+  getUserWithOwnerRole({ userId, orgId }) {
+    return this.model.findOne({
+      where: {
+        userId,
+        orgId,
+        deletedAt: null
+      },
+      include: [{
+        model: RoleModel,
+        where: { name: orgRole.owner },
+      }]
     });
   }
 }

@@ -74,8 +74,21 @@ export class RepositoriesList extends React.Component {
     return mappedRepositories;
   }
 
+  filterRepositories = repositories => {
+    const { filter } = this.props;
+    switch (filter) {
+    case 'Public':
+      return repositories.filter(({ isPublic }) => isPublic);
+    case 'Private':
+      return repositories.filter(({ isPublic }) => !isPublic);
+    default:
+      return repositories;
+    }
+  };
+
   render() {
     const { repositories } = this.state;
+    const filteredRepositories = this.filterRepositories(repositories);
     const {
       match: {
         params: { username }
@@ -84,7 +97,7 @@ export class RepositoriesList extends React.Component {
 
     return (
       <>
-        {repositories.map(repo => {
+        {filteredRepositories.map(repo => {
           return <RepositoryItem repo={repo} key={repo.name} onStar={this.onStar} username={username} />;
         })}
       </>
@@ -100,6 +113,7 @@ RepositoriesList.propTypes = {
     url: PropTypes.string.isRequired
   }).isRequired,
   id: PropTypes.string,
+  filter: PropTypes.string,
   onDataChange: PropTypes.func
 };
 
