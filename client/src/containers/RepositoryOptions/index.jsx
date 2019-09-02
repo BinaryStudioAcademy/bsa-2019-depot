@@ -74,6 +74,7 @@ class RepositoryOptions extends React.Component {
       name: oldName
     });
     history.push(`/${owner}`);
+    window.location.reload();
   };
 
   onClickRename = ({ name }) => {
