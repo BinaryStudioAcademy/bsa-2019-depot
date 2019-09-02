@@ -133,7 +133,7 @@ class LabelItem extends React.Component {
                   label="Description"
                   name="description"
                   value={values.description}
-                  placeholder="Oprional description"
+                  placeholder="Optional description"
                   width={6}
                   className={styles.labelInput}
                   onChange={handleChange}

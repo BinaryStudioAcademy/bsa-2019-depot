@@ -65,14 +65,14 @@ export class CommitCommentItem extends Component {
   }
 
   render() {
-    const { comment, hash, userId } = this.props;
-    const { body, author, createdAt } = comment;
-    const { id: authorId, name, username, imgUrl } = author;
+    const { comment, hash, userId, isAccessGranted } = this.props;
+    const { body, user, createdAt } = comment;
+    const { id: authorId, name, username, imgUrl } = user;
     const { text, isEditing, selectedTab } = this.state;
     const authorTitle = name || username;
 
     const isAbleToChange =
-      userId === authorId ? (
+      userId === authorId || isAccessGranted ? (
         <div className="menu">
           <Dropdown item text="...">
             <Dropdown.Menu>
@@ -127,7 +127,7 @@ CommitCommentItem.defaultProps = {};
 CommitCommentItem.propTypes = {
   comment: PropTypes.shape({
     id: PropTypes.string.isRequired,
-    author: PropTypes.shape({
+    user: PropTypes.shape({
       id: PropTypes.string.isRequired,
       imgUrl: PropTypes.string,
       username: PropTypes.string,
@@ -141,5 +141,6 @@ CommitCommentItem.propTypes = {
   match: PropTypes.object,
   userId: PropTypes.string.isRequired,
   editComment: PropTypes.func,
-  deleteComment: PropTypes.func
+  deleteComment: PropTypes.func,
+  isAccessGranted: PropTypes.bool.isRequired
 };

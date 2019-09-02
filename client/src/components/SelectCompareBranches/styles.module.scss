@@ -1,0 +1,51 @@
+$blue: #2e53db;
+$gray: #f7f7fb;
+$black: #363a44;
+
+:global(.ui.segment):local(.selectBranchesContainer) {
+  margin-left: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $gray;
+
+  .gitCompare {
+    margin-right: 15px;
+  }
+}
+
+:global(.ui.button):local(.repoBranchesButton) {
+  margin: 0 6px;
+  text-overflow: ellipsis;
+  &:active,
+  &:focus {
+    background-color: #e9ecef;
+    background-image: none;
+    border-color: rgba(27, 31, 35, 0.35);
+    box-shadow: inset 0 0.15em 0.3em rgba(27, 31, 35, 0.15);
+  }
+
+  :global(.menu.transition.visible) :global(.header) {
+    font-size: 100%;
+  }
+}
+
+:global(.ui.button):local(.actionButton) {
+  background-color: $gray;
+  border: 1px solid rgba(27, 31, 35, 0.2);
+  color: $black;
+  font-size: 75%;
+  line-height: 20px;
+  padding: 3px 10px;
+}
+
+:global(.ui.compact.button):local(.createPullRequest) {
+  margin-left: 0;
+  padding: 4px 10px;
+  font-size: 75%;
+  line-height: 20px;
+
+  :global(.octicon) {
+    margin-right: 5px;
+  }
+}

@@ -1,18 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Loader, Icon, Input, Dropdown, Button, Label } from 'semantic-ui-react';
+import { Loader } from 'semantic-ui-react';
 import { fetchIssues, fetchCurrentRepo } from '../../routines/routines';
-import IssuesList from '../../components/IssuesList';
-
-import styles from './styles.module.scss';
+import IssuePrContainer from '../IssuePrContainer';
 
 class IssuesTab extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      filterByTitle: '',
       filter: {
         title: '',
         author: '',
@@ -31,6 +28,7 @@ class IssuesTab extends React.Component {
         params: { username, reponame }
       }
     } = this.props;
+    const { filter } = this.state;
     if (!repositoryId) {
       fetchCurrentRepo({ username, reponame });
     } else {
@@ -38,150 +36,25 @@ class IssuesTab extends React.Component {
         username,
         reponame,
         repositoryId,
-        filter: this.state.filter
+        filter
       });
     }
   }
 
-  countOpenIssues = () => {
-    const counter = this.props.issues.filter(issue => issue.isOpened);
-    return counter.length;
-  };
-
-  countClosedIssues = () => {
-    const counter = this.props.issues.filter(issue => !issue.isOpened);
-    return counter.length;
-  };
-
-  renderFilteredIssues = () => {
-    const { issues } = this.props;
-    const { filterByTitle } = this.state;
-    return issues.filter(({ title }) => title.includes(filterByTitle));
-  };
-
-  filterIssues = e => {
+  onChangeFilter = filter => {
     this.setState({
-      ...this.state,
-      filterByTitle: e.target.value
+      filter
     });
-  };
-
-  onCreateIssue = () => {
-    const { location, history } = this.props;
-    history.push(`${location.pathname}/new`);
-  };
-
-  onShowLabels = () => {
-    const { history, match } = this.props;
-    const { username, reponame } = match.params;
-    history.push(`/${username}/${reponame}/labels`);
   };
 
   render() {
     const { loading, issues } = this.props;
-    const { filterByTitle } = this.state;
-
-    const authorList = issues.reduce((acc, { user }) => {
-      return !acc.includes(user.username) ? [...acc, user.username] : acc;
-    }, []);
-
-    const openIssues = this.countOpenIssues();
-    const closedIssues = this.countClosedIssues();
-    const filteredIssues = filterByTitle ? this.renderFilteredIssues() : issues;
-
-    // Mock data
-    const sortOptions = [
-      {
-        key: 'createdAt_DESC',
-        text: 'Newest',
-        value: 'createdAt_DESC'
-      },
-      {
-        key: 'createdAt_ASC',
-        text: 'Oldest',
-        value: 'createdAt_ASC'
-      }
-    ];
-
-    const filterOptions = [
-      {
-        key: 0,
-        text: 'Your Issues',
-        value: 'Your Issues'
-      }
-    ];
+    const { onChangeFilter } = this.state;
 
     return loading ? (
       <Loader active />
     ) : (
-      <>
-        <div className={styles.filterRow}>
-          <div className={styles.leftGroup}>
-            <Input
-              label={<Dropdown text="Filters" options={filterOptions} />}
-              labelPosition="left"
-              placeholder="Filter by title"
-              onChange={this.filterIssues}
-            />
-            <Button basic className={styles.labelButton} onClick={this.onShowLabels}>
-              <Button.Content className={styles.labelButtonIcon}>
-                <Icon name="tag" />
-              </Button.Content>
-
-              <Button.Content className={styles.labelButtonText}>Labels</Button.Content>
-              <Button.Content className={styles.labelButtonContent}>
-                <Label circular>8</Label>
-              </Button.Content>
-            </Button>
-          </div>
-          <Button content="New Issue" positive onClick={this.onCreateIssue} />
-        </div>
-        <div className={styles.issuesContainer}>
-          <div className={styles.issuesHeader}>
-            <div className="issues-counters">
-              <span className={styles.openedIssues}>
-                <Icon name="info" /> {openIssues} Open
-              </span>
-              <span className={styles.closedIssues}>
-                <Icon name="check" /> {closedIssues} Closed
-              </span>
-            </div>
-            <div className={styles.issueFilters}>
-              <Dropdown text="Author" icon="filter">
-                <Dropdown.Menu>
-                  <Input icon="search" iconPosition="left" className="search" placeholder="Filter authors" />
-                  <Dropdown.Menu scrolling>
-                    {authorList.map((author, index) => (
-                      <Dropdown.Item key={index} text={author} value={author} />
-                    ))}
-                  </Dropdown.Menu>
-                </Dropdown.Menu>
-              </Dropdown>
-              <Dropdown text="Assignee" icon="filter">
-                <Dropdown.Menu>
-                  <Input icon="search" iconPosition="left" className="search" placeholder="Filter assignees" />
-                  {/* <Dropdown.Menu scrolling>
-                    {issues
-                      .map(issue => issue.assignees)
-                      .flat()
-                      .map(assignee => (
-                        <Dropdown.Item key={assignee.username} text={assignee.username} value={assignee.username} />
-                      ))}
-                  </Dropdown.Menu> */}
-                </Dropdown.Menu>
-              </Dropdown>
-              <Dropdown text="Sort" icon="filter">
-                <Dropdown.Menu>
-                  {sortOptions.map(({ key, text, value }) => (
-                    <Dropdown.Item key={key} text={text} value={value} />
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
-            </div>
-          </div>
-          <IssuesList issues={filteredIssues} />
-        </div>
-      </>
+      <IssuePrContainer data={issues} isIssues={true} onChangeFilter={onChangeFilter} />
     );
   }
 }

@@ -174,7 +174,7 @@ BranchesTab.propTypes = {
     error: PropTypes.string,
     branches: PropTypes.array
   }).isRequired,
-  repoID: PropTypes.string,
+  repoID: PropTypes.string.isRequired,
   fetchBranches: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
   username: PropTypes.string

@@ -1,7 +1,5 @@
 const { Router } = require('express');
-const {
-  createLabel, updateLabelById, deleteLabelById, getLabelById
-} = require('../services/label.service');
+const { createLabel, updateLabelById, deleteLabelById, getLabelById } = require('../services/label.service');
 
 const router = Router();
 
@@ -21,7 +19,7 @@ router.post('/', (req, res, next) => {
 router.put('/', (req, res, next) => {
   const { id } = req.body;
   updateLabelById(id, { ...req.body })
-    .then((label) => {
+    .then(label => {
       res.send(label);
     })
     .catch(next);

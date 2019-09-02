@@ -1,28 +1,37 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import Octicon, { Repo } from '@primer/octicons-react';
-import { Icon, Label, Container } from 'semantic-ui-react';
+import { Icon, Label, Container, Segment, Button } from 'semantic-ui-react';
 import ForkButton from '../ForkButton';
+import StarButton from '../../components/StarButton';
+import { setStar } from '../../services/repositoryService';
 
 import styles from './styles.module.scss';
 
 const RepositoryHeader = ({
   userId,
-  currentRepoInfo: { userId: repoOwnerId, originalRepo },
+  currentRepoInfo: { id: repositoryId, userId: repoOwnerId, originalRepo, starsCount, stars },
   owner,
   username,
   repoName,
   issueCount,
+  pullCount,
   activePage,
   baseUrl,
+  isBlamePage,
   history
 }) => {
+  const [isStar, setIsStar] = useState(Boolean(stars.find(star => star.user.id === userId)));
+  const [starCount, setStarCount] = useState(starsCount);
   let activeTab;
   switch (activePage) {
   case 'issues':
     activeTab = 'issues';
+    break;
+  case 'pulls':
+    activeTab = 'pulls';
     break;
   case 'commits':
     activeTab = 'code';
@@ -39,6 +48,20 @@ const RepositoryHeader = ({
     window.location.reload();
   };
 
+  const stargazersLinkClickHandler = useCallback(() => history.push(`/${owner}/${repoName}/stargazers`), [
+    owner,
+    repoName,
+    history
+  ]);
+
+  const starClickHandler = useCallback(() => {
+    const updatedStarCount = isStar ? Number(starCount) - 1 : Number(starCount) + 1;
+    setIsStar(!isStar);
+    setStarCount(updatedStarCount);
+
+    setStar({ userId, repositoryId });
+  }, [isStar, repositoryId, starCount, userId]);
+
   const renderOrignalRepoLink = () => {
     if (originalRepo) {
       const { name: forkedRepoName, owner: forkedRepoOwner } = originalRepo;
@@ -53,10 +76,11 @@ const RepositoryHeader = ({
       }
     }
   };
+
   return (
     <header className={styles.repoHeader}>
-      <Container>
-        <div className={styles.repoHeaderContainer}>
+      <Container fluid={isBlamePage}>
+        <Segment basic>
           <div className={styles.repoNameRow}>
             <div className={styles.repoName}>
               <Octicon icon={Repo} />
@@ -69,11 +93,20 @@ const RepositoryHeader = ({
               </span>
               {renderOrignalRepoLink()}
             </div>
-            {repoOwnerId !== userId ? (
-              <ForkButton isOwnRepo={false} owner={owner} repoName={repoName} />
-            ) : (
-              <ForkButton isOwnRepo owner={owner} repoName={repoName} />
-            )}
+            <div>
+              <Button size="small" as="div" compact labelPosition="right">
+                <StarButton starClickHandler={starClickHandler} isStar={isStar} />
+                <Label as="a" basic onClick={stargazersLinkClickHandler}>
+                  {starCount}
+                </Label>
+              </Button>
+
+              {repoOwnerId !== userId ? (
+                <ForkButton isOwnRepo={false} owner={owner} repoName={repoName} />
+              ) : (
+                <ForkButton isOwnRepo owner={owner} repoName={repoName} />
+              )}
+            </div>
           </div>
           <div className="ui top attached tabular menu">
             <div className={`${activeTab === 'code' && 'active'} item`}>
@@ -86,6 +119,11 @@ const RepositoryHeader = ({
                 Issues<Label circular>{issueCount}</Label>
               </Link>
             </div>
+            <div className={`${activeTab === 'pulls' && 'active'} item`}>
+              <Link to={`${baseUrl}/pulls`}>
+                Pull Requests<Label circular>{pullCount}</Label>
+              </Link>
+            </div>
             {username && username === owner && (
               <div className={`${activeTab === 'settings' && 'active'} item`}>
                 <Link to={`${baseUrl}/settings`}>
@@ -94,7 +132,7 @@ const RepositoryHeader = ({
               </div>
             )}
           </div>
-        </div>
+        </Segment>
       </Container>
     </header>
   );
@@ -105,8 +143,12 @@ RepositoryHeader.propTypes = {
   username: PropTypes.string.isRequired,
   repoName: PropTypes.string.isRequired,
   issueCount: PropTypes.string.isRequired,
+  pullCount: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
   currentRepoInfo: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    starsCount: PropTypes.string.isRequired,
+    stars: PropTypes.array.isRequired,
     userId: PropTypes.string,
     forksCount: PropTypes.string,
     originalRepo: PropTypes.shape({
@@ -117,9 +159,16 @@ RepositoryHeader.propTypes = {
       })
     })
   }).isRequired,
+  match: PropTypes.exact({
+    params: PropTypes.object.isRequired,
+    isExact: PropTypes.bool.isRequired,
+    path: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired
+  }).isRequired,
   activePage: PropTypes.string,
   baseUrl: PropTypes.string.isRequired,
-  history: PropTypes.object
+  history: PropTypes.object,
+  isBlamePage: PropTypes.bool
 };
 
 const mapStateToProps = ({

@@ -8,27 +8,28 @@ const userRepository = require('../../data/repositories/user.repository');
 const starRepository = require('../../data/repositories/star.repository');
 const branchRepository = require('../../data/repositories/branch.repository');
 const commitRepository = require('../../data/repositories/commit.repository');
+const collaboratorRepository = require('../../data/repositories/collaborator.repository');
 
 const CustomError = require('../../helpers/error.helper');
-const {defaultLabels} = require('../../config/labels.config');
-const {createLabel} = require('./label.service');
+const { defaultLabels } = require('../../config/labels.config');
+const { createLabel } = require('./label.service');
 
 const initialCommit = async ({
-                               owner, email, repoName, files
-                             }) => {
-  const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
+  owner, email, reponame, files
+}) => {
+  const pathToRepo = repoHelper.getPathToRepo(owner, reponame);
   const repo = await NodeGit.Repository.open(pathToRepo);
   const treeBuilder = await NodeGit.Treebuilder.create(repo, null);
   const authorSignature = NodeGit.Signature.now(owner, email);
 
   const fileBlobOids = await Promise.all(
-    files.map(({content, filename}) => {
+    files.map(({ content, filename }) => {
       const fileBuffer = Buffer.from(content);
-      return NodeGit.Blob.createFromBuffer(repo, fileBuffer, fileBuffer.length).then(oid => ({oid, filename}));
+      return NodeGit.Blob.createFromBuffer(repo, fileBuffer, fileBuffer.length).then(oid => ({ oid, filename }));
     })
   );
 
-  fileBlobOids.forEach(({oid, filename}) => {
+  fileBlobOids.forEach(({ oid, filename }) => {
     treeBuilder.insert(filename, oid, NodeGit.TreeEntry.FILEMODE.BLOB);
   });
 
@@ -49,7 +50,7 @@ const initialCommit = async ({
     [
       {
         repoOwner: owner,
-        repoName,
+        reponame,
         sha: commit.sha(),
         message: 'Initial commit',
         userEmail: email,
@@ -96,15 +97,15 @@ const createRepo = async (repoData) => {
   });
 
   // add default labels for repository
-  const {id} = repository;
-  await Promise.all(defaultLabels.map(label => createLabel({repositoryId: id, ...label})));
+  const { id } = repository;
+  await Promise.all(defaultLabels.map(label => createLabel({ repositoryId: id, ...label })));
 
-  const initialData = repoHelper.generateInitialData({...repoData});
+  const initialData = repoHelper.generateInitialData({ ...repoData });
   // Initial data has to contain 'email' (of user) and 'files' in form of [ { filename, content }, {... ]
   if (initialData) {
     await initialCommit({
       owner,
-      repoName: name,
+      reponame: name,
       ...initialData
     });
   }
@@ -112,13 +113,13 @@ const createRepo = async (repoData) => {
   return result;
 };
 
-const checkName = async ({owner, reponame}) => {
-  const {id} = await userRepository.getByUsername(owner);
+const checkName = async ({ owner, reponame }) => {
+  const { id } = await userRepository.getByUsername(owner);
   const repository = await repoRepository.getByUserAndReponame(id, reponame);
   return Boolean(repository);
 };
 
-const isEmpty = async ({owner, reponame}) => {
+const isEmpty = async ({ owner, reponame }) => {
   try {
     let result;
     const pathToRepo = repoHelper.getPathToRepo(owner, reponame);
@@ -135,27 +136,27 @@ const isEmpty = async ({owner, reponame}) => {
   }
 };
 
-const getByUserAndReponame = async ({owner, reponame}) => {
+const getByUserAndReponame = async ({ owner, reponame }) => {
   const user = await userRepository.getByUsername(owner);
   if (!user) {
     return Promise.reject(new CustomError(404, `User ${owner} not found`));
   }
-  const repository = await repoRepository.getByUserAndReponame(user.get({plain: true}).id, reponame);
+  const repository = await repoRepository.getByUserAndReponame(user.get({ plain: true }).id, reponame);
   if (!repository) {
     return Promise.reject(new CustomError(404, `Repository ${reponame} not found`));
   }
-  const branches = await branchRepository.getByRepoId(repository.get({plain: true}).id);
-  const branchesNames = branches.map((branch) => {
-    const {name} = branch.get({plain: true});
+  const branches = await branchRepository.getByRepoId(repository.get({ plain: true }).id);
+  /* const branchesNames = branches.map((branch) => {
+    const { name } = branch.get({ plain: true });
     return name;
-  });
+  }); */
   return {
-    ...repository.get({plain: true}),
-    branches: branchesNames
+    ...repository.get({ plain: true }),
+    branches
   };
 };
 
-const updateByUserAndReponame = async ({owner, reponame, data}) => {
+const updateByUserAndReponame = async ({ owner, reponame, data }) => {
   const user = await userRepository.getByUsername(owner);
   if (!user) {
     return Promise.reject(new CustomError(404, `User ${owner} not found`));
@@ -163,7 +164,7 @@ const updateByUserAndReponame = async ({owner, reponame, data}) => {
   return repoRepository.updateByUserAndReponame(user.id, reponame, data);
 };
 
-const deleteByUserAndReponame = async ({owner, reponame}) => {
+const deleteByUserAndReponame = async ({ owner, reponame }) => {
   const user = await userRepository.getByUsername(owner);
   if (!user) {
     return Promise.reject(new CustomError(404, `User ${owner} not found`));
@@ -171,24 +172,24 @@ const deleteByUserAndReponame = async ({owner, reponame}) => {
   return repoRepository.deleteByUserAndReponame(user.id, reponame);
 };
 
-const renameRepo = async ({repoName, newName, username}) => {
+const renameRepo = async ({ reponame, newName, username }) => {
   try {
-    const oldDirectory = repoHelper.getPathToRepo(username, repoName);
+    const oldDirectory = repoHelper.getPathToRepo(username, reponame);
     const newDirectory = repoHelper.getPathToRepo(username, newName);
     fs.renameSync(oldDirectory, newDirectory);
-    await updateByUserAndReponame({owner: username, reponame: repoName, data: {name: newName}});
+    await updateByUserAndReponame({ owner: username, reponame, data: { name: newName } });
     return true;
   } catch (e) {
     return e;
   }
 };
 
-const deleteRepo = async ({repoName, username}) => {
+const deleteRepo = async ({ reponame, username }) => {
   try {
-    const directory = repoHelper.getPathToRepo(username, repoName);
+    const directory = repoHelper.getPathToRepo(username, reponame);
     await fs.remove(directory);
-    const {id: repositoryId} = await getByUserAndReponame({owner: username, reponame: repoName});
-    await deleteByUserAndReponame({owner: username, reponame: repoName});
+    const { id: repositoryId } = await getByUserAndReponame({ owner: username, reponame });
+    await deleteByUserAndReponame({ owner: username, reponame });
     await branchRepository.deleteByRepoId(repositoryId);
     await commitRepository.deleteByRepoId(repositoryId);
     return true;
@@ -197,7 +198,9 @@ const deleteRepo = async ({repoName, username}) => {
   }
 };
 
-const getReposNames = async ({user: username, filter, limit}) => {
+const getReposNames = async ({
+  user: username, isOwner, filter, limit
+}) => {
   const user = await userRepository.getByUsername(username);
   if (!user) {
     return Promise.reject(new CustomError(404, `User ${username} not found`));
@@ -207,11 +210,11 @@ const getReposNames = async ({user: username, filter, limit}) => {
     limit,
     sortByCreatedDateDesc: true
   };
-  const repos = await repoRepository.getByUserWithOptions(user.id, findOptions);
-  return repos.map(({name}) => name);
+  const repos = await repoRepository.getByUserWithOptions(user.id, isOwner, findOptions);
+  return repos.map(({ name }) => name);
 };
 
-const getReposData = async ({username, isOwner}) => {
+const getReposData = async ({ username, isOwner }) => {
   const user = await userRepository.getByUsername(username);
   if (!user) {
     return Promise.reject(new CustomError(404, `User ${username} not found`));
@@ -220,13 +223,13 @@ const getReposData = async ({username, isOwner}) => {
 };
 
 const forkRepo = async ({
-                          userId, username, owner, name, website, description, forkedFromRepoId
-                        }) => {
+  userId, username, owner, name, website, description, forkedFromRepoId
+}) => {
   try {
     const source = repoHelper.getPathToRepo(owner, name);
     const target = repoHelper.getPathToRepo(username, name);
 
-    await fs.mkdir(target, {recursive: true});
+    await fs.mkdir(target, { recursive: true });
     await copydir(
       source,
       target,
@@ -266,12 +269,14 @@ const setStar = async (userId, repositoryId) => {
 
   const result = star
     ? await starRepository.deleteById(star.id)
-    : await starRepository.create({userId, repositoryId});
+    : await starRepository.create({ userId, repositoryId });
 
   return Number.isInteger(result) ? {} : starRepository.getStar(userId, repositoryId);
 };
 
 const getRepoData = async repositoryId => repoRepository.getRepositoryById(repositoryId);
+
+const getRepositoryCollaborators = repositoryId => collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId);
 
 module.exports = {
   createRepo,
@@ -285,5 +290,6 @@ module.exports = {
   setStar,
   getByUserAndReponame,
   updateByUserAndReponame,
-  getRepoData
+  getRepoData,
+  getRepositoryCollaborators
 };

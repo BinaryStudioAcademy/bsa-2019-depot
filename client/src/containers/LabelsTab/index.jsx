@@ -125,6 +125,7 @@ class LabelsTab extends React.Component {
     const sortedLabels = labels.sort((label, prevLabel) => {
       if (value === 'name_ASC') return label.name > prevLabel.name ? 1 : -1;
       if (value === 'name_DESC') return label.name > prevLabel.name ? -1 : 1;
+      return null;
     });
     this.setState({
       ...this.state,
@@ -224,7 +225,9 @@ LabelsTab.propTypes = {
 
 const mapStateToProps = ({
   currentRepo: {
-    currentRepoInfo: { id }
+    repository: {
+      currentRepoInfo: { id }
+    }
   }
 }) => ({
   repositoryId: id

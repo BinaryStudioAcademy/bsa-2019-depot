@@ -265,7 +265,19 @@ class IssueRepository extends BaseRepository {
         },
         {
           model: UserModel,
-          attributes: ['username']
+          attributes: ['username', 'imgUrl']
+        }
+      ]
+    });
+  }
+
+  getRepoByIssueId(id) {
+    return this.model.findOne({
+      where: { id },
+      include: [
+        {
+          model: RepositoryModel,
+          attributes: ['id']
         }
       ]
     });

@@ -1,0 +1,42 @@
+.header {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+
+  h1 {
+    margin-bottom: 0.2em;
+  }
+
+  h5 {
+    margin-top: 0.2em;
+  }
+}
+
+.diffInfo {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  h3 {
+    margin-bottom: 10px;
+  }
+}
+
+:global(.ui.segment):local(.pullStats) {
+  margin-left: 0;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+
+  :global(.octicon) {
+    margin-right: 5px;
+  }
+}
+
+.commentsInfo {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -66,6 +66,7 @@ class CommitsPage extends React.Component {
 }
 
 CommitsPage.propTypes = {
+  repoId: PropTypes.string.isRequired,
   commitsData: PropTypes.exact({
     loading: PropTypes.bool.isRequired,
     error: PropTypes.string,
@@ -79,7 +80,6 @@ CommitsPage.propTypes = {
   }).isRequired,
   fetchCommits: PropTypes.func.isRequired,
   fetchBranches: PropTypes.func.isRequired,
-  repoId: PropTypes.string,
   username: PropTypes.string,
   match: PropTypes.object,
   history: PropTypes.object

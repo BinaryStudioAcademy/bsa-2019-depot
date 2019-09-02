@@ -1,14 +1,13 @@
 const { Router } = require('express');
 const issueService = require('../services/issue.service');
 const issueCommentService = require('../services/issue-comment.service');
+const { checkIssuePermissions } = require('../../helpers/check.permission.level.helper');
 
 const router = Router();
 
 router
   .post('/', (req, res, next) => {
-    const {
-      userId, repositoryId, title, body
-    } = req.body;
+    const { userId, repositoryId, title, body } = req.body;
     issueService
       .addIssue({
         userId,
@@ -17,9 +16,11 @@ router
         body,
         isOpened: true
       })
-      .then(data => res.send({
-        data
-      }))
+      .then(data =>
+        res.send({
+          data
+        })
+      )
       .catch(next);
   })
   .put('/', async (req, res, next) => {
@@ -32,8 +33,9 @@ router
 
     const userId = req.user.id;
     const authorId = await issueService.getAuthorId(id);
+    const isAccessGranted = checkIssuePermissions(id, userId);
 
-    if (userId !== authorId) {
+    if (userId !== authorId && !isAccessGranted) {
       res.status(401).send('Only issue author can update it');
       return;
     }
@@ -60,8 +62,8 @@ router
     const userId = req.user.id;
     const authorId = await issueService.getAuthorId(id);
     const repoOwnerId = await issueService.getRepoOwnerId(id);
-
-    if (userId !== authorId && userId !== repoOwnerId) {
+    const isAccessGranted = checkIssuePermissions(id, userId);
+    if (userId !== authorId && userId !== repoOwnerId && !isAccessGranted) {
       res.status(401).send('Only issue author or repo owner can close it');
       return;
     }
@@ -76,8 +78,9 @@ router
     const userId = req.user.id;
     const authorId = await issueService.getAuthorId(id);
     const repoOwnerId = await issueService.getRepoOwnerId(id);
+    const isAccessGranted = checkIssuePermissions(id, userId);
 
-    if (userId !== authorId && userId !== repoOwnerId) {
+    if (userId !== authorId && userId !== repoOwnerId && !isAccessGranted) {
       res.status(401).send('Only issue author or repo owner can reopen it');
       return;
     }
@@ -89,17 +92,17 @@ router
   })
   .delete('/:id', async (req, res, next) => {
     const { id } = req.params;
-
     const userId = req.user.id;
     const authorId = await issueService.getAuthorId(id);
-    if (userId !== authorId) {
+    const isAccessGranted = checkIssuePermissions(id, userId);
+    if (userId !== authorId && !isAccessGranted) {
       res.status(401).send('Only issue author can update it');
       return;
     }
 
     issueService
       .deleteIssueById(id)
-      .then((result) => {
+      .then(result => {
         if (result) {
           res.status(204).send({});
         } else {

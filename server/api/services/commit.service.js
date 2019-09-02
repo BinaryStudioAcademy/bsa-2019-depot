@@ -8,12 +8,14 @@ const userRepository = require('../../data/repositories/user.repository');
 const RepoRepository = require('../../data/repositories/repository.repository');
 const CustomError = require('../../helpers/error.helper');
 
+
 const getCommitsAndCreatedRepoByDate = async (data) => {
-  const { user } = data;
+  const { user, isOwner } = data;
   const repoList = await getReposNames(data);
+
   let globalCommits = [];
-  const promises = repoList.map((repoName) => {
-    const pathToRepo = repoHelper.getPathToRepo(user, repoName);
+  const promises = repoList.map((reponame) => {
+    const pathToRepo = repoHelper.getPathToRepo(user, reponame);
     return NodeGit.Repository.open(pathToRepo).then((repo) => {
       isEmpty({ owner: user, reponame: repo });
       const walker = NodeGit.Revwalk.create(repo);
@@ -21,13 +23,13 @@ const getCommitsAndCreatedRepoByDate = async (data) => {
       walker.sorting(NodeGit.Revwalk.SORT.TIME);
       return walker
         .getCommitsUntil(commit => commit)
-        .then((commits) => {
+        .then(commits => {
           const repoCommits = commits.map(commit => ({
             sha: commit.sha(),
             author: commit.author().name(),
             date: commit.date(),
             message: commit.message().split('\n')[0],
-            repo: repoName
+            repo: reponame
           }));
           globalCommits = globalCommits.concat(repoCommits);
         });
@@ -41,7 +43,7 @@ const getCommitsAndCreatedRepoByDate = async (data) => {
     return Promise.reject(new CustomError(404, `User ${username} not found`));
   }
   const { id } = dbUser;
-  const repos = await RepoRepository.getByUserWithOptions(id);
+  const repos = await RepoRepository.getByUserWithOptions(id, isOwner);
   const userRepos = repos.map(repo => repo.get({ plain: true }));
   const userActivitybyDate = {};
   const monthActivity = {};
@@ -83,6 +85,7 @@ const getCommitsAndCreatedRepoByDate = async (data) => {
       monthActivity[monthAndYear].commits[repo] = 1;
     }
   });
+
   userRepos.forEach(({ name, createdAt }) => {
     const stringifiedDate = JSON.stringify(createdAt);
     const monthAndYear = stringifiedDate.slice(1, 8);
@@ -95,20 +98,14 @@ const getCommits = async (branch, repoId) => {
   const { name, userId } = await RepoRepository.getById(repoId);
   const { username } = await userRepository.getById(userId);
   const pathToRepo = repoHelper.getPathToRepo(username, name);
-  const allCommits = [];
+  const commitShas = [];
   await NodeGit.Repository.open(pathToRepo)
     .then(repo => repo.getBranchCommit(branch))
-    .then((firstCommitOnMaster) => {
+    .then(firstCommitOnMaster => {
       const history = firstCommitOnMaster.history(NodeGit.Revwalk.SORT.TIME);
       const commitPromise = new Promise((resolve) => {
         history.on('commit', (commit) => {
-          const commitObject = {
-            sha: commit.sha(),
-            author: commit.author().name(),
-            date: commit.date(),
-            message: commit.message()
-          };
-          allCommits.push(commitObject);
+          commitShas.push(commit.sha());
         });
         history.on('end', () => {
           resolve();
@@ -117,7 +114,7 @@ const getCommits = async (branch, repoId) => {
       history.start();
       return commitPromise;
     });
-  return allCommits;
+  return Promise.all(commitShas.map(sha => CommitRepository.getByHash(sha)));
 };
 
 const getCommitCount = async (branch, repoId) => {
@@ -145,7 +142,7 @@ const getCommitDiff = async ({ user, name, hash }) => {
 
 const modifyFile = async ({
   owner,
-  repoName,
+  reponame,
   author,
   email,
   baseBranch,
@@ -155,7 +152,7 @@ const modifyFile = async ({
   filepath,
   fileData
 }) => {
-  const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
+  const pathToRepo = repoHelper.getPathToRepo(owner, reponame);
   const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(baseBranch);
   const lastCommitTree = await lastCommitOnBranch.getTree();
@@ -192,7 +189,7 @@ const modifyFile = async ({
     [
       {
         repoOwner: owner,
-        repoName,
+        reponame,
         sha: commit.sha(),
         message,
         userEmail: email,
@@ -209,9 +206,9 @@ const modifyFile = async ({
 };
 
 const deleteFile = async ({
-  owner, repoName, branch, author, email, filepath
+  owner, reponame, branch, author, email, filepath
 }) => {
-  const pathToRepo = repoHelper.getPathToRepo(owner, repoName);
+  const pathToRepo = repoHelper.getPathToRepo(owner, reponame);
   const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
   const lastCommitTree = await lastCommitOnBranch.getTree();
@@ -238,7 +235,7 @@ const deleteFile = async ({
     [
       {
         repoOwner: owner,
-        repoName,
+        reponame,
         sha: commit.sha(),
         message: `Deleted ${filepath}`,
         userEmail: email,
@@ -263,6 +260,14 @@ const createCommit = async ({ ...commitData }) => {
   }
 };
 
+const getRepoByCommitId = async (commitId) => {
+  try {
+    return await CommitRepository.getRepoByCommitId(commitId);
+  } catch (err) {
+    return Promise.reject(new Error(err.message));
+  }
+};
+
 module.exports = {
   getCommits,
   getCommitDiff,
@@ -270,5 +275,6 @@ module.exports = {
   modifyFile,
   deleteFile,
   createCommit,
-  getCommitCount
+  getCommitCount,
+  getRepoByCommitId
 };

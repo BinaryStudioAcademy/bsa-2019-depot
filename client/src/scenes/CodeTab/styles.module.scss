@@ -113,7 +113,3 @@ $black: #363a44;
   justify-content: space-between;
   align-items: center;
 }
-
-:global(.ui.container):local(.contentContainer) {
-  max-width: 1000px !important;
-}

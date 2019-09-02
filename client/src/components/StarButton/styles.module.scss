@@ -1,0 +1,24 @@
+$gray: #f7f7fb;
+
+:global(.ui.button):local(.repo_item_stars) {
+  display: flex;
+  align-items: center;
+  font-size: 0.85rem;
+  line-height: 20px;
+
+  background-color: $gray;
+  color: #24292e;
+  border: 1px solid rgba(27, 31, 35, 0.2);
+  border-radius: 0.25em;
+  cursor: pointer;
+  vertical-align: middle;
+  white-space: nowrap;
+
+  & .star_icon {
+    margin-right: 5px;
+  }
+
+  &:global(.compact) {
+    padding: 3px 10px;
+  }
+}

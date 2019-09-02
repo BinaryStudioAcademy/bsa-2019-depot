@@ -9,15 +9,15 @@ const branchRepository = require('../data/repositories/branch.repository');
 const commitRepository = require('../data/repositories/commit.repository');
 const languageStatsService = require('../api/services/language-stats.service');
 
-const getPathToRepo = (username, reponame) => path.resolve(`${gitPath}/${username}/${reponame}.git`).replace(/\\/g, '/');
+const getPathToRepo = (username, reponame) =>
+  path.resolve(`${gitPath}/${username}/${reponame}.git`).replace(/\\/g, '/');
 const getPathToRepos = username => path.resolve(`${gitPath}/${username}`).replace(/\\/g, '/');
 
-const getGitignore = gitignore => fs.readFileSync(path.resolve(`${__dirname}/../data/initial-files/gitignores/${gitignore}`));
+const getGitignore = gitignore =>
+  fs.readFileSync(path.resolve(`${__dirname}/../data/initial-files/gitignores/${gitignore}`));
 const getLicense = license => fs.readFileSync(path.resolve(`${__dirname}/../data/initial-files/licenses/${license}`));
 
-const generateInitialData = ({
-  name, email, readme, gitignore, license
-}) => {
+const generateInitialData = ({ name, email, readme, gitignore, license }) => {
   const files = [];
   if (readme) {
     files.push({
@@ -39,9 +39,9 @@ const generateInitialData = ({
   }
   return files.length !== 0
     ? {
-      files,
-      email
-    }
+        files,
+        email
+      }
     : null;
 };
 
@@ -54,7 +54,7 @@ const updateLanguageStats = async (owner, reponame, branch) => {
 
   await index.readTree(branchTree);
 
-  const filesData = index.entries().map((entry) => {
+  const filesData = index.entries().map(entry => {
     const filename = entry.path.split('/').pop();
     const fileId = entry.id;
 
@@ -65,10 +65,12 @@ const updateLanguageStats = async (owner, reponame, branch) => {
   });
 
   const langs = await Promise.all(
-    filesData.map(({ filename, fileId }) => repo.getBlob(fileId).then((blob) => {
-      const content = blob.toString();
-      return detect.contents(filename, content);
-    }))
+    filesData.map(({ filename, fileId }) =>
+      repo.getBlob(fileId).then(blob => {
+        const content = blob.toString();
+        return detect.contents(filename, content);
+      })
+    )
   );
 
   let fileCount = 0;
@@ -102,7 +104,7 @@ const updateLanguageStats = async (owner, reponame, branch) => {
 /* syncDb takes commits in form of:
  {
     repoOwner,
-    repoName,
+    reponame,
     sha,
     message,
     userEmail, // Email of the commit's author
@@ -116,19 +118,21 @@ const updateLanguageStats = async (owner, reponame, branch) => {
  }
 */
 const syncDb = async (commits, branch) => {
-  const { repoOwner, repoName } = commits[0];
+  const { repoOwner, reponame } = commits[0];
   const { id: userId } = await userRepository.getByUsername(repoOwner);
-  const { id: repositoryId } = await repoRepository.getByUserAndReponame(userId, repoName);
+  const { id: repositoryId } = await repoRepository.getByUserAndReponame(userId, reponame);
   const commitAuthors = await Promise.all(commits.map(({ userEmail }) => userRepository.getByEmail(userEmail)));
   const addedCommits = await Promise.all(
-    commitAuthors.map(({ id: authorId }, index) => commitRepository.add({
-      sha: commits[index].sha,
-      message: commits[index].message,
-      userId: authorId,
-      createdAt: new Date(commits[index].createdAt),
-      updatedAt: new Date(commits[index].createdAt),
-      repositoryId
-    }))
+    commitAuthors.map(({ id: authorId }, index) =>
+      commitRepository.add({
+        sha: commits[index].sha,
+        message: commits[index].message,
+        userId: authorId,
+        createdAt: new Date(commits[index].createdAt),
+        updatedAt: new Date(commits[index].createdAt),
+        repositoryId
+      })
+    )
   );
   const headCommitId = addedCommits.find(({ sha }) => sha === branch.newHeadSha).id;
 
@@ -146,7 +150,7 @@ const syncDb = async (commits, branch) => {
     });
   }
 
-  await updateLanguageStats(repoOwner, repoName, branch.name);
+  await updateLanguageStats(repoOwner, reponame, branch.name);
 };
 
 module.exports = {

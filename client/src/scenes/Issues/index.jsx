@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as queryString from 'query-string';
 import { Loader, Icon, Input, Dropdown, Button } from 'semantic-ui-react';
-import IssuesList from '../../components/IssuesList';
+import DataList from '../../components/DataList';
 import * as issuesService from '../../services/issuesService';
 
 import styles from './styles.module.scss';
@@ -249,7 +249,7 @@ class Issues extends Component {
               <Dropdown text="Sort" icon="caret down" onChange={this.handleSortChange} options={sortOptions}></Dropdown>
             </div>
           </div>
-          <IssuesList issues={filteredIssues} />
+          <DataList data={filteredIssues} isPull={false} />
         </div>
       </div>
     );

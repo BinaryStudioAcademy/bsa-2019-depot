@@ -40,11 +40,11 @@ const CodeTabMenu = ({ ownername, reponame, branch, branchesCount, commitsCount 
 );
 
 CodeTabMenu.propTypes = {
-  ownername: PropTypes.string,
-  reponame: PropTypes.string,
-  branch: PropTypes.string,
-  branchesCount: PropTypes.number,
-  commitsCount: PropTypes.number
+  ownername: PropTypes.string.isRequired,
+  reponame: PropTypes.string.isRequired,
+  branch: PropTypes.string.isRequired,
+  branchesCount: PropTypes.number.isRequired,
+  commitsCount: PropTypes.number.isRequired
 };
 
 export default CodeTabMenu;

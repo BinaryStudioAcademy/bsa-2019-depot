@@ -44,7 +44,16 @@ export const getBranch = async (repoID, branch) => {
 
 export const checkFilename = async (owner, repoName, branch, query) => {
   const response = await callWebApi({
-    endpoint: `/api/repo/${owner}/${repoName}/${branch}/file-exist`,
+    endpoint: `/api/repos/${owner}/${repoName}/${branch}/file-exist`,
+    type: 'GET',
+    query
+  });
+  return response.json();
+};
+
+export const getFileBlame = async (owner, repoName, branch, query) => {
+  const response = await callWebApi({
+    endpoint: `/api/repo/${owner}/${repoName}/${branch}/blame`,
     type: 'GET',
     query
   });

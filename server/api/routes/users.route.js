@@ -10,6 +10,7 @@ const {
   getStars,
   getUsersToInviting,
   getUsersOrganizations,
+  getUsersForCollaboratorsAddition,
   uploadPhoto,
   deletePhoto
 } = require('../services/user.service');
@@ -57,7 +58,8 @@ router.get('/:userId/keys', (req, res, next) => {
 
 router.get('/:username/overview', (req, res, next) => {
   const { username } = req.params;
-  getUserDetailed(username)
+  const isOwner = req.user.username === username;
+  getUserDetailed(username, isOwner)
     .then(data => res.send(data))
     .catch(next);
 });
@@ -91,7 +93,8 @@ router.get('/:userid/organizations', (req, res, next) => {
 
 router.get('/:username/contribution-activity', (req, res, next) => {
   const { username } = req.params;
-  getCommitsAndCreatedRepoByDate({ user: username })
+  const isOwner = req.user.username === username;
+  getCommitsAndCreatedRepoByDate({ user: username, isOwner })
     .then(commits => res.send(commits))
     .catch(next);
 });
@@ -114,6 +117,13 @@ router.get('/:username/repos/:repo', async (req, res, next) => {
   }
 });
 
+router.get('/search/collaborators/:username/:repositoryId/:userId', (req, res, next) => {
+  const { username, repositoryId, userId } = req.params;
+  getUsersForCollaboratorsAddition({ username, repositoryId, userId })
+    .then(data => res.send(data))
+    .catch(next);
+});
+
 router.post('/image', (req, res, next) => {
   uploadPhoto({ ...req.body })
     .then(data => res.send(data))
@@ -131,7 +141,7 @@ router.get('/:username/issues', (req, res, next) => {
   const { isOpened, sort, owner } = req.query;
 
   getUserByUsername(username)
-    .then((data) => {
+    .then(data => {
       const { id } = data;
       Promise.all([
         getAllIssuesCount(id, { owner, isOpened: true }),
@@ -139,7 +149,7 @@ router.get('/:username/issues', (req, res, next) => {
         getAllIssuesOwners(id),
         getAllIssues(id, { isOpened, sort, owner })
       ])
-        .then((result) => {
+        .then(result => {
           res.send({
             open: result[0],
             close: result[1],

@@ -12,6 +12,7 @@ import RepoDescription from '../../components/RepoDescription';
 import CodeTabMenu from '../../components/CodeTabMenu';
 import RepoNav from '../../components/RepoNav';
 import EmptyRepositoryTab from '../../containers/EmptyRepositoryTab';
+import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 
 import { Container, Button, Loader, Divider, Message, Breadcrumb } from 'semantic-ui-react';
 import styles from './styles.module.scss';
@@ -21,7 +22,8 @@ class CodeTab extends React.Component {
     super(props);
 
     this.state = {
-      branch: ''
+      branch: '',
+      isAccessGranted: false
     };
 
     this.onBranchChange = this.onBranchChange.bind(this);
@@ -29,11 +31,12 @@ class CodeTab extends React.Component {
     this.onSubmitInfo = this.onSubmitInfo.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const {
       repoID,
       ownername,
       reponame,
+      userId,
       fetchBranch,
       fetchFileTree,
       branches,
@@ -45,12 +48,14 @@ class CodeTab extends React.Component {
       params: { branch }
     } = match;
     if (!branch) {
-      branch = defaultBranch || branches[0];
+      branch = defaultBranch || (branches[0] && branches[0].name);
     }
 
+    const isAccessGranted = await getWriteUserPermissions(ownername, reponame, userId);
     this.setState({
       ...this.state,
-      branch
+      branch,
+      isAccessGranted
     });
 
     if (!branches.length) {
@@ -178,9 +183,9 @@ class CodeTab extends React.Component {
     } = currentBranchData;
     const { files } = fileTreeData.tree;
 
-    const { branch } = this.state;
+    const { branch, isAccessGranted } = this.state;
 
-    const isOwn = currentUserName && currentUserName === ownername;
+    const isOwn = (currentUserName && currentUserName === ownername) || isAccessGranted;
 
     const readme = files && files.find(file => file.name === 'README.md');
     const branchesCount = branches ? branches.length : 0;
@@ -217,7 +222,8 @@ class CodeTab extends React.Component {
         <RepoNav
           isOwn={isOwn}
           branch={branch}
-          branches={branches}
+          z
+          branches={branches.map(({ name }) => name)}
           onBranchChange={this.onBranchChange}
           onCreateFile={this.onCreateFile}
         />
@@ -267,7 +273,7 @@ const mapStateToProps = ({
     fileTreeData
   },
   profile: {
-    currentUser: { username: currentUserName }
+    currentUser: { username: currentUserName, id: userId }
   }
 }) => ({
   repoID,
@@ -278,6 +284,7 @@ const mapStateToProps = ({
   branches,
   defaultBranch,
   currentUserName,
+  userId,
   currentBranchData,
   fileTreeData
 });
@@ -320,7 +327,8 @@ CodeTab.propTypes = {
     },
     loading: PropTypes.bool
   }),
-  currentUserName: PropTypes.string
+  currentUserName: PropTypes.string,
+  userId: PropTypes.string
 };
 
 export default connect(

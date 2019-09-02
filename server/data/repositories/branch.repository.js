@@ -1,14 +1,11 @@
 const BaseRepository = require('./base.repository');
-const {
-  BranchModel, CommitModel, UserModel, RepositoryModel
-} = require('../models/index');
-
+const { BranchModel, CommitModel, UserModel, RepositoryModel } = require('../models/index');
 // const sequelize = require('../db/connection');
 
 class BranchRepository extends BaseRepository {
   getByNameAndRepoId(name, repositoryId) {
     return this.model.findOne({
-      where: {name, repositoryId},
+      where: { name, repositoryId },
       attributes: ['id', 'name', 'createdAt'],
       include: [
         {
@@ -31,7 +28,7 @@ class BranchRepository extends BaseRepository {
 
   getByRepoId(repositoryId) {
     return this.model.findAll({
-      where: {repositoryId},
+      where: { repositoryId },
       include: [
         {
           model: CommitModel,
@@ -58,7 +55,7 @@ class BranchRepository extends BaseRepository {
   }
 
   deleteByRepoId(repositoryId) {
-    return this.model.destroy({where: {repositoryId}});
+    return this.model.destroy({ where: { repositoryId } });
   }
 }
 

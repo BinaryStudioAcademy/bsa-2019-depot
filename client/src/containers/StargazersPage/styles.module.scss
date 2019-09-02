@@ -1,0 +1,39 @@
+:local(.stargazersGrid) {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+  grid-gap: 20px;
+}
+
+:local(.stargazerBox) {
+  display: flex;
+  height: 100px;
+  padding: 0 0 20px 0;
+  border-bottom: 1px solid #e1e4e8;
+}
+
+:global(.ui.header:first-child):local(.stargazerHeader) {
+  font-weight: 500;
+  margin: 1.3em 0 0.7em 0;
+}
+
+:local(.stargazerInfo) {
+  margin-left: 1.3em;
+}
+
+:global(a):local(.profileLink) {
+  display: block;
+  font-weight: 400;
+  font-size: 1.4em;
+  color: #24292e;
+  margin-bottom: 3px;
+  &:hover {
+    color: #24292e;
+    text-decoration: underline;
+  }
+}
+
+:local(.stargazerDate) {
+  color: #586069;
+  font-size: 0.75em;
+  margin-left: 0.4em;
+}

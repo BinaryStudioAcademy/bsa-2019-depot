@@ -10,23 +10,24 @@
   align-items: center;
 }
 
-:local(.issuesContainer) {
+:local(.dataContainer) {
   margin-top: 10px;
   border: 1px solid lightgrey;
   border-radius: 5px;
 }
 
-:local(.issuesHeader) {
+:local(.dataHeader) {
   padding: 15px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   background-color: #f6f6f6;
   border-bottom: 1px solid lightgrey;
   border-radius: 5px 5px 0 0;
 }
 
-:local(.openedIssues),
-:local(.closedIssues),
+:local(.openedData),
+:local(.closedData),
 :global(.ui.dropdown) {
   color: #575757;
   cursor: pointer;
@@ -36,11 +37,11 @@
   }
 }
 
-:local(.openedIssues) {
+:local(.openedData) {
   margin-right: 15px;
 }
 
-:local(.issueFilters) > :not(:last-child) {
+:local(.dataFilters) > :not(:last-child) {
   margin-right: 10px;
 }
 
