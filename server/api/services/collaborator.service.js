@@ -7,7 +7,9 @@ const { getByUserAndReponame } = require('./repo.service');
 const { getUserDetailed } = require('./user.service');
 const { sendInviteCollaboratorEmail } = require('./email.service');
 
-const addCollaborator = async ({ recipient, username, reponame, repositoryId, url, permission }) => {
+const addCollaborator = async ({
+  recipient, username, reponame, repositoryId, url, permission
+}) => {
   const { email, id: userId } = await getUserDetailed(recipient);
 
   // await sendInviteCollaboratorEmail({ email, url, username, reponame });

@@ -103,7 +103,7 @@ class RepositoryPage extends React.Component {
     const branchExists = pathname.match(/tree\/.+/);
     let branch = '';
     if (branchExists) branch = branchExists[0].split('/')[1]; // branchExists[0] has format 'tree/nameOfBranch/...'
-    branch = branch || defaultBranch || branches[0].name;
+    branch = branch || defaultBranch || (branches[0] && branches[0].name);
     const pathToDir = pathname.replace(`${match.url}/tree/${branch}`, '').split('/');
     const params = pathToDir
       .filter(path => path)

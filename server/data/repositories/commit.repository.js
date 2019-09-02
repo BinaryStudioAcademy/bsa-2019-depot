@@ -1,5 +1,7 @@
 const BaseRepository = require('./base.repository');
-const { CommitModel, UserModel, CommitCommentModel, RepositoryModel } = require('../models/index');
+const {
+  CommitModel, UserModel, CommitCommentModel, RepositoryModel
+} = require('../models/index');
 
 class CommitRepository extends BaseRepository {
   add({ ...commitData }) {

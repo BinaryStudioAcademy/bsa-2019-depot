@@ -48,7 +48,7 @@ class CodeTab extends React.Component {
       params: { branch }
     } = match;
     if (!branch) {
-      branch = defaultBranch || branches[0].name;
+      branch = defaultBranch || (branches[0] && branches[0].name);
     }
 
     const isAccessGranted = await getWriteUserPermissions(ownername, reponame, userId);
