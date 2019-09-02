@@ -3,25 +3,25 @@ import { CLEAR_REPO_STATE } from './actionTypes';
 
 const initialCurrentRepoState = {
   currentRepoInfo: {
-    'id': '',
-    'name': '',
-    'owner': {
-      'id': '',
-      'username': ''
+    id: '',
+    name: '',
+    owner: {
+      id: '',
+      username: ''
     },
-    'description': '',
-    'website': '',
-    'createdAt': '',
-    'updatedAt': '',
-    'starsCount': null,
-    'forksCount': null,
-    'issuesCount': null,
-    'branches': [],
-    'defaultBranch': 'master',
-    'originalRepo': {
-      'id': '',
-      'name': '',
-      'owner': ''
+    description: '',
+    website: '',
+    createdAt: '',
+    updatedAt: '',
+    starsCount: null,
+    forksCount: null,
+    issuesCount: null,
+    branches: [],
+    defaultBranch: 'master',
+    originalRepo: {
+      id: '',
+      name: '',
+      owner: ''
     }
   },
   loading: true,

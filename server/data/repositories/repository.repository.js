@@ -1,20 +1,20 @@
-const { Op } = require('sequelize');
+const {Op} = require('sequelize');
 const BaseRepository = require('./base.repository');
-const { RepositoryModel, UserModel, StarModel } = require('../models/index');
+const {RepositoryModel, UserModel, StarModel} = require('../models/index');
 const sequelize = require('../db/connection');
 
 class RepositoryRepository extends BaseRepository {
-  addRepository({ ...repositoryData }) {
+  addRepository({...repositoryData}) {
     return this.create(repositoryData);
   }
 
   getByUser(userId) {
-    return this.model.findAll({ where: { userId } });
+    return this.model.findAll({where: {userId}});
   }
 
   getByUserWithOptions(userId, isOwner, options = {}) {
-    const whereStatement = isOwner ? { userId } : { userId, isPublic: true };
-    const { filter, limit, sortByCreatedDateDesc } = options;
+    const whereStatement = isOwner ? {userId} : {userId, isPublic: true};
+    const {filter, limit, sortByCreatedDateDesc} = options;
     const findOptions = {
       where: whereStatement,
       attributes: {
@@ -33,7 +33,7 @@ class RepositoryRepository extends BaseRepository {
         {
           model: UserModel,
           attributes: [],
-          where: { id: userId }
+          where: {id: userId}
         },
         {
           model: StarModel,
@@ -63,7 +63,7 @@ class RepositoryRepository extends BaseRepository {
 
   getByUserAndReponame(userId, reponame) {
     return this.model.findOne({
-      where: { name: reponame, userId },
+      where: {name: reponame, userId},
       attributes: {
         include: [
           [
@@ -112,11 +112,11 @@ class RepositoryRepository extends BaseRepository {
   }
 
   updateByUserAndReponame(userId, reponame, data) {
-    return this.model.update(data, { where: { name: reponame, userId } });
+    return this.model.update(data, {where: {name: reponame, userId}});
   }
 
   deleteByUserAndReponame(userId, reponame) {
-    return this.model.destroy({ where: { name: reponame, userId } });
+    return this.model.destroy({where: {name: reponame, userId}});
   }
 }
 

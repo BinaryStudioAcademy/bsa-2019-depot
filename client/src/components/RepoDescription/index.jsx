@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Form, Button }  from 'semantic-ui-react';
+import { Form, Button } from 'semantic-ui-react';
 import { InputError } from '../../components/InputError';
 
 import styles from './styles.module.scss';
 
-const RepoDescription = (props) => {
+const RepoDescription = props => {
   const [edit, setEdit] = useState(false);
   const { description, website, isOwn, onSubmit } = props;
 
@@ -88,22 +88,17 @@ const RepoDescription = (props) => {
           )}
         </Formik>
       ) : (
-          <>
-            <div className={styles.repoDescriptionText}>
-              {infoContent}
-            </div>
-            {isOwn && (
-              <Button
-                className={[styles.actionButton, styles.editButton].join(' ')}
-                onClick={toggleEdit}
-              >
-                Edit
-              </Button>
-            )}
-          </>
-        )}
+        <>
+          <div className={styles.repoDescriptionText}>{infoContent}</div>
+          {isOwn && (
+            <Button className={[styles.actionButton, styles.editButton].join(' ')} onClick={toggleEdit}>
+              Edit
+            </Button>
+          )}
+        </>
+      )}
     </div>
-  )
+  );
 };
 
 RepoDescription.propTypes = {
