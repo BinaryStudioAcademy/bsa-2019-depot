@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { Icon, Input, Dropdown, Button, Label } from 'semantic-ui-react';
-import { PullRequestOutline} from '@ant-design/icons';
+import { PullRequestOutline } from '@ant-design/icons';
 import AntdIcon from '@ant-design/icons-react';
 import DataList from '../../components/DataList';
 
@@ -136,7 +136,14 @@ class IssuePrContainer extends React.Component {
           <div className={styles.dataHeader}>
             <div>
               <span className={styles.openedData} onClick={this.showOpenData}>
-                {isIssues ? <Icon name="info" /> : <Icon><AntdIcon type={PullRequestOutline} /></Icon>} {openData.length} Open
+                {isIssues ? (
+                  <Icon name="info" />
+                ) : (
+                  <Icon>
+                    <AntdIcon type={PullRequestOutline} />
+                  </Icon>
+                )}{' '}
+                {openData.length} Open
               </span>
               <span className={styles.closedData} onClick={this.showClosedData}>
                 <Icon name="check" /> {closedData.length} Closed

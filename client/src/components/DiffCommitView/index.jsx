@@ -231,7 +231,7 @@ class DiffCommitView extends Component {
     return (
       <div>
         {pageError}
-        <DiffList diffs={diffsData.diffs}/>
+        <DiffList diffs={diffsData.diffs} />
         <div className="comments-count">
           {`${comments ? comments.length : 0} comments on commit`}{' '}
           <Message compact>{match.params.hash.slice(0, 7)}</Message>

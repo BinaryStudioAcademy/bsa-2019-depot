@@ -134,7 +134,7 @@ class RepositoryPage extends React.Component {
             <Route exact path={`${match.path}/commit/:hash`} component={DiffCommitView} />
             <Route exact path={`${match.path}/issues`} component={IssuesTab} />
             <Route exact path={`${match.path}/pulls`} component={PullRequestsTab} />
-            <Route exact path={`${match.path}/compare`} component={CompareChanges}/>
+            <Route exact path={`${match.path}/compare`} component={CompareChanges} />
             <Route exact path={`${match.path}/issues/new`} component={CreateIssuePage} />
             <Route exact path={`${match.path}/issues/:number`} component={IssueComments} />
             <Route exact path={`${match.path}/labels`} component={LabelTab} />

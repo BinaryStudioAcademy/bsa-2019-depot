@@ -53,7 +53,7 @@ class CreateIssuePage extends React.Component {
   render() {
     return (
       <Container className={styles.issueFormContainer}>
-        <CreateIssuePrForm isIssues onSubmit={this.onSubmit}/>
+        <CreateIssuePrForm isIssues onSubmit={this.onSubmit} />
       </Container>
     );
   }

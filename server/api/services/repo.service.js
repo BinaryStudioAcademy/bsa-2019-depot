@@ -242,7 +242,11 @@ const forkRepo = async ({
         if (err) throw err;
       }
     );
-    await repoRepository.create({
+
+    const currentRepoBranches = await branchRepository.getAllRepoBranches(forkedFromRepoId);
+    const currentRepoCommits = await commitRepository.getAllRepoCommits(forkedFromRepoId);
+
+    const {id} = await repoRepository.create({
       userId,
       name,
       website,
@@ -250,7 +254,11 @@ const forkRepo = async ({
       forkedFromRepoId
     });
 
-    return { status: true, username };
+    const branchesPromises = currentRepoBranches.map(branch => branchRepository.create({...branch, repositoryId: id}));
+    await Promise.all(branchesPromises);
+    const commitPromises = currentRepoCommits.map(commit => commitRepository.create({...commit, repositoryId: id}));
+    await Promise.all(commitPromises);
+    return {status: true, username};
   } catch (err) {
     return Promise.reject(new CustomError(500, err.message));
   }
