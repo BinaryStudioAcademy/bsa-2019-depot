@@ -9,8 +9,9 @@ const RepoRepository = require('../../data/repositories/repository.repository');
 const CustomError = require('../../helpers/error.helper');
 
 const getCommitsAndCreatedRepoByDate = async (data) => {
-  const { user } = data;
+  const { user, isOwner } = data;
   const repoList = await getReposNames(data);
+
   let globalCommits = [];
   const promises = repoList.map((repoName) => {
     const pathToRepo = repoHelper.getPathToRepo(user, repoName);
@@ -41,7 +42,7 @@ const getCommitsAndCreatedRepoByDate = async (data) => {
     return Promise.reject(new CustomError(404, `User ${username} not found`));
   }
   const { id } = dbUser;
-  const repos = await RepoRepository.getByUserWithOptions(id);
+  const repos = await RepoRepository.getByUserWithOptions(id, isOwner);
   const userRepos = repos.map(repo => repo.get({ plain: true }));
   const userActivitybyDate = {};
   const monthActivity = {};
@@ -83,6 +84,7 @@ const getCommitsAndCreatedRepoByDate = async (data) => {
       monthActivity[monthAndYear].commits[repo] = 1;
     }
   });
+
   userRepos.forEach(({ name, createdAt }) => {
     const stringifiedDate = JSON.stringify(createdAt);
     const monthAndYear = stringifiedDate.slice(1, 8);
@@ -257,6 +259,14 @@ const createCommit = async ({ ...commitData }) => {
   }
 };
 
+const getRepoByCommitId = async (commitId)  => {
+  try {
+    return await CommitRepository.getRepoByCommitId(commitId);
+  } catch (err) {
+    return Promise.reject(new Error(err.message));
+  }
+};
+
 module.exports = {
   getCommits,
   getCommitDiff,
@@ -264,5 +274,6 @@ module.exports = {
   modifyFile,
   deleteFile,
   createCommit,
-  getCommitCount
+  getCommitCount,
+  getRepoByCommitId
 };

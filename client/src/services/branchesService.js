@@ -1,6 +1,6 @@
 import callWebApi from '../helpers/webApiHelper';
 
-export const getBranches = async (repoID) => {
+export const getBranches = async repoID => {
   const response = await callWebApi({
     endpoint: `/api/repos/${repoID}/branches`,
     type: 'GET'

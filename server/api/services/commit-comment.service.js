@@ -3,6 +3,7 @@ const CommitCommentRepository = require('../../data/repositories/commit-comment.
 const UserRepository = require('../../data/repositories/user.repository');
 const RepoRepository = require('../../data/repositories/repository.repository');
 const CustomError = require('../../helpers/error.helper');
+const { checkCommitCommentPermissions } = require('../../helpers/check.permission.level.helper');
 
 const getCommitCommentById = async (commitCommentId) => {
   const commitComment = await CommitCommentRepository.getCommitCommentById(commitCommentId);
@@ -76,11 +77,13 @@ const updateCommitComment = async (commitCommentData) => {
     } = commitCommentData;
 
     const commitComment = await CommitCommentRepository.getCommitCommentById(id);
+    const isAccessGranted = checkCommitCommentPermissions(commitId, userId);
+
     if (!commitComment) {
       return Promise.reject(new CustomError(400, `Comment with id ${id} does not exist.`));
     }
     const { userId: commentUserId } = commitComment;
-    if (userId !== commentUserId) {
+    if (userId !== commentUserId && !isAccessGranted) {
       return Promise.reject(new CustomError(401, `User with id ${userId} is not allowed to update this comment.`));
     }
 
@@ -122,7 +125,9 @@ const deleteCommitComment = async (id, userId) => {
       return Promise.reject(new CustomError(404, `Commit comment with ${id} does not exist.`));
     }
     const { userId: commitUserId } = comment;
-    if (commitUserId !== userId) {
+    const isAccessGranted = checkCommitCommentPermissions(id, userId);
+
+    if (commitUserId !== userId && !isAccessGranted) {
       return Promise.reject(new CustomError(400, `User with ${userId} is not allowed to delete comment ${id}.`));
     }
     const result = await CommitCommentRepository.deleteCommitCommentById(id);

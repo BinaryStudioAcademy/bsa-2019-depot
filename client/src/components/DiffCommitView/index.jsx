@@ -8,6 +8,7 @@ import 'react-mde/lib/styles/css/react-mde-all.css';
 import { connect } from 'react-redux';
 import * as commitsService from '../../services/commitsService';
 import DiffList from '../DiffList';
+import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 import { getUserImgLink } from '../../helpers/imageHelper';
 import { socketInit } from '../../helpers/socketInitHelper';
 
@@ -25,7 +26,8 @@ class DiffCommitView extends Component {
       diffsData: {
         id: null,
         diffs: ''
-      }
+      },
+      isAccessGranted: false
     };
 
     this.onBodyChange = this.onBodyChange.bind(this);
@@ -82,12 +84,23 @@ class DiffCommitView extends Component {
   }
 
   async componentDidMount() {
+    const {
+      currentUser: { id: userId },
+      match: {
+        params: { username, reponame }
+      }
+    } = this.props;
     await this.fetchDiffs();
     const { id } = this.state.diffsData;
     if (id) {
       await this.fetchComments(id);
     }
     this.initSocket();
+
+    const isAccessGranted = await getWriteUserPermissions(username, reponame, userId);
+    this.setState({
+      isAccessGranted
+    });
   }
 
   onTabChange(selectedTab) {
@@ -113,11 +126,20 @@ class DiffCommitView extends Component {
 
     this.socket.emit('createRoom', id);
 
-    this.socket.on('newCommitComment', data => {
-      this.setState({
-        ...this.state,
-        comments: [...this.state.comments, data]
-      });
+    this.socket.on('newCommitComment', async data => {
+      const {
+        diffsData: { id }
+      } = this.state;
+      const comments = await commitsService.getCommitComments(id);
+      this.setState({ comments });
+    });
+
+    this.socket.on('changedCommitComment', async () => {
+      const {
+        diffsData: { id }
+      } = this.state;
+      const comments = await commitsService.getCommitComments(id);
+      this.setState({ comments });
     });
   }
 
@@ -181,7 +203,7 @@ class DiffCommitView extends Component {
   }
 
   render() {
-    const { body, selectedTab, loading, comments, diffsData, error } = this.state;
+    const { body, selectedTab, loading, comments, diffsData, error, isAccessGranted } = this.state;
     if (loading) {
       return <Loader active />;
     }
@@ -198,6 +220,7 @@ class DiffCommitView extends Component {
             key={comment.id}
             hash={match.params.hash}
             userId={currentUser.id}
+            isAccessGranted={isAccessGranted}
             editComment={this.editComment}
             deleteComment={this.deleteComment}
           />

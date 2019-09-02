@@ -1,0 +1,64 @@
+$red: #ed1a37;
+
+$white_linear_gradient: linear-gradient(-180deg, rgb(250, 251, 252), rgb(239, 243, 246) 90%);
+$red_text: $red;
+$dark_text: #24292e;
+$red_border: $red;
+$dark_border: rgba(27, 31, 35, 0.2);
+$dark_border_hover: rgba(27, 31, 35, 0.5);
+$grey_border: #e1e4e8;
+
+:global(.ui.button):local(.button_rename) {
+  margin-left: 5px !important;
+  color: $dark_text !important;
+  background-image: $white_linear_gradient;
+  border: 1px solid $dark_border !important;
+  &:hover {
+    border-color: $dark_border_hover !important;
+    background-image: linear-gradient(-180deg, rgb(240, 243, 246), rgb(230, 235, 241) 90%) !important;
+  }
+}
+
+:local(.dangerField) {
+  margin: 0px !important;
+  background-color: white !important;
+  border-bottom: 1px solid $grey_border !important;
+  box-shadow: 0px 0px 0px 0px rgba(34, 36, 38, 0.22) inset, 0px 0px 0px 0px rgba(0, 0, 0, 0) !important;
+  &:last-child {
+    border-bottom: 0px !important;
+  }
+}
+
+:local(.dangerZone) {
+  border: 1px $red_border solid;
+  border-radius: 3px !important;
+}
+
+:global(.ui.button):local(.dangerButton) {
+  background-image: $white_linear_gradient;
+  color: $red_text;
+  border: 1px solid $dark_border !important;
+  padding: 11px 5px 11px 5px !important;
+  font-size: 81.25% !important;
+  &:hover {
+    background-color: $red;
+    background-image: none;
+    border-color: $dark_border_hover !important;
+    color: white !important;
+  }
+}
+
+:local(.text_input) {
+  width: 250px !important;
+}
+
+:local(.first_column) {
+  min-width: 210px !important;
+}
+
+:local(.second_column) {
+  min-width: 660px !important;
+}
+:local(.box) {
+  padding-top: 20px !important;
+}

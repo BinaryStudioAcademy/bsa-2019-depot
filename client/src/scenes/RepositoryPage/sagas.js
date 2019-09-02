@@ -7,6 +7,7 @@ function* currentRepoRequest({ payload }) {
     yield put(fetchCurrentRepo.request());
 
     const response = yield call(repositoryService.getRepositoryByOwnerAndName, payload);
+    console.log(response);
     yield put(fetchCurrentRepo.success(response));
     yield put(fetchCurrentRepo.failure(response.error.message));
   } catch (error) {

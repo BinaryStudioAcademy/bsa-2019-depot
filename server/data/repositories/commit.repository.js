@@ -1,5 +1,5 @@
 const BaseRepository = require('./base.repository');
-const { CommitModel, UserModel, CommitCommentModel } = require('../models/index');
+const { CommitModel, UserModel, CommitCommentModel, RepositoryModel } = require('../models/index');
 
 class CommitRepository extends BaseRepository {
   add({ ...commitData }) {
@@ -31,6 +31,18 @@ class CommitRepository extends BaseRepository {
 
   deleteByRepoId(repositoryId) {
     return this.model.destroy({ where: { repositoryId } });
+  }
+
+  getRepoByCommitId(id) {
+    return this.model.findOne({
+      where: { id },
+      include: [
+        {
+          model: RepositoryModel,
+          attributes: ['id']
+        }
+      ]
+    });
   }
 }
 

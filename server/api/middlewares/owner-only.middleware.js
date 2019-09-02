@@ -1,10 +1,41 @@
-module.exports = (req, res, next) => {
-  const { username } = req.user;
-  const { owner } = req.params;
+const RepositoryRepository = require('../../data/repositories/repository.repository');
+const UserRepository = require('../../data/repositories/user.repository');
+const OrgUserRepository = require('../../data/repositories/org-user.repository');
 
-  if (username !== owner) {
-    next({ status: 401, message: 'Only owner allowed.' }, null);
-  } else {
-    next();
-  }
+module.exports = async(req, res, next) => {
+  if(req.params.owner === req.user.username) {
+    return next();
+  };
+  const reponame = req.params.repoName || req.params.reponame;
+  const username = req.params.owner;
+  const repo = req.params.repositoryId
+    ? await RepositoryRepository.getById(req.params.repositoryId)
+    : await RepositoryRepository.getByUsernameAndReponame(username, reponame);
+
+  if (req.user.id === repo.userId) {
+    return next();
+  };
+
+  const org = username
+    ? await UserRepository.findOne({
+        where: {
+          username,
+          type: 'ORG'
+        }
+      })
+    : await UserRepository.findOne({
+        where: {
+          id: req.params.userId,
+          type: 'ORG'
+        }
+      });
+
+  const orgUser = OrgUserRepository.getUserWithOwnerRole({
+    userId: req.user.id,
+    orgId: org.id,
+  });
+
+  return orgUser
+    ? next()
+    : next(new CustomError(403, `User ${req.user.username} doesn't have permission to access this page`));
 };

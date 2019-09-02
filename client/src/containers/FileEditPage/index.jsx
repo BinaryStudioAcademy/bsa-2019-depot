@@ -146,14 +146,15 @@ class FileEditPage extends React.Component {
       };
 
       this.setState({ checkingFilename: true });
-      checkFilename(username, reponame, branch, { filepath: `${this.filepath}${this.filepath ? '/' : ''}${filename.trim()}` })
-        .then(({ isFilenameUnique }) => {
-          this.setState({
-            isFilenameUnique,
-            checkingFilename: false,
-            checkFilenameTimer: setTimeout(resetTimer, 500)
-          });
+      checkFilename(username, reponame, branch, {
+        filepath: `${this.filepath}${this.filepath ? '/' : ''}${filename.trim()}`
+      }).then(({ isFilenameUnique }) => {
+        this.setState({
+          isFilenameUnique,
+          checkingFilename: false,
+          checkFilenameTimer: setTimeout(resetTimer, 500)
         });
+      });
     }
   }
 
@@ -162,13 +163,14 @@ class FileEditPage extends React.Component {
     const { filename } = this.state;
 
     this.setState({ checkingFilename: true });
-    checkFilename(username, reponame, branch, { filepath: `${this.filepath}${this.filepath ? '/' : ''}${filename.trim()}` })
-      .then(({ isFilenameUnique }) => {
-        this.setState({
-          isFilenameUnique,
-          checkingFilename: false
-        });
+    checkFilename(username, reponame, branch, {
+      filepath: `${this.filepath}${this.filepath ? '/' : ''}${filename.trim()}`
+    }).then(({ isFilenameUnique }) => {
+      this.setState({
+        isFilenameUnique,
+        checkingFilename: false
       });
+    });
   }
 
   render() {
@@ -267,16 +269,19 @@ class FileEditPage extends React.Component {
             <Button className={styles.newButton} basic onClick={this.handleCancel}>
               Cancel
             </Button>
-            {!isFilenameUnique && (
-              <div className={styles.error_wrapper}>A file with the same name already exists</div>
-            )}
+            {!isFilenameUnique && <div className={styles.error_wrapper}>A file with the same name already exists</div>}
           </Breadcrumb.Section>
         </Breadcrumb>
         <Tab className={styles.editorArea} panes={panes} />
         <CommitFileForm
           avatar={avatar}
           initialBranch={branch}
-          disabled={!filename || (content === oldContent && filename === oldFilename && toEdit) || checkingFilename || !isFilenameUnique}
+          disabled={
+            !filename ||
+            (content === oldContent && filename === oldFilename && toEdit) ||
+            checkingFilename ||
+            !isFilenameUnique
+          }
           onSubmit={this.handleCommitFile}
           onCancel={this.handleCancel}
         />

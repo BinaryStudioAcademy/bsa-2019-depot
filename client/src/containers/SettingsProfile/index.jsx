@@ -63,6 +63,7 @@ class SettingsProfile extends Component {
       restrictions: {
         maxFileSize: 4000000,
         maxNumberOfFiles: 1,
+        allowedFileTypes: ['.jpg', '.png', '.gif'],
         minNumberOfFiles: 1
       }
     }).use(AwsS3, {

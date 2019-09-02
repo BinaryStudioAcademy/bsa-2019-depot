@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import Octicon, { Repo } from '@primer/octicons-react';
-import { Icon, Label, Container } from 'semantic-ui-react';
+import { Icon, Label, Container, Button } from 'semantic-ui-react';
 import ForkButton from '../ForkButton';
+import StarButton from '../../components/StarButton';
+import { setStar } from '../../services/repositoryService';
 
 import styles from './styles.module.scss';
 
 const RepositoryHeader = ({
   userId,
-  currentRepoInfo: { userId: repoOwnerId, originalRepo },
+  currentRepoInfo: { id: repositoryId, userId: repoOwnerId, originalRepo, starsCount, stars },
   owner,
   username,
   repoName,
@@ -20,6 +22,8 @@ const RepositoryHeader = ({
   baseUrl,
   history
 }) => {
+  const [isStar, setIsStar] = useState(Boolean(stars.find(star => star.user.id === userId)));
+  const [starCount, setStarCount] = useState(starsCount);
   let activeTab;
   switch (activePage) {
   case 'issues':
@@ -43,12 +47,26 @@ const RepositoryHeader = ({
     window.location.reload();
   };
 
+  const stargazersLinkClickHandler = useCallback(
+    () => history.push(`/${owner}/${repoName}/stargazers`),
+    [owner, repoName, history]
+  );
+
+  const starClickHandler = useCallback(
+    () => {
+      const updatedStarCount = isStar ? Number(starCount) - 1 : Number(starCount) + 1;
+      setIsStar(!isStar);
+      setStarCount(updatedStarCount);
+  
+      setStar({ userId, repositoryId });
+    },
+    [isStar, repositoryId, starCount, userId]
+  );
+  
+
   const renderOrignalRepoLink = () => {
     if (originalRepo) {
-      const {
-        name: forkedRepoName,
-        owner: forkedRepoOwner
-      } = originalRepo;
+      const { name: forkedRepoName, owner: forkedRepoOwner } = originalRepo;
       if (forkedRepoName && forkedRepoOwner) {
         return (
           <div className={styles.originalRepoLink}>
@@ -60,6 +78,7 @@ const RepositoryHeader = ({
       }
     }
   };
+
   return (
     <header className={styles.repoHeader}>
       <Container>
@@ -76,11 +95,21 @@ const RepositoryHeader = ({
               </span>
               {renderOrignalRepoLink()}
             </div>
-            {repoOwnerId !== userId ? (
-              <ForkButton isOwnRepo={false} owner={owner} repoName={repoName} />
-            ) : (
-              <ForkButton isOwnRepo owner={owner} repoName={repoName} />
-            )}
+            <div>
+              <Button size="small" as="div" compact labelPosition="right">
+                <StarButton starClickHandler={starClickHandler} isStar={isStar} />
+                <Label as="a" basic onClick={stargazersLinkClickHandler}>
+                  {starCount}
+                </Label>
+              </Button>
+              
+              {repoOwnerId !== userId ? (
+                <ForkButton isOwnRepo={false} owner={owner} repoName={repoName} />
+              ) : (
+                <ForkButton isOwnRepo owner={owner} repoName={repoName} />
+              )}
+            </div>
+
           </div>
           <div className="ui top attached tabular menu">
             <div className={`${activeTab === 'code' && 'active'} item`}>
@@ -120,14 +149,24 @@ RepositoryHeader.propTypes = {
   pullCount: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
   currentRepoInfo: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    starsCount: PropTypes.string.isRequired,
+    stars: PropTypes.array.isRequired,
     userId: PropTypes.string,
     forksCount: PropTypes.string,
     originalRepo: PropTypes.shape({
       name: PropTypes.string,
+      owner: PropTypes.string,
       user: PropTypes.shape({
         username: PropTypes.string
       })
     })
+  }).isRequired,
+  match: PropTypes.exact({
+    params: PropTypes.object.isRequired,
+    isExact: PropTypes.bool.isRequired,
+    path: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired
   }).isRequired,
   activePage: PropTypes.string,
   baseUrl: PropTypes.string.isRequired,
@@ -138,7 +177,9 @@ const mapStateToProps = ({
   profile: {
     currentUser: { id, username }
   },
-  currentRepo: { repository: { currentRepoInfo } }
+  currentRepo: {
+    repository: { currentRepoInfo }
+  }
 }) => ({
   userId: id,
   username,

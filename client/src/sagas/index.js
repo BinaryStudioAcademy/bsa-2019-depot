@@ -7,7 +7,7 @@ import commitPageSagas from '../containers/CommitsPage/sagas';
 import codeTabSagas from '../scenes/CodeTab/sagas';
 import profileSagas from '../containers/Profile/sagas';
 import profileSettingsSagas from '../containers/SettingsProfile/sagas';
-import repoSettingsSagas from '../containers/SettingsTab/sagas';
+import repoOptionsSagas from '../containers/RepositoryOptions/sagas';
 import branchesSagas from '../containers/BranchesTab/sagas';
 import createIssueSagas from '../containers/CreateIssuePage/sagas';
 // import repositoryTabSagas from '../containers/RepositoryTab/sagas';
@@ -22,7 +22,7 @@ export default function* rootSaga() {
     commitPageSagas(),
     profileSagas(),
     codeTabSagas(),
-    repoSettingsSagas(),
+    repoOptionsSagas(),
     profileSettingsSagas(),
     branchesSagas(),
     createIssueSagas(),

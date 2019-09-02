@@ -21,7 +21,8 @@ class CommitCommentRepository extends BaseRepository {
   getByCommitId(commitId) {
     return this.model.findAll({
       where: { commitId },
-      include: [UserModel]
+      include: [UserModel],
+      order: [['createdAt', 'ASC']]
     });
   }
 }
