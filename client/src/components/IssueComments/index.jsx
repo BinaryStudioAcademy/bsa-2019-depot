@@ -13,7 +13,7 @@ import {
 } from '../../services/issuesService';
 import { createIssueComment, updateIssueComment, deleteIssueComment } from '../../services/issueCommentsService';
 import IssueComment from '../IssueComment';
-import IssueHeader from '../IssueHeader';
+import IssuePrHeader from '../IssuePrHeader';
 import { socketInit } from '../../helpers/socketInitHelper';
 import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 import 'react-mde/lib/styles/css/react-mde-all.css';
@@ -201,12 +201,13 @@ class IssueComments extends React.Component {
       <Loader active />
     ) : (
       <>
-        <IssueHeader
+        <IssuePrHeader
           title={currentIssue.title}
           number={currentIssue.number}
           canEdit={this.isOwnIssue()}
           onNewIssue={this.redirectToCreateNewIssue}
           onSubmit={this.onIssueUpdateTitle}
+          isIssue={true}
         />
         <div>
           <Label color={currentIssue.isOpened ? 'green' : 'red'} className={styles.issue_label}>

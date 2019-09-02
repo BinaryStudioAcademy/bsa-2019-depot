@@ -4,7 +4,7 @@ import { Header, Button, Input } from 'semantic-ui-react';
 
 import styles from './styles.module.scss';
 
-class IssueHeader extends React.Component {
+class IssuePrHeader extends React.Component {
   constructor(props) {
     super(props);
 
@@ -46,7 +46,7 @@ class IssueHeader extends React.Component {
   }
 
   render() {
-    const { canEdit, number, onNewIssue } = this.props;
+    const { canEdit, number, onNewIssue, isIssue } = this.props;
     const { editing, title, isDisabled } = this.state;
     return editing ? (
       <div className={styles.header_row}>
@@ -61,18 +61,19 @@ class IssueHeader extends React.Component {
           <span>{` #${number}`}</span>
         </Header>
         {canEdit ? <Button compact secondary basic content="Edit" onClick={this.onEdit} /> : null}
-        <Button compact positive content="New Issue" primary onClick={onNewIssue} />
+        {isIssue ? <Button compact positive content="New Issue" primary onClick={onNewIssue} /> : null}
       </div>
     );
   }
 }
 
-IssueHeader.propTypes = {
+IssuePrHeader.propTypes = {
   title: PropTypes.string,
   canEdit: PropTypes.bool,
   number: PropTypes.number,
   onNewIssue: PropTypes.func,
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
+  isIssue: PropTypes.bool
 };
 
-export default IssueHeader;
+export default IssuePrHeader;
