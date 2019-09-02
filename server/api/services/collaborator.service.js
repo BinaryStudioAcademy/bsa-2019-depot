@@ -11,18 +11,17 @@ const addCollaborator = async ({
   recipient, username, reponame, repositoryId, url, permission
 }) => {
   const { email, id: userId } = await getUserDetailed(recipient);
-
-  await sendInviteCollaboratorEmail({ email, url, username, reponame });
-
   const { id: permissionId } = await permissionRepository.getPermissionByName(permission);
 
-  await collaboratorRepository.create({
+  const { id } = await collaboratorRepository.create({
     permissionId,
     userId,
     repositoryId,
     isActivated: false
   });
-  return getRepositoryCollaborators(repositoryId);
+
+  await sendInviteCollaboratorEmail({ email, url, username, reponame });
+  return collaboratorRepository.getCollaboratorById(id);
 };
 
 const getUserInvitationStatus = async (username, reponame, userId) => {
@@ -33,19 +32,17 @@ const getUserInvitationStatus = async (username, reponame, userId) => {
 
 const acceptInvitation = async (username, reponame, userId) => {
   const [{ id }] = await getUserInvitationStatus(username, reponame, userId);
-  collaboratorRepository.updateById(id, {
+  return collaboratorRepository.updateById(id, {
     isActivated: true
   });
 };
 
 const declineInvitation = async (username, reponame, userId) => {
   const [{ id }] = await getUserInvitationStatus(username, reponame, userId);
-  collaboratorRepository.deleteById(id);
+  return collaboratorRepository.deleteById(id);
 };
 
-const removeRepositoryCollaborator = (collaboratorId) => {
-  collaboratorRepository.deleteById(collaboratorId);
-};
+const removeRepositoryCollaborator = collaboratorId => collaboratorRepository.deleteById(collaboratorId);
 
 const getUserRights = async (username, reponame, userId) => {
   const { id: repositoryId } = await getByUserAndReponame({ owner: username, reponame });
@@ -57,7 +54,6 @@ const getUserRightsByUserIdAndRepositoryId = (userId, repositoryId) => collabora
 module.exports = {
   addCollaborator,
   getUserRights,
-  getRepositoryCollaborators,
   getUserInvitationStatus,
   acceptInvitation,
   declineInvitation,

@@ -77,3 +77,11 @@ export const setStar = async request => {
   });
   return response.json();
 };
+
+export const getRepositoryCollaborators = async repositoryId => {
+  const response = await callWebApi({
+    endpoint: `/api/repos/${repositoryId}/collaborators`,
+    type: 'GET'
+  });
+  return response.json();
+};
