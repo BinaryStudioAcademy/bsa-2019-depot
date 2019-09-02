@@ -79,7 +79,6 @@ CommitsPage.propTypes = {
     lastCommits: PropTypes.object
   }).isRequired,
   fetchCommits: PropTypes.func.isRequired,
-  repoId: PropTypes.string.isRequired,
   fetchBranches: PropTypes.func.isRequired,
   username: PropTypes.string,
   match: PropTypes.object,
