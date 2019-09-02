@@ -21,11 +21,13 @@ class Dashboard extends React.Component {
 
     this.state = {
       userData: initialUserData,
-      userOrgs: []
+      userOrgs: [],
+      filter: 'All'
     };
 
     this.getUserData = this.getUserData.bind(this);
     this.getUsersOrgs = this.getUsersOrgs.bind(this);
+    this.getCurrentRepoFilter = this.getCurrentRepoFilter.bind(this);
   }
 
   async getUserData() {
@@ -59,13 +61,19 @@ class Dashboard extends React.Component {
     await this.getUsersOrgs();
   }
 
+  getCurrentRepoFilter(e, { value: filter }) {
+    this.setState({
+      filter
+    });
+  }
+
   renderTab(tab) {
     switch (tab) {
     case tabs.repositories:
       return (
           <>
-            <RepositoriesFilters />
-            <RepositoriesList onDataChange={this.getUserData} />
+            <RepositoriesFilters getCurrentRepoFilter={this.getCurrentRepoFilter} />
+            <RepositoriesList filter={this.state.filter} onDataChange={this.getUserData} />
           </>
       );
     case tabs.projects:
