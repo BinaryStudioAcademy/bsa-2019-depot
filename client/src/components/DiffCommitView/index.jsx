@@ -146,9 +146,11 @@ class DiffCommitView extends Component {
   async onSubmit() {
     const { body } = this.state;
     const { username, reponame, hash } = this.props.match.params;
+    const { id: userId } = this.props.currentUser;
     await commitsService.addCommitComment({
       username,
       reponame,
+      userId,
       hash,
       body
     });
