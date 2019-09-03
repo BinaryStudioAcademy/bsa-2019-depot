@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 
 import styles from './styles.module.scss';
 
-const Footer = ({ isAuthorized }) =>
-  isAuthorized ? (
+const Footer = ({ isAuthorized, username }) =>
+  isAuthorized && username ? (
     <Container className="teststtsat">
       <Grid centered>
         <Grid.Row>
@@ -40,12 +40,18 @@ const Footer = ({ isAuthorized }) =>
   ) : null;
 
 Footer.propTypes = {
-  isAuthorized: PropTypes.bool
+  isAuthorized: PropTypes.bool,
+  username: PropTypes.string
 };
 
-const mapStateToProps = rootState => {
-  return {
-    isAuthorized: rootState.profile.isAuthorized
-  };
-};
+const mapStateToProps = ({
+  profile: {
+    isAuthorized,
+    currentUser: { username }
+  }
+}) => ({
+  username,
+  isAuthorized
+});
+
 export default connect(mapStateToProps)(Footer);
