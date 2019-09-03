@@ -4,6 +4,7 @@ import { List, Button, Label, Form, Grid } from 'semantic-ui-react';
 import { Formik } from 'formik';
 import { InputError } from '../../components/InputError';
 import * as Yup from 'yup';
+import ColorPicker from '../../components/ColorPicker';
 
 import styles from './styles.module.scss';
 
@@ -32,6 +33,7 @@ class LabelItem extends React.Component {
     this.cancelEditing = this.cancelEditing.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
+    this.handleChangeColor = this.handleChangeColor.bind(this);
   }
 
   componentDidMount(props) {
@@ -99,6 +101,10 @@ class LabelItem extends React.Component {
     });
   }
 
+  handleChangeColor(color) {
+    this.setState({ color });
+  }
+
   renderEditForm() {
     const { isEditing, name, description, color } = this.state;
     const { labelObject } = this.props;
@@ -112,7 +118,7 @@ class LabelItem extends React.Component {
         onSubmit={this.finishEditing}
         validationSchema={validationSchema}
       >
-        {({ isValid, touched, values, handleChange, handleBlur, handleSubmit, errors }) => {
+        {({ isValid, touched, values, handleChange, handleBlur, handleSubmit, errors, setFieldValue }) => {
           return (
             <Form className={styles.labelForm} onSubmit={handleSubmit}>
               <Form.Group>
@@ -134,7 +140,7 @@ class LabelItem extends React.Component {
                   name="description"
                   value={values.description}
                   placeholder="Optional description"
-                  width={6}
+                  width={5}
                   className={styles.labelInput}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -143,11 +149,11 @@ class LabelItem extends React.Component {
                   onKeyUp={this.handleKeyUp}
                 />
                 <Form.Input
-                  label="Color"
+                  label="Enter color hex value"
                   name="color"
                   value={values.color}
                   placeholder="Color"
-                  width={2}
+                  width={3}
                   className={styles.labelInput}
                   onChange={handleChange}
                   onBlur={handleBlur}
@@ -155,6 +161,7 @@ class LabelItem extends React.Component {
                   fluid
                   onKeyUp={this.handleKeyUp}
                 />
+                <ColorPicker color={color} handleChangeColor={this.handleChangeColor} setFieldValue={setFieldValue} />
                 <div className={styles.editButtons} width={2} floated="right">
                   <Button basic content="Cancel" onClick={this.cancelEditing} />
                   <Button type="submit" disabled={!isValid} color="blue" content={submitButtonText} />
