@@ -46,7 +46,7 @@ class RepositoryItem extends React.Component {
           allRepoCommits.push(allBranchCommits);
         });
         Promise.all(allRepoCommits).then(data => {
-          const allRepoCommitsSorted = data.flat().sort((a, b) => new Date(b.date) - new Date(a.date));
+          const allRepoCommitsSorted = data.flat().sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
           const lastCommitDate = moment(allRepoCommitsSorted[0].updatedAt).fromNow();
           this.setState({ repoCommits: allRepoCommitsSorted, updatedAt: lastCommitDate });
           const { repoCommits } = this.state;
