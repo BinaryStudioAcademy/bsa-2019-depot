@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Dropdown, Form, Grid } from 'semantic-ui-react';
+import { Button, Form, Grid } from 'semantic-ui-react';
 import { Field, Formik } from 'formik';
 import { InputError } from '../InputError';
 import ReactMde from 'react-mde';
 import ReactMarkdown from 'react-markdown';
 import * as Yup from 'yup';
+import IssuePrSidebar from '../../containers/IssuePrSidebar';
 
 import 'react-mde/lib/styles/css/react-mde-all.css';
 import styles from './styles.module.scss';
@@ -13,21 +14,6 @@ import styles from './styles.module.scss';
 const CreateIssuePrForm = ({ isIssues, onSubmit }) => {
   const [selectedTab, setSelectedTab] = useState('write');
   const [body, setBody] = useState('');
-
-  // labels mock
-  const labelOptions = [
-    { key: 1, text: 'One', value: 1, color: 'red' },
-    { key: 2, text: 'Two', value: 2, color: 'green' },
-    { key: 3, text: 'Three', value: 3, color: 'blue' }
-  ];
-
-  //assignees mock
-  const assigneeOptions = [
-    { key: 'af', value: 'af', text: 'John Doe' },
-    { key: 'ax', value: 'ax', text: 'Alanda Java' },
-    { key: 'al', value: 'al', text: 'Ivan Fortran' },
-    { key: 'dz', value: 'dz', text: 'Michael Algol' }
-  ];
 
   const validationSchema = Yup.object().shape({
     title: Yup.string()
@@ -37,13 +23,6 @@ const CreateIssuePrForm = ({ isIssues, onSubmit }) => {
 
   function renderPreview() {
     return Promise.resolve(<ReactMarkdown source={body} />);
-  }
-
-  function renderLabel(label) {
-    return {
-      color: label.color,
-      content: label.text
-    };
   }
 
   function handleSubmit({ title }) {
@@ -79,29 +58,7 @@ const CreateIssuePrForm = ({ isIssues, onSubmit }) => {
               </Button>
             </Grid.Column>
             <Grid.Column width={4}>
-              <div className={styles.sidebar}>
-                <div className={styles.sidebarItem}>
-                  <Dropdown
-                    multiple
-                    selection
-                    fluid
-                    options={labelOptions}
-                    placeholder="Choose an option"
-                    renderLabel={renderLabel}
-                  />
-                </div>
-                <div className={styles.sidebarItem}>
-                  <Dropdown
-                    clearable
-                    fluid
-                    multiple
-                    search
-                    selection
-                    options={assigneeOptions}
-                    placeholder="Assignees"
-                  />
-                </div>
-              </div>
+              <IssuePrSidebar isIssue />
             </Grid.Column>
           </Grid>
         </Form>
