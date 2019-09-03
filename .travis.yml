@@ -6,6 +6,8 @@ branches:
   - develop
 notifications:
   slack: binary-academy-2019:zu0JzpVwZUPF9GSv8vPwHcI1
+before_install:
+  - pip install --user awscli
 install:
   - . scripts/install.sh
 script:
