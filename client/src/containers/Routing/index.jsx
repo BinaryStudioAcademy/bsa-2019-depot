@@ -24,12 +24,12 @@ class Routing extends React.Component {
   }
 
   render() {
-    const { loading } = this.props;
+    const { loading, isAuthorized } = this.props;
 
     return loading ? (
       <Spinner />
     ) : (
-      <section className="main-wrapper">
+      <section className={'main-wrapper' + (!isAuthorized ? ' auth-wrapper' : '')}>
         <div className="content">
           <Header />
           <Switch>
@@ -62,11 +62,13 @@ class Routing extends React.Component {
 
 Routing.propTypes = {
   loading: PropTypes.bool.isRequired,
+  isAuthorized: PropTypes.bool.isRequired,
   fetchCurrentUser: PropTypes.func.isRequired
 };
 
-const mapStateToProps = ({ profile: { loading } }) => ({
-  loading
+const mapStateToProps = ({ profile: { loading, isAuthorized } }) => ({
+  loading,
+  isAuthorized
 });
 
 const mapDispatchToProps = {
