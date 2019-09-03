@@ -59,7 +59,8 @@ const DataList = props => {
                 </Link>
               </List.Header>
               <List.Description>
-                {`#${item.number} opened ${moment(item.createdAt).fromNow()} by ${item.user.username}`}
+                { isPull ? `#${item.number} ${item.prstatus.name.toLowerCase()} ${moment(item.updatedAt).fromNow()} by ${item.user.username}`
+                  : `#${item.number} ${item.isOpened ? 'opened' : 'closed'} ${moment(item.updatedAt).fromNow()} by ${item.user.username}` }
               </List.Description>
             </List.Content>
           </List.Item>
