@@ -25,6 +25,11 @@ $black: #363a44;
     :local(.actionButton) {
       font-size: 90%;
     }
+    :local(.saveButton) {
+      font-size: 90%;
+      background-color: $blue;
+      color: #fff;
+    }
   }
 }
 

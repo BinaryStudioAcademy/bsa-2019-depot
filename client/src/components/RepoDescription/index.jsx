@@ -78,7 +78,11 @@ const RepoDescription = props => {
                 onChange={handleChange}
               />
               <InputError name="website" />
-              <Button type="submit" disabled={errors.description || errors.website} className={styles.actionButton}>
+              <Button
+                type="submit"
+                disabled={errors.description || errors.website}
+                className={[styles.actionButton, styles.saveButton].join(' ')}
+              >
                 Save
               </Button>
               <Button onClick={toggleEdit} className={styles.actionButton}>
