@@ -18,8 +18,7 @@ export const updatePullComment = async request => {
   return response ? response.json() : false;
 };
 
-export const deletePullComment = async request => {
-  const { id } = request;
+export const deletePullComment = async id => {
   const response = await callWebApi({
     endpoint: `/api/pull-comments/${id}`,
     type: 'DELETE'

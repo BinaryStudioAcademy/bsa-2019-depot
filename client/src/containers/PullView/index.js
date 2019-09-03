@@ -6,10 +6,10 @@ import { Label, Icon, Container, Loader } from 'semantic-ui-react';
 import { Switch, Route, Link } from 'react-router-dom';
 
 import IssuePrHeader from '../../components/IssuePrHeader';
+import ConversationTab from '../ConversationTab';
 import PrCommits from '../PrCommits';
 
 import { getPullByNumber, getPullComments, getBranchDiffs, updatePull } from '../../services/pullsService';
-// import { updatePullComment } from '../../services/pullCommentsService';
 import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 
 import styles from './styles.module.scss';
@@ -20,7 +20,8 @@ class PullView extends React.Component {
     this.state = {
       currentPull: {},
       commitsCount: 0,
-      loading: true
+      loading: true,
+      comment: ''
     };
   }
   async componentDidMount() {
@@ -32,12 +33,14 @@ class PullView extends React.Component {
       userId
     } = this.props;
     const currentPull = await getPullByNumber(username, reponame, number);
+
     const {
       fromBranch: { name: fromBranch },
-      toBranch: { name: toBranch }
+      toBranch: { name: toBranch },
+      id
     } = currentPull;
+
     const { commits } = await getBranchDiffs(repositoryId, { fromBranch, toBranch });
-    const { id } = currentPull;
     const pullComments = await getPullComments(id);
     const isAccessGranted = await getWriteUserPermissions(username, reponame, userId);
     this.setState({
@@ -47,18 +50,17 @@ class PullView extends React.Component {
       isAccessGranted,
       loading: false
     });
-    //this.initSocket();
   }
 
-  onPullUpdateTitle = async (title) => {
+  onPullUpdateTitle = async title => {
     const { id, body } = this.state.currentPull;
     return await updatePull({ id, title, body });
   };
 
   isOwnPull = () => {
     const { userId } = this.props;
-    const { userId: pullUserId } = this.state.currentPull;
-    const { isAccessGranted } = this.state;
+    const { isAccessGranted, currentPull } = this.state;
+    const { userId: pullUserId } = currentPull;
     return userId === pullUserId || isAccessGranted;
   };
 
@@ -69,10 +71,10 @@ class PullView extends React.Component {
       color = 'green';
       break;
     case 'CLOSED':
-      color = '#ED1A37';
+      color = 'red';
       break;
     case 'MERGED':
-      color = '#6f42c1';
+      color = 'purple';
       break;
     default:
       color = 'green';
@@ -97,12 +99,12 @@ class PullView extends React.Component {
       ).fromNow()}`;
       break;
     case 'CLOSED':
-      statusText = `$wants to merge ${commitsCount} commit into ${toBranch} from ${fromBranch} · ${moment(
+      statusText = `wanted to merge ${commitsCount} commit into ${toBranch} from ${fromBranch} · ${moment(
         updatedAt
       ).fromNow()}`;
       break;
     case 'MERGED':
-      statusText = `$merged ${commitsCount} commit into ${toBranch} from ${fromBranch} · ${moment(
+      statusText = `merged ${commitsCount} commit into ${toBranch} from ${fromBranch} · ${moment(
         updatedAt
       ).fromNow()}`;
       break;
@@ -112,12 +114,15 @@ class PullView extends React.Component {
     return statusText;
   };
 
+  updateState = state => {
+    this.setState(state);
+  };
+
   render() {
     const {
       match,
       location: { pathname }
     } = this.props;
-
     const { currentPull, loading, commitsCount, pullComments } = this.state;
     const baseUrl = match.url;
     const activePage = pathname.split('/')[5];
@@ -174,6 +179,19 @@ class PullView extends React.Component {
         </div>
         <Container className={styles.contentContainer}>
           <Switch>
+            <Route
+              exact
+              path={`${match.path}/`}
+              // eslint-disable-next-line react/jsx-no-bind
+              component={() => (
+                <ConversationTab
+                  currentPull={currentPull}
+                  pullComments={pullComments}
+                  isOwnPull={this.isOwnPull()}
+                  updateState={this.updateState}
+                />
+              )}
+            />
             <Route exact path={`${match.path}/commits`} component={PrCommits} />
             <Route exact path={`${match.path}/files-changed`} component={null} />
           </Switch>

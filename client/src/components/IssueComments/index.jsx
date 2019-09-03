@@ -12,7 +12,7 @@ import {
   deleteIssue
 } from '../../services/issuesService';
 import { createIssueComment, updateIssueComment, deleteIssueComment } from '../../services/issueCommentsService';
-import IssueComment from '../IssueComment';
+import Comment from '../Comment';
 import IssuePrHeader from '../IssuePrHeader';
 import { socketInit } from '../../helpers/socketInitHelper';
 import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
@@ -110,7 +110,7 @@ class IssueComments extends React.Component {
       return;
     }
 
-    return await deleteIssueComment({ id });
+    return await deleteIssueComment( id );
   }
 
   async onIssueUpdateBody(id, body) {
@@ -155,7 +155,7 @@ class IssueComments extends React.Component {
     const {
       currentIssue: { id: issueId }
     } = this.state;
-
+    console.log(comment);
     if (!comment) return;
 
     const { userId } = this.props;
@@ -209,7 +209,7 @@ class IssueComments extends React.Component {
           onSubmit={this.onIssueUpdateTitle}
           isIssue={true}
         />
-        <div>
+        <div className={styles.status_line}>
           <Label color={currentIssue.isOpened ? 'green' : 'red'} className={styles.issue_label}>
             <Icon name="exclamation circle" /> {currentIssue.isOpened ? 'Open' : 'Closed'}
           </Label>
@@ -220,7 +220,7 @@ class IssueComments extends React.Component {
             } comments`}</span>
           </span>
         </div>
-        <IssueComment
+        <Comment
           id={currentIssue.id}
           avatar={currentIssue.user.imgUrl}
           username={currentIssue.user.username}
@@ -243,7 +243,7 @@ class IssueComments extends React.Component {
               userId: commentUserId
             } = issueComment;
             return (
-              <IssueComment
+              <Comment
                 key={id}
                 id={id}
                 avatar={imgUrl}
@@ -259,7 +259,7 @@ class IssueComments extends React.Component {
               />
             );
           })}
-        <IssueComment
+        <Comment
           avatar={userImg}
           username={userName}
           newComment={true}
