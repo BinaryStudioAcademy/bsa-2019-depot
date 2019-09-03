@@ -34,8 +34,7 @@ class RepositoryItem extends React.Component {
     await this.checkIfEmpty(username, name);
 
     const { isEmpty } = this.state;
-
-    if (!isEmpty) {
+    if (!isEmpty && typeof isEmpty !== 'undefined') {
       try {
         await this.getRepoBranches(repoId);
         const { repoBranches } = this.state;
@@ -45,9 +44,10 @@ class RepositoryItem extends React.Component {
           const allBranchCommits = this.getRepoCommits(repoId, branch.name);
           allRepoCommits.push(allBranchCommits);
         });
+
         Promise.all(allRepoCommits).then(data => {
           const allRepoCommitsSorted = data.flat().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-          const lastCommitDate = moment(allRepoCommitsSorted[0].updatedAt).fromNow();
+          const lastCommitDate = moment(allRepoCommitsSorted[0].createdAt).fromNow();
           this.setState({ repoCommits: allRepoCommitsSorted, updatedAt: lastCommitDate });
           const { repoCommits } = this.state;
           this.groupCommitsByDay(repoCommits);
@@ -89,9 +89,9 @@ class RepositoryItem extends React.Component {
   groupCommitsByDay(commits) {
     //transform server data format to format for recharts, count commits per 1 day
     const countOfCommitsByDate = commits.reduce((acc, commit) => {
-      let i = acc.findIndex(x => x.day === moment(commit.updatedAt.split('T')[0]).dayOfYear());
+      let i = acc.findIndex(x => x.day === moment(commit.createdAt.split('T')[0]).dayOfYear());
       return (
-        i === -1 ? acc.push({ day: moment(commit.updatedAt.split('T')[0]).dayOfYear(), commits: 1 }) : acc[i].commits++,
+        i === -1 ? acc.push({ day: moment(commit.createdAt.split('T')[0]).dayOfYear(), commits: 1 }) : acc[i].commits++,
         acc
       );
     }, []);
