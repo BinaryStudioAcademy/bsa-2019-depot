@@ -8,7 +8,7 @@ import styles from './styles.module.scss';
 
 const Footer = ({ isAuthorized, username }) =>
   isAuthorized && username ? (
-    <Container className="teststtsat">
+    <Container>
       <Grid centered>
         <Grid.Row>
           <Grid.Column computer={12} mobile={16}>
