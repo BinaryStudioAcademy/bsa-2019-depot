@@ -24,6 +24,7 @@ const { getAllRepoIssues, getRepoIssueByNumber } = require('../services/issue.se
 const { getLabelsByRepoId } = require('../services/label.service');
 const { getFileContent } = require('../services/files.service');
 const { getStatsByBranch } = require('../services/language-stats.service');
+const { getRepositoryCollaborators } = require('../services/repo.service');
 const ownerOnlyMiddleware = require('../middlewares/owner-only.middleware');
 const isReaderMiddleware = require('../middlewares/is-reader.middleware');
 const isAdminMiddleware = require('../middlewares/is-admin.middleware');
@@ -245,6 +246,12 @@ router
   .get('/:repositoryId/pulls', (req, res, next) => {
     const { repositoryId } = req.params;
     pullsService.getPulls(repositoryId)
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .get('/:repositoryId/collaborators', (req, res, next) => {
+    const { repositoryId } = req.params;
+    getRepositoryCollaborators(repositoryId)
       .then(data => res.send(data))
       .catch(next);
   });

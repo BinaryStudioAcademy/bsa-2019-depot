@@ -221,7 +221,8 @@ class CodeTab extends React.Component {
         />
         <RepoNav
           isOwn={isOwn}
-          branch={branch}z
+          branch={branch}
+          z
           branches={branches.map(({ name }) => name)}
           onBranchChange={this.onBranchChange}
           onCreateFile={this.onCreateFile}
