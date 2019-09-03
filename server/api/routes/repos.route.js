@@ -238,16 +238,17 @@ router
   .get('/:repositoryId/pulls/diffs', (req, res, next) => {
     const { repositoryId } = req.params;
     const { fromBranch, toBranch } = req.query;
-    pullsService.getPullData(repositoryId, fromBranch, toBranch)
+    pullsService
+      .getPullData(repositoryId, fromBranch, toBranch)
       .then(data => res.send(data))
       .catch(next);
   })
   .get('/:repositoryId/pulls', (req, res, next) => {
     const { repositoryId } = req.params;
-    pullsService.getPulls(repositoryId)
+    pullsService
+      .getPulls(repositoryId)
       .then(data => res.send(data))
       .catch(next);
   });
-
 
 module.exports = router;

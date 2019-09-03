@@ -21,10 +21,8 @@ const getDiffCommits = async (pathToRepo, fromBranch, toBranch) => {
     walker.start();
   });
 
-  const fromBranchCommits = await repo.getBranchCommit(fromBranch)
-    .then(setListeners);
-  const toBranchCommits = await repo.getBranchCommit(toBranch)
-    .then(setListeners);
+  const fromBranchCommits = await repo.getBranchCommit(fromBranch).then(setListeners);
+  const toBranchCommits = await repo.getBranchCommit(toBranch).then(setListeners);
 
   const fromBranchShas = fromBranchCommits.map(commit => commit.sha());
   const toBranchShas = toBranchCommits.map(commit => commit.sha());

@@ -8,7 +8,6 @@ const userRepository = require('../../data/repositories/user.repository');
 const RepoRepository = require('../../data/repositories/repository.repository');
 const CustomError = require('../../helpers/error.helper');
 
-
 const getCommitsAndCreatedRepoByDate = async (data) => {
   const { user, isOwner } = data;
   const repoList = await getReposNames(data);
@@ -23,7 +22,7 @@ const getCommitsAndCreatedRepoByDate = async (data) => {
       walker.sorting(NodeGit.Revwalk.SORT.TIME);
       return walker
         .getCommitsUntil(commit => commit)
-        .then(commits => {
+        .then((commits) => {
           const repoCommits = commits.map(commit => ({
             sha: commit.sha(),
             author: commit.author().name(),
@@ -101,7 +100,7 @@ const getCommits = async (branch, repoId) => {
   const commitShas = [];
   await NodeGit.Repository.open(pathToRepo)
     .then(repo => repo.getBranchCommit(branch))
-    .then(firstCommitOnMaster => {
+    .then((firstCommitOnMaster) => {
       const history = firstCommitOnMaster.history(NodeGit.Revwalk.SORT.TIME);
       const commitPromise = new Promise((resolve) => {
         history.on('commit', (commit) => {

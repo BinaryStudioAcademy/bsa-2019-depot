@@ -6,7 +6,6 @@ function getFetchUrl(args) {
 }
 
 function getFetchArgs(args) {
-  console.log(args);
   const headers = {};
   if (!args.attachment) {
     headers['Content-Type'] = 'application/json';
@@ -35,7 +34,7 @@ function getFetchArgs(args) {
     method: args.type,
     headers,
     signal: args.ct,
-    mode: args.mode || 'cors'
+    mode: args.mode
   };
 }
 
@@ -57,12 +56,19 @@ export function handleError(err) {
 
 export default async function callWebApi(args) {
   try {
-    console.log(getFetchUrl(args), getFetchArgs(args));
     const res = await fetch(getFetchUrl(args), getFetchArgs(args));
     if (args.endpoint !== '/api/auth/user') await throwIfResponseFailed(res);
     return res;
   } catch (err) {
     toast.error(`Status: ${err.status}. ${err.message}`);
     handleError(err);
+  }
+}
+
+export async function callExternalApi(args) {
+  try {
+    return fetch(getFetchUrl(args));
+  } catch (err) {
+    toast.error(`Status: ${err.status}. ${err.message}`);
   }
 }

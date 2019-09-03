@@ -14,7 +14,12 @@ const addCollaborator = async ({
 }) => {
   const { email, id: userId } = await getUserDetailed(recipient);
 
-  // await sendInviteCollaboratorEmail({ email, url, username, reponame });
+  await sendInviteCollaboratorEmail({
+    email,
+    url,
+    username,
+    reponame
+  });
 
   const { id: permissionId } = await permissionRepository.getPermissionByName(permission);
 

@@ -1,4 +1,4 @@
-import callWebApi from '../helpers/webApiHelper';
+import callWebApi, { callExternalApi } from '../helpers/webApiHelper';
 
 export const getIssues = async ({ username: owner, reponame, repositoryId }) => {
   const response = await callWebApi({
@@ -90,16 +90,11 @@ export const getAllIssues = async (username, params) => {
   return response.json();
 };
 
-export const getAllQuestionOnSO = params => {
-  // fetch('https://api.stackexchange.com//2.2/search?order=desc&sort=activity&intitle=install nvm&site=stackoverflow')
-  //   .then(data => data.json()).then(console.log)
-  return callWebApi({
-    endpoint: 'https://api.stackexchange.com/2.2/search?order=desc&sort=activity&intitle=install&site=stackoverflow',
-    type: 'GET',
-    // skipAuthorization: true,
-    mode: 'cors'
-    // query: params
+export const getAllQuestionOnSO = async params => {
+  const response = await callExternalApi({
+    endpoint: 'http://api.stackexchange.com/2.2/search',
+    query: params
   });
 
-  // return response.json();
+  return response.json();
 };

@@ -32,10 +32,12 @@ class OrgUserRepository extends BaseRepository {
         orgId,
         deletedAt: null
       },
-      include: [{
-        model: RoleModel,
-        where: { name: orgRole.owner },
-      }]
+      include: [
+        {
+          model: RoleModel,
+          where: { name: orgRole.owner }
+        }
+      ]
     });
   }
 }

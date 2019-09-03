@@ -6,7 +6,7 @@ const CollaboratorRepository = require('../../data/repositories/collaborator.rep
 const CustomError = require('../../helpers/error.helper');
 const tokenHelper = require('../../helpers/token.helper');
 
-const getUserById = async userId => {
+const getUserById = async (userId) => {
   const user = await UserRepository.getUserById(userId);
   return user || Promise.reject(new CustomError(404, `User with id ${userId} not found`));
 };
@@ -45,7 +45,9 @@ const resetPassword = async ({ token, password }) => {
 };
 
 const updateUserSettings = async ({ id, settings }) => {
-  const { name, bio, url, company, location, imgUrl } = settings;
+  const {
+    name, bio, url, company, location, imgUrl
+  } = settings;
   const data = await UserRepository.updateUserById(id, {
     name,
     bio,

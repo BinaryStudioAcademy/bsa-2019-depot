@@ -13,7 +13,7 @@ class CreateIssuePage extends React.Component {
     super(props);
     this.state = {
       question: null
-    }
+    };
 
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -38,8 +38,7 @@ class CreateIssuePage extends React.Component {
       sort: 'activity',
       order: 'asc'
     };
-    getAllQuestionOnSO(filter)
-      .then(question => this.setState({ question }));
+    getAllQuestionOnSO(filter).then(question => this.setState({ question }));
   }
 
   onSubmit(title, body) {
@@ -67,10 +66,9 @@ class CreateIssuePage extends React.Component {
   }
 
   render() {
-    console.log(this.state.question);
     return (
       <Container className={styles.issueFormContainer}>
-        <CreateIssuePrForm isIssues onSubmit={this.onSubmit}/>
+        <CreateIssuePrForm isIssues onSubmit={this.onSubmit} />
       </Container>
     );
   }

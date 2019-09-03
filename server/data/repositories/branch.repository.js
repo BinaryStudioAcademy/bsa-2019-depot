@@ -1,5 +1,7 @@
 const BaseRepository = require('./base.repository');
-const { BranchModel, CommitModel, UserModel, RepositoryModel } = require('../models/index');
+const {
+  BranchModel, CommitModel, UserModel, RepositoryModel
+} = require('../models/index');
 // const sequelize = require('../db/connection');
 
 class BranchRepository extends BaseRepository {
