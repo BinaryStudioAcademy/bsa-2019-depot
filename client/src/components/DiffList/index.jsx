@@ -34,7 +34,8 @@ const DiffList = ({ diffs }) => {
       >
         {hunks => hunks.flatMap(h => renderHunk(newPath, h))}
       </Diff>
-    ));
+    )
+  );
 };
 
 DiffList.propTypes = {

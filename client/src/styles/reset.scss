@@ -108,7 +108,9 @@ body {
     'Segoe UI Emoji', 'Segoe UI Symbol' !important;
   line-height: 1;
   font-size: 16px !important;
-  > div {
+  display: flex;
+  flex-direction: column;
+  #root {
     height: 100%;
   }
 }

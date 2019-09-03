@@ -5,7 +5,7 @@ import Octicon, { Star } from '@primer/octicons-react';
 import { Button } from 'semantic-ui-react';
 import styles from './styles.module.scss';
 
-const StarButton = (props) => {
+const StarButton = props => {
   const { starClickHandler, isStar } = props;
   return (
     <Button compact className={styles.repo_item_stars} onClick={starClickHandler}>

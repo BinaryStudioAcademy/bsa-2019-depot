@@ -29,13 +29,13 @@ const getCommitCommentsByCommitId = async (commitId) => {
 const createCommitComment = async (commitCommentData) => {
   try {
     const {
-      hash, username, reponame, body
+      hash, username, reponame, userId, body
     } = commitCommentData;
 
-    const user = await UserRepository.getByUsername(username);
-    const { id: userId, name, imgUrl } = user;
+    const user = await UserRepository.getUserById(userId);
+    const { name, imgUrl } = user;
 
-    const repo = await RepoRepository.getByUserAndReponame(userId, reponame);
+    const repo = await RepoRepository.getByUsernameAndReponame(username, reponame);
     const { id: repositoryId } = repo;
     let commit = await CommitRepository.getByHash(hash);
     if (!commit) {

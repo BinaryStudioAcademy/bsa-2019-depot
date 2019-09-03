@@ -6,9 +6,9 @@ import PropTypes from 'prop-types';
 
 import styles from './styles.module.scss';
 
-const Footer = ({ isAuthorized }) =>
-  isAuthorized ? (
-    <Container className="teststtsat">
+const Footer = ({ isAuthorized, username }) =>
+  isAuthorized && username ? (
+    <Container>
       <Grid centered>
         <Grid.Row>
           <Grid.Column computer={12} mobile={16}>
@@ -16,12 +16,6 @@ const Footer = ({ isAuthorized }) =>
               <Grid.Column mobile={7}>
                 <ul className={styles.menuLeft}>
                   <li className={styles.copy}>&copy; 2019 Depot</li>
-                  <li>
-                    <a href="/api">API</a>
-                  </li>
-                  <li>
-                    <a href="/about">About</a>
-                  </li>
                 </ul>
               </Grid.Column>
               <Grid.Column computer={2} className={styles.logo}>
@@ -36,9 +30,6 @@ const Footer = ({ isAuthorized }) =>
                   <li>
                     <a href="/mobile">Mobile App</a>
                   </li>
-                  <li>
-                    <a href="/status">Status</a>
-                  </li>
                 </ul>
               </Grid.Column>
             </Grid.Row>
@@ -49,12 +40,18 @@ const Footer = ({ isAuthorized }) =>
   ) : null;
 
 Footer.propTypes = {
-  isAuthorized: PropTypes.bool
+  isAuthorized: PropTypes.bool,
+  username: PropTypes.string
 };
 
-const mapStateToProps = rootState => {
-  return {
-    isAuthorized: rootState.profile.isAuthorized
-  };
-};
+const mapStateToProps = ({
+  profile: {
+    isAuthorized,
+    currentUser: { username }
+  }
+}) => ({
+  username,
+  isAuthorized
+});
+
 export default connect(mapStateToProps)(Footer);

@@ -48,22 +48,19 @@ const RepositoryHeader = ({
     window.location.reload();
   };
 
-  const stargazersLinkClickHandler = useCallback(
-    () => history.push(`/${owner}/${repoName}/stargazers`),
-    [owner, repoName, history]
-  );
+  const stargazersLinkClickHandler = useCallback(() => history.push(`/${owner}/${repoName}/stargazers`), [
+    owner,
+    repoName,
+    history
+  ]);
 
-  const starClickHandler = useCallback(
-    () => {
-      const updatedStarCount = isStar ? Number(starCount) - 1 : Number(starCount) + 1;
-      setIsStar(!isStar);
-      setStarCount(updatedStarCount);
-  
-      setStar({ userId, repositoryId });
-    },
-    [isStar, repositoryId, starCount, userId]
-  );
-  
+  const starClickHandler = useCallback(() => {
+    const updatedStarCount = isStar ? Number(starCount) - 1 : Number(starCount) + 1;
+    setIsStar(!isStar);
+    setStarCount(updatedStarCount);
+
+    setStar({ userId, repositoryId });
+  }, [isStar, repositoryId, starCount, userId]);
 
   const renderOrignalRepoLink = () => {
     if (originalRepo) {
@@ -103,14 +100,13 @@ const RepositoryHeader = ({
                   {starCount}
                 </Label>
               </Button>
-              
+
               {repoOwnerId !== userId ? (
                 <ForkButton isOwnRepo={false} owner={owner} repoName={repoName} />
               ) : (
                 <ForkButton isOwnRepo owner={owner} repoName={repoName} />
               )}
             </div>
-
           </div>
           <div className="ui top attached tabular menu">
             <div className={`${activeTab === 'code' && 'active'} item`}>

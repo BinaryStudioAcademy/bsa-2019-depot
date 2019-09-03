@@ -9,7 +9,7 @@ import 'react-mde/lib/styles/css/react-mde-all.css';
 
 import styles from './styles.module.scss';
 
-class IssueComment extends React.Component {
+class Comment extends React.Component {
   constructor(props) {
     super(props);
 
@@ -147,7 +147,7 @@ class IssueComment extends React.Component {
   }
 }
 
-IssueComment.propTypes = {
+Comment.propTypes = {
   id: PropTypes.string,
   avatar: PropTypes.string,
   username: PropTypes.string.isRequired,
@@ -163,4 +163,4 @@ IssueComment.propTypes = {
   onDelete: PropTypes.func
 };
 
-export default IssueComment;
+export default Comment;

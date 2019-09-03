@@ -31,7 +31,8 @@ class PullCommentRepository extends BaseRepository {
       where: { pullId },
       include: [
         {
-          model: UserModel
+          model: UserModel,
+          attributes: ['username', 'imgUrl']
         }
       ],
       order: [['createdAt', 'ASC']]

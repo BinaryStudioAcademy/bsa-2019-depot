@@ -7,7 +7,8 @@ import * as Yup from 'yup';
 import CancelInvitation from '../../components/CancelInvitationButton';
 import { getRepositoryByOwnerAndName } from '../../services/repositoryService';
 import { getUsersForCollaboratorsAddition } from '../../services/userService';
-import { invite, getRepositoryCollaborators, removeRepositoryCollaborator } from '../../services/collaboratorService';
+import { invite, removeRepositoryCollaborator } from '../../services/collaboratorService';
+import { getRepositoryCollaborators } from '../../services/repositoryService';
 import { getUserImgLink } from '../../helpers/imageHelper';
 
 import styles from './styles.module.scss';
@@ -85,27 +86,25 @@ class CollaboratorsPage extends React.Component {
       repository: { name: reponame, id: repositoryId },
       username: recipient
     } = this.state;
-    const collaborators = await invite({
+    const newCollaborator = await invite({
       username,
       recipient,
       reponame,
       repositoryId,
       permission
     });
-    this.setState({
+    this.setState(({ collaborators }) => ({
       username: '',
-      collaborators
-    });
+      collaborators: [...collaborators, newCollaborator]
+    }));
     window.location.reload();
   };
 
   removeCollaborator = async id => {
-    const { status } = await removeRepositoryCollaborator(id);
-    if (status) {
-      this.setState({
-        collaborators: this.state.collaborators.filter(collaborator => collaborator.id !== id)
-      });
-    }
+    await removeRepositoryCollaborator(id);
+    this.setState({
+      collaborators: this.state.collaborators.filter(collaborator => collaborator.id !== id)
+    });
   };
 
   renderCollaboratorsPage = () => {
@@ -134,9 +133,6 @@ class CollaboratorsPage extends React.Component {
                       <Grid.Column width={12}>
                         {!isActivated ? `Awaiting ${username}'s response` : `${username}`}
                       </Grid.Column>
-                      {/* <Grid.Column width={4}>
-                        {!isActivated ? <Button basic size="tiny" content="Copy invite link" /> : null}
-                      </Grid.Column> */}
                       <Grid.Column width={2}>
                         {!isActivated ? (
                           <CancelInvitation type={'button'} id={id} onClick={this.removeCollaborator} />

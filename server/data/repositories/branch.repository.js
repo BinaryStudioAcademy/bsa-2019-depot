@@ -46,6 +46,16 @@ class BranchRepository extends BaseRepository {
     });
   }
 
+  getAllRepoBranches(repositoryId) {
+    return this.model.findAll({
+      raw: true,
+      where: {repositoryId},
+      attributes: {
+        exclude: ['id']
+      }
+    });
+  }
+
   deleteByRepoId(repositoryId) {
     return this.model.destroy({ where: { repositoryId } });
   }

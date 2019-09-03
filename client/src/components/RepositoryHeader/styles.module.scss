@@ -23,15 +23,12 @@ $gray: #f7f7fb;
 }
 
 :local(.repoHeader) {
-  border-bottom: 1px solid lightgrey;
-
   :local(.repoHeaderContainer) {
     max-width: 1000px;
     margin: auto;
     padding-top: 20px;
   }
 }
-
 
 :local(.repoNameRow) {
   display: flex;

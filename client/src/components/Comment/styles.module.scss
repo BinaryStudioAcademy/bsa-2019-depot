@@ -37,12 +37,12 @@
 :local(.issue_comment_wrapper) {
   display: flex;
   justify-content: space-between;
-  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 :local(.issue_comment_container) {
   width: calc(100% - 50px);
-  border: 1px solid lightgrey;
+  box-shadow: 0 7px 16px 3px lightgrey;
   border-radius: 5px;
 }
 

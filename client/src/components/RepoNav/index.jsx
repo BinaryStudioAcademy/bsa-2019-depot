@@ -53,7 +53,9 @@ const RepoNav = props => {
             </React.Fragment>
           </Dropdown.Menu>
         </Dropdown>
-        <Button className={styles.actionButton} onClick={handleCreatePull}>New pull request</Button>
+        <Button className={styles.actionButton} onClick={handleCreatePull}>
+          New pull request
+        </Button>
       </div>
       <div className={styles.repoActions}>
         <Button.Group>

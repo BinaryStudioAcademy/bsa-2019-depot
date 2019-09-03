@@ -50,3 +50,30 @@ export const updatePull = async request => {
   });
   return response.json();
 };
+
+export const closePull = async request => {
+  const { id } = request;
+  const response = await callWebApi({
+    endpoint: `/api/pulls/${id}/close`,
+    type: 'PUT'
+  });
+  return response.json();
+};
+
+export const reopenPull = async request => {
+  const { id } = request;
+  const response = await callWebApi({
+    endpoint: `/api/pulls/${id}/reopen`,
+    type: 'PUT'
+  });
+  return response.json();
+};
+
+export const mergePull = async request => {
+  const { id } = request;
+  const response = await callWebApi({
+    endpoint: `/api/pulls/${id}/merge`,
+    type: 'PUT'
+  });
+  return response.json();
+};
