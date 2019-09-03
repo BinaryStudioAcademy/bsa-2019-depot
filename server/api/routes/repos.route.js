@@ -118,13 +118,6 @@ router
       .then(fileData => res.send(fileData))
       .catch(next);
   })
-  .get('/:owner/:repoName/:branch/file-exist', (req, res, next) => {
-    const { owner, repoName, branch } = req.params;
-    const { filepath } = req.query;
-    checkFileExists(owner, repoName, branch, filepath)
-      .then(result => res.send(result))
-      .catch(next);
-  })
   .get('/:username/:reponame/:branchName/last-commit', isReaderMiddleware, (req, res, next) => {
     const { username, reponame, branchName } = req.params;
     getLastCommitOnBranch({ user: username, name: reponame, branch: branchName })
@@ -239,13 +232,15 @@ router
   .get('/:repositoryId/pulls/diffs', (req, res, next) => {
     const { repositoryId } = req.params;
     const { fromBranch, toBranch } = req.query;
-    pullsService.getPullData(repositoryId, fromBranch, toBranch)
+    pullsService
+      .getPullData(repositoryId, fromBranch, toBranch)
       .then(data => res.send(data))
       .catch(next);
   })
   .get('/:repositoryId/pulls', (req, res, next) => {
     const { repositoryId } = req.params;
-    pullsService.getPulls(repositoryId)
+    pullsService
+      .getPulls(repositoryId)
       .then(data => res.send(data))
       .catch(next);
   })
@@ -255,6 +250,5 @@ router
       .then(data => res.send(data))
       .catch(next);
   });
-
 
 module.exports = router;
