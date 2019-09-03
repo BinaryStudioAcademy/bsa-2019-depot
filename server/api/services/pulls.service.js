@@ -5,6 +5,7 @@ const repoRepository = require('../../data/repositories/repository.repository');
 const commitRepository = require('../../data/repositories/commit.repository');
 const userRepository = require('../../data/repositories/user.repository');
 const pullRepository = require('../../data/repositories/pull-request.repository');
+const prStatusRepository = require('../../data/repositories/pr-status.repository');
 const repoHelper = require('../../helpers/repo.helper');
 const CustomError = require('../../helpers/error.helper');
 
@@ -22,10 +23,8 @@ const getDiffCommits = async (pathToRepo, fromBranch, toBranch) => {
     walker.start();
   });
 
-  const fromBranchCommits = await repo.getBranchCommit(fromBranch)
-    .then(setListeners);
-  const toBranchCommits = await repo.getBranchCommit(toBranch)
-    .then(setListeners);
+  const fromBranchCommits = await repo.getBranchCommit(fromBranch).then(setListeners);
+  const toBranchCommits = await repo.getBranchCommit(toBranch).then(setListeners);
 
   const fromBranchShas = fromBranchCommits.map(commit => commit.sha());
   const toBranchShas = toBranchCommits.map(commit => commit.sha());
@@ -81,6 +80,40 @@ const getRepoPullByNumber = async (username, reponame, number) => {
 
 const updatePullById = ({ id, ...pullData }) => pullRepository.updatePullById(id, pullData);
 
+const closePullById = async (id) => {
+  const status = await prStatusRepository.getByName('CLOSED');
+  const { id: statusId } = status.get({ plain: true });
+  return pullRepository.setStatusById(id, statusId);
+};
+
+const reopenPullById = async (id) => {
+  const status = await prStatusRepository.getByName('OPEN');
+  const { id: statusId } = status.get({ plain: true });
+  return pullRepository.setStatusById(id, statusId);
+};
+
+const mergePullById = async (id) => {
+  const status = await prStatusRepository.getByName('MERGED');
+  const { id: statusId } = status.get({ plain: true });
+  return pullRepository.setStatusById(id, statusId);
+};
+
+const getAuthorId = pullId => pullRepository.getAuthorId(pullId);
+
+const getRepoOwnerId = pullId => pullRepository.getRepoOwnerId(pullId);
+
+const getRepoByPullId = pullId => pullRepository.getRepoByPullId(pullId);
+
 module.exports = {
-  getPulls, addPull, getPullData, getRepoPullByNumber, updatePullById
+  getPulls,
+  addPull,
+  getPullData,
+  getRepoPullByNumber,
+  updatePullById,
+  closePullById,
+  getAuthorId,
+  getRepoOwnerId,
+  reopenPullById,
+  mergePullById,
+  getRepoByPullId
 };

@@ -89,6 +89,47 @@ class PullRepository extends BaseRepository {
       plain: true
     });
   }
+
+  setStatusById(id, statusId) {
+    return this.model.update(
+      { statusId },
+      {
+        where: { id },
+        returning: true,
+        plain: true
+      }
+    );
+  }
+
+  getPullById(id) {
+    return this.model.findOne({ where: { id } });
+  }
+
+  async getAuthorId(pullId) {
+    const pull = await this.getPullById(pullId);
+    const { userId: authorId } = pull.get({ plain: true });
+    return authorId;
+  }
+
+  async getRepoOwnerId(pullId) {
+    const pull = await this.getPullById(pullId);
+    const { repositoryId } = pull.get({ plain: true });
+    const repo = await RepositoryModel.findOne({ where: { id: repositoryId } });
+    const { userId } = repo.get({ plain: true });
+    return userId;
+  }
+
+  getRepoByPullId(id) {
+    return this.model.findOne({
+      where: { id },
+      include: [
+        {
+          model: RepositoryModel,
+          attributes: ['id']
+        }
+      ]
+    });
+  }
 }
 
 module.exports = new PullRepository(PullRequestModel);

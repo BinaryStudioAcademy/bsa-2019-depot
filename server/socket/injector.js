@@ -3,7 +3,7 @@ const issuesSocketInjector = issuesNsp => (req, res, next) => {
   next();
 };
 const pullsSocketInjector = pullsNsp => (req, res, next) => {
-  req.pulsNsp = pullsNsp;
+  req.pullsNsp = pullsNsp;
   next();
 };
 const commitsSocketInjector = commitsNsp => (req, res, next) => {
