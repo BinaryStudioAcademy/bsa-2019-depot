@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
-const { UserModel } = require('../models/index');
+const { UserModel, IssueModel } = require('../models/index');
 const cryptoHelper = require('../../helpers/crypto.helper');
 const sequelize = require('../db/connection');
 
@@ -71,6 +71,17 @@ class UserRepository extends BaseRepository {
           [Op.iLike]: `%${username}%`
         },
         type: 'USER'
+      }
+    });
+  }
+
+  getIssuesAuthors(repositoryId) {
+    return this.model.findAll({
+      attributes: ['id', 'username', 'imgUrl'],
+      include: {
+        model: IssueModel,
+        where: { repositoryId },
+        attributes: []
       }
     });
   }
