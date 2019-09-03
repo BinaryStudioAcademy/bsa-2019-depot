@@ -79,6 +79,8 @@ const getRepoPullByNumber = async (username, reponame, number) => {
   return repoIssue || Promise.reject(new CustomError(404, `Pull-request number ${number} not found`));
 };
 
+const updatePullById = ({ id, ...pullData }) => pullRepository.updatePullById(id, pullData);
+
 module.exports = {
-  getPulls, addPull, getPullData, getRepoPullByNumber
+  getPulls, addPull, getPullData, getRepoPullByNumber, updatePullById
 };

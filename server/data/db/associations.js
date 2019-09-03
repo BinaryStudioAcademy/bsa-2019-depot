@@ -33,7 +33,7 @@ module.exports = (models) => {
   Repository.hasMany(Issue, { foreignKey: 'repositoryId' });
   Repository.hasMany(PullRequest, { foreignKey: 'repositoryId' });
   Issue.hasMany(IssueComment, { onDelete: 'cascade' });
-  PullRequest.hasMany(PullComment, { onDelete: 'cascade' });
+  PullRequest.hasMany(PullComment, { foreignKey: 'pullId', onDelete: 'cascade' });
 
   User.hasMany(OrgUser, { foreignKey: 'userId' });
   User.hasMany(OrgUser, { foreignKey: 'orgId' });
@@ -84,7 +84,7 @@ module.exports = (models) => {
   PullRequest.belongsTo(Branch, { as: 'fromBranch', foreignKey: 'fromBranchId' });
   PullRequest.belongsTo(Branch, { as: 'toBranch', foreignKey: 'toBranchId' });
   PullComment.belongsTo(User);
-  PullComment.belongsTo(PullRequest);
+  PullComment.belongsTo(PullRequest, { as: 'pull' });
   Star.belongsTo(Repository);
   Star.belongsTo(User);
 

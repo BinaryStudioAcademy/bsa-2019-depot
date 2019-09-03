@@ -81,6 +81,14 @@ class PullRepository extends BaseRepository {
       ]
     });
   }
+
+  updatePullById(id, data) {
+    return this.model.update(data, {
+      where: { id },
+      returning: true,
+      plain: true
+    });
+  }
 }
 
 module.exports = new PullRepository(PullRequestModel);

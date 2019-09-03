@@ -41,3 +41,12 @@ export const getPullComments = async pullId => {
   });
   return response.json();
 };
+
+export const updatePull = async request => {
+  const response = await callWebApi({
+    endpoint: '/api/pulls',
+    type: 'PUT',
+    request
+  });
+  return response.json();
+};

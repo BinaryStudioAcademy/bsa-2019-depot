@@ -19,4 +19,11 @@ router.get('/:pullId/comments', (req, res, next) => {
     .catch(next);
 });
 
+router.put('/', (req, res, next) => {
+  pullService
+    .updatePullById({ ...req.body })
+    .then(data => res.send({ data }))
+    .catch(next);
+});
+
 module.exports = router;

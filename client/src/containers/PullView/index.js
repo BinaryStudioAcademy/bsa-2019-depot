@@ -8,8 +8,8 @@ import { Switch, Route, Link } from 'react-router-dom';
 import IssuePrHeader from '../../components/IssuePrHeader';
 import PrCommits from '../PrCommits';
 
-import { getPullByNumber, getPullComments, getBranchDiffs } from '../../services/pullsService';
-import { updatePullComment } from '../../services/pullCommentsService';
+import { getPullByNumber, getPullComments, getBranchDiffs, updatePull } from '../../services/pullsService';
+// import { updatePullComment } from '../../services/pullCommentsService';
 import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 
 import styles from './styles.module.scss';
@@ -37,22 +37,22 @@ class PullView extends React.Component {
       toBranch: { name: toBranch }
     } = currentPull;
     const { commits } = await getBranchDiffs(repositoryId, { fromBranch, toBranch });
-    // const { id } = currentPull;
-    //const pullComments = await getPullComments(id);
-    //console.log(pullComments);
+    const { id } = currentPull;
+    const pullComments = await getPullComments(id);
     const isAccessGranted = await getWriteUserPermissions(username, reponame, userId);
     this.setState({
       currentPull,
       commitsCount: commits.length,
-      //pullComments,
+      pullComments,
       isAccessGranted,
       loading: false
     });
     //this.initSocket();
   }
 
-  onPullUpdateTitle = (id, comment) => {
-    return updatePullComment({ id, comment });
+  onPullUpdateTitle = async (title) => {
+    const { id, body } = this.state.currentPull;
+    return await updatePull({ id, title, body });
   };
 
   isOwnPull = () => {
@@ -118,9 +118,7 @@ class PullView extends React.Component {
       location: { pathname }
     } = this.props;
 
-    const { currentPull, loading, commitsCount } = this.state;
-    const pullComments = [];
-
+    const { currentPull, loading, commitsCount, pullComments } = this.state;
     const baseUrl = match.url;
     const activePage = pathname.split('/')[5];
 
@@ -160,12 +158,12 @@ class PullView extends React.Component {
         <div className="ui top attached tabular menu">
           <div className={`${activeTab === 'conversation' && 'active'} item`}>
             <Link to={baseUrl}>
-              Conversation <Label circular>{pullComments.length}</Label>
+              Conversation <Label circular>{pullComments.data.length}</Label>
             </Link>
           </div>
           <div className={`${activeTab === 'commits' && 'active'} item`}>
             <Link to={`${baseUrl}/commits`}>
-              Commits<Label circular>{0}</Label>
+              Commits<Label circular>{commitsCount}</Label>
             </Link>
           </div>
           <div className={`${activeTab === 'files-changed' && 'active'} item`}>
