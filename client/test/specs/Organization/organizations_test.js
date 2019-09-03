@@ -23,7 +23,6 @@ describe('Organizations  ', () => {
 
   it('should create repository in organization', () => {
     menuSteps.navigateToNewOrganization();
-    //Dasha camelCase please, always
     OrgSteps.enternameofneworg(credentials.org.neworgname1);
     OrgSteps.enteremailofneworg(credentials.org.neworgemail1);
     OrgSteps.saveneworgbutton();

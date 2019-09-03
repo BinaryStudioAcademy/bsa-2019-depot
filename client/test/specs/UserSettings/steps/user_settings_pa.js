@@ -1,17 +1,7 @@
 const SettingsPages = require('../pages/user_settings_po');
 
 class SettingsSteps {
-  fillUpUserProfile(info) {
-    //here waitForDisplayed of whole form - container for all the inputs
-    this.enterName(info.profileSettings.name);
-    this.enterBio(info.profileSettings.bio);
-    this.enterUrl(info.profileSettings.url);
-    this.enterCompany(info.profileSettings.company);
-    this.enterLocation(info.profileSettings.location);
-  }
-
   enterName(name) {
-    //delete this wait, cuz we'll wait for whole form
     SettingsPages.nameInput.waitForDisplayed(2000);
     SettingsPages.nameInput.clearValue();
     SettingsPages.nameInput.setValue(name);
@@ -38,7 +28,6 @@ class SettingsSteps {
   }
 
   updateProfileBtn() {
-    //always wait to be displayed etc
     SettingsPages.updateProfileButton.click();
   }
 

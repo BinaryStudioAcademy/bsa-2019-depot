@@ -13,9 +13,6 @@ describe('Repositories  ', () => {
   });
 
   afterEach(() => {
-    //postconditions shall be here
-    // repoSteps.navigateToRepoSettings();
-    // repoSteps.deleteRepo();
     browser.reloadSession();
   });
 
