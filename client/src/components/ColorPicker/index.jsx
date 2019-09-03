@@ -33,8 +33,7 @@ class ColorPicker extends React.Component {
           height: '40px'
         },
         label: {
-          fontWeight: 'bold',
-          marginBottom: '.6em'
+          fontWeight: 'bold'
         },
         color: {
           height: '100%',
@@ -44,6 +43,7 @@ class ColorPicker extends React.Component {
         swatch: {
           width: '100%',
           height: '36px',
+          marginTop: '0.3em',
           padding: '5px',
           borderRadius: '3px',
           boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
@@ -66,7 +66,7 @@ class ColorPicker extends React.Component {
 
     return (
       <div style={styles.wrapper}>
-        <p style={styles.label}>or choose it</p>
+        <label style={styles.label}>or choose it</label>
         <div style={styles.swatch} onClick={this.handleClick}>
           <div style={styles.color} />
         </div>
