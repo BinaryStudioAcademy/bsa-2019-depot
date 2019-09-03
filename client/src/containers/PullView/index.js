@@ -1,47 +1,127 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Label, Icon, Container } from 'semantic-ui-react';
-import { Switch, Route, Link, withRouter } from 'react-router-dom';
+import { Label, Icon, Container, Loader } from 'semantic-ui-react';
+import { Switch, Route, Link } from 'react-router-dom';
 
 import IssuePrHeader from '../../components/IssuePrHeader';
 import PrCommits from '../PrCommits';
 
+import { getPullByNumber, getPullComments, getBranchDiffs, updatePull } from '../../services/pullsService';
+// import { updatePullComment } from '../../services/pullCommentsService';
+import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
+
 import styles from './styles.module.scss';
 
 class PullView extends React.Component {
-  onPullUpdateTitle = () => {};
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentPull: {},
+      commitsCount: 0,
+      loading: true
+    };
+  }
+  async componentDidMount() {
+    const {
+      match: {
+        params: { username, reponame, number }
+      },
+      repositoryId,
+      userId
+    } = this.props;
+    const currentPull = await getPullByNumber(username, reponame, number);
+    const {
+      fromBranch: { name: fromBranch },
+      toBranch: { name: toBranch }
+    } = currentPull;
+    const { commits } = await getBranchDiffs(repositoryId, { fromBranch, toBranch });
+    const { id } = currentPull;
+    const pullComments = await getPullComments(id);
+    const isAccessGranted = await getWriteUserPermissions(username, reponame, userId);
+    this.setState({
+      currentPull,
+      commitsCount: commits.length,
+      pullComments,
+      isAccessGranted,
+      loading: false
+    });
+    //this.initSocket();
+  }
+
+  onPullUpdateTitle = async (title) => {
+    const { id, body } = this.state.currentPull;
+    return await updatePull({ id, title, body });
+  };
+
   isOwnPull = () => {
-    return true;
+    const { userId } = this.props;
+    const { userId: pullUserId } = this.state.currentPull;
+    const { isAccessGranted } = this.state;
+    return userId === pullUserId || isAccessGranted;
   };
 
   getStatusColor = status => {
-    return 'green';
+    let color;
+    switch (status) {
+    case 'OPEN':
+      color = 'green';
+      break;
+    case 'CLOSED':
+      color = '#ED1A37';
+      break;
+    case 'MERGED':
+      color = '#6f42c1';
+      break;
+    default:
+      color = 'green';
+    }
+    return color;
   };
 
-  getStatusText = status => {
-    return 'Opened';
+  getStatusText = commitsCount => {
+    const {
+      toBranch: { name: toBranch },
+      fromBranch: { name: fromBranch },
+      updatedAt,
+      createdAt,
+      prstatus: { name }
+    } = this.state.currentPull;
+
+    let statusText = '';
+    switch (name) {
+    case 'OPEN':
+      statusText = `wants to merge ${commitsCount} commit into ${toBranch} from ${fromBranch} · ${moment(
+        createdAt
+      ).fromNow()}`;
+      break;
+    case 'CLOSED':
+      statusText = `$wants to merge ${commitsCount} commit into ${toBranch} from ${fromBranch} · ${moment(
+        updatedAt
+      ).fromNow()}`;
+      break;
+    case 'MERGED':
+      statusText = `$merged ${commitsCount} commit into ${toBranch} from ${fromBranch} · ${moment(
+        updatedAt
+      ).fromNow()}`;
+      break;
+    default:
+      statusText = 'green';
+    }
+    return statusText;
   };
+
   render() {
     const {
       match,
       location: { pathname }
     } = this.props;
 
-    const currentPull = {
-      title: 'test pr',
-      number: '1',
-      status: 'OPEN',
-      user: {
-        username: 'user0'
-      }
-    };
-    const pullComments = [];
-
-    const status = this.getStatusText();
-
+    const { currentPull, loading, commitsCount, pullComments } = this.state;
     const baseUrl = match.url;
-    const activePage = pathname.split('/')[3];
+    const activePage = pathname.split('/')[5];
+
     let activeTab;
     switch (activePage) {
     case 'conversation':
@@ -57,7 +137,7 @@ class PullView extends React.Component {
       activeTab = 'conversation';
     }
 
-    return (
+    return !loading ? (
       <div>
         <IssuePrHeader
           title={currentPull.title}
@@ -67,25 +147,23 @@ class PullView extends React.Component {
           isIssue={false}
         />
         <div>
-          <Label color={this.getStatusColor()} className={styles.pull_label}>
-            <Icon name="exclamation circle" /> {status}
+          <Label color={this.getStatusColor(currentPull.prstatus.name)} className={styles.pull_label}>
+            <Icon name="exclamation circle" /> {currentPull.prstatus.name}
           </Label>
           <span className={styles.comment_author_name}>
             {`${currentPull.user.username} `}
-            <span>{`${status.toLowerCase()} this pull-request ${moment(currentPull.createdAt).fromNow()} · ${
-              pullComments.length
-            } comments`}</span>
+            <span>{this.getStatusText(commitsCount)}</span>
           </span>
         </div>
         <div className="ui top attached tabular menu">
           <div className={`${activeTab === 'conversation' && 'active'} item`}>
             <Link to={baseUrl}>
-              Conversation <Label circular>{pullComments.length}</Label>
+              Conversation <Label circular>{pullComments.data.length}</Label>
             </Link>
           </div>
           <div className={`${activeTab === 'commits' && 'active'} item`}>
             <Link to={`${baseUrl}/commits`}>
-              Commits<Label circular>{0}</Label>
+              Commits<Label circular>{commitsCount}</Label>
             </Link>
           </div>
           <div className={`${activeTab === 'files-changed' && 'active'} item`}>
@@ -101,6 +179,8 @@ class PullView extends React.Component {
           </Switch>
         </Container>
       </div>
+    ) : (
+      <Loader active />
     );
   }
 }
@@ -112,7 +192,23 @@ PullView.propTypes = {
     path: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired
   }).isRequired,
-  location: PropTypes.object
+  location: PropTypes.object,
+  repositoryId: PropTypes.string,
+  userId: PropTypes.string
 };
 
-export default withRouter(PullView);
+const mapStateToProps = ({
+  currentRepo: {
+    repository: {
+      currentRepoInfo: { id }
+    }
+  },
+  profile: {
+    currentUser: { id: userId }
+  }
+}) => ({
+  repositoryId: id,
+  userId
+});
+
+export default connect(mapStateToProps)(PullView);

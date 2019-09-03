@@ -6,6 +6,7 @@ const commitRepository = require('../../data/repositories/commit.repository');
 const userRepository = require('../../data/repositories/user.repository');
 const pullRepository = require('../../data/repositories/pull-request.repository');
 const repoHelper = require('../../helpers/repo.helper');
+const CustomError = require('../../helpers/error.helper');
 
 const getDiffCommits = async (pathToRepo, fromBranch, toBranch) => {
   const repo = await NodeGit.Repository.open(pathToRepo);
@@ -73,4 +74,13 @@ const getPulls = async (repoId) => {
 
 const addPull = pullData => pullRepository.addPull(pullData);
 
-module.exports = { getPulls, addPull, getPullData };
+const getRepoPullByNumber = async (username, reponame, number) => {
+  const repoIssue = await pullRepository.getRepoPullByNumber(username, reponame, number);
+  return repoIssue || Promise.reject(new CustomError(404, `Pull-request number ${number} not found`));
+};
+
+const updatePullById = ({ id, ...pullData }) => pullRepository.updatePullById(id, pullData);
+
+module.exports = {
+  getPulls, addPull, getPullData, getRepoPullByNumber, updatePullById
+};

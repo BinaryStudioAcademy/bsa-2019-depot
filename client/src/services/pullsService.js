@@ -25,3 +25,28 @@ export const createPull = async request => {
   });
   return response.json();
 };
+
+export const getPullByNumber = async (username, reponame, number) => {
+  const response = await callWebApi({
+    endpoint: `/api/users/${username}/repos/${reponame}/pulls/${number}`,
+    type: 'GET'
+  });
+  return response.json();
+};
+
+export const getPullComments = async pullId => {
+  const response = await callWebApi({
+    endpoint: `/api/pulls/${pullId}/comments`,
+    type: 'GET'
+  });
+  return response.json();
+};
+
+export const updatePull = async request => {
+  const response = await callWebApi({
+    endpoint: '/api/pulls',
+    type: 'PUT',
+    request
+  });
+  return response.json();
+};

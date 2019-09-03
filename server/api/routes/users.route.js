@@ -18,6 +18,7 @@ const { getReposData, getByUserAndReponame } = require('../services/repo.service
 const { getCommitsAndCreatedRepoByDate } = require('../services/commit.service');
 const { getKeysByUser } = require('../services/ssh-key.service');
 const { getRepoIssueByNumber } = require('../services/issue.service');
+const { getRepoPullByNumber } = require('../services/pulls.service');
 const { getAllIssues, getAllIssuesCount, getAllIssuesOwners } = require('../services/issue.service');
 const { getUserByUsername } = require('../services/user.service');
 const { clientUrl } = require('../../config/common.config');
@@ -165,6 +166,13 @@ router.get('/:username/issues', (req, res, next) => {
 router.get('/:username/repos/:reponame/issues/:number', (req, res, next) => {
   const { username, reponame, number } = req.params;
   getRepoIssueByNumber(username, reponame, number)
+    .then(result => res.send(result))
+    .catch(next);
+});
+
+router.get('/:username/repos/:reponame/pulls/:number', (req, res, next) => {
+  const { username, reponame, number } = req.params;
+  getRepoPullByNumber(username, reponame, number)
     .then(result => res.send(result))
     .catch(next);
 });
