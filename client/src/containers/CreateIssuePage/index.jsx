@@ -4,12 +4,16 @@ import { connect } from 'react-redux';
 import { createIssue, fetchCurrentRepo } from '../../routines/routines';
 import { Container } from 'semantic-ui-react';
 import CreateIssuePrForm from '../../components/CreateIssuePrForm';
+import { getAllQuestionOnSO } from '../../services/issuesService';
 
 import styles from './styles.module.scss';
 
 class CreateIssuePage extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      question: null
+    }
 
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -25,6 +29,17 @@ class CreateIssuePage extends React.Component {
     if (!repositoryId) {
       fetchCurrentRepo({ username, reponame });
     }
+    const filter = {
+      key: 'K)aMbXa)izv27xUSCXUW8A((',
+      intitle: 'How to fetch an API in reactJs',
+      site: 'stackoverflow',
+      pagesize: 50,
+      tagged: 'reactjs',
+      sort: 'activity',
+      order: 'asc'
+    };
+    getAllQuestionOnSO(filter)
+      .then(question => this.setState({ question }));
   }
 
   onSubmit(title, body) {
@@ -43,6 +58,7 @@ class CreateIssuePage extends React.Component {
       repositoryId,
       isOpened: true
     });
+
     const newUrl = url
       .split('/')
       .slice(0, -1)
@@ -51,6 +67,7 @@ class CreateIssuePage extends React.Component {
   }
 
   render() {
+    console.log(this.state.question);
     return (
       <Container className={styles.issueFormContainer}>
         <CreateIssuePrForm isIssues onSubmit={this.onSubmit}/>

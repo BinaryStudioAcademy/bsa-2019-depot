@@ -89,3 +89,17 @@ export const getAllIssues = async (username, params) => {
   });
   return response.json();
 };
+
+export const getAllQuestionOnSO = params => {
+  // fetch('https://api.stackexchange.com//2.2/search?order=desc&sort=activity&intitle=install nvm&site=stackoverflow')
+  //   .then(data => data.json()).then(console.log)
+  return callWebApi({
+    endpoint: 'https://api.stackexchange.com/2.2/search?order=desc&sort=activity&intitle=install&site=stackoverflow',
+    type: 'GET',
+    // skipAuthorization: true,
+    mode: 'cors'
+    // query: params
+  });
+
+  // return response.json();
+};

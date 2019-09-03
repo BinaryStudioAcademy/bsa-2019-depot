@@ -6,6 +6,7 @@ function getFetchUrl(args) {
 }
 
 function getFetchArgs(args) {
+  console.log(args);
   const headers = {};
   if (!args.attachment) {
     headers['Content-Type'] = 'application/json';
@@ -30,10 +31,11 @@ function getFetchArgs(args) {
     body = JSON.stringify(args.request);
   }
   return {
+    ...(args.request === 'GET' ? {} : { body }),
     method: args.type,
     headers,
     signal: args.ct,
-    ...(args.request === 'GET' ? {} : { body })
+    mode: args.mode || 'cors'
   };
 }
 
@@ -55,6 +57,7 @@ export function handleError(err) {
 
 export default async function callWebApi(args) {
   try {
+    console.log(getFetchUrl(args), getFetchArgs(args));
     const res = await fetch(getFetchUrl(args), getFetchArgs(args));
     if (args.endpoint !== '/api/auth/user') await throwIfResponseFailed(res);
     return res;
