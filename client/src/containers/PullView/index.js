@@ -6,13 +6,14 @@ import { Label, Icon, Container, Loader } from 'semantic-ui-react';
 import { Switch, Route, Link } from 'react-router-dom';
 
 import IssuePrHeader from '../../components/IssuePrHeader';
-import PrCommits from '../PrCommits';
+import CommitsList from '../../components/CommitsList';
 
 import { getPullByNumber, getPullComments, getBranchDiffs, updatePull } from '../../services/pullsService';
 // import { updatePullComment } from '../../services/pullCommentsService';
 import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 
 import styles from './styles.module.scss';
+import PrDiffs from '../PrDiffs';
 
 class PullView extends React.Component {
   constructor(props) {
@@ -22,6 +23,8 @@ class PullView extends React.Component {
       commitsCount: 0,
       loading: true
     };
+
+    this.renderComponent = this.renderComponent.bind(this);
   }
   async componentDidMount() {
     const {
@@ -36,14 +39,17 @@ class PullView extends React.Component {
       fromBranch: { name: fromBranch },
       toBranch: { name: toBranch }
     } = currentPull;
-    const { commits } = await getBranchDiffs(repositoryId, { fromBranch, toBranch });
+    const { diffs, commits } = await getBranchDiffs(repositoryId, { fromBranch, toBranch });
     const { id } = currentPull;
     const pullComments = await getPullComments(id);
     const isAccessGranted = await getWriteUserPermissions(username, reponame, userId);
     this.setState({
       currentPull,
+      filesCount: diffs.split('diff --git').length - 1,
       commitsCount: commits.length,
+      pullCommits: commits,
       pullComments,
+      pullDiffs: diffs,
       isAccessGranted,
       loading: false
     });
@@ -112,13 +118,17 @@ class PullView extends React.Component {
     return statusText;
   };
 
+  renderComponent(Component, props) {
+    return <Component {...props} />;
+  }
+
   render() {
     const {
       match,
       location: { pathname }
     } = this.props;
 
-    const { currentPull, loading, commitsCount, pullComments } = this.state;
+    const { currentPull, loading, filesCount, commitsCount, pullCommits, pullComments, pullDiffs } = this.state;
     const baseUrl = match.url;
     const activePage = pathname.split('/')[5];
 
@@ -168,14 +178,16 @@ class PullView extends React.Component {
           </div>
           <div className={`${activeTab === 'files-changed' && 'active'} item`}>
             <Link to={`${baseUrl}/files-changed`}>
-              Files changed<Label circular>{0}</Label>
+              Files changed<Label circular>{filesCount}</Label>
             </Link>
           </div>
         </div>
         <Container className={styles.contentContainer}>
           <Switch>
-            <Route exact path={`${match.path}/commits`} component={PrCommits} />
-            <Route exact path={`${match.path}/files-changed`} component={null} />
+            {/* eslint-disable-next-line react/jsx-no-bind */}
+            <Route exact path={`${match.path}/commits`} render={() => this.renderComponent(CommitsList, { commits: pullCommits })}/>
+            {/* eslint-disable-next-line react/jsx-no-bind */}
+            <Route exact path={`${match.path}/files-changed`} render={() => this.renderComponent(PrDiffs, { diffs: pullDiffs })} />
           </Switch>
         </Container>
       </div>

@@ -13,7 +13,7 @@ const DiffList = ({ diffs }) => {
 
   const renderHunk = (newPath, hunk) => [
     <Decoration key={hunk.content} className="diff-filename">
-      {newPath}
+      <span id={newPath}>{newPath}</span>
     </Decoration>,
     <Decoration key={`decoration-${hunk.content}`}>{hunk.content}</Decoration>,
     <Hunk key={hunk.content + Math.random()} hunk={hunk} />
