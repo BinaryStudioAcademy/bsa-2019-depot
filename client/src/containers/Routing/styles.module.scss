@@ -2,21 +2,27 @@
   min-height: 100%;
   margin: 0;
   padding: 0;
-  &:global(.auth-wrapper) {
-    height: 100%;
-  }
+  display: flex;
+  flex-direction: column;
   > :global(.content) {
     height: 100%;
     grid-row-start: 1;
-    display: flex;
-    flex-direction: column;
+    flex: 1 0 auto;
   }
   > :global(.ui.container) {
-    grid-row-start: 2;
-    grid-row-end: 3;
+    flex-shrink: 0;
 
     > :global(.ui.centered.grid) {
       margin: 0;
+    }
+  }
+  &:global(.auth-wrapper) {
+    > :global(.content) {
+      display: flex;
+      flex-direction: column;
+      > :global(.ui.center.grid) {
+        flex: 1 0 auto;
+      }
     }
   }
 }
