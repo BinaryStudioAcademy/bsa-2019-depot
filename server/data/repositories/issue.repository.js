@@ -238,6 +238,16 @@ class IssueRepository extends BaseRepository {
           ]
         ]
       },
+      include: [
+        {
+          model: UserModel,
+          attributes: ['username']
+        },
+        {
+          model: RepositoryModel,
+          attributes: ['name']
+        }
+      ],
       order: parseSortQuery(sort)
     });
   }
