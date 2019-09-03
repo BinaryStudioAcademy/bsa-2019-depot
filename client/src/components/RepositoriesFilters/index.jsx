@@ -20,13 +20,13 @@ export class RepositoriesFilters extends React.Component {
       { key: 'lt_3', text: 'CSS', value: 'CSS' }
     ];
 
-    const { orgPage, isOwner, orgName, getCurrentRepoFilter } = this.props;
+    const { orgPage, isOwner, orgName, getCurrentRepoFilter, filter } = this.props;
 
     return (
       <Container className={styles.repos_filters}>
         <Input placeholder="Find a repository…" className={styles.repos_search_input} />
         <div>
-          <Dropdown fluid selection className={styles.repos_filters_dropdown} text="Type: All">
+          <Dropdown fluid selection className={styles.repos_filters_dropdown} text={`Type: ${filter}`}>
             <Dropdown.Menu>
               {repoTypes.map(({ key, text, value }) => (
                 <Dropdown.Item key={key} text={text} value={value} onClick={getCurrentRepoFilter} />
@@ -66,6 +66,7 @@ RepositoriesFilters.propTypes = {
   orgPage: PropTypes.bool,
   isOwner: PropTypes.bool,
   orgName: PropTypes.string,
+  filter: PropTypes.string,
   getCurrentRepoFilter: PropTypes.func
 };
 

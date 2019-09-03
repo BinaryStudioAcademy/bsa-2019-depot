@@ -17,21 +17,21 @@ const isAdminMiddleware = require('../middlewares/is-admin.middleware');
 
 const router = Router();
 
-router.get('/:orgID/users', isReaderMiddleware, (req, res, next) => {
+router.get('/:orgID/users', (req, res, next) => {
   const { orgID } = req.params;
   getOrganizationMembers(orgID)
     .then(data => res.send(data))
     .catch(next);
 });
 
-router.get('/:orgID/owner', isReaderMiddleware, (req, res, next) => {
+router.get('/:orgID/owner', (req, res, next) => {
   const { orgID } = req.params;
   getOrganizationOwner(orgID)
     .then(data => res.send(data))
     .catch(next);
 });
 
-router.post('/', isReaderMiddleware, (req, res, next) => {
+router.post('/', (req, res, next) => {
   const { username, email, userID } = req.body;
   createOrganization({ username, email, userID })
     .then(data => res.send(data))

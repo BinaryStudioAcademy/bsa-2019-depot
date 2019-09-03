@@ -44,27 +44,24 @@ class CompareChanges extends React.Component {
     const { fromBranch, toBranch } = this.state;
 
     this.setState({ loading: true });
-    getBranchDiffs(repositoryId, { fromBranch, toBranch })
-      .then(({ diffs, commits }) => {
-        const numOfFiles = diffs.split('diff --git').length - 1;
-        const numOfCommitComments = commits.reduce((counter, commit) => counter += commit.commitComments.length, 0);
-        const contributors = new Set(commits.map(({ user }) => user.username));
-        const commitComments = commits.flatMap(commit =>
-          commit.commitComments.map(comment =>
-            ({ ...comment, commitSha: commit.sha })
-          )
-        );
-        this.setState({
-          loading: false,
-          diffs,
-          commits,
-          commitComments,
-          numOfCommits: commits.length,
-          numOfFiles,
-          numOfCommitComments,
-          numOfContributors: contributors.size
-        });
+    getBranchDiffs(repositoryId, { fromBranch, toBranch }).then(({ diffs, commits }) => {
+      const numOfFiles = diffs.split('diff --git').length - 1;
+      const numOfCommitComments = commits.reduce((counter, commit) => (counter += commit.commitComments.length), 0);
+      const contributors = new Set(commits.map(({ user }) => user.username));
+      const commitComments = commits.flatMap(commit =>
+        commit.commitComments.map(comment => ({ ...comment, commitSha: commit.sha }))
+      );
+      this.setState({
+        loading: false,
+        diffs,
+        commits,
+        commitComments,
+        numOfCommits: commits.length,
+        numOfFiles,
+        numOfCommitComments,
+        numOfContributors: contributors.size
       });
+    });
   }
 
   onToBranchChange(event, { value }) {
@@ -85,7 +82,7 @@ class CompareChanges extends React.Component {
     const { fromBranch, toBranch } = this.state;
 
     const { id: fromBranchId, headCommitId: fromCommitId } = branches.find(({ name }) => name === fromBranch);
-    const { id: toBranchId, headCommitId: toCommitId }  = branches.find(({ name }) => name === toBranch);
+    const { id: toBranchId, headCommitId: toCommitId } = branches.find(({ name }) => name === toBranch);
 
     const request = {
       title,
@@ -99,11 +96,10 @@ class CompareChanges extends React.Component {
     };
 
     this.setState({ loading: true });
-    createPull(request)
-      .then(() => {
-        this.setState({ loading: false });
-        history.push(`/${username}/${reponame}/pulls`);
-      });
+    createPull(request).then(() => {
+      this.setState({ loading: false });
+      history.push(`/${username}/${reponame}/pulls`);
+    });
   }
 
   getNounEnding(quantity) {
@@ -125,22 +121,18 @@ class CompareChanges extends React.Component {
     } = this.state;
     const { branches } = this.props;
 
-    const commentsList = commitComments && commitComments.length ? (
-      <Item.Group>
-        {commitComments.map(comment => (
-          <CommitCommentItem
-            comment={comment}
-            key={comment.id}
-            hash={comment.commitSha}
-            userId={comment.userId}
-          />
-        ))}
-      </Item.Group>
-    ) : (
-      <div className={styles.commentsInfo}>
-        <h3>No commit comments for this range</h3>
-      </div>
-    );
+    const commentsList =
+      commitComments && commitComments.length ? (
+        <Item.Group>
+          {commitComments.map(comment => (
+            <CommitCommentItem comment={comment} key={comment.id} hash={comment.commitSha} userId={comment.userId} />
+          ))}
+        </Item.Group>
+      ) : (
+        <div className={styles.commentsInfo}>
+          <h3>No commit comments for this range</h3>
+        </div>
+      );
 
     return (
       <>
@@ -155,40 +147,48 @@ class CompareChanges extends React.Component {
           onToBranchChange={this.onToBranchChange}
           onFromBranchChange={this.onFromBranchChange}
         />
-        {loading
-          ? <Loader active />
-          : (diffs && diffs.length
-            ? (
-              <>
-                <CreateIssuePrForm isIssues={false} onSubmit={this.onSubmit}/>
-                <Segment className={styles.pullStats}>
-                  <div className={styles.pullStatSection}><Octicon icon={GitCommit}/><b>{numOfCommits}</b> commit{this.getNounEnding(numOfCommits)}</div>
-                  <div className={styles.pullStatSection}><Octicon icon={Diff}/><b>{numOfFiles}</b> file{this.getNounEnding(numOfFiles)} changed</div>
-                  <div className={styles.pullStatSection}><Octicon icon={Comment}/><b>{numOfCommitComments}</b> commit comment{this.getNounEnding(numOfCommitComments)}</div>
-                  <div className={styles.pullStatSection}><Octicon icon={Organization}/><b>{numOfContributors}</b> contributor{this.getNounEnding(numOfContributors)}</div>
-                </Segment>
-                <CommitList commits={commits}/>
-                <DiffList diffs={diffs}/>
-                {commentsList}
-              </>
-            )
-            : (
-              <div className={styles.diffInfo}>
-                <h3>There isn’t anything to compare.</h3>
-                <p>
-                  {fromBranch === toBranch
-                    ? 'You’ll need to use two different branch names to get a valid comparison.'
-                    : (
-                        <>
-                          <b>{toBranch}</b> is up to date with all commits from <b>{fromBranch}</b>. Try switching the base for your comparison.
-                        </>
-                    )
-                  }
-                </p>
+        {loading ? (
+          <Loader active />
+        ) : diffs && diffs.length ? (
+          <>
+            <CreateIssuePrForm isIssues={false} onSubmit={this.onSubmit} />
+            <Segment className={styles.pullStats}>
+              <div className={styles.pullStatSection}>
+                <Octicon icon={GitCommit} />
+                <b>{numOfCommits}</b> commit{this.getNounEnding(numOfCommits)}
               </div>
-            )
-          )
-        }
+              <div className={styles.pullStatSection}>
+                <Octicon icon={Diff} />
+                <b>{numOfFiles}</b> file{this.getNounEnding(numOfFiles)} changed
+              </div>
+              <div className={styles.pullStatSection}>
+                <Octicon icon={Comment} />
+                <b>{numOfCommitComments}</b> commit comment{this.getNounEnding(numOfCommitComments)}
+              </div>
+              <div className={styles.pullStatSection}>
+                <Octicon icon={Organization} />
+                <b>{numOfContributors}</b> contributor{this.getNounEnding(numOfContributors)}
+              </div>
+            </Segment>
+            <CommitList commits={commits} />
+            <DiffList diffs={diffs} />
+            {commentsList}
+          </>
+        ) : (
+          <div className={styles.diffInfo}>
+            <h3>There isn’t anything to compare.</h3>
+            <p>
+              {fromBranch === toBranch ? (
+                'You’ll need to use two different branch names to get a valid comparison.'
+              ) : (
+                <>
+                  <b>{toBranch}</b> is up to date with all commits from <b>{fromBranch}</b>. Try switching the base for
+                  your comparison.
+                </>
+              )}
+            </p>
+          </div>
+        )}
       </>
     );
   }
@@ -208,8 +208,14 @@ CompareChanges.propTypes = {
 };
 
 const mapStateToProps = ({
-  currentRepo: { repository: { currentRepoInfo: { id: repositoryId, branches } } },
-  profile: { currentUser: { id: userId } }
+  currentRepo: {
+    repository: {
+      currentRepoInfo: { id: repositoryId, branches }
+    }
+  },
+  profile: {
+    currentUser: { id: userId }
+  }
 }) => ({
   userId,
   repositoryId,

@@ -111,12 +111,12 @@ const checkFileExists = async (owner, reponame, branch, filepath) => {
   const pathToRepo = repoHelper.getPathToRepo(owner, reponame);
   const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
-  const entry = await lastCommitOnBranch.getEntry(filepath);
-  const blob = await entry.getBlob();
-  return {
-    content: blob.isBinary() ? blob.content() : blob.toString(),
-    size: blob.rawsize()
-  };
+  const tree = await lastCommitOnBranch.getTree();
+  const index = await repo.index();
+  await index.readTree(tree);
+
+  const file = index.getByPath(filepath, 0); // 0 === NodeGit.Index.STAGE.NORMAL, but this Enum doesn't work for some reason
+  return { isFilenameUnique: !file };
 };
 
 const getFileBlame = async ({

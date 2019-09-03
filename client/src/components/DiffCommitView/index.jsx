@@ -146,9 +146,11 @@ class DiffCommitView extends Component {
   async onSubmit() {
     const { body } = this.state;
     const { username, reponame, hash } = this.props.match.params;
+    const { id: userId } = this.props.currentUser;
     await commitsService.addCommitComment({
       username,
       reponame,
+      userId,
       hash,
       body
     });
@@ -231,7 +233,7 @@ class DiffCommitView extends Component {
     return (
       <div>
         {pageError}
-        <DiffList diffs={diffsData.diffs}/>
+        <DiffList diffs={diffsData.diffs} />
         <div className="comments-count">
           {`${comments ? comments.length : 0} comments on commit`}{' '}
           <Message compact>{match.params.hash.slice(0, 7)}</Message>
