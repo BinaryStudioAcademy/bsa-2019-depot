@@ -29,7 +29,7 @@ class ColorPicker extends React.Component {
       default: {
         wrapper: {
           paddingRight: '.5em',
-          width: '87px',
+          width: '90px',
           height: '40px'
         },
         label: {
