@@ -49,7 +49,7 @@ class BranchRepository extends BaseRepository {
   getAllRepoBranches(repositoryId) {
     return this.model.findAll({
       raw: true,
-      where: {repositoryId},
+      where: { repositoryId },
       attributes: {
         exclude: ['id']
       }

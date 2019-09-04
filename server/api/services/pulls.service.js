@@ -42,7 +42,7 @@ const getDiffCommits = async (pathToRepo, fromBranch, toBranch) => {
 };
 
 const getBranchDiffs = async (pathToRepo, fromBranch, toBranch) => {
-  const getDiffsCommand = `cd ${pathToRepo} && git diff -U1 ${toBranch}...${fromBranch}`;
+  const getDiffsCommand = `cd ${pathToRepo} && git diff -U1 ${toBranch}..${fromBranch}`;
   const diffsOutput = await exec(getDiffsCommand);
 
   if (diffsOutput.stderr) {
@@ -64,6 +64,62 @@ const getPullData = async (repoId, fromBranch, toBranch) => {
     diffs,
     commits
   };
+};
+
+const mergeBranches = async (id, authorId) => {
+  const {
+    repository: {
+      name: reponame,
+      user: {
+        username: repoOwner
+      }
+    },
+    fromBranch: {
+      name: fromBranchName
+    },
+    toBranch: {
+      name: toBranchName
+    },
+    number
+  } = await pullRepository.getPullById(id);
+  const { username: authorUsername, email: authorEmail } = await userRepository.getUserById(authorId);
+
+  const pathToRepo = repoHelper.getPathToRepo(repoOwner, reponame);
+  const repo = await NodeGit.Repository.open(pathToRepo);
+  const authorSignature = NodeGit.Signature.now(authorUsername, authorEmail);
+
+  const fromHeadCommit = await repo.getBranchCommit(fromBranchName);
+  const toHeadCommit = await repo.getBranchCommit(toBranchName);
+
+  const index = await NodeGit.Merge.commits(repo, toHeadCommit, fromHeadCommit, null);
+  const mergeCommitTreeId = await index.writeTreeTo(repo);
+  const mergeCommitTree = await repo.getTree(mergeCommitTreeId);
+
+  const mergeCommitId = await repo.createCommit(
+    `refs/heads/${toBranchName}`,
+    authorSignature,
+    authorSignature,
+    `Merge pull request #${number} from ${repoOwner}/${fromBranchName}`,
+    mergeCommitTree,
+    [toHeadCommit]
+  );
+
+  const mergeCommit = await repo.getCommit(mergeCommitId);
+
+  await repoHelper.syncDb(
+    [{
+      repoOwner,
+      reponame,
+      sha: mergeCommit.sha(),
+      message: mergeCommit.message(),
+      userEmail: authorEmail,
+      createdAt: new Date()
+    }],
+    {
+      name: toBranchName,
+      newHeadSha: mergeCommit.sha()
+    }
+  );
 };
 
 const getPulls = async (repoId) => {
@@ -92,7 +148,9 @@ const reopenPullById = async (id) => {
   return pullRepository.setStatusById(id, statusId);
 };
 
-const mergePullById = async (id) => {
+const mergePullById = async (id, userId) => {
+  await mergeBranches(id, userId);
+
   const status = await prStatusRepository.getByName('MERGED');
   const { id: statusId } = status.get({ plain: true });
   return pullRepository.setStatusById(id, statusId);

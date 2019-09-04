@@ -182,8 +182,7 @@ class CompareChanges extends React.Component {
                 'You’ll need to use two different branch names to get a valid comparison.'
               ) : (
                 <>
-                  <b>{toBranch}</b> is up to date with all commits from <b>{fromBranch}</b>. Try switching the base for
-                  your comparison.
+                  <b>{toBranch}</b> is up to date with <b>{fromBranch}</b>. Try switching the base for your comparison.
                 </>
               )}
             </p>

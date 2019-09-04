@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const { clientUrl } = require('../../config/common.config');
 const {
-   getUserInvitationStatus, acceptInvitation, declineInvitation, removeRepositoryCollaborator, addCollaborator, getUserRights
+  getUserInvitationStatus, acceptInvitation, declineInvitation, removeRepositoryCollaborator, addCollaborator, getUserRights
 } = require('../services/collaborator.service');
 
 const router = Router();

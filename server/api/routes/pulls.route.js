@@ -73,7 +73,7 @@ router.put('/:id/merge', async (req, res, next) => {
   }
 
   pullService
-    .mergePullById(id)
+    .mergePullById(id, userId)
     .then(([, data]) => res.send(data))
     .catch(next);
 });

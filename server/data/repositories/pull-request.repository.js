@@ -102,7 +102,25 @@ class PullRepository extends BaseRepository {
   }
 
   getPullById(id) {
-    return this.model.findOne({ where: { id } });
+    return this.model.findOne({
+      where: { id },
+      include: [
+        {
+          model: RepositoryModel,
+          include: [UserModel]
+        },
+        {
+          model: BranchModel,
+          as: 'fromBranch',
+          attributes: ['name']
+        },
+        {
+          model: BranchModel,
+          as: 'toBranch',
+          attributes: ['name']
+        }
+      ]
+    });
   }
 
   async getAuthorId(pullId) {

@@ -155,7 +155,6 @@ class IssueComments extends React.Component {
     const {
       currentIssue: { id: issueId }
     } = this.state;
-    console.log(comment);
     if (!comment) return;
 
     const { userId } = this.props;
