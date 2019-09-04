@@ -252,7 +252,13 @@ class IssueRepository extends BaseRepository {
         },
         {
           model: RepositoryModel,
-          attributes: ['name']
+          attributes: ['name'],
+          include: [
+            {
+              model: UserModel,
+              attributes: ['username']
+            }
+          ]
         }
       ],
       order: parseSortQuery(sort)
