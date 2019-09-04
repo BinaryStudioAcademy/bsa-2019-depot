@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Loader } from 'semantic-ui-react';
 import { getRepositoryByOwnerAndName } from '../../services/repositoryService';
-import IssuesList from '../../components/IssuesList/index';
+import IssuesPullsList from '../../components/IssuesPullsList/index';
 
 class IssuesTab extends React.Component {
   constructor(props) {
@@ -30,7 +30,7 @@ class IssuesTab extends React.Component {
   render() {
     const { loading, repositoryId } = this.state;
 
-    return loading ? <Loader active /> : <IssuesList repositoryId={repositoryId} />;
+    return loading ? <Loader active /> : <IssuesPullsList repositoryId={repositoryId} isIssues={true} />;
   }
 }
 

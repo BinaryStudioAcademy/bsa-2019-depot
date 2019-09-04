@@ -250,12 +250,31 @@ router
       .then(data => res.send(data))
       .catch(next);
   })
-  .get('/:repositoryId/pulls', (req, res, next) => {
-    const { repositoryId } = req.params;
-    pullsService
-      .getPulls(repositoryId)
-      .then(data => res.send(data))
+  .get('/:username/:reponame/pulls', isReaderMiddleware, (req, res, next) => {
+    const { repositoryId } = req.query;
+    pullsService.getPulls(repositoryId)
+      .then(result => res.send(result))
       .catch(next);
+  })
+  .get('/:repositoryId/pulls', isReaderMiddleware, async (req, res, next) => {
+    const { repositoryId } = req.params;
+    const {
+      sort, authorId, title, isOpened
+    } = req.query;
+    try {
+      const pulls = await pullsService.getRepoPulls(repositoryId, sort, authorId, title, isOpened);
+      const authors = await userService.getPullsAuthors(repositoryId);
+      const openCount = await pullsService.getPullCount(repositoryId, true);
+      const closedCount = await pullsService.getPullCount(repositoryId, false);
+      res.send({
+        openCount,
+        closedCount,
+        authors,
+        pulls
+      });
+    } catch (e) {
+      next(e);
+    }
   })
   .get('/:repositoryId/collaborators', (req, res, next) => {
     const { repositoryId } = req.params;

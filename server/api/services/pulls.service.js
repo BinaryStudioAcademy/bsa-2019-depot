@@ -162,6 +162,17 @@ const getRepoOwnerId = pullId => pullRepository.getRepoOwnerId(pullId);
 
 const getRepoByPullId = pullId => pullRepository.getRepoByPullId(pullId);
 
+const getRepoPulls = async (repositoryId, sort, authorId, title, isOpened) => {
+  const status = await prStatusRepository.getByName('OPEN');
+  const { id: statusId } = status.get({ plain: true });
+  return pullRepository.getPulls(repositoryId, sort, authorId, title, isOpened, statusId);
+};
+
+const getPullCount = async (repositoryId, isOpened) => {
+  const statusOpen = await prStatusRepository.getByName('OPEN');
+  return pullRepository.getPullCount(repositoryId, isOpened, statusOpen);
+};
+
 module.exports = {
   getPulls,
   addPull,
@@ -173,5 +184,7 @@ module.exports = {
   getRepoOwnerId,
   reopenPullById,
   mergePullById,
-  getRepoByPullId
+  getRepoByPullId,
+  getRepoPulls,
+  getPullCount
 };

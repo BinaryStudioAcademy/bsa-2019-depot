@@ -44,7 +44,7 @@ const sortOptions = [
   }
 ];
 
-class IssuesList extends React.Component {
+class IssuesPullsList extends React.Component {
   constructor(props) {
     super(props);
 
@@ -66,15 +66,22 @@ class IssuesList extends React.Component {
   }
 
   fetchData = async () => {
-    const { repositoryId } = this.props;
+    const { repositoryId, isIssues } = this.props;
     const { filter } = this.state;
 
-    const { openCount, closedCount, authors: authorList, issues: items } = await RepoService.getRepositoryIssues(
-      repositoryId,
-      filter
-    );
-
-    this.setState({ openCount, closedCount, authorList, items, loading: false });
+    if (isIssues) {
+      const { openCount, closedCount, authors: authorList, issues: items } = await RepoService.getRepositoryIssues(
+        repositoryId,
+        filter
+      );
+      this.setState({ openCount, closedCount, authorList, items, loading: false });
+    } else {
+      const { openCount, closedCount, authors: authorList, pulls: items } = await RepoService.getRepositoryPulls(
+        repositoryId,
+        filter
+      );
+      this.setState({ isIssues, openCount, closedCount, authorList, items, loading: false });
+    }
   };
 
   async componentDidMount() {
@@ -270,7 +277,7 @@ class IssuesList extends React.Component {
   }
 }
 
-IssuesList.propTypes = {
+IssuesPullsList.propTypes = {
   isIssues: PropTypes.bool,
   reponame: PropTypes.string,
   repositoryId: PropTypes.string,
@@ -286,4 +293,4 @@ IssuesList.propTypes = {
   onChangeFilter: PropTypes.func
 };
 
-export default withRouter(IssuesList);
+export default withRouter(IssuesPullsList);

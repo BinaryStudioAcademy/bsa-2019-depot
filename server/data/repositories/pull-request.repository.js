@@ -1,8 +1,32 @@
+const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
 const PRStatusRepository = require('./pr-status.repository');
 const {
   PullRequestModel, UserModel, RepositoryModel, PRStatusModel, BranchModel
 } = require('../models/index');
+
+const sequelize = require('../db/connection');
+
+const { Op } = Sequelize;
+
+const parseSortQuery = (sort) => {
+  switch (sort) {
+  case 'created_asc':
+    return [['createdAt', 'ASC']];
+  case 'created_desc':
+    return [['createdAt', 'DESC']];
+  case 'updated_asc':
+    return [['updatedAt', 'ASC']];
+  case 'updated_desc':
+    return [['updatedAt', 'DESC']];
+  case 'comments_desc':
+    return [[sequelize.literal('"commentsCount"'), 'DESC']];
+  case 'comments_asc':
+    return [[sequelize.literal('"commentsCount"'), 'ASC']];
+  default:
+    return [];
+  }
+};
 
 class PullRepository extends BaseRepository {
   getMaxIssueRepoNumber(repositoryId) {
@@ -135,6 +159,63 @@ class PullRepository extends BaseRepository {
     const repo = await RepositoryModel.findOne({ where: { id: repositoryId } });
     const { userId } = repo.get({ plain: true });
     return userId;
+  }
+
+  getPulls(repositoryId, sort, authorId, title, isOpened, statusOpenedId) {
+    return this.model.findAll({
+      where: {
+        repositoryId,
+        statusId:
+          isOpened === 'true'
+            ? statusOpenedId
+            : {
+              [Op.ne]: statusOpenedId
+            },
+        ...(title ? { title: { [Op.substring]: title } } : {}),
+        ...(authorId ? { userId: authorId } : {})
+      },
+      attributes: {
+        include: [
+          [
+            sequelize.literal(`
+          (SELECT COUNT(*)
+          FROM "pullComments"
+          WHERE "pullrequest"."id" = "pullComments"."pullId"
+          AND "pullComments"."deletedAt" IS NULL)`),
+            'commentsCount'
+          ]
+        ]
+      },
+      include: [
+        {
+          model: UserModel,
+          attributes: ['username']
+        },
+        {
+          model: RepositoryModel,
+          attributes: ['name']
+        },
+        {
+          model: PRStatusModel,
+          attributes: ['name']
+        }
+      ],
+      order: parseSortQuery(sort)
+    });
+  }
+
+  getPullCount(repositoryId, isOpened, status) {
+    const { id: statusId } = status;
+    return this.model.aggregate('id', 'COUNT', {
+      where: {
+        repositoryId,
+        statusId: isOpened
+          ? statusId
+          : {
+            [Op.ne]: statusId
+          }
+      }
+    });
   }
 
   getRepoByPullId(id) {

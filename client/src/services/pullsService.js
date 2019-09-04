@@ -9,10 +9,13 @@ export const getBranchDiffs = async (repoId, query) => {
   return response.json();
 };
 
-export const getPulls = async ({ repositoryId: repoID }) => {
+export const getPulls = async ({ username: owner, reponame, repositoryId }) => {
   const response = await callWebApi({
-    endpoint: `/api/repos/${repoID}/pulls`,
-    type: 'GET'
+    endpoint: `/api/repos/${owner}/${reponame}/pulls`,
+    type: 'GET',
+    query: {
+      repositoryId
+    }
   });
   return response.json();
 };
