@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import parse from 'parse-diff';
 import { Label, Icon, Container, Loader } from 'semantic-ui-react';
 import { Switch, Route, Link } from 'react-router-dom';
 
@@ -21,7 +22,8 @@ class PullView extends React.Component {
       currentPull: {},
       commitsCount: 0,
       loading: true,
-      comment: ''
+      comment: '',
+      rate: 0
     };
   }
   async componentDidMount() {
@@ -40,7 +42,8 @@ class PullView extends React.Component {
       id
     } = currentPull;
 
-    const { commits } = await getBranchDiffs(repositoryId, { fromBranch, toBranch });
+    const { commits, diffs } = await getBranchDiffs(repositoryId, { fromBranch, toBranch });
+    this.getLineChanges(diffs);
     const pullComments = await getPullComments(id);
     const isAccessGranted = await getWriteUserPermissions(username, reponame, userId);
     this.setState({
@@ -51,6 +54,23 @@ class PullView extends React.Component {
       loading: false
     });
   }
+
+  getLineChanges = diffs => {
+    const files = parse(diffs);
+    let deletions = 0;
+    let additions = 0;
+    files.forEach(file => {
+      deletions += file.deletions;
+      additions += file.additions;
+    });
+    this.setState({
+      lineChanges: {
+        deletions,
+        additions
+      },
+      rate: additions / deletions
+    });
+  };
 
   onPullUpdateTitle = async title => {
     const { id, body } = this.state.currentPull;
@@ -123,7 +143,7 @@ class PullView extends React.Component {
       match,
       location: { pathname }
     } = this.props;
-    const { currentPull, loading, commitsCount, pullComments } = this.state;
+    const { currentPull, loading, commitsCount, pullComments, lineChanges, rate } = this.state;
     const baseUrl = match.url;
     const activePage = pathname.split('/')[5];
 
@@ -175,6 +195,17 @@ class PullView extends React.Component {
             <Link to={`${baseUrl}/files-changed`}>
               Files changed<Label circular>{0}</Label>
             </Link>
+          </div>
+          <div className="item">
+            <span className={styles.green}>{`+${lineChanges.additions}`}</span>
+            <span className={styles.red}>{`-${lineChanges.deletions}`}</span>
+            <span className={styles.block_container}>
+              <span className={`${rate > 0.25 ? styles.block_added : styles.block_deleted}`}></span>
+              <span className={`${rate > 0.75 ? styles.block_added : styles.block_deleted}`}></span>
+              <span className={`${rate > 1.25 ? styles.block_added : styles.block_deleted}`}></span>
+              <span className={`${rate > 1.5 ? styles.block_added : styles.block_deleted}`}></span>
+              <span className={styles.block_neutral}></span>
+            </span>
           </div>
         </div>
         <Container className={styles.contentContainer}>
