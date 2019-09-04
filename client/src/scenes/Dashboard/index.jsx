@@ -68,12 +68,13 @@ class Dashboard extends React.Component {
   }
 
   renderTab(tab) {
+    const { filter } = this.state;
     switch (tab) {
     case tabs.repositories:
       return (
           <>
-            <RepositoriesFilters getCurrentRepoFilter={this.getCurrentRepoFilter} />
-            <RepositoriesList filter={this.state.filter} onDataChange={this.getUserData} />
+            <RepositoriesFilters filter={filter} getCurrentRepoFilter={this.getCurrentRepoFilter} />
+            <RepositoriesList filter={filter} onDataChange={this.getUserData} />
           </>
       );
     case tabs.projects:

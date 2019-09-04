@@ -52,13 +52,9 @@ class BlameViewPage extends React.Component {
                 <div className={styles.blameAvatar}>
                   <Image src={getUserImgLink(blameObj.imgUrl)} avatar />
                 </div>
-                <div className={styles.blameMessage}>
-                  {blameObj.message}
-                </div>
+                <div className={styles.blameMessage}>{blameObj.message}</div>
               </div>
-              <div className={styles.blameDate}>
-                {moment(blameObj.date).fromNow()}
-              </div>
+              <div className={styles.blameDate}>{moment(blameObj.date).fromNow()}</div>
             </div>
           </Grid.Column>
           <Grid.Column className={styles.blobMain}>
@@ -132,11 +128,7 @@ class BlameViewPage extends React.Component {
         }
 
         if (blameObj.commitId === nextCommit && isMultiRawCommit === true) {
-          return (
-            <>
-              {this.blameMultiRaw(blameObj, i)}
-            </>
-          );
+          return <>{this.blameMultiRaw(blameObj, i)}</>;
         }
 
         if (blameObj.commitId !== nextCommit && isMultiRawCommit === true) {
@@ -153,11 +145,7 @@ class BlameViewPage extends React.Component {
 
         if (blameObj.commitId === nextCommit && isMultiRawCommit !== true) {
           isMultiRawCommit = true;
-          return (
-            <>
-              {this.blameRaw(blameObj, i)}
-            </>
-          );
+          return <>{this.blameRaw(blameObj, i)}</>;
         }
         return nextCommit;
       });

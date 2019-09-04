@@ -119,13 +119,6 @@ router
       .then(fileData => res.send(fileData))
       .catch(next);
   })
-  .get('/:owner/:repoName/:branch/file-exist', (req, res, next) => {
-    const { owner, repoName, branch } = req.params;
-    const { filepath } = req.query;
-    checkFileExists(owner, repoName, branch, filepath)
-      .then(result => res.send(result))
-      .catch(next);
-  })
   .get('/:username/:reponame/:branchName/last-commit', isReaderMiddleware, (req, res, next) => {
     const { username, reponame, branchName } = req.params;
     getLastCommitOnBranch({ user: username, name: reponame, branch: branchName })

@@ -9,7 +9,7 @@ const SelectCompareBranches = ({ branches, toBranch, fromBranch, onToBranchChang
   return (
     <Segment className={styles.selectBranchesContainer}>
       <div>
-        <Octicon icon={GitCompare} className={styles.gitCompare}/>
+        <Octicon icon={GitCompare} className={styles.gitCompare} />
         <Dropdown
           button
           text={`To branch: ${toBranch}`}
@@ -21,17 +21,13 @@ const SelectCompareBranches = ({ branches, toBranch, fromBranch, onToBranchChang
           <Dropdown.Menu>
             <Dropdown.Header content="branch" as="h4" />
             {branches.map((branch, index) => (
-              <Dropdown.Item
-                key={index}
-                onClick={onToBranchChange}
-                value={branch}
-              >
+              <Dropdown.Item key={index} onClick={onToBranchChange} value={branch}>
                 {branch}
               </Dropdown.Item>
             ))}
           </Dropdown.Menu>
         </Dropdown>
-        <Octicon icon={ArrowLeft}/>
+        <Octicon icon={ArrowLeft} />
         <Dropdown
           button
           text={`From branch: ${fromBranch}`}
@@ -43,11 +39,7 @@ const SelectCompareBranches = ({ branches, toBranch, fromBranch, onToBranchChang
           <Dropdown.Menu>
             <Dropdown.Header content="branch" as="h4" />
             {branches.map((branch, index) => (
-              <Dropdown.Item
-                key={index}
-                onClick={onFromBranchChange}
-                value={branch}
-              >
+              <Dropdown.Item key={index} onClick={onFromBranchChange} value={branch}>
                 {branch}
               </Dropdown.Item>
             ))}
