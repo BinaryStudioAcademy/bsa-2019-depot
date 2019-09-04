@@ -17,7 +17,7 @@ const getAllRepoIssues = async (repositoryId) => {
   return issues || Promise.reject(new CustomError(404, `Repository with id ${repositoryId} not found`));
 };
 
-const getRepoIssues = (repositoryId, sort, author, title) => issueRepository.getIssues(repositoryId, sort, author, title);
+const getRepoIssues = (repositoryId, sort, authorId, title, isOpened) => issueRepository.getIssues(repositoryId, sort, authorId, title, isOpened);
 
 const getRepoIssueByIdNumber = (repositoryId, number) => issueRepository.getIssueByIdNumber(repositoryId, number);
 
@@ -45,6 +45,8 @@ const reopenIssueById = id => issueRepository.setIsOpenedById(id, true);
 
 const getRepoByIssueId = id => issueRepository.getRepoByIssueId(id);
 
+const getIssueCount = (repositoryId, isOpened) => issueRepository.getIssueCount(repositoryId, isOpened);
+
 module.exports = {
   addIssue,
   updateIssueById,
@@ -62,5 +64,6 @@ module.exports = {
   getRepoIssueByNumber,
   getAllIssueComments,
   getRepoIssueByIdNumber,
-  getRepoByIssueId
+  getRepoByIssueId,
+  getIssueCount
 };
