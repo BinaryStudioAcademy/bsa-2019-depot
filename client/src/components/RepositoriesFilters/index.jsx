@@ -20,7 +20,7 @@ export class RepositoriesFilters extends React.Component {
       { key: 'lt_3', text: 'CSS', value: 'CSS' }
     ];
 
-    const { orgPage, isOwner, orgName, getCurrentRepoFilter, filter } = this.props;
+    const { orgPage, isOwner, isMember, orgName, getCurrentRepoFilter, filter } = this.props;
 
     return (
       <Container className={styles.repos_filters}>
@@ -43,7 +43,7 @@ export class RepositoriesFilters extends React.Component {
             className={styles.repos_filters_dropdown}
           />
         </div>
-        {(orgPage ? isOwner : true) && (
+        {(orgPage ? isOwner || isMember : true) && (
           <div className={styles.new_repo_wrapper}>
             <Link to={orgPage ? `/organizations/${orgName}/repositories/new` : '/new'}>
               <Button primary className={styles.new_repo}>
