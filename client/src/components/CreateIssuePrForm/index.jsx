@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Dropdown, Form, Grid } from 'semantic-ui-react';
+import { Button, Dropdown, Form, Grid, Segment } from 'semantic-ui-react';
 import { Field, Formik } from 'formik';
 import { InputError } from '../InputError';
 import ReactMde from 'react-mde';
@@ -51,62 +51,64 @@ const CreateIssuePrForm = ({ isIssues, onSubmit }) => {
   }
 
   return (
-    <Formik initialValues={{ title: '' }} onSubmit={handleSubmit} validationSchema={validationSchema}>
-      {({ values: { title, body }, errors, handleChange, handleSubmit }) => (
-        <Form className={styles.issuePrForm} onSubmit={handleSubmit}>
-          <Grid>
-            <Grid.Column width={12}>
-              <Field
-                name="title"
-                value={title}
-                onChange={handleChange}
-                placeholder="Title"
-                className={styles.titleInput}
-              />
-              <InputError name="title" />
-              <div className={styles.commentEditor}>
-                <ReactMde
-                  value={body}
-                  className={styles.markdownEditor}
-                  onChange={setBody}
-                  selectedTab={selectedTab}
-                  onTabChange={setSelectedTab}
-                  generateMarkdownPreview={renderPreview}
+    <Segment basic>
+      <Formik initialValues={{ title: '' }} onSubmit={handleSubmit} validationSchema={validationSchema}>
+        {({ values: { title, body }, errors, handleChange, handleSubmit }) => (
+          <Form className={styles.issuePrForm} onSubmit={handleSubmit}>
+            <Grid>
+              <Grid.Column width={12}>
+                <Field
+                  name="title"
+                  value={title}
+                  onChange={handleChange}
+                  placeholder="Title"
+                  className={styles.titleInput}
                 />
-              </div>
-              <Button primary floated="right" type="submit" disabled={errors.issueTitle}>
-                {isIssues ? 'Submit new issue' : 'Create pull request'}
-              </Button>
-            </Grid.Column>
-            <Grid.Column width={4}>
-              <div className={styles.sidebar}>
-                <div className={styles.sidebarItem}>
-                  <Dropdown
-                    multiple
-                    selection
-                    fluid
-                    options={labelOptions}
-                    placeholder="Choose an option"
-                    renderLabel={renderLabel}
+                <InputError name="title" />
+                <div className={styles.commentEditor}>
+                  <ReactMde
+                    value={body}
+                    className={styles.markdownEditor}
+                    onChange={setBody}
+                    selectedTab={selectedTab}
+                    onTabChange={setSelectedTab}
+                    generateMarkdownPreview={renderPreview}
                   />
                 </div>
-                <div className={styles.sidebarItem}>
-                  <Dropdown
-                    clearable
-                    fluid
-                    multiple
-                    search
-                    selection
-                    options={assigneeOptions}
-                    placeholder="Assignees"
-                  />
+                <Button primary floated="right" type="submit" disabled={errors.issueTitle}>
+                  {isIssues ? 'Submit new issue' : 'Create pull request'}
+                </Button>
+              </Grid.Column>
+              <Grid.Column width={4}>
+                <div className={styles.sidebar}>
+                  <div className={styles.sidebarItem}>
+                    <Dropdown
+                      multiple
+                      selection
+                      fluid
+                      options={labelOptions}
+                      placeholder="Choose an option"
+                      renderLabel={renderLabel}
+                    />
+                  </div>
+                  <div className={styles.sidebarItem}>
+                    <Dropdown
+                      clearable
+                      fluid
+                      multiple
+                      search
+                      selection
+                      options={assigneeOptions}
+                      placeholder="Assignees"
+                    />
+                  </div>
                 </div>
-              </div>
-            </Grid.Column>
-          </Grid>
-        </Form>
-      )}
-    </Formik>
+              </Grid.Column>
+            </Grid>
+          </Form>
+        )}
+      </Formik>
+    </Segment>
   );
 };
 

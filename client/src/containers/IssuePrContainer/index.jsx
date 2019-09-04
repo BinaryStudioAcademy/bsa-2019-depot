@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { Icon, Input, Dropdown, Button, Label } from 'semantic-ui-react';
+import { Icon, Input, Dropdown, Button, Label, Segment } from 'semantic-ui-react';
 import { PullRequestOutline } from '@ant-design/icons';
 import AntdIcon from '@ant-design/icons-react';
 import DataList from '../../components/DataList';
@@ -123,7 +123,7 @@ class IssuePrContainer extends React.Component {
     ];
 
     return (
-      <>
+      <Segment basic>
         <div className={styles.filterRow}>
           <div className={styles.leftGroup}>
             <Input
@@ -197,7 +197,7 @@ class IssuePrContainer extends React.Component {
           </div>
           <DataList data={filteredData} isPull={!isIssues} />
         </div>
-      </>
+      </Segment>
     );
   }
 }

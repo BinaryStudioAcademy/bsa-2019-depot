@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ReactMarkdown from 'react-markdown';
-import { Breadcrumb, Input, Button, Tab, Loader } from 'semantic-ui-react';
+import { Breadcrumb, Input, Button, Tab, Loader, Segment } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import ReactDiffViewer from 'react-diff-viewer';
 import CommitFileForm from '../../components/CommitFileForm';
@@ -243,7 +243,7 @@ class FileEditPage extends React.Component {
     return loading ? (
       <Loader active inline="centered" />
     ) : (
-      <>
+      <Segment basic>
         <Breadcrumb size="big" className={styles.filePath}>
           <Breadcrumb.Section>
             <Link to={`/${ownerUsername}/${reponame}`}>{reponame}</Link>
@@ -285,7 +285,7 @@ class FileEditPage extends React.Component {
           onSubmit={this.handleCommitFile}
           onCancel={this.handleCancel}
         />
-      </>
+      </Segment>
     );
   }
 }

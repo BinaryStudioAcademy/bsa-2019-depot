@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ReactMde from 'react-mde';
 import ReactMarkdown from 'react-markdown';
 import { CommitCommentItem } from '../CommitCommentItem';
-import { Container, Grid, Form, Button, Message, Item, Loader } from 'semantic-ui-react';
+import { Container, Grid, Form, Button, Message, Item, Loader, Segment } from 'semantic-ui-react';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 import { connect } from 'react-redux';
 import * as commitsService from '../../services/commitsService';
@@ -220,7 +220,7 @@ class DiffCommitView extends Component {
     ) : null;
 
     return (
-      <div>
+      <Segment basic>
         {pageError}
         <DiffList diffs={diffsData.diffs} />
         <div className="comments-count">
@@ -249,7 +249,7 @@ class DiffCommitView extends Component {
             </Grid>
           </Form>
         </Container>
-      </div>
+      </Segment>
     );
   }
 }
