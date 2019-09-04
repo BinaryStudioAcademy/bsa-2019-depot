@@ -5,8 +5,6 @@ import { createIssue, fetchCurrentRepo } from '../../routines/routines';
 import { Container } from 'semantic-ui-react';
 import CreateIssuePrForm from '../../components/CreateIssuePrForm';
 
-import styles from './styles.module.scss';
-
 class CreateIssuePage extends React.Component {
   constructor(props) {
     super(props);
@@ -52,7 +50,7 @@ class CreateIssuePage extends React.Component {
 
   render() {
     return (
-      <Container className={styles.issueFormContainer}>
+      <Container fluid>
         <CreateIssuePrForm isIssues onSubmit={this.onSubmit} />
       </Container>
     );

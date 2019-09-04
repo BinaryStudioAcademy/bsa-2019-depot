@@ -133,7 +133,7 @@ class FileViewPage extends React.Component {
     return loading || deleting ? (
       <Loader active inline="centered" />
     ) : (
-      <>
+      <Segment basic>
         <div className={styles.filePathRow}>
           <Breadcrumb size="big" className={styles.filePath}>
             <Breadcrumb.Section>
@@ -191,7 +191,7 @@ class FileViewPage extends React.Component {
             )}
           </Segment>
         </Segment.Group>
-      </>
+      </Segment>
     );
   }
 }

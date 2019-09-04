@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Loader } from 'semantic-ui-react';
+import { Loader, Segment } from 'semantic-ui-react';
 import { getRepositoryByOwnerAndName } from '../../services/repositoryService';
 import IssuesList from '../../components/IssuesList/index';
 
@@ -30,7 +30,13 @@ class IssuesTab extends React.Component {
   render() {
     const { loading, repositoryId } = this.state;
 
-    return loading ? <Loader active /> : <IssuesList repositoryId={repositoryId} />;
+    return loading ? (
+      <Loader active />
+    ) : (
+      <Segment basic>
+        <IssuesList repositoryId={repositoryId} />
+      </Segment>
+    );
   }
 }
 
