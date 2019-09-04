@@ -1,10 +1,12 @@
 import React from 'react';
-import { Text, View, FlatList, Button, TouchableOpacity } from 'react-native';
+import { Text, View, FlatList, TouchableOpacity } from 'react-native';
 import styles from './styles';
 import Spinner from '../../components/Spinner';
 import { getAllIssues } from '../../services/issueService';
 import { connect } from 'react-redux';
 import IssueItem from '../../components/IssueItem';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { Button } from 'react-native-elements';
 
 class IssuesView extends React.Component {
   constructor(props) {
@@ -58,24 +60,22 @@ class IssuesView extends React.Component {
   }
 
   render() {
-    const { isLoading, issuesData } = this.state;
-
+    const { isLoading, issuesData, isOpened } = this.state;
     return !isLoading ? (
       <View>
-        <View>
-          <TouchableOpacity onPress={this.showOpen}>
-            <Text>Open</Text>
-            <Text>{issuesData.open}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.showClosed}>
-            <Text>Closed</Text>
-            <Text>{issuesData.close}</Text>
-          </TouchableOpacity>
+        <View style={styles.issueHeader}>
+          <Button
+            title={issuesData.open + ' Open'}
+            type="outline"
+            onPress={this.showOpen}
+            containerStyle={styles.leftButton}
+          />
+          <Button title={issuesData.close + ' Closed'} type="outline" onPress={this.showClosed} />
         </View>
         <FlatList
           data={issuesData.issues}
           // eslint-disable-next-line react/jsx-no-bind
-          renderItem={({ item }) => <IssueItem data={item} />}
+          renderItem={({ item }) => <IssueItem data={item} isOpened={isOpened} />}
         />
       </View>
     ) : (

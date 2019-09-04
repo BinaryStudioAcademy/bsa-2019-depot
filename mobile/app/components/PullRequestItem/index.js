@@ -6,24 +6,24 @@ import Icon from 'react-native-vector-icons/Octicons';
 
 import styles from './styles';
 
-const IssueItem = ({ data: { title, number, user, updatedAt }, isOpened }) => {
+const PullRequestItem = ({ data: { repository, pullRequestName, number, date, name }, isOpened }) => {
   return (
     <View style={styles.issue}>
       <View style={styles.header}>
         {isOpened ? (
-          <Icon name="issue-opened" size={20} color="#28a745" />
+          <Icon name="git-pull-request" size={20} color="#28a745" />
         ) : (
-          <Icon name="issue-closed" size={20} color="#ff0000" />
+          <Icon name="git-merge" size={20} color="#ff0000" />
         )}
-        <Text style={styles.headerText}>{title}</Text>
+        <Text style={styles.headerText}>{repository + ' ' + pullRequestName}</Text>
       </View>
       <View style={styles.data}>
         <Text style={styles.dataNumber}>#{number} opened</Text>
-        <Text style={styles.dataDate}>{moment(updatedAt).fromNow()}</Text>
-        <Text style={styles.dataUsername}>by {user.username}</Text>
+        <Text style={styles.dataDate}>{moment(date).fromNow()}</Text>
+        <Text style={styles.dataUsername}>by {name}</Text>
       </View>
     </View>
   );
 };
 
-export default IssueItem;
+export default PullRequestItem;
