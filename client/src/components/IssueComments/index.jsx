@@ -2,7 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Button, Label, Icon, Loader } from 'semantic-ui-react';
+import { Button, Label, Icon, Loader, Message } from 'semantic-ui-react';
+import { CheckCircleFill } from '@ant-design/icons';
+import AntdIcon from '@ant-design/icons-react';
 import {
   getIssueByNumber,
   getIssueComments,
@@ -12,13 +14,18 @@ import {
   deleteIssue
 } from '../../services/issuesService';
 import { createIssueComment, updateIssueComment, deleteIssueComment } from '../../services/issueCommentsService';
+import { getAllQuestionOnSO } from '../../services/issuesService';
 import IssueComment from '../IssueComment';
 import IssueHeader from '../IssueHeader';
 import { socketInit } from '../../helpers/socketInitHelper';
 import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 import 'react-mde/lib/styles/css/react-mde-all.css';
+import htmlEntities from 'he'
 
 import styles from './styles.module.scss';
+
+import { ReactComponent as SOLogoSVG } from '../../styles/assets/icons/stackoverflow.svg';
+AntdIcon.add(CheckCircleFill);
 
 class IssueComments extends React.Component {
   constructor(props) {
@@ -26,6 +33,7 @@ class IssueComments extends React.Component {
     this.state = {
       currentIssue: {},
       issueComments: [],
+      questions: [],
       loading: true,
       comment: '',
       selectedTab: 'write',
@@ -54,16 +62,29 @@ class IssueComments extends React.Component {
     } = this.props;
 
     const currentIssue = await getIssueByNumber(username, reponame, number);
-    const { id } = currentIssue;
+    const { id, title } = currentIssue;
 
     const issueComments = await getIssueComments(id);
 
     const isAccessGranted = await getWriteUserPermissions(username, reponame, userId);
 
+    const filter = {
+      key: 'K)aMbXa)izv27xUSCXUW8A((',
+      intitle: title,
+      filter: 'default',
+      site: 'stackoverflow',
+      pagesize: 5,
+      // tagged: ['reactjs', 'javascript'].join(';'), // for label names 
+      sort: 'votes',
+      order: 'desc'
+    };
+    const soQuestions = await getAllQuestionOnSO(filter);
+
     this.setState({
       currentIssue,
       issueComments,
       isAccessGranted,
+      questions: soQuestions,
       loading: false
     });
     this.initSocket();
@@ -194,100 +215,124 @@ class IssueComments extends React.Component {
   }
 
   render() {
-    const { currentIssue, issueComments, loading } = this.state;
+    const { currentIssue, issueComments, loading, questions } = this.state;
     const { userImg, userName, userId } = this.props;
 
-    return loading ? (
+    return loading || questions.length ? (
       <Loader active />
     ) : (
-      <>
-        <IssueHeader
-          title={currentIssue.title}
-          number={currentIssue.number}
-          canEdit={this.isOwnIssue()}
-          onNewIssue={this.redirectToCreateNewIssue}
-          onSubmit={this.onIssueUpdateTitle}
-        />
-        <div>
-          <Label color={currentIssue.isOpened ? 'green' : 'red'} className={styles.issue_label}>
-            <Icon name="exclamation circle" /> {currentIssue.isOpened ? 'Open' : 'Closed'}
-          </Label>
-          <span className={styles.comment_author_name}>
-            {`${currentIssue.user.username} `}
-            <span>{`opened this issue ${moment(currentIssue.createdAt).fromNow()} · ${
-              issueComments.length
-            } comments`}</span>
-          </span>
-        </div>
-        <IssueComment
-          id={currentIssue.id}
-          avatar={currentIssue.user.imgUrl}
-          username={currentIssue.user.username}
-          body={currentIssue.body}
-          createdAt={currentIssue.createdAt}
-          newComment={false}
-          onSubmit={this.onIssueUpdateBody}
-          submitBtnTxt="Update comment"
-          cancelBtnTxt="Cancel"
-          ownComment={this.isOwnIssue()}
-        />
+        <>
+          <IssueHeader
+            title={currentIssue.title}
+            number={currentIssue.number}
+            canEdit={this.isOwnIssue()}
+            onNewIssue={this.redirectToCreateNewIssue}
+            onSubmit={this.onIssueUpdateTitle}
+          />
+          <div>
+            <Label color={currentIssue.isOpened ? 'green' : 'red'} className={styles.issue_label}>
+              <Icon name="exclamation circle" /> {currentIssue.isOpened ? 'Open' : 'Closed'}
+            </Label>
+            <span className={styles.comment_author_name}>
+              {`${currentIssue.user.username} `}
+              <span>{`opened this issue ${moment(currentIssue.createdAt).fromNow()} · ${
+                issueComments.length
+                } comments`}</span>
+            </span>
+          </div>
+          <IssueComment
+            id={currentIssue.id}
+            avatar={currentIssue.user.imgUrl}
+            username={currentIssue.user.username}
+            body={currentIssue.body}
+            createdAt={currentIssue.createdAt}
+            newComment={false}
+            onSubmit={this.onIssueUpdateBody}
+            submitBtnTxt="Update comment"
+            cancelBtnTxt="Cancel"
+            ownComment={this.isOwnIssue()}
+          />
 
-        {issueComments.length > 0 &&
-          issueComments.map(issueComment => {
-            const {
-              id,
-              user: { username, imgUrl },
-              body,
-              createdAt,
-              userId: commentUserId
-            } = issueComment;
-            return (
-              <IssueComment
-                key={id}
-                id={id}
-                avatar={imgUrl}
-                username={username}
-                body={body}
-                createdAt={createdAt}
-                newComment={false}
-                onSubmit={this.onCommentUpdate}
-                submitBtnTxt="Update comment"
-                cancelBtnTxt="Cancel"
-                onDelete={this.onCommentDelete}
-                ownComment={userId === commentUserId}
+          {questions.items.length 
+            ? (
+                <h2 className={styles.questionsHeader}>
+                  <span>Related questions from{' '}</span>
+                  <SOLogoSVG className={styles.SOIcon} />
+                </h2>
+            ) : null
+          }
+
+
+          {questions.items.map((question, index) => (
+            <a key={index} href={`${question.link}`} className={styles.questionLink} rel="noopener noreferrer" target="_blank">
+              <Message
+                icon={question.is_answered ? (
+                  <Icon>
+                    <AntdIcon type={CheckCircleFill} className={styles.checkCircleButton} />
+                  </Icon>
+                ) : null}
+                header={htmlEntities.decode(question.title)}
+                content={<>Posted on {moment.unix(question.creation_date).format('MMM DD, YYYY')} </>}              
               />
-            );
-          })}
-        <IssueComment
-          avatar={userImg}
-          username={userName}
-          newComment={true}
-          onSubmit={this.onCommentCreate}
-          submitBtnTxt="Comment"
-          createdAt={currentIssue.createdAt}
-          buttons={
-            this.isOwnIssue()
-              ? [
-                currentIssue.isOpened ? (
-                  <Button compact floated="right" secondary key="close" onClick={this.onIssueToggle}>
-                    <Icon name="check circle outline" />
+            </a>
+          ))}
+
+          {issueComments.length > 0 &&
+            issueComments.map(issueComment => {
+              const {
+                id,
+                user: { username, imgUrl },
+                body,
+                createdAt,
+                userId: commentUserId
+              } = issueComment;
+              return (
+                <IssueComment
+                  key={id}
+                  id={id}
+                  avatar={imgUrl}
+                  username={username}
+                  body={body}
+                  createdAt={createdAt}
+                  newComment={false}
+                  onSubmit={this.onCommentUpdate}
+                  submitBtnTxt="Update comment"
+                  cancelBtnTxt="Cancel"
+                  onDelete={this.onCommentDelete}
+                  ownComment={userId === commentUserId}
+                />
+              );
+            })}
+          <IssueComment
+            avatar={userImg}
+            username={userName}
+            newComment={true}
+            onSubmit={this.onCommentCreate}
+            submitBtnTxt="Comment"
+            createdAt={currentIssue.createdAt}
+            buttons={
+              this.isOwnIssue()
+                ? [
+                  currentIssue.isOpened ? (
+                    <Button compact floated="right" secondary key="close" onClick={this.onIssueToggle}>
+                      <Icon name="check circle outline" />
                       Close issue
                   </Button>
-                ) : (
-                  <Button compact floated="right" secondary color="red" key="close" onClick={this.onIssueToggle}>
-                      Reopen issue
+                  ) : (
+                      <Button compact floated="right" secondary color="red" key="close" onClick={this.onIssueToggle}>
+                        Reopen issue
                   </Button>
-                ),
-                <Button compact floated="right" basic color="grey" key="delete" onClick={this.onIssueDelete}>
-                  <Icon name="exclamation" color="grey" />
+                    ),
+                  <Button compact floated="right" basic color="grey" key="delete" onClick={this.onIssueDelete}>
+                    <Icon name="exclamation" color="grey" />
                     Delete issue
                 </Button>
-              ]
-              : null
-          }
-        />
-      </>
-    );
+                ]
+                : null
+            }
+          />
+        </>
+      );
   }
 }
 
