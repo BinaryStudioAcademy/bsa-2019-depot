@@ -7,13 +7,14 @@ import { Label, Icon, Container, Loader } from 'semantic-ui-react';
 import { Switch, Route, Link } from 'react-router-dom';
 
 import IssuePrHeader from '../../components/IssuePrHeader';
+import CommitsList from '../../components/CommitsList';
 import ConversationTab from '../ConversationTab';
-import PrCommits from '../PrCommits';
 
 import { getPullByNumber, getPullComments, getBranchDiffs, updatePull } from '../../services/pullsService';
 import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 
 import styles from './styles.module.scss';
+import PrDiffs from '../PrDiffs';
 
 class PullView extends React.Component {
   constructor(props) {
@@ -25,6 +26,8 @@ class PullView extends React.Component {
       comment: '',
       rate: 0
     };
+
+    this.renderComponent = this.renderComponent.bind(this);
   }
   async componentDidMount() {
     const {
@@ -48,8 +51,11 @@ class PullView extends React.Component {
     const isAccessGranted = await getWriteUserPermissions(username, reponame, userId);
     this.setState({
       currentPull,
+      filesCount: diffs.split('diff --git').length - 1,
       commitsCount: commits.length,
+      pullCommits: commits,
       pullComments,
+      pullDiffs: diffs,
       isAccessGranted,
       loading: false
     });
@@ -134,6 +140,10 @@ class PullView extends React.Component {
     return statusText;
   };
 
+  renderComponent(Component, props) {
+    return <Component {...props} />;
+  }
+
   updateState = state => {
     this.setState(state);
   };
@@ -143,7 +153,7 @@ class PullView extends React.Component {
       match,
       location: { pathname }
     } = this.props;
-    const { currentPull, loading, commitsCount, pullComments, lineChanges, rate } = this.state;
+    const { currentPull, loading, commitsCount, pullComments, lineChanges, rate, filesCount, pullCommits, pullDiffs } = this.state;
     const baseUrl = match.url;
     const activePage = pathname.split('/')[5];
 
@@ -193,7 +203,7 @@ class PullView extends React.Component {
           </div>
           <div className={`${activeTab === 'files-changed' && 'active'} item`}>
             <Link to={`${baseUrl}/files-changed`}>
-              Files changed<Label circular>{0}</Label>
+              Files changed<Label circular>{filesCount}</Label>
             </Link>
           </div>
           <div className="item">
@@ -210,6 +220,10 @@ class PullView extends React.Component {
         </div>
         <Container className={styles.contentContainer}>
           <Switch>
+            {/* eslint-disable-next-line react/jsx-no-bind */}
+            <Route exact path={`${match.path}/commits`} render={() => this.renderComponent(CommitsList, { commits: pullCommits })}/>
+            {/* eslint-disable-next-line react/jsx-no-bind */}
+            <Route exact path={`${match.path}/files-changed`} render={() => this.renderComponent(PrDiffs, { diffs: pullDiffs })} />
             <Route
               exact
               path={`${match.path}/`}
@@ -223,8 +237,6 @@ class PullView extends React.Component {
                 />
               )}
             />
-            <Route exact path={`${match.path}/commits`} component={PrCommits} />
-            <Route exact path={`${match.path}/files-changed`} component={null} />
           </Switch>
         </Container>
       </div>
