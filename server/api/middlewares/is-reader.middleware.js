@@ -12,7 +12,7 @@ module.exports = async (req, res, next) => {
   const repo = req.params.repositoryId
     ? await RepositoryRepository.getById(req.params.repositoryId)
     : await RepositoryRepository.getByUsernameAndReponame(username, reponame);
-
+  
   if (repo.userId === req.user.id || repo.isPublic) {
     return next();
   }

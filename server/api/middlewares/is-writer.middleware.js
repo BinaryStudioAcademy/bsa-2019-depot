@@ -1,6 +1,6 @@
 const RepositoryRepository = require('../../data/repositories/repository.repository');
 const CollaboratorRepository = require('../../data/repositories/collaborator.repository');
-const { permissionLevel } = require('../../helpers/permission.level.helper');
+const permissionLevel = require('../../helpers/permission.level.helper');
 const CustomError = require('../../helpers/error.helper');
 
 module.exports = async (req, res, next) => {
