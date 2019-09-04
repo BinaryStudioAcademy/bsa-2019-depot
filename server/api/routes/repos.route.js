@@ -39,7 +39,7 @@ router
     const { reponame, ownerID } = req.body;
     createRepo({ userId: ownerID, name: reponame, ...req.body }).then(data => res.send(data));
   })
-  .get('/:username/:reponame/check-name', isReaderMiddleware, (req, res, next) => {
+  .get('/:username/:reponame/check-name', (req, res, next) => {
     const { username, reponame } = req.params;
     checkName({ owner: username, reponame })
       .then(result => res.send({ exists: result }))
