@@ -14,7 +14,7 @@ import RepoNav from '../../components/RepoNav';
 import EmptyRepositoryTab from '../../containers/EmptyRepositoryTab';
 import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 
-import { Container, Button, Loader, Divider, Message, Breadcrumb, Segment } from 'semantic-ui-react';
+import { Container, Button, Loader, Message, Breadcrumb, Segment } from 'semantic-ui-react';
 import styles from './styles.module.scss';
 
 class CodeTab extends React.Component {
@@ -211,7 +211,6 @@ class CodeTab extends React.Component {
     ) : (
       <Container fluid className={styles.contentContainer}>
         <Segment basic>
-          <Divider hidden />
           <RepoDescription isOwn={isOwn} description={description} website={website} onSubmit={this.onSubmitInfo} />
           <CodeTabMenu
             ownername={ownername}

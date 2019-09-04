@@ -95,7 +95,7 @@ const RepoDescription = props => {
         <>
           <div className={styles.repoDescriptionText}>{infoContent}</div>
           {isOwn && (
-            <Button className={[styles.actionButton, styles.editButton].join(' ')} onClick={toggleEdit}>
+            <Button secondary className={styles.editButton} onClick={toggleEdit}>
               Edit
             </Button>
           )}

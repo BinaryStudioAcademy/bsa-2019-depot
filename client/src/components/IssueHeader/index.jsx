@@ -60,7 +60,7 @@ class IssueHeader extends React.Component {
           {title}
           <span>{` #${number}`}</span>
         </Header>
-        {canEdit ? <Button compact secondary basic content="Edit" onClick={this.onEdit} /> : null}
+        {canEdit ? <Button compact secondary content="Edit" onClick={this.onEdit} /> : null}
         <Button compact positive content="New Issue" primary onClick={onNewIssue} />
       </div>
     );
