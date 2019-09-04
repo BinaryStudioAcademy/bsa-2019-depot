@@ -31,6 +31,7 @@ const isAdminMiddleware = require('../middlewares/is-admin.middleware');
 
 const issueService = require('../services/issue.service');
 const pullsService = require('../services/pulls.service');
+const userService = require('../services/user.service');
 
 const router = Router();
 
@@ -215,13 +216,25 @@ router
       .then(labels => res.send(labels))
       .catch(next);
   })
-  .get('/:repositoryId/issues', isReaderMiddleware, (req, res, next) => {
+  .get('/:repositoryId/issues', isReaderMiddleware, async (req, res, next) => {
     const { repositoryId } = req.params;
-    const { sort, author, title } = req.query;
-    issueService
-      .getRepoIssues(repositoryId, sort, author, title)
-      .then(result => res.send(result))
-      .catch(next);
+    const {
+      sort, authorId, title, isOpened
+    } = req.query;
+    try {
+      const issues = await issueService.getRepoIssues(repositoryId, sort, authorId, title, isOpened);
+      const authors = await userService.getIssuesAuthors(repositoryId);
+      const openCount = await issueService.getIssueCount(repositoryId, true);
+      const closedCount = await issueService.getIssueCount(repositoryId, false);
+      res.send({
+        openCount,
+        closedCount,
+        authors,
+        issues
+      });
+    } catch (e) {
+      next(e);
+    }
   })
   .get('/:reponame/issues/:number', isReaderMiddleware, (req, res, next) => {
     const { reponame, number } = req.params;

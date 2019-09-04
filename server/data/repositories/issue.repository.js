@@ -218,11 +218,13 @@ class IssueRepository extends BaseRepository {
     });
   }
 
-  getIssues(repositoryId, sort, author, title) {
+  getIssues(repositoryId, sort, authorId, title, isOpened = true) {
     return this.model.findAll({
       where: {
         repositoryId,
-        ...(title ? { body: { [Op.substring]: title } } : {})
+        isOpened,
+        ...(title ? { body: { [Op.substring]: title } } : {}),
+        ...(authorId ? { userId: authorId } : {})
       },
       attributes: {
         include: [
@@ -239,11 +241,23 @@ class IssueRepository extends BaseRepository {
       include: [
         {
           model: UserModel,
-          attributes: [],
-          ...(author ? { where: { username: author } } : {})
+          attributes: ['username']
+        },
+        {
+          model: RepositoryModel,
+          attributes: ['name']
         }
       ],
       order: parseSortQuery(sort)
+    });
+  }
+
+  getIssueCount(repositoryId, isOpened) {
+    return this.model.aggregate('id', 'COUNT', {
+      where: {
+        repositoryId,
+        isOpened
+      }
     });
   }
 
