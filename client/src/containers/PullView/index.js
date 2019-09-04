@@ -206,7 +206,7 @@ class PullView extends React.Component {
               Files changed<Label circular>{filesCount}</Label>
             </Link>
           </div>
-          <div className="item">
+          <div className={`${styles.last} item`}>
             <span className={styles.green}>{`+${lineChanges.additions}`}</span>
             <span className={styles.red}>{`-${lineChanges.deletions}`}</span>
             <span className={styles.block_container}>
@@ -218,7 +218,7 @@ class PullView extends React.Component {
             </span>
           </div>
         </div>
-        <Container className={styles.contentContainer}>
+        <Container>
           <Switch>
             {/* eslint-disable-next-line react/jsx-no-bind */}
             <Route exact path={`${match.path}/commits`} render={() => this.renderComponent(CommitsList, { commits: pullCommits })}/>

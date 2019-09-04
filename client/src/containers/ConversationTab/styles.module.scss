@@ -1,3 +1,4 @@
-:local(.container) {
-    margin-top: 10px !important;
+:local(.noBorder) {
+  border: none !important;
+  box-shadow: none !important;
 }

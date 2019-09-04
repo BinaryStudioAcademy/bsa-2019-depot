@@ -25,10 +25,6 @@
   margin-right: 0.8em !important;
 }
 
-:global(.ui.container):local(.contentContainer) {
-    max-width: 1000px !important;
-}
-
 :local(.red){
   margin-left: 2px;
   color: #cb2431 !important;
@@ -61,5 +57,9 @@
     height: 10px;
     margin-left: 1px;
   }
+}
+
+:local(.last){
+  margin-left: auto !important;
 }
 

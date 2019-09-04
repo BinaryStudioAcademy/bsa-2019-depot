@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Icon, Button, Grid } from 'semantic-ui-react';
+import { Icon, Button, Grid, Segment } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
 
 import IssuePrSidebar from '../IssuePrSidebar';
@@ -195,21 +195,22 @@ class ConversationTab extends React.Component {
     const { data: comments } = pullComments;
 
     return (
-      <Grid className={styles.container}>
-        <Grid.Column width={12}>
-          <Comment
-            id={id}
-            avatar={imgUrl}
-            username={owner}
-            body={body}
-            createdAt={createdAt}
-            newComment={false}
-            onSubmit={this.onPullUpdateBody}
-            submitBtnTxt="Update comment"
-            cancelBtnTxt="Cancel"
-            ownComment={isOwnPull}
-          />
-          {comments.length > 0 &&
+      <Segment className={styles.noBorder}>
+        <Grid>
+          <Grid.Column width={12}>
+            <Comment
+              id={id}
+              avatar={imgUrl}
+              username={owner}
+              body={body}
+              createdAt={createdAt}
+              newComment={false}
+              onSubmit={this.onPullUpdateBody}
+              submitBtnTxt="Update comment"
+              cancelBtnTxt="Cancel"
+              ownComment={isOwnPull}
+            />
+            {comments.length > 0 &&
             comments.map((comment, index) => {
               const {
                 id,
@@ -235,20 +236,21 @@ class ConversationTab extends React.Component {
                 />
               );
             })}
-          <Comment
-            avatar={userImg}
-            username={username}
-            newComment={true}
-            onSubmit={this.onCommentCreate}
-            submitBtnTxt="Comment"
-            createdAt={createdAt}
-            buttons={isOwnPull ? this.generateButtons(prstatus.name) : null}
-          />
-        </Grid.Column>
-        <Grid.Column width={4}>
-          <IssuePrSidebar isIssue />
-        </Grid.Column>
-      </Grid>
+            <Comment
+              avatar={userImg}
+              username={username}
+              newComment={true}
+              onSubmit={this.onCommentCreate}
+              submitBtnTxt="Comment"
+              createdAt={createdAt}
+              buttons={isOwnPull ? this.generateButtons(prstatus.name) : null}
+            />
+          </Grid.Column>
+          <Grid.Column width={4}>
+            <IssuePrSidebar isIssue />
+          </Grid.Column>
+        </Grid>
+      </Segment>
     );
   }
 }
