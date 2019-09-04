@@ -17,7 +17,8 @@ module.exports = models => {
     PullRequest,
     PRStatus,
     Permission,
-    Collaborator
+    Collaborator,
+    PinnedRepository
   } = models;
 
   SshKey.belongsTo(User);
@@ -94,4 +95,9 @@ module.exports = models => {
 
   Repository.hasMany(Label);
   Label.belongsTo(Repository);
+
+  User.hasMany(PinnedRepository);
+  PinnedRepository.belongsTo(User);
+  Repository.hasMany(PinnedRepository);
+  PinnedRepository.belongsTo(Repository);
 };
