@@ -125,3 +125,11 @@ export const setPinnedRepos = async request => {
   });
   return response.json();
 };
+
+export const getPinnedRepos = async userId => {
+  const response = await callWebApi({
+    endpoint: `/api/users/pinned-repositories/${userId}`,
+    type: 'GET'
+  });
+  return response.json();
+};
