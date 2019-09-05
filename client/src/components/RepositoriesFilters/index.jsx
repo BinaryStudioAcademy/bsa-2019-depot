@@ -65,6 +65,7 @@ RepositoriesFilters.propTypes = {
   repo: PropTypes.object,
   orgPage: PropTypes.bool,
   isOwner: PropTypes.bool,
+  isMember: PropTypes.bool,
   orgName: PropTypes.string,
   filter: PropTypes.string,
   getCurrentRepoFilter: PropTypes.func

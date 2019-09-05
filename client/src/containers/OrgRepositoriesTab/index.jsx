@@ -57,6 +57,7 @@ OrgRepositoriesTab.propTypes = {
   orgMembers: PropTypes.any,
   orgInfo: PropTypes.any,
   isOwner: PropTypes.any,
+  isMember: PropTypes.bool,
   repositories: PropTypes.array,
   filter: PropTypes.string
 };
