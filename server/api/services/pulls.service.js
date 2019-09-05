@@ -42,7 +42,7 @@ const getDiffCommits = async (pathToRepo, fromBranch, toBranch) => {
 };
 
 const getBranchDiffs = async (pathToRepo, fromBranch, toBranch) => {
-  const getDiffsCommand = `cd ${pathToRepo} && git diff -U1 ${toBranch}..${fromBranch}`;
+  const getDiffsCommand = `cd ${pathToRepo} && git diff -U1 ${toBranch}...${fromBranch}`;
   const diffsOutput = await exec(getDiffsCommand);
 
   if (diffsOutput.stderr) {
@@ -101,7 +101,7 @@ const mergeBranches = async (id, authorId) => {
     authorSignature,
     `Merge pull request #${number} from ${repoOwner}/${fromBranchName}`,
     mergeCommitTree,
-    [toHeadCommit]
+    [toHeadCommit, fromHeadCommit]
   );
 
   const mergeCommit = await repo.getCommit(mergeCommitId);

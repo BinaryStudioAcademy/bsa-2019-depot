@@ -12,7 +12,7 @@ import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 import { getUserImgLink } from '../../helpers/imageHelper';
 import { socketInit } from '../../helpers/socketInitHelper';
 
-import './styles.module.scss';
+import styles from './styles.module.scss';
 
 class DiffCommitView extends Component {
   constructor(props) {
@@ -222,7 +222,10 @@ class DiffCommitView extends Component {
     return (
       <Segment basic>
         {pageError}
-        <DiffList diffs={diffsData.diffs} />
+        {diffsData.diffs.indexOf('diff --git') !== -1
+          ? <DiffList diffs={diffsData.diffs} />
+          : <h3 className={styles.diffInfo}>No diffs for this commit</h3>
+        }
         <div className="comments-count">
           {`${comments ? comments.length : 0} comments on commit`}{' '}
           <Message compact>{match.params.hash.slice(0, 7)}</Message>

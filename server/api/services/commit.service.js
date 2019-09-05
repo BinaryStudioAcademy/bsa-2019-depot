@@ -2,7 +2,7 @@ const NodeGit = require('nodegit');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const repoHelper = require('../../helpers/repo.helper');
-const { getReposNames, /*isEmpty*/ } = require('./repo.service');
+const { getReposNames, /* isEmpty */ } = require('./repo.service');
 const CommitRepository = require('../../data/repositories/commit.repository');
 const userRepository = require('../../data/repositories/user.repository');
 const RepoRepository = require('../../data/repositories/repository.repository');
@@ -17,7 +17,7 @@ const getCommitsAndCreatedRepoByDate = async (data) => {
   const promises = repoList.map((reponame) => {
     const pathToRepo = repoHelper.getPathToRepo(user, reponame);
     return NodeGit.Repository.open(pathToRepo).then((repo) => {
-      //isEmpty({ owner: user, reponame: repo });
+      // isEmpty({ owner: user, reponame: repo });
       const walker = NodeGit.Revwalk.create(repo);
       walker.pushGlob('refs/heads/*');
       walker.sorting(NodeGit.Revwalk.SORT.TIME);

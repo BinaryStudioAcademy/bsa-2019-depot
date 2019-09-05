@@ -149,7 +149,7 @@ class CompareChanges extends React.Component {
         />
         {loading ? (
           <Loader active />
-        ) : diffs && diffs.length ? (
+        ) : diffs && diffs.length && commits && commits.length ? (
           <>
             <CreateIssuePrForm isIssues={false} onSubmit={this.onSubmit} />
             <Segment className={styles.pullStats}>
