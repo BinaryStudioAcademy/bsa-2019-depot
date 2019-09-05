@@ -21,6 +21,7 @@ const { getRepoIssueByNumber } = require('../services/issue.service');
 const { getAllIssues, getAllIssuesCount, getAllIssuesOwners } = require('../services/issue.service');
 const { getUserByUsername } = require('../services/user.service');
 const { clientUrl } = require('../../config/common.config');
+const PinnedReposService = require('../services/pinned-repos.service');
 
 const router = Router();
 
@@ -141,7 +142,7 @@ router.get('/:username/issues', (req, res, next) => {
   const { isOpened, sort, owner } = req.query;
 
   getUserByUsername(username)
-    .then(data => {
+    .then((data) => {
       const { id } = data;
       Promise.all([
         getAllIssuesCount(id, { owner, isOpened: true }),
@@ -149,7 +150,7 @@ router.get('/:username/issues', (req, res, next) => {
         getAllIssuesOwners(id),
         getAllIssues(id, { isOpened, sort, owner })
       ])
-        .then(result => {
+        .then((result) => {
           res.send({
             open: result[0],
             close: result[1],
@@ -165,6 +166,20 @@ router.get('/:username/issues', (req, res, next) => {
 router.get('/:username/repos/:reponame/issues/:number', (req, res, next) => {
   const { username, reponame, number } = req.params;
   getRepoIssueByNumber(username, reponame, number)
+    .then(result => res.send(result))
+    .catch(next);
+});
+
+router.get('/:userId/pinned-repositories', (req, res, next) => {
+  const { userId } = req.params;
+  PinnedReposService.getPinnedRepos(userId)
+    .then(result => res.send(result))
+    .catch(next);
+});
+
+router.post('/set-pinned-repos', (req, res, next) => {
+  const { userId, repositories } = req.body;
+  PinnedReposService.setPinnedRepos(userId, repositories)
     .then(result => res.send(result))
     .catch(next);
 });

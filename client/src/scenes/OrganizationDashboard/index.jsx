@@ -16,7 +16,8 @@ class OrganizationDashboard extends React.Component {
       currentOrg: {},
       orgMembers: [],
       isOwner: false,
-      repositories: []
+      repositories: [],
+      filter: 'All'
     };
   }
 
@@ -37,8 +38,9 @@ class OrganizationDashboard extends React.Component {
     this.setState({ currentOrg: data });
   }
   async getMembers(orgId) {
+    const { username } = this.props;
     await getOrgMembers(orgId).then(data => {
-      this.setState({ orgMembers: data });
+      this.setState({ orgMembers: data, isMember: data.some(member => member.username === username) });
     });
   }
   async isOwner(orgId) {
@@ -56,7 +58,7 @@ class OrganizationDashboard extends React.Component {
   }
 
   render() {
-    const { repositories, orgMembers, currentOrg, isOwner } = this.state;
+    const { repositories, orgMembers, currentOrg, isOwner, isMember, filter } = this.state;
     return (
       <>
         <OrganizationHeader
@@ -66,7 +68,13 @@ class OrganizationDashboard extends React.Component {
           tab="repositories"
         />
         <Container>
-          <OrgRepositoriesTab orgInfo={currentOrg} orgMembers={orgMembers} isOwner={isOwner} />
+          <OrgRepositoriesTab
+            orgInfo={currentOrg}
+            orgMembers={orgMembers}
+            isOwner={isOwner}
+            isMember={isMember}
+            filter={filter}
+          />
         </Container>
       </>
     );

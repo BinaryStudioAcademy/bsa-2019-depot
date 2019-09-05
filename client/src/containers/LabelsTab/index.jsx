@@ -1,5 +1,5 @@
 import React from 'react';
-import { Loader, Icon, Input, Dropdown, Button, List } from 'semantic-ui-react';
+import { Loader, Input, Dropdown, Button, List } from 'semantic-ui-react';
 import { getLabels, updateLabel, createLabel, deleteLabel } from '../../services/labelsService';
 import { getRepositoryByOwnerAndName } from '../../services/repositoryService';
 import { connect } from 'react-redux';
@@ -23,6 +23,7 @@ class LabelsTab extends React.Component {
     this.onEditLabel = this.onEditLabel.bind(this);
     this.sortLabels = this.sortLabels.bind(this);
     this.startCreateLabel = this.startCreateLabel.bind(this);
+    this.cancelCreateLabel = this.cancelCreateLabel.bind(this);
   }
 
   async componentDidMount() {
@@ -64,7 +65,14 @@ class LabelsTab extends React.Component {
 
     return (
       <List divided verticalAlign="middle">
-        {isCreatingNewLabel ? <LabelItem key={0} labelObject={newLabel} onEdit={this.onCreateLabel} /> : null}
+        {isCreatingNewLabel ? (
+          <LabelItem
+            key={0}
+            labelObject={newLabel}
+            onEdit={this.onCreateLabel}
+            cancelCreateLabel={this.cancelCreateLabel}
+          />
+        ) : null}
         {displayedLabels.map((label, idx) => (
           <LabelItem key={idx + 1} labelObject={label} onDelete={this.onDeleteLabel} onEdit={this.onEditLabel} />
         ))}
@@ -77,6 +85,10 @@ class LabelsTab extends React.Component {
       ...this.state,
       isCreatingNewLabel: true
     });
+  };
+
+  cancelCreateLabel = () => {
+    this.setState({ isCreatingNewLabel: false });
   };
 
   async onCreateLabel(labelObject) {
@@ -170,13 +182,6 @@ class LabelsTab extends React.Component {
       <>
         <div className={styles.filterRow}>
           <div className={styles.leftGroup}>
-            <Button color="blue" className={styles.labelButton}>
-              <Button.Content className={styles.labelButtonIcon}>
-                <Icon name="tag" />
-              </Button.Content>
-
-              <Button.Content className={styles.labelButtonText}>Labels</Button.Content>
-            </Button>
             <Input
               icon="search"
               iconPosition="left"

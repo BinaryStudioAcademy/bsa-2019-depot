@@ -8,7 +8,7 @@ module.exports = async (req, res, next) => {
     return next();
   }
   const { reponame } = req.params;
-  const username = req.params.owner;
+  const username = req.params.owner || req.params.username;
   const repo = req.params.repositoryId
     ? await RepositoryRepository.getById(req.params.repositoryId)
     : await RepositoryRepository.getByUsernameAndReponame(username, reponame);

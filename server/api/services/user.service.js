@@ -2,11 +2,10 @@ const UserRepository = require('../../data/repositories/user.repository');
 const StarRepository = require('../../data/repositories/star.repository');
 const OrgUserRepository = require('../../data/repositories/org-user.repository');
 const CollaboratorRepository = require('../../data/repositories/collaborator.repository');
-
 const CustomError = require('../../helpers/error.helper');
 const tokenHelper = require('../../helpers/token.helper');
 
-const getUserById = async userId => {
+const getUserById = async (userId) => {
   const user = await UserRepository.getUserById(userId);
   return user || Promise.reject(new CustomError(404, `User with id ${userId} not found`));
 };
@@ -18,7 +17,10 @@ const getUserDetailed = async (username, isOwner) => {
   return user || Promise.reject(new CustomError(404, `User ${username} not found`));
 };
 
-const getUserByUsername = username => UserRepository.getByUsername(username);
+const getUserByUsername = async (username) => {
+  const user = await UserRepository.getByUsername(username);
+  return user || Promise.reject(new CustomError(404, `User ${username} not found`));
+};
 
 const setUsername = async ({ id, username }) => {
   const data = await UserRepository.setUsernameById(id, username);
@@ -45,7 +47,9 @@ const resetPassword = async ({ token, password }) => {
 };
 
 const updateUserSettings = async ({ id, settings }) => {
-  const { name, bio, url, company, location, imgUrl } = settings;
+  const {
+    name, bio, url, company, location, imgUrl
+  } = settings;
   const data = await UserRepository.updateUserById(id, {
     name,
     bio,
@@ -98,6 +102,8 @@ const getUsersForCollaboratorsAddition = async ({ username, repositoryId, userId
     .slice(0, 6);
 };
 
+const getIssuesAuthors = async repositoryId => UserRepository.getIssuesAuthors(repositoryId);
+
 module.exports = {
   getUserById,
   getUserByUsername,
@@ -111,5 +117,6 @@ module.exports = {
   getUsersOrganizations,
   getUsersForCollaboratorsAddition,
   uploadPhoto,
-  deletePhoto
+  deletePhoto,
+  getIssuesAuthors
 };

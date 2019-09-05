@@ -2,12 +2,12 @@ const NodeGit = require('nodegit');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const repoHelper = require('../../helpers/repo.helper');
-const { getReposNames, isEmpty } = require('./repo.service');
+const { getReposNames /* isEmpty */ } = require('./repo.service');
 const CommitRepository = require('../../data/repositories/commit.repository');
 const userRepository = require('../../data/repositories/user.repository');
+const branchRepository = require('../../data/repositories/branch.repository');
 const RepoRepository = require('../../data/repositories/repository.repository');
 const CustomError = require('../../helpers/error.helper');
-
 
 const getCommitsAndCreatedRepoByDate = async (data) => {
   const { user, isOwner } = data;
@@ -17,13 +17,13 @@ const getCommitsAndCreatedRepoByDate = async (data) => {
   const promises = repoList.map((reponame) => {
     const pathToRepo = repoHelper.getPathToRepo(user, reponame);
     return NodeGit.Repository.open(pathToRepo).then((repo) => {
-      isEmpty({ owner: user, reponame: repo });
+      // isEmpty({ owner: user, reponame: repo });
       const walker = NodeGit.Revwalk.create(repo);
       walker.pushGlob('refs/heads/*');
       walker.sorting(NodeGit.Revwalk.SORT.TIME);
       return walker
         .getCommitsUntil(commit => commit)
-        .then(commits => {
+        .then((commits) => {
           const repoCommits = commits.map(commit => ({
             sha: commit.sha(),
             author: commit.author().name(),
@@ -95,13 +95,21 @@ const getCommitsAndCreatedRepoByDate = async (data) => {
 };
 
 const getCommits = async (branch, repoId) => {
-  const { name, userId } = await RepoRepository.getById(repoId);
+  const repository = await RepoRepository.getById(repoId);
+  if (!repository) {
+    return Promise.reject(new CustomError(404, `Repository with id ${repoId} not found`));
+  }
+  const { name, userId } = repository;
   const { username } = await userRepository.getById(userId);
+  const dbBranch = await branchRepository.getByNameAndRepoId(branch, repoId);
+  if (!dbBranch) {
+    return Promise.reject(new CustomError(404, `Branch ${branch} not found in repository with id ${repoId} not found`));
+  }
   const pathToRepo = repoHelper.getPathToRepo(username, name);
   const commitShas = [];
   await NodeGit.Repository.open(pathToRepo)
     .then(repo => repo.getBranchCommit(branch))
-    .then(firstCommitOnMaster => {
+    .then((firstCommitOnMaster) => {
       const history = firstCommitOnMaster.history(NodeGit.Revwalk.SORT.TIME);
       const commitPromise = new Promise((resolve) => {
         history.on('commit', (commit) => {

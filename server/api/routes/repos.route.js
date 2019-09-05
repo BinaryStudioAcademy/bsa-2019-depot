@@ -31,6 +31,7 @@ const isAdminMiddleware = require('../middlewares/is-admin.middleware');
 
 const issueService = require('../services/issue.service');
 const pullsService = require('../services/pulls.service');
+const userService = require('../services/user.service');
 
 const router = Router();
 
@@ -39,7 +40,7 @@ router
     const { reponame, ownerID } = req.body;
     createRepo({ userId: ownerID, name: reponame, ...req.body }).then(data => res.send(data));
   })
-  .get('/:username/:reponame/check-name', isReaderMiddleware, (req, res, next) => {
+  .get('/:username/:reponame/check-name', (req, res, next) => {
     const { username, reponame } = req.params;
     checkName({ owner: username, reponame })
       .then(result => res.send({ exists: result }))
@@ -116,13 +117,6 @@ router
       filepath
     })
       .then(fileData => res.send(fileData))
-      .catch(next);
-  })
-  .get('/:owner/:repoName/:branch/file-exist', (req, res, next) => {
-    const { owner, repoName, branch } = req.params;
-    const { filepath } = req.query;
-    checkFileExists(owner, repoName, branch, filepath)
-      .then(result => res.send(result))
       .catch(next);
   })
   .get('/:username/:reponame/:branchName/last-commit', isReaderMiddleware, (req, res, next) => {
@@ -210,7 +204,7 @@ router
       req.reposNsp.to(repositoryId).emit('changedToPrivate', repositoryId);
     }
   })
-  .put('/star', isReaderMiddleware, (req, res, next) => {
+  .put('/star', (req, res, next) => {
     const { userId, repositoryId } = req.body;
     setStar(userId, repositoryId)
       .then(star => res.send(star))
@@ -222,13 +216,25 @@ router
       .then(labels => res.send(labels))
       .catch(next);
   })
-  .get('/:repositoryId/issues', isReaderMiddleware, (req, res, next) => {
+  .get('/:repositoryId/issues', isReaderMiddleware, async (req, res, next) => {
     const { repositoryId } = req.params;
-    const { sort, author, title } = req.query;
-    issueService
-      .getRepoIssues(repositoryId, sort, author, title)
-      .then(result => res.send(result))
-      .catch(next);
+    const {
+      sort, authorId, title, isOpened
+    } = req.query;
+    try {
+      const issues = await issueService.getRepoIssues(repositoryId, sort, authorId, title, isOpened);
+      const authors = await userService.getIssuesAuthors(repositoryId);
+      const openCount = await issueService.getIssueCount(repositoryId, true);
+      const closedCount = await issueService.getIssueCount(repositoryId, false);
+      res.send({
+        openCount,
+        closedCount,
+        authors,
+        issues
+      });
+    } catch (e) {
+      next(e);
+    }
   })
   .get('/:reponame/issues/:number', isReaderMiddleware, (req, res, next) => {
     const { reponame, number } = req.params;
@@ -239,13 +245,15 @@ router
   .get('/:repositoryId/pulls/diffs', (req, res, next) => {
     const { repositoryId } = req.params;
     const { fromBranch, toBranch } = req.query;
-    pullsService.getPullData(repositoryId, fromBranch, toBranch)
+    pullsService
+      .getPullData(repositoryId, fromBranch, toBranch)
       .then(data => res.send(data))
       .catch(next);
   })
   .get('/:repositoryId/pulls', (req, res, next) => {
     const { repositoryId } = req.params;
-    pullsService.getPulls(repositoryId)
+    pullsService
+      .getPulls(repositoryId)
       .then(data => res.send(data))
       .catch(next);
   })
@@ -255,6 +263,5 @@ router
       .then(data => res.send(data))
       .catch(next);
   });
-
 
 module.exports = router;

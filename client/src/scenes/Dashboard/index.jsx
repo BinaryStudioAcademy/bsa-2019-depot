@@ -68,12 +68,16 @@ class Dashboard extends React.Component {
   }
 
   renderTab(tab) {
+    const {
+      userData: { id: userId },
+      filter
+    } = this.state;
     switch (tab) {
     case tabs.repositories:
       return (
           <>
-            <RepositoriesFilters getCurrentRepoFilter={this.getCurrentRepoFilter} />
-            <RepositoriesList filter={this.state.filter} onDataChange={this.getUserData} />
+            <RepositoriesFilters filter={filter} getCurrentRepoFilter={this.getCurrentRepoFilter} />
+            <RepositoriesList filter={filter} onDataChange={this.getUserData} />
           </>
       );
     case tabs.projects:
@@ -85,7 +89,7 @@ class Dashboard extends React.Component {
     case tabs.followers:
       return <div>followers</div>;
     default:
-      return <Overview />;
+      return <Overview userId={userId} />;
     }
   }
 

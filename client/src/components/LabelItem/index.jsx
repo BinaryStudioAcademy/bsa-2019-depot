@@ -5,6 +5,7 @@ import { Formik } from 'formik';
 import { InputError } from '../../components/InputError';
 import * as Yup from 'yup';
 import ColorPicker from '../../components/ColorPicker';
+import Color from 'color';
 
 import styles from './styles.module.scss';
 
@@ -34,6 +35,7 @@ class LabelItem extends React.Component {
     this.handleDelete = this.handleDelete.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.handleChangeColor = this.handleChangeColor.bind(this);
+    this.changeTextColor = this.changeTextColor.bind(this);
   }
 
   componentDidMount(props) {
@@ -71,6 +73,7 @@ class LabelItem extends React.Component {
       description: '',
       color: ''
     });
+    this.props.cancelCreateLabel();
   }
 
   finishEditing() {
@@ -187,12 +190,17 @@ class LabelItem extends React.Component {
     ) : null;
   }
 
+  changeTextColor(labelColor) {
+    return Color(labelColor).isDark() ? '#f7f7fb' : '#363a44';
+  }
+
   render() {
     const { labelObject } = this.props;
     const isNewLabel = !labelObject.id;
     const { isEditing, name, color } = this.state;
     const labelText = isEditing ? name || 'Label Preview' : labelObject.name;
     const labelColor = isEditing && color.match(/^#[0-9a-fA-F]{6}$/) ? color : labelObject.color;
+    const textColor = labelColor && this.changeTextColor(labelColor);
 
     return (
       <>
@@ -200,7 +208,11 @@ class LabelItem extends React.Component {
           {isNewLabel && !isEditing ? null : (
             <List.Content floated="left" className={styles.leftGroup}>
               <div className={styles.nameContainer}>
-                <Label horizontal style={{ backgroundColor: labelColor }} className={styles.labelName}>
+                <Label
+                  horizontal
+                  style={{ backgroundColor: labelColor, color: textColor }}
+                  className={styles.labelName}
+                >
                   {labelText}
                 </Label>
               </div>
@@ -233,7 +245,8 @@ LabelItem.propTypes = {
     color: PropTypes.string.isRequired
   }),
   onDelete: PropTypes.func,
-  onEdit: PropTypes.func
+  onEdit: PropTypes.func,
+  cancelCreateLabel: PropTypes.func
 };
 
 export default LabelItem;

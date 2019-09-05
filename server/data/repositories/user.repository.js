@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
-const { UserModel } = require('../models/index');
+const { UserModel, IssueModel } = require('../models/index');
 const cryptoHelper = require('../../helpers/crypto.helper');
 const sequelize = require('../db/connection');
 
@@ -36,24 +36,29 @@ class UserRepository extends BaseRepository {
     return this.updateById(user.id, { password: cryptoHelper.encryptSync(password) });
   }
 
-  getUserDetailed(username) {
+  getUserDetailed(username, isOwner) {
+    const literalStatement = isOwner
+      ? `
+    (SELECT COUNT(*)
+    FROM "repositories"
+    WHERE "repositories"."userId" = "user"."id"
+    AND "repositories"."deletedAt" IS NULL)`
+      : `
+    (SELECT COUNT(*)
+    FROM "repositories"
+    WHERE "repositories"."userId" = "user"."id"
+    AND "repositories"."isPublic" = true
+    AND "repositories"."deletedAt" IS NULL)`;
     return this.model.findOne({
       where: { username },
       attributes: {
         include: [
-          [
-            sequelize.literal(`
-            (SELECT COUNT(*)
-            FROM "repositories"
-            WHERE "repositories"."userId" = "user"."id" 
-            AND "repositories"."deletedAt" IS NULL)`),
-            'repositoriesCount'
-          ],
+          [sequelize.literal(literalStatement), 'repositoriesCount'],
           [
             sequelize.literal(`
             (SELECT COUNT(*)
             FROM "stars", "repositories"
-            WHERE "user"."id" = "stars"."userId" 
+            WHERE "user"."id" = "stars"."userId"
             AND "repositories"."id" = "stars"."repositoryId"
             AND "stars"."deletedAt" IS NULL
             AND "repositories"."deletedAt" IS NULL)`),
@@ -71,6 +76,17 @@ class UserRepository extends BaseRepository {
           [Op.iLike]: `%${username}%`
         },
         type: 'USER'
+      }
+    });
+  }
+
+  getIssuesAuthors(repositoryId) {
+    return this.model.findAll({
+      attributes: ['id', 'username', 'imgUrl'],
+      include: {
+        model: IssueModel,
+        where: { repositoryId },
+        attributes: []
       }
     });
   }

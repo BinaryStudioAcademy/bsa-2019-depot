@@ -1,18 +1,18 @@
 :global(.diff-content) {
   width: 100%;
   margin-top: 10px;
-  border: 1px solid #ddd;
+  box-shadow: 0 7px 16px 3px lightgrey;
   > p {
     background-color: #eee;
     padding: 5px;
   }
   :global(.diff-filename) {
     background-color: #eee;
-    padding: 5px;
+    padding: 5px 15px;
     :global(.diff-decoration-content) {
       background-color: #f3f3f3;
-      padding: 10px 5px;
-      border-top: 3px solid #ccc;
+      padding: 10px;
+      border-top: 1px solid #ccc;
       border-bottom: 1px solid #ccc;
     }
   }
@@ -131,7 +131,7 @@
 
   :global(.diff-decoration-content) {
     font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
-    padding: 0;
+    padding: 0px 10px;
     background-color: #e8f3ff;
   }
 }

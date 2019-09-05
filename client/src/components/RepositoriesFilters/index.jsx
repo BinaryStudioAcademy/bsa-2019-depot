@@ -20,13 +20,13 @@ export class RepositoriesFilters extends React.Component {
       { key: 'lt_3', text: 'CSS', value: 'CSS' }
     ];
 
-    const { orgPage, isOwner, orgName, getCurrentRepoFilter } = this.props;
+    const { orgPage, isOwner, isMember, orgName, getCurrentRepoFilter, filter } = this.props;
 
     return (
       <Container className={styles.repos_filters}>
         <Input placeholder="Find a repository…" className={styles.repos_search_input} />
         <div>
-          <Dropdown fluid selection className={styles.repos_filters_dropdown} text="Type: All">
+          <Dropdown fluid selection className={styles.repos_filters_dropdown} text={`Type: ${filter}`}>
             <Dropdown.Menu>
               {repoTypes.map(({ key, text, value }) => (
                 <Dropdown.Item key={key} text={text} value={value} onClick={getCurrentRepoFilter} />
@@ -43,7 +43,7 @@ export class RepositoriesFilters extends React.Component {
             className={styles.repos_filters_dropdown}
           />
         </div>
-        {(orgPage ? isOwner : true) && (
+        {(orgPage ? isOwner || isMember : true) && (
           <div className={styles.new_repo_wrapper}>
             <Link to={orgPage ? `/organizations/${orgName}/repositories/new` : '/new'}>
               <Button primary className={styles.new_repo}>
@@ -65,7 +65,9 @@ RepositoriesFilters.propTypes = {
   repo: PropTypes.object,
   orgPage: PropTypes.bool,
   isOwner: PropTypes.bool,
+  isMember: PropTypes.bool,
   orgName: PropTypes.string,
+  filter: PropTypes.string,
   getCurrentRepoFilter: PropTypes.func
 };
 

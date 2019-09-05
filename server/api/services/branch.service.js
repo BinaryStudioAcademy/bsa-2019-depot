@@ -2,12 +2,21 @@ const NodeGit = require('nodegit');
 const repoHelper = require('../../helpers/repo.helper');
 const userRepository = require('../../data/repositories/user.repository');
 const branchRepository = require('../../data/repositories/branch.repository');
+const CustomError = require('../../helpers/error.helper');
 
 const getBranches = repoId => branchRepository.getByRepoId(repoId);
 
-const getBranchInfo = (branchName, repoId) => branchRepository.getByNameAndRepoId(branchName, repoId);
+const getBranchInfo = async (branchName, repoId) => {
+  const branch = await branchRepository.getByNameAndRepoId(branchName, repoId);
+  return (
+    branch
+    || Promise.reject(new CustomError(404, `Branch ${branchName} not found in repository with id ${repoId} not found`))
+  );
+};
 
-const getLastModifiedCommit = async ({ user, name, branch, entry }) => {
+const getLastModifiedCommit = async ({
+  user, name, branch, entry
+}) => {
   const pathToRepo = repoHelper.getPathToRepo(user, name);
   const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
@@ -63,7 +72,9 @@ const traverseFileTree = async (user, name, branch, tree) => {
   return fileTree;
 };
 
-const getBranchTree = async ({ user, name, branch, pathToDir }) => {
+const getBranchTree = async ({
+  user, name, branch, pathToDir
+}) => {
   const pathToRepo = repoHelper.getPathToRepo(user, name);
   const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
@@ -107,15 +118,17 @@ const checkFileExists = async (owner, reponame, branch, filepath) => {
   const pathToRepo = repoHelper.getPathToRepo(owner, reponame);
   const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
-  const entry = await lastCommitOnBranch.getEntry(filepath);
-  const blob = await entry.getBlob();
-  return {
-    content: blob.isBinary() ? blob.content() : blob.toString(),
-    size: blob.rawsize()
-  };
+  const tree = await lastCommitOnBranch.getTree();
+  const index = await repo.index();
+  await index.readTree(tree);
+
+  const file = index.getByPath(filepath, 0); // 0 === NodeGit.Index.STAGE.NORMAL, but this Enum doesn't work for some reason
+  return { isFilenameUnique: !file };
 };
 
-const getFileBlame = async ({ user, name, branch, filepath }) => {
+const getFileBlame = async ({
+  user, name, branch, filepath
+}) => {
   const pathToRepo = repoHelper.getPathToRepo(user, name);
   const repo = await NodeGit.Repository.open(pathToRepo);
   const lastCommitOnBranch = await repo.getBranchCommit(branch);
@@ -123,7 +136,7 @@ const getFileBlame = async ({ user, name, branch, filepath }) => {
   const blob = await entry.getBlob();
   const BlameArray = [];
 
-  await NodeGit.Blame.file(repo, filepath).then(async blame => {
+  await NodeGit.Blame.file(repo, filepath).then(async (blame) => {
     let count = 0;
     for (let i = 0; i < blame.getHunkCount(); i += 1) {
       const hunk = blame.getHunkByIndex(i);

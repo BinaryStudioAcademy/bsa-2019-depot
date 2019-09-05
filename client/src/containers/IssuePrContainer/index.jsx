@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { Icon, Input, Dropdown, Button, Label } from 'semantic-ui-react';
+import { Icon, Input, Dropdown, Button, Label, Segment } from 'semantic-ui-react';
 import { PullRequestOutline } from '@ant-design/icons';
 import AntdIcon from '@ant-design/icons-react';
 import DataList from '../../components/DataList';
+import { getLabels } from '../../services/labelsService';
+import { getRepositoryByOwnerAndName } from '../../services/repositoryService';
 
 import styles from './styles.module.scss';
 AntdIcon.add(PullRequestOutline);
@@ -15,8 +17,18 @@ class IssuePrContainer extends React.Component {
 
     this.state = {
       filterByTitle: '',
-      showOpenData: true
+      showOpenData: true,
+      labelsCount: null
     };
+  }
+
+  async componentDidMount() {
+    const { username, reponame } = this.props.match.params;
+    const { id } = await getRepositoryByOwnerAndName({ username, reponame });
+    const labels = await getLabels(id);
+    this.setState({
+      labelsCount: labels.length
+    });
   }
 
   openData = () => {
@@ -79,6 +91,7 @@ class IssuePrContainer extends React.Component {
 
   render() {
     const { data, isIssues } = this.props;
+    const { labelsCount } = this.state;
 
     const authorList = data.reduce((acc, { user }) => {
       return !acc.includes(user.username) ? [...acc, user.username] : acc;
@@ -110,7 +123,7 @@ class IssuePrContainer extends React.Component {
     ];
 
     return (
-      <>
+      <Segment basic>
         <div className={styles.filterRow}>
           <div className={styles.leftGroup}>
             <Input
@@ -126,7 +139,7 @@ class IssuePrContainer extends React.Component {
 
               <Button.Content className={styles.labelButtonText}>Labels</Button.Content>
               <Button.Content className={styles.labelButtonContent}>
-                <Label circular>8</Label>
+                <Label circular>{labelsCount}</Label>
               </Button.Content>
             </Button>
           </div>
@@ -184,7 +197,7 @@ class IssuePrContainer extends React.Component {
           </div>
           <DataList data={filteredData} isPull={!isIssues} />
         </div>
-      </>
+      </Segment>
     );
   }
 }
