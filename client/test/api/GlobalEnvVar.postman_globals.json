@@ -1,0 +1,134 @@
+{
+  "id": "26e000a2-a1ff-4059-815d-cc10d53701a6",
+  "values": [
+    {
+      "key": "loginEmail",
+      "value": "depot.project.tester@gmail.com",
+      "enabled": true
+    },
+    {
+      "key": "loginPass",
+      "value": "Q!w2e3r4t5",
+      "enabled": true
+    },
+    {
+      "key": "token",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjdjMjYwNGZlLTExZGQtNDUzNS05MzlkLTFmODFlZDYyMDJkZCIsImVtYWlsIjoiZGVwb3QucHJvamVjdC50ZXN0ZXJAZ21haWwuY29tIiwiaWF0IjoxNTY3NjIzNzEyLCJleHAiOjE1Njc3MTAxMTJ9.w0HeauJTZDradGLEbAzbJN_H6R6TCxtxcXnlB85GyVY",
+      "enabled": true
+    },
+    {
+      "key": "repo_name1",
+      "value": "PostmanRepo",
+      "enabled": true
+    },
+    {
+      "key": "repo_name2",
+      "value": "PostmanRepo2",
+      "enabled": true
+    },
+    {
+      "key": "repo_name3",
+      "value": "PostmanRepo3",
+      "enabled": true
+    },
+    {
+      "key": "repo_name4",
+      "value": "PostmanRepo4",
+      "enabled": true
+    },
+    {
+      "key": "depotApi",
+      "value": "https://stage.depothub.xyz/api",
+      "enabled": true
+    },
+    {
+      "key": "id",
+      "value": "7c2604fe-11dd-4535-939d-1f81ed6202dd",
+      "enabled": true
+    },
+    {
+      "key": "username",
+      "value": "tester",
+      "enabled": true
+    },
+    {
+      "key": "ChangeName",
+      "value": "Elon Mask",
+      "enabled": true
+    },
+    {
+      "key": "ChangeBio",
+      "value": "a long time ago",
+      "enabled": true
+    },
+    {
+      "key": "ChangeUrl",
+      "value": "mysite.com",
+      "enabled": true
+    },
+    {
+      "key": "ChangeCompany",
+      "value": "my Company",
+      "enabled": true
+    },
+    {
+      "key": "ChangeLocation",
+      "value": "Kiev",
+      "enabled": true
+    },
+    {
+      "key": "bio",
+      "value": "asgasgaasgasgaasgasgaasdas",
+      "enabled": true
+    },
+    {
+      "key": "company",
+      "value": "gagehjyj",
+      "enabled": true
+    },
+    {
+      "key": "location",
+      "value": "gagehjyjgagehjyjgagehjyj",
+      "enabled": true
+    },
+    {
+      "key": "url",
+      "value": "aefcaefcaefcaefc",
+      "enabled": true
+    },
+    {
+      "key": "name",
+      "value": "asgasgaasgasga",
+      "enabled": true
+    },
+    {
+      "key": "branch",
+      "value": "new1",
+      "enabled": true
+    },
+    {
+      "key": "repo_name5",
+      "value": "PstmnRepo5",
+      "enabled": true
+    },
+    {
+      "key": "repo_name6",
+      "value": "PstmnRepo6",
+      "enabled": true
+    },
+    {
+      "key": "fileName",
+      "value": "style.css",
+      "enabled": true
+    },
+    {
+      "key": "fileData",
+      "value": "Some css text",
+      "enabled": true
+    }
+  ],
+  "name": "My Workspace Globals",
+  "_postman_variable_scope": "globals",
+  "_postman_exported_at": "2019-09-04T19:05:08.746Z",
+  "_postman_exported_using": "Postman/7.6.0"
+}

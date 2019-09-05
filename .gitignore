@@ -88,4 +88,5 @@ yarn.lock
 
 # Test
 
-test/output/
+client/test/output/
+client/test/api/output/
