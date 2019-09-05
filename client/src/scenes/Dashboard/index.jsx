@@ -68,7 +68,10 @@ class Dashboard extends React.Component {
   }
 
   renderTab(tab) {
-    const { filter } = this.state;
+    const {
+      userData: { id: userId },
+      filter
+    } = this.state;
     switch (tab) {
     case tabs.repositories:
       return (
@@ -86,7 +89,7 @@ class Dashboard extends React.Component {
     case tabs.followers:
       return <div>followers</div>;
     default:
-      return <Overview />;
+      return <Overview userId={userId} />;
     }
   }
 
