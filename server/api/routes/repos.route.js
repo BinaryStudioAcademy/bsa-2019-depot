@@ -204,7 +204,7 @@ router
       req.reposNsp.to(repositoryId).emit('changedToPrivate', repositoryId);
     }
   })
-  .put('/star', isReaderMiddleware, (req, res, next) => {
+  .put('/star', (req, res, next) => {
     const { userId, repositoryId } = req.body;
     setStar(userId, repositoryId)
       .then(star => res.send(star))
