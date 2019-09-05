@@ -41,10 +41,14 @@ const acceptInvitation = async (username, reponame, userId) => {
 
 const declineInvitation = async (username, reponame, userId) => {
   const [{ id }] = await getUserInvitationStatus(username, reponame, userId);
-  return collaboratorRepository.deleteById(id);
+  await collaboratorRepository.deleteById(id);
+  return {};
 };
 
-const removeRepositoryCollaborator = collaboratorId => collaboratorRepository.deleteById(collaboratorId);
+const removeRepositoryCollaborator = async collaboratorId => {
+  await collaboratorRepository.deleteById(collaboratorId)
+  return {};
+};
 
 const getUserRights = async (username, reponame, userId) => {
   const { id: repositoryId } = await getByUserAndReponame({ owner: username, reponame });
