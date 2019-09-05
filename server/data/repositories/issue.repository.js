@@ -230,7 +230,7 @@ class IssueRepository extends BaseRepository {
       where: {
         repositoryId,
         isOpened,
-        ...(title ? { body: { [Op.substring]: title } } : {}),
+        ...(title ? { title: { [Op.substring]: title } } : {}),
         ...(authorId ? { userId: authorId } : {})
       },
       attributes: {
@@ -252,7 +252,13 @@ class IssueRepository extends BaseRepository {
         },
         {
           model: RepositoryModel,
-          attributes: ['name']
+          attributes: ['name'],
+          include: [
+            {
+              model: UserModel,
+              attributes: ['username']
+            }
+          ]
         }
       ],
       order: parseSortQuery(sort)

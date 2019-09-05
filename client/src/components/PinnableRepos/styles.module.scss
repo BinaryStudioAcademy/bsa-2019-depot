@@ -1,0 +1,39 @@
+$red: #ed1a37;
+$blue: #2e53db;
+
+:local(.pinnableItem) {
+  width: 100% !important;
+}
+
+:local(.repoLabel) {
+  box-sizing: border-box;
+  display: flex !important;
+  justify-content: space-between;
+  width: 100%;
+}
+
+:local(.formFooter) {
+  display: flex;
+  justify-content: space-between;
+}
+
+:local(.warning) {
+  color: $red;
+}
+
+:local(.trigger) {
+  font: inherit;
+  font-size: 80%;
+  border: none;
+  background-color: transparent;
+
+  &:hover {
+    cursor: pointer;
+    color: $blue;
+  }
+}
+
+:local(.normalFont) {
+  font-weight: normal;
+  font-size: 80%;
+}

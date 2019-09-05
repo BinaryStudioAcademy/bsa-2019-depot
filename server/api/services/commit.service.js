@@ -5,6 +5,7 @@ const repoHelper = require('../../helpers/repo.helper');
 const { getReposNames /* isEmpty */ } = require('./repo.service');
 const CommitRepository = require('../../data/repositories/commit.repository');
 const userRepository = require('../../data/repositories/user.repository');
+const branchRepository = require('../../data/repositories/branch.repository');
 const RepoRepository = require('../../data/repositories/repository.repository');
 const CustomError = require('../../helpers/error.helper');
 
@@ -94,8 +95,16 @@ const getCommitsAndCreatedRepoByDate = async (data) => {
 };
 
 const getCommits = async (branch, repoId) => {
-  const { name, userId } = await RepoRepository.getById(repoId);
+  const repository = await RepoRepository.getById(repoId);
+  if (!repository) {
+    return Promise.reject(new CustomError(404, `Repository with id ${repoId} not found`));
+  }
+  const { name, userId } = repository;
   const { username } = await userRepository.getById(userId);
+  const dbBranch = await branchRepository.getByNameAndRepoId(branch, repoId);
+  if (!dbBranch) {
+    return Promise.reject(new CustomError(404, `Branch ${branch} not found in repository with id ${repoId} not found`));
+  }
   const pathToRepo = repoHelper.getPathToRepo(username, name);
   const commitShas = [];
   await NodeGit.Repository.open(pathToRepo)

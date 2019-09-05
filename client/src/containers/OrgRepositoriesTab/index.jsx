@@ -14,6 +14,7 @@ class OrgRepositoriesTab extends React.Component {
       orgMembers,
       orgInfo,
       isOwner,
+      isMember,
       orgInfo: { username },
       filter
     } = this.props;
@@ -25,6 +26,7 @@ class OrgRepositoriesTab extends React.Component {
               <RepositoriesFilters
                 className={styles.org_repositories_filter}
                 isOwner={isOwner}
+                isMember={isMember}
                 orgPage={true}
                 orgName={username}
                 filter={filter}
@@ -55,6 +57,7 @@ OrgRepositoriesTab.propTypes = {
   orgMembers: PropTypes.any,
   orgInfo: PropTypes.any,
   isOwner: PropTypes.any,
+  isMember: PropTypes.bool,
   repositories: PropTypes.array,
   filter: PropTypes.string
 };

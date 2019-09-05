@@ -34,7 +34,7 @@ class IssuesTab extends React.Component {
       <Loader active />
     ) : (
       <Segment basic>
-        <IssuesList repositoryId={repositoryId} />
+        <IssuesList repositoryId={repositoryId} isIssues={true} />
       </Segment>
     );
   }

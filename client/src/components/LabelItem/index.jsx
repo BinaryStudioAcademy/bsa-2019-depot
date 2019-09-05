@@ -73,6 +73,7 @@ class LabelItem extends React.Component {
       description: '',
       color: ''
     });
+    this.props.cancelCreateLabel();
   }
 
   finishEditing() {
@@ -244,7 +245,8 @@ LabelItem.propTypes = {
     color: PropTypes.string.isRequired
   }),
   onDelete: PropTypes.func,
-  onEdit: PropTypes.func
+  onEdit: PropTypes.func,
+  cancelCreateLabel: PropTypes.func
 };
 
 export default LabelItem;

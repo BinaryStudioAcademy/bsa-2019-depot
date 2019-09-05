@@ -65,7 +65,9 @@ const DataList = props => {
             <List.Content>
               <List.Header>
                 <Link
-                  to={`/${item.user.username}/${item.repository.name}/${isPull ? 'pulls' : 'issues'}/${item.number}`}
+                  to={`/${item.repository.user.username}/${item.repository.name}/${isPull ? 'pulls' : 'issues'}/${
+                    item.number
+                  }`}
                 >
                   {item.title}
                 </Link>
