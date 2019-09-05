@@ -14,9 +14,9 @@ import {
   deleteIssue
 } from '../../services/issuesService';
 import { createIssueComment, updateIssueComment, deleteIssueComment } from '../../services/issueCommentsService';
+import Comment from '../Comment';
+import IssuePrHeader from '../IssuePrHeader';
 import { getAllQuestionOnSO } from '../../services/issuesService';
-import IssueComment from '../IssueComment';
-import IssueHeader from '../IssueHeader';
 import { socketInit } from '../../helpers/socketInitHelper';
 import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 import 'react-mde/lib/styles/css/react-mde-all.css';
@@ -76,7 +76,7 @@ class IssueComments extends React.Component {
       intitle: title,
       site: 'stackoverflow',
       pagesize: 5,
-      // tagged: ['reactjs', 'javascript'].join(';'), // for label names 
+      // tagged: ['reactjs', 'javascript'].join(';'), // for label names
       sort: 'votes',
       order: 'desc'
     };
@@ -133,7 +133,7 @@ class IssueComments extends React.Component {
       return;
     }
 
-    return await deleteIssueComment({ id });
+    return await deleteIssueComment( id );
   }
 
   async onIssueUpdateBody(id, body) {
@@ -178,7 +178,6 @@ class IssueComments extends React.Component {
     const {
       currentIssue: { id: issueId }
     } = this.state;
-
     if (!comment) return;
 
     const { userId } = this.props;
@@ -224,14 +223,15 @@ class IssueComments extends React.Component {
       <Loader active />
     ) : (
       <Segment basic>
-        <IssueHeader
+        <IssuePrHeader
           title={currentIssue.title}
           number={currentIssue.number}
           canEdit={this.isOwnIssue()}
           onNewIssue={this.redirectToCreateNewIssue}
           onSubmit={this.onIssueUpdateTitle}
+          isIssue={true}
         />
-        <div>
+        <div className={styles.status_line}>
           <Label color={currentIssue.isOpened ? 'green' : 'red'} className={styles.issue_label}>
             <Icon name="exclamation circle" /> {currentIssue.isOpened ? 'Open' : 'Closed'}
           </Label>
@@ -242,7 +242,7 @@ class IssueComments extends React.Component {
             } comments`}</span>
           </span>
         </div>
-        <IssueComment
+        <Comment
           id={currentIssue.id}
           avatar={currentIssue.user.imgUrl}
           username={currentIssue.user.username}
@@ -263,7 +263,7 @@ class IssueComments extends React.Component {
                 <SOLogoSVG className={styles.SOIcon} />
               </h2>
               {questions.items.map((question, index) => (
-                <IssueComment
+                <Comment
                   key={index}
                   avatar={SOAvatarSVG}
                   isQuestion
@@ -285,7 +285,7 @@ class IssueComments extends React.Component {
               userId: commentUserId
             } = issueComment;
             return (
-              <IssueComment
+              <Comment
                 key={id}
                 id={id}
                 avatar={imgUrl}
@@ -301,7 +301,7 @@ class IssueComments extends React.Component {
               />
             );
           })}
-        <IssueComment
+        <Comment
           avatar={userImg}
           username={userName}
           newComment={true}

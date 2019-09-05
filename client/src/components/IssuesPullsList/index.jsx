@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { Icon, Input, Dropdown, Button, Label } from 'semantic-ui-react';
+import { Icon, Input, Dropdown, Button, Label, Segment } from 'semantic-ui-react';
 import { PullRequestOutline } from '@ant-design/icons';
 import AntdIcon from '@ant-design/icons-react';
 import DataList from '../DataList';
@@ -44,7 +44,7 @@ const sortOptions = [
   }
 ];
 
-class IssuesList extends React.Component {
+class IssuesPullsList extends React.Component {
   constructor(props) {
     super(props);
 
@@ -66,15 +66,22 @@ class IssuesList extends React.Component {
   }
 
   fetchData = async () => {
-    const { repositoryId } = this.props;
+    const { repositoryId, isIssues } = this.props;
     const { filter } = this.state;
 
-    const { openCount, closedCount, authors: authorList, issues: items } = await RepoService.getRepositoryIssues(
-      repositoryId,
-      filter
-    );
-
-    this.setState({ openCount, closedCount, authorList, items, loading: false });
+    if (isIssues) {
+      const { openCount, closedCount, authors: authorList, issues: items } = await RepoService.getRepositoryIssues(
+        repositoryId,
+        filter
+      );
+      this.setState({ openCount, closedCount, authorList, items, loading: false });
+    } else {
+      const { openCount, closedCount, authors: authorList, pulls: items } = await RepoService.getRepositoryPulls(
+        repositoryId,
+        filter
+      );
+      this.setState({ isIssues, openCount, closedCount, authorList, items, loading: false });
+    }
   };
 
   async componentDidMount() {
@@ -170,7 +177,7 @@ class IssuesList extends React.Component {
     const filteredAuthorList = authorList.filter(author => author.username.includes(authorDropdownFilter));
 
     return (
-      <>
+      <Segment basic>
         <div className={styles.filterRow}>
           <div className={styles.leftGroup}>
             <Input
@@ -265,12 +272,12 @@ class IssuesList extends React.Component {
           </div>
           <DataList data={items} isPull={!isIssues} />
         </div>
-      </>
+      </Segment>
     );
   }
 }
 
-IssuesList.propTypes = {
+IssuesPullsList.propTypes = {
   isIssues: PropTypes.bool,
   reponame: PropTypes.string,
   repositoryId: PropTypes.string,
@@ -286,4 +293,4 @@ IssuesList.propTypes = {
   onChangeFilter: PropTypes.func
 };
 
-export default withRouter(IssuesList);
+export default withRouter(IssuesPullsList);

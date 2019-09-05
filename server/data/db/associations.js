@@ -16,6 +16,7 @@ module.exports = (models) => {
     LanguageStats,
     PullRequest,
     PRStatus,
+    PullComment,
     Permission,
     Collaborator,
     PinnedRepository
@@ -29,9 +30,11 @@ module.exports = (models) => {
   User.hasMany(Issue);
   User.hasMany(IssueComment);
   User.hasMany(PullRequest);
+  User.hasMany(PullComment);
   Repository.hasMany(Issue, { foreignKey: 'repositoryId' });
   Repository.hasMany(PullRequest, { foreignKey: 'repositoryId' });
   Issue.hasMany(IssueComment, { onDelete: 'cascade' });
+  PullRequest.hasMany(PullComment, { foreignKey: 'pullId', onDelete: 'cascade' });
 
   User.hasMany(OrgUser, { foreignKey: 'userId' });
   User.hasMany(OrgUser, { foreignKey: 'orgId' });
@@ -71,6 +74,7 @@ module.exports = (models) => {
   Issue.belongsTo(Repository);
   IssueComment.belongsTo(User);
   IssueComment.belongsTo(Issue);
+
   Repository.hasMany(Star);
   PullRequest.belongsTo(User);
   PullRequest.belongsTo(Repository);
@@ -78,8 +82,10 @@ module.exports = (models) => {
   PullRequest.belongsTo(PRStatus, { foreignKey: 'statusId' });
   PullRequest.belongsTo(Commit, { foreignKey: 'toCommitId' });
   PullRequest.belongsTo(Commit, { foreignKey: 'fromCommitId' });
-  PullRequest.belongsTo(Branch, { foreignKey: 'fromBranchId' });
-  PullRequest.belongsTo(Branch, { foreignKey: 'toBranchId' });
+  PullRequest.belongsTo(Branch, { as: 'fromBranch', foreignKey: 'fromBranchId' });
+  PullRequest.belongsTo(Branch, { as: 'toBranch', foreignKey: 'toBranchId' });
+  PullComment.belongsTo(User);
+  PullComment.belongsTo(PullRequest, { as: 'pull' });
   Star.belongsTo(Repository);
   Star.belongsTo(User);
 

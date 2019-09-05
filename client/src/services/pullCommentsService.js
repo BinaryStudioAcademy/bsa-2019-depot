@@ -1,28 +1,28 @@
 import callWebApi from '../helpers/webApiHelper';
 
-export const createIssueComment = async request => {
+export const createPullComment = async request => {
   const response = await callWebApi({
-    endpoint: '/api/issue-comments',
+    endpoint: '/api/pull-comments',
     type: 'POST',
     request
   });
   return response ? response.json() : false;
 };
 
-export const updateIssueComment = async request => {
+export const updatePullComment = async request => {
   const response = await callWebApi({
-    endpoint: '/api/issue-comments',
+    endpoint: '/api/pull-comments',
     type: 'PUT',
     request
   });
   return response ? response.json() : false;
 };
 
-export const deleteIssueComment = async id => {
+export const deletePullComment = async id => {
   const response = await callWebApi({
-    endpoint: `/api/issue-comments/${id}`,
+    endpoint: `/api/pull-comments/${id}`,
     type: 'DELETE'
   });
 
-  return response.status === 204 ? true : false;
+  return response.status === 200;
 };

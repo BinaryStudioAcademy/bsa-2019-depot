@@ -82,6 +82,10 @@
   margin-right: auto !important;
 }
 
+:local(.status_line) {
+  margin-bottom: 30px;
+}
+
 :local(.questionsHeader) {
   font-size: 1.3em;
   font-weight: 500;

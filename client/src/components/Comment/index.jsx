@@ -13,7 +13,7 @@ import AntdIcon from '@ant-design/icons-react';
 import styles from './styles.module.scss';
 AntdIcon.add(CheckCircleFill);
 
-class IssueComment extends React.Component {
+class Comment extends React.Component {
   constructor(props) {
     super(props);
 
@@ -172,7 +172,7 @@ class IssueComment extends React.Component {
   }
 }
 
-IssueComment.propTypes = {
+Comment.propTypes = {
   id: PropTypes.string,
   avatar: PropTypes.string,
   username: PropTypes.string.isRequired,
@@ -190,4 +190,4 @@ IssueComment.propTypes = {
   isQuestion: PropTypes.bool.isRequired
 };
 
-export default IssueComment;
+export default Comment;
