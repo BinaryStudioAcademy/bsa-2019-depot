@@ -170,6 +170,13 @@ router.get('/:username/repos/:reponame/issues/:number', (req, res, next) => {
     .catch(next);
 });
 
+router.get('/pinned-repositories/:userId', (req, res, next) => {
+  const { userId } = req.params;
+  PinnedReposService.getPinnedRepos(userId)
+    .then(result => res.send(result))
+    .catch(next);
+});
+
 router.post('/set-pinned-repos', (req, res, next) => {
   const { userId, repositories } = req.body;
   PinnedReposService.setPinnedRepos(userId, repositories)

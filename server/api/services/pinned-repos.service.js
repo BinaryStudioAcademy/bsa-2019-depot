@@ -1,5 +1,7 @@
 const pinnedReposRepository = require('../../data/repositories/pinned-repository.repository');
 
+const getPinnedRepos = async userId => pinnedReposRepository.getAll(userId);
+
 const setPinnedRepos = async (userId, repositories) => {
   try {
     await pinnedReposRepository.deleteByUserId(userId);
@@ -8,9 +10,9 @@ const setPinnedRepos = async (userId, repositories) => {
   } catch (error) {
     throw error;
   }
-
 };
 
 module.exports = {
+  getPinnedRepos,
   setPinnedRepos
 };
