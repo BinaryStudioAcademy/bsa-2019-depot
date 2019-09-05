@@ -19,7 +19,9 @@ module.exports = (models) => {
     PullComment,
     Permission,
     Collaborator,
-    PinnedRepository
+    PinnedRepository,
+    PullReviewer,
+    ReviewStatus
   } = models;
 
   SshKey.belongsTo(User);
@@ -86,6 +88,9 @@ module.exports = (models) => {
   PullRequest.belongsTo(Branch, { as: 'toBranch', foreignKey: 'toBranchId' });
   PullComment.belongsTo(User);
   PullComment.belongsTo(PullRequest, { as: 'pull' });
+  PullReviewer.belongsTo(User);
+  PullReviewer.belongsTo(PullRequest, { as: 'pull' });
+  PullReviewer.belongsTo(ReviewStatus, { as: 'status' });
   Star.belongsTo(Repository);
   Star.belongsTo(User);
 

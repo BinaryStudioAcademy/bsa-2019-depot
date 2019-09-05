@@ -45,8 +45,8 @@ const declineInvitation = async (username, reponame, userId) => {
   return {};
 };
 
-const removeRepositoryCollaborator = async collaboratorId => {
-  await collaboratorRepository.deleteById(collaboratorId)
+const removeRepositoryCollaborator = async (collaboratorId) => {
+  await collaboratorRepository.deleteById(collaboratorId);
   return {};
 };
 
