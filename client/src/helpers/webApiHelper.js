@@ -30,10 +30,11 @@ function getFetchArgs(args) {
     body = JSON.stringify(args.request);
   }
   return {
+    ...(args.request === 'GET' ? {} : { body }),
     method: args.type,
     headers,
     signal: args.ct,
-    ...(args.request === 'GET' ? {} : { body })
+    mode: args.mode
   };
 }
 
@@ -61,5 +62,13 @@ export default async function callWebApi(args) {
   } catch (err) {
     toast.error(`Status: ${err.status}. ${err.message}`);
     handleError(err);
+  }
+}
+
+export async function callExternalApi(args) {
+  try {
+    return fetch(getFetchUrl(args));
+  } catch (err) {
+    toast.error(`Status: ${err.status}. ${err.message}`);
   }
 }
