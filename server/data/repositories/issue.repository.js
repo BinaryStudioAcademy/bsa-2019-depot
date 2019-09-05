@@ -230,7 +230,7 @@ class IssueRepository extends BaseRepository {
       where: {
         repositoryId,
         isOpened,
-        ...(title ? { body: { [Op.substring]: title } } : {}),
+        ...(title ? { title: { [Op.substring]: title } } : {}),
         ...(authorId ? { userId: authorId } : {})
       },
       attributes: {
