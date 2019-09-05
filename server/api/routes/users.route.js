@@ -141,7 +141,7 @@ router.get('/:username/issues', (req, res, next) => {
   const { isOpened, sort, owner } = req.query;
 
   getUserByUsername(username)
-    .then(data => {
+    .then((data) => {
       const { id } = data;
       Promise.all([
         getAllIssuesCount(id, { owner, isOpened: true }),
@@ -149,7 +149,7 @@ router.get('/:username/issues', (req, res, next) => {
         getAllIssuesOwners(id),
         getAllIssues(id, { isOpened, sort, owner })
       ])
-        .then(result => {
+        .then((result) => {
           res.send({
             open: result[0],
             close: result[1],
