@@ -13,7 +13,7 @@ class PinnedRepositories extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      repositories: []
+      loading: true
     };
   }
 
@@ -23,10 +23,11 @@ class PinnedRepositories extends React.Component {
   }
 
   async getRepositories(userId) {
-    const repositories = await UserService.getPinnedRepos(userId);
+    const data = await UserService.getPinnedRepos(userId);
     this.setState({
       ...this.state,
-      repositories
+      ...data,
+      loading: false
     });
   }
 
@@ -60,16 +61,22 @@ class PinnedRepositories extends React.Component {
 
   render() {
     const { username } = this.props;
-    const { repositories } = this.state;
+    const { pinnedRepos, popularRepos, loading } = this.state;
 
-    if (!repositories) {
+    if (loading) {
       return <div>loading...</div>;
     }
+
+    if (!pinnedRepos && !popularRepos) {
+      return null;
+    }
+
+    const repositories = pinnedRepos || popularRepos.map(repo => ({ repository: repo }));
 
     return (
       <>
         <div className={styles.pinnedHeader}>
-          <h2 className={styles.pinnedTitle}>Pinned</h2>
+          <h2 className={styles.pinnedTitle}>{pinnedRepos ? 'Pinned' : 'Popular repositories'}</h2>
           <PinnableRepos username={username} />
         </div>
         <Card.Group itemsPerRow={2} stackable={true}>
