@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { Icon, Input, Dropdown, Button, Label } from 'semantic-ui-react';
+import { Icon, Input, Dropdown, Button, Label, Segment } from 'semantic-ui-react';
 import { PullRequestOutline } from '@ant-design/icons';
 import AntdIcon from '@ant-design/icons-react';
 import DataList from '../DataList';
@@ -177,7 +177,7 @@ class IssuesPullsList extends React.Component {
     const filteredAuthorList = authorList.filter(author => author.username.includes(authorDropdownFilter));
 
     return (
-      <>
+      <Segment basic>
         <div className={styles.filterRow}>
           <div className={styles.leftGroup}>
             <Input
@@ -272,7 +272,7 @@ class IssuesPullsList extends React.Component {
           </div>
           <DataList data={items} isPull={!isIssues} />
         </div>
-      </>
+      </Segment>
     );
   }
 }

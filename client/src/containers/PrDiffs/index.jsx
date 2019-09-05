@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox, Button, Dropdown } from 'semantic-ui-react';
-import { parseDiff } from 'react-diff-view';
 import DiffList from '../../components/DiffList';
 import parse from 'parse-diff';
 

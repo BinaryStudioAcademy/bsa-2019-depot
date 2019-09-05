@@ -3,14 +3,13 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import parse from 'parse-diff';
-import { Label, Icon, Container, Loader } from 'semantic-ui-react';
+import { Label, Icon, Container, Loader, Segment } from 'semantic-ui-react';
 import { Switch, Route, Link } from 'react-router-dom';
 
 import IssuePrHeader from '../../components/IssuePrHeader';
 import CommitsList from '../../components/CommitsList';
 import ConversationTab from '../ConversationTab';
 import PrDiffs from '../PrDiffs';
-
 
 import { getPullByNumber, getPullComments, getBranchDiffs, updatePull } from '../../services/pullsService';
 import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
@@ -174,7 +173,7 @@ class PullView extends React.Component {
     }
 
     return !loading ? (
-      <div>
+      <Segment basic>
         <IssuePrHeader
           title={currentPull.title}
           number={+currentPull.number}
@@ -240,7 +239,7 @@ class PullView extends React.Component {
             />
           </Switch>
         </Container>
-      </div>
+      </Segment>
     ) : (
       <Loader active />
     );

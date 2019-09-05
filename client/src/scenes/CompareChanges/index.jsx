@@ -135,7 +135,7 @@ class CompareChanges extends React.Component {
       );
 
     return (
-      <>
+      <Segment basic>
         <div className={styles.header}>
           <h1>Comparing changes</h1>
           <h5>Choose two branches to see what’s changed or to start a new pull request</h5>
@@ -188,7 +188,7 @@ class CompareChanges extends React.Component {
             </p>
           </div>
         )}
-      </>
+      </Segment>
     );
   }
 }
