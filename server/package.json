@@ -22,6 +22,7 @@
     "bcrypt": "^3.0.6",
     "copy-dir": "^1.2.0",
     "cors": "^2.8.5",
+    "date-and-time": "^0.9.0",
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
     "fs-extra": "^8.1.0",
@@ -43,12 +44,12 @@
     "uuid": "^3.3.3"
   },
   "devDependencies": {
-    "nodemon": "^1.19.1",
     "eslint": "5.16.0",
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-plugin-import": "^2.18.2",
     "husky": "^3.0.2",
     "lint-staged": "^9.2.1",
+    "nodemon": "^1.19.1",
     "prettier": "^1.18.2"
   },
   "husky": {
