@@ -1,30 +1,30 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Header, Loader } from 'semantic-ui-react';
-import { getForksList } from '../../services/repositoryService';
+//import { getForksList } from '../../services/repositoryService';
 
 import styles from './styles.module.scss';
 
-class ForksPage extends React.Component {
+class ForksPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      forks: [],
-      loading: true
+      forks: [{ id: 1, name: 'aaaa' }, { id: 2, name: 'bbbb' }],
+      loading: false //true
     };
   }
 
-  componentDidMount() {
-    this.getForksList();
-  }
+  //componentDidMount() {
+  // this.getForksList();
+  // }
 
-  getForksList() {
-    const { userId } = this.props;
-    getForksList(userId).then(forks => {
-      this.setState({ forks, loading: false });
-    });
-  }
+  //getForksList() {
+  //const { userId } = this.props;
+  // getForksList(userId).then(forks => {
+  //   this.setState({ forks, loading: false });
+  // });
+  //}
 
   render() {
     const { loading, forks } = this.state;
@@ -39,8 +39,8 @@ class ForksPage extends React.Component {
             <Loader active />
           ) : (
             <ul className={styles.forksList}>
-              {forks.map(({ id }) => (
-                <li key={id}></li>
+              {forks.map(({ id, name }) => (
+                <li key={id}>{name}</li>
               ))}
             </ul>
           )}
