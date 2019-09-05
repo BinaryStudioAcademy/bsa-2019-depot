@@ -9,12 +9,13 @@ import { Switch, Route, Link } from 'react-router-dom';
 import IssuePrHeader from '../../components/IssuePrHeader';
 import CommitsList from '../../components/CommitsList';
 import ConversationTab from '../ConversationTab';
+import PrDiffs from '../PrDiffs';
+
 
 import { getPullByNumber, getPullComments, getBranchDiffs, updatePull } from '../../services/pullsService';
 import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 
 import styles from './styles.module.scss';
-import PrDiffs from '../PrDiffs';
 
 class PullView extends React.Component {
   constructor(props) {

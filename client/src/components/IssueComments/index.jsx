@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Button, Label, Icon, Loader } from 'semantic-ui-react';
+import { Button, Label, Icon, Loader, Segment } from 'semantic-ui-react';
 import {
   getIssueByNumber,
   getIssueComments,
@@ -199,7 +199,7 @@ class IssueComments extends React.Component {
     return loading ? (
       <Loader active />
     ) : (
-      <>
+      <Segment basic>
         <IssuePrHeader
           title={currentIssue.title}
           number={currentIssue.number}
@@ -286,7 +286,7 @@ class IssueComments extends React.Component {
               : null
           }
         />
-      </>
+      </Segment>
     );
   }
 }

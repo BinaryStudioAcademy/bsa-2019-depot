@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Checkbox, Button, Dropdown } from 'semantic-ui-react';
 import { parseDiff } from 'react-diff-view';
 import DiffList from '../../components/DiffList';
+import parse from 'parse-diff';
 
 import styles from './styles.module.scss';
 
@@ -18,17 +19,10 @@ const PrDiffs = ({ diffs }) => {
       .map(filename => filename.split('.').pop())
   );
 
-  const parsedDiffs = parseDiff(diffs);
-  const fileChangeCounters = new Map(parsedDiffs.map(({ newPath, hunks }) => {
-    const changesCounters = hunks.reduce((total, { newLines, oldLines }) => {
-      return {
-        newLines: total.newLines += newLines - 2, // Minus context lines
-        oldLines: total.oldLines += oldLines - 2,
-      };
-    }, { newLines: 0, oldLines: 0 });
-
-    return [newPath, changesCounters];
-  }));
+  const files = parse(diffs);
+  const fileChangeCounters = new Map(
+    files.map(({ to, additions, deletions }) => [to, { newLines: additions, oldLines: deletions }])
+  );
 
   const [filteredDiffs, setFilteredDiffs] = useState(diffs);
   const [extensionFilter, setExtensionFilter] = useState(fileExtensions);
