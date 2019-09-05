@@ -5,6 +5,10 @@ const { CollaboratorModel, PermissionModel, UserModel } = require('../models/ind
 const { Op } = Sequelize;
 
 class CollaboratorRepository extends BaseRepository {
+  create(data) {
+    return this.model.create(data);
+  }
+
   findRepoById(repositoryId) {
     return this.model.findAll({
       where: {
@@ -35,6 +39,23 @@ class CollaboratorRepository extends BaseRepository {
     return this.model.findAll({
       where: {
         repositoryId,
+        deletedAt: {
+          [Op.is]: null
+        }
+      },
+      include: [
+        {
+          model: UserModel,
+          attributes: ['username', 'imgUrl']
+        }
+      ]
+    });
+  }
+
+  getCollaboratorById(id) {
+    return this.model.findOne({
+      where: {
+        id,
         deletedAt: {
           [Op.is]: null
         }

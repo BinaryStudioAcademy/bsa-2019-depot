@@ -77,3 +77,20 @@ export const setStar = async request => {
   });
   return response.json();
 };
+
+export const getRepositoryCollaborators = async repositoryId => {
+  const response = await callWebApi({
+    endpoint: `/api/repos/${repositoryId}/collaborators`,
+    type: 'GET'
+  });
+  return response.json();
+};
+
+export const getRepositoryIssues = async (repositoryId, query) => {
+  const response = await callWebApi({
+    endpoint: `/api/repos/${repositoryId}/issues`,
+    type: 'GET',
+    query
+  });
+  return response.json();
+};

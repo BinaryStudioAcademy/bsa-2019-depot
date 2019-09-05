@@ -16,7 +16,8 @@ class OrganizationDashboard extends React.Component {
       currentOrg: {},
       orgMembers: [],
       isOwner: false,
-      repositories: []
+      repositories: [],
+      filter: 'All'
     };
   }
 
@@ -56,7 +57,7 @@ class OrganizationDashboard extends React.Component {
   }
 
   render() {
-    const { repositories, orgMembers, currentOrg, isOwner } = this.state;
+    const { repositories, orgMembers, currentOrg, isOwner, filter } = this.state;
     return (
       <>
         <OrganizationHeader
@@ -66,7 +67,7 @@ class OrganizationDashboard extends React.Component {
           tab="repositories"
         />
         <Container>
-          <OrgRepositoriesTab orgInfo={currentOrg} orgMembers={orgMembers} isOwner={isOwner} />
+          <OrgRepositoriesTab orgInfo={currentOrg} orgMembers={orgMembers} isOwner={isOwner} filter={filter} />
         </Container>
       </>
     );

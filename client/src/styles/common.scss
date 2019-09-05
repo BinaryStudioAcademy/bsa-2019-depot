@@ -1,5 +1,6 @@
 $gray: #f7f7fb;
 $black: #363a44;
+$blue: #2e53db;
 
 .ui.vertical.menu {
   :not(.active) {
@@ -29,5 +30,14 @@ $black: #363a44;
     border-bottom: 1px solid rgba(34, 36, 38, 0.15);
     background-color: $gray;
     color: $black;
+  }
+}
+.ui.secondary.button {
+  box-shadow: inset 0 0 1px 1px $blue;
+  background-color: #fff;
+  color: $blue;
+  &:hover {
+    background-color: darken(#fff, 10%);
+    color: $blue;
   }
 }

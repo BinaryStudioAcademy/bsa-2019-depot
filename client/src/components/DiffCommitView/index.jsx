@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ReactMde from 'react-mde';
 import ReactMarkdown from 'react-markdown';
 import { CommitCommentItem } from '../CommitCommentItem';
-import { Container, Grid, Form, Button, Message, Item, Loader } from 'semantic-ui-react';
+import { Container, Grid, Form, Button, Message, Item, Loader, Segment } from 'semantic-ui-react';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 import { connect } from 'react-redux';
 import * as commitsService from '../../services/commitsService';
@@ -40,14 +40,12 @@ class DiffCommitView extends Component {
 
   async setLoading(loading) {
     await this.setState({
-      ...this.state,
       loading
     });
   }
 
   async setError(error) {
     await this.setState({
-      ...this.state,
       error
     });
   }
@@ -58,7 +56,6 @@ class DiffCommitView extends Component {
       const { username, reponame, hash } = this.props.match.params;
       const diffsData = await commitsService.getCommitDiffs(username, reponame, hash);
       this.setState({
-        ...this.state,
         diffsData
       });
     } catch (err) {
@@ -73,7 +70,6 @@ class DiffCommitView extends Component {
       await this.setLoading(true);
       const comments = await commitsService.getCommitComments(id);
       this.setState({
-        ...this.state,
         comments
       });
     } catch (err) {
@@ -104,11 +100,11 @@ class DiffCommitView extends Component {
   }
 
   onTabChange(selectedTab) {
-    this.setState({ ...this.state, selectedTab });
+    this.setState({ selectedTab });
   }
 
   onBodyChange(body) {
-    this.setState({ ...this.state, body });
+    this.setState({ body });
   }
 
   componentWillUnmount() {
@@ -146,9 +142,11 @@ class DiffCommitView extends Component {
   async onSubmit() {
     const { body } = this.state;
     const { username, reponame, hash } = this.props.match.params;
+    const { id: userId } = this.props.currentUser;
     await commitsService.addCommitComment({
       username,
       reponame,
+      userId,
       hash,
       body
     });
@@ -167,7 +165,6 @@ class DiffCommitView extends Component {
         let updatedComments = [...comments];
         updatedComments.splice(commentIdx, 1);
         await this.setState({
-          ...this.state,
           comments: updatedComments
         });
         this.setState(({ comments }) => ({
@@ -181,17 +178,11 @@ class DiffCommitView extends Component {
 
   async editComment(id, text, commitId, userId) {
     try {
-      const updatedComment = await commitsService.updateCommitComment({ id, body: text, commitId, userId });
-      if (updatedComment) {
-        const { id } = updatedComment;
+      const result = await commitsService.updateCommitComment({ id, body: text, commitId, userId });
+      if (result) {
         const { comments } = this.state;
-        const commentIdx = comments.findIndex(comment => comment.id === id);
-        let updatedComments = [...comments];
-        updatedComments.splice(commentIdx, 1, updatedComment);
-        await this.setState({
-          ...this.state,
-          comments: updatedComments
-        });
+        const updatedComments = comments.map(comment => (comment.id === id ? { ...comment, body: text } : comment));
+        this.setState({ comments: updatedComments });
       }
     } catch (err) {
       await this.setError(err);
@@ -229,7 +220,7 @@ class DiffCommitView extends Component {
     ) : null;
 
     return (
-      <div>
+      <Segment basic>
         {pageError}
         <DiffList diffs={diffsData.diffs} />
         <div className="comments-count">
@@ -258,7 +249,7 @@ class DiffCommitView extends Component {
             </Grid>
           </Form>
         </Container>
-      </div>
+      </Segment>
     );
   }
 }

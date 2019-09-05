@@ -14,7 +14,8 @@ class OrgRepositoriesTab extends React.Component {
       orgMembers,
       orgInfo,
       isOwner,
-      orgInfo: { username }
+      orgInfo: { username },
+      filter
     } = this.props;
     return (
       <Container className={styles.org_repositories_list}>
@@ -26,6 +27,7 @@ class OrgRepositoriesTab extends React.Component {
                 isOwner={isOwner}
                 orgPage={true}
                 orgName={username}
+                filter={filter}
               />
             </Container>
             <Grid.Column className={styles.userinfo_wrapper} mobile={16} tablet={8} computer={11}>
@@ -53,7 +55,8 @@ OrgRepositoriesTab.propTypes = {
   orgMembers: PropTypes.any,
   orgInfo: PropTypes.any,
   isOwner: PropTypes.any,
-  repositories: PropTypes.array
+  repositories: PropTypes.array,
+  filter: PropTypes.string
 };
 
 export default OrgRepositoriesTab;

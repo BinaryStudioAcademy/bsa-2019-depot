@@ -1,7 +1,6 @@
 const { Router } = require('express');
 const { clientUrl } = require('../../config/common.config');
 const {
-  getRepositoryCollaborators,
   getUserInvitationStatus,
   acceptInvitation,
   declineInvitation,
@@ -12,38 +11,32 @@ const {
 
 const router = Router();
 
-router.get('/:repositoryId', (req, res, next) => {
-  const { repositoryId } = req.params;
-  getRepositoryCollaborators(repositoryId)
-    .then(data => res.send(data))
-    .catch(next);
-});
-
-router.get('/:username/:reponame/:userId', (req, res, next) => {
-  const { username, reponame, userId } = req.params;
+router.get('/:userId/status', (req, res, next) => {
+  const { userId } = req.params;
+  const { username, reponame } = req.query;
   getUserInvitationStatus(username, reponame, userId)
     .then(data => res.send(data))
     .catch(next);
 });
 
-router.post('/', (req, res, next) => {
+router.put('/accept', (req, res, next) => {
   const { username, reponame, userId } = req.body;
   acceptInvitation(username, reponame, userId)
-    .then(data => res.send(data))
+    .then(() => res.sendStatus(200))
     .catch(next);
 });
 
-router.delete('/', (req, res, next) => {
+router.delete('/decline', (req, res, next) => {
   const { username, reponame, userId } = req.body;
   declineInvitation(username, reponame, userId)
-    .then(data => res.send(data))
+    .then(() => res.sendStatus(200))
     .catch(next);
 });
 
 router.delete('/:collaboratorId', (req, res, next) => {
   const { collaboratorId } = req.params;
   removeRepositoryCollaborator(collaboratorId)
-    .then(data => res.send(data))
+    .then(() => res.sendStatus(200))
     .catch(next);
 });
 

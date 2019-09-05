@@ -16,6 +16,16 @@ class CommitRepository extends BaseRepository {
     return this.model.findOne({ where: { id } });
   }
 
+  getAllRepoCommits(repositoryId) {
+    return this.model.findAll({
+      raw: true,
+      where: { repositoryId },
+      attributes: {
+        exclude: ['id']
+      }
+    });
+  }
+
   getByHash(hash) {
     return this.model.findOne({
       where: { sha: hash },
