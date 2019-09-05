@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import StarLink from '../StarLink';
 import Octicon, { Repo } from '@primer/octicons-react';
-import { Card } from 'semantic-ui-react';
+import { Card, Loader } from 'semantic-ui-react';
 import PinnableRepos from '../PinnableRepos';
 import * as UserService from '../../services/userService';
 
@@ -36,7 +36,6 @@ class PinnedRepositories extends React.Component {
     const data = await UserService.getPinnedRepos(userId);
 
     this.setState({
-      ...this.state,
       ...data,
       loading: false
     });
@@ -75,10 +74,10 @@ class PinnedRepositories extends React.Component {
     const { pinnedRepos, popularRepos, loading } = this.state;
 
     if (loading) {
-      return <div>loading...</div>;
+      return <Loader />;
     }
 
-    if (!pinnedRepos && !popularRepos) {
+    if ((!pinnedRepos || !pinnedRepos.length) && (!popularRepos || !popularRepos.length)) {
       return null;
     }
 
