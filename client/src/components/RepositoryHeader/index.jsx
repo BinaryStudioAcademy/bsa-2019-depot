@@ -36,6 +36,9 @@ const RepositoryHeader = ({
   case 'commits':
     activeTab = 'code';
     break;
+  case 'insights':
+    activeTab = 'insights';
+    break;
   case 'settings':
     activeTab = 'settings';
     break;
@@ -122,6 +125,11 @@ const RepositoryHeader = ({
             <div className={`${activeTab === 'pulls' && 'active'} item`}>
               <Link to={`${baseUrl}/pulls`}>
                 Pull Requests<Label circular>{pullCount}</Label>
+              </Link>
+            </div>
+            <div className={`${activeTab === 'insights' && 'active'} item`}>
+              <Link to={`${baseUrl}/forks`}>
+                <Icon name="chart bar outline" /> Insights
               </Link>
             </div>
             {username && username === owner && (
