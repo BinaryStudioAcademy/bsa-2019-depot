@@ -97,7 +97,7 @@ class PinnableRepos extends React.Component {
   async onSubmit(values) {
     const { userId } = this.props;
     const repositories = this.mapResult(values);
-    userService.setPinnedRepos({ userId, repositories });
+    await userService.setPinnedRepos({ userId, repositories });
 
     this.handleClose();
     this.props.onSetPinned();

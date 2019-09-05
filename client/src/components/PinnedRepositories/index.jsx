@@ -10,6 +10,12 @@ import * as UserService from '../../services/userService';
 
 import styles from './styles.module.scss';
 
+const initialState = {
+  popularRepos: null,
+  pinnedRepos: null,
+  loading: true
+};
+
 class PinnedRepositories extends React.Component {
   constructor(props) {
     super(props);
@@ -26,6 +32,7 @@ class PinnedRepositories extends React.Component {
 
   async getRepositories() {
     const { userId } = this.props;
+    this.setState(initialState);
     const data = await UserService.getPinnedRepos(userId);
 
     this.setState({
