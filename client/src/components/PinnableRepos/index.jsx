@@ -157,9 +157,9 @@ class PinnableRepos extends React.Component {
         size="tiny"
       >
         <Modal.Header>
-          <strong>Edit pinned items</strong>
+          Edit pinned items
           <br></br>
-          Select up to six public repositories or gists you’d like to show.
+          <span className={styles.normalFont}>Select up to six public repositories or gists you’d like to show.</span>
         </Modal.Header>
         <Modal.Content>
           <Input placeholder="Filter repositories" fluid onChange={this.onFilter} />

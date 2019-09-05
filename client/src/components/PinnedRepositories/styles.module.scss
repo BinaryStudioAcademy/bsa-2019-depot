@@ -10,8 +10,13 @@
 }
 
 :local(.pinnedItemHeader) {
+  font-size: 100% !important;
+
   svg {
     margin-right: 5px;
-    transform: translateY(-2px);
   }
+}
+
+:local(.pinnedItemDescription) {
+  font-size: 80%;
 }

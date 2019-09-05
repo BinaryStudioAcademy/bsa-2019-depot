@@ -57,7 +57,7 @@ class PinnedRepositories extends React.Component {
               {name}
             </Link>
           </Card.Header>
-          <Card.Description>{description}</Card.Description>
+          <Card.Description className={styles.pinnedItemDescription}>{description}</Card.Description>
         </Card.Content>
         <Card.Content extra>
           {true ? (

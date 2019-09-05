@@ -32,3 +32,8 @@ $blue: #2e53db;
     color: $blue;
   }
 }
+
+:local(.normalFont) {
+  font-weight: normal;
+  font-size: 80%;
+}
