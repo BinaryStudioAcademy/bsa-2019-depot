@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import StarLink from '../StarLink';
@@ -60,7 +61,7 @@ class PinnedRepositories extends React.Component {
   }
 
   render() {
-    const { username } = this.props;
+    const { username, userId, currentUserId } = this.props;
     const { pinnedRepos, popularRepos, loading } = this.state;
 
     if (loading) {
@@ -71,13 +72,14 @@ class PinnedRepositories extends React.Component {
       return null;
     }
 
+    const isOwner = userId === currentUserId;
     const repositories = pinnedRepos || popularRepos.map(repo => ({ repository: repo }));
 
     return (
       <>
         <div className={styles.pinnedHeader}>
           <h2 className={styles.pinnedTitle}>{pinnedRepos ? 'Pinned' : 'Popular repositories'}</h2>
-          <PinnableRepos username={username} />
+          {isOwner ? <PinnableRepos username={username} /> : null}
         </div>
         <Card.Group itemsPerRow={2} stackable={true}>
           {repositories.map(repo => this.renderItem(username, repo))}
@@ -89,7 +91,14 @@ class PinnedRepositories extends React.Component {
 
 PinnedRepositories.propTypes = {
   username: PropTypes.string,
-  userId: PropTypes.string
+  userId: PropTypes.string,
+  currentUserId: PropTypes.string
 };
 
-export default PinnedRepositories;
+const mapStateToProps = ({
+  profile: {
+    currentUser: { id: currentUserId }
+  }
+}) => ({ currentUserId });
+
+export default connect(mapStateToProps)(PinnedRepositories);
