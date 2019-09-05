@@ -3,34 +3,34 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    paddingLeft: 5,
-    alignItems: 'center',
-    paddingRight: 10
-  },
-  headerText: {
-    paddingLeft: 10,
-    fontSize: 20
-  },
   data: {
     flexDirection: 'row',
     paddingLeft: 25
   },
-  issue: {
-    padding: 5,
-    borderBottomColor: colors.greyBorder,
-    borderBottomWidth: 1
+  dataDate: {
+    fontSize: 15,
+    paddingLeft: 7
   },
   dataNumber: {
     fontSize: 15
   },
-  dataDate: {
-    paddingLeft: 7,
-    fontSize: 15
-  },
   dataUsername: {
-    paddingLeft: 7,
-    fontSize: 15
+    fontSize: 15,
+    paddingLeft: 7
+  },
+  header: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingLeft: 5,
+    paddingRight: 10
+  },
+  headerText: {
+    fontSize: 20,
+    paddingLeft: 10
+  },
+  issue: {
+    borderBottomColor: colors.greyBorder,
+    borderBottomWidth: 1,
+    padding: 5
   }
 });
