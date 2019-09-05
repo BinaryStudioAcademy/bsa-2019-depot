@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Container, Button, Icon, Divider } from 'semantic-ui-react';
+import { Button, Icon, Segment } from 'semantic-ui-react';
 import Octicon, { Clippy } from '@primer/octicons-react';
 import styles from './styles.module.scss';
 import { Link, withRouter } from 'react-router-dom';
@@ -52,8 +52,7 @@ function EmptyRepositoryTab(props) {
   }
 
   return (
-    <Container>
-      <Divider hidden />
+    <Segment basic>
       <div className={styles.box}>
         <section className={styles.boxSectionHeader}>
           <h3>Quick setup — if you’ve done this kind of thing before</h3>
@@ -108,7 +107,7 @@ function EmptyRepositoryTab(props) {
         <Icon name="idea" />
         ProTip! Use the URL for this page when adding Depot as a remote.
       </p>
-    </Container>
+    </Segment>
   );
 }
 

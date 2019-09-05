@@ -78,7 +78,11 @@ const RepoDescription = props => {
                 onChange={handleChange}
               />
               <InputError name="website" />
-              <Button type="submit" disabled={errors.description || errors.website} className={styles.actionButton}>
+              <Button
+                type="submit"
+                disabled={errors.description || errors.website}
+                className={[styles.actionButton, styles.saveButton].join(' ')}
+              >
                 Save
               </Button>
               <Button onClick={toggleEdit} className={styles.actionButton}>
@@ -91,7 +95,7 @@ const RepoDescription = props => {
         <>
           <div className={styles.repoDescriptionText}>{infoContent}</div>
           {isOwn && (
-            <Button className={[styles.actionButton, styles.editButton].join(' ')} onClick={toggleEdit}>
+            <Button secondary className={styles.editButton} onClick={toggleEdit}>
               Edit
             </Button>
           )}

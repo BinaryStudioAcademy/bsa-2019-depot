@@ -35,28 +35,28 @@ export class CommitCommentItem extends Component {
 
   startEditComment() {
     const { body } = this.props.comment;
-    this.setState({ ...this.state, isEditing: true, text: body });
+    this.setState({ isEditing: true, text: body });
   }
 
   onTabChange(selectedTab) {
-    this.setState({ ...this.state, selectedTab });
+    this.setState({ selectedTab });
   }
 
   onBodyChange(text) {
-    this.setState({ ...this.state, text });
+    this.setState({ text });
   }
 
   onCancel() {
-    this.setState({ ...this.state, isEditing: false });
+    this.setState({ isEditing: false });
   }
 
-  onSubmit() {
+  async onSubmit() {
     const { text } = this.state;
     if (text) {
       const { editComment, comment, userId } = this.props;
       const { id, commitId } = comment;
       editComment(id, text, commitId, userId);
-      this.setState({ ...this.state, isEditing: false, text: '' });
+      await this.setState({ isEditing: false, text: '' });
     }
   }
 
@@ -91,7 +91,7 @@ export class CommitCommentItem extends Component {
           onTabChange={this.onTabChange}
           generateMarkdownPreview={this.renderPreview}
         />
-        <Button color="blue" floated="right" type="submit" onClick={this.onSubmit}>
+        <Button color="blue" floated="right" type="submit" onClick={this.onSubmit} disabled={!text || text === body}>
           Update comment text
         </Button>
         <Button floated="right" type="cancel" className="cancel-button" onClick={this.onCancel}>

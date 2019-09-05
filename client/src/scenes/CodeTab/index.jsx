@@ -14,7 +14,7 @@ import RepoNav from '../../components/RepoNav';
 import EmptyRepositoryTab from '../../containers/EmptyRepositoryTab';
 import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 
-import { Container, Button, Loader, Divider, Message, Breadcrumb } from 'semantic-ui-react';
+import { Container, Button, Loader, Message, Breadcrumb, Segment } from 'semantic-ui-react';
 import styles from './styles.module.scss';
 
 class CodeTab extends React.Component {
@@ -209,48 +209,54 @@ class CodeTab extends React.Component {
         <Loader active />
       </div>
     ) : (
-      <Container className={styles.contentContainer}>
-        <Divider hidden />
-        <RepoDescription isOwn={isOwn} description={description} website={website} onSubmit={this.onSubmitInfo} />
-        <CodeTabMenu
-          ownername={ownername}
-          branch={branch}
-          reponame={reponame}
-          commitsCount={count}
-          branchesCount={branchesCount}
-        />
-        <RepoNav
-          isOwn={isOwn}
-          branch={branch}
-          z
-          branches={branches.map(({ name }) => name)}
-          onBranchChange={this.onBranchChange}
-          onCreateFile={this.onCreateFile}
-        />
-        {currentDir ? (
-          <div className={styles.filePathRow}>
-            <Breadcrumb size="big" className={styles.filePath}>
-              <Breadcrumb.Section>
-                <Link to="" onClick={this.toRootDir}>
-                  {reponame}
-                </Link>
-              </Breadcrumb.Section>
-              <Breadcrumb.Divider />
-              <FilePathBreadcrumbSections owner={ownername} reponame={reponame} branch={branch} filepath={pathToDir} />
-              <Breadcrumb.Section>{currentDir}</Breadcrumb.Section>
-            </Breadcrumb>
-          </div>
-        ) : null}
-        <RepoFileTree
-          lastCommitData={headCommit}
-          fileTreeData={fileTreeData}
-          username={ownername}
-          reponame={reponame}
-          branch={branch}
-          history={history}
-          fetchFileTree={fetchFileTree}
-        />
-        {this.renderReadMe(readme, isOwn)}
+      <Container fluid className={styles.contentContainer}>
+        <Segment basic>
+          <RepoDescription isOwn={isOwn} description={description} website={website} onSubmit={this.onSubmitInfo} />
+          <CodeTabMenu
+            ownername={ownername}
+            branch={branch}
+            reponame={reponame}
+            commitsCount={count}
+            branchesCount={branchesCount}
+          />
+          <RepoNav
+            isOwn={isOwn}
+            branch={branch}
+            z
+            branches={branches.map(({ name }) => name)}
+            onBranchChange={this.onBranchChange}
+            onCreateFile={this.onCreateFile}
+          />
+          {currentDir ? (
+            <div className={styles.filePathRow}>
+              <Breadcrumb size="big" className={styles.filePath}>
+                <Breadcrumb.Section>
+                  <Link to="" onClick={this.toRootDir}>
+                    {reponame}
+                  </Link>
+                </Breadcrumb.Section>
+                <Breadcrumb.Divider />
+                <FilePathBreadcrumbSections
+                  owner={ownername}
+                  reponame={reponame}
+                  branch={branch}
+                  filepath={pathToDir}
+                />
+                <Breadcrumb.Section>{currentDir}</Breadcrumb.Section>
+              </Breadcrumb>
+            </div>
+          ) : null}
+          <RepoFileTree
+            lastCommitData={headCommit}
+            fileTreeData={fileTreeData}
+            username={ownername}
+            reponame={reponame}
+            branch={branch}
+            history={history}
+            fetchFileTree={fetchFileTree}
+          />
+          {this.renderReadMe(readme, isOwn)}
+        </Segment>
       </Container>
     );
   }
