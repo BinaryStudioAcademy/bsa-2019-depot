@@ -260,58 +260,6 @@
           "name": "Create repository",
           "item": [
             {
-              "name": "User login",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "5b6c0331-d3cb-47f9-a28d-4a1df2beaf1c",
-                    "exec": [
-                      "\r",
-                      "var json = JSON.parse(responseBody);\r",
-                      "pm.globals.set(\"token\", json.token);\r",
-                      "\r",
-                      "pm.test(\"Status code is 200\", function () {\r",
-                      "    pm.response.to.have.status(200);\r",
-                      "});"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{token}}",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n\"username\":\"{{loginEmail}}\",\n\"password\":\"{{loginPass}}\"\n}\n"
-                },
-                "url": {
-                  "raw": "{{depotApi}}/auth/login",
-                  "host": ["{{depotApi}}"],
-                  "path": ["auth", "login"]
-                }
-              },
-              "response": []
-            },
-            {
               "name": "Create Repository",
               "event": [
                 {
@@ -451,58 +399,6 @@
         {
           "name": "Delete repository",
           "item": [
-            {
-              "name": "User login",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "5b6c0331-d3cb-47f9-a28d-4a1df2beaf1c",
-                    "exec": [
-                      "\r",
-                      "var json = JSON.parse(responseBody);\r",
-                      "pm.globals.set(\"token\", json.token);\r",
-                      "\r",
-                      "pm.test(\"Status code is 200\", function () {\r",
-                      "    pm.response.to.have.status(200);\r",
-                      "});"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{token}}",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n\"username\":\"{{loginEmail}}\",\n\"password\":\"{{loginPass}}\"\n}\n"
-                },
-                "url": {
-                  "raw": "{{depotApi}}/auth/login",
-                  "host": ["{{depotApi}}"],
-                  "path": ["auth", "login"]
-                }
-              },
-              "response": []
-            },
             {
               "name": "Create Repository",
               "event": [
@@ -649,58 +545,6 @@
         {
           "name": "Create new file",
           "item": [
-            {
-              "name": "User login",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "5b6c0331-d3cb-47f9-a28d-4a1df2beaf1c",
-                    "exec": [
-                      "\r",
-                      "var json = JSON.parse(responseBody);\r",
-                      "pm.globals.set(\"token\", json.token);\r",
-                      "\r",
-                      "pm.test(\"Status code is 200\", function () {\r",
-                      "    pm.response.to.have.status(200);\r",
-                      "});"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{token}}",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n\"username\":\"{{loginEmail}}\",\n\"password\":\"{{loginPass}}\"\n}\n"
-                },
-                "url": {
-                  "raw": "{{depotApi}}/auth/login",
-                  "host": ["{{depotApi}}"],
-                  "path": ["auth", "login"]
-                }
-              },
-              "response": []
-            },
             {
               "name": "Create Repository",
               "event": [
@@ -901,58 +745,6 @@
         {
           "name": "Commit file to new branch",
           "item": [
-            {
-              "name": "User login",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "5b6c0331-d3cb-47f9-a28d-4a1df2beaf1c",
-                    "exec": [
-                      "\r",
-                      "var json = JSON.parse(responseBody);\r",
-                      "pm.globals.set(\"token\", json.token);\r",
-                      "\r",
-                      "pm.test(\"Status code is 200\", function () {\r",
-                      "    pm.response.to.have.status(200);\r",
-                      "});"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{token}}",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n\"username\":\"{{loginEmail}}\",\n\"password\":\"{{loginPass}}\"\n}\n"
-                },
-                "url": {
-                  "raw": "{{depotApi}}/auth/login",
-                  "host": ["{{depotApi}}"],
-                  "path": ["auth", "login"]
-                }
-              },
-              "response": []
-            },
             {
               "name": "Create Repository",
               "event": [
@@ -1173,58 +965,6 @@
         {
           "name": "Delete file",
           "item": [
-            {
-              "name": "User login",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "5b6c0331-d3cb-47f9-a28d-4a1df2beaf1c",
-                    "exec": [
-                      "\r",
-                      "var json = JSON.parse(responseBody);\r",
-                      "pm.globals.set(\"token\", json.token);\r",
-                      "\r",
-                      "pm.test(\"Status code is 200\", function () {\r",
-                      "    pm.response.to.have.status(200);\r",
-                      "});"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{token}}",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n\"username\":\"{{loginEmail}}\",\n\"password\":\"{{loginPass}}\"\n}\n"
-                },
-                "url": {
-                  "raw": "{{depotApi}}/auth/login",
-                  "host": ["{{depotApi}}"],
-                  "path": ["auth", "login"]
-                }
-              },
-              "response": []
-            },
             {
               "name": "Create Repository",
               "event": [
@@ -1485,58 +1225,6 @@
         {
           "name": "Change file",
           "item": [
-            {
-              "name": "User login",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "id": "5b6c0331-d3cb-47f9-a28d-4a1df2beaf1c",
-                    "exec": [
-                      "\r",
-                      "var json = JSON.parse(responseBody);\r",
-                      "pm.globals.set(\"token\", json.token);\r",
-                      "\r",
-                      "pm.test(\"Status code is 200\", function () {\r",
-                      "    pm.response.to.have.status(200);\r",
-                      "});"
-                    ],
-                    "type": "text/javascript"
-                  }
-                }
-              ],
-              "request": {
-                "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{token}}",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Content-Type",
-                    "name": "Content-Type",
-                    "value": "application/json",
-                    "type": "text"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\n\"username\":\"{{loginEmail}}\",\n\"password\":\"{{loginPass}}\"\n}\n"
-                },
-                "url": {
-                  "raw": "{{depotApi}}/auth/login",
-                  "host": ["{{depotApi}}"],
-                  "path": ["auth", "login"]
-                }
-              },
-              "response": []
-            },
             {
               "name": "Create Repository",
               "event": [
