@@ -5,7 +5,7 @@ export default StyleSheet.create({
   container: {
     borderBottomColor: colors.greyBorder,
     borderBottomWidth: 1,
-    padding: 6
+    padding: 5
   },
   descriptionText: {
     color: colors.greyText,
@@ -20,13 +20,14 @@ export default StyleSheet.create({
     width: 10
   },
   starText: {
-    color: colors.greyText
+    color: colors.greyText,
+    fontSize: 15,
+    paddingLeft: 2
   },
   starsView: {
-    flex: 1,
+    alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center',
     marginLeft: 26
   },
   titleIcon: {
@@ -37,11 +38,10 @@ export default StyleSheet.create({
   },
   titleText: {
     color: colors.blueLink,
-    fontSize: 16
+    fontSize: 20
   },
   titleView: {
     alignItems: 'center',
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'flex-start'
   }

@@ -1,12 +1,12 @@
 import React from 'react';
-import { Text, View, FlatList, TouchableOpacity } from 'react-native';
+import { View, FlatList } from 'react-native';
 import styles from './styles';
 import Spinner from '../../components/Spinner';
 import { getAllIssues } from '../../services/issueService';
 import { connect } from 'react-redux';
 import IssueItem from '../../components/IssueItem';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { Button } from 'react-native-elements';
+import PropTypes from 'prop-types';
 
 class IssuesView extends React.Component {
   constructor(props) {
@@ -28,7 +28,6 @@ class IssuesView extends React.Component {
   }
 
   async fetchIssues() {
-    console.log(this.state);
     const { isOpened, sort, owner } = this.state;
     const { username } = this.props.currentUser;
     try {
@@ -83,6 +82,10 @@ class IssuesView extends React.Component {
     );
   }
 }
+
+IssuesView.propTypes = {
+  currentUser: PropTypes.object
+};
 
 const mapStateToProps = ({ profile: { currentUser } }) => ({
   currentUser

@@ -6,7 +6,7 @@ class Notifications extends Component {
   render() {
     return (
       <View style={styles.menu}>
-        <Text>Notification center</Text>
+        <Text style={styles.header}>Notification center</Text>
       </View>
     );
   }

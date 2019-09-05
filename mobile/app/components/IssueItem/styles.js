@@ -1,5 +1,4 @@
 import colors from '../../config/color.config';
-import EStyleSheet from 'react-native-extended-stylesheet';
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
@@ -8,13 +7,16 @@ export default StyleSheet.create({
     paddingLeft: 25
   },
   dataDate: {
+    color: colors.greyText,
     fontSize: 15,
     paddingLeft: 7
   },
   dataNumber: {
+    color: colors.greyText,
     fontSize: 15
   },
   dataUsername: {
+    color: colors.greyText,
     fontSize: 15,
     paddingLeft: 7
   },
@@ -25,6 +27,7 @@ export default StyleSheet.create({
     paddingRight: 10
   },
   headerText: {
+    color: colors.blueLink,
     fontSize: 20,
     paddingLeft: 10
   },

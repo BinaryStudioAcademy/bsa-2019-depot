@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ReposList from '../../containers/ReposList';
@@ -8,8 +8,6 @@ import Spinner from '../../components/Spinner';
 import { getUserDetailed } from '../../services/userService';
 import { getRepositories } from '../../services/repositoryService';
 import { fetchCurrentUser } from '../../routines/routines';
-import storageHelper from '../../helpers/storageHelper';
-import { GoogleManager } from '../../config/google.config';
 
 import styles from './styles';
 
@@ -21,14 +19,6 @@ class ReposView extends React.Component {
       repos: []
     };
   }
-
-  logOut = async () => {
-    const { navigation, fetchCurrentUser } = this.props;
-    storageHelper.clear();
-    GoogleManager.deauthorize('google');
-    await fetchCurrentUser();
-    navigation.navigate('Auth');
-  };
 
   async componentDidMount() {
     const { isAuthorized, navigation, currentUser } = this.props;

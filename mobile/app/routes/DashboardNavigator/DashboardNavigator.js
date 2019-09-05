@@ -4,34 +4,13 @@ import PullsView from '../../views/PullsView';
 import IssuesView from '../../views/IssuesView';
 import StarsView from '../../views/StarsView';
 import DashboardHeader from '../../components/DashboardHeader';
-import { createAppContainer } from 'react-navigation';
-import { AppRegistry, Dimensions } from 'react-native';
 import SideMenu from '../../components/SideMenu';
 import React from 'react';
-import { TabNavigator, createStackNavigator, createDrawerNavigator } from 'react-navigation';
+import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
 import Notifications from '../../components/Notifications';
-import Icon from 'react-native-vector-icons/FontAwesome';
-
-// const DashboardNavigator = createMaterialTopTabNavigator({
-//   Repos: { screen: ReposView },
-//   Pulls: { screen: PullsView },
-//   Issues: { screen: IssuesView },
-//   Stars: { screen: StarsView }
-// });
-
-const Repos = createStackNavigator(
-  {
-    Repos: {
-      screen: ReposView
-    }
-  },
-  {
-    headerMode: 'none'
-  }
-);
 
 const TabNav = createMaterialTopTabNavigator({
-  Repos: Repos,
+  Repos: { screen: ReposView },
   Pulls: { screen: PullsView },
   Issues: { screen: IssuesView },
   Stars: { screen: StarsView }
@@ -56,6 +35,7 @@ const Drawer = createDrawerNavigator(
     }
   },
   {
+    // eslint-disable-next-line react/display-name
     contentComponent: props => <SideMenu {...props} />,
     drawerType: 'front',
     drawerWidth: 200,

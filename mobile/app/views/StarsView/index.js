@@ -1,21 +1,60 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View, FlatList } from 'react-native';
 import styles from './styles';
-
-const MyStars = [
-  { repository: 'moment / moment', description: 'React Calendar', updatedAt: 'Updated 2 days ago' },
-  { repository: 'zeit / next.js', description: 'The React Framework', updatedAt: 'Updated 1 hour ago' },
-  { repository: 'react-component / calendar ', description: 'Updated 10 hours ago' }
-];
+import Spinner from '../../components/Spinner';
+import { getAllStars } from '../../services/starsService';
+import { connect } from 'react-redux';
+import StarItem from '../../components/StarItem';
+import PropTypes from 'prop-types';
 
 class StarsView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: true,
+      starsData: []
+    };
+  }
+
+  async componentDidMount() {
+    await this.fetchStars();
+  }
+
+  async fetchStars() {
+    const { username } = this.props.currentUser;
+    try {
+      const starsData = await getAllStars(username);
+      this.setState({
+        ...this.state,
+        isLoading: false,
+        starsData
+      });
+    } catch (err) {}
+  }
+
   render() {
-    return (
+    const { isLoading, starsData } = this.state;
+    return !isLoading ? (
       <View>
-        <Text>This is a list of Starred Repos </Text>
+        <View style={styles.starsHeader}></View>
+        <FlatList
+          data={starsData}
+          // eslint-disable-next-line react/jsx-no-bind
+          renderItem={({ item }) => <StarItem data={item} />}
+        />
       </View>
+    ) : (
+      <Spinner />
     );
   }
 }
 
-export default StarsView;
+StarsView.propTypes = {
+  currentUser: PropTypes.object
+};
+
+const mapStateToProps = ({ profile: { currentUser } }) => ({
+  currentUser
+});
+
+export default connect(mapStateToProps)(StarsView);

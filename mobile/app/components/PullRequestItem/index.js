@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import { Text, View, Image } from 'react-native';
+import { Text, View } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/Octicons';
 
@@ -24,6 +24,11 @@ const PullRequestItem = ({ data: { repository, pullRequestName, number, date, na
       </View>
     </View>
   );
+};
+
+PullRequestItem.propTypes = {
+  data: PropTypes.object,
+  isOpened: PropTypes.bool
 };
 
 export default PullRequestItem;
