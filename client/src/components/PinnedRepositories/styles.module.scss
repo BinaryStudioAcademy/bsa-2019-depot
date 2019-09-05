@@ -1,0 +1,10 @@
+:local(.pinnedHeader) {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 1em 0;
+}
+
+:local(.pinnedTitle) {
+  font-size: 100%;
+}
