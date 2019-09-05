@@ -35,7 +35,6 @@ class PinnableRepos extends React.Component {
     const repositories = await repositoryService.getRepositories(username);
 
     this.setState({
-      ...this.state,
       repositories,
       loading: false
     });
@@ -47,7 +46,6 @@ class PinnableRepos extends React.Component {
 
   onFilter(e, data) {
     this.setState({
-      ...this.state,
       searchValue: data.value
     });
   }
@@ -77,7 +75,6 @@ class PinnableRepos extends React.Component {
     const checkedRepositories = this.checkRepos(result, repositories, remaining);
 
     this.setState({
-      ...this.state,
       remaining,
       repositories: checkedRepositories
     });
@@ -148,10 +145,11 @@ class PinnableRepos extends React.Component {
   }
 
   render() {
+    const { modalOpen, searchValue } = this.state;
     return (
       <Modal
         trigger={this.renderTrigger()}
-        open={this.state.modalOpen}
+        open={modalOpen}
         onOpen={this.getRepositories}
         onClose={this.handleClose}
         size="tiny"
@@ -162,7 +160,7 @@ class PinnableRepos extends React.Component {
           <span className={styles.normalFont}>Select up to six public repositories or gists you’d like to show.</span>
         </Modal.Header>
         <Modal.Content>
-          <Input placeholder="Filter repositories" fluid onChange={this.onFilter} />
+          <Input placeholder="Filter repositories" fluid onChange={this.onFilter} value={searchValue} />
           <Divider />
           <Formik onSubmit={this.onSubmit} render={this.renderForm} validate={this.validate} />
         </Modal.Content>
