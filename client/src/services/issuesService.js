@@ -92,7 +92,7 @@ export const getAllIssues = async (username, params) => {
 
 export const getAllQuestionOnSO = async params => {
   const response = await callExternalApi({
-    endpoint: 'http://api.stackexchange.com/2.2/search',
+    endpoint: 'https://api.stackexchange.com/2.2/search',
     query: params
   });
 
