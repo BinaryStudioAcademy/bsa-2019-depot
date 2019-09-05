@@ -6,6 +6,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { Container, Grid, Dropdown, Accordion } from 'semantic-ui-react';
 import Octicon, { Fold, Unfold, RepoPush, Repo } from '@primer/octicons-react';
 import * as commitsService from '../../services/commitsService';
+import PinnedRepositories from '../../components/PinnedRepositories';
 
 import styles from './styles.module.scss';
 
@@ -84,7 +85,8 @@ export class Overview extends React.Component {
     const {
       match: {
         params: { username }
-      }
+      },
+      userId
     } = this.props;
     const {
       userActivity: { userActivityByDate, userMonthActivity }
@@ -120,34 +122,7 @@ export class Overview extends React.Component {
     });
     return (
       <>
-        {/* {!!repositoriesNames.length && (
-          <div className={styles.section}>
-            <Container className={styles.section_header}>
-              <h2>Pinned</h2>
-              <Link to="" className={styles.header_actions}>
-                Customize your pins
-              </Link>
-            </Container>
-            <Container className={styles.favorite_repos_wrapper}>
-              {repositoriesNames &&
-                repositoriesNames.map(repo => {
-                  return (
-                    <div key={repo} className={styles.pinned_item}>
-                      <div>
-                        <Octicon className={styles.card_icon} icon={Repo} />
-                        <Link to={`${username}/${repo}`}>{repo}</Link>
-                        <Octicon className={styles.card_icon_grab} icon={Grabber} />
-                      </div>
-                      <p className={styles.pinned_item_desc}> </p>
-                      <p className={styles.pinned_item_lang}>
-                        <span></span>Javascript
-                      </p>
-                    </div>
-                  );
-                })}
-            </Container>
-          </div>
-        )} */}
+        <PinnedRepositories username={username} userId={userId} repositories={this.state.repositories} />
         <Grid>
           <Grid.Row columns={2}>
             <Grid.Column mobile={16} computer={13}>
@@ -313,7 +288,8 @@ Overview.propTypes = {
     url: PropTypes.string.isRequired
   }).isRequired,
   userActivityByDate: PropTypes.object.isRequired,
-  userMonthActivity: PropTypes.object.isRequired
+  userMonthActivity: PropTypes.object.isRequired,
+  userId: PropTypes.string.isRequired
 };
 
 export default withRouter(Overview);

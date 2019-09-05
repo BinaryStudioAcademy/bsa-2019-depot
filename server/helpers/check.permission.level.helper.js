@@ -5,7 +5,9 @@ const pullService = require('../api/services/pulls.service');
 const permissionLevel = require('../helpers/permission.level.helper');
 
 const checkIssuePermissions = async (issueId, userId) => {
-  const { repository: { id: repositoryId } } = await issueService.getRepoByIssueId(issueId);
+  const {
+    repository: { id: repositoryId }
+  } = await issueService.getRepoByIssueId(issueId);
   const [collaborator] = await collaboratorService.getUserRightsByUserIdAndRepositoryId(userId, repositoryId);
   let permissionName;
   if (collaborator) {
@@ -15,7 +17,9 @@ const checkIssuePermissions = async (issueId, userId) => {
 };
 
 const checkCommitCommentPermissions = async (commitId, userId) => {
-  const { repository: { id: repositoryId } } = await commitService.getRepoByCommitId(commitId);
+  const {
+    repository: { id: repositoryId }
+  } = await commitService.getRepoByCommitId(commitId);
   const [collaborator] = await collaboratorService.getUserRightsByUserIdAndRepositoryId(userId, repositoryId);
   let permissionName;
   if (collaborator) {

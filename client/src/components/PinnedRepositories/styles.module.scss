@@ -1,0 +1,22 @@
+:local(.pinnedHeader) {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 1em 0;
+}
+
+:local(.pinnedTitle) {
+  font-size: 100%;
+}
+
+:local(.pinnedItemHeader) {
+  font-size: 100% !important;
+
+  svg {
+    margin-right: 5px;
+  }
+}
+
+:local(.pinnedItemDescription) {
+  font-size: 80%;
+}

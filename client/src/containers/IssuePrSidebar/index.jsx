@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
-import { Button, Divider, Dropdown, Image } from 'semantic-ui-react';
-import Octicon, { Unmute } from '@primer/octicons-react';
+import { Divider, Dropdown } from 'semantic-ui-react';
 import { getUserImgLink } from '../../helpers/imageHelper';
 
 import styles from './styles.module.scss';

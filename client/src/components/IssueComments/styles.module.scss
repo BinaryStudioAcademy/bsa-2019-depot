@@ -82,6 +82,18 @@
   margin-right: auto !important;
 }
 
-:local(.status_line){
+:local(.status_line) {
   margin-bottom: 30px;
+}
+
+:local(.questionsHeader) {
+  font-size: 1.3em;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+:local(.SOIcon) {
+  vertical-align: middle;
 }

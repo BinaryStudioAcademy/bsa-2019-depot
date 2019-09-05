@@ -22,6 +22,7 @@ const { getRepoPullByNumber } = require('../services/pulls.service');
 const { getAllIssues, getAllIssuesCount, getAllIssuesOwners } = require('../services/issue.service');
 const { getUserByUsername } = require('../services/user.service');
 const { clientUrl } = require('../../config/common.config');
+const PinnedReposService = require('../services/pinned-repos.service');
 
 const router = Router();
 
@@ -173,6 +174,20 @@ router.get('/:username/repos/:reponame/issues/:number', (req, res, next) => {
 router.get('/:username/repos/:reponame/pulls/:number', (req, res, next) => {
   const { username, reponame, number } = req.params;
   getRepoPullByNumber(username, reponame, number)
+    .then(result => res.send(result))
+    .catch(next);
+});
+
+router.get('/:userId/pinned-repositories', (req, res, next) => {
+  const { userId } = req.params;
+  PinnedReposService.getPinnedRepos(userId)
+    .then(result => res.send(result))
+    .catch(next);
+});
+
+router.post('/set-pinned-repos', (req, res, next) => {
+  const { userId, repositories } = req.body;
+  PinnedReposService.setPinnedRepos(userId, repositories)
     .then(result => res.send(result))
     .catch(next);
 });

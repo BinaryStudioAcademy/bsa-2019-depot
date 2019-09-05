@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { CheckCircleFill } from '@ant-design/icons';
+import AntdIcon from '@ant-design/icons-react';
 import { Button, Label, Icon, Loader, Segment } from 'semantic-ui-react';
 import {
   getIssueByNumber,
@@ -14,11 +16,19 @@ import {
 import { createIssueComment, updateIssueComment, deleteIssueComment } from '../../services/issueCommentsService';
 import Comment from '../Comment';
 import IssuePrHeader from '../IssuePrHeader';
+import { getAllQuestionOnSO } from '../../services/issuesService';
 import { socketInit } from '../../helpers/socketInitHelper';
 import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 
 import styles from './styles.module.scss';
+
+import { ReactComponent as SOLogoSVG } from '../../styles/assets/icons/stackoverflow.svg';
+import SOAvatarSVG from '../../styles/assets/icons/so-logo.svg';
+AntdIcon.add(CheckCircleFill);
+
+
+const REACT_APP_STACK_OVERFLOW_API_KEY = process.env.REACT_APP_STACK_OVERFLOW_API_KEY;
 
 class IssueComments extends React.Component {
   constructor(props) {
@@ -26,6 +36,7 @@ class IssueComments extends React.Component {
     this.state = {
       currentIssue: {},
       issueComments: [],
+      questions: [],
       loading: true,
       comment: '',
       selectedTab: 'write',
@@ -54,16 +65,28 @@ class IssueComments extends React.Component {
     } = this.props;
 
     const currentIssue = await getIssueByNumber(username, reponame, number);
-    const { id } = currentIssue;
+    const { id, title } = currentIssue;
 
     const issueComments = await getIssueComments(id);
 
     const isAccessGranted = await getWriteUserPermissions(username, reponame, userId);
 
+    const filter = {
+      key: REACT_APP_STACK_OVERFLOW_API_KEY,
+      intitle: title,
+      site: 'stackoverflow',
+      pagesize: 5,
+      // tagged: ['reactjs', 'javascript'].join(';'), // for label names
+      sort: 'votes',
+      order: 'desc'
+    };
+    const soQuestions = await getAllQuestionOnSO(filter);
+
     this.setState({
       currentIssue,
       issueComments,
       isAccessGranted,
+      questions: soQuestions,
       loading: false
     });
     this.initSocket();
@@ -193,10 +216,10 @@ class IssueComments extends React.Component {
   }
 
   render() {
-    const { currentIssue, issueComments, loading } = this.state;
+    const { currentIssue, issueComments, loading, questions } = this.state;
     const { userImg, userName, userId } = this.props;
 
-    return loading ? (
+    return loading || questions.length ? (
       <Loader active />
     ) : (
       <Segment basic>
@@ -231,6 +254,26 @@ class IssueComments extends React.Component {
           cancelBtnTxt="Cancel"
           ownComment={this.isOwnIssue()}
         />
+
+        {questions.items.length && currentIssue.isOpened
+          ? (
+            <>
+              <h2 className={styles.questionsHeader}>
+                <span>Related questions from{' '}</span>
+                <SOLogoSVG className={styles.SOIcon} />
+              </h2>
+              {questions.items.map((question, index) => (
+                <Comment
+                  key={index}
+                  avatar={SOAvatarSVG}
+                  isQuestion
+                  question={question}
+                />
+              ))}
+            </>
+          ) : null
+        }
+
 
         {issueComments.length > 0 &&
           issueComments.map(issueComment => {

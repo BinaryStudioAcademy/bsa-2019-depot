@@ -23,6 +23,7 @@ class LabelsTab extends React.Component {
     this.onEditLabel = this.onEditLabel.bind(this);
     this.sortLabels = this.sortLabels.bind(this);
     this.startCreateLabel = this.startCreateLabel.bind(this);
+    this.cancelCreateLabel = this.cancelCreateLabel.bind(this);
   }
 
   async componentDidMount() {
@@ -64,7 +65,14 @@ class LabelsTab extends React.Component {
 
     return (
       <List divided verticalAlign="middle">
-        {isCreatingNewLabel ? <LabelItem key={0} labelObject={newLabel} onEdit={this.onCreateLabel} /> : null}
+        {isCreatingNewLabel ? (
+          <LabelItem
+            key={0}
+            labelObject={newLabel}
+            onEdit={this.onCreateLabel}
+            cancelCreateLabel={this.cancelCreateLabel}
+          />
+        ) : null}
         {displayedLabels.map((label, idx) => (
           <LabelItem key={idx + 1} labelObject={label} onDelete={this.onDeleteLabel} onEdit={this.onEditLabel} />
         ))}
@@ -77,6 +85,10 @@ class LabelsTab extends React.Component {
       ...this.state,
       isCreatingNewLabel: true
     });
+  };
+
+  cancelCreateLabel = () => {
+    this.setState({ isCreatingNewLabel: false });
   };
 
   async onCreateLabel(labelObject) {

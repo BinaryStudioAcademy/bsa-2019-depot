@@ -1,10 +1,10 @@
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
-import DashboardView from '../../views/DashboardView';
 import AuthNavigator from '../StackNavigator/AuthNavigator';
+import DashboardNavigator from '../../routes/DashboardNavigator/DashboardNavigator';
 
 const AppNavigator = createSwitchNavigator(
   {
-    Home: DashboardView,
+    Home: DashboardNavigator,
     Auth: AuthNavigator
   },
   {

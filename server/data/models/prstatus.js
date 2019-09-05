@@ -2,7 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   const PRStatus = sequelize.define(
     'prstatus',
     {
-      name: DataTypes.STRING,
+      name: DataTypes.STRING
     },
     {
       paranoid: true,

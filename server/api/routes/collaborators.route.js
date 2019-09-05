@@ -1,7 +1,12 @@
 const { Router } = require('express');
 const { clientUrl } = require('../../config/common.config');
 const {
-  getUserInvitationStatus, acceptInvitation, declineInvitation, removeRepositoryCollaborator, addCollaborator, getUserRights
+  getUserInvitationStatus,
+  acceptInvitation,
+  declineInvitation,
+  removeRepositoryCollaborator,
+  addCollaborator,
+  getUserRights
 } = require('../services/collaborator.service');
 
 const router = Router();
@@ -40,7 +45,12 @@ router.post('/invite', (req, res, next) => {
     recipient, username, reponame, repositoryId, permission
   } = req.body;
   addCollaborator({
-    recipient, username, reponame, repositoryId, permission, url: clientUrl
+    recipient,
+    username,
+    reponame,
+    repositoryId,
+    permission,
+    url: clientUrl
   })
     .then(data => res.send(data))
     .catch(next);

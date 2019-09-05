@@ -2,7 +2,6 @@ const UserRepository = require('../../data/repositories/user.repository');
 const StarRepository = require('../../data/repositories/star.repository');
 const OrgUserRepository = require('../../data/repositories/org-user.repository');
 const CollaboratorRepository = require('../../data/repositories/collaborator.repository');
-
 const CustomError = require('../../helpers/error.helper');
 const tokenHelper = require('../../helpers/token.helper');
 
@@ -18,7 +17,10 @@ const getUserDetailed = async (username, isOwner) => {
   return user || Promise.reject(new CustomError(404, `User ${username} not found`));
 };
 
-const getUserByUsername = username => UserRepository.getByUsername(username);
+const getUserByUsername = async (username) => {
+  const user = await UserRepository.getByUsername(username);
+  return user || Promise.reject(new CustomError(404, `User ${username} not found`));
+};
 
 const setUsername = async ({ id, username }) => {
   const data = await UserRepository.setUsernameById(id, username);

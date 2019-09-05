@@ -193,7 +193,7 @@ class PullRepository extends BaseRepository {
         },
         {
           model: RepositoryModel,
-          attributes: ['name']
+          include: [UserModel]
         },
         {
           model: PRStatusModel,

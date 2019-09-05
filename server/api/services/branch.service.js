@@ -2,10 +2,17 @@ const NodeGit = require('nodegit');
 const repoHelper = require('../../helpers/repo.helper');
 const userRepository = require('../../data/repositories/user.repository');
 const branchRepository = require('../../data/repositories/branch.repository');
+const CustomError = require('../../helpers/error.helper');
 
 const getBranches = repoId => branchRepository.getByRepoId(repoId);
 
-const getBranchInfo = (branchName, repoId) => branchRepository.getByNameAndRepoId(branchName, repoId);
+const getBranchInfo = async (branchName, repoId) => {
+  const branch = await branchRepository.getByNameAndRepoId(branchName, repoId);
+  return (
+    branch
+    || Promise.reject(new CustomError(404, `Branch ${branchName} not found in repository with id ${repoId} not found`))
+  );
+};
 
 const getLastModifiedCommit = async ({
   user, name, branch, entry
