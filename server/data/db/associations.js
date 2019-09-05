@@ -98,6 +98,5 @@ module.exports = models => {
 
   User.hasMany(PinnedRepository);
   PinnedRepository.belongsTo(User);
-  Repository.hasMany(PinnedRepository);
   PinnedRepository.belongsTo(Repository);
 };
