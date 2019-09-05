@@ -1,13 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { Dropdown, Button, Divider, Image } from 'semantic-ui-react';
+import { Dropdown, Button, Divider, Image, Message } from 'semantic-ui-react';
 import { getUserImgLink } from '../../helpers/imageHelper';
 import ReactMde from 'react-mde';
 import ReactMarkdown from 'react-markdown';
 import 'react-mde/lib/styles/css/react-mde-all.css';
+import htmlEntities from 'he';
+import { CheckCircleFill } from '@ant-design/icons';
+import AntdIcon from '@ant-design/icons-react';
 
 import styles from './styles.module.scss';
+AntdIcon.add(CheckCircleFill);
 
 class IssueComment extends React.Component {
   constructor(props) {
@@ -78,72 +82,93 @@ class IssueComment extends React.Component {
     return Promise.resolve(<ReactMarkdown source={markdown} />);
   }
 
-  render() {
-    const { id, avatar, username, createdAt, buttons, submitBtnTxt, cancelBtnTxt, onDelete, ownComment } = this.props;
-    const { comment, selectedTab, isDisabled } = this.state;
+  renderStackOverflowQuestion() {
+    const { question, avatar } = this.props;
     return (
-      <div className={styles.issue_comment_wrapper} key={id}>
-        <div className={styles.comment_author_avatar}>
+      <div className={styles.questionWrapper}>
+        <div className={styles.questionAvatar}>
           <Image src={getUserImgLink(avatar)} />
         </div>
-        {this.state.editing ? (
-          <div className={styles.mde}>
-            <ReactMde
-              className={styles.commentEditor}
-              value={comment}
-              onChange={this.onCommentChange}
-              selectedTab={selectedTab}
-              onTabChange={this.onTabChange}
-              generateMarkdownPreview={this.renderPreview}
-            />
+        <a href={`${question.link}`} className={styles.questionLink} rel="noopener noreferrer" target="_blank">
+          <Message
+            icon={question.is_answered ? <div title="Is answered"><AntdIcon type={CheckCircleFill} className={styles.checkCircleButton} /></div> : null}
+            header={htmlEntities.decode(question.title)}
+            content={<>Posted on {moment.unix(question.creation_date).format('MMM DD, YYYY')} </>}              
+          />
+        </a>
+      </div>
+    );
+  }
 
-            <Button
-              positive
-              compact
-              floated="right"
-              onClick={this.onSubmit}
-              disabled={isDisabled}
-              className={styles.button}
-            >
-              {submitBtnTxt}
-            </Button>
-            {cancelBtnTxt ? (
-              <Button negative compact basic floated="right" onClick={this.onCancel}>
-                {cancelBtnTxt}
-              </Button>
-            ) : null}
-            {buttons ? buttons.map(button => button) : null}
+  render() {
+    const { id, avatar, username, createdAt, buttons, submitBtnTxt, cancelBtnTxt, onDelete, ownComment, isQuestion } = this.props;
+    const { comment, selectedTab, isDisabled } = this.state;
+    
+    return isQuestion 
+      ? this.renderStackOverflowQuestion()
+      : (
+        <div className={styles.issue_comment_wrapper} key={id}>
+          <div className={styles.comment_author_avatar}>
+            <Image src={getUserImgLink(avatar)} />
           </div>
-        ) : (
-          <div className={styles.issue_comment_container}>
-            <div className={styles.issue_comment_header}>
-              <span className={styles.comment_author_name}>
-                {`${username} `}
-                <span>{`commented ${moment(createdAt).fromNow()}`}</span>
-              </span>
+          {this.state.editing ? (
+            <div className={styles.mde}>
+              <ReactMde
+                className={styles.commentEditor}
+                value={comment}
+                onChange={this.onCommentChange}
+                selectedTab={selectedTab}
+                onTabChange={this.onTabChange}
+                generateMarkdownPreview={this.renderPreview}
+              />
 
-              <Dropdown className={styles.dropdown_header} icon="ellipsis horizontal">
-                <Dropdown.Menu>
-                  <Dropdown.Item text="Copy link" />
-                  <Dropdown.Item text="Quote reply" />
-                  {ownComment ? (
+              <Button
+                positive
+                compact
+                floated="right"
+                onClick={this.onSubmit}
+                disabled={isDisabled}
+                className={styles.button}
+              >
+                {submitBtnTxt}
+              </Button>
+              {cancelBtnTxt ? (
+                <Button negative compact basic floated="right" onClick={this.onCancel}>
+                  {cancelBtnTxt}
+                </Button>
+              ) : null}
+              {buttons ? buttons.map(button => button) : null}
+            </div>
+          ) : (
+            <div className={styles.issue_comment_container}>
+              <div className={styles.issue_comment_header}>
+                <span className={styles.comment_author_name}>
+                  {`${username} `}
+                  <span>{`commented ${moment(createdAt).fromNow()}`}</span>
+                </span>
+
+                <Dropdown className={styles.dropdown_header} icon="ellipsis horizontal">
+                  <Dropdown.Menu>
+                    <Dropdown.Item text="Copy link" />
+                    <Dropdown.Item text="Quote reply" />
+                    {ownComment ? (
                     <>
                       <Divider />
                       <Dropdown.Item text="Edit" onClick={this.onEdit} />
                       {onDelete ? <Dropdown.Item text="Delete" onClick={this.onDelete} /> : null}
                     </>
-                  ) : null}
-                </Dropdown.Menu>
-              </Dropdown>
+                    ) : null}
+                  </Dropdown.Menu>
+                </Dropdown>
+              </div>
+              <Divider className={styles.divide} />
+              <div className={styles.issue_comment_desc}>
+                {comment ? <ReactMarkdown source={comment} /> : 'No description provided.'}
+              </div>
             </div>
-            <Divider className={styles.divide} />
-            <div className={styles.issue_comment_desc}>
-              {comment ? <ReactMarkdown source={comment} /> : 'No description provided.'}
-            </div>
-          </div>
-        )}
-      </div>
-    );
+          )}
+        </div>
+      );
   }
 }
 
@@ -160,7 +185,9 @@ IssueComment.propTypes = {
   submitBtnTxt: PropTypes.string,
   cancelBtnTxt: PropTypes.string,
   ownComment: PropTypes.bool,
-  onDelete: PropTypes.func
+  onDelete: PropTypes.func,
+  question: PropTypes.object,
+  isQuestion: PropTypes.bool.isRequired
 };
 
 export default IssueComment;

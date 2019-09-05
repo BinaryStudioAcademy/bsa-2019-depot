@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { CheckCircleFill } from '@ant-design/icons';
 import AntdIcon from '@ant-design/icons-react';
-import { Button, Label, Icon, Loader, Segment, Message } from 'semantic-ui-react';
+import { Button, Label, Icon, Loader, Segment } from 'semantic-ui-react';
 import {
   getIssueByNumber,
   getIssueComments,
@@ -20,12 +20,15 @@ import IssueHeader from '../IssueHeader';
 import { socketInit } from '../../helpers/socketInitHelper';
 import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 import 'react-mde/lib/styles/css/react-mde-all.css';
-import htmlEntities from 'he';
 
 import styles from './styles.module.scss';
 
 import { ReactComponent as SOLogoSVG } from '../../styles/assets/icons/stackoverflow.svg';
+import SOAvatarSVG from '../../styles/assets/icons/so-logo.svg';
 AntdIcon.add(CheckCircleFill);
+
+
+const REACT_APP_STACK_OVERFLOW_API_KEY = process.env.REACT_APP_STACK_OVERFLOW_API_KEY;
 
 class IssueComments extends React.Component {
   constructor(props) {
@@ -69,9 +72,8 @@ class IssueComments extends React.Component {
     const isAccessGranted = await getWriteUserPermissions(username, reponame, userId);
 
     const filter = {
-      key: 'K)aMbXa)izv27xUSCXUW8A((',
+      key: REACT_APP_STACK_OVERFLOW_API_KEY,
       intitle: title,
-      filter: 'default',
       site: 'stackoverflow',
       pagesize: 5,
       // tagged: ['reactjs', 'javascript'].join(';'), // for label names 
@@ -253,29 +255,25 @@ class IssueComments extends React.Component {
           ownComment={this.isOwnIssue()}
         />
 
-        {questions.items.length 
+        {questions.items.length && currentIssue.isOpened
           ? (
-            <h2 className={styles.questionsHeader}>
-              <span>Related questions from{' '}</span>
-              <SOLogoSVG className={styles.SOIcon} />
-            </h2>
+            <>
+              <h2 className={styles.questionsHeader}>
+                <span>Related questions from{' '}</span>
+                <SOLogoSVG className={styles.SOIcon} />
+              </h2>
+              {questions.items.map((question, index) => (
+                <IssueComment
+                  key={index}
+                  avatar={SOAvatarSVG}
+                  isQuestion
+                  question={question}
+                />
+              ))}
+            </>
           ) : null
         }
 
-
-        {questions.items.map((question, index) => (
-          <a key={index} href={`${question.link}`} className={styles.questionLink} rel="noopener noreferrer" target="_blank">
-            <Message
-              icon={question.is_answered ? (
-                <Icon>
-                  <AntdIcon type={CheckCircleFill} className={styles.checkCircleButton} />
-                </Icon>
-              ) : null}
-              header={htmlEntities.decode(question.title)}
-              content={<>Posted on {moment.unix(question.creation_date).format('MMM DD, YYYY')} </>}              
-            />
-          </a>
-        ))}
 
         {issueComments.length > 0 &&
           issueComments.map(issueComment => {

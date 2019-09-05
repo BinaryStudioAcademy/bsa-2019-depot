@@ -78,3 +78,31 @@
   height: 40px;
   object-fit: contain;
 }
+
+:global(.ui.icon.message) {
+  flex-direction: row-reverse;
+}
+
+:local(.questionLink) {
+  display: inline-block;
+  width: 94%;
+} 
+
+:local(.questionWrapper) {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+} 
+
+:local(.questionAvatar) {
+  width: 40px;
+  height: 40px;
+}
+
+:local(.checkCircleButton) {
+  color: #28a745;
+  width: 32px;
+  height: 32px;
+}

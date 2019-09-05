@@ -82,23 +82,6 @@
   margin-right: auto !important;
 }
 
-:global(.ui.icon.message) {
-  flex-direction: row-reverse;
-}
-
-:local(.questionLink) {
-  display: block;
-  margin-bottom: 10px;
-} 
-
-:local(.questionBode) {
-  width: 100%;
-  padding: 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-} 
-
 :local(.questionsHeader) {
   font-size: 1.3em;
   font-weight: 500;
@@ -109,10 +92,4 @@
 
 :local(.SOIcon) {
   vertical-align: middle;
-}
-
-:local(.checkCircleButton) {
-  color: #28a745;
-  width: 32px;
-  height: 32px;
 }
