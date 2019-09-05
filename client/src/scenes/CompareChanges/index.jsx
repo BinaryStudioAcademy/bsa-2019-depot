@@ -135,7 +135,7 @@ class CompareChanges extends React.Component {
       );
 
     return (
-      <>
+      <Segment basic>
         <div className={styles.header}>
           <h1>Comparing changes</h1>
           <h5>Choose two branches to see what’s changed or to start a new pull request</h5>
@@ -149,7 +149,7 @@ class CompareChanges extends React.Component {
         />
         {loading ? (
           <Loader active />
-        ) : diffs && diffs.length ? (
+        ) : diffs && diffs.length && commits && commits.length ? (
           <>
             <CreateIssuePrForm isIssues={false} onSubmit={this.onSubmit} />
             <Segment className={styles.pullStats}>
@@ -182,14 +182,13 @@ class CompareChanges extends React.Component {
                 'You’ll need to use two different branch names to get a valid comparison.'
               ) : (
                 <>
-                  <b>{toBranch}</b> is up to date with all commits from <b>{fromBranch}</b>. Try switching the base for
-                  your comparison.
+                  <b>{toBranch}</b> is up to date with <b>{fromBranch}</b>. Try switching the base for your comparison.
                 </>
               )}
             </p>
           </div>
         )}
-      </>
+      </Segment>
     );
   }
 }

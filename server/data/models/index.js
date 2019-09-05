@@ -19,6 +19,7 @@ const LanguageStats = orm.import('./languageStats');
 const Label = orm.import('./label');
 const PullRequest = orm.import('./pullrequest');
 const PRStatus = orm.import('./prstatus');
+const PullComment = orm.import('./pullComment');
 const PinnedRepository = orm.import('./pinnedRepository');
 
 associate({
@@ -40,6 +41,7 @@ associate({
   Label,
   PullRequest,
   PRStatus,
+  PullComment,
   PinnedRepository
 });
 
@@ -62,5 +64,6 @@ module.exports = {
   LabelModel: Label,
   PullRequestModel: PullRequest,
   PRStatusModel: PRStatus,
+  PullCommentModel: PullComment,
   PinnedRepositoryModel: PinnedRepository
 };

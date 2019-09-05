@@ -23,6 +23,7 @@ import Spinner from '../../components/Spinner';
 import CodeTab from '../../scenes/CodeTab';
 import CollaboratorInvitation from '../../containers/CollaboratorInvitation';
 import LabelTab from '../../containers/LabelsTab';
+import PullView from '../../containers/PullView';
 import { getAllUserPermissions } from '../../helpers/checkPermissionsHelper';
 import { socketInit } from '../../helpers/socketInitHelper';
 
@@ -134,6 +135,7 @@ class RepositoryPage extends React.Component {
             <Route exact path={`${match.path}/commit/:hash`} component={DiffCommitView} />
             <Route exact path={`${match.path}/issues`} component={IssuesTab} />
             <Route exact path={`${match.path}/pulls`} component={PullRequestsTab} />
+            <Route path={`${match.path}/pulls/:number`} component={PullView} />
             <Route exact path={`${match.path}/compare`} component={CompareChanges} />
             <Route exact path={`${match.path}/issues/new`} component={CreateIssuePage} />
             <Route exact path={`${match.path}/issues/:number`} component={IssueComments} />

@@ -41,6 +41,7 @@ class CreateIssuePage extends React.Component {
       repositoryId,
       isOpened: true
     });
+
     const newUrl = url
       .split('/')
       .slice(0, -1)

@@ -14,7 +14,9 @@ const routesWhiteList = require('./config/routes-white-list.config');
 const authorizationMiddleware = require('./api/middlewares/authorization.middleware');
 const errorHandlerMiddleware = require('./api/middlewares/error-handler.middleware');
 const socketHandlers = require('./socket/socket-handlers');
-const { issuesSocketInjector, commitsSocketInjector, reposSocketInjector } = require('./socket/injector');
+const {
+  issuesSocketInjector, pullsSocketInjector, commitsSocketInjector, reposSocketInjector
+} = require('./socket/injector');
 
 const app = express();
 app.use(cors());
@@ -22,6 +24,7 @@ const socketServer = http.Server(app);
 const io = socketIO(socketServer);
 
 const issuesNsp = io.of('/issues').on('connection', socketHandlers);
+const pullsNsp = io.of('/pulls').on('connection', socketHandlers);
 const commitsNsp = io.of('/commits').on('connection', socketHandlers);
 const reposNsp = io.of('/repos').on('connection', socketHandlers);
 
@@ -30,6 +33,7 @@ app.use(passport.initialize());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/', authorizationMiddleware(routesWhiteList));
 app.use(issuesSocketInjector(issuesNsp));
+app.use(pullsSocketInjector(pullsNsp));
 app.use(commitsSocketInjector(commitsNsp));
 app.use(reposSocketInjector(reposNsp));
 

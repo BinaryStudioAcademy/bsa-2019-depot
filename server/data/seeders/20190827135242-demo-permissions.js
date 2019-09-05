@@ -5,7 +5,8 @@ module.exports = {
     const permissions = [
       {
         name: 'ADMIN',
-        description: 'Can read, clone and push to this repository. Can also manage issues, pull requests, and repository settings, including adding collaborators.'
+        description:
+          'Can read, clone and push to this repository. Can also manage issues, pull requests, and repository settings, including adding collaborators.'
       },
       {
         name: 'WRITE',

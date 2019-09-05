@@ -1,8 +1,8 @@
-const socketHandlers = socket => {
-  socket.on('createRoom', roomId => {
+const socketHandlers = (socket) => {
+  socket.on('createRoom', (roomId) => {
     socket.join(roomId);
   });
-  socket.on('leaveRoom', roomId => {
+  socket.on('leaveRoom', (roomId) => {
     socket.leave(roomId);
   });
 };

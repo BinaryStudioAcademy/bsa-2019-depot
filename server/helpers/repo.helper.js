@@ -9,15 +9,15 @@ const branchRepository = require('../data/repositories/branch.repository');
 const commitRepository = require('../data/repositories/commit.repository');
 const languageStatsService = require('../api/services/language-stats.service');
 
-const getPathToRepo = (username, reponame) =>
-  path.resolve(`${gitPath}/${username}/${reponame}.git`).replace(/\\/g, '/');
+const getPathToRepo = (username, reponame) => path.resolve(`${gitPath}/${username}/${reponame}.git`).replace(/\\/g, '/');
 const getPathToRepos = username => path.resolve(`${gitPath}/${username}`).replace(/\\/g, '/');
 
-const getGitignore = gitignore =>
-  fs.readFileSync(path.resolve(`${__dirname}/../data/initial-files/gitignores/${gitignore}`));
+const getGitignore = gitignore => fs.readFileSync(path.resolve(`${__dirname}/../data/initial-files/gitignores/${gitignore}`));
 const getLicense = license => fs.readFileSync(path.resolve(`${__dirname}/../data/initial-files/licenses/${license}`));
 
-const generateInitialData = ({ name, email, readme, gitignore, license }) => {
+const generateInitialData = ({
+  name, email, readme, gitignore, license
+}) => {
   const files = [];
   if (readme) {
     files.push({
@@ -39,9 +39,9 @@ const generateInitialData = ({ name, email, readme, gitignore, license }) => {
   }
   return files.length !== 0
     ? {
-        files,
-        email
-      }
+      files,
+      email
+    }
     : null;
 };
 
@@ -54,7 +54,7 @@ const updateLanguageStats = async (owner, reponame, branch) => {
 
   await index.readTree(branchTree);
 
-  const filesData = index.entries().map(entry => {
+  const filesData = index.entries().map((entry) => {
     const filename = entry.path.split('/').pop();
     const fileId = entry.id;
 
@@ -65,12 +65,10 @@ const updateLanguageStats = async (owner, reponame, branch) => {
   });
 
   const langs = await Promise.all(
-    filesData.map(({ filename, fileId }) =>
-      repo.getBlob(fileId).then(blob => {
-        const content = blob.toString();
-        return detect.contents(filename, content);
-      })
-    )
+    filesData.map(({ filename, fileId }) => repo.getBlob(fileId).then((blob) => {
+      const content = blob.toString();
+      return detect.contents(filename, content);
+    }))
   );
 
   let fileCount = 0;
@@ -123,16 +121,14 @@ const syncDb = async (commits, branch) => {
   const { id: repositoryId } = await repoRepository.getByUserAndReponame(userId, reponame);
   const commitAuthors = await Promise.all(commits.map(({ userEmail }) => userRepository.getByEmail(userEmail)));
   const addedCommits = await Promise.all(
-    commitAuthors.map(({ id: authorId }, index) =>
-      commitRepository.add({
-        sha: commits[index].sha,
-        message: commits[index].message,
-        userId: authorId,
-        createdAt: new Date(commits[index].createdAt),
-        updatedAt: new Date(commits[index].createdAt),
-        repositoryId
-      })
-    )
+    commitAuthors.map(({ id: authorId }, index) => commitRepository.add({
+      sha: commits[index].sha,
+      message: commits[index].message,
+      userId: authorId,
+      createdAt: new Date(commits[index].createdAt),
+      updatedAt: new Date(commits[index].createdAt),
+      repositoryId
+    }))
   );
   const headCommitId = addedCommits.find(({ sha }) => sha === branch.newHeadSha).id;
 
