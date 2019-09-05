@@ -8,3 +8,10 @@
 :local(.pinnedTitle) {
   font-size: 100%;
 }
+
+:local(.pinnedItemHeader) {
+  svg {
+    margin-right: 5px;
+    transform: translateY(-2px);
+  }
+}

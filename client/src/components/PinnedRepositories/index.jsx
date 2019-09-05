@@ -51,7 +51,7 @@ class PinnedRepositories extends React.Component {
     return (
       <Card key={name}>
         <Card.Content>
-          <Card.Header>
+          <Card.Header className={styles.pinnedItemHeader}>
             <Octicon className={styles.pinnedIcon} icon={Repo} />
             <Link to={`${username}/${name}`} className={styles.repo_name}>
               {name}
