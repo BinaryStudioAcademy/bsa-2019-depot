@@ -144,7 +144,7 @@ class PinnableRepos extends React.Component {
 
     return (
       <Form onSubmit={handleSubmit} loading={loading}>
-        {filteredRepos.map((repo, i) => this.renderItem(repo, handleChange, values[repo.id]))}
+        {filteredRepos.map(repo => this.renderItem(repo, handleChange, values[repo.id]))}
         <Divider />
         <div className={styles.formFooter}>
           <span className={!remaining ? styles.warning : ''}>{remaining} remaining</span>

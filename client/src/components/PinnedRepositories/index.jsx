@@ -77,7 +77,7 @@ class PinnedRepositories extends React.Component {
       return <Loader />;
     }
 
-    if (!pinnedRepos && !popularRepos) {
+    if ((!pinnedRepos || !pinnedRepos.length) && (!popularRepos || !popularRepos.length)) {
       return null;
     }
 
