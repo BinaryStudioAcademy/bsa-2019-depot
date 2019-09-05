@@ -220,7 +220,7 @@ class IssuePrSidebar extends React.Component {
 
     return (
       <>
-        {isIssue && (
+        {!isIssue && (
           <>
             <h5 className={styles.sectionHeader}>Reviewers</h5>
             <Dropdown
@@ -265,18 +265,6 @@ class IssuePrSidebar extends React.Component {
           onChange={this.onPropChange}
           renderLabel={this.renderLabel}
         />
-        <Divider/>
-        <h5 className={styles.sectionHeader}>Notifications</h5>
-        <Button fluid className={styles.actionButton}><Octicon icon={Unmute}/>{' '}Subscribe</Button>
-        <Divider/>
-        <h5 className={styles.sectionHeader}>5 participants</h5>
-        <div className={styles.participantsAvatars}>
-          {[...reviewers, ...assignees].map(({ username, imgUrl }) => (
-            <Link key={username} to={`/${username}`}>
-              <Image src={getUserImgLink(imgUrl)} avatar/>
-            </Link>
-          ))}
-        </div>
       </>
     );
   }
