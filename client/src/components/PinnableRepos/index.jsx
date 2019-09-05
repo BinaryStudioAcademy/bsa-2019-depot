@@ -1,9 +1,11 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Modal, Button, Form, Checkbox, Divider, Input } from 'semantic-ui-react';
 import { Formik } from 'formik';
 import Octicon, { Star, Repo } from '@primer/octicons-react';
 import * as repositoryService from '../../services/repositoryService';
+import * as userService from '../../services/userService';
 
 import styles from './styles.module.scss';
 
@@ -16,24 +18,24 @@ class PinnableRepos extends React.Component {
     this.state = {
       remaining: MAX_PINNED_COUNT,
       repositories: [],
-      searchValue: ''
+      searchValue: '',
+      loading: true
     };
 
     this.renderForm = this.renderForm.bind(this);
     this.validate = this.validate.bind(this);
     this.onFilter = this.onFilter.bind(this);
+    this.getRepositories = this.getRepositories.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
-  componentDidMount() {
+  async getRepositories() {
     const { username } = this.props;
-    this.getRepositories(username);
-  }
-
-  async getRepositories(username) {
     const repositories = await repositoryService.getRepositories(username);
     this.setState({
       ...this.state,
-      repositories
+      repositories,
+      loading: false
     });
   }
 
@@ -58,10 +60,14 @@ class PinnableRepos extends React.Component {
     });
   }
 
-  validate(values) {
-    const result = Object.entries(values)
+  mapResult(values) {
+    return Object.entries(values)
       .map(([key, value]) => (value ? key : null))
       .filter(item => item);
+  }
+
+  validate(values) {
+    const result = this.mapResult(values);
 
     const remaining = MAX_PINNED_COUNT - result.length;
     const { repositories } = this.state;
@@ -106,15 +112,18 @@ class PinnableRepos extends React.Component {
   }
 
   async onSubmit(values) {
-    console.warn(values);
+    const { userId } = this.props;
+    const repositories = this.mapResult(values);
+    const result = await userService.setPinnedRepos({ userId, repositories });
+    console.warn(result);
   }
 
-  renderForm({ errors, touched, handleChange, handleSubmit, values }) {
-    const { repositories, remaining, searchValue } = this.state;
+  renderForm({ errors, touched, handleChange, handleSubmit }) {
+    const { repositories, remaining, searchValue, loading } = this.state;
     const filteredRepos = this.filterRepositories(repositories, searchValue);
 
     return (
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit} loading={loading}>
         {filteredRepos.map(repo => this.renderItem(repo, handleChange))}
         <Divider />
         <div className={styles.formFooter}>
@@ -129,7 +138,7 @@ class PinnableRepos extends React.Component {
 
   render() {
     return (
-      <Modal trigger={this.renderTrigger()} size="tiny">
+      <Modal trigger={this.renderTrigger()} onOpen={this.getRepositories} size="tiny">
         <Modal.Header>
           <strong>Edit pinned items</strong>
           <br></br>
@@ -145,8 +154,15 @@ class PinnableRepos extends React.Component {
   }
 }
 
+const mapStateToProps = ({
+  profile: {
+    currentUser: { id: userId }
+  }
+}) => ({ userId });
+
 PinnableRepos.propTypes = {
-  username: PropTypes.string
+  username: PropTypes.string,
+  userId: PropTypes.string
 };
 
-export default PinnableRepos;
+export default connect(mapStateToProps)(PinnableRepos);
