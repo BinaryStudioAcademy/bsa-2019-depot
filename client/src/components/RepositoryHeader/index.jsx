@@ -128,7 +128,7 @@ const RepositoryHeader = ({
               </Link>
             </div>
             <div className={`${activeTab === 'insights' && 'active'} item`}>
-              <Link to={`${baseUrl}/forks`}>
+              <Link to={`${baseUrl}/insights`}>
                 <Icon name="chart bar outline" /> Insights
               </Link>
             </div>
