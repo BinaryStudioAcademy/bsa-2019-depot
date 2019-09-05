@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ReposList from '../../containers/ReposList';
 import Spinner from '../../components/Spinner';
-
 import { getUserDetailed } from '../../services/userService';
 import { getRepositories } from '../../services/repositoryService';
 import { fetchCurrentUser } from '../../routines/routines';
