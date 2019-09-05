@@ -2,21 +2,21 @@ const date = require('date-and-time');
 
 const DAYS = 30;
 
-const offsets = new Array(DAYS).fill(null).map((el, idx) => idx - DAYS + 1);
-
-const byDaysOfWeek = [
-  { day: 'Sunday', value: 0 },
-  { day: 'Monday', value: 0 },
-  { day: 'Tuesday', value: 0 },
-  { day: 'Wednesday', value: 0 },
-  { day: 'Thursday', value: 0 },
-  { day: 'Friday', value: 0 },
-  { day: 'Saturday', value: 0 }
-];
-
-const roundToDay = value => new Date(value - (value % 86400000));
-
 const getCommitActivity = (commits) => {
+  const offsets = new Array(DAYS).fill(null).map((el, idx) => idx - DAYS + 1);
+
+  const byDaysOfWeek = [
+    { day: 'Sunday', value: 0 },
+    { day: 'Monday', value: 0 },
+    { day: 'Tuesday', value: 0 },
+    { day: 'Wednesday', value: 0 },
+    { day: 'Thursday', value: 0 },
+    { day: 'Friday', value: 0 },
+    { day: 'Saturday', value: 0 }
+  ];
+
+  const roundToDay = value => new Date(value - (value % 86400000));
+
   if (!commits.length) {
     return {};
   }
