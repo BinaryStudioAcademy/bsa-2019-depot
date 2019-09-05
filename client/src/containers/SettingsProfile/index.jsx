@@ -146,6 +146,8 @@ class SettingsProfile extends Component {
 
   closeModal = () => {
     this.setState({ isDeleteModalOpen: false });
+    // class removal doesn't handled by uppy
+    document.body.classList.remove('uppy-Dashboard-isFixed');
   };
 
   onRemovePhoto = () => {
@@ -178,6 +180,7 @@ class SettingsProfile extends Component {
                     <DashboardModal
                       uppy={this.uppy}
                       closeModalOnClickOutside
+                      closeAfterFinish={true}
                       open={this.state.isUploadModalOpen}
                       onRequestClose={this.handleClose}
                     />

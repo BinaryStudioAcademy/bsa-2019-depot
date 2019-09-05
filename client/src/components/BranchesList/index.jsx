@@ -39,7 +39,7 @@ const BranchesList = ({ branches, username, reponame }) => {
               {branch.merged ? (
                 <p className={styles.pullRequest}>
                   <span className={styles.pullRequestNumber}>#{branch.merged.number}</span>
-                  <Label color="purple" className={styles.pullRequestStatus}>
+                  <Label color="green" className={styles.pullRequestStatus}>
                     #{branch.merged.status}
                   </Label>
                 </p>

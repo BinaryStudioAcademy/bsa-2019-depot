@@ -1,6 +1,8 @@
 const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
-const { IssueModel, UserModel, RepositoryModel } = require('../models/index');
+const {
+  IssueModel, UserModel, RepositoryModel, OrgUserModel
+} = require('../models/index');
 const sequelize = require('../db/connection');
 
 const { Op } = Sequelize;
@@ -204,6 +206,11 @@ class IssueRepository extends BaseRepository {
               where: { userId }
             }
           ]
+        },
+        {
+          attributes: [],
+          model: OrgUserModel,
+          where: { userId }
         }
       ]
     });
@@ -223,7 +230,7 @@ class IssueRepository extends BaseRepository {
       where: {
         repositoryId,
         isOpened,
-        ...(title ? { body: { [Op.substring]: title } } : {}),
+        ...(title ? { title: { [Op.substring]: title } } : {}),
         ...(authorId ? { userId: authorId } : {})
       },
       attributes: {
@@ -245,7 +252,13 @@ class IssueRepository extends BaseRepository {
         },
         {
           model: RepositoryModel,
-          attributes: ['name']
+          attributes: ['name'],
+          include: [
+            {
+              model: UserModel,
+              attributes: ['username']
+            }
+          ]
         }
       ],
       order: parseSortQuery(sort)
