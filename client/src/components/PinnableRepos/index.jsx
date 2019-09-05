@@ -97,7 +97,7 @@ class PinnableRepos extends React.Component {
   async onSubmit(values) {
     const { userId } = this.props;
     const repositories = this.mapResult(values);
-    await userService.setPinnedRepos({ userId, repositories });
+    userService.setPinnedRepos({ userId, repositories });
 
     this.handleClose();
     this.props.onSetPinned();
@@ -149,7 +149,13 @@ class PinnableRepos extends React.Component {
 
   render() {
     return (
-      <Modal trigger={this.renderTrigger()} open={this.state.modalOpen} onOpen={this.getRepositories} size="tiny">
+      <Modal
+        trigger={this.renderTrigger()}
+        open={this.state.modalOpen}
+        onOpen={this.getRepositories}
+        onClose={this.handleClose}
+        size="tiny"
+      >
         <Modal.Header>
           <strong>Edit pinned items</strong>
           <br></br>
