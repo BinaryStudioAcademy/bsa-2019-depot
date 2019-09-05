@@ -19,7 +19,8 @@ class PinnableRepos extends React.Component {
       remaining: MAX_PINNED_COUNT,
       repositories: [],
       searchValue: '',
-      loading: true
+      loading: true,
+      modalOpen: false
     };
 
     this.renderForm = this.renderForm.bind(this);
@@ -32,6 +33,7 @@ class PinnableRepos extends React.Component {
   async getRepositories() {
     const { username } = this.props;
     const repositories = await repositoryService.getRepositories(username);
+
     this.setState({
       ...this.state,
       repositories,
@@ -81,8 +83,24 @@ class PinnableRepos extends React.Component {
     });
   }
 
+  handleOpen = () => this.setState({ ...this.state, modalOpen: true });
+  handleClose = () => this.setState({ ...this.state, modalOpen: false });
+
   renderTrigger() {
-    return <button className={styles.trigger}>Customize your pins</button>;
+    return (
+      <button className={styles.trigger} onClick={this.handleOpen}>
+        Customize your pins
+      </button>
+    );
+  }
+
+  async onSubmit(values) {
+    const { userId } = this.props;
+    const repositories = this.mapResult(values);
+    userService.setPinnedRepos({ userId, repositories });
+
+    this.handleClose();
+    this.props.onSetPinned();
   }
 
   renderItem({ id, name, disabled, starsCount }, handleChange) {
@@ -111,13 +129,6 @@ class PinnableRepos extends React.Component {
     );
   }
 
-  async onSubmit(values) {
-    const { userId } = this.props;
-    const repositories = this.mapResult(values);
-    const result = await userService.setPinnedRepos({ userId, repositories });
-    console.warn(result);
-  }
-
   renderForm({ errors, touched, handleChange, handleSubmit }) {
     const { repositories, remaining, searchValue, loading } = this.state;
     const filteredRepos = this.filterRepositories(repositories, searchValue);
@@ -138,7 +149,7 @@ class PinnableRepos extends React.Component {
 
   render() {
     return (
-      <Modal trigger={this.renderTrigger()} onOpen={this.getRepositories} size="tiny">
+      <Modal trigger={this.renderTrigger()} open={this.state.modalOpen} onOpen={this.getRepositories} size="tiny">
         <Modal.Header>
           <strong>Edit pinned items</strong>
           <br></br>
@@ -162,7 +173,8 @@ const mapStateToProps = ({
 
 PinnableRepos.propTypes = {
   username: PropTypes.string,
-  userId: PropTypes.string
+  userId: PropTypes.string,
+  onSetPinned: PropTypes.func
 };
 
 export default connect(mapStateToProps)(PinnableRepos);

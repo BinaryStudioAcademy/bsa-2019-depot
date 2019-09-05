@@ -16,15 +16,18 @@ class PinnedRepositories extends React.Component {
     this.state = {
       loading: true
     };
+
+    this.getRepositories = this.getRepositories.bind(this);
   }
 
   componentDidMount() {
-    const { userId } = this.props;
-    this.getRepositories(userId);
+    this.getRepositories();
   }
 
-  async getRepositories(userId) {
+  async getRepositories() {
+    const { userId } = this.props;
     const data = await UserService.getPinnedRepos(userId);
+
     this.setState({
       ...this.state,
       ...data,
@@ -79,7 +82,9 @@ class PinnedRepositories extends React.Component {
       <>
         <div className={styles.pinnedHeader}>
           <h2 className={styles.pinnedTitle}>{pinnedRepos ? 'Pinned' : 'Popular repositories'}</h2>
-          {isOwner ? <PinnableRepos username={username} /> : null}
+          {isOwner ? (
+            <PinnableRepos username={username} pinnedRepos={pinnedRepos} onSetPinned={this.getRepositories} />
+          ) : null}
         </div>
         <Card.Group itemsPerRow={2} stackable={true}>
           {repositories.map(repo => this.renderItem(username, repo))}
