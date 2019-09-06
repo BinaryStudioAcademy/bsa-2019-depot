@@ -12,17 +12,15 @@ export default StyleSheet.create({
     color: colors.white,
     justifyContent: 'center',
     margin: 10,
-    marginRight: 20,
     paddingVertical: 8,
     width: '20%'
   },
   commentInput: {
-    alignSelf: 'flex-end',
+    alignSelf: 'center',
     borderColor: colors.greyBorder,
     borderWidth: 1,
-    marginRight: 20,
     marginTop: 20,
-    width: '80.5%'
+    width: '95%'
   },
   data: {
     flexDirection: 'row',

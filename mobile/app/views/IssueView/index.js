@@ -51,7 +51,7 @@ class IssueView extends Component {
     const userId = user.id;
     const result = await createIssueComment({
       comment,
-      id,
+      issueId: id,
       userId
     });
     this.setState({

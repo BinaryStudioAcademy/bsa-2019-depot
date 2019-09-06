@@ -27,17 +27,15 @@ const IssueComment = ({
   return (
     <View style={styles.comment}>
       <View style={styles.commentHeader}>
-        <Image style={styles.avatar} source={{ uri: link }} />
         <View style={styles.commentHeaderInfo}>
+          <Image style={styles.avatar} source={{ uri: link }} />
           <Text style={styles.commentAuthor}>{username}</Text>
           <Text> commented </Text>
           <Text style={styles.commentDate}>{moment(updatedAt).fromNow()}</Text>
         </View>
       </View>
-      <View style={styles.commentBodyContainer}>
-        <View style={styles.commentBody}>
-          <Text>{body}</Text>
-        </View>
+      <View style={styles.commentBody}>
+        <Text>{body}</Text>
       </View>
     </View>
   );

@@ -3,10 +3,9 @@ import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   avatar: {
-    height: 40,
-    marginLeft: 10,
+    height: 15,
     marginRight: 10,
-    width: 40
+    width: 15
   },
   comment: {
     marginTop: 20
@@ -15,6 +14,7 @@ export default StyleSheet.create({
     fontWeight: 'bold'
   },
   commentBody: {
+    alignSelf: 'center',
     borderBottomColor: colors.greyBorder,
     borderBottomWidth: 1,
     borderLeftColor: colors.greyBorder,
@@ -22,13 +22,14 @@ export default StyleSheet.create({
     borderRightColor: colors.greyBorder,
     borderRightWidth: 1,
     padding: 10,
-    width: '94.1%'
+    width: '95%'
   },
   commentBodyContainer: {
     marginLeft: 60
   },
   commentHeader: {
     alignItems: 'center',
+    alignSelf: 'center',
     color: colors.greyText,
     flexDirection: 'row',
     height: 40,
