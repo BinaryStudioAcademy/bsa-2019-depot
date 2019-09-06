@@ -1,39 +1,51 @@
 import colors from '../../config/color.config';
 import { StyleSheet } from 'react-native';
 
+const width = '90%';
+const bodyWidth = '88.5%';
+
 export default StyleSheet.create({
-  data: {
-    flexDirection: 'row',
-    paddingLeft: 25
+  avatar: {
+    height: 40,
+    marginLeft: 10,
+    marginRight: 10,
+    width: 40
   },
-  dataDate: {
-    color: colors.greyText,
-    fontSize: 15,
-    paddingLeft: 7
+  comment: {
+    marginTop: 20
   },
-  dataNumber: {
-    color: colors.greyText,
-    fontSize: 15
+  commentAuthor: {
+    fontWeight: 'bold'
   },
-  dataUsername: {
-    color: colors.greyText,
-    fontSize: 15,
-    paddingLeft: 7
-  },
-  header: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    paddingLeft: 5,
-    paddingRight: 10
-  },
-  headerText: {
-    color: colors.blueLink,
-    fontSize: 20,
-    paddingLeft: 10
-  },
-  issue: {
+  commentBody: {
     borderBottomColor: colors.greyBorder,
     borderBottomWidth: 1,
-    padding: 5
+    borderLeftColor: colors.greyBorder,
+    borderLeftWidth: 1,
+    borderRightColor: colors.greyBorder,
+    borderRightWidth: 1,
+    padding: 10,
+    width: bodyWidth
+  },
+  commentBodyContainer: {
+    marginLeft: 60
+  },
+  commentHeader: {
+    alignItems: 'center',
+    color: colors.greyText,
+    flexDirection: 'row',
+    height: 40,
+    width: width
+  },
+  commentHeaderInfo: {
+    alignItems: 'center',
+    backgroundColor: '#f1f8ff',
+    color: colors.greyText,
+    flexDirection: 'row',
+    flex: 1,
+    height: 40,
+    padding: 10,
+    borderColor: colors.greyBorder,
+    borderWidth: 1
   }
 });

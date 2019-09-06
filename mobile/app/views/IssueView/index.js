@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, FlatList } from 'react-native';
+import { Text, View, FlatList, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import { getIssueComments } from '../../services/issueService';
 import IssueComment from '../../components/IssueComment';
@@ -55,6 +55,12 @@ class IssueView extends Component {
           data={issueComments}
           // eslint-disable-next-line react/jsx-no-bind
           renderItem={({ item }) => <IssueComment data={item} />}
+        />
+        <TextInput
+          multiline={true}
+          numberOfLines={4}
+          onChangeText={comment => this.setState({ comment })}
+          value={this.state.comment}
         />
       </View>
     );
