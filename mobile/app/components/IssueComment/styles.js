@@ -1,8 +1,8 @@
 import colors from '../../config/color.config';
 import { StyleSheet } from 'react-native';
 
-const width = '90%';
-const bodyWidth = '88.5%';
+const width = '95%';
+const bodyWidth = '94.1%';
 
 export default StyleSheet.create({
   avatar: {

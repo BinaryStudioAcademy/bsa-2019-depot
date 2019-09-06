@@ -17,11 +17,12 @@ export default StyleSheet.create({
     width: '20%'
   },
   commentInput: {
-    alignSelf: 'center',
+    alignSelf: 'flex-end',
     borderColor: colors.greyBorder,
     borderWidth: 1,
     margin: 10,
-    width: '90%'
+    marginRight: 20,
+    width: '80.5%'
   },
   data: {
     flexDirection: 'row',
