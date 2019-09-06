@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Loader, Image, Popup, Header, Grid, Icon } from 'semantic-ui-react';
+import { Loader, Image, Popup, Header, Grid, Icon, Container } from 'semantic-ui-react';
 import { getUserImgLink } from '../../helpers/imageHelper';
 import { getForksList } from '../../services/repositoryService';
+import Octicon, { getIconByName } from '@primer/octicons-react';
 
 import './styles.module.scss';
 
@@ -35,8 +36,8 @@ class ForksPage extends Component {
       <div>
         {loading ? (
           <Loader active />
-        ) : (
-          <ul className="forked-list">
+        ) : forks.length > 0 ? (
+          <ul>
             <li key={repositoryId} className="forked-item">
               <Popup trigger={<Image src={getUserImgLink(imgUrl)} size="mini" spaced />} flowing on="hover">
                 <div className="popup-body">
@@ -114,6 +115,17 @@ class ForksPage extends Component {
               </li>
             ))}
           </ul>
+        ) : (
+          <Container text textAlign="center">
+            <p>
+              <Octicon icon={getIconByName('repo-forked')} />
+            </p>
+            <Header as="h3">No one has forked this repository yet.</Header>
+            <p>
+              Forks are a great way to contribute to a repository. After forking a repository, you can send the original
+              author a pull request.
+            </p>
+          </Container>
         )}
       </div>
     );
