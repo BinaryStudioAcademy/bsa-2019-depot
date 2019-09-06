@@ -11,9 +11,10 @@ import IssuePrSidebar from '../../containers/IssuePrSidebar';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 import styles from './styles.module.scss';
 
-const CreateIssuePrForm = ({ isIssues, onSubmit }) => {
+const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels }) => {
   const [selectedTab, setSelectedTab] = useState('write');
   const [body, setBody] = useState('');
+  const [labelNames, setLabels] = useState('');
 
   const validationSchema = Yup.object().shape({
     title: Yup.string()
@@ -25,8 +26,12 @@ const CreateIssuePrForm = ({ isIssues, onSubmit }) => {
     return Promise.resolve(<ReactMarkdown source={body} />);
   }
 
+  function updateLabelNames(labelNames){
+    setLabels(labelNames);
+  }
+
   function handleSubmit({ title }) {
-    onSubmit(title, body);
+    onSubmit(title, body, labelNames);
   }
 
   return (
@@ -59,7 +64,7 @@ const CreateIssuePrForm = ({ isIssues, onSubmit }) => {
                 </Button>
               </Grid.Column>
               <Grid.Column width={4}>
-                <IssuePrSidebar isIssue={isIssues}/>
+                <IssuePrSidebar isIssue={isIssues} repositoryId={repositoryId} labels={labels} setLabelsOnCreateItem={updateLabelNames}/>
               </Grid.Column>
             </Grid>
           </Form>
@@ -71,7 +76,9 @@ const CreateIssuePrForm = ({ isIssues, onSubmit }) => {
 
 CreateIssuePrForm.propTypes = {
   isIssues: PropTypes.bool.isRequired,
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
+  repositoryId: PropTypes.string.isRequired,
+  labels: PropTypes.array.isRequired
 };
 
 export default CreateIssuePrForm;

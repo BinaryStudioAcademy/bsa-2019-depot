@@ -19,7 +19,8 @@ module.exports = (models) => {
     PullComment,
     Permission,
     Collaborator,
-    PinnedRepository
+    PinnedRepository,
+    PullLabel
   } = models;
 
   SshKey.belongsTo(User);
@@ -35,6 +36,7 @@ module.exports = (models) => {
   Repository.hasMany(PullRequest, { foreignKey: 'repositoryId' });
   Issue.hasMany(IssueComment, { onDelete: 'cascade' });
   PullRequest.hasMany(PullComment, { foreignKey: 'pullId', onDelete: 'cascade' });
+  PullRequest.hasMany(PullLabel, { foreignKey: 'pullId', onDelete: 'cascade' });
 
   User.hasMany(OrgUser, { foreignKey: 'userId' });
   User.hasMany(OrgUser, { foreignKey: 'orgId' });
@@ -86,6 +88,9 @@ module.exports = (models) => {
   PullRequest.belongsTo(Branch, { as: 'toBranch', foreignKey: 'toBranchId' });
   PullComment.belongsTo(User);
   PullComment.belongsTo(PullRequest, { as: 'pull' });
+  PullLabel.belongsTo(PullRequest, { as: 'pull' });
+  Label.hasMany(PullLabel);
+  PullLabel.belongsTo(Label);
   Star.belongsTo(Repository);
   Star.belongsTo(User);
 

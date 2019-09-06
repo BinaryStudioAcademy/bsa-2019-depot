@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { getUserImgLink } from '../../helpers/imageHelper';
-import { List, Icon, Image, Popup } from 'semantic-ui-react';
+import { List, Icon, Image, Popup, Label } from 'semantic-ui-react';
 import { PullRequestOutline } from '@ant-design/icons';
 import AntdIcon from '@ant-design/icons-react';
 import { Link } from 'react-router-dom';
@@ -70,11 +70,21 @@ const DataList = props => {
                   }`}
                 >
                   {item.title}
+                  {item.pullLabels && item.pullLabels.map(({ label }) => (
+                    <Label size="mini" key={label.id} style={{ background: `${label.color}`, marginLeft: '5px' }}>
+                      {label.name}
+                    </Label>
+                  ))}
                 </Link>
               </List.Header>
               <List.Description>
-                { isPull ? `#${item.number} ${item.prstatus.name.toLowerCase()} ${moment(item.updatedAt).fromNow()} by ${item.user.username}`
-                  : `#${item.number} ${item.isOpened ? 'opened' : 'closed'} ${moment(item.updatedAt).fromNow()} by ${item.user.username}` }
+                {isPull
+                  ? `#${item.number} ${item.prstatus.name.toLowerCase()} ${moment(item.updatedAt).fromNow()} by ${
+                    item.user.username
+                  }`
+                  : `#${item.number} ${item.isOpened ? 'opened' : 'closed'} ${moment(item.updatedAt).fromNow()} by ${
+                    item.user.username
+                  }`}
               </List.Description>
             </List.Content>
           </List.Item>

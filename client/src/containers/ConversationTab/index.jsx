@@ -18,6 +18,7 @@ import {
   mergePull
 } from '../../services/pullsService';
 import { updatePullComment, createPullComment, deletePullComment } from '../../services/pullCommentsService';
+import * as LabelService from '../../services/labelsService';
 
 import styles from './styles.module.scss';
 
@@ -183,8 +184,22 @@ class ConversationTab extends React.Component {
     }
   };
 
+  setLabelToPull = async labelId => {
+    const {
+      currentPull: { id, repositoryId }
+    } = this.props;
+    return LabelService.setLabelToPull(labelId, id, repositoryId);
+  }; 
+
+  removeLabelFromPull = async labelId => {
+    const {
+      currentPull: { repositoryId }
+    } = this.props;
+    return LabelService.removeLabelFromPull(labelId, repositoryId);
+  };
+
   render() {
-    const { userId, username, userImg, currentPull, pullComments, isOwnPull } = this.props;
+    const { userId, username, userImg, currentPull, pullComments, isOwnPull, labels, currentLabels } = this.props;
     const {
       user: { imgUrl, username: owner },
       body,
@@ -211,31 +226,31 @@ class ConversationTab extends React.Component {
               ownComment={isOwnPull}
             />
             {comments.length > 0 &&
-            comments.map((comment, index) => {
-              const {
-                id,
-                user: { username, imgUrl },
-                body,
-                createdAt,
-                userId: commentUserId
-              } = comment;
-              return (
-                <Comment
-                  key={index}
-                  id={id}
-                  avatar={imgUrl}
-                  username={username}
-                  body={body}
-                  createdAt={createdAt}
-                  newComment={false}
-                  onSubmit={this.onCommentUpdate}
-                  submitBtnTxt="Update comment"
-                  cancelBtnTxt="Cancel"
-                  onDelete={this.onCommentDelete}
-                  ownComment={userId === commentUserId}
-                />
-              );
-            })}
+              comments.map((comment, index) => {
+                const {
+                  id,
+                  user: { username, imgUrl },
+                  body,
+                  createdAt,
+                  userId: commentUserId
+                } = comment;
+                return (
+                  <Comment
+                    key={index}
+                    id={id}
+                    avatar={imgUrl}
+                    username={username}
+                    body={body}
+                    createdAt={createdAt}
+                    newComment={false}
+                    onSubmit={this.onCommentUpdate}
+                    submitBtnTxt="Update comment"
+                    cancelBtnTxt="Cancel"
+                    onDelete={this.onCommentDelete}
+                    ownComment={userId === commentUserId}
+                  />
+                );
+              })}
             <Comment
               avatar={userImg}
               username={username}
@@ -247,7 +262,13 @@ class ConversationTab extends React.Component {
             />
           </Grid.Column>
           <Grid.Column width={4}>
-            <IssuePrSidebar isIssue />
+            <IssuePrSidebar
+              isIssue={false}
+              labels={labels}
+              currentLabels={currentLabels}
+              setLabelToPull={this.setLabelToPull}
+              removeLabelFromPull={this.removeLabelFromPull}
+            />
           </Grid.Column>
         </Grid>
       </Segment>
@@ -268,7 +289,9 @@ ConversationTab.propTypes = {
   currentPull: PropTypes.object,
   pullComments: PropTypes.object,
   isOwnPull: PropTypes.bool,
-  updateState: PropTypes.func
+  updateState: PropTypes.func,
+  labels: PropTypes.array.isRequired,
+  currentLabels: PropTypes.array.isRequired
 };
 
 const mapStateToProps = ({
