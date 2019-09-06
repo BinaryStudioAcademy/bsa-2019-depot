@@ -9,6 +9,7 @@ const issuesRoutes = require('./issues.route');
 const issueCommentsRoutes = require('./issue-comments.route');
 const collaborators = require('./collaborators.route');
 const labelRoutes = require('./labels.route');
+const issueLabelRoutes = require('./issue-labels.route');
 const filesRoutes = require('./files.route');
 const pullsRoutes = require('./pulls.route');
 const pullCommentsRoutes = require('./pull-comments.route');
@@ -25,6 +26,7 @@ module.exports = (app) => {
   app.use('/api/issue-comments', issueCommentsRoutes);
   app.use('/api/collaborators', collaborators);
   app.use('/api/labels', labelRoutes);
+  app.use('/api/issue-labels', issueLabelRoutes);
   app.use('/api/files', filesRoutes);
   app.use('/api/pulls', pullsRoutes);
   app.use('/api/pull-comments', pullCommentsRoutes);

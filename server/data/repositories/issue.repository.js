@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
 const {
-  IssueModel, UserModel, RepositoryModel, OrgUserModel
+  IssueModel, UserModel, RepositoryModel, OrgUserModel, LabelModel
 } = require('../models/index');
 const sequelize = require('../db/connection');
 
@@ -111,6 +111,10 @@ class IssueRepository extends BaseRepository {
         {
           model: RepositoryModel,
           attributes: ['name']
+        },
+        {
+          model: LabelModel,
+          attributes: ['id', 'name', 'color', 'description']
         }
       ]
     });
@@ -154,6 +158,10 @@ class IssueRepository extends BaseRepository {
           model: UserModel,
           where: { id: userId },
           attributes: ['id', 'username']
+        },
+        {
+          model: LabelModel,
+          attributes: ['id', 'name', 'color', 'description']
         }
       ]
     };
@@ -259,6 +267,10 @@ class IssueRepository extends BaseRepository {
               attributes: ['username']
             }
           ]
+        },
+        {
+          model: LabelModel,
+          attributes: ['id', 'name', 'color', 'description']
         }
       ],
       order: parseSortQuery(sort)
@@ -293,6 +305,10 @@ class IssueRepository extends BaseRepository {
         {
           model: UserModel,
           attributes: ['username', 'imgUrl']
+        },
+        {
+          model: LabelModel,
+          attributes: ['id', 'name', 'color', 'description']
         }
       ]
     });
