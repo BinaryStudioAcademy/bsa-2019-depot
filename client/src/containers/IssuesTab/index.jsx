@@ -30,11 +30,7 @@ class IssuesTab extends React.Component {
   render() {
     const { loading, repositoryId } = this.state;
 
-    return loading ? (
-      <Loader active />
-    ) : (
-        <IssuesPullsList repositoryId={repositoryId} isIssues={true} />
-    );
+    return loading ? <Loader active /> : <IssuesPullsList repositoryId={repositoryId} isIssues={true} />;
   }
 }
 

@@ -59,7 +59,7 @@ $grey_border: #e1e4e8;
 
 :local(.second_column) {
   min-width: 660px !important;
-  >:global(.ui.form){
+  > :global(.ui.form) {
     margin-bottom: 1em;
   }
 }

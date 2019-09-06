@@ -10,12 +10,7 @@ export const tabs = {
   stars: 'stars'
 };
 
-const DashboardHeader = ({
-  repoCount,
-  starsCount,
-  baseUrl,
-  activeTab
-}) => {
+const DashboardHeader = ({ repoCount, starsCount, baseUrl, activeTab }) => {
   const getClassName = (tab, activeTab) => {
     if (!activeTab && tab === 'overview') {
       return 'dashboard_link selected';

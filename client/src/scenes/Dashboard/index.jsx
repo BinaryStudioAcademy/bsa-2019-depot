@@ -135,12 +135,7 @@ class Dashboard extends React.Component {
             </Grid.Column>
 
             <Grid.Column mobile={16} tablet={12} computer={12}>
-              <DashboardHeader
-                baseUrl={url}
-                activeTab={tab}
-                repoCount={repositoriesCount}
-                starsCount={starsCount}
-              />
+              <DashboardHeader baseUrl={url} activeTab={tab} repoCount={repositoriesCount} starsCount={starsCount} />
               {this.renderTab(tab)}
             </Grid.Column>
           </Grid.Row>
