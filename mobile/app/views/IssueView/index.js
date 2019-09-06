@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Text, View, FlatList, TextInput } from 'react-native';
+import { Text, View, FlatList, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
-import { getIssueComments } from '../../services/issueService';
+import { getIssueComments, createIssueComment } from '../../services/issueService';
 import IssueComment from '../../components/IssueComment';
 import moment from 'moment';
 import styles from './styles';
@@ -10,8 +10,8 @@ class IssueView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      issueComments: {},
-      comment
+      issueComments: [],
+      comment: ''
     };
   }
 
@@ -29,11 +29,28 @@ class IssueView extends Component {
     } catch (err) {}
   }
 
+  handleSubmit = async () => {
+    const { comment } = this.state;
+    const issueId = this.props.navigation.state.params.data.id;
+    const userId = this.props.navigation.state.params.data.user.id;
+    const result = await createIssueComment({
+      comment,
+      issueId,
+      userId
+    });
+    console.log(this.state.issueComments, result);
+    this.setState({
+      ...this.state,
+      issueComments: [...this.state.issueComments, result],
+      comment: ''
+    });
+  };
+
   render() {
     const { issueComments } = this.state;
     const data = this.props.navigation.state.params.data;
     return (
-      <View>
+      <ScrollView style={styles.container}>
         <View style={styles.issue}>
           <View style={styles.header}>
             {data.isOpened ? (
@@ -57,13 +74,19 @@ class IssueView extends Component {
           // eslint-disable-next-line react/jsx-no-bind
           renderItem={({ item }) => <IssueComment data={item} />}
         />
-        <TextInput
-          multiline={true}
-          numberOfLines={4}
-          onChangeText={comment => this.setState({ comment })}
-          value={this.state.comment}
-        />
-      </View>
+        <View style={styles.commentInputContainer}>
+          <TextInput
+            multiline={true}
+            numberOfLines={4}
+            onChangeText={comment => this.setState({ ...this.state, comment })}
+            value={this.state.comment}
+            style={styles.commentInput}
+          />
+          <TouchableOpacity style={styles.button} onPress={this.handleSubmit}>
+            <Text style={styles.text}>{'Comment'}</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     );
   }
 }

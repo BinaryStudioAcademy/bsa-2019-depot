@@ -16,3 +16,12 @@ export const getIssueComments = async issueId => {
   });
   return response.json();
 };
+
+export const createIssueComment = async request => {
+  const response = await callWebApi({
+    endpoint: 'http://10.0.2.2:3000/api/issue-comments',
+    type: 'POST',
+    request
+  });
+  return response ? response.json() : false;
+};
