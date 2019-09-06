@@ -20,7 +20,15 @@ class IssueView extends Component {
   }
 
   async fetchIssueComments() {
-    const id = this.props.navigation.state.params.data.id;
+    const {
+      navigation: {
+        state: {
+          params: {
+            data: { id }
+          }
+        }
+      }
+    } = this.props;
     try {
       const issueComments = await getIssueComments(id);
       this.setState({
@@ -31,14 +39,21 @@ class IssueView extends Component {
 
   handleSubmit = async () => {
     const { comment } = this.state;
-    const issueId = this.props.navigation.state.params.data.id;
-    const userId = this.props.navigation.state.params.data.user.id;
+    const {
+      navigation: {
+        state: {
+          params: {
+            data: { id, user }
+          }
+        }
+      }
+    } = this.props;
+    const userId = user.id;
     const result = await createIssueComment({
       comment,
-      issueId,
+      id,
       userId
     });
-    console.log(this.state.issueComments, result);
     this.setState({
       ...this.state,
       issueComments: [...this.state.issueComments, result],
