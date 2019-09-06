@@ -29,7 +29,7 @@ class CreateIssuePage extends React.Component {
     if (!repositoryId) {
       fetchCurrentRepo({ username, reponame });
     }
-    const labels = getLabels(repositoryId);
+    const labels = await getLabels(repositoryId);
     this.setState({ labels, loading: false });
   }
 
