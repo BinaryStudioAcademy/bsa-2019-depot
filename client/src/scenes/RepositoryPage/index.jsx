@@ -12,7 +12,7 @@ import CommitsPage from '../../containers/CommitsPage/index';
 import DiffCommitView from '../../components/DiffCommitView/index';
 import RepoSettings from '../../containers/SettingsTab/index';
 import FileViewPage from '../../containers/FileViewPage';
-import BlameViewPage from  '../../containers/BlameViewPage';
+import BlameViewPage from '../../containers/BlameViewPage';
 import FileEditPage from '../../containers/FileEditPage';
 import StargazersPage from '../../containers/StargazersPage/index';
 import BranchesTab from '../../containers/BranchesTab/index';
@@ -28,8 +28,6 @@ import LabelTab from '../../containers/LabelsTab';
 import PullView from '../../containers/PullView';
 import { getAllUserPermissions } from '../../helpers/checkPermissionsHelper';
 import { socketInit } from '../../helpers/socketInitHelper';
-
-import styles from './styles.module.scss';
 
 class RepositoryPage extends React.Component {
   constructor(props) {
@@ -128,7 +126,7 @@ class RepositoryPage extends React.Component {
           activePage={pathname.split('/')[3]}
           baseUrl={match.url}
         />
-        <Container className={styles.contentContainer}>
+        <Container>
           <Switch>
             <Route exact path={`${match.path}`} component={CodeTab} />
             <Route exact path={`${match.path}/tree/:branch`} component={CodeTab} />
