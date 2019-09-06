@@ -80,3 +80,11 @@ export const mergePull = async request => {
   });
   return response.json();
 };
+
+export const getReviewers = async id => {
+  const response = await callWebApi({
+    endpoint: `/api/pulls/${id}/reviewers`,
+    type: 'GET'
+  });
+  return response.json();
+};

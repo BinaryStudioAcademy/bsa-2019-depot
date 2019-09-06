@@ -39,20 +39,7 @@ class IssuePrSidebar extends React.Component {
   }
 
   render() {
-    const { isIssue } = this.props;
-
-    const reviewers = [
-      {
-        id: '5d7e8149-c61f-444e-a998-15c3d3d92624',
-        username: 'thesubliminalfffffffffffff',
-        imgUrl: null
-      },
-      {
-        id: '5d7e8149-c61f-444e-a998-15c3dd3d92624',
-        username: 'sublimini',
-        imgUrl: 'https://api.adorable.io/avatars/face/eyes4/nose3/mouth7/8e8895'
-      }
-    ];
+    const { isIssue, reviewers, collaborators } = this.props;
 
     const assignees = [
       {
@@ -190,7 +177,7 @@ class IssuePrSidebar extends React.Component {
       }
     ];
 
-    const reviewerOptions = reviewers.map(({ id, username, imgUrl }) => ({
+    const reviewerOptions = collaborators.map(({ id, user: { username, imgUrl } }) => ({
       key: id,
       text: username,
       value: username,
@@ -229,7 +216,7 @@ class IssuePrSidebar extends React.Component {
               fluid
               text="Select Reviewers"
               name="reviewers"
-              defaultValue={initialReviewers.map(({ username }) => username)}
+              defaultValue={reviewers.map(({ user: { username } }) => username)}
               onChange={this.onPropChange}
               renderLabel={this.renderLabel}
             />
@@ -269,7 +256,9 @@ class IssuePrSidebar extends React.Component {
 }
 
 IssuePrSidebar.propTypes = {
-  isIssue: PropTypes.bool.isRequired
+  isIssue: PropTypes.bool.isRequired,
+  reviewers: PropTypes.array,
+  collaborators: PropTypes.array
 };
 
 export default IssuePrSidebar;
