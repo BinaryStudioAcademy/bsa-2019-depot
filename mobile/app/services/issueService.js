@@ -1,8 +1,9 @@
 import callWebApi from '../helpers/webApiHelper';
+import { MOBILE_SERVER } from 'react-native-dotenv';
 
 export const getAllIssues = async (username, params) => {
   const response = await callWebApi({
-    endpoint: `http://10.0.2.2:3000/api/users/${username}/issues`,
+    endpoint: `${MOBILE_SERVER}/api/users/${username}/issues`,
     type: 'GET',
     query: params
   });
@@ -11,7 +12,7 @@ export const getAllIssues = async (username, params) => {
 
 export const getIssueComments = async issueId => {
   const response = await callWebApi({
-    endpoint: `http://10.0.2.2:3000/api/issues/${issueId}/comments`,
+    endpoint: `${MOBILE_SERVER}/api/issues/${issueId}/comments`,
     type: 'GET'
   });
   return response.json();
@@ -19,7 +20,7 @@ export const getIssueComments = async issueId => {
 
 export const createIssueComment = async request => {
   const response = await callWebApi({
-    endpoint: 'http://10.0.2.2:3000/api/issue-comments',
+    endpoint: `${MOBILE_SERVER}/api/issue-comments`,
     type: 'POST',
     request
   });
@@ -29,7 +30,7 @@ export const createIssueComment = async request => {
 export const closeIssue = async request => {
   const { id } = request;
   const response = await callWebApi({
-    endpoint: `http://10.0.2.2:3000/api/issues/${id}/close`,
+    endpoint: `${MOBILE_SERVER}/api/issues/${id}/close`,
     type: 'PUT'
   });
   return response.json();
@@ -38,7 +39,7 @@ export const closeIssue = async request => {
 export const reopenIssue = async request => {
   const { id } = request;
   const response = await callWebApi({
-    endpoint: `http://10.0.2.2:3000/api/issues/${id}/reopen`,
+    endpoint: `${MOBILE_SERVER}/api/issues/${id}/reopen`,
     type: 'PUT'
   });
   return response.json();
