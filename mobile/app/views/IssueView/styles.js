@@ -11,17 +11,17 @@ export default StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     color: colors.white,
     justifyContent: 'center',
-    marginBottom: 12,
+    margin: 10,
     marginRight: 20,
-    paddingVertical: 12,
+    paddingVertical: 8,
     width: '20%'
   },
   commentInput: {
     alignSelf: 'flex-end',
     borderColor: colors.greyBorder,
     borderWidth: 1,
-    margin: 10,
     marginRight: 20,
+    marginTop: 20,
     width: '80.5%'
   },
   data: {
@@ -63,7 +63,7 @@ export default StyleSheet.create({
     borderBottomWidth: 1,
     color: colors.greyText,
     fontSize: 20,
-    paddingLeft: 25,
+    paddingLeft: 30,
     padding: 10
   },
   text: {
