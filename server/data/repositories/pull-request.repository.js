@@ -72,7 +72,6 @@ class PullRepository extends BaseRepository {
               attributes: [],
               where: {
                 repositoryId,
-                deletedAt: null
               }
             }
           ]
@@ -120,10 +119,7 @@ class PullRepository extends BaseRepository {
           include: [
             {
               model: LabelModel,
-              attributes: ['name', 'description', 'color'],
-              where: {
-                deletedAt: null
-              }
+              attributes: ['name', 'description', 'color']
             }
           ]
         }
@@ -229,10 +225,7 @@ class PullRepository extends BaseRepository {
           include: [
             {
               model: LabelModel,
-              attributes: ['name', 'description', 'color'],
-              where: {
-                deletedAt: null
-              }
+              attributes: ['name', 'description', 'color']
             }
           ]
         }
