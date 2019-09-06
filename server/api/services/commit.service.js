@@ -8,6 +8,7 @@ const userRepository = require('../../data/repositories/user.repository');
 const branchRepository = require('../../data/repositories/branch.repository');
 const RepoRepository = require('../../data/repositories/repository.repository');
 const CustomError = require('../../helpers/error.helper');
+const CommitActivityHelper = require('../../helpers/commit-activity.helper');
 
 const getCommitsAndCreatedRepoByDate = async (data) => {
   const { user, isOwner } = data;
@@ -276,6 +277,15 @@ const getRepoByCommitId = async (commitId) => {
   }
 };
 
+const getCommitActivityData = async (repositoryId) => {
+  try {
+    const commits = await CommitRepository.getAllRepoCommits(repositoryId);
+    return CommitActivityHelper.getCommitActivity(commits);
+  } catch (err) {
+    return Promise.reject(new Error(err.message));
+  }
+};
+
 module.exports = {
   getCommits,
   getCommitDiff,
@@ -284,5 +294,6 @@ module.exports = {
   deleteFile,
   createCommit,
   getCommitCount,
-  getRepoByCommitId
+  getRepoByCommitId,
+  getCommitActivityData
 };

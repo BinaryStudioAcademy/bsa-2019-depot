@@ -111,3 +111,11 @@ export const getRepositoryPulls = async (repositoryId, query) => {
   });
   return response.json();
 };
+
+export const getCommitActivity = async repositoryId => {
+  const response = await callWebApi({
+    endpoint: `/api/repos/${repositoryId}/commit-activity-data`,
+    type: 'GET'
+  });
+  return response.json();
+};

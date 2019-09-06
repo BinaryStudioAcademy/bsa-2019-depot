@@ -11,7 +11,9 @@ const {
   updateByUserAndReponame,
   getRepositoryForks
 } = require('../services/repo.service');
-const { getCommits, getCommitDiff, getCommitCount } = require('../services/commit.service');
+const {
+  getCommits, getCommitDiff, getCommitCount, getCommitActivityData
+} = require('../services/commit.service');
 const { deleteStarsByRepoId } = require('../services/star.service');
 const {
   getBranches,
@@ -301,6 +303,12 @@ router
   .get('/:repositoryId/forks', (req, res, next) => {
     const { repositoryId } = req.params;
     getRepositoryForks(repositoryId)
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .get('/:repositoryId/commit-activity-data', (req, res, next) => {
+    const { repositoryId } = req.params;
+    getCommitActivityData(repositoryId)
       .then(data => res.send(data))
       .catch(next);
   });
