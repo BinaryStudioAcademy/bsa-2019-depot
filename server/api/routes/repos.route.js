@@ -154,7 +154,7 @@ router
       .then(result => res.send(result))
       .catch(next);
   })
-  .post('/fork', isAdminMiddleware, (req, res, next) => {
+  .post('/fork', (req, res, next) => {
     const {
       body: {
         owner,
