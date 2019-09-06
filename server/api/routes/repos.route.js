@@ -252,7 +252,8 @@ router
   })
   .get('/:username/:reponame/pulls', isReaderMiddleware, (req, res, next) => {
     const { repositoryId } = req.query;
-    pullsService.getPulls(repositoryId)
+    pullsService
+      .getPulls(repositoryId)
       .then(result => res.send(result))
       .catch(next);
   })
@@ -275,6 +276,20 @@ router
     } catch (e) {
       next(e);
     }
+  })
+  .post('/:repositoryId/pulls/labels', async (req, res, next) => {
+    const { labelId, pullId } = req.body;
+    pullsService
+      .setLabel(labelId, pullId)
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .delete('/:repositoryId/pulls/labels', async (req, res, next) => {
+    const { labelId } = req.body;
+    pullsService
+      .removeLabel(labelId)
+      .then(data => res.send(data))
+      .catch(next);
   })
   .get('/:repositoryId/collaborators', (req, res, next) => {
     const { repositoryId } = req.params;
