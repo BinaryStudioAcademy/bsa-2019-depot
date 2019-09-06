@@ -6,6 +6,7 @@ import { List, Icon, Image, Popup, Label } from 'semantic-ui-react';
 import { PullRequestOutline } from '@ant-design/icons';
 import AntdIcon from '@ant-design/icons-react';
 import { Link } from 'react-router-dom';
+import Color from 'color';
 
 import styles from './styles.module.scss';
 AntdIcon.add(PullRequestOutline);
@@ -34,6 +35,10 @@ const renderIcon = status => {
     return null;
   }
 };
+
+function changeTextColor(labelColor) {
+  return Color(labelColor).isDark() ? '#f7f7fb' : '#363a44';
+}
 
 const DataList = props => {
   const { data, isPull } = props;
@@ -71,7 +76,7 @@ const DataList = props => {
                 >
                   {item.title}
                   {item.pullLabels && item.pullLabels.map(({ label }) => (
-                    <Label size="mini" key={label.id} style={{ background: `${label.color}`, marginLeft: '5px' }}>
+                    <Label size="mini" key={label.id} style={{ background: `${label.color}`, color: changeTextColor(label.color), marginLeft: '5px' }}>
                       {label.name}
                     </Label>
                   ))}
