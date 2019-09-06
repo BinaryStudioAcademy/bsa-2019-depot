@@ -19,7 +19,7 @@ class CommitRepository extends BaseRepository {
   getAllRepoCommits(repositoryId) {
     return this.model.findAll({
       raw: true,
-      where: {repositoryId},
+      where: { repositoryId },
       attributes: {
         exclude: ['id']
       }

@@ -102,3 +102,12 @@ export const getForksList = async repositoryId => {
   });
   return response.json();
 };
+
+export const getRepositoryPulls = async (repositoryId, query) => {
+  const response = await callWebApi({
+    endpoint: `/api/repos/${repositoryId}/pulls`,
+    type: 'GET',
+    query
+  });
+  return response.json();
+};

@@ -8,11 +8,11 @@ module.exports = async (req, res, next) => {
   const userId = req.user.id;
 
   const { id: orgId } = await UserRepository.getByUsername(orgName);
-  const result = await OrgUserRepository.getUserWithOwnerRole({userId, orgId});
+  const result = await OrgUserRepository.getUserWithOwnerRole({ userId, orgId });
   let userRole;
-  if(result) {
+  if (result) {
     userRole = result.role.name;
-  };
+  }
 
   return userRole === orgRole.owner
     ? next()

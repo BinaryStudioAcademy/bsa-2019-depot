@@ -10,6 +10,7 @@ import DiffList from '../../components/DiffList';
 import CreateIssuePrForm from '../../components/CreateIssuePrForm';
 import { getBranchDiffs } from '../../services/pullsService';
 import { createPull } from '../../services/pullsService';
+import { getLabels, setLabelToPull } from '../../services/labelsService';
 
 import styles from './styles.module.scss';
 
@@ -35,7 +36,10 @@ class CompareChanges extends React.Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    const { repositoryId } = this.props;
+    const labels = await getLabels(repositoryId);
+    this.setState({ labels });
     this.updateBranchDiffs();
   }
 
@@ -76,10 +80,10 @@ class CompareChanges extends React.Component {
     });
   }
 
-  onSubmit(title, body) {
+  onSubmit(title, body, labelNames) {
     const { userId, repositoryId, branches, history, match } = this.props;
     const { username, reponame } = match.params;
-    const { fromBranch, toBranch } = this.state;
+    const { fromBranch, toBranch, labels } = this.state;
 
     const { id: fromBranchId, headCommitId: fromCommitId } = branches.find(({ name }) => name === fromBranch);
     const { id: toBranchId, headCommitId: toCommitId } = branches.find(({ name }) => name === toBranch);
@@ -96,7 +100,12 @@ class CompareChanges extends React.Component {
     };
 
     this.setState({ loading: true });
-    createPull(request).then(() => {
+    createPull(request).then(pull => {
+      labels.forEach(label => {
+        if (labelNames.includes(label.name)) {
+          setLabelToPull(label.id, pull.data.id, repositoryId);
+        }
+      });
       this.setState({ loading: false });
       history.push(`/${username}/${reponame}/pulls`);
     });
@@ -117,9 +126,10 @@ class CompareChanges extends React.Component {
       numOfContributors,
       fromBranch,
       toBranch,
-      loading
+      loading,
+      labels
     } = this.state;
-    const { branches } = this.props;
+    const { branches, repositoryId } = this.props;
 
     const commentsList =
       commitComments && commitComments.length ? (
@@ -135,7 +145,7 @@ class CompareChanges extends React.Component {
       );
 
     return (
-      <>
+      <Segment basic>
         <div className={styles.header}>
           <h1>Comparing changes</h1>
           <h5>Choose two branches to see what’s changed or to start a new pull request</h5>
@@ -149,9 +159,9 @@ class CompareChanges extends React.Component {
         />
         {loading ? (
           <Loader active />
-        ) : diffs && diffs.length ? (
+        ) : diffs && diffs.length && commits && commits.length ? (
           <>
-            <CreateIssuePrForm isIssues={false} onSubmit={this.onSubmit} />
+            <CreateIssuePrForm isIssues={false} onSubmit={this.onSubmit} repositoryId={repositoryId} labels={labels} />
             <Segment className={styles.pullStats}>
               <div className={styles.pullStatSection}>
                 <Octicon icon={GitCommit} />
@@ -182,14 +192,13 @@ class CompareChanges extends React.Component {
                 'You’ll need to use two different branch names to get a valid comparison.'
               ) : (
                 <>
-                  <b>{toBranch}</b> is up to date with all commits from <b>{fromBranch}</b>. Try switching the base for
-                  your comparison.
+                  <b>{toBranch}</b> is up to date with <b>{fromBranch}</b>. Try switching the base for your comparison.
                 </>
               )}
             </p>
           </div>
         )}
-      </>
+      </Segment>
     );
   }
 }
