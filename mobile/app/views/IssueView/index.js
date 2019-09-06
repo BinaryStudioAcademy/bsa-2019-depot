@@ -10,7 +10,8 @@ class IssueView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      issueComments: {}
+      issueComments: {},
+      comment
     };
   }
 
