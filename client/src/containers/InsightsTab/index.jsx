@@ -1,11 +1,15 @@
 import React from 'react';
-import { Switch, NavLink, Route } from 'react-router-dom';
+import { Switch, NavLink, Route, Redirect } from 'react-router-dom';
 import { Grid, Menu } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import ForksPage from '../ForksPage';
 import CommitsInsight from '../CommitsInsight';
 
 const InsightsTab = ({ match }) => {
+  function defaultRedirect(props) {
+    return <Redirect {...props} to={`${props.match.url}/forks`} />;
+  }
+
   return (
     <>
       <Grid container>
@@ -21,7 +25,7 @@ const InsightsTab = ({ match }) => {
         </Grid.Column>
         <Grid.Column computer={12} tablet={16} mobile={16}>
           <Switch>
-            <Route exact path={`${match.path}`} component={ForksPage} />
+            <Route exact path={`${match.path}`} render={defaultRedirect} />
             <Route exact path={`${match.path}/forks`} component={ForksPage} />
             <Route exact path={`${match.path}/commits`} component={CommitsInsight} />
           </Switch>
