@@ -18,7 +18,7 @@ import {
   mergePull
 } from '../../services/pullsService';
 import { updatePullComment, createPullComment, deletePullComment } from '../../services/pullCommentsService';
-import { setLabelToPull, removeLabelFromPull } from '../../services/labelsService';
+import * as LabelService from '../../services/labelsService';
 
 import styles from './styles.module.scss';
 
@@ -188,14 +188,14 @@ class ConversationTab extends React.Component {
     const {
       currentPull: { id, repositoryId }
     } = this.props;
-    return setLabelToPull(labelId, id, repositoryId);
-  };
+    return LabelService.setLabelToPull(labelId, id, repositoryId);
+  }; 
 
   removeLabelFromPull = async labelId => {
     const {
       currentPull: { repositoryId }
     } = this.props;
-    return removeLabelFromPull(labelId, repositoryId);
+    return LabelService.removeLabelFromPull(labelId, repositoryId);
   };
 
   render() {
