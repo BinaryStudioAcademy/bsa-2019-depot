@@ -2,7 +2,27 @@ import colors from '../../config/color.config';
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-  button: {
+  closeButton: {
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    backgroundColor: colors.white,
+    borderColor: colors.blueButton,
+    borderRadius: 4,
+    borderWidth: StyleSheet.hairlineWidth,
+    color: colors.white,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    margin: 10,
+    paddingVertical: 8,
+    width: '30%'
+  },
+  closeIcon: {
+    marginRight: 5
+  },
+  closeText: {
+    color: colors.blueButton
+  },
+  commentButton: {
     alignItems: 'center',
     alignSelf: 'flex-end',
     backgroundColor: colors.blueButton,
@@ -21,6 +41,9 @@ export default StyleSheet.create({
     borderWidth: 1,
     marginTop: 20,
     width: '95%'
+  },
+  commentText: {
+    color: colors.white
   },
   data: {
     flexDirection: 'row',
@@ -64,7 +87,9 @@ export default StyleSheet.create({
     paddingLeft: 30,
     padding: 10
   },
-  text: {
-    color: colors.white
+  issueButtons: {
+    alignItems: 'flex-end',
+    flexDirection: 'row',
+    width: '100%'
   }
 });

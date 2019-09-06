@@ -25,3 +25,21 @@ export const createIssueComment = async request => {
   });
   return response ? response.json() : false;
 };
+
+export const closeIssue = async request => {
+  const { id } = request;
+  const response = await callWebApi({
+    endpoint: `http://10.0.2.2:3000/api/issues/${id}/close`,
+    type: 'PUT'
+  });
+  return response.json();
+};
+
+export const reopenIssue = async request => {
+  const { id } = request;
+  const response = await callWebApi({
+    endpoint: `http://10.0.2.2:3000/api/issues/${id}/reopen`,
+    type: 'PUT'
+  });
+  return response.json();
+};
