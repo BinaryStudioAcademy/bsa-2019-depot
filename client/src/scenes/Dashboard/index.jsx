@@ -80,14 +80,8 @@ class Dashboard extends React.Component {
             <RepositoriesList filter={filter} onDataChange={this.getUserData} />
           </>
       );
-    case tabs.projects:
-      return <div>Hello! Projects are there</div>;
     case tabs.stars:
       return <StarsTab onDataChange={this.getUserData} />;
-    case tabs.following:
-      return <div>Following</div>;
-    case tabs.followers:
-      return <div>followers</div>;
     default:
       return <Overview userId={userId} />;
     }
@@ -102,10 +96,7 @@ class Dashboard extends React.Component {
         username,
         imgUrl,
         repositoriesCount,
-        projectsCount,
         starsCount,
-        followersCount,
-        followingCount,
         type,
         bio,
         url: link,
@@ -148,10 +139,7 @@ class Dashboard extends React.Component {
                 baseUrl={url}
                 activeTab={tab}
                 repoCount={repositoriesCount}
-                projectsCount={projectsCount}
                 starsCount={starsCount}
-                followersCount={followersCount}
-                followingCount={followingCount}
               />
               {this.renderTab(tab)}
             </Grid.Column>
