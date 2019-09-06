@@ -2,6 +2,9 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+  +div{
+    margin-top: 0.5em;
+  }
 }
 
 .keyList {

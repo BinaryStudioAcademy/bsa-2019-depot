@@ -29,6 +29,10 @@
 
 :local(.collaborators_search_container) {
   padding: 0.625em;
+  :local(.collaborators_search_field){
+    margin-top: 0.5em;
+  }
+
 }
 
 :local(.collaborators_list) {
