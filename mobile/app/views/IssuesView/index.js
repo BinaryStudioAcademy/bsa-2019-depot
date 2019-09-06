@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import { View, FlatList } from 'react-native';
 import styles from './styles';
@@ -74,7 +75,7 @@ class IssuesView extends React.Component {
         <FlatList
           data={issuesData.issues}
           // eslint-disable-next-line react/jsx-no-bind
-          renderItem={({ item }) => <IssueItem data={item} isOpened={isOpened} />}
+          renderItem={({ item }) => <IssueItem data={item} isOpened={isOpened} navigation={this.props.navigation} />}
         />
       </View>
     ) : (

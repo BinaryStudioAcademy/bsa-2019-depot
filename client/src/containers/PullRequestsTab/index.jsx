@@ -6,7 +6,6 @@ import { fetchCurrentRepo } from '../../routines/routines';
 import IssuesPullsList from '../../components/IssuesPullsList';
 
 class PullRequestsTab extends React.Component {
-
   async componentDidMount() {
     const {
       repositoryId,
@@ -17,17 +16,13 @@ class PullRequestsTab extends React.Component {
     } = this.props;
     if (!repositoryId) {
       fetchCurrentRepo({ username, reponame });
-    } 
+    }
   }
 
   render() {
     const { loading, repositoryId } = this.props;
 
-    return loading ? (
-      <Loader active />
-    ) : (
-      <IssuesPullsList isIssues={false} repositoryId={repositoryId}/>
-    );
+    return loading ? <Loader active /> : <IssuesPullsList isIssues={false} repositoryId={repositoryId} />;
   }
 }
 

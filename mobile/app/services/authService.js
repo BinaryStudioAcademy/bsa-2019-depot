@@ -1,8 +1,9 @@
 import callWebApi from '../helpers/webApiHelper';
+import { MOBILE_SERVER } from 'react-native-dotenv';
 
 export const login = async request => {
   const response = await callWebApi({
-    endpoint: 'http://10.0.2.2:3000/api/auth/login',
+    endpoint: `${MOBILE_SERVER}/api/auth/login`,
     type: 'POST',
     request
   });
@@ -11,7 +12,7 @@ export const login = async request => {
 
 export const getCurrentUser = async () => {
   const response = await callWebApi({
-    endpoint: 'http://10.0.2.2:3000/api/auth/user',
+    endpoint: `${MOBILE_SERVER}/api/auth/user`,
     type: 'GET'
   });
   return response.json();
@@ -19,7 +20,7 @@ export const getCurrentUser = async () => {
 
 export const signup = async request => {
   const response = await callWebApi({
-    endpoint: 'http://10.0.2.2:3000/api/auth/register',
+    endpoint: `${MOBILE_SERVER}/api/auth/register`,
     type: 'POST',
     request
   });
@@ -28,7 +29,7 @@ export const signup = async request => {
 
 export const googleSignup = async request => {
   const response = await callWebApi({
-    endpoint: 'http://10.0.2.2:3000/api/auth/google/mobile',
+    endpoint: `${MOBILE_SERVER}/api/auth/google/mobile`,
     type: 'POST',
     request
   });
@@ -41,7 +42,7 @@ export const setUsername = async (username, profile) => {
     profile
   };
   const response = await callWebApi({
-    endpoint: 'http://10.0.2.2:3000/api/users/username',
+    endpoint: `${MOBILE_SERVER}/api/users/username`,
     type: 'POST',
     request
   });
@@ -50,7 +51,7 @@ export const setUsername = async (username, profile) => {
 
 export const checkUsername = async username => {
   const response = await callWebApi({
-    endpoint: 'http://10.0.2.2:3000/api/users/username-exists',
+    endpoint: `${MOBILE_SERVER}/api/users/username-exists`,
     type: 'GET',
     query: {
       username

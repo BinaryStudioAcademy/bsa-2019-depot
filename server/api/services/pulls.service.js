@@ -6,6 +6,7 @@ const commitRepository = require('../../data/repositories/commit.repository');
 const userRepository = require('../../data/repositories/user.repository');
 const pullRepository = require('../../data/repositories/pull-request.repository');
 const prStatusRepository = require('../../data/repositories/pr-status.repository');
+const pullLabelRepository = require('../../data/repositories/pull-label.repository');
 const repoHelper = require('../../helpers/repo.helper');
 const CustomError = require('../../helpers/error.helper');
 
@@ -173,6 +174,10 @@ const getPullCount = async (repositoryId, isOpened) => {
   return pullRepository.getPullCount(repositoryId, isOpened, statusOpen);
 };
 
+const setLabel = async (labelId, pullId) => pullLabelRepository.create({ labelId, pullId });
+
+const removeLabel = async id => pullLabelRepository.delete(id);
+
 module.exports = {
   getPulls,
   addPull,
@@ -186,5 +191,7 @@ module.exports = {
   mergePullById,
   getRepoByPullId,
   getRepoPulls,
-  getPullCount
+  getPullCount,
+  setLabel,
+  removeLabel
 };

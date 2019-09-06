@@ -25,33 +25,33 @@
   margin-right: 0.8em !important;
 }
 
-:local(.red){
+:local(.red) {
   margin-left: 2px;
   color: #cb2431 !important;
 }
 
-:local(.green){
+:local(.green) {
   color: #2cbe4e !important;
 }
 
-:local(.block_added){
+:local(.block_added) {
   background-color: #2cbe4e;
 }
 
-:local(.block_deleted){
+:local(.block_deleted) {
   background-color: #cb2431;
 }
 
-:local(.block_neutral){
+:local(.block_neutral) {
   background-color: #d1d5da;
 }
 
-:local(.block_container){
+:local(.block_container) {
   display: flex;
   align-items: center;
   margin-left: 5px;
   margin-top: 2px;
-  span{
+  span {
     display: inline-block;
     width: 10px;
     height: 10px;
@@ -59,7 +59,6 @@
   }
 }
 
-:local(.last){
+:local(.last) {
   margin-left: auto !important;
 }
-

@@ -1,8 +1,9 @@
 import callWebApi from '../helpers/webApiHelper';
+import { MOBILE_SERVER } from 'react-native-dotenv';
 
 export const getAllStars = async username => {
   const response = await callWebApi({
-    endpoint: `http://10.0.2.2:3000/api/users/${username}/stars`,
+    endpoint: `${MOBILE_SERVER}/api/users/${username}/stars`,
     type: 'GET'
   });
   return response.json();

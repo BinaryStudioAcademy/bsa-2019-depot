@@ -22,6 +22,7 @@ const PRStatus = orm.import('./prstatus');
 const PullComment = orm.import('./pullComment');
 const PinnedRepository = orm.import('./pinnedRepository');
 const IssueLabel = orm.import('./issueLabel');
+const PullLabel = orm.import('./pullLabel');
 
 associate({
   User,
@@ -44,7 +45,8 @@ associate({
   PRStatus,
   PullComment,
   PinnedRepository,
-  IssueLabel
+  IssueLabel,
+  PullLabel
 });
 
 module.exports = {
@@ -68,5 +70,6 @@ module.exports = {
   PRStatusModel: PRStatus,
   PullCommentModel: PullComment,
   PinnedRepositoryModel: PinnedRepository,
-  IssueLabelModel: IssueLabel
+  IssueLabelModel: IssueLabel,
+  PullLabelModel: PullLabel
 };

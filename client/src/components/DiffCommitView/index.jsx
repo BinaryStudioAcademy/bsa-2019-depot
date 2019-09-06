@@ -222,10 +222,11 @@ class DiffCommitView extends Component {
     return (
       <Segment basic>
         {pageError}
-        {diffsData.diffs.indexOf('diff --git') !== -1
-          ? <DiffList diffs={diffsData.diffs} />
-          : <h3 className={styles.diffInfo}>No diffs for this commit</h3>
-        }
+        {diffsData.diffs.indexOf('diff --git') !== -1 ? (
+          <DiffList diffs={diffsData.diffs} />
+        ) : (
+          <h3 className={styles.diffInfo}>No diffs for this commit</h3>
+        )}
         <div className="comments-count">
           {`${comments ? comments.length : 0} comments on commit`}{' '}
           <Message compact>{match.params.hash.slice(0, 7)}</Message>

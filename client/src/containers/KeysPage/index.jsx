@@ -85,7 +85,7 @@ class KeysPage extends React.Component {
             New SSH key
           </Button>
         </Header>
-        <div className={styles.section}>
+        <div className={styles.sectionText}>
           <p>This is a list of SSH keys associated with your account. Remove any keys that you do not recognize.</p>
           {loading ? (
             <Loader active />
