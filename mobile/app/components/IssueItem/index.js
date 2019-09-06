@@ -3,10 +3,15 @@ import moment from 'moment';
 import { Text, View } from 'react-native';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/Octicons';
+import { withNavigation } from 'react-navigation';
 
 import styles from './styles';
 
-const IssueItem = ({ data: { title, number, user, updatedAt }, isOpened }) => {
+const IssueItem = ({ data, data: { title, number, user, updatedAt }, isOpened, navigation }) => {
+  openIssue = () => {
+    navigation.navigate('IssueView', { data: data });
+  };
+
   return (
     <View style={styles.issue}>
       <View style={styles.header}>
@@ -15,7 +20,9 @@ const IssueItem = ({ data: { title, number, user, updatedAt }, isOpened }) => {
         ) : (
           <Icon name="issue-closed" size={20} color="#ff0000" />
         )}
-        <Text style={styles.headerText}>{title}</Text>
+        <Text style={styles.headerText} onPress={this.openIssue}>
+          {title}
+        </Text>
       </View>
       <View style={styles.data}>
         <Text style={styles.dataNumber}>#{number} opened</Text>
@@ -28,7 +35,8 @@ const IssueItem = ({ data: { title, number, user, updatedAt }, isOpened }) => {
 
 IssueItem.propTypes = {
   data: PropTypes.object,
-  isOpened: PropTypes.bool
+  isOpened: PropTypes.bool,
+  navigation: PropTypes.object
 };
 
-export default IssueItem;
+export default withNavigation(IssueItem);
