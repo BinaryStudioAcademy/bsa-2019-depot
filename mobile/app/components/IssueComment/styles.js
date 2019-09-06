@@ -1,9 +1,6 @@
 import colors from '../../config/color.config';
 import { StyleSheet } from 'react-native';
 
-const width = '95%';
-const bodyWidth = '94.1%';
-
 export default StyleSheet.create({
   avatar: {
     height: 40,
@@ -25,7 +22,7 @@ export default StyleSheet.create({
     borderRightColor: colors.greyBorder,
     borderRightWidth: 1,
     padding: 10,
-    width: bodyWidth
+    width: '94.1%'
   },
   commentBodyContainer: {
     marginLeft: 60
@@ -35,7 +32,7 @@ export default StyleSheet.create({
     color: colors.greyText,
     flexDirection: 'row',
     height: 40,
-    width: width
+    width: '95%'
   },
   commentHeaderInfo: {
     alignItems: 'center',
