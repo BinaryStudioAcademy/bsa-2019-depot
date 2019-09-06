@@ -32,6 +32,7 @@ $grey_border: #e1e4e8;
 :local(.dangerZone) {
   border: 1px $red_border solid;
   border-radius: 3px !important;
+  margin-top: 0.5em;
 }
 
 :global(.ui.button):local(.dangerButton) {
@@ -58,6 +59,9 @@ $grey_border: #e1e4e8;
 
 :local(.second_column) {
   min-width: 660px !important;
+  > :global(.ui.form) {
+    margin-bottom: 1em;
+  }
 }
 :local(.box) {
   padding-top: 20px !important;

@@ -278,7 +278,9 @@ class IssuesPullsList extends React.Component {
           <DataList data={items} isPull={!isIssues} />
         </div>
       </Segment>
-    ): <Loader active/>;
+    ) : (
+      <Loader active />
+    );
   }
 }
 

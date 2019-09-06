@@ -170,6 +170,7 @@ class CollaboratorsPage extends React.Component {
                 results={results}
                 value={value}
                 resultRenderer={this.resultRenderer}
+                className={styles.collaborators_search_field}
               />
             </Form.Field>
           </Form>

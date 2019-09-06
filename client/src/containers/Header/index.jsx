@@ -199,11 +199,6 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
         <Grid.Column computer={7} tablet={6} mobile={6} floated="right">
           <ul className={styles.rightMenu}>
             <li>
-              <a href="/">
-                <Icon name="bell" />
-              </a>
-            </li>
-            <li>
               <Dropdown
                 pointing="top right"
                 icon={null}
@@ -216,7 +211,6 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
               >
                 <Dropdown.Menu>
                   <Dropdown.Item href="/new">New repository</Dropdown.Item>
-                  <Dropdown.Item href="/import">Import repository</Dropdown.Item>
                   <Dropdown.Item href="/organizations/new">New organization</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
