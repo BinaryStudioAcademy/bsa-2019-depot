@@ -121,7 +121,7 @@ class RepositoryOptions extends React.Component {
     } = this.state;
     return (
       <Grid container stackable className={styles.box}>
-        <Grid.Column width={12} className={styles.second_column}>
+        <Grid.Column className={styles.second_column}>
           <Header as="h2">Settings</Header>
           <Divider />
           {repoInfo && <Header as="h4">Repository name</Header>}

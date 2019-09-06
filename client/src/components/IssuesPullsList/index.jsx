@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { Icon, Input, Dropdown, Button, Label, Segment } from 'semantic-ui-react';
+import { Icon, Input, Dropdown, Button, Label, Segment, Loader } from 'semantic-ui-react';
 import { PullRequestOutline } from '@ant-design/icons';
 import AntdIcon from '@ant-design/icons-react';
 import DataList from '../DataList';
 import * as RepoService from '../../services/repositoryService';
+import { getLabels } from '../../services/labelsService';
 import { getUserImgLink } from '../../helpers/imageHelper';
 
 import styles from './styles.module.scss';
@@ -57,6 +58,7 @@ class IssuesPullsList extends React.Component {
         authorId: '',
         sort: 'created_desc'
       },
+      labelsCount: 0,
       openCount: 0,
       closedCount: 0,
       authorList: [],
@@ -68,19 +70,20 @@ class IssuesPullsList extends React.Component {
   fetchData = async () => {
     const { repositoryId, isIssues } = this.props;
     const { filter } = this.state;
+    const labelsCount = (await getLabels(repositoryId)).length;
 
     if (isIssues) {
       const { openCount, closedCount, authors: authorList, issues: items } = await RepoService.getRepositoryIssues(
         repositoryId,
         filter
       );
-      this.setState({ openCount, closedCount, authorList, items, loading: false });
+      this.setState({ openCount, closedCount, authorList, items, labelsCount, loading: false });
     } else {
       const { openCount, closedCount, authors: authorList, pulls: items } = await RepoService.getRepositoryPulls(
         repositoryId,
         filter
       );
-      this.setState({ isIssues, openCount, closedCount, authorList, items, loading: false });
+      this.setState({ isIssues, openCount, closedCount, authorList, items, labelsCount, loading: false });
     }
   };
 
@@ -171,12 +174,14 @@ class IssuesPullsList extends React.Component {
       openCount,
       closedCount,
       authorDropdownFilter,
-      authorList
+      authorList,
+      labelsCount,
+      loading
     } = this.state;
 
     const filteredAuthorList = authorList.filter(author => author.username.includes(authorDropdownFilter));
 
-    return (
+    return !loading ? (
       <Segment basic>
         <div className={styles.filterRow}>
           <div className={styles.leftGroup}>
@@ -194,7 +199,7 @@ class IssuesPullsList extends React.Component {
 
               <Button.Content className={styles.labelButtonText}>Labels</Button.Content>
               <Button.Content className={styles.labelButtonContent}>
-                <Label circular>8</Label>
+                <Label circular>{labelsCount}</Label>
               </Button.Content>
             </Button>
           </div>
@@ -273,6 +278,8 @@ class IssuesPullsList extends React.Component {
           <DataList data={items} isPull={!isIssues} />
         </div>
       </Segment>
+    ) : (
+      <Loader active />
     );
   }
 }

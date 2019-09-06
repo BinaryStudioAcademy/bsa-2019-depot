@@ -129,6 +129,8 @@ SKIP_PREFLIGHT_CHECK = true
 PORT = 3001  # default. has to be changed if it is different
 REACT_APP_SERVER_URL = "http://localhost:3000"  # default. has to be changed if it is different
 REACT_APP_RAW_SERVER_URL = http://localhost:3003  # default. has to be changed if it is different
+REACT_APP_STACK_OVERFLOW_API_KEY = "K)aMbXa)izv27xUSCXUW8A(("
+REACT_APP_STACK_OVERFLOW_API_URL = "https://api.stackexchange.com/2.2/search"
 ```
 
 _/server/.env_
