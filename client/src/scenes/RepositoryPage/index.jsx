@@ -12,6 +12,7 @@ import CommitsPage from '../../containers/CommitsPage/index';
 import DiffCommitView from '../../components/DiffCommitView/index';
 import RepoSettings from '../../containers/SettingsTab/index';
 import FileViewPage from '../../containers/FileViewPage';
+import BlameViewPage from  '../../containers/BlameViewPage';
 import FileEditPage from '../../containers/FileEditPage';
 import StargazersPage from '../../containers/StargazersPage/index';
 import BranchesTab from '../../containers/BranchesTab/index';
@@ -147,6 +148,7 @@ class RepositoryPage extends React.Component {
             <Route exact path={`${match.path}/branches`} component={BranchesTab} />
             <PrivateTab path={[`${match.path}/new/:branch`, `${match.path}/edit/:branch`]} component={FileEditPage} />
             <Route path={`${match.path}/blob/:branch`} component={FileViewPage} />
+            <Route path={`${match.path}/blame/:branch`} component={BlameViewPage} />
             <Route exact path={`${match.path}/invitations`} component={CollaboratorInvitation} />
           </Switch>
         </Container>
