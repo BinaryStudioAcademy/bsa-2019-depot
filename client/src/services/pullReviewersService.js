@@ -24,5 +24,5 @@ export const removeReviewer = async id => {
     type: 'DELETE'
   });
 
-  return response.json();
+  return response.status === 200;
 };

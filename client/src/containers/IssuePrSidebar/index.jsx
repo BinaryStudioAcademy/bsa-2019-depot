@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Divider, Dropdown, Loader } from 'semantic-ui-react';
+import { Divider, Dropdown } from 'semantic-ui-react';
 import { getUserImgLink } from '../../helpers/imageHelper';
 
 import styles from './styles.module.scss';
@@ -9,31 +9,23 @@ class IssuePrSidebar extends React.Component {
   constructor(props) {
     super(props);
 
+    const { currentLabels, reviewers } = this.props;
+
     this.state = {
-      initialReviewers: [],
-      initialAssignees: [],
-      initialLabels: [],
-      reviewers: [],
-      assignees: [],
-      labels: [],
-      loading: true
+      currentLabels,
+      reviewers
     };
 
     this.onPropChange = this.onPropChange.bind(this);
+    this.onChangeReviewers = this.onChangeReviewers.bind(this);
     this.renderLabel = this.renderLabel.bind(this);
-  }
-
-  async componentDidMount() {
-    // Fetch data
-    const { currentLabels } = this.props;
-    this.setState({ currentLabels, loading: false });
   }
 
   onPropChange = (event, { name, value }) => {
     this.setState({ [name]: value });
   };
 
-  onChangeLables = async (event, { value }) => {
+  onChangeLabels = async (event, { value }) => {
     const { setLabelsOnCreateItem, isIssue, setLabelToPull, labels, removeLabelFromPull } = this.props;
     const { currentLabels } = this.state;
     if (setLabelsOnCreateItem) {
@@ -68,6 +60,27 @@ class IssuePrSidebar extends React.Component {
     }
   };
 
+  onChangeReviewers(event, { value }) {
+    const { collaborators, setReviewerToPull, removeReviewerFromPull } = this.props;
+    const { reviewers } = this.state;
+
+    const newNumOfReviewers = value.length;
+
+    if (newNumOfReviewers < reviewers.length) {
+      const deletedReviewerIdx = reviewers.findIndex(({ user: { username } }) => !value.includes(username));
+      removeReviewerFromPull(reviewers[deletedReviewerIdx].id).then(() => {
+        reviewers.splice(deletedReviewerIdx, 1);
+        this.setState({ reviewers });
+      });
+    } else {
+      const { userId } = collaborators.find(({ user: { username } }) => username === value[newNumOfReviewers - 1]);
+      setReviewerToPull(userId).then(result => {
+        reviewers.push(result);
+        this.setState({ reviewers });
+      });
+    }
+  }
+
   renderLabel(label) {
     return {
       content: label.text,
@@ -76,8 +89,8 @@ class IssuePrSidebar extends React.Component {
   }
 
   render() {
-    const { isIssue, reviewers, collaborators, labels } = this.props;
-    const { currentLabels, loading } = this.state;
+    const { isIssue, collaborators, labels } = this.props;
+    const { currentLabels, reviewers } = this.state;
     let defaultLabelValues = null;
     if (currentLabels) {
       defaultLabelValues = currentLabels.map(({ label }) => label.name);
@@ -142,7 +155,7 @@ class IssuePrSidebar extends React.Component {
       )
     }));
 
-    return !loading ? (
+    return (
       <>
         {!isIssue && (
           <>
@@ -156,7 +169,7 @@ class IssuePrSidebar extends React.Component {
               text="Select Reviewers"
               name="reviewers"
               defaultValue={reviewers.map(({ user: { username } }) => username)}
-              onChange={this.onPropChange}
+              onChange={this.onChangeReviewers}
               renderLabel={this.renderLabel}
             />
             <Divider />
@@ -186,12 +199,10 @@ class IssuePrSidebar extends React.Component {
           text="Select Labels"
           name="labels"
           defaultValue={defaultLabelValues || null}
-          onChange={this.onChangeLables}
+          onChange={this.onChangeLabels}
           renderLabel={this.renderLabel}
         />
       </>
-    ) : (
-      <Loader active />
     );
   }
 }
@@ -204,7 +215,9 @@ IssuePrSidebar.propTypes = {
   setLabelsOnCreateItem: PropTypes.func,
   currentLabels: PropTypes.array,
   setLabelToPull: PropTypes.func,
-  removeLabelFromPull: PropTypes.func
+  removeLabelFromPull: PropTypes.func,
+  setReviewerToPull: PropTypes.func.isRequired,
+  removeReviewerFromPull: PropTypes.func.isRequired
 };
 
 export default IssuePrSidebar;

@@ -23,7 +23,7 @@ router.delete('/:reviewerId', (req, res, next) => {
   const { reviewerId } = req.params;
   pullReviewerService
     .removeReviewer(reviewerId)
-    .then(data => res.send(data))
+    .then(() => res.sendStatus(200))
     .catch(next);
 });
 

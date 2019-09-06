@@ -55,7 +55,7 @@ const getUserRights = async (username, reponame, userId) => {
   const { id: repositoryId } = await getByUserAndReponame({ owner: username, reponame });
   const collaboratorRights = await collaboratorRepository.getUserRights(userId, repositoryId);
 
-  if(!collaboratorRights.length) {
+  if (!collaboratorRights.length) {
     const { id: orgId } = await userRepository.getByUsername(username);
     const result = await orgUserRepository.getUserWithOwnerRole({ userId, orgId });
     return [result];
