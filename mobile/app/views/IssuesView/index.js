@@ -74,7 +74,7 @@ class IssuesView extends React.Component {
         <FlatList
           data={issuesData.issues}
           // eslint-disable-next-line react/jsx-no-bind
-          renderItem={({ item }) => <IssueItem data={item} isOpened={isOpened} />}
+          renderItem={({ item }) => <IssueItem data={item} isOpened={isOpened} navigation={this.props.navigation} />}
         />
       </View>
     ) : (

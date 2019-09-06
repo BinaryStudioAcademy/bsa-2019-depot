@@ -8,9 +8,12 @@ const {
   isEmpty,
   forkRepo,
   setStar,
-  updateByUserAndReponame
+  updateByUserAndReponame,
+  getRepositoryForks
 } = require('../services/repo.service');
-const { getCommits, getCommitDiff, getCommitCount } = require('../services/commit.service');
+const {
+  getCommits, getCommitDiff, getCommitCount, getCommitActivityData
+} = require('../services/commit.service');
 const { deleteStarsByRepoId } = require('../services/star.service');
 const {
   getBranches,
@@ -154,7 +157,7 @@ router
       .then(result => res.send(result))
       .catch(next);
   })
-  .post('/fork', isAdminMiddleware, (req, res, next) => {
+  .post('/fork', (req, res, next) => {
     const {
       body: {
         owner,
@@ -252,7 +255,8 @@ router
   })
   .get('/:username/:reponame/pulls', isReaderMiddleware, (req, res, next) => {
     const { repositoryId } = req.query;
-    pullsService.getPulls(repositoryId)
+    pullsService
+      .getPulls(repositoryId)
       .then(result => res.send(result))
       .catch(next);
   })
@@ -276,9 +280,35 @@ router
       next(e);
     }
   })
+  .post('/:repositoryId/pulls/labels', async (req, res, next) => {
+    const { labelId, pullId } = req.body;
+    pullsService
+      .setLabel(labelId, pullId)
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .delete('/:repositoryId/pulls/labels', async (req, res, next) => {
+    const { labelId } = req.body;
+    pullsService
+      .removeLabel(labelId)
+      .then(data => res.send(data))
+      .catch(next);
+  })
   .get('/:repositoryId/collaborators', (req, res, next) => {
     const { repositoryId } = req.params;
     getRepositoryCollaborators(repositoryId)
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .get('/:repositoryId/forks', (req, res, next) => {
+    const { repositoryId } = req.params;
+    getRepositoryForks(repositoryId)
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .get('/:repositoryId/commit-activity-data', (req, res, next) => {
+    const { repositoryId } = req.params;
+    getCommitActivityData(repositoryId)
       .then(data => res.send(data))
       .catch(next);
   });

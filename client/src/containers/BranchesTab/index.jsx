@@ -85,21 +85,6 @@ class BranchesTab extends React.Component {
         key: 1,
         text: 'Overview',
         value: 'Overview'
-      },
-      {
-        key: 2,
-        text: 'Yours',
-        value: 'Yours'
-      },
-      {
-        key: 3,
-        text: 'Active',
-        value: 'Active'
-      },
-      {
-        key: 4,
-        text: 'Stale',
-        value: 'Stale'
       }
     ];
 

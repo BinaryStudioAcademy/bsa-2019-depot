@@ -2,6 +2,7 @@ const permissionRepository = require('../../data/repositories/permission.reposit
 const collaboratorRepository = require('../../data/repositories/collaborator.repository');
 const repositoryRepository = require('../../data/repositories/repository.repository');
 const userRepository = require('../../data/repositories/user.repository');
+const orgUserRepository = require('../../data/repositories/org-user.repository');
 const { getByUserAndReponame } = require('./repo.service');
 
 const { getUserDetailed } = require('./user.service');
@@ -52,7 +53,13 @@ const removeRepositoryCollaborator = async (collaboratorId) => {
 
 const getUserRights = async (username, reponame, userId) => {
   const { id: repositoryId } = await getByUserAndReponame({ owner: username, reponame });
-  return collaboratorRepository.getUserRights(userId, repositoryId);
+  const collaboratorRights = await collaboratorRepository.getUserRights(userId, repositoryId);
+
+  if(!collaboratorRights.length) {
+    const { id: orgId } = await userRepository.getByUsername(username);
+    const result = await orgUserRepository.getUserWithOwnerRole({ userId, orgId });
+    return [result];
+  }
 };
 
 const getUserRightsByUserIdAndRepositoryId = (userId, repositoryId) => collaboratorRepository.getUserRights(userId, repositoryId);

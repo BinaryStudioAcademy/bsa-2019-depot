@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Icon, Button, Grid, Loader, Segment } from 'semantic-ui-react';
+import { Icon, Button, Grid, Segment } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
 
 import IssuePrSidebar from '../IssuePrSidebar';
@@ -18,8 +18,7 @@ import {
   mergePull
 } from '../../services/pullsService';
 import { updatePullComment, createPullComment, deletePullComment } from '../../services/pullCommentsService';
-import { getRepositoryCollaborators } from '../../services/repositoryService';
-import { getReviewers } from '../../services/pullsService';
+import * as LabelService from '../../services/labelsService';
 
 import styles from './styles.module.scss';
 
@@ -35,14 +34,7 @@ class ConversationTab extends React.Component {
   }
 
   async componentDidMount() {
-    const { repoId, currentPull: { id: pullId } } = this.props;
-
     this.initSocket();
-
-    const collaborators = await getRepositoryCollaborators(repoId);
-    const reviewers = await getReviewers(pullId);
-    console.log(collaborators, reviewers);
-    this.setState({ collaborators, reviewers, loading: false });
   }
 
   initSocket() {
@@ -202,8 +194,33 @@ class ConversationTab extends React.Component {
     }
   };
 
+  setLabelToPull = async labelId => {
+    const {
+      currentPull: { id, repositoryId }
+    } = this.props;
+    return LabelService.setLabelToPull(labelId, id, repositoryId);
+  };
+
+  removeLabelFromPull = async labelId => {
+    const {
+      currentPull: { repositoryId }
+    } = this.props;
+    return LabelService.removeLabelFromPull(labelId, repositoryId);
+  };
+
   render() {
-    const { userId, username, userImg, currentPull, pullComments, isOwnPull } = this.props;
+    const {
+      userId,
+      username,
+      userImg,
+      currentPull,
+      pullComments,
+      isOwnPull,
+      labels,
+      currentLabels,
+      reviewers,
+      collaborators
+    } = this.props;
     const {
       user: { imgUrl, username: owner },
       body,
@@ -212,71 +229,73 @@ class ConversationTab extends React.Component {
       createdAt
     } = currentPull;
     const { data: comments } = pullComments;
-    const { loading, reviewers, collaborators } = this.state;
 
-    return loading
-      ? <Loader active />
-      : (
-        <Segment className={styles.noBorder}>
-          <Grid>
-            <Grid.Column width={12}>
-              <Comment
-                id={id}
-                avatar={imgUrl}
-                username={owner}
-                body={body}
-                createdAt={createdAt}
-                newComment={false}
-                onSubmit={this.onPullUpdateBody}
-                submitBtnTxt="Update comment"
-                cancelBtnTxt="Cancel"
-                ownComment={isOwnPull}
-                isQuestion={false}
-              />
-              {comments.length > 0 &&
-                comments.map((comment, index) => {
-                  const {
-                    id,
-                    user: { username, imgUrl },
-                    body,
-                    createdAt,
-                    userId: commentUserId
-                  } = comment;
-                  return (
-                    <Comment
-                      key={index}
-                      id={id}
-                      avatar={imgUrl}
-                      username={username}
-                      body={body}
-                      createdAt={createdAt}
-                      newComment={false}
-                      onSubmit={this.onCommentUpdate}
-                      submitBtnTxt="Update comment"
-                      cancelBtnTxt="Cancel"
-                      onDelete={this.onCommentDelete}
-                      ownComment={userId === commentUserId}
-                      isQuestion={false}
-                    />
-                  );
-                })}
-              <Comment
-                avatar={userImg}
-                username={username}
-                newComment={true}
-                onSubmit={this.onCommentCreate}
-                submitBtnTxt="Comment"
-                createdAt={createdAt}
-                buttons={isOwnPull ? this.generateButtons(prstatus.name) : null}
-                isQuestion={false}
-              />
-            </Grid.Column>
-            <Grid.Column width={4}>
-              <IssuePrSidebar isIssue={false} reviewers={reviewers} collaborators={collaborators}/>
-            </Grid.Column>
-          </Grid>
-        </Segment>
-      );
+    return (
+      <Segment className={styles.noBorder}>
+        <Grid>
+          <Grid.Column width={12}>
+            <Comment
+              id={id}
+              avatar={imgUrl}
+              username={owner}
+              body={body}
+              createdAt={createdAt}
+              newComment={false}
+              onSubmit={this.onPullUpdateBody}
+              submitBtnTxt="Update comment"
+              cancelBtnTxt="Cancel"
+              ownComment={isOwnPull}
+            />
+            {comments.length > 0 &&
+              comments.map((comment, index) => {
+                const {
+                  id,
+                  user: { username, imgUrl },
+                  body,
+                  createdAt,
+                  userId: commentUserId
+                } = comment;
+                return (
+                  <Comment
+                    key={index}
+                    id={id}
+                    avatar={imgUrl}
+                    username={username}
+                    body={body}
+                    createdAt={createdAt}
+                    newComment={false}
+                    onSubmit={this.onCommentUpdate}
+                    submitBtnTxt="Update comment"
+                    cancelBtnTxt="Cancel"
+                    onDelete={this.onCommentDelete}
+                    ownComment={userId === commentUserId}
+                  />
+                );
+              })}
+            <Comment
+              avatar={userImg}
+              username={username}
+              newComment={true}
+              onSubmit={this.onCommentCreate}
+              submitBtnTxt="Comment"
+              createdAt={createdAt}
+              buttons={isOwnPull ? this.generateButtons(prstatus.name) : null}
+            />
+          </Grid.Column>
+          <Grid.Column width={4}>
+            <IssuePrSidebar
+              isIssue={false}
+              labels={labels}
+              currentLabels={currentLabels}
+              setLabelToPull={this.setLabelToPull}
+              removeLabelFromPull={this.removeLabelFromPull}
+              reviewers={reviewers}
+              collaborators={collaborators}
+            />
+          </Grid.Column>
+        </Grid>
+      </Segment>
+    );
   }
 }
 
@@ -288,28 +307,23 @@ ConversationTab.propTypes = {
     url: PropTypes.string.isRequired
   }).isRequired,
   userId: PropTypes.string,
-  repoId: PropTypes.string.isRequired,
   username: PropTypes.string,
   userImg: PropTypes.string,
   currentPull: PropTypes.object,
   pullComments: PropTypes.object,
   isOwnPull: PropTypes.bool,
-  updateState: PropTypes.func
+  updateState: PropTypes.func,
+  labels: PropTypes.array.isRequired,
+  currentLabels: PropTypes.array.isRequired,
+  reviewers: PropTypes.array.isRequired,
+  collaborators: PropTypes.array.isRequired
 };
 
 const mapStateToProps = ({
   profile: {
     currentUser: { id: userId, username, imgUrl }
-  },
-  currentRepo: {
-    repository: {
-      currentRepoInfo: {
-        id: repoId
-      }
-    }
   }
 }) => ({
-  repoId,
   userId,
   username,
   userImg: imgUrl

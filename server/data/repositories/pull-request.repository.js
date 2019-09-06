@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
 const PRStatusRepository = require('./pr-status.repository');
 const {
-  PullRequestModel, UserModel, RepositoryModel, PRStatusModel, BranchModel
+  PullRequestModel, UserModel, RepositoryModel, PRStatusModel, BranchModel, PullLabelModel, LabelModel
 } = require('../models/index');
 
 const sequelize = require('../db/connection');
@@ -63,6 +63,18 @@ class PullRepository extends BaseRepository {
         {
           model: PRStatusModel,
           attributes: ['name']
+        },
+        {
+          model: PullLabelModel,
+          include: [
+            {
+              model: LabelModel,
+              attributes: [],
+              where: {
+                repositoryId,
+              }
+            }
+          ]
         }
       ]
     });
@@ -101,6 +113,15 @@ class PullRepository extends BaseRepository {
           model: BranchModel,
           as: 'toBranch',
           attributes: ['name']
+        },
+        {
+          model: PullLabelModel,
+          include: [
+            {
+              model: LabelModel,
+              attributes: ['name', 'description', 'color']
+            }
+          ]
         }
       ]
     });
@@ -198,6 +219,15 @@ class PullRepository extends BaseRepository {
         {
           model: PRStatusModel,
           attributes: ['name']
+        },
+        {
+          model: PullLabelModel,
+          include: [
+            {
+              model: LabelModel,
+              attributes: ['name', 'description', 'color']
+            }
+          ]
         }
       ],
       order: parseSortQuery(sort)

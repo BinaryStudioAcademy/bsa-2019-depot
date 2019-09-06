@@ -50,7 +50,6 @@ const SidebarUnauth = (closeSidebar, sidebarOpened) => {
         <Icon name="close" color="grey" />
       </Menu.Item>
       <Menu.Item className={styles.sidebarForm} as="div">
-        {SearchInp()}
         <div>
           {signIn}
           {signUp}
@@ -89,7 +88,6 @@ const HeaderDesktopUnauth = ({ openSidebar, closeSidebar, sidebarOpened }) => (
         </Grid.Column>
         <Grid.Column computer={6} tablet={8} mobile={10}>
           <div className={styles.form}>
-            {SearchInp()}
             {signIn}
             {signUp}
             <BurgerSVG className={styles.burger} onClick={openSidebar} />
@@ -201,11 +199,6 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
         <Grid.Column computer={7} tablet={6} mobile={6} floated="right">
           <ul className={styles.rightMenu}>
             <li>
-              <a href="/">
-                <Icon name="bell" />
-              </a>
-            </li>
-            <li>
               <Dropdown
                 pointing="top right"
                 icon={null}
@@ -218,7 +211,6 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
               >
                 <Dropdown.Menu>
                   <Dropdown.Item href="/new">New repository</Dropdown.Item>
-                  <Dropdown.Item href="/import">Import repository</Dropdown.Item>
                   <Dropdown.Item href="/organizations/new">New organization</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>

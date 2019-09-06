@@ -11,8 +11,16 @@ import CommitsList from '../../components/CommitsList';
 import ConversationTab from '../ConversationTab';
 import PrDiffs from '../PrDiffs';
 
-import { getPullByNumber, getPullComments, getBranchDiffs, updatePull } from '../../services/pullsService';
+import {
+  getPullByNumber,
+  getPullComments,
+  getBranchDiffs,
+  updatePull,
+  getReviewers
+} from '../../services/pullsService';
+import { getLabels } from '../../services/labelsService';
 import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
+import { getRepositoryCollaborators } from '../../services/repositoryService';
 
 import styles from './styles.module.scss';
 
@@ -38,12 +46,15 @@ class PullView extends React.Component {
       userId
     } = this.props;
     const currentPull = await getPullByNumber(username, reponame, number);
-
+    const labels = await getLabels(repositoryId);
+    this.setState({ labels });
     const {
       fromBranch: { name: fromBranch },
       toBranch: { name: toBranch },
       id
     } = currentPull;
+    const collaborators = await getRepositoryCollaborators(repositoryId);
+    const reviewers = await getReviewers(currentPull.id);
 
     const { commits, diffs } = await getBranchDiffs(repositoryId, { fromBranch, toBranch });
     this.getLineChanges(diffs);
@@ -57,6 +68,8 @@ class PullView extends React.Component {
       pullComments,
       pullDiffs: diffs,
       isAccessGranted,
+      collaborators,
+      reviewers,
       loading: false
     });
   }
@@ -153,7 +166,21 @@ class PullView extends React.Component {
       match,
       location: { pathname }
     } = this.props;
-    const { currentPull, loading, commitsCount, pullComments, lineChanges, rate, filesCount, pullCommits, pullDiffs } = this.state;
+    const {
+      currentPull,
+      loading,
+      commitsCount,
+      pullComments,
+      lineChanges,
+      rate,
+      filesCount,
+      pullCommits,
+      pullDiffs,
+      labels,
+      reviewers,
+      collaborators
+    } = this.state;
+    const { pullLabels } = currentPull;
     const baseUrl = match.url;
     const activePage = pathname.split('/')[5];
 
@@ -220,20 +247,32 @@ class PullView extends React.Component {
         </div>
         <Container>
           <Switch>
-            {/* eslint-disable-next-line react/jsx-no-bind */}
-            <Route exact path={`${match.path}/commits`} render={() => this.renderComponent(CommitsList, { commits: pullCommits })}/>
-            {/* eslint-disable-next-line react/jsx-no-bind */}
-            <Route exact path={`${match.path}/files-changed`} render={() => this.renderComponent(PrDiffs, { diffs: pullDiffs })} />
+            {/* eslint-disable react/jsx-no-bind */}
+            <Route
+              exact
+              path={`${match.path}/commits`}
+              render={() => this.renderComponent(CommitsList, { commits: pullCommits })}
+            />
+            {/* eslint-disable react/jsx-no-bind */}
+            <Route
+              exact
+              path={`${match.path}/files-changed`}
+              render={() => this.renderComponent(PrDiffs, { diffs: pullDiffs })}
+            />
+            {/* eslint-disable react/jsx-no-bind */}
             <Route
               exact
               path={`${match.path}/`}
-              // eslint-disable-next-line react/jsx-no-bind
               component={() => (
                 <ConversationTab
                   currentPull={currentPull}
                   pullComments={pullComments}
                   isOwnPull={this.isOwnPull()}
                   updateState={this.updateState}
+                  currentLabels={pullLabels}
+                  labels={labels}
+                  reviewers={reviewers}
+                  collaborators={collaborators}
                 />
               )}
             />

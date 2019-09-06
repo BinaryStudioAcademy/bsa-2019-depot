@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Divider, Dropdown } from 'semantic-ui-react';
+import { Divider, Dropdown, Loader } from 'semantic-ui-react';
 import { getUserImgLink } from '../../helpers/imageHelper';
 
 import styles from './styles.module.scss';
@@ -23,13 +23,50 @@ class IssuePrSidebar extends React.Component {
     this.renderLabel = this.renderLabel.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     // Fetch data
+    const { currentLabels } = this.props;
+    this.setState({ currentLabels, loading: false });
   }
 
-  onPropChange(event, { name, value }) {
+  onPropChange = (event, { name, value }) => {
     this.setState({ [name]: value });
-  }
+  };
+
+  onChangeLables = async (event, { value }) => {
+    const { setLabelsOnCreateItem, isIssue, setLabelToPull, labels, removeLabelFromPull } = this.props;
+    const { currentLabels } = this.state;
+    if (setLabelsOnCreateItem) {
+      setLabelsOnCreateItem(value.join(' '));
+    } else {
+      const selectedLabels = value.length;
+      if (currentLabels.length < selectedLabels) {
+        const label = labels.find(label => label.name === value[selectedLabels - 1]);
+        if (!isIssue) {
+          setLabelToPull(label.id).then(({ id }) => {
+            currentLabels.push({
+              id,
+              label
+            });
+            this.setState({ currentLabels });
+          });
+        }
+      } else {
+        const label =
+          currentLabels.length !== 1
+            ? currentLabels.find(({ label }) => label.name === value[selectedLabels - 1])
+            : currentLabels[0];
+        if (!isIssue) {
+          removeLabelFromPull(label.id).then(data => {
+            const newCurrentLabels = currentLabels.filter(({ id }) => id !== data.id);
+            this.setState({
+              currentLabels: newCurrentLabels
+            });
+          });
+        }
+      }
+    }
+  };
 
   renderLabel(label) {
     return {
@@ -39,7 +76,12 @@ class IssuePrSidebar extends React.Component {
   }
 
   render() {
-    const { isIssue, reviewers, collaborators } = this.props;
+    const { isIssue, reviewers, collaborators, labels } = this.props;
+    const { currentLabels, loading } = this.state;
+    let defaultLabelValues = null;
+    if (currentLabels) {
+      defaultLabelValues = currentLabels.map(({ label }) => label.name);
+    }
 
     const assignees = [
       {
@@ -59,88 +101,6 @@ class IssuePrSidebar extends React.Component {
       }
     ];
 
-    const labels = [{
-      'id': 'f90ff2f6-59e2-455d-85a5-f3a58505606d',
-      'name': 'bug',
-      'description': 'Something isn`t working',
-      'color': '#d73a4a',
-      'createdAt': '2019-09-01T09:24:12.566Z',
-      'updatedAt': '2019-09-01T09:24:12.566Z',
-      'deletedAt': null,
-      'repositoryId': '60e9cc5e-e7d5-4199-a787-07c735a861cd'
-    }, {
-      'id': '71cc5073-353a-42d7-88f5-0756267aa16d',
-      'name': 'documentation',
-      'description': 'Improvements or additions to documentation',
-      'color': '#0075ca',
-      'createdAt': '2019-09-01T09:24:12.566Z',
-      'updatedAt': '2019-09-01T09:24:12.566Z',
-      'deletedAt': null,
-      'repositoryId': '60e9cc5e-e7d5-4199-a787-07c735a861cd'
-    }, {
-      'id': '1cdcaf9b-4fcf-42b9-a347-ff1b9ba69c37',
-      'name': 'duplicate',
-      'description': 'This issue or pull request already exists',
-      'color': '#cfd3d7',
-      'createdAt': '2019-09-01T09:24:12.571Z',
-      'updatedAt': '2019-09-01T09:24:12.571Z',
-      'deletedAt': null,
-      'repositoryId': '60e9cc5e-e7d5-4199-a787-07c735a861cd'
-    }, {
-      'id': '20bb766e-6f86-43a2-8881-03993f64649f',
-      'name': 'enhancement',
-      'description': 'New feature or request',
-      'color': '#a2eeef',
-      'createdAt': '2019-09-01T09:24:12.571Z',
-      'updatedAt': '2019-09-01T09:24:12.571Z',
-      'deletedAt': null,
-      'repositoryId': '60e9cc5e-e7d5-4199-a787-07c735a861cd'
-    }, {
-      'id': '24fe4535-b6db-4b4e-8071-32a6157be0be',
-      'name': 'good first issue',
-      'description': 'Good for newcomers',
-      'color': '#7057ff',
-      'createdAt': '2019-09-01T09:24:12.575Z',
-      'updatedAt': '2019-09-01T09:24:12.575Z',
-      'deletedAt': null,
-      'repositoryId': '60e9cc5e-e7d5-4199-a787-07c735a861cd'
-    }, {
-      'id': '7f52c57a-4942-4fd5-afd4-992b6fc99e45',
-      'name': 'help wanted',
-      'description': 'Extra attention is needed',
-      'color': '#008672',
-      'createdAt': '2019-09-01T09:24:12.575Z',
-      'updatedAt': '2019-09-01T09:24:12.575Z',
-      'deletedAt': null,
-      'repositoryId': '60e9cc5e-e7d5-4199-a787-07c735a861cd'
-    }, {
-      'id': '9c300c41-34f9-4d7b-bd27-da6c6d3aaa1b',
-      'name': 'invalid',
-      'description': 'This doesn\'t seem right',
-      'color': '#e4e669',
-      'createdAt': '2019-09-01T09:24:12.579Z',
-      'updatedAt': '2019-09-01T09:24:12.579Z',
-      'deletedAt': null,
-      'repositoryId': '60e9cc5e-e7d5-4199-a787-07c735a861cd'
-    }, {
-      'id': 'ab26bae8-3067-4eb0-b240-d4fc2e2bf928',
-      'name': 'question',
-      'description': 'Further information is requested',
-      'color': '#d876e3',
-      'createdAt': '2019-09-01T09:24:12.580Z',
-      'updatedAt': '2019-09-01T09:24:12.580Z',
-      'deletedAt': null,
-      'repositoryId': '60e9cc5e-e7d5-4199-a787-07c735a861cd'
-    }];
-
-    const initialReviewers = [
-      {
-        id: '5d7e8149-c61f-444e-a998-15c3dd3d92624',
-        username: 'sublimini',
-        imgUrl: 'https://api.adorable.io/avatars/face/eyes4/nose3/mouth7/8e8895'
-      }
-    ];
-
     const initialAssignees = [
       {
         id: '5d7e8149-c61e-444e-a998-15c3d3d92624',
@@ -151,29 +111,6 @@ class IssuePrSidebar extends React.Component {
         id: '5d7e8d-c61e-444e-a998-15c3d3d92624',
         username: 'sdfsdf',
         imgUrl: 'https://randomuser.me/api/portraits/women/47.jpg'
-      }
-    ];
-
-    const initialLabels = [
-      {
-        'id': '1cdcaf9b-4fcf-42b9-a347-ff1b9ba69c37',
-        'name': 'duplicate',
-        'description': 'This issue or pull request already exists',
-        'color': '#cfd3d7',
-        'createdAt': '2019-09-01T09:24:12.571Z',
-        'updatedAt': '2019-09-01T09:24:12.571Z',
-        'deletedAt': null,
-        'repositoryId': '60e9cc5e-e7d5-4199-a787-07c735a861cd'
-      },
-      {
-        'id': '20bb766e-6f86-43a2-8881-03993f64649f',
-        'name': 'enhancement',
-        'description': 'New feature or request',
-        'color': '#a2eeef',
-        'createdAt': '2019-09-01T09:24:12.571Z',
-        'updatedAt': '2019-09-01T09:24:12.571Z',
-        'deletedAt': null,
-        'repositoryId': '60e9cc5e-e7d5-4199-a787-07c735a861cd'
       }
     ];
 
@@ -197,13 +134,15 @@ class IssuePrSidebar extends React.Component {
       value: name,
       content: (
         <>
-          <div className={styles.labelName}><span className={styles.labelColor} style={{ backgroundColor: color }}/>{ ' ' }{ name }</div>
+          <div className={styles.labelName}>
+            <span className={styles.labelColor} style={{ backgroundColor: color }} /> {name}
+          </div>
           <div>{description}</div>
         </>
       )
     }));
 
-    return (
+    return !loading ? (
       <>
         {!isIssue && (
           <>
@@ -220,7 +159,7 @@ class IssuePrSidebar extends React.Component {
               onChange={this.onPropChange}
               renderLabel={this.renderLabel}
             />
-            <Divider/>
+            <Divider />
           </>
         )}
         <h5 className={styles.sectionHeader}>Assignees</h5>
@@ -236,7 +175,7 @@ class IssuePrSidebar extends React.Component {
           onChange={this.onPropChange}
           renderLabel={this.renderLabel}
         />
-        <Divider/>
+        <Divider />
         <h5 className={styles.sectionHeader}>Labels</h5>
         <Dropdown
           options={labelOptions}
@@ -246,11 +185,13 @@ class IssuePrSidebar extends React.Component {
           fluid
           text="Select Labels"
           name="labels"
-          defaultValue={initialLabels.map(({ name }) => name)}
-          onChange={this.onPropChange}
+          defaultValue={defaultLabelValues || null}
+          onChange={this.onChangeLables}
           renderLabel={this.renderLabel}
         />
       </>
+    ) : (
+      <Loader active />
     );
   }
 }
@@ -258,7 +199,12 @@ class IssuePrSidebar extends React.Component {
 IssuePrSidebar.propTypes = {
   isIssue: PropTypes.bool.isRequired,
   reviewers: PropTypes.array,
-  collaborators: PropTypes.array
+  collaborators: PropTypes.array,
+  labels: PropTypes.array.isRequired,
+  setLabelsOnCreateItem: PropTypes.func,
+  currentLabels: PropTypes.array,
+  setLabelToPull: PropTypes.func,
+  removeLabelFromPull: PropTypes.func
 };
 
 export default IssuePrSidebar;
