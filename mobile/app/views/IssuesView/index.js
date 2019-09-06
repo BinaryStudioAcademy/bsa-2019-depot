@@ -60,7 +60,6 @@ class IssuesView extends React.Component {
 
   render() {
     const { isLoading, issuesData, isOpened } = this.state;
-    console.log(issuesData);
     return !isLoading ? (
       <View>
         <View style={styles.issueHeader}>
