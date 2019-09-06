@@ -13,6 +13,7 @@ import { createPull } from '../../services/pullsService';
 import { getLabels, setLabelToPull } from '../../services/labelsService';
 
 import styles from './styles.module.scss';
+import { getRepositoryCollaborators } from '../../services/repositoryService';
 
 class CompareChanges extends React.Component {
   constructor(props) {
@@ -39,7 +40,8 @@ class CompareChanges extends React.Component {
   async componentDidMount() {
     const { repositoryId } = this.props;
     const labels = await getLabels(repositoryId);
-    this.setState({ labels });
+    const collaborators = await getRepositoryCollaborators(repositoryId);
+    this.setState({ labels, collaborators });
     this.updateBranchDiffs();
   }
 
@@ -127,7 +129,8 @@ class CompareChanges extends React.Component {
       fromBranch,
       toBranch,
       loading,
-      labels
+      labels,
+      collaborators
     } = this.state;
     const { branches, repositoryId } = this.props;
 
@@ -161,7 +164,7 @@ class CompareChanges extends React.Component {
           <Loader active />
         ) : diffs && diffs.length && commits && commits.length ? (
           <>
-            <CreateIssuePrForm isIssues={false} onSubmit={this.onSubmit} repositoryId={repositoryId} labels={labels} />
+            <CreateIssuePrForm isIssues={false} onSubmit={this.onSubmit} repositoryId={repositoryId} labels={labels} collaborators={collaborators} />
             <Segment className={styles.pullStats}>
               <div className={styles.pullStatSection}>
                 <Octicon icon={GitCommit} />

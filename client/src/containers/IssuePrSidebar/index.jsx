@@ -216,8 +216,12 @@ IssuePrSidebar.propTypes = {
   currentLabels: PropTypes.array,
   setLabelToPull: PropTypes.func,
   removeLabelFromPull: PropTypes.func,
-  setReviewerToPull: PropTypes.func.isRequired,
-  removeReviewerFromPull: PropTypes.func.isRequired
+  setReviewerToPull: PropTypes.func,
+  removeReviewerFromPull: PropTypes.func
+};
+
+IssuePrSidebar.defaultProps = {
+  reviewers: []
 };
 
 export default IssuePrSidebar;

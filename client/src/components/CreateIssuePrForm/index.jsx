@@ -11,7 +11,7 @@ import IssuePrSidebar from '../../containers/IssuePrSidebar';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 import styles from './styles.module.scss';
 
-const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels }) => {
+const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels, collaborators }) => {
   const [selectedTab, setSelectedTab] = useState('write');
   const [body, setBody] = useState('');
   const [labelNames, setLabels] = useState('');
@@ -69,6 +69,7 @@ const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels }) => {
                   repositoryId={repositoryId}
                   labels={labels}
                   setLabelsOnCreateItem={updateLabelNames}
+                  collaborators={collaborators}
                 />
               </Grid.Column>
             </Grid>
@@ -83,7 +84,8 @@ CreateIssuePrForm.propTypes = {
   isIssues: PropTypes.bool.isRequired,
   onSubmit: PropTypes.func.isRequired,
   repositoryId: PropTypes.string.isRequired,
-  labels: PropTypes.array.isRequired
+  labels: PropTypes.array.isRequired,
+  collaborators: PropTypes.array
 };
 
 export default CreateIssuePrForm;
