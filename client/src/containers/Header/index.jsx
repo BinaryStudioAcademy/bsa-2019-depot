@@ -50,7 +50,6 @@ const SidebarUnauth = (closeSidebar, sidebarOpened) => {
         <Icon name="close" color="grey" />
       </Menu.Item>
       <Menu.Item className={styles.sidebarForm} as="div">
-        {SearchInp()}
         <div>
           {signIn}
           {signUp}
@@ -89,7 +88,6 @@ const HeaderDesktopUnauth = ({ openSidebar, closeSidebar, sidebarOpened }) => (
         </Grid.Column>
         <Grid.Column computer={6} tablet={8} mobile={10}>
           <div className={styles.form}>
-            {SearchInp()}
             {signIn}
             {signUp}
             <BurgerSVG className={styles.burger} onClick={openSidebar} />
