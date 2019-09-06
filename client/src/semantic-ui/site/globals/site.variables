@@ -1,0 +1,12 @@
+/*******************************
+     User Global Variables
+*******************************/
+@fontName: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+
+@black: #363A44;
+@gray: #F7F7FB;
+@red: #ED1A37;
+@blue: #2E53DB;
+@positiveColor: @blue;
+@primaryColor: @blue;
+@linkColor: rgb(79, 96, 172, 0.7);

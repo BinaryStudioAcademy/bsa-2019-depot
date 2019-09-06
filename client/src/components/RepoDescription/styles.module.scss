@@ -1,0 +1,66 @@
+$blue: #2e53db;
+$gray: #f7f7fb;
+$black: #363a44;
+
+:local(.repoDescription) {
+  margin: 0.35em 0em 1em;
+  line-height: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  :local(.link) {
+    margin-left: 10px;
+  }
+
+  :global(.ui.form) {
+    width: 100%;
+    :global(.fields) {
+      margin-bottom: 0;
+    }
+    :local(.actionButton) {
+      font-size: 90%;
+    }
+    :local(.saveButton) {
+      font-size: 90%;
+      background-color: $blue;
+      color: #fff;
+    }
+  }
+}
+
+:local(.repoDescriptionText) {
+  line-height: 1.5;
+}
+
+.actionButton,
+:global(.ui.selectable.single.line.unstackable.bottom.attached.table),
+:global(.ui.borderless.top.attached.four.item.menu) {
+  :global(.octicon) {
+    color: rgba(3, 47, 98, 0.55);
+    margin-right: 5px;
+  }
+}
+:global(.ui.button):local(.editButton) {
+  align-self: flex-start;
+  padding: 0.6em 1em;
+}
+:global(.ui.button):local(.actionButton) {
+  background-color: $gray;
+  border: 1px solid rgba(27, 31, 35, 0.2);
+  color: $black;
+  font-size: 75%;
+  line-height: 20px;
+  padding: 3px 10px;
+}
+
+.repoActions {
+  :global(.ui.buttons) {
+    font-size: 75%;
+
+    :global(.ui.button):local(.actionButton) {
+      border-left: 1px solid rgba(27, 31, 35, 0.2);
+      font-size: 100%;
+    }
+  }
+}

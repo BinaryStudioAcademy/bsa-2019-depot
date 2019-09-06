@@ -1,0 +1,1 @@
+export const CLEAR_REPO_STATE = 'CLEAR_REPO_STATE';

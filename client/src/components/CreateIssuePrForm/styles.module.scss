@@ -1,0 +1,36 @@
+:local(.commentEditor) {
+  margin-bottom: 10px;
+
+  :global(.react-mde):local(.markdownEditor) {
+    textarea {
+      width: 100%;
+      border: 0;
+      padding: 10px;
+      vertical-align: top;
+      resize: none;
+    }
+
+    :global(.grip) {
+      border-top: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 5px;
+    }
+  }
+}
+
+:local(.titleInput) {
+  margin-bottom: 10px !important;
+}
+
+:local(.sidebarItem) {
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e6ebf1;
+
+  &:last-child {
+    margin-bottom: 0;
+    border-bottom: none;
+  }
+}

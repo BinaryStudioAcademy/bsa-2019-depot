@@ -1,0 +1,78 @@
+:local(.container) {
+  max-width: 1200px;
+  margin: auto;
+}
+
+:local(.filterRow) {
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+:local(.dataContainer) {
+  margin-top: 10px;
+  border: 1px solid lightgrey;
+  border-radius: 5px;
+}
+
+:local(.dataHeader) {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f6f6f6;
+  border-bottom: 1px solid lightgrey;
+  border-radius: 5px 5px 0 0;
+}
+
+:local(.openedData),
+:local(.closedData),
+:global(.ui.dropdown) {
+  color: #575757;
+  cursor: pointer;
+
+  &:hover {
+    color: #000000;
+  }
+}
+
+:local(.openedData) {
+  margin-right: 15px;
+}
+
+:local(.dataFilters) > :not(:last-child) {
+  margin-right: 10px;
+}
+
+:local(.leftGroup) {
+  display: flex;
+}
+
+:local(.labelButton):global(.ui.basic.button) {
+  display: flex;
+  padding: 0.65em 0.75em;
+  align-items: center;
+  margin-left: 0.75em;
+}
+
+:local(.labelButtonIcon):global(.content) {
+  margin-right: 0.25em;
+}
+
+:local(.labelButtonText):global(.content) {
+  margin-right: 0.5em;
+}
+
+:local(.active) {
+  font-weight: 600;
+}
+
+:local(.hide_check) {
+  color: transparent;
+}
+
+:local(.avatar) {
+  width: 2em;
+  height: 2em;
+}

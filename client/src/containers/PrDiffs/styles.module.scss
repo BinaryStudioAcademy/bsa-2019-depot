@@ -1,0 +1,37 @@
+$red: #ed1a37;
+
+.prDiffHeader {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .diffFilters {
+    :global(.ui.dropdown:first-child) {
+      margin-right: 25px;
+    }
+  }
+
+  .fileNameRow {
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .fileName {
+      font-weight: bold;
+      margin-right: 15px;
+    }
+
+    .fileChangesCounters {
+      .newLines {
+        color: #28a745;
+        margin-right: 5px;
+      }
+
+      .oldLines {
+        color: $red;
+      }
+    }
+  }
+}

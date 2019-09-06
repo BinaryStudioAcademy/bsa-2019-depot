@@ -1,0 +1,301 @@
+$blue-color: #2e53db;
+$text-color: #363a44;
+$gray-color: #f7f7fb;
+
+:local(.main) {
+  padding: 80px 0 40px;
+  background-color: $gray-color;
+  text-align: center;
+}
+
+:local(.header) {
+  color: $text-color;
+  font-size: 275%;
+
+  @media screen and (max-width: 768px) {
+    font-size: 187% !important;
+  }
+}
+
+:local(.link) {
+  color: $blue-color !important;
+
+  &:hover {
+    svg {
+      transform: translate3d(5px, 0, 0);
+      transition: transform 250ms;
+    }
+  }
+
+  svg {
+    margin-left: 5px;
+  }
+}
+
+:local(.headerCentered) {
+  composes: header;
+  text-align: center;
+}
+
+:local(.mainText) {
+  font-size: 125%;
+  text-align: center;
+  color: $text-color;
+}
+
+:local(.button) {
+  margin: 24px 0 !important;
+  background-color: $blue-color !important;
+  color: #fff !important;
+}
+
+:local(.wave) {
+  path {
+    fill: $gray-color;
+  }
+  transform: rotate(180deg);
+}
+
+:local(.advantageSmall) {
+  margin-top: 50px;
+
+  img {
+    height: 140px;
+    margin: 0 auto;
+  }
+
+  h3 {
+    font-size: 150%;
+    color: $text-color;
+    text-align: center;
+  }
+
+  p {
+    text-align: center;
+    line-height: 24px;
+  }
+}
+
+:local(.advantageImg) {
+  margin-top: 60px;
+}
+
+:local(.advantageText) {
+  margin-top: 60px;
+
+  h5 {
+    text-transform: uppercase;
+    font-size: 75%;
+    padding-top: 15px;
+    color: $blue-color;
+  }
+
+  h2,
+  p {
+    color: $text-color;
+  }
+
+  h2 {
+    font-size: 225%;
+    margin-bottom: 24px;
+  }
+
+  p {
+    font-size: 125%;
+  }
+
+  a {
+    color: $blue-color;
+  }
+}
+
+:local(.advantageTextHide) {
+  @media screen and (min-width: 992px) {
+    display: none !important;
+  }
+}
+
+:local(.advantageTextShow) {
+  @media screen and (max-width: 992px) {
+    display: none !important;
+  }
+}
+
+:local(.new) {
+  composes: main;
+  margin-top: 100px;
+}
+
+:local(.newCard) {
+  height: 400px;
+  padding: 40px;
+  margin-top: 20px;
+  color: $text-color;
+  background-color: #fff;
+
+  img {
+    height: 90px;
+  }
+
+  h3 {
+    font-size: 150%;
+  }
+
+  p {
+    line-height: 24px;
+  }
+}
+
+:local(.btnWrapper) {
+  display: flex;
+  justify-content: center;
+}
+
+:local(.betterWay) {
+  margin: 2rem 0;
+  padding: 1rem 0;
+  min-height: 300px;
+
+  :global(.ui.centered.container.one.column.grid) {
+    :global(.row) {
+      align-items: center;
+    }
+  }
+
+  .logo {
+    margin-top: 3em;
+    width: 20em;
+  }
+}
+
+:local(.footer) {
+  padding-top: 60px;
+  background-color: $gray-color;
+  color: $text-color;
+
+  h4 {
+    font-size: 125%;
+
+    &:not(:last-child) {
+      @media screen and (max-width: 992px) {
+        margin-top: 50px;
+      }
+    }
+  }
+
+  li:not(:last-child) {
+    margin-bottom: 8px;
+  }
+
+  a {
+    color: $text-color;
+    font-size: 87.5%;
+
+    &:hover {
+      color: $text-color;
+      text-decoration: underline;
+    }
+  }
+
+  p {
+    margin: 26px 0;
+  }
+
+  .form {
+    div {
+      justify-content: space-between;
+
+      div:first-child {
+        flex-grow: 1 !important;
+      }
+
+      @media screen and (max-width: 992px) {
+        justify-content: flex-start;
+      }
+    }
+
+    button {
+      background: $gray-color;
+      border: 1px solid $blue-color;
+      color: $blue-color;
+
+      &:hover {
+        color: $blue-color;
+        background-color: darken($gray-color, $amount: 1);
+      }
+    }
+  }
+
+  .social {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 30px 0;
+
+    p {
+      display: inline-block;
+      margin: 0 30px 0 0;
+    }
+
+    ul {
+      display: inline-flex;
+
+      li {
+        margin: 0;
+
+        &:not(:last-child) {
+          margin-right: 12px;
+        }
+      }
+    }
+
+    a {
+      display: block;
+      height: 32px;
+      width: 32px;
+      background-size: 100%;
+      color: transparent;
+    }
+  }
+
+  .fb {
+    background: url(https://wac-cdn.atlassian.com/assets/img/icons/social-icons/facebook-badge.svg) center center
+      no-repeat;
+  }
+
+  .tw {
+    background: url(https://wac-cdn.atlassian.com/assets/img/icons/social-icons/twitter.svg) center center no-repeat;
+  }
+
+  .foterLine {
+    border-top: 2px solid #dfe1e5;
+    padding-top: 1.5em !important;
+    padding-bottom: 2em !important;
+
+    a {
+      font-size: inherit !important;
+    }
+
+    ul {
+      display: flex;
+      align-items: center;
+
+      li {
+        margin: 0;
+
+        &:not(:last-child) {
+          margin-right: 30px;
+        }
+
+        img {
+          width: 120px !important;
+        }
+      }
+
+      @media screen and (max-width: 768px) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  }
+}

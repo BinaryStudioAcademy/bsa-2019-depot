@@ -1,0 +1,37 @@
+$red: #ed1a37;
+
+:global(.ui.bottom.attached.segment.active.tab) {
+  padding: 0;
+}
+
+.editorArea {
+  margin-bottom: 20px;
+}
+
+.fileNameInput {
+  margin-right: 10px;
+}
+
+:global(.ui.big.breadcrumb):local(.filePath) {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+
+  :local(.fileNameSection) {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.markdownContainer {
+  padding: 20px;
+}
+
+.error_wrapper {
+  color: $red;
+  margin-top: 0;
+  margin-bottom: 5px;
+  margin-left: 5px;
+  font-size: 67%;
+  float: right;
+}

@@ -1,0 +1,47 @@
+:local(.privacyLabel) {
+  position: relative;
+
+  span {
+    display: flex;
+    flex-direction: column;
+    padding-left: 35px;
+    font-weight: bold;
+  }
+
+  &[name='private'] {
+    .privacyIcon {
+      color: rgba(115, 92, 15, 0.5);
+    }
+  }
+}
+
+:local(.reponameInput) {
+  margin-bottom: 10px !important;
+}
+
+:local(.privacyIcon) {
+  position: absolute;
+  width: 24px;
+  height: 32px;
+  color: #959da5;
+}
+
+:local(.slash) {
+  font-size: 131.25%;
+  color: #586069;
+  padding-top: 32px;
+}
+
+:local(.label) {
+  position: absolute;
+  left: 10px;
+  top: 100%;
+}
+
+:local(.formField) {
+  position: relative;
+}
+
+:local(.title) {
+  margin-top: 0;
+}

@@ -1,0 +1,14 @@
+:global(.ui.grid.forgot-grid) {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+:global(.ui.center.aligned.header.forgot-header) {
+  position: relative;
+}
+:global(.ui.form .field) {
+  > label {
+    text-align: left;
+  }
+}

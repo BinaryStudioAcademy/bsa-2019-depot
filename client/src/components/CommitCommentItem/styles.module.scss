@@ -1,0 +1,66 @@
+:global(.item.comment-item) {
+  width: 100%;
+  :global(.ui.tiny.image) {
+    width: 6.25%;
+    > img {
+      width: 60%;
+    }
+    + :global(.content) {
+      padding: 0;
+      border-radius: 3px;
+      box-shadow: 0 7px 16px 3px lightgrey;
+      > :global(.header) {
+        display: flex;
+        justify-content: space-between;
+        margin: 0;
+        padding: 10px 15px;
+        font-size: 100%;
+        font-weight: normal;
+        background-color: #f1f8ff;
+        border-bottom: 1px solid darken(#f1f8ff, 20%);
+        color: #666;
+        > :global(.name) {
+          > span {
+            font-weight: 700;
+          }
+        }
+        > :global(.menu) {
+          > :global(.ui.item.dropdown) {
+            > :global(.dropdown.icon) {
+              display: none;
+            }
+          }
+        }
+      }
+      > :global(.description) {
+        display: block;
+        padding: 10px 15px;
+      }
+      > :global(.react-mde.react-mde-tabbed-layout) {
+        > :global(.grip) {
+          display: none;
+        }
+        > :global(.mde-text) {
+          height: 100px !important;
+        }
+      }
+      > :global(.ui.button) {
+        border: 1px solid #2e53db;
+        margin: 5px;
+      }
+      > :global(.ui.button.blue) {
+        border: 1px solid #2e53db;
+      }
+      > :global(.ui.button.cancel-button) {
+        background-color: white;
+        color: #ed1a37;
+        border: 1px solid #ccc;
+        &:hover {
+          background-color: #ed1a37;
+          color: white;
+          border: 1px solid #ed1a37;
+        }
+      }
+    }
+  }
+}

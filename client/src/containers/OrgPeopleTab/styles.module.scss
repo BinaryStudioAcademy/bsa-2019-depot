@@ -1,0 +1,61 @@
+$button-color: #2e53db;
+
+:global(.ui.container):local(.memberListContainer) {
+  width: 1000px;
+  max-width: 1000px;
+  padding-top: 20px;
+  margin-bottom: 24px;
+
+  :local(.memberListFilters) {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    :local(.inviteButton) {
+      background-color: $button-color;
+      color: #fff;
+    }
+  }
+
+  :local(.backBtn) {
+    margin-top: 10px;
+  }
+
+  :local(.memberListHeader) {
+    color: #586069;
+    background-color: #f6f8fa;
+    padding-bottom: 13px;
+    padding-top: 13px;
+    padding-left: 16px;
+  }
+
+  :local(.memberItem) {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 12px 14px;
+    border: 1px solid #eaecef;
+
+    :local(.memberBox_member) {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      margin-left: 30px;
+    }
+    :local(.memberUsername) {
+      color: #586069;
+    }
+    :local(.memberRole) {
+      display: flex;
+      margin: auto;
+    }
+    :local(.memberNameContainer) {
+      width: 25%;
+    }
+    :local(.memberPhoto) {
+      width: 48px;
+      height: 48px;
+    }
+  }
+}

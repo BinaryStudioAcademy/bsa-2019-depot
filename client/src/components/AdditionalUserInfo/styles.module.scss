@@ -1,0 +1,30 @@
+:local(.additionInfo) {
+  font-size: 87.5%;
+  margin-top: 10px;
+  div {
+    word-wrap: break-word;
+  }
+  :local(.additionInfoItem) {
+    width: 100%;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3em;
+    white-space: nowrap;
+  }
+  i {
+    margin-right: 7px !important;
+  }
+  :local(.organizationsHeader) {
+    margin-top: 0.5em;
+    padding-top: 0.5em;
+    font-weight: 600;
+    font-size: 120%;
+    border-top: 1px solid #e1e4e8;
+  }
+  :local(.organizationsList) {
+    li {
+      display: inline-block;
+    }
+  }
+}

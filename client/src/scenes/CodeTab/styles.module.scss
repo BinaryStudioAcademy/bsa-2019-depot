@@ -1,0 +1,115 @@
+$blue: #2e53db;
+$gray: #f7f7fb;
+$black: #363a44;
+
+.actionButton,
+:global(.ui.selectable.single.line.unstackable.bottom.attached.table),
+:global(.ui.borderless.top.attached.four.item.menu) {
+  :global(.octicon) {
+    color: rgba(3, 47, 98, 0.55);
+    margin-right: 5px;
+  }
+}
+.filePathRow {
+  margin-bottom: 10px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  :global(.ui.breadcrumb):local(.filePath) {
+    margin: 0;
+  }
+}
+:global(.ui.button):local(.actionButton) {
+  background-color: $gray;
+  border: 1px solid rgba(27, 31, 35, 0.2);
+  color: $black;
+  font-size: 75%;
+  line-height: 20px;
+  padding: 3px 10px;
+}
+
+.repoActions {
+  :global(.ui.buttons) {
+    font-size: 75%;
+
+    :global(.ui.button):local(.actionButton) {
+      border-left: 1px solid rgba(27, 31, 35, 0.2);
+      font-size: 100%;
+    }
+  }
+}
+
+:global(a):local(.link) {
+  font-weight: normal;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+:global(.ui.dropdown .menu > .item):local(.branchesMenuItem) {
+  border-bottom: 1px solid #eaecef;
+  padding: 8px 8px 8px 30px;
+  &:first-child {
+    border-top: 1px solid #eaecef;
+  }
+  &:hover {
+    background: $blue;
+    color: #fff;
+  }
+}
+
+:global(.ui.horizontal.segments):local(.languageSegments) {
+  border-radius: 0px 0px 4px 4px;
+  box-shadow: none;
+  border: none;
+  width: calc(100% + 2px);
+  margin: 0px 0px 10px 0px;
+  overflow: hidden;
+}
+:local(.repoDescription) {
+  margin: 0.35em 0em 1em;
+  line-height: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  :local(.link) {
+    margin-left: 10px;
+  }
+
+  .editButton {
+    align-self: flex-start;
+  }
+
+  :global(.ui.form) {
+    width: 100%;
+    :global(.fields) {
+      margin-bottom: 0;
+    }
+    :local(.actionButton) {
+      font-size: 90%;
+    }
+  }
+}
+
+:local(.repoDescriptionText) {
+  line-height: 1.5;
+}
+
+:local(.repoMetaDataLinks) {
+  color: $black;
+}
+
+:local(.repoLinkInput) {
+  width: 100%;
+}
+
+:global(.ui.message):local(.readmeTip) {
+  margin-top: 10px;
+  padding: 15px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

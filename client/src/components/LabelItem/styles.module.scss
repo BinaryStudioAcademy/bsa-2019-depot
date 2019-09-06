@@ -1,0 +1,90 @@
+:global(.ui.divided.middle.aligned.list) {
+  margin-top: 0;
+
+  :global(.item):local(.labelItem) {
+    display: flex;
+    padding: 0.5em;
+
+    &:last-child {
+      border-radius: 0 0 5px 5px;
+    }
+  }
+
+  :global(.item):local(.labelItem):hover {
+    background-color: white;
+    border-left: 1px solid #eaecef;
+  }
+}
+
+:local(.leftGroup) {
+  flex-grow: 1;
+  display: flex;
+}
+
+:local(.nameContainer) {
+  width: 20em;
+}
+
+:local(.labelDescription) {
+  font-size: 0.8em;
+}
+
+:local(.actionButton):global(.ui.button) {
+  background: white;
+  padding: 0.5em;
+  font-size: 0.8em;
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+    background: white;
+  }
+
+  :global(.icon) {
+    font-size: 1.1em;
+    text-decoration: none;
+  }
+}
+
+:local(.labelName):global(.ui.horizontal.label) {
+  flex-grow: 3;
+  font-size: 1.1em;
+  cursor: pointer;
+}
+
+:local(.labelDescription) {
+  flex-grow: 5;
+  color: #586069;
+  line-height: 2.25em;
+}
+
+:local(.labelButtons) {
+  flex-grow: 0;
+}
+
+:local(.labelForm):global(.ui.form) {
+  padding-left: 0.75em;
+}
+
+:local(.editButtons) {
+  display: flex;
+  align-items: flex-end;
+  flex-grow: 1;
+  justify-content: flex-end;
+  padding-right: 1em;
+
+  :global(.ui.button) {
+    padding-top: 0.85em;
+    padding-bottom: 0.85em;
+  }
+
+  :global(.ui.blue.button) {
+    margin-left: 0.75em;
+  }
+}
+
+:global(.ui.grid) {
+  :local(.errorFields):global(.row) {
+    padding: 0.5em 1em 1em;
+  }
+}

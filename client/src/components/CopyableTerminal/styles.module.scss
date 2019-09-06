@@ -1,0 +1,15 @@
+:local(.copyable) {
+  position: relative;
+  background-color: #f6f8fa;
+  border-radius: 3px;
+  padding: 1em;
+  padding-right: 55px;
+  position: relative;
+}
+
+:local(.clipboardButton) {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  padding: 0.5em 1em !important;
+}

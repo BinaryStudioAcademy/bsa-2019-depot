@@ -1,0 +1,65 @@
+$gray: #f7f7fb;
+$black: #363a44;
+
+:global(.ui.button):local(.copyButton) {
+  margin-right: 0;
+}
+
+:global(.ui.segments):local(.fileViewContainer) {
+  margin-top: 0;
+}
+
+:global(.ui.segment):local(.fileView) {
+  padding: 0;
+}
+
+:global(.ui.segment):local(.fileViewHeader) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+:global(.ui.button):local(.actionButton) {
+  background-color: $gray;
+  border: 1px solid rgba(27, 31, 35, 0.2);
+  color: $black;
+  line-height: 20px;
+
+  &:global(.compact) {
+    padding: 3px 10px;
+  }
+}
+
+:global(.ui.button):local(.rawButton) {
+  margin-right: 10px;
+}
+
+.filePathRow {
+  margin-bottom: 10px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  :global(.ui.breadcrumb):local(.filePath) {
+    margin: 0;
+  }
+}
+
+.fileInfo {
+  display: flex;
+
+  .lineCount {
+    margin-right: 15px;
+  }
+}
+
+.fileControls {
+  :global(.icon.pencil) {
+    margin-right: 10px;
+  }
+}
+
+.markdownContainer {
+  padding: 20px;
+}

@@ -1,0 +1,15 @@
+.commitFormContainer {
+  display: flex;
+  justify-content: center;
+  :global(div.ui.segment) {
+    margin-top: 0;
+    margin-left: 10px;
+    flex-grow: 1;
+  }
+}
+
+:global(.ui.form) {
+  :global(.field):local(.branchInput) {
+    margin-top: 10px;
+  }
+}

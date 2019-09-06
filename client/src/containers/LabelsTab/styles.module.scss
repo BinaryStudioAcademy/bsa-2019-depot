@@ -1,0 +1,75 @@
+:local(.container) {
+  max-width: 1200px;
+  margin: auto;
+}
+
+:local(.filterRow) {
+  min-width: 950px;
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+:local(.labelsContainer) {
+  min-width: 950px;
+  margin-top: 10px;
+  border: 1px solid lightgrey;
+  border-radius: 5px;
+}
+
+:local(.labelsHeader) {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  background-color: #f6f6f6;
+  border-bottom: 1px solid lightgrey;
+  border-radius: 5px 5px 0 0;
+}
+
+:local(.labelsCount),
+:global(.ui.dropdown) {
+  color: #575757;
+
+  &:hover {
+    color: #575757;
+  }
+  pointer-events: auto;
+}
+
+:local(.labelsCount) {
+  flex-grow: 1;
+  margin-right: 0.5em;
+}
+
+:local(.labelsSort) {
+  cursor: pointer;
+}
+
+:local(.leftGroup) {
+  display: flex;
+}
+
+:local(.labelButton):global(.ui.blue.button) {
+  display: flex;
+  padding: 0.65em 0.75em;
+  align-items: center;
+}
+
+:local(.labelButtonIcon):global(.content) {
+  margin-right: 0.25em;
+}
+
+:local(.labelButtonText):global(.content) {
+  margin-right: 0.5em;
+}
+
+:local(.search):global(.ui.input) {
+  margin-left: 0.25em;
+}
+
+:local(.labelsList) {
+  min-width: 950px;
+  border: 1px solid #eaecef;
+  border-radius: 0 0 5px 5px;
+}

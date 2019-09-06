@@ -1,0 +1,57 @@
+$gray: #f7f7fb;
+
+:global(.ui.top.attached.tabular.menu) {
+  position: relative;
+  top: 1px;
+
+  :global(.item) {
+    padding: 5px 10px;
+
+    :global(a) {
+      color: #252525;
+    }
+
+    :global(.ui.circular.label) {
+      background-color: $gray;
+      margin-left: 5px;
+    }
+  }
+}
+
+:global(header) {
+  border-bottom: none;
+}
+
+:local(.repoHeader) {
+  :local(.repoHeaderContainer) {
+    max-width: 1000px;
+    margin: auto;
+    padding-top: 20px;
+  }
+}
+
+:local(.repoNameRow) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  :local(.repoName) {
+    :global(.octicon) {
+      margin-right: 0;
+    }
+
+    :local(.repoPath) {
+      margin-left: 10px;
+      font-size: 125%;
+      :local(.pathDivider) {
+        margin: 0 5px;
+      }
+    }
+    :local(.originalRepoLink) {
+      font-size: 0.75em;
+      margin: 6px 0 0 23px;
+      line-height: 0.75em;
+      white-space: nowrap;
+    }
+  }
+}

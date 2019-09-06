@@ -1,0 +1,279 @@
+$primary-color: #586069;
+$secondary-color: #d1d5da;
+$blue: #2e53db;
+
+:export {
+  activity_lvl1: #eeeeee;
+  activity_lvl2: #d6e685;
+  activity_lvl3: #8cc665;
+  activity_lvl4: #44a340;
+  activity_lvl5: #1e6823;
+}
+
+:global(.octicon):local(.card_icon),
+:global(.octicon):local(.card_icon_grab) {
+  margin-right: 0;
+  color: $primary-color;
+}
+
+.contribution_activity_desc {
+  :global(.octicon) {
+    margin-right: 0;
+    color: $primary-color;
+  }
+}
+
+:local(.pinned_header) {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+:global(.ui.container):local(.section_header) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+
+  h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  .header_actions {
+    font-size: 75%;
+    color: $primary-color;
+
+    :global(.menu.transition.visible) {
+      :global(.item) {
+        font-size: 100%;
+      }
+    }
+  }
+}
+
+:global(.ui.container):local(.favorite_repos_wrapper) {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+  justify-items: center;
+  align-items: center;
+
+  :local(.pinned_item) {
+    width: 100%;
+    min-height: 110px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 16px;
+    border: 1px solid $secondary-color;
+    border-radius: 3px;
+
+    & div {
+      display: flex;
+      align-items: center;
+    }
+
+    :local(.card_icon) {
+      position: relative;
+      top: 1px;
+      margin-right: 5px;
+    }
+
+    :local(.card_icon_grab) {
+      cursor: grab;
+    }
+
+    & a {
+      flex: 1 1 auto;
+      font-weight: bold;
+      color: $blue;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  :local(.pinned_item_desc) {
+    margin: 8px 0 16px;
+    font-size: 12px;
+  }
+
+  :local(.pinned_item_lang) {
+    font-size: 12px;
+    line-height: 1.5;
+
+    & span {
+      position: relative;
+      top: 2px;
+      width: 12px;
+      height: 12px;
+      margin-right: 4px;
+      display: inline-block;
+      border-radius: 50%;
+      background-color: #f1e05a;
+    }
+  }
+}
+
+:global(.ui.dropdown):local(.dropdown_header) {
+  min-width: 152px;
+}
+
+:global(.calendar) {
+  width: 100%;
+}
+
+.calendarContainer {
+  overflow: hidden;
+  padding: 15px 15px 10px 15px;
+  border: 1px solid $secondary-color;
+  border-radius: 3px;
+}
+
+:global(.calendar-wrapper) {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  :global(.calendar) {
+    :global(.month) {
+      font-size: 62.5%;
+      fill: #767676;
+    }
+    :global(.week) {
+      font-size: 62.5%;
+      fill: #767676;
+    }
+  }
+}
+
+:local(.contribution_activity) {
+  position: relative;
+
+  &:before {
+    display: block;
+    content: '';
+    width: 2px;
+    bottom: 0;
+    left: 15px;
+    position: absolute;
+    top: 0;
+    background-color: $secondary-color;
+    z-index: -1;
+  }
+
+  &:after {
+    background-color: $secondary-color;
+    content: '';
+    height: 1px;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 12px;
+    z-index: -1;
+  }
+
+  h3 {
+    display: inline-block;
+    padding: 4px 8px 4px;
+    font-size: 75%;
+    background-color: #fff;
+  }
+
+  :local(.contribution_activity_desc) {
+    margin-left: 16px;
+    padding: 24px 0 24px 24px;
+
+    :global(.title) {
+      display: flex;
+      justify-content: space-between;
+
+      p {
+        margin: 0;
+      }
+    }
+
+    :local(.contribution_activity_icon) {
+      background-color: #e6ebf1;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      color: $primary-color;
+      float: left;
+      height: 32px;
+      line-height: 28px;
+      margin-left: -40px;
+      text-align: center;
+      width: 32px;
+    }
+  }
+}
+
+:local(.load_more_activity) {
+  width: 100%;
+  display: inline-block;
+  padding: 12px;
+  color: $blue;
+  font-size: 75%;
+  font-weight: 600;
+  background-color: #fff;
+  border: 1px solid $secondary-color;
+  border-radius: 3px;
+  text-align: center;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #f6f8fa;
+  }
+}
+
+:global(.three.wide.column) {
+  :local(.contribution_year_list) {
+    width: 100%;
+    position: sticky;
+    top: 54px;
+
+    :local(.contribution_year) {
+      display: block;
+      margin-bottom: 5px;
+      padding: 6px 14px;
+      color: $primary-color;
+      font-size: 75%;
+      border-radius: 3px;
+
+      &:hover {
+        background-color: $secondary-color;
+      }
+    }
+
+    :local(.contribution_year):local(.active) {
+      color: #fff;
+      background-color: $blue;
+    }
+  }
+}
+
+:global(.calendar-wrapper.calendar-wrapper-meaning) {
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 80%;
+  :global(.calendar.calendar-meaning) {
+    width: 75px;
+    padding: 0 5px;
+  }
+}
+
+@media (max-width: 1024px) {
+  :global(.thirteen.wide.column):local(.contribution_years) {
+    width: 100%;
+  }
+}

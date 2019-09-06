@@ -69,6 +69,7 @@ yarn-error.log
 
 # IDE settings
 .vscode
+.idea
 
 # production
 build
@@ -82,3 +83,11 @@ build
 
 package-lock.json
 yarn.lock
+
+.idea/
+
+# Test
+
+test/output/
+
+ohl-repos

@@ -1,0 +1,44 @@
+:global(.ui.grid.login-grid) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin: 0;
+}
+:global(.has-error input) {
+  border-color: #d0a89c !important;
+}
+:global(.no-error input) {
+  border-color: #bbd3bb !important;
+}
+
+:global(.check.icon.icon-green) {
+  color: #60b044;
+}
+
+:global(.check.icon.icon-hidden) {
+  display: none;
+}
+
+:global(.ui.error.message) {
+  text-align: center;
+}
+
+:global(.ui.center.aligned.header.login-header) {
+  position: relative;
+}
+:global(.ui.form .field.password-wrapper) {
+  position: relative;
+  > a {
+    position: absolute;
+    right: 0;
+  }
+}
+:global(div.google-button) {
+  margin-top: 10px;
+  > a {
+    > button {
+      width: 100%;
+    }
+  }
+}

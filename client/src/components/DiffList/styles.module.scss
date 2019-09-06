@@ -1,0 +1,137 @@
+:global(.diff-content) {
+  width: 100%;
+  margin-top: 10px;
+  box-shadow: 0 7px 16px 3px lightgrey;
+  > p {
+    background-color: #eee;
+    padding: 5px;
+  }
+  :global(.diff-filename) {
+    background-color: #eee;
+    padding: 5px 15px;
+    :global(.diff-decoration-content) {
+      background-color: #f3f3f3;
+      padding: 10px;
+      border-top: 1px solid #ccc;
+      border-bottom: 1px solid #ccc;
+    }
+  }
+  :global(.diff-line) {
+    line-height: 1.5;
+    font-family: Consolas, Courier, monospace;
+  }
+
+  :global(.diff-gutter) {
+    > a {
+      color: inherit;
+      display: block;
+    }
+  }
+
+  :global(.diff-gutter),
+  :global(.diff-gutter) {
+    > a {
+      padding: 0 1ch;
+      text-align: right;
+      cursor: pointer;
+      user-select: none;
+    }
+  }
+
+  :global(.diff-gutter-insert) {
+    background-color: #d6fedb;
+  }
+
+  :global(.diff-gutter-delete) {
+    background-color: #fadde0;
+  }
+
+  :global(.diff-gutter-omit) {
+    cursor: default;
+  }
+
+  :global(.diff-gutter-selected) {
+    background-color: #fef6b9;
+  }
+
+  :global(.diff-code) {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-all;
+    padding: 0 0 0 0.5em;
+  }
+
+  :global(.diff-code-insert) {
+    background-color: #eaffee;
+  }
+
+  :global(.diff-code-edit) {
+    display: inline-block;
+    color: inherit;
+  }
+
+  :global(.diff-code-insert .diff-code-edit) {
+    background-color: #c0dc91;
+  }
+
+  :global(.diff-code-delete) {
+    background-color: #fdeff0;
+  }
+
+  :global(.diff-code-delete .diff-code-edit) {
+    background-color: #f39ea2;
+  }
+
+  :global(.diff-code-selected) {
+    background-color: #fffce0;
+  }
+
+  :global(.diff-omit) {
+    background-color: #fafbfc;
+  }
+
+  :global(.diff-widget-content) {
+    vertical-align: top;
+  }
+
+  :global(.diff) {
+    table-layout: fixed;
+    border-collapse: collapse;
+    width: 100%;
+    td {
+      vertical-align: top;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  :global(.diff-gutter-col) {
+    width: 7ch;
+  }
+
+  :global(.diff-gutter-omit) {
+    height: 0;
+  }
+
+  :global(.diff-gutter-omit):before {
+    content: ' ';
+    display: block;
+    white-space: pre;
+    width: 2px;
+    height: 100%;
+    margin-left: 4.6ch;
+    overflow: hidden;
+    background-color: #cb2a1d;
+  }
+
+  :global(.diff-decoration) {
+    line-height: 1.5;
+    user-select: none;
+  }
+
+  :global(.diff-decoration-content) {
+    font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+    padding: 0px 10px;
+    background-color: #e8f3ff;
+  }
+}

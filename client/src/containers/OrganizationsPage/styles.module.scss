@@ -1,0 +1,40 @@
+:global(.ui.container):local(.headerWrapper) {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+:global(.ui.dividing.header):local(.headerWrapper) {
+  padding-bottom: 1em;
+}
+:local(.orgList) {
+  margin-top: 1em;
+  :local(.orgItem) {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1em;
+    border: 1px solid rgba(34, 36, 38, 0.15);
+    border-bottom: none;
+    &:last-child {
+      border-bottom: 1px solid rgba(34, 36, 38, 0.15);
+    }
+    :local(.orgInfo) {
+      display: flex;
+      margin: auto 0;
+      > * {
+        margin-right: 1em;
+      }
+      :local(.orgName) {
+        text-transform: capitalize;
+        text-decoration: none;
+        color: #0366d6;
+        font-weight: 600;
+        font-size: 90%;
+      }
+      :local(.roleName) {
+        text-transform: lowercase;
+        font-size: 70%;
+      }
+    }
+  }
+}

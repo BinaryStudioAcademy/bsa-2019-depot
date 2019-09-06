@@ -1,0 +1,78 @@
+$background-color: #fafbfc;
+
+:global(.ui.top.attached.tabular.menu) {
+  position: relative;
+  top: 1px;
+
+  :global(.item) {
+    padding: 5px 10px;
+
+    :global(a) {
+      color: #252525;
+    }
+
+    :global(.ui.circular.label) {
+      margin-left: 5px;
+    }
+  }
+}
+
+:global(header) {
+  border-bottom: none;
+}
+
+:local(.orgHeader) {
+  border-bottom: 1px solid lightgrey;
+  background-color: $background-color;
+  padding-top: 20px;
+
+  :local(.orgHeaderContainer) {
+    max-width: 1000px;
+    margin: auto;
+  }
+  :global(.ui.container):local(.orgInfoContainer) {
+    max-width: 1000px !important;
+    margin: auto;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+  :global(.ui.container):local(.orgInfo) {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    padding: 1em 0 1em 0.6em;
+  }
+  :local(.orgName) {
+    font-size: 90%;
+    font-weight: 400;
+    text-transform: capitalize;
+  }
+  :local(.orgDescription) {
+    font-size: 85%;
+  }
+  :local(.orgWebsite) {
+    font-size: 75%;
+    :local(.orgWebsiteIcon) {
+      color: #ccc;
+      margin-right: 5px;
+    }
+    a {
+      color: #586069;
+    }
+  }
+  :local(.orgEmail) {
+    margin-right: 5px;
+  }
+  :local(.personIcon) {
+    margin-right: 5px;
+  }
+}
+
+:global(.ui.menu) {
+  :global(.item.active) {
+    border-top: 2px solid #e36209 !important;
+  }
+}

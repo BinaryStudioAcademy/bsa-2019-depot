@@ -1,0 +1,76 @@
+:global(.ui.dividing.header) {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.keyList {
+  margin-bottom: 1em;
+
+  .keyListItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-left: 1px solid lightgrey;
+    border-right: 1px solid lightgrey;
+
+    .infoSection {
+      display: flex;
+    }
+
+    .keyInfo {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      margin-left: 15px;
+
+      .keyTitle {
+        font-weight: bold;
+      }
+
+      .keyDescription {
+        color: #515151;
+
+        .fingerprint {
+          font-size: 75%;
+        }
+      }
+    }
+
+    .keyIcon {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      :global(i.icon.key) {
+        margin: 0 0 5px 0;
+      }
+    }
+  }
+
+  .keyListItem:last-child {
+    border-bottom: 1px solid lightgrey;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+  .keyListItem:first-child {
+    border-top: 1px solid lightgrey;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+
+  .keyListItem:not(:last-child),
+  .keyListItem:not(:first-child) {
+    border-top: 1px solid lightgrey;
+  }
+}
+
+:global(.actions) {
+  :global(.ui.basic.fluid.negative.button) {
+    margin: 0;
+  }
+}

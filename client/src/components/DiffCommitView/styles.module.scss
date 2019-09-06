@@ -1,0 +1,25 @@
+:global(.comments-count) {
+  margin-top: 1em;
+  font-weight: 700;
+  :global(.ui.compact.message) {
+    padding: 5px;
+    font-weight: normal;
+  }
+}
+:global(.ui.container.commit-comment-form) {
+  :global(.react-mde.react-mde-tabbed-layout) {
+    > :global(.grip) {
+      display: none;
+    }
+    > :global(.mde-text) {
+      height: 100px !important;
+    }
+    + :global(.ui.blue.button) {
+      margin: 5px 0;
+    }
+  }
+}
+
+.diffInfo {
+  text-align: center;
+}

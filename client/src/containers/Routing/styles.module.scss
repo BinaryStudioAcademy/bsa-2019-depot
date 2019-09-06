@@ -1,0 +1,28 @@
+:global(.main-wrapper) {
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  > :global(.content) {
+    height: 100%;
+    grid-row-start: 1;
+    flex: 1 0 auto;
+  }
+  > :global(.ui.container) {
+    flex-shrink: 0;
+
+    > :global(.ui.centered.grid) {
+      margin: 0;
+    }
+  }
+  &:global(.auth-wrapper) {
+    > :global(.content) {
+      display: flex;
+      flex-direction: column;
+      > :global(.ui.center.grid) {
+        flex: 1 0 auto;
+      }
+    }
+  }
+}

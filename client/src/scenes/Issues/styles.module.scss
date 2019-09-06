@@ -1,0 +1,53 @@
+:local(.container) {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  :local(.issuesContainer) {
+    width: 100%;
+    margin-top: 10px;
+    box-shadow: 0 7px 16px 3px lightgrey;
+    border-radius: 5px;
+  }
+}
+
+:local(.filterRow) {
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  :global(.ui.active.button) {
+    color: #fff;
+    background-color: #2e53db;
+  }
+}
+
+:local(.issuesHeader) {
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f6f6f6;
+  border-bottom: 1px solid lightgrey;
+  border-radius: 5px 5px 0 0;
+}
+
+:local(.openedIssues),
+:local(.closedIssues),
+:global(.ui.dropdown) {
+  color: #575757;
+  cursor: pointer;
+  &:global(.active) {
+    color: #000000;
+  }
+  &:hover {
+    color: #000000;
+  }
+}
+
+:local(.openedIssues) {
+  margin-right: 15px;
+}
+
+:local(.issueFilters) > :not(:last-child) {
+  margin-right: 10px;
+}
