@@ -12,7 +12,7 @@ const router = Router();
 
 router.post('/', (req, res, next) => {
   createCommitComment({ ...req.body })
-    .then(data => {
+    .then((data) => {
       const { commitId } = data;
       req.commitsNsp.to(commitId).emit('newCommitComment', data);
       return res.send(data);

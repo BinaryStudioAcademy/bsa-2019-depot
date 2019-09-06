@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, NavLink, Route } from 'react-router-dom';
-import { Grid, Menu, Divider } from 'semantic-ui-react';
+import { Grid, Menu } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import ForksPage from '../ForksPage';
 import CommitsInsight from '../CommitsInsight';
@@ -8,7 +8,6 @@ import CommitsInsight from '../CommitsInsight';
 const InsightsTab = ({ match }) => {
   return (
     <>
-      <Divider hidden />
       <Grid container>
         <Grid.Column computer={4} tablet={8} mobile={16}>
           <Menu vertical>

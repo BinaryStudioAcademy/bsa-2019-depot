@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { getUserImgLink } from '../../helpers/imageHelper';
-import { List, Icon, Image, Popup } from 'semantic-ui-react';
+import { List, Icon, Image, Popup, Label } from 'semantic-ui-react';
 import { PullRequestOutline } from '@ant-design/icons';
 import AntdIcon from '@ant-design/icons-react';
 import { Link } from 'react-router-dom';
+import Color from 'color';
 
 import styles from './styles.module.scss';
 AntdIcon.add(PullRequestOutline);
@@ -34,6 +35,10 @@ const renderIcon = status => {
     return null;
   }
 };
+
+function changeTextColor(labelColor) {
+  return Color(labelColor).isDark() ? '#f7f7fb' : '#363a44';
+}
 
 const DataList = props => {
   const { data, isPull } = props;
@@ -70,10 +75,26 @@ const DataList = props => {
                   }`}
                 >
                   {item.title}
+                  {item.pullLabels &&
+                    item.pullLabels.map(({ label }) => (
+                      <Label
+                        size="mini"
+                        key={label.id}
+                        style={{ background: `${label.color}`, color: changeTextColor(label.color), marginLeft: '5px' }}
+                      >
+                        {label.name}
+                      </Label>
+                    ))}
                 </Link>
               </List.Header>
               <List.Description>
-                {`#${item.number} opened ${moment(item.createdAt).fromNow()} by ${item.user.username}`}
+                {isPull
+                  ? `#${item.number} ${item.prstatus.name.toLowerCase()} ${moment(item.updatedAt).fromNow()} by ${
+                    item.user.username
+                  }`
+                  : `#${item.number} ${item.isOpened ? 'opened' : 'closed'} ${moment(item.updatedAt).fromNow()} by ${
+                    item.user.username
+                  }`}
               </List.Description>
             </List.Content>
           </List.Item>

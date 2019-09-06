@@ -8,7 +8,8 @@ const {
   isEmpty,
   forkRepo,
   setStar,
-  updateByUserAndReponame
+  updateByUserAndReponame,
+  getRepositoryForks
 } = require('../services/repo.service');
 const {
   getCommits, getCommitDiff, getCommitCount, getCommitActivityData
@@ -156,7 +157,7 @@ router
       .then(result => res.send(result))
       .catch(next);
   })
-  .post('/fork', isAdminMiddleware, (req, res, next) => {
+  .post('/fork', (req, res, next) => {
     const {
       body: {
         owner,
@@ -252,16 +253,56 @@ router
       .then(data => res.send(data))
       .catch(next);
   })
-  .get('/:repositoryId/pulls', (req, res, next) => {
-    const { repositoryId } = req.params;
+  .get('/:username/:reponame/pulls', isReaderMiddleware, (req, res, next) => {
+    const { repositoryId } = req.query;
     pullsService
       .getPulls(repositoryId)
+      .then(result => res.send(result))
+      .catch(next);
+  })
+  .get('/:repositoryId/pulls', isReaderMiddleware, async (req, res, next) => {
+    const { repositoryId } = req.params;
+    const {
+      sort, authorId, title, isOpened
+    } = req.query;
+    try {
+      const pulls = await pullsService.getRepoPulls(repositoryId, sort, authorId, title, isOpened);
+      const authors = await userService.getPullsAuthors(repositoryId);
+      const openCount = await pullsService.getPullCount(repositoryId, true);
+      const closedCount = await pullsService.getPullCount(repositoryId, false);
+      res.send({
+        openCount,
+        closedCount,
+        authors,
+        pulls
+      });
+    } catch (e) {
+      next(e);
+    }
+  })
+  .post('/:repositoryId/pulls/labels', async (req, res, next) => {
+    const { labelId, pullId } = req.body;
+    pullsService
+      .setLabel(labelId, pullId)
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .delete('/:repositoryId/pulls/labels', async (req, res, next) => {
+    const { labelId } = req.body;
+    pullsService
+      .removeLabel(labelId)
       .then(data => res.send(data))
       .catch(next);
   })
   .get('/:repositoryId/collaborators', (req, res, next) => {
     const { repositoryId } = req.params;
     getRepositoryCollaborators(repositoryId)
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .get('/:repositoryId/forks', (req, res, next) => {
+    const { repositoryId } = req.params;
+    getRepositoryForks(repositoryId)
       .then(data => res.send(data))
       .catch(next);
   })

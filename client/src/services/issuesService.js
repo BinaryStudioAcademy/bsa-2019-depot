@@ -1,4 +1,5 @@
-import callWebApi from '../helpers/webApiHelper';
+import callWebApi, { callExternalApi } from '../helpers/webApiHelper';
+const REACT_APP_STACK_OVERFLOW_API_URL = process.env.REACT_APP_STACK_OVERFLOW_API_URL;
 
 export const getIssues = async ({ username: owner, reponame, repositoryId }) => {
   const response = await callWebApi({
@@ -87,5 +88,14 @@ export const getAllIssues = async (username, params) => {
     type: 'GET',
     query: params
   });
+  return response.json();
+};
+
+export const getAllQuestionOnSO = async params => {
+  const response = await callExternalApi({
+    endpoint: REACT_APP_STACK_OVERFLOW_API_URL,
+    query: params
+  });
+
   return response.json();
 };

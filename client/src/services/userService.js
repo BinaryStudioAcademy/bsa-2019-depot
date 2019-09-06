@@ -116,3 +116,20 @@ export const getUsersForCollaboratorsAddition = async (username, repositoryId, u
   });
   return response.json();
 };
+
+export const setPinnedRepos = async request => {
+  const response = await callWebApi({
+    endpoint: '/api/users/set-pinned-repos',
+    type: 'POST',
+    request
+  });
+  return response.json();
+};
+
+export const getPinnedRepos = async userId => {
+  const response = await callWebApi({
+    endpoint: `/api/users/${userId}/pinned-repositories`,
+    type: 'GET'
+  });
+  return response.json();
+};

@@ -3,24 +3,9 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Loader } from 'semantic-ui-react';
 import { fetchCurrentRepo } from '../../routines/routines';
-import { getPulls } from '../../services/pullsService';
-import IssuePrContainer from '../IssuePrContainer';
+import IssuesPullsList from '../../components/IssuesPullsList';
 
 class PullRequestsTab extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      filter: {
-        title: '',
-        author: '',
-        assignees: [],
-        opened: true
-      },
-      pulls: []
-    };
-  }
-
   async componentDidMount() {
     const {
       repositoryId,
@@ -31,34 +16,17 @@ class PullRequestsTab extends React.Component {
     } = this.props;
     if (!repositoryId) {
       fetchCurrentRepo({ username, reponame });
-    } else {
-      const pulls = await getPulls({
-        repositoryId
-      });
-      this.setState({ pulls });
     }
   }
 
-  onChangeFilter = filter => {
-    this.setState({
-      filter
-    });
-  };
-
   render() {
-    const { loading } = this.props;
-    const { onChangeFilter, pulls } = this.state;
+    const { loading, repositoryId } = this.props;
 
-    return loading ? (
-      <Loader active />
-    ) : (
-      <IssuePrContainer data={pulls} isIssues={false} onChangeFilter={onChangeFilter} />
-    );
+    return loading ? <Loader active /> : <IssuesPullsList isIssues={false} repositoryId={repositoryId} />;
   }
 }
 
 PullRequestsTab.propTypes = {
-  reponame: PropTypes.string,
   repositoryId: PropTypes.string,
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
@@ -67,8 +35,6 @@ PullRequestsTab.propTypes = {
     url: PropTypes.string.isRequired
   }).isRequired,
   fetchCurrentRepo: PropTypes.func.isRequired,
-  history: PropTypes.object,
-  location: PropTypes.object.isRequired,
   loading: PropTypes.bool.isRequired
 };
 
