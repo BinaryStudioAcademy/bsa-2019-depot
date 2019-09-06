@@ -2,7 +2,6 @@ module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable('issueLabels', {
     id: {
       allowNull: false,
-      autoIncrement: false,
       primaryKey: true,
       type: Sequelize.UUID,
       defaultValue: Sequelize.literal('gen_random_uuid()')
@@ -27,5 +26,5 @@ module.exports = {
     updatedAt: Sequelize.DATE,
     deletedAt: Sequelize.DATE
   }),
-  down: queryInterface => queryInterface.dropTable('IssueLabels')
+  down: queryInterface => queryInterface.dropTable('issueLabels')
 };

@@ -1,7 +1,12 @@
 const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
 const {
-  IssueModel, UserModel, RepositoryModel, OrgUserModel, LabelModel
+  IssueModel,
+  UserModel,
+  RepositoryModel,
+  OrgUserModel,
+  LabelModel,
+  IssueLabelModel
 } = require('../models/index');
 const sequelize = require('../db/connection');
 
@@ -113,8 +118,11 @@ class IssueRepository extends BaseRepository {
           attributes: ['name']
         },
         {
-          model: LabelModel,
-          attributes: ['id', 'name', 'color', 'description']
+          model: IssueLabelModel,
+          include: {
+            model: LabelModel,
+            attributes: ['id', 'name', 'color', 'description']
+          }
         }
       ]
     });

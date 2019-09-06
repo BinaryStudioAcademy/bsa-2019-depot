@@ -107,16 +107,8 @@ module.exports = (models) => {
   PinnedRepository.belongsTo(User);
   PinnedRepository.belongsTo(Repository);
 
-  Issue.belongsToMany(IssueLabel, {
-    through: 'issueLabels',
-    as: 'labels',
-    foreignKey: 'issueId'
-  });
-  Label.belongsToMany(IssueLabel, {
-    through: 'issueLabels',
-    as: 'issues',
-    foreignKey: 'labelId'
-  });
-  // Issue.hasMany(IssueLabel, { foreignKey: 'issueId' });
-  // Label.hasMany(IssueLabel, { foreignKey: 'labelId' });
+  Issue.hasMany(IssueLabel, { foreignKey: 'issueId' });
+  IssueLabel.belongsTo(Issue);
+  Label.hasMany(IssueLabel, { foreignKey: 'labelId' });
+  IssueLabel.belongsTo(Label);
 };

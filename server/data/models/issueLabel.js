@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   const IssueLabel = sequelize.define(
-    'IssueLabel',
+    'issueLabel',
     {
       issueId: DataTypes.STRING,
       labelId: DataTypes.STRING

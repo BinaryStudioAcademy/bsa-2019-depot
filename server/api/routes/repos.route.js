@@ -180,8 +180,8 @@ router
       .catch(next);
   })
   .get('/:username/:reponame/issues', isReaderMiddleware, (req, res, next) => {
-    const { repositoryId } = req.query;
-    getAllRepoIssues({ repositoryId })
+    const { username, reponame } = req.params;
+    getAllRepoIssues(username, reponame)
       .then(result => res.send(result))
       .catch(next);
   })
@@ -252,7 +252,8 @@ router
   })
   .get('/:username/:reponame/pulls', isReaderMiddleware, (req, res, next) => {
     const { repositoryId } = req.query;
-    pullsService.getPulls(repositoryId)
+    pullsService
+      .getPulls(repositoryId)
       .then(result => res.send(result))
       .catch(next);
   })
