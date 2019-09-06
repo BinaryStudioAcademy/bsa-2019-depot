@@ -8,6 +8,7 @@ import SideMenu from '../../components/SideMenu';
 import React from 'react';
 import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
 import Notifications from '../../components/Notifications';
+import IssueView from '../../views/IssueView';
 
 const TabNav = createMaterialTopTabNavigator({
   Repos: { screen: ReposView },
@@ -25,6 +26,9 @@ const StackTab = createStackNavigator({
   },
   Notifications: {
     screen: Notifications
+  },
+  IssueView: {
+    screen: IssueView
   }
 });
 

@@ -1,4 +1,4 @@
-const amqp = require('amqplib/callback_api');
+/* const amqp = require('amqplib/callback_api');
 const { connectionUrl, emailQueue, repoDataQueue } = require('../../config/rabbitmq.config');
 const { sendEmail } = require('../../helpers/email.helper');
 const { syncDb } = require('../../helpers/repo.helper');
@@ -49,3 +49,4 @@ const sendToQueue = async (queueName, data) => {
 module.exports = {
   sendToQueue
 };
+ */
