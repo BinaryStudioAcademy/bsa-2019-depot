@@ -75,11 +75,16 @@ const DataList = props => {
                   }`}
                 >
                   {item.title}
-                  {item.pullLabels && item.pullLabels.map(({ label }) => (
-                    <Label size="mini" key={label.id} style={{ background: `${label.color}`, color: changeTextColor(label.color), marginLeft: '5px' }}>
-                      {label.name}
-                    </Label>
-                  ))}
+                  {item.pullLabels &&
+                    item.pullLabels.map(({ label }) => (
+                      <Label
+                        size="mini"
+                        key={label.id}
+                        style={{ background: `${label.color}`, color: changeTextColor(label.color), marginLeft: '5px' }}
+                      >
+                        {label.name}
+                      </Label>
+                    ))}
                 </Link>
               </List.Header>
               <List.Description>

@@ -113,7 +113,7 @@ class RepositoryRepository extends BaseRepository {
         },
         {
           model: UserModel,
-          attributes: ['id', 'username']
+          attributes: ['id', 'username', 'imgUrl']
         },
         {
           model: StarModel,
@@ -142,6 +142,17 @@ class RepositoryRepository extends BaseRepository {
 
   deleteByUserAndReponame(userId, reponame) {
     return this.model.destroy({ where: { name: reponame, userId } });
+  }
+  getRepositoryForks(repositoryId){
+    return this.model.findAll({
+      where: { forkedFromRepoId: repositoryId },
+      include: [
+        {
+          model: UserModel,
+          attributes: ['username', 'imgUrl', 'bio', 'location']
+        }
+      ]
+    });
   }
 }
 

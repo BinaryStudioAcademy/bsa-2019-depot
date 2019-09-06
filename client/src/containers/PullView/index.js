@@ -234,22 +234,22 @@ class PullView extends React.Component {
         </div>
         <Container>
           <Switch>
-            {/* eslint-disable-next-line react/jsx-no-bind */}
+            {/* eslint-disable react/jsx-no-bind */}
             <Route
               exact
               path={`${match.path}/commits`}
               render={() => this.renderComponent(CommitsList, { commits: pullCommits })}
             />
-            {/* eslint-disable-next-line react/jsx-no-bind */}
+            {/* eslint-disable react/jsx-no-bind */}
             <Route
               exact
               path={`${match.path}/files-changed`}
               render={() => this.renderComponent(PrDiffs, { diffs: pullDiffs })}
             />
+            {/* eslint-disable react/jsx-no-bind */}
             <Route
               exact
               path={`${match.path}/`}
-              // eslint-disable-next-line react/jsx-no-bind
               component={() => (
                 <ConversationTab
                   currentPull={currentPull}

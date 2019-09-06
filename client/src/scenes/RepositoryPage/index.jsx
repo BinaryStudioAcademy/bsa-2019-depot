@@ -17,6 +17,7 @@ import StargazersPage from '../../containers/StargazersPage/index';
 import BranchesTab from '../../containers/BranchesTab/index';
 import CreateIssuePage from '../../containers/CreateIssuePage';
 import PrivateTab from '../../containers/PrivateTab';
+import InsightsTab from '../../containers/InsightsTab';
 import { fetchCurrentRepo } from '../../routines/routines';
 import { clearRepoState } from './actions';
 import Spinner from '../../components/Spinner';
@@ -135,6 +136,7 @@ class RepositoryPage extends React.Component {
             <Route exact path={`${match.path}/commit/:hash`} component={DiffCommitView} />
             <Route exact path={`${match.path}/issues`} component={IssuesTab} />
             <Route exact path={`${match.path}/pulls`} component={PullRequestsTab} />
+            <Route exact path={`${match.path}/insights`} component={InsightsTab} />
             <Route path={`${match.path}/pulls/:number`} component={PullView} />
             <Route exact path={`${match.path}/compare`} component={CompareChanges} />
             <Route exact path={`${match.path}/issues/new`} component={CreateIssuePage} />

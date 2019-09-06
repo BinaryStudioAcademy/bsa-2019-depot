@@ -56,4 +56,3 @@ export const removeLabelFromPull = async (labelId, repositoryId) => {
   });
   return response.json();
 };
-

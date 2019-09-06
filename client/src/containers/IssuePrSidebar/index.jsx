@@ -80,7 +80,7 @@ class IssuePrSidebar extends React.Component {
     const { currentLabels, loading } = this.state;
     let defaultLabelValues = null;
     if (currentLabels) {
-      defaultLabelValues = currentLabels.map(({label}) => label.name);
+      defaultLabelValues = currentLabels.map(({ label }) => label.name);
     }
     const reviewers = [
       {
@@ -210,7 +210,9 @@ class IssuePrSidebar extends React.Component {
           renderLabel={this.renderLabel}
         />
       </>
-    ) : <Loader active/>;
+    ) : (
+      <Loader active />
+    );
   }
 }
 

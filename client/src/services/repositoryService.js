@@ -95,6 +95,14 @@ export const getRepositoryIssues = async (repositoryId, query) => {
   return response.json();
 };
 
+export const getForksList = async repositoryId => {
+  const response = await callWebApi({
+    endpoint: `/api/repos/${repositoryId}/forks`,
+    type: 'GET'
+  });
+  return response.json();
+};
+
 export const getRepositoryPulls = async (repositoryId, query) => {
   const response = await callWebApi({
     endpoint: `/api/repos/${repositoryId}/pulls`,

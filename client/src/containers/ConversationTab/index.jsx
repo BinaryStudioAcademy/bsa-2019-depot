@@ -189,7 +189,7 @@ class ConversationTab extends React.Component {
       currentPull: { id, repositoryId }
     } = this.props;
     return LabelService.setLabelToPull(labelId, id, repositoryId);
-  }; 
+  };
 
   removeLabelFromPull = async labelId => {
     const {

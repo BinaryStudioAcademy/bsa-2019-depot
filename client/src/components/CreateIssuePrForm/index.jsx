@@ -26,7 +26,7 @@ const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels }) => {
     return Promise.resolve(<ReactMarkdown source={body} />);
   }
 
-  function updateLabelNames(labelNames){
+  function updateLabelNames(labelNames) {
     setLabels(labelNames);
   }
 
@@ -64,7 +64,12 @@ const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels }) => {
                 </Button>
               </Grid.Column>
               <Grid.Column width={4}>
-                <IssuePrSidebar isIssue={isIssues} repositoryId={repositoryId} labels={labels} setLabelsOnCreateItem={updateLabelNames}/>
+                <IssuePrSidebar
+                  isIssue={isIssues}
+                  repositoryId={repositoryId}
+                  labels={labels}
+                  setLabelsOnCreateItem={updateLabelNames}
+                />
               </Grid.Column>
             </Grid>
           </Form>

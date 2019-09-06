@@ -1,0 +1,47 @@
+:global(.forked-item) {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: auto;
+  &:first-child {
+    > :local(span) {
+      background-color: #fff5b1;
+    }
+  }
+  &:not(:first-child) {
+    position: relative;
+    padding: 0.3em 0 0.3em 1.5em;
+  }
+  > :global(.ui.mini.spaced.image) {
+    margin: 0;
+    width: 1.5em;
+    height: 1.5em;
+    margin-right: 0.3em;
+  }
+  > :local(span) {
+    > :local(a) {
+      margin-right: 0.3em;
+      &:not(:first-child) {
+        margin-left: 0.3em;
+      }
+    }
+  }
+  &:not(:first-child) {
+    &:before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 3px;
+      left: 7px;
+      width: 12px;
+      height: 12px;
+      margin-right: 5px;
+      border-left: 1px dotted lightgray;
+      border-bottom: 1px dotted lightgray;
+    }
+  }
+}
+
+:local(.popup-body) {
+  padding: 0.5em;
+}

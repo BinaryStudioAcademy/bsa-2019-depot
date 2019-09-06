@@ -8,7 +8,8 @@ const {
   isEmpty,
   forkRepo,
   setStar,
-  updateByUserAndReponame
+  updateByUserAndReponame,
+  getRepositoryForks
 } = require('../services/repo.service');
 const { getCommits, getCommitDiff, getCommitCount } = require('../services/commit.service');
 const { deleteStarsByRepoId } = require('../services/star.service');
@@ -294,6 +295,12 @@ router
   .get('/:repositoryId/collaborators', (req, res, next) => {
     const { repositoryId } = req.params;
     getRepositoryCollaborators(repositoryId)
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .get('/:repositoryId/forks', (req, res, next) => {
+    const { repositoryId } = req.params;
+    getRepositoryForks(repositoryId)
       .then(data => res.send(data))
       .catch(next);
   });
