@@ -61,23 +61,27 @@ class IssuePrSidebar extends React.Component {
   };
 
   onChangeReviewers(event, { value }) {
-    const { collaborators, setReviewerToPull, removeReviewerFromPull } = this.props;
+    const { collaborators, setReviewerToPull, removeReviewerFromPull, setReviewersOnCreateItem } = this.props;
     const { reviewers } = this.state;
 
     const newNumOfReviewers = value.length;
 
-    if (newNumOfReviewers < reviewers.length) {
-      const deletedReviewerIdx = reviewers.findIndex(({ user: { username } }) => !value.includes(username));
-      removeReviewerFromPull(reviewers[deletedReviewerIdx].id).then(() => {
-        reviewers.splice(deletedReviewerIdx, 1);
-        this.setState({ reviewers });
-      });
+    if (setReviewersOnCreateItem) {
+      setReviewersOnCreateItem(value);
     } else {
-      const { userId } = collaborators.find(({ user: { username } }) => username === value[newNumOfReviewers - 1]);
-      setReviewerToPull(userId).then(result => {
-        reviewers.push(result);
-        this.setState({ reviewers });
-      });
+      if (newNumOfReviewers < reviewers.length) {
+        const deletedReviewerIdx = reviewers.findIndex(({ user: { username } }) => !value.includes(username));
+        removeReviewerFromPull(reviewers[deletedReviewerIdx].id).then(() => {
+          reviewers.splice(deletedReviewerIdx, 1);
+          this.setState({ reviewers });
+        });
+      } else {
+        const { userId } = collaborators.find(({ user: { username } }) => username === value[newNumOfReviewers - 1]);
+        setReviewerToPull(userId).then(result => {
+          reviewers.push(result);
+          this.setState({ reviewers });
+        });
+      }
     }
   }
 
@@ -127,12 +131,17 @@ class IssuePrSidebar extends React.Component {
       }
     ];
 
-    const reviewerOptions = collaborators.map(({ id, user: { username, imgUrl } }) => ({
-      key: id,
-      text: username,
-      value: username,
-      image: { avatar: true, src: getUserImgLink(imgUrl) }
-    }));
+    let reviewerOptions;
+    if (!isIssue) {
+      reviewerOptions = collaborators.map(({ id, user: { username, imgUrl } }) => ({
+        key: id,
+        text: username,
+        value: username,
+        image: { avatar: true, src: getUserImgLink(imgUrl) }
+      }));
+    }
+
+
 
     const assigneeOptions = assignees.map(({ id, username, imgUrl }) => ({
       key: id,
@@ -216,6 +225,7 @@ IssuePrSidebar.propTypes = {
   currentLabels: PropTypes.array,
   setLabelToPull: PropTypes.func,
   removeLabelFromPull: PropTypes.func,
+  setReviewersOnCreateItem: PropTypes.func,
   setReviewerToPull: PropTypes.func,
   removeReviewerFromPull: PropTypes.func
 };

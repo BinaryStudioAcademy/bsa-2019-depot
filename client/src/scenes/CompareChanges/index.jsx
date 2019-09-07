@@ -11,9 +11,10 @@ import CreateIssuePrForm from '../../components/CreateIssuePrForm';
 import { getBranchDiffs } from '../../services/pullsService';
 import { createPull } from '../../services/pullsService';
 import { getLabels, setLabelToPull } from '../../services/labelsService';
+import { getRepositoryCollaborators } from '../../services/repositoryService';
+import { addReviewer } from '../../services/pullReviewersService';
 
 import styles from './styles.module.scss';
-import { getRepositoryCollaborators } from '../../services/repositoryService';
 
 class CompareChanges extends React.Component {
   constructor(props) {
@@ -82,10 +83,10 @@ class CompareChanges extends React.Component {
     });
   }
 
-  onSubmit(title, body, labelNames) {
+  onSubmit(title, body, labelNames, reviewers) {
     const { userId, repositoryId, branches, history, match } = this.props;
     const { username, reponame } = match.params;
-    const { fromBranch, toBranch, labels } = this.state;
+    const { fromBranch, toBranch, labels, collaborators } = this.state;
 
     const { id: fromBranchId, headCommitId: fromCommitId } = branches.find(({ name }) => name === fromBranch);
     const { id: toBranchId, headCommitId: toCommitId } = branches.find(({ name }) => name === toBranch);
@@ -108,6 +109,11 @@ class CompareChanges extends React.Component {
           setLabelToPull(label.id, pull.data.id, repositoryId);
         }
       });
+      reviewers.forEach(reviewer => {
+        const { userId } = collaborators.find(({ user: { username } }) => username === reviewer);
+        addReviewer({ userId, pullId: pull.data.id });
+      });
+
       this.setState({ loading: false });
       history.push(`/${username}/${reponame}/pulls`);
     });
@@ -164,7 +170,13 @@ class CompareChanges extends React.Component {
           <Loader active />
         ) : diffs && diffs.length && commits && commits.length ? (
           <>
-            <CreateIssuePrForm isIssues={false} onSubmit={this.onSubmit} repositoryId={repositoryId} labels={labels} collaborators={collaborators} />
+            <CreateIssuePrForm
+              isIssues={false}
+              onSubmit={this.onSubmit}
+              repositoryId={repositoryId}
+              labels={labels}
+              collaborators={collaborators}
+            />
             <Segment className={styles.pullStats}>
               <div className={styles.pullStatSection}>
                 <Octicon icon={GitCommit} />

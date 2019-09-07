@@ -15,6 +15,7 @@ const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels, collabora
   const [selectedTab, setSelectedTab] = useState('write');
   const [body, setBody] = useState('');
   const [labelNames, setLabels] = useState('');
+  const [reviewers, setReviewers] = useState([]);
 
   const validationSchema = Yup.object().shape({
     title: Yup.string()
@@ -30,8 +31,12 @@ const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels, collabora
     setLabels(labelNames);
   }
 
+  function updateReviewers(reviewers) {
+    setReviewers(reviewers);
+  }
+
   function handleSubmit({ title }) {
-    onSubmit(title, body, labelNames);
+    onSubmit(title, body, labelNames, reviewers);
   }
 
   return (
@@ -68,8 +73,9 @@ const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels, collabora
                   isIssue={isIssues}
                   repositoryId={repositoryId}
                   labels={labels}
-                  setLabelsOnCreateItem={updateLabelNames}
                   collaborators={collaborators}
+                  setLabelsOnCreateItem={updateLabelNames}
+                  setReviewersOnCreateItem={updateReviewers}
                 />
               </Grid.Column>
             </Grid>
