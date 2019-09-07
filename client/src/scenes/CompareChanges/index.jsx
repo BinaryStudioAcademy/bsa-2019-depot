@@ -106,9 +106,7 @@ class CompareChanges extends React.Component {
 
     this.setState({ loading: true });
     createPull(request).then(pull => {
-      if (labelIds.length) {
-        setLabelsToPull(labelIds, pull.data.id, repositoryId);
-      }
+      setLabelsToPull(labelIds, pull.data.id, repositoryId);
       reviewers.forEach(reviewer => {
         const { userId } = collaborators.find(({ user: { username } }) => username === reviewer);
         addReviewer({ userId, pullId: pull.data.id });
