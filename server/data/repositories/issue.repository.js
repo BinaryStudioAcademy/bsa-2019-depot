@@ -119,6 +119,7 @@ class IssueRepository extends BaseRepository {
         },
         {
           model: IssueLabelModel,
+          attributes: ['id'],
           include: {
             model: LabelModel,
             attributes: ['id', 'name', 'color', 'description']
@@ -169,6 +170,7 @@ class IssueRepository extends BaseRepository {
         },
         {
           model: IssueLabelModel,
+          attributes: ['id'],
           include: {
             model: LabelModel,
             attributes: ['id', 'name', 'color', 'description']
@@ -281,10 +283,13 @@ class IssueRepository extends BaseRepository {
         },
         {
           model: IssueLabelModel,
-          include: {
-            model: LabelModel,
-            attributes: ['id', 'name', 'color', 'description']
-          }
+          attributes: ['id'],
+          include: [
+            {
+              model: LabelModel,
+              attributes: ['name', 'description', 'color', 'id']
+            }
+          ]
         }
       ],
       order: parseSortQuery(sort)
@@ -322,6 +327,7 @@ class IssueRepository extends BaseRepository {
         },
         {
           model: IssueLabelModel,
+          attributes: ['id'],
           include: {
             model: LabelModel,
             attributes: ['id', 'name', 'color', 'description']
