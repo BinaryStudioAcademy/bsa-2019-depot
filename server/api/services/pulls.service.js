@@ -10,8 +10,10 @@ const pullLabelRepository = require('../../data/repositories/pull-label.reposito
 const repoHelper = require('../../helpers/repo.helper');
 const CustomError = require('../../helpers/error.helper');
 
-const getDiffCommits = async (pathToRepo, fromBranch, toBranch) => {
+const getDiffCommits = async (pathToRepo, fromCommitId, toCommitId) => {
   const repo = await NodeGit.Repository.open(pathToRepo);
+  const { sha: fromCommitSha } = await commitRepository.getById(fromCommitId);
+  const { sha: toCommitSha } = await commitRepository.getById(toCommitId);
 
   const setListeners = headCommit => new Promise((resolve, reject) => {
     const walker = headCommit.history();
@@ -24,8 +26,8 @@ const getDiffCommits = async (pathToRepo, fromBranch, toBranch) => {
     walker.start();
   });
 
-  const fromBranchCommits = await repo.getBranchCommit(fromBranch).then(setListeners);
-  const toBranchCommits = await repo.getBranchCommit(toBranch).then(setListeners);
+  const fromBranchCommits = await repo.getCommit(fromCommitSha).then(setListeners);
+  const toBranchCommits = await repo.getCommit(toCommitSha).then(setListeners);
 
   const fromBranchShas = fromBranchCommits.map(commit => commit.sha());
   const toBranchShas = toBranchCommits.map(commit => commit.sha());
@@ -42,8 +44,11 @@ const getDiffCommits = async (pathToRepo, fromBranch, toBranch) => {
   return Promise.all(filteredShas.map(sha => commitRepository.getByHash(sha)));
 };
 
-const getBranchDiffs = async (pathToRepo, fromBranch, toBranch) => {
-  const getDiffsCommand = `cd ${pathToRepo} && git diff -U1 ${toBranch}...${fromBranch}`;
+const getBranchDiffs = async (pathToRepo, fromCommitId, toCommitId) => {
+  const { sha: fromCommitSha } = await commitRepository.getById(fromCommitId);
+  const { sha: toCommitSha } = await commitRepository.getById(toCommitId);
+
+  const getDiffsCommand = `cd ${pathToRepo} && git diff -U1 ${toCommitSha}...${fromCommitSha}`;
   const diffsOutput = await exec(getDiffsCommand);
 
   if (diffsOutput.stderr) {
@@ -53,13 +58,13 @@ const getBranchDiffs = async (pathToRepo, fromBranch, toBranch) => {
   return diffsOutput.stdout;
 };
 
-const getPullData = async (repoId, fromBranch, toBranch) => {
+const getPullData = async (repoId, fromCommitId, toCommitId) => {
   const { userId, name: reponame } = await repoRepository.getById(repoId);
   const { username: owner } = await userRepository.getUserById(userId);
   const pathToRepo = repoHelper.getPathToRepo(owner, reponame);
 
-  const diffs = await getBranchDiffs(pathToRepo, fromBranch, toBranch);
-  const commits = await getDiffCommits(pathToRepo, fromBranch, toBranch);
+  const diffs = await getBranchDiffs(pathToRepo, fromCommitId, toCommitId);
+  const commits = await getDiffCommits(pathToRepo, fromCommitId, toCommitId);
 
   return {
     diffs,

@@ -22,8 +22,8 @@ class CompareChanges extends React.Component {
 
     this.state = {
       loading: true,
-      fromBranch: this.props.branches[0].name,
-      toBranch: this.props.branches[0].name,
+      fromBranch: this.props.branches[0],
+      toBranch: this.props.branches[0],
       diffs: null,
       commits: null,
       commitComments: null,
@@ -51,7 +51,7 @@ class CompareChanges extends React.Component {
     const { fromBranch, toBranch } = this.state;
 
     this.setState({ loading: true });
-    getBranchDiffs(repositoryId, { fromBranch, toBranch }).then(({ diffs, commits }) => {
+    getBranchDiffs(repositoryId, { fromCommitId: fromBranch.headCommit.id, toCommitId: toBranch.headCommit.id }).then(({ diffs, commits }) => {
       const numOfFiles = diffs.split('diff --git').length - 1;
       const numOfCommitComments = commits.reduce((counter, commit) => (counter += commit.commitComments.length), 0);
       const contributors = new Set(commits.map(({ user }) => user.username));
@@ -72,13 +72,15 @@ class CompareChanges extends React.Component {
   }
 
   onToBranchChange(event, { value }) {
-    this.setState({ toBranch: value }, () => {
+    const toBranch = this.props.branches.find(({ name }) => name === value);
+    this.setState({ toBranch }, () => {
       this.updateBranchDiffs();
     });
   }
 
   onFromBranchChange(event, { value }) {
-    this.setState({ fromBranch: value }, () => {
+    const fromBranch = this.props.branches.find(({ name }) => name === value);
+    this.setState({ fromBranch }, () => {
       this.updateBranchDiffs();
     });
   }
@@ -88,8 +90,8 @@ class CompareChanges extends React.Component {
     const { username, reponame } = match.params;
     const { fromBranch, toBranch, collaborators } = this.state;
 
-    const { id: fromBranchId, headCommitId: fromCommitId } = branches.find(({ name }) => name === fromBranch);
-    const { id: toBranchId, headCommitId: toCommitId } = branches.find(({ name }) => name === toBranch);
+    const { id: fromBranchId, headCommitId: fromCommitId } = branches.find(({ name }) => name === fromBranch.name);
+    const { id: toBranchId, headCommitId: toCommitId } = branches.find(({ name }) => name === toBranch.name);
 
     const request = {
       title,
@@ -155,8 +157,8 @@ class CompareChanges extends React.Component {
           <h5>Choose two branches to see what’s changed or to start a new pull request</h5>
         </div>
         <SelectCompareBranches
-          fromBranch={fromBranch}
-          toBranch={toBranch}
+          fromBranch={fromBranch.name}
+          toBranch={toBranch.name}
           branches={branches.map(({ name }) => name)}
           onToBranchChange={this.onToBranchChange}
           onFromBranchChange={this.onFromBranchChange}
@@ -198,11 +200,11 @@ class CompareChanges extends React.Component {
           <div className={styles.diffInfo}>
             <h3>There isn’t anything to compare.</h3>
             <p>
-              {fromBranch === toBranch ? (
+              {fromBranch.name === toBranch.name ? (
                 'You’ll need to use two different branch names to get a valid comparison.'
               ) : (
                 <>
-                  <b>{toBranch}</b> is up to date with <b>{fromBranch}</b>. Try switching the base for your comparison.
+                  <b>{toBranch.name}</b> is up to date with <b>{fromBranch.name}</b>. Try switching the base for your comparison.
                 </>
               )}
             </p>

@@ -49,14 +49,14 @@ class PullView extends React.Component {
     const labels = await getLabels(repositoryId);
     this.setState({ labels });
     const {
-      fromBranch: { name: fromBranch },
-      toBranch: { name: toBranch },
+      fromCommitId,
+      toCommitId,
       id
     } = currentPull;
     const collaborators = await getRepositoryCollaborators(repositoryId);
     const reviewers = await getReviewers(currentPull.id);
 
-    const { commits, diffs } = await getBranchDiffs(repositoryId, { fromBranch, toBranch });
+    const { commits, diffs } = await getBranchDiffs(repositoryId, { fromCommitId, toCommitId });
     this.getLineChanges(diffs);
     const pullComments = await getPullComments(id);
     const isAccessGranted = await getWriteUserPermissions(username, reponame, userId);
