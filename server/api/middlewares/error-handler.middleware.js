@@ -1,4 +1,5 @@
 module.exports = (err, req, res, next) => {
+  console.error(err);
   if (res.headersSent) {
     next(err);
   } else {

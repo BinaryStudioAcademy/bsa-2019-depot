@@ -12,9 +12,9 @@ router.post('/', (req, res, next) => {
 });
 
 router.put('/', (req, res, next) => {
-  const { reviewerId, status } = req.body;
+  const { userId, pullId, status } = req.body;
   pullReviewerService
-    .updateReviewStatus(reviewerId, status)
+    .updateReviewStatus(userId, pullId, status)
     .then(data => res.send(data))
     .catch(next);
 });

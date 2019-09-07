@@ -73,7 +73,7 @@ const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels, collabora
                   isIssue={isIssues}
                   repositoryId={repositoryId}
                   labels={labels}
-                  collaborators={collaborators}
+                  collaborators={collaborators ? collaborators.filter(({ isActivated }) => isActivated) : null}
                   setLabelsOnCreateItem={updateLabelNames}
                   setReviewersOnCreateItem={updateReviewers}
                 />

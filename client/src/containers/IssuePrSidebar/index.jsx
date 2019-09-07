@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Octicon, { Comment, RequestChanges, Check, PrimitiveDot } from '@primer/octicons-react';
 import { Divider, Dropdown } from 'semantic-ui-react';
 import { getUserImgLink } from '../../helpers/imageHelper';
 
@@ -18,6 +19,7 @@ class IssuePrSidebar extends React.Component {
 
     this.onPropChange = this.onPropChange.bind(this);
     this.onChangeReviewers = this.onChangeReviewers.bind(this);
+    this.renderReviewerLabel = this.renderReviewerLabel.bind(this);
     this.renderLabel = this.renderLabel.bind(this);
   }
 
@@ -85,6 +87,45 @@ class IssuePrSidebar extends React.Component {
     }
   }
 
+  renderReviewerLabel(label) {
+    const reviewer = this.state.reviewers.find(({ user: { username } }) => username === label.text);
+    const statusName = reviewer ? reviewer.status.name : 'PENDING';
+
+    let labelColor, labelIcon;
+    switch (statusName) {
+    case 'PENDING':
+      labelColor = 'yellow';
+      labelIcon = <Octicon icon={PrimitiveDot}/>;
+      break;
+    case 'COMMENTED':
+      labelIcon = <Octicon icon={Comment}/>;
+      break;
+    case 'APPROVED':
+      labelColor = 'green';
+      labelIcon = <Octicon icon={Check}/>;
+      break;
+    case 'CHANGES REQUESTED':
+      labelColor = 'red';
+      labelIcon = <Octicon icon={RequestChanges}/>;
+      break;
+    default:
+      labelColor = 'yellow';
+      labelIcon = <Octicon icon={PrimitiveDot}/>;
+      break;
+    }
+
+    return {
+      content: (
+        <>
+          {labelIcon}
+          {label.text}
+        </>
+      ),
+      className: 'optionLabel',
+      color: labelColor
+    };
+  }
+
   renderLabel(label) {
     return {
       content: label.text,
@@ -141,8 +182,6 @@ class IssuePrSidebar extends React.Component {
       }));
     }
 
-
-
     const assigneeOptions = assignees.map(({ id, username, imgUrl }) => ({
       key: id,
       text: username,
@@ -179,7 +218,7 @@ class IssuePrSidebar extends React.Component {
               name="reviewers"
               defaultValue={reviewers.map(({ user: { username } }) => username)}
               onChange={this.onChangeReviewers}
-              renderLabel={this.renderLabel}
+              renderLabel={this.renderReviewerLabel}
             />
             <Divider />
           </>

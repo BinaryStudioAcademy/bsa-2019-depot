@@ -16,6 +16,25 @@ class PullReviewerRepository extends BaseRepository {
       ]
     });
   }
+
+  getByUserAndPull(userId, pullId) {
+    return this.model.findOne({
+      where: { userId, pullId },
+      include: [
+        {
+          model: ReviewStatusModel,
+          as: 'status'
+        },
+        {
+          model: UserModel
+        }
+      ]
+    });
+  }
+
+  updateByUserAndPull(userId, pullId, data) {
+    return this.model.update(data, { where: { userId, pullId } });
+  }
 }
 
 module.exports = new PullReviewerRepository(PullReviewerModel);

@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Checkbox, Button, Dropdown } from 'semantic-ui-react';
+import { Checkbox, Dropdown, Icon } from 'semantic-ui-react';
 import DiffList from '../../components/DiffList';
 import parse from 'parse-diff';
+import { updateReviewStatus } from '../../services/pullReviewersService';
 
 import styles from './styles.module.scss';
 
-const PrDiffs = ({ diffs }) => {
+const PrDiffs = ({ diffs, currentUserId, currentPullId, isReviewer, reviewStatus, pullUrl }) => {
   const filepaths = diffs
     .split('diff --git')
     .filter(hunk => hunk)
@@ -64,6 +65,12 @@ const PrDiffs = ({ diffs }) => {
     updateFilters();
   }
 
+  function onChangeReviewStatus(event, { value }) {
+    updateReviewStatus({ userId: currentUserId, pullId: currentPullId, status: value }).then(() => {
+      window.location.replace(pullUrl);
+    });
+  }
+
   function scrollToFile(event, data) {
     const { value: filename } = data;
     document.getElementById(filename).scrollIntoView();
@@ -110,7 +117,36 @@ const PrDiffs = ({ diffs }) => {
             </Dropdown.Menu>
           </Dropdown>
         </div>
-        <Button primary>Review changes</Button>
+        {isReviewer && (
+          <Dropdown
+            text="Review changes"
+            icon="dropdown"
+            pointing="top right"
+            className={styles.reviewChanges}
+            button
+          >
+            <Dropdown.Menu>
+              <Dropdown.Item value="APPROVED" onClick={onChangeReviewStatus}>
+                {reviewStatus === 'APPROVED' && (
+                  <Icon name="check"/>
+                )}
+                <div className={styles.statusDescription}>
+                  <div className={styles.reviewChangesItemHeader}>Approve</div>
+                  <div>Submit feedback approving these changes.</div>
+                </div>
+              </Dropdown.Item>
+              <Dropdown.Item value="CHANGES REQUESTED" onClick={onChangeReviewStatus}>
+                {reviewStatus === 'CHANGES REQUESTED' && (
+                  <Icon name="check"/>
+                )}
+                <div className={styles.statusDescription}>
+                  <div className={styles.reviewChangesItemHeader}>Request changes</div>
+                  <div>Submit feedback suggesting changes.</div>
+                </div>
+              </Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
+        )}
       </div>
       <DiffList diffs={filteredDiffs} />
     </>
@@ -118,7 +154,12 @@ const PrDiffs = ({ diffs }) => {
 };
 
 PrDiffs.propTypes = {
-  diffs: PropTypes.string.isRequired
+  diffs: PropTypes.string.isRequired,
+  currentUserId: PropTypes.string.isRequired,
+  currentPullId: PropTypes.string.isRequired,
+  isReviewer: PropTypes.bool.isRequired,
+  reviewStatus: PropTypes.bool.isRequired,
+  pullUrl: PropTypes.string.isRequired
 };
 
 export default PrDiffs;

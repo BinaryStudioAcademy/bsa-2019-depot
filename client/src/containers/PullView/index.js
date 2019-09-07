@@ -164,7 +164,8 @@ class PullView extends React.Component {
   render() {
     const {
       match,
-      location: { pathname }
+      location: { pathname },
+      userId
     } = this.props;
     const {
       currentPull,
@@ -180,9 +181,11 @@ class PullView extends React.Component {
       reviewers,
       collaborators
     } = this.state;
-    const { pullLabels } = currentPull;
+    const { id: currentPullId, pullLabels } = currentPull;
     const baseUrl = match.url;
     const activePage = pathname.split('/')[5];
+
+    const isReviewer = loading ? null : reviewers.map(({ userId: reviewerId }) => reviewerId).includes(userId);
 
     let activeTab;
     switch (activePage) {
@@ -257,7 +260,14 @@ class PullView extends React.Component {
             <Route
               exact
               path={`${match.path}/files-changed`}
-              render={() => this.renderComponent(PrDiffs, { diffs: pullDiffs })}
+              render={() => this.renderComponent(PrDiffs, {
+                diffs: pullDiffs,
+                currentUserId: userId,
+                currentPullId: currentPullId,
+                isReviewer,
+                reviewStatus: isReviewer ? reviewers.find(({ userId: reviewerId }) => reviewerId === userId).status.name : null,
+                pullUrl: match.url
+              })}
             />
             {/* eslint-disable react/jsx-no-bind */}
             <Route
@@ -293,6 +303,7 @@ PullView.propTypes = {
     url: PropTypes.string.isRequired
   }).isRequired,
   location: PropTypes.object,
+  history: PropTypes.object.isRequired,
   repositoryId: PropTypes.string,
   userId: PropTypes.string
 };

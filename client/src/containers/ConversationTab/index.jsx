@@ -303,7 +303,7 @@ class ConversationTab extends React.Component {
               setLabelToPull={this.setLabelToPull}
               removeLabelFromPull={this.removeLabelFromPull}
               reviewers={reviewers}
-              collaborators={collaborators}
+              collaborators={collaborators.filter(({ isActivated }) => isActivated)}
               setReviewerToPull={this.setReviewerToPull}
               removeReviewerFromPull={this.removeReviewerFromPull}
             />
