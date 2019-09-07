@@ -10,7 +10,7 @@ import DiffList from '../../components/DiffList';
 import CreateIssuePrForm from '../../components/CreateIssuePrForm';
 import { getBranchDiffs } from '../../services/pullsService';
 import { createPull } from '../../services/pullsService';
-import { getLabels, setLabelToPull } from '../../services/labelsService';
+import { getLabels, setLabelsToPull } from '../../services/labelsService';
 
 import styles from './styles.module.scss';
 
@@ -80,10 +80,10 @@ class CompareChanges extends React.Component {
     });
   }
 
-  onSubmit(title, body, labelNames) {
+  onSubmit(title, body, labelIds) {
     const { userId, repositoryId, branches, history, match } = this.props;
     const { username, reponame } = match.params;
-    const { fromBranch, toBranch, labels } = this.state;
+    const { fromBranch, toBranch } = this.state;
 
     const { id: fromBranchId, headCommitId: fromCommitId } = branches.find(({ name }) => name === fromBranch);
     const { id: toBranchId, headCommitId: toCommitId } = branches.find(({ name }) => name === toBranch);
@@ -101,11 +101,7 @@ class CompareChanges extends React.Component {
 
     this.setState({ loading: true });
     createPull(request).then(pull => {
-      labels.forEach(label => {
-        if (labelNames.includes(label.name)) {
-          setLabelToPull(label.id, pull.data.id, repositoryId);
-        }
-      });
+      setLabelsToPull(labelIds, pull.data.id, repositoryId);
       this.setState({ loading: false });
       history.push(`/${username}/${reponame}/pulls`);
     });
