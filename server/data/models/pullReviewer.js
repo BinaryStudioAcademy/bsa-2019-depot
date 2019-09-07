@@ -1,7 +1,6 @@
 module.exports = (sequelize) => {
-  const pullReviewers = sequelize.define('pullReviewers', {}, {
-    /* timestamps: true,
-    paranoid: true, */
+  const pullReviewer = sequelize.define('pullReviewers', {}, {
+    timestamps: true,
     indexes: [
       {
         unique: true,
@@ -9,5 +8,5 @@ module.exports = (sequelize) => {
       }
     ]
   });
-  return pullReviewers;
+  return pullReviewer;
 };
