@@ -168,8 +168,11 @@ class IssueRepository extends BaseRepository {
           attributes: ['id', 'username']
         },
         {
-          model: LabelModel,
-          attributes: ['id', 'name', 'color', 'description']
+          model: IssueLabelModel,
+          include: {
+            model: LabelModel,
+            attributes: ['id', 'name', 'color', 'description']
+          }
         }
       ]
     };
@@ -277,8 +280,11 @@ class IssueRepository extends BaseRepository {
           ]
         },
         {
-          model: LabelModel,
-          attributes: ['id', 'name', 'color', 'description']
+          model: IssueLabelModel,
+          include: {
+            model: LabelModel,
+            attributes: ['id', 'name', 'color', 'description']
+          }
         }
       ],
       order: parseSortQuery(sort)
@@ -315,8 +321,11 @@ class IssueRepository extends BaseRepository {
           attributes: ['username', 'imgUrl']
         },
         {
-          model: LabelModel,
-          attributes: ['id', 'name', 'color', 'description']
+          model: IssueLabelModel,
+          include: {
+            model: LabelModel,
+            attributes: ['id', 'name', 'color', 'description']
+          }
         }
       ]
     });
