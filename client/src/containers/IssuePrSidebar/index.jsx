@@ -43,13 +43,12 @@ class IssuePrSidebar extends React.Component {
       if (currentLabels.length < selectedLabels) {
         const label = labels.find(label => label.name === value[selectedLabels - 1]);
         if (!isIssue) {
-          setLabelToPull(label.id).then(({ id }) => {
-            currentLabels.push({
-              id,
-              label
-            });
-            this.setState({ currentLabels });
+          setLabelToPull(label.id);
+          currentLabels.push({
+            id: label.id,
+            label
           });
+          this.setState({ currentLabels });
         }
       } else {
         const label =
@@ -57,11 +56,10 @@ class IssuePrSidebar extends React.Component {
             ? currentLabels.find(({ label }) => label.name === value[selectedLabels - 1])
             : currentLabels[0];
         if (!isIssue) {
-          removeLabelFromPull(label.id).then(data => {
-            const newCurrentLabels = currentLabels.filter(({ id }) => id !== data.id);
-            this.setState({
-              currentLabels: newCurrentLabels
-            });
+          await removeLabelFromPull(label.id);
+          const newCurrentLabels = currentLabels.filter(({ id }) => id !== label.id);
+          this.setState({
+            currentLabels: newCurrentLabels
           });
         }
       }
@@ -147,7 +145,6 @@ class IssuePrSidebar extends React.Component {
       value: username,
       image: { avatar: true, src: getUserImgLink(imgUrl) }
     }));
-
     const labelOptions = labels.map(({ id, name, description, color }) => ({
       key: id,
       text: name,

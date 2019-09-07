@@ -288,7 +288,7 @@ router
     const { labelId } = req.body;
     pullsService
       .removeLabel(labelId)
-      .then(data => res.send(data))
+      .then(() => res.status(200).send({}))
       .catch(next);
   })
   .get('/:repositoryId/collaborators', (req, res, next) => {

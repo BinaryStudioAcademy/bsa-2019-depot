@@ -174,9 +174,9 @@ const getPullCount = async (repositoryId, isOpened) => {
   return pullRepository.getPullCount(repositoryId, isOpened, statusOpen);
 };
 
-const setLabel = async (labelId, pullId) => pullLabelRepository.create({ labelId, pullId });
+const setLabel = (labelId, pullId) => pullLabelRepository.create({ labelId, pullId });
 
-const removeLabel = async id => pullLabelRepository.delete(id);
+const removeLabel = id => pullLabelRepository.deleteLabelById(id);
 
 module.exports = {
   getPulls,
