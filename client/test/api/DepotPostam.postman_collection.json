@@ -1,15 +1,15 @@
 {
   "info": {
-    "_postman_id": "56996786-44ab-4d04-bfb4-8a825ced6e42",
+    "_postman_id": "4ff0b7de-8722-47b4-877d-1ef0c595bdcb",
     "name": "DepotPostam",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "User Settings",
+      "name": "Login",
       "item": [
         {
-          "name": "User login",
+          "name": "User login w/ valid credentials",
           "event": [
             {
               "listen": "test",
@@ -69,6 +69,54 @@
           },
           "response": []
         },
+        {
+          "name": "User login w/ invalid credentials",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "5b6c0331-d3cb-47f9-a28d-4a1df2beaf1c",
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {\r",
+                  "    pm.response.to.have.status(401);\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\"username\":\"{{invalidEmail}}\",\n\"password\":\"{{invalidPass}}\"\n}\n"
+            },
+            "url": {
+              "raw": "{{depotApi}}/auth/login",
+              "host": ["{{depotApi}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User Settings",
+      "item": [
         {
           "name": "Change user settings",
           "event": [
@@ -1488,6 +1536,830 @@
       ]
     },
     {
+      "name": "Repository labels",
+      "item": [
+        {
+          "name": "Create label",
+          "item": [
+            {
+              "name": "Create Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "839aa58b-2cf8-4454-b711-b471c9fbc5ea",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"owner\":\"tester\",\n\"ownerID\":\"{{id}}\",\n\"reponame\":\"{{repo_labels1}}\",\n\"description\":\"qwtqwe\",\n\"privacy\":\"public\",\n\"readme\":true,\n\"gitignore\":false,\n\"license\":false,\n\"email\":\"{{loginEmail}}\"\n}\n"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get repo id",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "724d8eb6-263b-4ca7-9cd1-1b4539101f5a",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var json = JSON.parse(responseBody);",
+                      "pm.globals.set(\"id_repo_labels1\", json.id);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/users/{{username}}/repos/{{repo_labels1}}",
+                  "host": ["{{depotApi}}"],
+                  "path": ["users", "{{username}}", "repos", "{{repo_labels1}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create label",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"repositoryId\":\"{{id_repo_labels1}}\",\n\"id\":\"\",\n\"name\":\"{{labelName}}\",\n\"color\":\"{{labelColor}}\",\n\"description\":\"\"\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/labels",
+                  "host": ["{{depotApi}}"],
+                  "path": ["labels"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Verify - label was created",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "ed7aef2a-820c-4258-8859-9b413487d71e",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "let json = JSON.parse(responseBody);",
+                      "let labelName = pm.variables.get(\"labelName\");",
+                      "    for(let i = 0; i < json.length; i++){",
+                      "        if(json[i].name === labelName){",
+                      "         var createdLabelName = json[i].name",
+                      "        }",
+                      "    }",
+                      "pm.test(\"New label was created\", function () {",
+                      "    pm.expect(createdLabelName).to.eql(labelName);",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{id_repo_labels1}}/labels",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{id_repo_labels1}}", "labels"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Postcondition/Delete Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a7eff5ae-7dc6-4571-a1af-898e71dfb27a",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{username}}/{{repo_labels1}}/settings",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{username}}", "{{repo_labels1}}", "settings"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Edit label",
+          "item": [
+            {
+              "name": "Create Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "839aa58b-2cf8-4454-b711-b471c9fbc5ea",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"owner\":\"tester\",\n\"ownerID\":\"{{id}}\",\n\"reponame\":\"{{repo_labels2}}\",\n\"description\":\"qwtqwe\",\n\"privacy\":\"public\",\n\"readme\":true,\n\"gitignore\":false,\n\"license\":false,\n\"email\":\"{{loginEmail}}\"\n}\n"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get repo id",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "724d8eb6-263b-4ca7-9cd1-1b4539101f5a",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var json = JSON.parse(responseBody);",
+                      "pm.globals.set(\"id_repo_labels2\", json.id);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/users/{{username}}/repos/{{repo_labels2}}",
+                  "host": ["{{depotApi}}"],
+                  "path": ["users", "{{username}}", "repos", "{{repo_labels2}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create label",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "2fe7caff-b15d-4d56-8a57-a5d1419cd3dc",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var json = JSON.parse(responseBody);",
+                      "pm.globals.set(\"label_id1\", json.id);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"repositoryId\":\"{{id_repo_labels2}}\",\n\"id\":\"\",\n\"name\":\"{{labelName}}\",\n\"color\":\"{{labelColor}}\",\n\"description\":\"\"\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/labels",
+                  "host": ["{{depotApi}}"],
+                  "path": ["labels"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Change label name",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "type": "text",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"id\":\"{{label_id1}}\",\n\"name\":\"{{change_label_name}}\",\n\"color\":\"{{labelColor}}\",\n\"description\":\"\"\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/labels",
+                  "host": ["{{depotApi}}"],
+                  "path": ["labels"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Verify - label name was changed",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "ed7aef2a-820c-4258-8859-9b413487d71e",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "let json = JSON.parse(responseBody);",
+                      "let changeLabelName = pm.variables.get(\"change_label_name\");",
+                      "    for(let i = 0; i < json.length; i++){",
+                      "        if(json[i].name === changeLabelName){",
+                      "         var changedLabelName = json[i].name",
+                      "        }",
+                      "    }",
+                      "pm.test(\"New label was created\", function () {",
+                      "    pm.expect(changedLabelName).to.eql(changeLabelName);",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{id_repo_labels2}}/labels",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{id_repo_labels2}}", "labels"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Postcondition/Delete Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a7eff5ae-7dc6-4571-a1af-898e71dfb27a",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{username}}/{{repo_labels2}}/settings",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{username}}", "{{repo_labels2}}", "settings"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "e2aa5fa6-28a3-4551-bcb9-970216158d3d",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "f3f4c8ff-b4d9-4f39-8e63-6c23d9292f5f",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            }
+          ],
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Delete label",
+          "item": [
+            {
+              "name": "Create Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "839aa58b-2cf8-4454-b711-b471c9fbc5ea",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"owner\":\"tester\",\n\"ownerID\":\"{{id}}\",\n\"reponame\":\"{{repo_labels3}}\",\n\"description\":\"qwtqwe\",\n\"privacy\":\"public\",\n\"readme\":true,\n\"gitignore\":false,\n\"license\":false,\n\"email\":\"{{loginEmail}}\"\n}\n"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get repo id",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "724d8eb6-263b-4ca7-9cd1-1b4539101f5a",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var json = JSON.parse(responseBody);",
+                      "pm.globals.set(\"id_repo_labels3\", json.id);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/users/{{username}}/repos/{{repo_labels3}}",
+                  "host": ["{{depotApi}}"],
+                  "path": ["users", "{{username}}", "repos", "{{repo_labels3}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create label",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "2fe7caff-b15d-4d56-8a57-a5d1419cd3dc",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var json = JSON.parse(responseBody);",
+                      "pm.globals.set(\"label_id2\", json.id);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"repositoryId\":\"{{id_repo_labels3}}\",\n\"id\":\"\",\n\"name\":\"{{labelName}}\",\n\"color\":\"{{labelColor}}\",\n\"description\":\"\"\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/labels",
+                  "host": ["{{depotApi}}"],
+                  "path": ["labels"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete label",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "type": "text",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/labels/{{label_id2}}",
+                  "host": ["{{depotApi}}"],
+                  "path": ["labels", "{{label_id2}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Verify - label was deleted",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "ed7aef2a-820c-4258-8859-9b413487d71e",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "let json = JSON.parse(responseBody);",
+                      "let labelName = pm.variables.get(\"labelName\");",
+                      "    for(let i = 0; i < json.length; i++){",
+                      "        if(json[i].name === labelName){",
+                      "         var deletedLabelName = json[i].name",
+                      "        }",
+                      "    }",
+                      "pm.test(\"Label was deleted successfully\", function () {",
+                      "    pm.expect(deletedLabelName).not.eql(labelName);",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{id_repo_labels3}}/labels",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{id_repo_labels3}}", "labels"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Postcondition/Delete Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a7eff5ae-7dc6-4571-a1af-898e71dfb27a",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{username}}/{{repo_labels3}}/settings",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{username}}", "{{repo_labels3}}", "settings"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "e2aa5fa6-28a3-4551-bcb9-970216158d3d",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "f3f4c8ff-b4d9-4f39-8e63-6c23d9292f5f",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            }
+          ],
+          "_postman_isSubFolder": true
+        }
+      ]
+    },
+    {
       "name": "Issues",
       "item": [
         {
@@ -1520,26 +2392,6 @@
         },
         {
           "name": "Edit issue",
-          "item": [],
-          "_postman_isSubFolder": true
-        }
-      ]
-    },
-    {
-      "name": "Repository labels",
-      "item": [
-        {
-          "name": "Create label",
-          "item": [],
-          "_postman_isSubFolder": true
-        },
-        {
-          "name": "Delete label",
-          "item": [],
-          "_postman_isSubFolder": true
-        },
-        {
-          "name": "Edit label",
           "item": [],
           "_postman_isSubFolder": true
         }

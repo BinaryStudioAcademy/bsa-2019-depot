@@ -1,5 +1,5 @@
 {
-  "id": "26e000a2-a1ff-4059-815d-cc10d53701a6",
+  "id": "cfd9bcc0-f3d0-4e1d-83a0-e87ab68cb032",
   "values": [
     {
       "key": "loginEmail",
@@ -13,7 +13,7 @@
     },
     {
       "key": "token",
-      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjdjMjYwNGZlLTExZGQtNDUzNS05MzlkLTFmODFlZDYyMDJkZCIsImVtYWlsIjoiZGVwb3QucHJvamVjdC50ZXN0ZXJAZ21haWwuY29tIiwiaWF0IjoxNTY3NjIzNzEyLCJleHAiOjE1Njc3MTAxMTJ9.w0HeauJTZDradGLEbAzbJN_H6R6TCxtxcXnlB85GyVY",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU5YTBhODE3LWZmZTQtNDc3MS1iMjlhLTZjZGIwN2MyN2Y4MCIsImVtYWlsIjoiZGVwb3QucHJvamVjdC50ZXN0ZXJAZ21haWwuY29tIiwiaWF0IjoxNTY3ODUzNDg1LCJleHAiOjE1Njc5Mzk4ODV9.pzudlSBNBWWPgABfS5LlIP0wYJox11Kxxl4AM3crefY",
       "enabled": true
     },
     {
@@ -43,7 +43,7 @@
     },
     {
       "key": "id",
-      "value": "7c2604fe-11dd-4535-939d-1f81ed6202dd",
+      "value": "e9a0a817-ffe4-4771-b29a-6cdb07c27f80",
       "enabled": true
     },
     {
@@ -78,27 +78,27 @@
     },
     {
       "key": "bio",
-      "value": "asgasgaasgasgaasgasgaasdas",
+      "value": "",
       "enabled": true
     },
     {
       "key": "company",
-      "value": "gagehjyj",
+      "value": "",
       "enabled": true
     },
     {
       "key": "location",
-      "value": "gagehjyjgagehjyjgagehjyj",
+      "value": "",
       "enabled": true
     },
     {
       "key": "url",
-      "value": "aefcaefcaefcaefc",
+      "value": "",
       "enabled": true
     },
     {
       "key": "name",
-      "value": "asgasgaasgasga",
+      "value": "",
       "enabled": true
     },
     {
@@ -125,10 +125,75 @@
       "key": "fileData",
       "value": "Some css text",
       "enabled": true
+    },
+    {
+      "key": "invalidEmail",
+      "value": "notester@gmail.com",
+      "enabled": true
+    },
+    {
+      "key": "invalidPass",
+      "value": "password123",
+      "enabled": true
+    },
+    {
+      "key": "repo_labels1",
+      "value": "RepoForLabels1",
+      "enabled": true
+    },
+    {
+      "key": "repo_labels2",
+      "value": "RepoForLabels2",
+      "enabled": true
+    },
+    {
+      "key": "repo_labels3",
+      "value": "RepoForLabels3",
+      "enabled": true
+    },
+    {
+      "key": "id_repo_labels1",
+      "value": "27a337f9-68b1-4724-adaf-74859719c423",
+      "enabled": true
+    },
+    {
+      "key": "id_repo_labels2",
+      "value": "d403c34b-63cc-4be7-a4c6-437bb11ac484",
+      "enabled": true
+    },
+    {
+      "key": "id_repo_labels3",
+      "value": "d403c34b-63cc-4be7-a4c6-437bb11ac484",
+      "enabled": true
+    },
+    {
+      "key": "labelName",
+      "value": "New lable",
+      "enabled": true
+    },
+    {
+      "key": "labelColor",
+      "value": "#fcc400",
+      "enabled": true
+    },
+    {
+      "key": "change_label_name",
+      "value": "Changed label",
+      "enabled": true
+    },
+    {
+      "key": "label_id1",
+      "value": "69c762a3-f1b7-49dd-b469-360d3554540d",
+      "enabled": true
+    },
+    {
+      "key": "label_id2",
+      "value": "f11353b4-b651-4408-b394-807fe9ffa707",
+      "enabled": true
     }
   ],
-  "name": "My Workspace Globals",
+  "name": "GlobalEnvVar Globals",
   "_postman_variable_scope": "globals",
-  "_postman_exported_at": "2019-09-04T19:05:08.746Z",
+  "_postman_exported_at": "2019-09-07T11:25:37.753Z",
   "_postman_exported_using": "Postman/7.6.0"
 }
