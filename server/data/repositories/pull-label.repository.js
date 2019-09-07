@@ -2,10 +2,28 @@ const BaseRepository = require('./base.repository');
 const { PullLabelModel } = require('../models/index');
 
 class PullLabelRepository extends BaseRepository {
-  async delete(id) {
-    const result = await this.model.findOne({ where: { id } });
-    this.deleteById(id);
-    return result;
+  getLabelsByPR(pullId) {
+    return this.model.findAll({
+      where: {
+        pullId
+      }
+    });
+  }
+
+  deleteLabelById(id) {
+    return this.deleteById(id);
+  }
+
+  deleteByLabelId(labelId) {
+    return this.model.destroy({
+      where: { labelId }
+    });
+  }
+
+  deleteByLabelAndPullId(labelId, pullId) {
+    return this.model.destroy({
+      where: { labelId, pullId }
+    });
   }
 }
 
