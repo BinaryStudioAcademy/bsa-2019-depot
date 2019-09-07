@@ -38,16 +38,6 @@
             }
           ],
           "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{token}}",
-                  "type": "string"
-                }
-              ]
-            },
             "method": "POST",
             "header": [
               {
@@ -1633,6 +1623,21 @@
             },
             {
               "name": "Create label",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "176881d0-7f06-4226-95f6-25cc07fa86d0",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -1911,6 +1916,21 @@
             },
             {
               "name": "Change label name",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b0614c99-f168-4868-8b0f-fe7881adc7b5",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -2207,6 +2227,21 @@
             },
             {
               "name": "Delete label",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "7e1f8501-299f-4add-a616-60da8570898e",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
               "request": {
                 "auth": {
                   "type": "bearer",
@@ -2364,12 +2399,260 @@
       "item": [
         {
           "name": "Create issue",
-          "item": [],
+          "item": [
+            {
+              "name": "Create Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "839aa58b-2cf8-4454-b711-b471c9fbc5ea",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"owner\":\"tester\",\n\"ownerID\":\"{{id}}\",\n\"reponame\":\"{{repo_issue1}}\",\n\"description\":\"qwtqwe\",\n\"privacy\":\"public\",\n\"readme\":true,\n\"gitignore\":false,\n\"license\":false,\n\"email\":\"{{loginEmail}}\"\n}\n"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get repo id",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "724d8eb6-263b-4ca7-9cd1-1b4539101f5a",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var json = JSON.parse(responseBody);",
+                      "pm.globals.set(\"id_repo_issue1\", json.id);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/users/{{username}}/repos/{{repo_issue1}}",
+                  "host": ["{{depotApi}}"],
+                  "path": ["users", "{{username}}", "repos", "{{repo_issue1}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create issue",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "381bdbd6-ded7-4a68-bd61-5ff02dff8e18",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"title\":\"{{issue_title}}\",\n\"body\":\"{{issue_body}}\",\n\"userId\":\"{{id}}\",\n\"repositoryId\":\"{{id_repo_issue1}}\",\n\"isOpened\":true\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/issues",
+                  "host": ["{{depotApi}}"],
+                  "path": ["issues"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Verify - issues was created",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "83c7dabc-2066-4fe1-ab5d-30d9450499bf",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "let json = JSON.parse(responseBody);",
+                      "let issueName = pm.variables.get(\"issue_title\");",
+                      "    for(let i = 0; i < json.issues.length; i++){",
+                      "        if(json.issues[i].title === issueName){",
+                      "         var createdIssueName = json.issues[i].title",
+                      "        }",
+                      "    }",
+                      "pm.test(\"New label was created\", function () {",
+                      "    pm.expect(createdIssueName).to.eql(issueName);",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{id_repo_issue1}}/issues?authorId=&isOpened=true&sort=created_desc&title=",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{id_repo_issue1}}", "issues"],
+                  "query": [
+                    {
+                      "key": "authorId",
+                      "value": ""
+                    },
+                    {
+                      "key": "isOpened",
+                      "value": "true"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "created_desc"
+                    },
+                    {
+                      "key": "title",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Postcondition/Delete Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a7eff5ae-7dc6-4571-a1af-898e71dfb27a",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{username}}/{{repo_issue1}}/settings",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{username}}", "{{repo_issue1}}", "settings"]
+                }
+              },
+              "response": []
+            }
+          ],
           "event": [
             {
               "listen": "prerequest",
               "script": {
-                "id": "f582aaf0-93f4-4682-8f98-82db65deebab",
+                "id": "bab7751b-891b-4e1b-9277-aa198672b78d",
                 "type": "text/javascript",
                 "exec": [""]
               }
@@ -2377,7 +2660,7 @@
             {
               "listen": "test",
               "script": {
-                "id": "297644ab-4b04-4dcc-8bdb-788672bdeb38",
+                "id": "ae5f01b9-993c-4630-86ad-0203fe5953c5",
                 "type": "text/javascript",
                 "exec": [""]
               }
@@ -2387,12 +2670,647 @@
         },
         {
           "name": "Delete issue",
-          "item": [],
+          "item": [
+            {
+              "name": "Create Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "839aa58b-2cf8-4454-b711-b471c9fbc5ea",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"owner\":\"tester\",\n\"ownerID\":\"{{id}}\",\n\"reponame\":\"{{repo_issue2}}\",\n\"description\":\"qwtqwe\",\n\"privacy\":\"public\",\n\"readme\":true,\n\"gitignore\":false,\n\"license\":false,\n\"email\":\"{{loginEmail}}\"\n}\n"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get repo id",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "724d8eb6-263b-4ca7-9cd1-1b4539101f5a",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var json = JSON.parse(responseBody);",
+                      "pm.globals.set(\"id_repo_issue2\", json.id);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/users/{{username}}/repos/{{repo_issue2}}",
+                  "host": ["{{depotApi}}"],
+                  "path": ["users", "{{username}}", "repos", "{{repo_issue2}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create issue",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "9c34133f-9add-42b2-ae4f-6cb859da5c73",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var json = JSON.parse(responseBody);",
+                      "pm.globals.set(\"issue_id1\", json.data.id);",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"title\":\"{{issue_title}}\",\n\"body\":\"{{issue_body}}\",\n\"userId\":\"{{id}}\",\n\"repositoryId\":\"{{id_repo_issue2}}\",\n\"isOpened\":true\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/issues",
+                  "host": ["{{depotApi}}"],
+                  "path": ["issues"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete issue",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "f7be5166-5c91-4e29-abeb-73c3948742b9",
+                    "exec": [
+                      "pm.test(\"Status code is 204\", function () {",
+                      "    pm.response.to.have.status(204);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "type": "text",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/issues/{{issue_id1}}",
+                  "host": ["{{depotApi}}"],
+                  "path": ["issues", "{{issue_id1}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Verify - issues was deleted",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "83c7dabc-2066-4fe1-ab5d-30d9450499bf",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "let json = JSON.parse(responseBody);",
+                      "let issueName = pm.variables.get(\"issue_title\");",
+                      "    for(let i = 0; i < json.issues.length; i++){",
+                      "        if(json.issues[i].title === issueName){",
+                      "         var createdIssueName = json.issues[i].title",
+                      "        }",
+                      "    }",
+                      "pm.test(\"New issue was deleted\", function () {",
+                      "    pm.expect(createdIssueName).not.eql(issueName);",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{id_repo_issue2}}/issues?authorId=&isOpened=true&sort=created_desc&title=",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{id_repo_issue2}}", "issues"],
+                  "query": [
+                    {
+                      "key": "authorId",
+                      "value": ""
+                    },
+                    {
+                      "key": "isOpened",
+                      "value": "true"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "created_desc"
+                    },
+                    {
+                      "key": "title",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Postcondition/Delete Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a7eff5ae-7dc6-4571-a1af-898e71dfb27a",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{username}}/{{repo_issue2}}/settings",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{username}}", "{{repo_issue2}}", "settings"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "bab7751b-891b-4e1b-9277-aa198672b78d",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "ae5f01b9-993c-4630-86ad-0203fe5953c5",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            }
+          ],
           "_postman_isSubFolder": true
         },
         {
           "name": "Edit issue",
-          "item": [],
+          "item": [
+            {
+              "name": "Create Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "839aa58b-2cf8-4454-b711-b471c9fbc5ea",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"owner\":\"tester\",\n\"ownerID\":\"{{id}}\",\n\"reponame\":\"{{repo_issue3}}\",\n\"description\":\"qwtqwe\",\n\"privacy\":\"public\",\n\"readme\":true,\n\"gitignore\":false,\n\"license\":false,\n\"email\":\"{{loginEmail}}\"\n}\n"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get repo id",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "724d8eb6-263b-4ca7-9cd1-1b4539101f5a",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var json = JSON.parse(responseBody);",
+                      "pm.globals.set(\"id_repo_issue3\", json.id);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/users/{{username}}/repos/{{repo_issue3}}",
+                  "host": ["{{depotApi}}"],
+                  "path": ["users", "{{username}}", "repos", "{{repo_issue3}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create issue",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "9c34133f-9add-42b2-ae4f-6cb859da5c73",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var json = JSON.parse(responseBody);",
+                      "pm.globals.set(\"issue_id2\", json.data.id);",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"title\":\"{{issue_title}}\",\n\"body\":\"{{issue_body}}\",\n\"userId\":\"{{id}}\",\n\"repositoryId\":\"{{id_repo_issue3}}\",\n\"isOpened\":true\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/issues",
+                  "host": ["{{depotApi}}"],
+                  "path": ["issues"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Edit issue",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "f7be5166-5c91-4e29-abeb-73c3948742b9",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "type": "text",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"id\":\"{{issue_id2}}\",\n\"title\":\"{{issueEditName}}\",\n\"body\":\"cloning of repository does not work\"\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/issues",
+                  "host": ["{{depotApi}}"],
+                  "path": ["issues"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Verify - issues was deleted",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "83c7dabc-2066-4fe1-ab5d-30d9450499bf",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "let json = JSON.parse(responseBody);",
+                      "let issueName = pm.variables.get(\"issueEditName\");",
+                      "    for(let i = 0; i < json.issues.length; i++){",
+                      "        if(json.issues[i].title === issueName){",
+                      "         var editedIssueName = json.issues[i].title",
+                      "        }",
+                      "    }",
+                      "pm.test(\"New issue was edited\", function () {",
+                      "    pm.expect(editedIssueName).to.eql(issueName);",
+                      "});",
+                      "",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{id_repo_issue3}}/issues?authorId=&isOpened=true&sort=created_desc&title=",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{id_repo_issue3}}", "issues"],
+                  "query": [
+                    {
+                      "key": "authorId",
+                      "value": ""
+                    },
+                    {
+                      "key": "isOpened",
+                      "value": "true"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "created_desc"
+                    },
+                    {
+                      "key": "title",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Postcondition/Delete Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a7eff5ae-7dc6-4571-a1af-898e71dfb27a",
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{username}}/{{repo_issue3}}/settings",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{username}}", "{{repo_issue3}}", "settings"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "bab7751b-891b-4e1b-9277-aa198672b78d",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "ae5f01b9-993c-4630-86ad-0203fe5953c5",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            }
+          ],
           "_postman_isSubFolder": true
         }
       ]
