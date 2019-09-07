@@ -195,18 +195,11 @@ class ConversationTab extends React.Component {
     }
   };
 
-  setLabelToPull = async labelId => {
+  setLabelsToPull = async labelIds => {
     const {
-      currentPull: { id, repositoryId }
+      currentPull: { id: pullId, repositoryId }
     } = this.props;
-    return LabelService.setLabelToPull(labelId, id, repositoryId);
-  };
-
-  removeLabelFromPull = async labelId => {
-    const {
-      currentPull: { repositoryId }
-    } = this.props;
-    return LabelService.removeLabelFromPull(labelId, repositoryId);
+    return LabelService.setLabelsToPull(labelIds, pullId, repositoryId);
   };
 
   setReviewerToPull = async (userId) => {
@@ -300,8 +293,7 @@ class ConversationTab extends React.Component {
               isIssue={false}
               labels={labels}
               currentLabels={currentLabels}
-              setLabelToPull={this.setLabelToPull}
-              removeLabelFromPull={this.removeLabelFromPull}
+              setLabelsToPull={this.setLabelsToPull}
               reviewers={reviewers}
               collaborators={collaborators.filter(({ isActivated }) => isActivated)}
               setReviewerToPull={this.setReviewerToPull}

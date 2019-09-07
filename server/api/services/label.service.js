@@ -1,5 +1,6 @@
 const LabelRepository = require('../../data/repositories/label.repository');
 const RepoRepository = require('../../data/repositories/repository.repository');
+const PullLabelRepository = require('../../data/repositories/pull-label.repository');
 const CustomError = require('../../helpers/error.helper');
 
 const getLabelById = async (id) => {
@@ -32,7 +33,10 @@ const createLabel = async (labelData) => {
 
 const updateLabelById = (id, labelData) => LabelRepository.updateLabelById(id, labelData);
 
-const deleteLabelById = id => LabelRepository.deleteLabelById(id);
+const deleteLabelById = async (id) => {
+  await PullLabelRepository.deleteByLabelId(id);
+  return LabelRepository.deleteLabelById(id);
+};
 
 module.exports = {
   getLabelById,

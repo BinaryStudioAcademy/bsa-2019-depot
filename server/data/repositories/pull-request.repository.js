@@ -69,7 +69,6 @@ class PullRepository extends BaseRepository {
           include: [
             {
               model: LabelModel,
-              attributes: [],
               where: {
                 repositoryId,
               }
@@ -119,7 +118,7 @@ class PullRepository extends BaseRepository {
           include: [
             {
               model: LabelModel,
-              attributes: ['name', 'description', 'color']
+              attributes: ['name', 'description', 'color', 'id']
             }
           ]
         }
@@ -225,7 +224,7 @@ class PullRepository extends BaseRepository {
           include: [
             {
               model: LabelModel,
-              attributes: ['name', 'description', 'color']
+              attributes: ['name', 'description', 'color', 'id']
             }
           ]
         }

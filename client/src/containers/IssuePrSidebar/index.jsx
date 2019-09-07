@@ -28,36 +28,12 @@ class IssuePrSidebar extends React.Component {
   };
 
   onChangeLabels = async (event, { value }) => {
-    const { setLabelsOnCreateItem, isIssue, setLabelToPull, labels, removeLabelFromPull } = this.props;
-    const { currentLabels } = this.state;
+    const { setLabelsOnCreateItem, isIssue, setLabelsToPull } = this.props;
     if (setLabelsOnCreateItem) {
-      setLabelsOnCreateItem(value.join(' '));
+      setLabelsOnCreateItem(value);
     } else {
-      const selectedLabels = value.length;
-      if (currentLabels.length < selectedLabels) {
-        const label = labels.find(label => label.name === value[selectedLabels - 1]);
-        if (!isIssue) {
-          setLabelToPull(label.id).then(({ id }) => {
-            currentLabels.push({
-              id,
-              label
-            });
-            this.setState({ currentLabels });
-          });
-        }
-      } else {
-        const label =
-          currentLabels.length !== 1
-            ? currentLabels.find(({ label }) => label.name === value[selectedLabels - 1])
-            : currentLabels[0];
-        if (!isIssue) {
-          removeLabelFromPull(label.id).then(data => {
-            const newCurrentLabels = currentLabels.filter(({ id }) => id !== data.id);
-            this.setState({
-              currentLabels: newCurrentLabels
-            });
-          });
-        }
+      if (!isIssue) {
+        setLabelsToPull(value);
       }
     }
   };
@@ -138,7 +114,7 @@ class IssuePrSidebar extends React.Component {
     const { currentLabels, reviewers } = this.state;
     let defaultLabelValues = null;
     if (currentLabels) {
-      defaultLabelValues = currentLabels.map(({ label }) => label.name);
+      defaultLabelValues = currentLabels.map(({ label }) => label.id);
     }
 
     const assignees = [
@@ -188,11 +164,10 @@ class IssuePrSidebar extends React.Component {
       value: username,
       image: { avatar: true, src: getUserImgLink(imgUrl) }
     }));
-
     const labelOptions = labels.map(({ id, name, description, color }) => ({
       key: id,
       text: name,
-      value: name,
+      value: id,
       content: (
         <>
           <div className={styles.labelName}>
@@ -262,8 +237,7 @@ IssuePrSidebar.propTypes = {
   labels: PropTypes.array.isRequired,
   setLabelsOnCreateItem: PropTypes.func,
   currentLabels: PropTypes.array,
-  setLabelToPull: PropTypes.func,
-  removeLabelFromPull: PropTypes.func,
+  setLabelsToPull: PropTypes.func,
   setReviewersOnCreateItem: PropTypes.func,
   setReviewerToPull: PropTypes.func,
   removeReviewerFromPull: PropTypes.func

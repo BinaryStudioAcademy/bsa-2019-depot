@@ -14,7 +14,7 @@ import styles from './styles.module.scss';
 const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels, collaborators }) => {
   const [selectedTab, setSelectedTab] = useState('write');
   const [body, setBody] = useState('');
-  const [labelNames, setLabels] = useState('');
+  const [labelIds, setLabels] = useState('');
   const [reviewers, setReviewers] = useState([]);
 
   const validationSchema = Yup.object().shape({
@@ -27,8 +27,8 @@ const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels, collabora
     return Promise.resolve(<ReactMarkdown source={body} />);
   }
 
-  function updateLabelNames(labelNames) {
-    setLabels(labelNames);
+  function updateLabelIds(labelIds){
+    setLabels(labelIds);
   }
 
   function updateReviewers(reviewers) {
@@ -36,7 +36,7 @@ const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels, collabora
   }
 
   function handleSubmit({ title }) {
-    onSubmit(title, body, labelNames, reviewers);
+    onSubmit(title, body, labelIds, reviewers);
   }
 
   return (
@@ -74,7 +74,7 @@ const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels, collabora
                   repositoryId={repositoryId}
                   labels={labels}
                   collaborators={collaborators ? collaborators.filter(({ isActivated }) => isActivated) : null}
-                  setLabelsOnCreateItem={updateLabelNames}
+                  setLabelsOnCreateItem={updateLabelIds}
                   setReviewersOnCreateItem={updateReviewers}
                 />
               </Grid.Column>
