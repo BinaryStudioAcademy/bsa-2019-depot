@@ -247,9 +247,9 @@ router
   })
   .get('/:repositoryId/pulls/diffs', (req, res, next) => {
     const { repositoryId } = req.params;
-    const { fromBranch, toBranch } = req.query;
+    const { fromCommitId, toCommitId } = req.query;
     pullsService
-      .getPullData(repositoryId, fromBranch, toBranch)
+      .getPullData(repositoryId, fromCommitId, toCommitId)
       .then(data => res.send(data))
       .catch(next);
   })

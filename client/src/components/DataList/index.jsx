@@ -89,9 +89,19 @@ const DataList = props => {
               </List.Header>
               <List.Description>
                 {isPull
-                  ? `#${item.number} ${item.prstatus.name.toLowerCase()} ${moment(item.updatedAt).fromNow()} by ${
-                    item.user.username
-                  }`
+                  ? (
+                    <>
+                      #{item.number} {item.prstatus.name.toLowerCase()} {moment(item.updatedAt).fromNow()} by {item.user.username}
+                      {item.reviewStatus
+                        ? (
+                          <>
+                            <Icon className={styles.circleDivider} size="mini" name="circle"/>
+                            {item.reviewStatus}
+                          </>
+                        )
+                        : null}
+                    </>
+                  )
                   : `#${item.number} ${item.isOpened ? 'opened' : 'closed'} ${moment(item.updatedAt).fromNow()} by ${
                     item.user.username
                   }`}

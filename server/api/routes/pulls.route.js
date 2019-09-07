@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const pullService = require('../services/pulls.service');
 const pullCommentService = require('../services/pull-comment.service');
+const pullReviewerService = require('../services/pull-reviewer.service');
 const { checkPullPermissions } = require('../../helpers/check.permission.level.helper');
 
 const router = Router();
@@ -17,6 +18,14 @@ router.get('/:pullId/comments', (req, res, next) => {
   pullCommentService
     .getAllPullComments(pullId)
     .then(data => res.send({ data }))
+    .catch(next);
+});
+
+router.get('/:pullId/reviewers', (req, res, next) => {
+  const { pullId } = req.params;
+  pullReviewerService
+    .getReviewersForPull(pullId)
+    .then(data => res.send(data))
     .catch(next);
 });
 
