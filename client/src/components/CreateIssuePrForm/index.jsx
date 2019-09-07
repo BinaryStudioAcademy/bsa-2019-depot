@@ -14,7 +14,7 @@ import styles from './styles.module.scss';
 const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels }) => {
   const [selectedTab, setSelectedTab] = useState('write');
   const [body, setBody] = useState('');
-  const [labelNames, setLabels] = useState('');
+  const [labelIds, setLabels] = useState('');
 
   const validationSchema = Yup.object().shape({
     title: Yup.string()
@@ -26,12 +26,12 @@ const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels }) => {
     return Promise.resolve(<ReactMarkdown source={body} />);
   }
 
-  function updateLabelNames(labelNames) {
-    setLabels(labelNames);
+  function updateLabelIds(labelIds){
+    setLabels(labelIds);
   }
 
   function handleSubmit({ title }) {
-    onSubmit(title, body, labelNames);
+    onSubmit(title, body, labelIds);
   }
 
   return (
@@ -64,12 +64,7 @@ const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels }) => {
                 </Button>
               </Grid.Column>
               <Grid.Column width={4}>
-                <IssuePrSidebar
-                  isIssue={isIssues}
-                  repositoryId={repositoryId}
-                  labels={labels}
-                  setLabelsOnCreateItem={updateLabelNames}
-                />
+                <IssuePrSidebar isIssue={isIssues} repositoryId={repositoryId} labels={labels} setLabelsOnCreateItem={updateLabelIds}/>
               </Grid.Column>
             </Grid>
           </Form>

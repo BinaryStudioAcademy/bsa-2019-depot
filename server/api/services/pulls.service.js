@@ -174,9 +174,13 @@ const getPullCount = async (repositoryId, isOpened) => {
   return pullRepository.getPullCount(repositoryId, isOpened, statusOpen);
 };
 
-const setLabel = async (labelId, pullId) => pullLabelRepository.create({ labelId, pullId });
-
-const removeLabel = async id => pullLabelRepository.delete(id);
+const setLabels = async (labelIds, pullId) => {
+  const currentPullLabelIds = (await pullLabelRepository.getLabelsByPR(pullId)).map(pullLabel => pullLabel.labelId);
+  const toAddIds = labelIds.filter(labelId => !currentPullLabelIds.includes(labelId));
+  const toDeleteIds = currentPullLabelIds.filter(labelId => !labelIds.includes(labelId));
+  toAddIds.forEach(labelId => pullLabelRepository.create({ labelId, pullId }));
+  toDeleteIds.forEach(labelId => pullLabelRepository.deleteByLabelAndPullId(labelId, pullId));
+};
 
 module.exports = {
   getPulls,
@@ -192,6 +196,5 @@ module.exports = {
   getRepoByPullId,
   getRepoPulls,
   getPullCount,
-  setLabel,
-  removeLabel
+  setLabels
 };
