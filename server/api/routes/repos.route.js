@@ -278,19 +278,13 @@ router
     }
   })
   .post('/:repositoryId/pulls/labels', async (req, res, next) => {
-    const { labelId, pullId } = req.body;
+    const { labelIds, pullId } = req.body;
     pullsService
-      .setLabel(labelId, pullId)
-      .then(data => res.send(data))
+      .setLabels(labelIds, pullId)
+      .then(() => res.send({}))
       .catch(next);
   })
-  .delete('/:repositoryId/pulls/labels', async (req, res, next) => {
-    const { labelId } = req.body;
-    pullsService
-      .removeLabel(labelId)
-      .then(() => res.status(200).send({}))
-      .catch(next);
-  })
+
   .get('/:repositoryId/collaborators', (req, res, next) => {
     const { repositoryId } = req.params;
     getRepositoryCollaborators(repositoryId)
