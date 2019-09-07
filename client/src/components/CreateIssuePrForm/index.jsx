@@ -14,7 +14,7 @@ import styles from './styles.module.scss';
 const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels }) => {
   const [selectedTab, setSelectedTab] = useState('write');
   const [body, setBody] = useState('');
-  const [labelIds, setLabels] = useState('');
+  const [labelIds, setLabels] = useState([]);
 
   const validationSchema = Yup.object().shape({
     title: Yup.string()
