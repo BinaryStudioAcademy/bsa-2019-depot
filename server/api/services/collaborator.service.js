@@ -2,6 +2,7 @@ const permissionRepository = require('../../data/repositories/permission.reposit
 const collaboratorRepository = require('../../data/repositories/collaborator.repository');
 const repositoryRepository = require('../../data/repositories/repository.repository');
 const userRepository = require('../../data/repositories/user.repository');
+const orgUserRepository = require('../../data/repositories/org-user.repository');
 const { getByUserAndReponame } = require('./repo.service');
 
 const { getUserDetailed } = require('./user.service');
@@ -41,14 +42,24 @@ const acceptInvitation = async (username, reponame, userId) => {
 
 const declineInvitation = async (username, reponame, userId) => {
   const [{ id }] = await getUserInvitationStatus(username, reponame, userId);
-  return collaboratorRepository.deleteById(id);
+  await collaboratorRepository.deleteById(id);
+  return {};
 };
 
-const removeRepositoryCollaborator = collaboratorId => collaboratorRepository.deleteById(collaboratorId);
+const removeRepositoryCollaborator = async collaboratorId => {
+  await collaboratorRepository.deleteById(collaboratorId)
+  return {};
+};
 
 const getUserRights = async (username, reponame, userId) => {
   const { id: repositoryId } = await getByUserAndReponame({ owner: username, reponame });
-  return collaboratorRepository.getUserRights(userId, repositoryId);
+  const collaboratorRights = await collaboratorRepository.getUserRights(userId, repositoryId);
+
+  if(!collaboratorRights.length) {
+    const { id: orgId } = await userRepository.getByUsername(username);
+    const result = await orgUserRepository.getUserWithOwnerRole({ userId, orgId });
+    return [result];
+  }
 };
 
 const getUserRightsByUserIdAndRepositoryId = (userId, repositoryId) => collaboratorRepository.getUserRights(userId, repositoryId);

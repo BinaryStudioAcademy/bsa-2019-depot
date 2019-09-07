@@ -98,6 +98,7 @@ class FileEditPage extends React.Component {
     }
 
     history.push(`${folderUrl}`);
+    window.location.reload();
   }
 
   handleCommitFile({ message, commitBranch }) {

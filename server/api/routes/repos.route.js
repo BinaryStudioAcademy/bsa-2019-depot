@@ -8,9 +8,12 @@ const {
   isEmpty,
   forkRepo,
   setStar,
-  updateByUserAndReponame
+  updateByUserAndReponame,
+  getRepositoryForks
 } = require('../services/repo.service');
-const { getCommits, getCommitDiff, getCommitCount } = require('../services/commit.service');
+const {
+  getCommits, getCommitDiff, getCommitCount, getCommitActivityData
+} = require('../services/commit.service');
 const { deleteStarsByRepoId } = require('../services/star.service');
 const {
   getBranches,
@@ -154,7 +157,7 @@ router
       .then(result => res.send(result))
       .catch(next);
   })
-  .post('/fork', isAdminMiddleware, (req, res, next) => {
+  .post('/fork', (req, res, next) => {
     const {
       body: {
         owner,
@@ -288,6 +291,18 @@ router
   .get('/:repositoryId/collaborators', (req, res, next) => {
     const { repositoryId } = req.params;
     getRepositoryCollaborators(repositoryId)
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .get('/:repositoryId/forks', (req, res, next) => {
+    const { repositoryId } = req.params;
+    getRepositoryForks(repositoryId)
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .get('/:repositoryId/commit-activity-data', (req, res, next) => {
+    const { repositoryId } = req.params;
+    getCommitActivityData(repositoryId)
       .then(data => res.send(data))
       .catch(next);
   });

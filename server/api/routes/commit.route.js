@@ -7,12 +7,11 @@ const {
   createCommit,
   deleteCommitById
 } = require('../services/commit.service');
-const ownerOnlyMiddleware = require('../middlewares/owner-only.middleware');
 
 const router = Router();
 
 router
-  .post('/:username/:reponame/:branchName', ownerOnlyMiddleware, (req, res, next) => {
+  .post('/:username/:reponame/:branchName', (req, res, next) => {
     const { username, reponame, branchName: branch } = req.params;
     const { toDelete, ...commitArgs } = req.body;
     if (toDelete) {

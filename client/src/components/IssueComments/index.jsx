@@ -27,7 +27,6 @@ import { ReactComponent as SOLogoSVG } from '../../styles/assets/icons/stackover
 import SOAvatarSVG from '../../styles/assets/icons/so-logo.svg';
 AntdIcon.add(CheckCircleFill);
 
-
 const REACT_APP_STACK_OVERFLOW_API_KEY = process.env.REACT_APP_STACK_OVERFLOW_API_KEY;
 
 class IssueComments extends React.Component {
@@ -133,7 +132,7 @@ class IssueComments extends React.Component {
       return;
     }
 
-    return await deleteIssueComment( id );
+    return await deleteIssueComment(id);
   }
 
   async onIssueUpdateBody(id, body) {
@@ -255,25 +254,17 @@ class IssueComments extends React.Component {
           ownComment={this.isOwnIssue()}
         />
 
-        {questions.items.length && currentIssue.isOpened
-          ? (
-            <>
-              <h2 className={styles.questionsHeader}>
-                <span>Related questions from{' '}</span>
-                <SOLogoSVG className={styles.SOIcon} />
-              </h2>
-              {questions.items.map((question, index) => (
-                <Comment
-                  key={index}
-                  avatar={SOAvatarSVG}
-                  isQuestion
-                  question={question}
-                />
-              ))}
-            </>
-          ) : null
-        }
-
+        {questions.items.length && currentIssue.isOpened ? (
+          <>
+            <h2 className={styles.questionsHeader}>
+              <span>Related questions from </span>
+              <SOLogoSVG className={styles.SOIcon} />
+            </h2>
+            {questions.items.map((question, index) => (
+              <Comment key={index} avatar={SOAvatarSVG} isQuestion question={question} />
+            ))}
+          </>
+        ) : null}
 
         {issueComments.length > 0 &&
           issueComments.map(issueComment => {

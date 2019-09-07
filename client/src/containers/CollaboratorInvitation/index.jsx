@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Container, Button, Icon, Loader } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import { Container, Button, Loader } from 'semantic-ui-react';
 import { getUserInvitationStatus, acceptInvitation, declineInvitation } from '../../services/collaboratorService';
 
 import styles from './styles.module.scss';
@@ -73,28 +72,11 @@ class CollaboratorInvitation extends React.Component {
     );
   };
 
-  renderNotInvitedComponent = () => {
-    const { ownUsername } = this.props;
-    return (
-      <Container textAlign="center" className={styles.form}>
-        <Icon name="warning sign" size="big" />
-        <h3 className={styles.notFoundTitle}>Invitation not found</h3>
-        <p className={styles.note}>We’ve looked all over but couldn’t find your invitation. </p>
-        <Link to={`/${ownUsername}`}>
-          <Button inverted primary className={styles.goToBtn}>
-            Return to your profile
-          </Button>
-        </Link>
-      </Container>
-    );
-  };
-
   render() {
     const { username, reponame } = this.props.match.params;
     const { invited, isActivated, loading } = this.state;
     if (loading) return <Loader active />;
     if (invited && !isActivated) return this.renderHaveInviteComponent();
-    if (!invited) return this.renderNotInvitedComponent();
     return <Redirect to={`/${username}/${reponame}`} />;
   }
 }

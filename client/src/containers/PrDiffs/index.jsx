@@ -13,10 +13,7 @@ const PrDiffs = ({ diffs }) => {
     .map(hunk => hunk.slice(0, hunk.indexOf('\n')))
     .map(firstHunkLine => firstHunkLine.slice(firstHunkLine.indexOf('b/') + 2));
 
-  const fileExtensions = new Set(
-    filepaths
-      .map(filename => filename.split('.').pop())
-  );
+  const fileExtensions = new Set(filepaths.map(filename => filename.split('.').pop()));
 
   const files = parse(diffs);
   const fileChangeCounters = new Map(
@@ -38,7 +35,8 @@ const PrDiffs = ({ diffs }) => {
           const firstHunkLine = hunk.slice(0, hunk.indexOf('\n'));
           const extension = firstHunkLine
             .slice(firstHunkLine.indexOf('b/'))
-            .split('.').pop();
+            .split('.')
+            .pop();
 
           return extensionFilter.has(extension) || !hunk;
         })
@@ -75,14 +73,17 @@ const PrDiffs = ({ diffs }) => {
     <>
       <div className={styles.prDiffHeader}>
         <div className={styles.diffFilters}>
-          <Dropdown
-            text="File filter..."
-            closeOnBlur={false}
-          >
+          <Dropdown text="File filter..." closeOnBlur={false}>
             <Dropdown.Menu>
               {[...fileExtensions].map(extension => (
                 <Dropdown.Item onClick={blockPropagation} key={extension}>
-                  <Checkbox checked={extensionFilter.has(extension)} onClick={blockPropagation} onChange={onExtensionChange} value={extension} label={`.${extension}`}/>
+                  <Checkbox
+                    checked={extensionFilter.has(extension)}
+                    onClick={blockPropagation}
+                    onChange={onExtensionChange}
+                    value={extension}
+                    label={`.${extension}`}
+                  />
                 </Dropdown.Item>
               ))}
               <Dropdown.Item onClick={blockPropagation}>
@@ -90,9 +91,7 @@ const PrDiffs = ({ diffs }) => {
               </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
-          <Dropdown
-            text="Jump to..."
-          >
+          <Dropdown text="Jump to...">
             <Dropdown.Menu>
               {filepaths
                 .filter(filepath => [...extensionFilter].some(extension => filepath.endsWith(extension)))
@@ -113,7 +112,7 @@ const PrDiffs = ({ diffs }) => {
         </div>
         <Button primary>Review changes</Button>
       </div>
-      <DiffList diffs={filteredDiffs}/>
+      <DiffList diffs={filteredDiffs} />
     </>
   );
 };

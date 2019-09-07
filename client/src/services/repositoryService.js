@@ -95,11 +95,27 @@ export const getRepositoryIssues = async (repositoryId, query) => {
   return response.json();
 };
 
+export const getForksList = async repositoryId => {
+  const response = await callWebApi({
+    endpoint: `/api/repos/${repositoryId}/forks`,
+    type: 'GET'
+  });
+  return response.json();
+};
+
 export const getRepositoryPulls = async (repositoryId, query) => {
   const response = await callWebApi({
     endpoint: `/api/repos/${repositoryId}/pulls`,
     type: 'GET',
     query
+  });
+  return response.json();
+};
+
+export const getCommitActivity = async repositoryId => {
+  const response = await callWebApi({
+    endpoint: `/api/repos/${repositoryId}/commit-activity-data`,
+    type: 'GET'
   });
   return response.json();
 };
