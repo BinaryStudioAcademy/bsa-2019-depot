@@ -28,7 +28,7 @@ module.exports = async (req, res, next) => {
     name: permissionLevel.admin
   });
 
-  if(collaborator) {
+  if (collaborator) {
     return next();
   }
 

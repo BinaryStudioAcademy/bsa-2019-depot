@@ -31,12 +31,12 @@ module.exports = async (req, res, next) => {
       }
     });
 
-  if(org) {
+  if (org) {
     const orgUser = OrgUserRepository.getUserWithOwnerRole({
       userId: req.user.id,
       orgId: org.id
     });
-    if(orgUser) {
+    if (orgUser) {
       return next();
     }
   }
