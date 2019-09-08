@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
 const {
-  IssueModel, UserModel, RepositoryModel, OrgUserModel
+  IssueModel, UserModel, RepositoryModel
 } = require('../models/index');
 const sequelize = require('../db/connection');
 
@@ -18,9 +18,9 @@ const parseSortQuery = (sort) => {
   case 'updated_desc':
     return [['updatedAt', 'DESC']];
   case 'comments_desc':
-    return [[sequelize.literal('"commentsCount"'), 'DESC']];
+    return [[sequelize.literal('"commentCount"'), 'DESC']];
   case 'comments_asc':
-    return [[sequelize.literal('"commentsCount"'), 'ASC']];
+    return [[sequelize.literal('"commentCount"'), 'ASC']];
   default:
     return [];
   }
@@ -207,12 +207,13 @@ class IssueRepository extends BaseRepository {
             }
           ]
         },
-        {
-          attributes: [],
-          model: OrgUserModel,
-          where: { userId }
+      ],
+      where: {
+        [Op.or]: {
+          type: 'ORG',
+          id: userId
         }
-      ]
+      }
     });
   }
 
@@ -241,7 +242,7 @@ class IssueRepository extends BaseRepository {
           FROM "issueComments"
           WHERE "issue"."id" = "issueComments"."issueId"
           AND "issueComments"."deletedAt" IS NULL)`),
-            'commentsCount'
+            'commentCount'
           ]
         ]
       },

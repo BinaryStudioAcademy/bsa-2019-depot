@@ -2,29 +2,36 @@ const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
 const PRStatusRepository = require('./pr-status.repository');
 const {
-  PullRequestModel, UserModel, RepositoryModel, PRStatusModel, BranchModel, PullLabelModel, LabelModel
+  PullRequestModel,
+  UserModel,
+  RepositoryModel,
+  PRStatusModel,
+  BranchModel,
+  PullLabelModel,
+  LabelModel,
+  PullReviewerModel
 } = require('../models/index');
 
 const sequelize = require('../db/connection');
 
 const { Op } = Sequelize;
 
-const parseSortQuery = (sort) => {
+const mapSort = (sort) => {
   switch (sort) {
-  case 'created_asc':
-    return [['createdAt', 'ASC']];
-  case 'created_desc':
-    return [['createdAt', 'DESC']];
-  case 'updated_asc':
-    return [['updatedAt', 'ASC']];
-  case 'updated_desc':
-    return [['updatedAt', 'DESC']];
-  case 'comments_desc':
-    return [[sequelize.literal('"commentsCount"'), 'DESC']];
-  case 'comments_asc':
-    return [[sequelize.literal('"commentsCount"'), 'ASC']];
+  case 'createdAt_DESC':
+  case 'createdAt_ASC':
+  case 'updatedAt_DESC':
+  case 'updatedAt_ASC':
+    return sort.split('_');
+
+  case 'commentCount_DESC':
+    return [[sequelize.col('commentCount'), 'DESC']];
+
+  case 'commentCount_ASC':
+    return [[sequelize.col('commentCount'), 'ASC']];
+
   default:
-    return [];
+    return ['createdAt', 'DESC'];
   }
 };
 
@@ -181,10 +188,13 @@ class PullRepository extends BaseRepository {
     return userId;
   }
 
-  getPulls(repositoryId, sort, authorId, title, isOpened, statusOpenedId) {
+  getPulls({
+    repositoryId, sort, userId, owner, title, isOpened, statusOpenedId, reviewRequests
+  }) {
+    const ownerWhere = owner ? { username: owner.split(',') } : {};
     return this.model.findAll({
       where: {
-        repositoryId,
+        ...(repositoryId ? { repositoryId } : {}),
         statusId:
           isOpened === 'true'
             ? statusOpenedId
@@ -192,7 +202,7 @@ class PullRepository extends BaseRepository {
               [Op.ne]: statusOpenedId
             },
         ...(title ? { title: { [Op.substring]: title } } : {}),
-        ...(authorId ? { userId: authorId } : {})
+        ...(userId && reviewRequests !== 'true' ? { userId } : {})
       },
       attributes: {
         include: [
@@ -200,9 +210,8 @@ class PullRepository extends BaseRepository {
             sequelize.literal(`
           (SELECT COUNT(*)
           FROM "pullComments"
-          WHERE "pullrequest"."id" = "pullComments"."pullId"
-          AND "pullComments"."deletedAt" IS NULL)`),
-            'commentsCount'
+          WHERE "pullrequest"."id" = "pullComments"."pullId")::integer`),
+            'commentCount'
           ]
         ]
       },
@@ -213,7 +222,14 @@ class PullRepository extends BaseRepository {
         },
         {
           model: RepositoryModel,
-          include: [UserModel]
+          required: true,
+          include: [
+            {
+              model: UserModel,
+              where: ownerWhere,
+              required: true
+            }
+          ]
         },
         {
           model: PRStatusModel,
@@ -227,22 +243,78 @@ class PullRepository extends BaseRepository {
               attributes: ['name', 'description', 'color', 'id']
             }
           ]
-        }
+        },
+        ...(reviewRequests === 'true'
+          ? [{
+            model: PullReviewerModel,
+            where: { userId }
+          }]
+          : []
+        )
       ],
-      order: parseSortQuery(sort)
+      order: [mapSort(sort)]
     });
   }
 
-  getPullCount(repositoryId, isOpened, status) {
-    const { id: statusId } = status;
-    return this.model.aggregate('id', 'COUNT', {
+  getPullCount({
+    repositoryId, userId, owner, isOpened, statusOpenedId, reviewRequests
+  }) {
+    const ownerWhere = owner ? { username: owner.split(',') } : {};
+    return this.model.count({
       where: {
-        repositoryId,
+        ...(repositoryId ? { repositoryId } : {}),
+        ...(userId && reviewRequests !== 'true' ? { userId } : {}),
         statusId: isOpened
-          ? statusId
+          ? statusOpenedId
           : {
-            [Op.ne]: statusId
+            [Op.ne]: statusOpenedId
           }
+      },
+      include: [
+        {
+          model: RepositoryModel,
+          attributes: [],
+          required: true,
+          include: [
+            {
+              model: UserModel,
+              where: ownerWhere,
+              required: true
+            }
+          ]
+        },
+        ...(reviewRequests === 'true'
+          ? [{
+            model: PullReviewerModel,
+            where: { userId }
+          }]
+          : []
+        )
+      ]
+    });
+  }
+
+  getAllPullsOwners(userId) {
+    return UserModel.findAll({
+      attributes: ['username'],
+      include: [
+        {
+          model: RepositoryModel,
+          attributes: [],
+          include: [
+            {
+              attributes: [],
+              model: this.model,
+              where: { userId }
+            }
+          ]
+        }
+      ],
+      where: {
+        [Op.or]: {
+          type: 'ORG',
+          id: userId
+        }
       }
     });
   }

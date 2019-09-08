@@ -6,7 +6,7 @@ import { List, Icon, Button, Label } from 'semantic-ui-react';
 
 import styles from './styles.module.scss';
 
-const BranchesList = ({ branches, username, reponame }) => {
+const BranchesList = ({ branches, username, reponame, createNewPullRequest }) => {
   const branchesCount = branches.length;
   if (!branchesCount) {
     return (
@@ -19,7 +19,7 @@ const BranchesList = ({ branches, username, reponame }) => {
       </List>
     );
   }
-  // return (<div>fasfasf</div>);
+
   return (
     <List divided className={styles.branchesList} verticalAlign="middle">
       {branches.map((branch, idx) => {
@@ -45,7 +45,7 @@ const BranchesList = ({ branches, username, reponame }) => {
                 </p>
               ) : (
                 <>
-                  <Button size="tiny">
+                  <Button size="tiny" onClick={createNewPullRequest}>
                     <Icon name="window restore outline" />
                     New Pull Request
                   </Button>
@@ -77,7 +77,8 @@ BranchesList.propTypes = {
     })
   ).isRequired,
   username: PropTypes.string.isRequired,
-  reponame: PropTypes.string.isRequired
+  reponame: PropTypes.string.isRequired,
+  createNewPullRequest: PropTypes.func.isRequired
 };
 
 export default BranchesList;
