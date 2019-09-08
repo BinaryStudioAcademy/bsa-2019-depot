@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, ScrollView, RefreshControl } from 'react-native';
 import styles from './styles';
 import Spinner from '../../components/Spinner';
 import { getAllIssues } from '../../services/issueService';
@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import IssueItem from '../../components/IssueItem';
 import { Button } from 'react-native-elements';
 import PropTypes from 'prop-types';
+import { fetchCurrentUser } from '../../routines/routines';
 
 class IssuesView extends React.Component {
   constructor(props) {
@@ -16,7 +17,8 @@ class IssuesView extends React.Component {
       isOpened: true,
       sort: 'createdAt_DESC',
       owner: null,
-      issuesData: {}
+      issuesData: {},
+      refreshing: false
     };
 
     this.showOpen = this.showOpen.bind(this);
@@ -24,20 +26,27 @@ class IssuesView extends React.Component {
   }
 
   async componentDidMount() {
-    await this.fetchIssues();
+    const { isAuthorized, navigation } = this.props;
+    if (!isAuthorized) {
+      navigation.navigate('Auth');
+    } else {
+      await this.fetchIssues();
+    }
   }
 
   async fetchIssues() {
     const { isOpened, sort, owner } = this.state;
     const { username } = this.props.currentUser;
-    try {
-      const issuesData = await getAllIssues(username, { isOpened, sort, owner });
-      this.setState({
-        ...this.state,
-        isLoading: false,
-        issuesData
-      });
-    } catch (err) {}
+    if (username) {
+      try {
+        const issuesData = await getAllIssues(username, { isOpened, sort, owner });
+        this.setState({
+          ...this.state,
+          isLoading: false,
+          issuesData
+        });
+      } catch (err) {}
+    }
   }
 
   async showOpen() {
@@ -58,25 +67,39 @@ class IssuesView extends React.Component {
     );
   }
 
+  handleRefresh = async () => {
+    this.setState({
+      refreshing: true
+    });
+    await this.fetchIssues();
+    this.setState({ refreshing: false });
+  };
+
   render() {
     const { isLoading, issuesData, isOpened } = this.state;
     return !isLoading ? (
-      <View>
+      <ScrollView refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.handleRefresh} />}>
         <View style={styles.issueHeader}>
           <Button
             title={issuesData.open + ' Open'}
-            type="outline"
+            type="solid"
             onPress={this.showOpen}
             containerStyle={styles.leftButton}
+            buttonStyle={styles.buttons}
           />
-          <Button title={issuesData.close + ' Closed'} type="outline" onPress={this.showClosed} />
+          <Button
+            title={issuesData.close + ' Closed'}
+            buttonStyle={styles.buttons}
+            type="solid"
+            onPress={this.showClosed}
+          />
         </View>
         <FlatList
           data={issuesData.issues}
           // eslint-disable-next-line react/jsx-no-bind
           renderItem={({ item }) => <IssueItem data={item} isOpened={isOpened} navigation={this.props.navigation} />}
         />
-      </View>
+      </ScrollView>
     ) : (
       <Spinner />
     );
@@ -84,11 +107,20 @@ class IssuesView extends React.Component {
 }
 
 IssuesView.propTypes = {
-  currentUser: PropTypes.object
+  currentUser: PropTypes.object,
+  navigation: PropTypes.object,
+  isAuthorized: PropTypes.bool
 };
 
-const mapStateToProps = ({ profile: { currentUser } }) => ({
-  currentUser
+const mapStateToProps = ({ profile: { currentUser, isAuthorized, loading } }) => ({
+  currentUser,
+  isAuthorized,
+  loading
 });
 
-export default connect(mapStateToProps)(IssuesView);
+const mapDispatchToProps = { fetchCurrentUser };
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(IssuesView);
