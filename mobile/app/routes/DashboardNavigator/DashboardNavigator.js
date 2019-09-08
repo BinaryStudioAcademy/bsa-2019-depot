@@ -11,12 +11,23 @@ import Notifications from '../../components/Notifications';
 import IssueView from '../../views/IssueView';
 import colors from '../../config/color.config';
 
-const TabNav = createMaterialTopTabNavigator({
-  Repos: { screen: ReposView },
-  Pulls: { screen: PullsView },
-  Issues: { screen: IssuesView },
-  Stars: { screen: StarsView }
-});
+const TabNav = createMaterialTopTabNavigator(
+  {
+    Repos: { screen: ReposView },
+    Pulls: { screen: PullsView },
+    Issues: { screen: IssuesView },
+    Stars: { screen: StarsView }
+  },
+  {
+    tabBarOptions: {
+      style: {
+        backgroundColor: colors.blueButton
+      },
+      indicatorStyle: {}
+    },
+    lazy: true
+  }
+);
 
 const StackTab = createStackNavigator({
   Tabs: {
