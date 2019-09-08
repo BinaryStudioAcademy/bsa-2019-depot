@@ -12,6 +12,7 @@
     "@uppy/react": "^1.2.0",
     "color": "^3.1.2",
     "dotenv": "^8.0.0",
+    "elasticsearch": "^16.3.0",
     "formik": "^1.5.8",
     "he": "^1.2.0",
     "immutable": "^4.0.0-rc.12",

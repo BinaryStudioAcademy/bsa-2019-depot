@@ -9,6 +9,7 @@ import { fetchRepoSettings } from '../../routines/routines';
 import { renameRepo, deleteRepo } from './actions';
 import styles from './styles.module.scss';
 import { getRepositoryByOwnerAndName, changeRepoType } from '../../services/repositoryService';
+import * as elasticHelper from '../../helpers/elasticsearchHelper';
 
 const renderDangerField = (header, description, buttonName, clickHandler) => (
   <Message className={styles.dangerField}>
@@ -65,7 +66,7 @@ class RepositoryOptions extends React.Component {
   }
 
   onClickDelete = () => {
-    const { owner } = this.state;
+    const { owner, repoInfo: {id} } = this.state;
     const { deleteRepo, history } = this.props;
     const { oldName } = this;
 
@@ -73,12 +74,12 @@ class RepositoryOptions extends React.Component {
       owner,
       name: oldName
     });
+    elasticHelper.deleteRepo(id);
     history.push(`/${owner}`);
-    window.location.reload();
   };
 
   onClickRename = ({ name }) => {
-    const { owner } = this.state;
+    const { owner, repoInfo: {id} } = this.state;
     const { oldName } = this;
     const { renameRepo, history } = this.props;
 
@@ -87,8 +88,8 @@ class RepositoryOptions extends React.Component {
       oldName,
       name
     });
+    elasticHelper.updateRepo(id, name, owner);
     history.push(`/${owner}/${name}/settings`);
-    window.location.reload();
   };
 
   onClickUpdateRepoType = async () => {
