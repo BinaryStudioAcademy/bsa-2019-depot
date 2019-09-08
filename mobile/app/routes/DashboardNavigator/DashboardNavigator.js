@@ -13,9 +13,9 @@ import colors from '../../config/color.config';
 
 const TabNav = createMaterialTopTabNavigator(
   {
-    Repos: { screen: ReposView },
-    Pulls: { screen: PullsView },
     Issues: { screen: IssuesView },
+    Pulls: { screen: PullsView },
+    Repos: { screen: ReposView },
     Stars: { screen: StarsView }
   },
   {
