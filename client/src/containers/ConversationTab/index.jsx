@@ -202,12 +202,14 @@ class ConversationTab extends React.Component {
     return LabelService.setLabelsToPull(labelIds, pullId, repositoryId);
   };
 
-  setReviewerToPull = async (userId) => {
-    const { currentPull: { id: pullId } } = this.props;
+  setReviewerToPull = async userId => {
+    const {
+      currentPull: { id: pullId }
+    } = this.props;
     return PullReviewerService.addReviewer({ userId, pullId });
   };
 
-  removeReviewerFromPull = async (reviewerId) => {
+  removeReviewerFromPull = async reviewerId => {
     return PullReviewerService.removeReviewer(reviewerId);
   };
 

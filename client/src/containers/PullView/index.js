@@ -48,11 +48,7 @@ class PullView extends React.Component {
     const currentPull = await getPullByNumber(username, reponame, number);
     const labels = await getLabels(repositoryId);
     this.setState({ labels });
-    const {
-      fromCommitId,
-      toCommitId,
-      id
-    } = currentPull;
+    const { fromCommitId, toCommitId, id } = currentPull;
     const collaborators = await getRepositoryCollaborators(repositoryId);
     const reviewers = await getReviewers(currentPull.id);
 
@@ -260,14 +256,18 @@ class PullView extends React.Component {
             <Route
               exact
               path={`${match.path}/files-changed`}
-              render={() => this.renderComponent(PrDiffs, {
-                diffs: pullDiffs,
-                currentUserId: userId,
-                currentPullId: currentPullId,
-                isReviewer,
-                reviewStatus: isReviewer ? reviewers.find(({ userId: reviewerId }) => reviewerId === userId).status.name : null,
-                pullUrl: match.url
-              })}
+              render={() =>
+                this.renderComponent(PrDiffs, {
+                  diffs: pullDiffs,
+                  currentUserId: userId,
+                  currentPullId: currentPullId,
+                  isReviewer,
+                  reviewStatus: isReviewer
+                    ? reviewers.find(({ userId: reviewerId }) => reviewerId === userId).status.name
+                    : null,
+                  pullUrl: match.url
+                })
+              }
             />
             {/* eslint-disable react/jsx-no-bind */}
             <Route
