@@ -4,7 +4,8 @@ import colors from '../../config/color.config';
 export default StyleSheet.create({
   containerStyle: {
     backgroundColor: colors.greyHeader,
-    borderBottomWidth: 0,
+    borderBottomColor: colors.white,
+
     height: 45
   },
   hamburger: {

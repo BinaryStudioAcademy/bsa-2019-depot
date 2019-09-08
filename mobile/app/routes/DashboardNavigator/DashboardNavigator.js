@@ -21,7 +21,7 @@ const TabNav = createMaterialTopTabNavigator(
   {
     tabBarOptions: {
       style: {
-        backgroundColor: colors.blueButton
+        backgroundColor: colors.greyHeader
       },
       indicatorStyle: {}
     },
@@ -40,7 +40,14 @@ const StackTab = createStackNavigator({
     screen: Notifications
   },
   IssueView: {
-    screen: IssueView
+    screen: IssueView,
+    navigationOptions: {
+      title: 'Issue',
+      headerStyle: {
+        backgroundColor: colors.greyHeader
+      },
+      headerTintColor: colors.white
+    }
   }
 });
 
