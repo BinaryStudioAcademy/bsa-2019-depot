@@ -62,11 +62,12 @@ class RepositoryPage extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(!prevProps)
+    if (!prevProps) {
       return;
-    const {username, reponame} = this.props.match.params;
+    }
+    const { username, reponame } = this.props.match.params;
     const currentRepo = username + reponame;
-    let {username: prevUsername, reponame: prevReponame} = prevProps.match.params;
+    let { username: prevUsername, reponame: prevReponame } = prevProps.match.params;
     const prevRepo = prevUsername + prevReponame;
     if (currentRepo !== prevRepo) {
       this.componentDidMount();
