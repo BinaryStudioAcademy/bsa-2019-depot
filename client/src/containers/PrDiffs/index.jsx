@@ -118,27 +118,17 @@ const PrDiffs = ({ diffs, currentUserId, currentPullId, isReviewer, reviewStatus
           </Dropdown>
         </div>
         {isReviewer && (
-          <Dropdown
-            text="Review changes"
-            icon="dropdown"
-            pointing="top right"
-            className={styles.reviewChanges}
-            button
-          >
+          <Dropdown text="Review changes" icon="dropdown" pointing="top right" className={styles.reviewChanges} button>
             <Dropdown.Menu>
               <Dropdown.Item value="APPROVED" onClick={onChangeReviewStatus}>
-                {reviewStatus === 'APPROVED' && (
-                  <Icon name="check"/>
-                )}
+                {reviewStatus === 'APPROVED' && <Icon name="check" />}
                 <div className={styles.statusDescription}>
                   <div className={styles.reviewChangesItemHeader}>Approve</div>
                   <div>Submit feedback approving these changes.</div>
                 </div>
               </Dropdown.Item>
               <Dropdown.Item value="CHANGES REQUESTED" onClick={onChangeReviewStatus}>
-                {reviewStatus === 'CHANGES REQUESTED' && (
-                  <Icon name="check"/>
-                )}
+                {reviewStatus === 'CHANGES REQUESTED' && <Icon name="check" />}
                 <div className={styles.statusDescription}>
                   <div className={styles.reviewChangesItemHeader}>Request changes</div>
                   <div>Submit feedback suggesting changes.</div>

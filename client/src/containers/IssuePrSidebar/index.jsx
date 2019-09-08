@@ -71,22 +71,22 @@ class IssuePrSidebar extends React.Component {
     switch (statusName) {
     case 'PENDING':
       labelColor = 'yellow';
-      labelIcon = <Octicon icon={PrimitiveDot}/>;
+      labelIcon = <Octicon icon={PrimitiveDot} />;
       break;
     case 'COMMENTED':
-      labelIcon = <Octicon icon={Comment}/>;
+      labelIcon = <Octicon icon={Comment} />;
       break;
     case 'APPROVED':
       labelColor = 'green';
-      labelIcon = <Octicon icon={Check}/>;
+      labelIcon = <Octicon icon={Check} />;
       break;
     case 'CHANGES REQUESTED':
       labelColor = 'red';
-      labelIcon = <Octicon icon={RequestChanges}/>;
+      labelIcon = <Octicon icon={RequestChanges} />;
       break;
     default:
       labelColor = 'yellow';
-      labelIcon = <Octicon icon={PrimitiveDot}/>;
+      labelIcon = <Octicon icon={PrimitiveDot} />;
       break;
     }
 
