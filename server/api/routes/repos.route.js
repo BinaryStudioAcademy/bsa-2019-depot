@@ -147,7 +147,9 @@ router
   .post('/:username/:reponame/settings/rename', isAdminMiddleware, (req, res, next) => {
     const { reponame, username: orgName } = req.params;
     const { newName } = req.body;
-    renameRepo({ reponame, newName, username: req.user.username, orgName })
+    renameRepo({
+      reponame, newName, username: req.user.username, orgName
+    })
       .then(result => res.send(result))
       .catch(next);
   })
@@ -268,8 +270,8 @@ router
     try {
       const pulls = await pullsService.getRepoPulls(repositoryId, sort, authorId, title, isOpened);
       const authors = await userService.getPullsAuthors(repositoryId);
-      const openCount = await pullsService.getPullCount(repositoryId, true);
-      const closedCount = await pullsService.getPullCount(repositoryId, false);
+      const openCount = await pullsService.getPullCount({ repositoryId, isOpened: true });
+      const closedCount = await pullsService.getPullCount({ repositoryId, isOpened: false });
       res.send({
         openCount,
         closedCount,

@@ -47,9 +47,11 @@ const DataList = props => {
       <List divided verticalAlign="middle">
         {data.map(item => (
           <List.Item key={item.id} className={styles.container}>
-            <List.Content floated="right">
-              <Icon name="comments outline" /> {item.commentCount}
-            </List.Content>
+            {item.commentCount > 0 && (
+              <List.Content floated="right">
+                <Icon name="comments outline" /> {item.commentCount}
+              </List.Content>
+            )}
             <List.Content floated="right">
               {item.assignees &&
                 item.assignees
@@ -88,23 +90,22 @@ const DataList = props => {
                 </Link>
               </List.Header>
               <List.Description>
-                {isPull
-                  ? (
-                    <>
-                      #{item.number} {item.prstatus.name.toLowerCase()} {moment(item.updatedAt).fromNow()} by {item.user.username}
-                      {item.reviewStatus
-                        ? (
-                          <>
-                            <Icon className={styles.circleDivider} size="mini" name="circle"/>
-                            {item.reviewStatus}
-                          </>
-                        )
-                        : null}
-                    </>
-                  )
-                  : `#${item.number} ${item.isOpened ? 'opened' : 'closed'} ${moment(item.updatedAt).fromNow()} by ${
+                {isPull ? (
+                  <>
+                    #{item.number} {item.prstatus.name.toLowerCase()} {moment(item.updatedAt).fromNow()} by{' '}
+                    {item.user.username}
+                    {item.reviewStatus ? (
+                      <>
+                        <Icon className={styles.circleDivider} size="mini" name="circle" />
+                        {item.reviewStatus}
+                      </>
+                    ) : null}
+                  </>
+                ) : (
+                  `#${item.number} ${item.isOpened ? 'opened' : 'closed'} ${moment(item.updatedAt).fromNow()} by ${
                     item.user.username
-                  }`}
+                  }`
+                )}
               </List.Description>
             </List.Content>
           </List.Item>
