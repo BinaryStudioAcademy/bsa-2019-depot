@@ -42,7 +42,7 @@ class RepositoryOptions extends React.Component {
   }
 
   validationSchema = Yup.object().shape({
-    name: Yup.string().required('Required')
+    name: Yup.string().matches(/^.*[\w]+.*$/, 'Invalid repository name').required('Required')
   });
 
   componentDidMount() {
@@ -81,13 +81,14 @@ class RepositoryOptions extends React.Component {
     const { owner } = this.state;
     const { oldName } = this;
     const { renameRepo, history } = this.props;
+    const transformedName = name.trim().replace(/\s+/g, '-');
 
     renameRepo({
       owner,
       oldName,
-      name
+      name: transformedName
     });
-    history.push(`/${owner}/${name}/settings`);
+    history.push(`/${owner}/${transformedName}/settings`);
     window.location.reload();
   };
 
@@ -129,7 +130,7 @@ class RepositoryOptions extends React.Component {
             {({ values: { name }, errors, handleChange, handleSubmit }) => (
               <Form onSubmit={handleSubmit}>
                 <Field name="name" value={name} className={styles.text_input} onChange={handleChange} />
-                <Button className={styles.button_rename} disabled={errors.name} type="submit">
+                <Button className={styles.button_rename} disabled={!!errors.name} type="submit">
                   Rename
                 </Button>
                 <InputError name="name" />
