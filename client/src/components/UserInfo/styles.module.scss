@@ -33,9 +33,15 @@ $md: 768px;
   }
 
   img {
+    border: 1px solid $secondary-color;
+    border-bottom-color: transparent;
     display: block;
     width: 100%;
     max-width: 280px;
+
+    @media (max-width: $md) {
+      border-bottom-color: $secondary-color;
+    }
   }
 }
 
@@ -46,6 +52,10 @@ $md: 768px;
   padding: 0.5em;
   color: $primary-color;
   font-size: 80%;
+  border: 1px solid $secondary-color;
+  border-top-color: transparent;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
 
   svg {
     margin-right: 5px;
