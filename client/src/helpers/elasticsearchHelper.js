@@ -5,7 +5,7 @@ const client = new Client({
   host: elasticHost,
   port: elasticPort
 });
-console.log(index);
+
 export const addUser = async ( username ) =>
   client.index({
     index,

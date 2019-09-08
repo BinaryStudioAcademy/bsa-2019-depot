@@ -61,7 +61,7 @@ class CodeTab extends React.Component {
     }
 
     const defaultPath = `/${ownername}/${reponame}/tree/${branch}`;
-    console.log(defaultPath);
+
     history.push(defaultPath);
 
     fetchBranch({ repoID, branch });
