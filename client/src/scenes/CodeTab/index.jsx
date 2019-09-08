@@ -121,8 +121,8 @@ class CodeTab extends React.Component {
         tree: { currentPath }
       }
     } = this.props;
-    const { username, reponame, branch } = match.params;
-
+    const { username, reponame } = match.params;
+    const { branch } = this.state;
     history.push(`/${username}/${reponame}/edit/${branch}/${currentPath}/README.md`);
   };
 
