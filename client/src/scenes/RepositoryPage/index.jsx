@@ -47,7 +47,6 @@ class RepositoryPage extends React.Component {
       },
       userId
     } = this.props;
-
     const isAccessGranted = await getAllUserPermissions(username, reponame, userId);
     fetchCurrentRepo({ username, reponame });
     this.setState({
@@ -63,7 +62,14 @@ class RepositoryPage extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.id !== prevProps.id) {
+    if(!prevProps)
+      return;
+    const {username, reponame} = this.props.match.params;
+    const currentRepo = username + reponame;
+    let {username: prevUsername, reponame: prevReponame} = prevProps.match.params;
+    const prevRepo = prevUsername + prevReponame;
+    if (currentRepo !== prevRepo) {
+      this.componentDidMount();
       const { id } = this.props;
       this.socket.emit('createRoom', id);
     }
