@@ -9,13 +9,11 @@ export const getBranchDiffs = async (repoId, query) => {
   return response.json();
 };
 
-export const getPulls = async ({ username: owner, reponame, repositoryId }) => {
+export const getUserPulls = async (username, params) => {
   const response = await callWebApi({
-    endpoint: `/api/repos/${owner}/${reponame}/pulls`,
+    endpoint: `/api/users/${username}/pulls`,
     type: 'GET',
-    query: {
-      repositoryId
-    }
+    query: params
   });
   return response.json();
 };
@@ -77,6 +75,14 @@ export const mergePull = async request => {
   const response = await callWebApi({
     endpoint: `/api/pulls/${id}/merge`,
     type: 'PUT'
+  });
+  return response.json();
+};
+
+export const getReviewers = async id => {
+  const response = await callWebApi({
+    endpoint: `/api/pulls/${id}/reviewers`,
+    type: 'GET'
   });
   return response.json();
 };

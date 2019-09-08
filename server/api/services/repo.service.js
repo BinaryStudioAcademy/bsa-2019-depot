@@ -176,30 +176,47 @@ const deleteByUserAndReponame = async ({ owner, reponame }) => {
   return repoRepository.deleteByUserAndReponame(user.id, reponame);
 };
 
-const renameRepo = async ({ reponame, newName, username }) => {
-  try {
-    const oldDirectory = repoHelper.getPathToRepo(username, reponame);
-    const newDirectory = repoHelper.getPathToRepo(username, newName);
-    fs.renameSync(oldDirectory, newDirectory);
-    await updateByUserAndReponame({ owner: username, reponame, data: { name: newName } });
-    return true;
-  } catch (e) {
-    return e;
+const renameRepo = ({
+  reponame, newName, username, orgName
+}) => {
+  const renameRepository = async (pathName) => {
+    try {
+      const oldDirectory = repoHelper.getPathToRepo(pathName, reponame);
+      const newDirectory = repoHelper.getPathToRepo(pathName, newName);
+      fs.renameSync(oldDirectory, newDirectory);
+      await updateByUserAndReponame({ owner: pathName, reponame, data: { name: newName } });
+      return true;
+    } catch (e) {
+      return e;
+    }
+  };
+
+  if (username === orgName) {
+    renameRepository(username);
   }
+  renameRepository(orgName);
 };
 
-const deleteRepo = async ({ reponame, username }) => {
-  try {
-    const directory = repoHelper.getPathToRepo(username, reponame);
-    await fs.remove(directory);
-    const { id: repositoryId } = await getByUserAndReponame({ owner: username, reponame });
-    await deleteByUserAndReponame({ owner: username, reponame });
-    await branchRepository.deleteByRepoId(repositoryId);
-    await commitRepository.deleteByRepoId(repositoryId);
-    return true;
-  } catch (e) {
-    return e;
+const deleteRepo = ({ reponame, username, orgName }) => {
+  const deleteRepository = async (pathName) => {
+    try {
+      const directory = repoHelper.getPathToRepo(pathName, reponame);
+      await fs.remove(directory);
+
+      const { id: repositoryId } = await getByUserAndReponame({ owner: pathName, reponame });
+      await deleteByUserAndReponame({ owner: pathName, reponame });
+      await branchRepository.deleteByRepoId(repositoryId);
+      await commitRepository.deleteByRepoId(repositoryId);
+      return true;
+    } catch (e) {
+      return e;
+    }
+  };
+
+  if (username === orgName) {
+    deleteRepository(username);
   }
+  deleteRepository(orgName);
 };
 
 const getReposNames = async ({

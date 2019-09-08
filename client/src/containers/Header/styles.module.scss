@@ -94,22 +94,18 @@ $grey-color: #f7f7fb;
     padding: 7px;
     border-radius: 5px;
     background-color: $grey-color;
-    color: $black-color;
+    color: #fff;
     &:not(:last-child) {
       margin-right: 16px;
       color: #fff;
       background-color: $black-color;
-      box-shadow: 0 0 1px 1px $grey-color;
       &:hover {
-        background-color: lighten($black-color, 20%);
+        color: darken(#fff, 20%);
       }
     }
     &:nth-child(2) {
-      background-color: $grey-color;
-      color: $black-color;
-      &:hover {
-        background-color: darken($grey-color, 10%);
-      }
+      box-shadow: 0 0 1px 1px $grey-color;
+      color: #fff;
     }
     &:nth-child(3) {
       border: 1px solid #fff;

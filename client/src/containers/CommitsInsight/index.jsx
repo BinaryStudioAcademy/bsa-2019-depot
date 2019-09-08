@@ -15,7 +15,9 @@ class CommitsInsight extends Component {
       repositoryId: '',
       loading: true,
       byPeriods: [],
-      byDaysOfWeek: []
+      byDaysOfWeek: [],
+      byDaysOfWeekMax: 0,
+      byPeriodsMax: 0
     };
   }
 
@@ -28,11 +30,13 @@ class CommitsInsight extends Component {
     const { id: repositoryId } = await getRepositoryByOwnerAndName({ username, reponame });
 
     const { byPeriods, byDaysOfWeek } = await getCommitActivity(repositoryId);
-    await this.setState({ repositoryId, loading: false, byPeriods, byDaysOfWeek });
+    const byDaysOfWeekMax = byDaysOfWeek.reduce((max, { value }) => (value > max ? value : max), 0);
+    const byPeriodsMax = byPeriods.reduce((max, { value }) => (value > max ? value : max), 0);
+    await this.setState({ repositoryId, loading: false, byPeriods, byDaysOfWeek, byDaysOfWeekMax, byPeriodsMax });
   }
 
   render() {
-    const { loading, byPeriods, byDaysOfWeek } = this.state;
+    const { loading, byPeriods, byDaysOfWeek, byDaysOfWeekMax, byPeriodsMax } = this.state;
     const {
       match: {
         params: { reponame }
@@ -47,7 +51,13 @@ class CommitsInsight extends Component {
           <BarChart data={byPeriods} margin={{ top: 5, right: 10, bottom: 0, left: 5 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis dataKey="date" />
-            <YAxis scale="linear" axisLine={false} width={25} />
+            <YAxis
+              scale="linear"
+              axisLine={false}
+              width={25}
+              allowDecimals={false}
+              {...(byPeriodsMax === 1 || byPeriodsMax === 2 ? { tickCount: byPeriodsMax } : {})}
+            />
             <Bar dataKey="value" fill="#fb8532" />
           </BarChart>
         </ResponsiveContainer>
@@ -56,7 +66,13 @@ class CommitsInsight extends Component {
           <LineChart data={byDaysOfWeek} margin={{ top: 15, right: 10, bottom: 0, left: 5 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis dataKey="day" />
-            <YAxis scale="linear" axisLine={false} width={25} />
+            <YAxis
+              scale="linear"
+              axisLine={false}
+              width={25}
+              allowDecimals={false}
+              {...(byDaysOfWeekMax === 1 || byDaysOfWeekMax === 2 ? { tickCount: byDaysOfWeekMax } : {})}
+            />
             <Line
               type="basic"
               dataKey="value"

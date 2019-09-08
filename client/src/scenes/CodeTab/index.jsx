@@ -327,9 +327,9 @@ CodeTab.propTypes = {
   currentBranchData: PropTypes.shape({
     name: PropTypes.string,
     headCommit: PropTypes.object,
-    commitsCount: {
+    commitsCount: PropTypes.shape({
       count: PropTypes.number
-    },
+    }),
     loading: PropTypes.bool
   }),
   currentUserName: PropTypes.string,

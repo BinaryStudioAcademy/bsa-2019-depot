@@ -19,11 +19,22 @@ import {
 } from '../../services/pullsService';
 import { updatePullComment, createPullComment, deletePullComment } from '../../services/pullCommentsService';
 import * as LabelService from '../../services/labelsService';
+import * as PullReviewerService from '../../services/pullReviewersService';
 
 import styles from './styles.module.scss';
 
 class ConversationTab extends React.Component {
-  componentDidMount() {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: true,
+      collaborators: null,
+      reviewers: null
+    };
+  }
+
+  async componentDidMount() {
     this.initSocket();
   }
 
@@ -189,10 +200,32 @@ class ConversationTab extends React.Component {
       currentPull: { id: pullId, repositoryId }
     } = this.props;
     return LabelService.setLabelsToPull(labelIds, pullId, repositoryId);
-  }; 
+  };
+
+  setReviewerToPull = async userId => {
+    const {
+      currentPull: { id: pullId }
+    } = this.props;
+    return PullReviewerService.addReviewer({ userId, pullId });
+  };
+
+  removeReviewerFromPull = async reviewerId => {
+    return PullReviewerService.removeReviewer(reviewerId);
+  };
 
   render() {
-    const { userId, username, userImg, currentPull, pullComments, isOwnPull, labels, currentLabels } = this.props;
+    const {
+      userId,
+      username,
+      userImg,
+      currentPull,
+      pullComments,
+      isOwnPull,
+      labels,
+      currentLabels,
+      reviewers,
+      collaborators
+    } = this.props;
     const {
       user: { imgUrl, username: owner },
       body,
@@ -217,6 +250,7 @@ class ConversationTab extends React.Component {
               submitBtnTxt="Update comment"
               cancelBtnTxt="Cancel"
               ownComment={isOwnPull}
+              isQuestion={false}
             />
             {comments.length > 0 &&
               comments.map((comment, index) => {
@@ -241,6 +275,7 @@ class ConversationTab extends React.Component {
                     cancelBtnTxt="Cancel"
                     onDelete={this.onCommentDelete}
                     ownComment={userId === commentUserId}
+                    isQuestion={false}
                   />
                 );
               })}
@@ -252,6 +287,7 @@ class ConversationTab extends React.Component {
               submitBtnTxt="Comment"
               createdAt={createdAt}
               buttons={isOwnPull ? this.generateButtons(prstatus.name) : null}
+              isQuestion={false}
             />
           </Grid.Column>
           <Grid.Column width={4}>
@@ -260,6 +296,10 @@ class ConversationTab extends React.Component {
               labels={labels}
               currentLabels={currentLabels}
               setLabelsToPull={this.setLabelsToPull}
+              reviewers={reviewers}
+              collaborators={collaborators.filter(({ isActivated }) => isActivated)}
+              setReviewerToPull={this.setReviewerToPull}
+              removeReviewerFromPull={this.removeReviewerFromPull}
             />
           </Grid.Column>
         </Grid>
@@ -283,7 +323,9 @@ ConversationTab.propTypes = {
   isOwnPull: PropTypes.bool,
   updateState: PropTypes.func,
   labels: PropTypes.array.isRequired,
-  currentLabels: PropTypes.array.isRequired
+  currentLabels: PropTypes.array.isRequired,
+  reviewers: PropTypes.array.isRequired,
+  collaborators: PropTypes.array.isRequired
 };
 
 const mapStateToProps = ({
