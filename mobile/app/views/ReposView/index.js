@@ -15,7 +15,8 @@ class ReposView extends React.Component {
     super(props);
     this.state = {
       userData: {},
-      repos: []
+      repos: [],
+      isLoading: true
     };
   }
 
@@ -29,15 +30,15 @@ class ReposView extends React.Component {
       const repos = await getRepositories(username);
       this.setState({
         userData,
-        repos
+        repos,
+        isLoading: false
       });
     }
   }
 
   render() {
-    const { repos } = this.state;
-    const { loading } = this.props;
-    return !loading ? (
+    const { repos, isLoading } = this.state;
+    return !isLoading ? (
       <View style={styles.container}>
         <ReposList repos={repos} />
       </View>

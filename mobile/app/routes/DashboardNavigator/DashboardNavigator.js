@@ -9,6 +9,7 @@ import React from 'react';
 import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
 import Notifications from '../../components/Notifications';
 import IssueView from '../../views/IssueView';
+import colors from '../../config/color.config';
 
 const TabNav = createMaterialTopTabNavigator({
   Repos: { screen: ReposView },
