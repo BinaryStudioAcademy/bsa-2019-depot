@@ -26,7 +26,7 @@ export class RepositoriesFilters extends React.Component {
       <Container className={styles.repos_filters}>
         <Input placeholder="Find a repository…" className={styles.repos_search_input} />
         <div>
-          <Dropdown fluid selection className={styles.repos_filters_dropdown} text={`Type: ${filter}`}>
+          <Dropdown fluid selection className={styles.repos_filters_dropdown_repotype} text={`Type: ${filter}`}>
             <Dropdown.Menu>
               {repoTypes.map(({ key, text, value }) => (
                 <Dropdown.Item key={key} text={text} value={value} onClick={getCurrentRepoFilter} />
