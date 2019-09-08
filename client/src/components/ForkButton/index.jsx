@@ -56,7 +56,7 @@ class ForkButton extends Component {
                 <Octicon className={styles.forkButtonIcon} icon={getIconByName('repo-forked')} />
                 Fork
               </Button>
-              <Label as="a" basic>
+              <Label basic>
                 <Link to={`/${owner}/${repoName}/insights`}>{forkedCount}</Link>
               </Label>
             </Button>
@@ -66,7 +66,7 @@ class ForkButton extends Component {
                 <Octicon className={styles.forkButtonIcon} icon={getIconByName('repo-forked')} />
                 Fork
               </Button>
-              <Label as="a" basic>
+              <Label basic>
                 <Link to={`/${owner}/${repoName}/insights`}>{forkedCount}</Link>
               </Label>
             </Button>
