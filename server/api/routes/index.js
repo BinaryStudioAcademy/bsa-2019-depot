@@ -12,6 +12,7 @@ const labelRoutes = require('./labels.route');
 const filesRoutes = require('./files.route');
 const pullsRoutes = require('./pulls.route');
 const pullCommentsRoutes = require('./pull-comments.route');
+const searchRoutes = require('./search.route');
 
 module.exports = (app) => {
   app.use('/api/auth', authRoutes);
@@ -28,4 +29,5 @@ module.exports = (app) => {
   app.use('/api/files', filesRoutes);
   app.use('/api/pulls', pullsRoutes);
   app.use('/api/pull-comments', pullCommentsRoutes);
+  app.use('/api/search', searchRoutes);
 };
