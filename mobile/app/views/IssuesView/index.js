@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, ScrollView, RefreshControl } from 'react-native';
 import styles from './styles';
 import Spinner from '../../components/Spinner';
 import { getAllIssues } from '../../services/issueService';
@@ -17,7 +17,8 @@ class IssuesView extends React.Component {
       isOpened: true,
       sort: 'createdAt_DESC',
       owner: null,
-      issuesData: {}
+      issuesData: {},
+      refreshing: false
     };
 
     this.showOpen = this.showOpen.bind(this);
@@ -66,10 +67,18 @@ class IssuesView extends React.Component {
     );
   }
 
+  handleRefresh = async () => {
+    this.setState({
+      refreshing: true
+    });
+    await this.fetchIssues();
+    this.setState({ refreshing: false });
+  };
+
   render() {
     const { isLoading, issuesData, isOpened } = this.state;
     return !isLoading ? (
-      <View>
+      <ScrollView refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.handleRefresh} />}>
         <View style={styles.issueHeader}>
           <Button
             title={issuesData.open + ' Open'}
@@ -90,7 +99,7 @@ class IssuesView extends React.Component {
           // eslint-disable-next-line react/jsx-no-bind
           renderItem={({ item }) => <IssueItem data={item} isOpened={isOpened} navigation={this.props.navigation} />}
         />
-      </View>
+      </ScrollView>
     ) : (
       <Spinner />
     );

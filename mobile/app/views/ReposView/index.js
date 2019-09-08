@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { RefreshControl, ScrollView } from 'react-native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ReposList from '../../containers/ReposList';
@@ -16,7 +16,8 @@ class ReposView extends React.Component {
     this.state = {
       userData: {},
       repos: [],
-      isLoading: true
+      isLoading: true,
+      refreshing: false
     };
   }
 
@@ -36,12 +37,24 @@ class ReposView extends React.Component {
     }
   }
 
+  handleRefresh = async () => {
+    this.setState({
+      refreshing: true
+    });
+    const { username } = this.props.currentUser;
+    const repos = await getRepositories(username);
+    this.setState({ refreshing: false, repos });
+  };
+
   render() {
     const { repos, isLoading } = this.state;
     return !isLoading ? (
-      <View style={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.handleRefresh} />}
+      >
         <ReposList repos={repos} />
-      </View>
+      </ScrollView>
     ) : (
       <Spinner />
     );
