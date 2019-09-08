@@ -46,8 +46,8 @@ const declineInvitation = async (username, reponame, userId) => {
   return {};
 };
 
-const removeRepositoryCollaborator = async collaboratorId => {
-  await collaboratorRepository.deleteById(collaboratorId)
+const removeRepositoryCollaborator = async (collaboratorId) => {
+  await collaboratorRepository.deleteById(collaboratorId);
   return {};
 };
 
@@ -55,9 +55,9 @@ const getUserRights = async (username, reponame, userId) => {
   const { id: repositoryId } = await getByUserAndReponame({ owner: username, reponame });
   const collaboratorRights = await collaboratorRepository.getUserRights(userId, repositoryId);
 
-  if(collaboratorRights.length) {
+  if (collaboratorRights.length) {
     return collaboratorRights;
-  };
+  }
   const { id: orgId } = await userRepository.getByUsername(username);
   const result = await orgUserRepository.getUserWithOwnerRole({ userId, orgId });
   return [result];

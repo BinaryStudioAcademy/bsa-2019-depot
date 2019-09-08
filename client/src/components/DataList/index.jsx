@@ -47,9 +47,11 @@ const DataList = props => {
       <List divided verticalAlign="middle">
         {data.map(item => (
           <List.Item key={item.id} className={styles.container}>
-            <List.Content floated="right">
-              <Icon name="comments outline" /> {item.commentCount}
-            </List.Content>
+            {item.commentCount > 0 && (
+              <List.Content floated="right">
+                <Icon name="comments outline" /> {item.commentCount}
+              </List.Content>
+            )}
             <List.Content floated="right">
               {item.assignees &&
                 item.assignees
