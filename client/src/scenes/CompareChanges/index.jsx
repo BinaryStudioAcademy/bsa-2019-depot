@@ -51,24 +51,26 @@ class CompareChanges extends React.Component {
     const { fromBranch, toBranch } = this.state;
 
     this.setState({ loading: true });
-    getBranchDiffs(repositoryId, { fromCommitId: fromBranch.headCommit.id, toCommitId: toBranch.headCommit.id }).then(({ diffs, commits }) => {
-      const numOfFiles = diffs.split('diff --git').length - 1;
-      const numOfCommitComments = commits.reduce((counter, commit) => (counter += commit.commitComments.length), 0);
-      const contributors = new Set(commits.map(({ user }) => user.username));
-      const commitComments = commits.flatMap(commit =>
-        commit.commitComments.map(comment => ({ ...comment, commitSha: commit.sha }))
-      );
-      this.setState({
-        loading: false,
-        diffs,
-        commits,
-        commitComments,
-        numOfCommits: commits.length,
-        numOfFiles,
-        numOfCommitComments,
-        numOfContributors: contributors.size
-      });
-    });
+    getBranchDiffs(repositoryId, { fromCommitId: fromBranch.headCommit.id, toCommitId: toBranch.headCommit.id }).then(
+      ({ diffs, commits }) => {
+        const numOfFiles = diffs.split('diff --git').length - 1;
+        const numOfCommitComments = commits.reduce((counter, commit) => (counter += commit.commitComments.length), 0);
+        const contributors = new Set(commits.map(({ user }) => user.username));
+        const commitComments = commits.flatMap(commit =>
+          commit.commitComments.map(comment => ({ ...comment, commitSha: commit.sha }))
+        );
+        this.setState({
+          loading: false,
+          diffs,
+          commits,
+          commitComments,
+          numOfCommits: commits.length,
+          numOfFiles,
+          numOfCommitComments,
+          numOfContributors: contributors.size
+        });
+      }
+    );
   }
 
   onToBranchChange(event, { value }) {
@@ -204,7 +206,8 @@ class CompareChanges extends React.Component {
                 'You’ll need to use two different branch names to get a valid comparison.'
               ) : (
                 <>
-                  <b>{toBranch.name}</b> is up to date with <b>{fromBranch.name}</b>. Try switching the base for your comparison.
+                  <b>{toBranch.name}</b> is up to date with <b>{fromBranch.name}</b>. Try switching the base for your
+                  comparison.
                 </>
               )}
             </p>
