@@ -21,6 +21,8 @@ module.exports = (models) => {
     Collaborator,
     PinnedRepository,
     IssueLabel,
+    PullReviewer,
+    ReviewStatus,
     PullLabel
   } = models;
 
@@ -89,6 +91,9 @@ module.exports = (models) => {
   PullRequest.belongsTo(Branch, { as: 'toBranch', foreignKey: 'toBranchId' });
   PullComment.belongsTo(User);
   PullComment.belongsTo(PullRequest, { as: 'pull' });
+  PullReviewer.belongsTo(User);
+  PullReviewer.belongsTo(PullRequest, { as: 'pull' });
+  PullReviewer.belongsTo(ReviewStatus, { as: 'status' });
   PullLabel.belongsTo(PullRequest, { as: 'pull' });
   Label.hasMany(PullLabel);
   PullLabel.belongsTo(Label);

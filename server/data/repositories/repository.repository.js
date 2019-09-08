@@ -143,7 +143,8 @@ class RepositoryRepository extends BaseRepository {
   deleteByUserAndReponame(userId, reponame) {
     return this.model.destroy({ where: { name: reponame, userId } });
   }
-  getRepositoryForks(repositoryId){
+
+  getRepositoryForks(repositoryId) {
     return this.model.findAll({
       where: { forkedFromRepoId: repositoryId },
       include: [

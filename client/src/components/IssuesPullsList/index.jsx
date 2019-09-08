@@ -288,7 +288,7 @@ IssuesPullsList.propTypes = {
   isIssues: PropTypes.bool,
   reponame: PropTypes.string,
   repositoryId: PropTypes.string,
-  data: PropTypes.array.isRequired,
+  data: PropTypes.array,
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
     isExact: PropTypes.bool.isRequired,

@@ -154,9 +154,9 @@ RepoFileTree.propTypes = {
     sha: PropTypes.string.isRequired,
     message: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired,
-    user: {
-      author: PropTypes.isRequired
-    }
+    user: PropTypes.shape({
+      username: PropTypes.string.isRequired
+    })
   }).isRequired,
   fileTreeData: PropTypes.exact({
     loading: PropTypes.bool.isRequired,

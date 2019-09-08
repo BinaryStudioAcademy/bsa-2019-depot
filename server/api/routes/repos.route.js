@@ -145,15 +145,15 @@ router
     res.sendStatus(200);
   })
   .post('/:username/:reponame/settings/rename', isAdminMiddleware, (req, res, next) => {
-    const { reponame } = req.params;
+    const { reponame, username: orgName } = req.params;
     const { newName } = req.body;
-    renameRepo({ reponame, newName, username: req.user.username })
+    renameRepo({ reponame, newName, username: req.user.username, orgName })
       .then(result => res.send(result))
       .catch(next);
   })
   .delete('/:username/:reponame/settings', ownerOnlyMiddleware, (req, res, next) => {
-    const { reponame } = req.params;
-    deleteRepo({ reponame, username: req.user.username })
+    const { reponame, username: orgName } = req.params;
+    deleteRepo({ reponame, username: req.user.username, orgName })
       .then(result => res.send(result))
       .catch(next);
   })
@@ -247,9 +247,9 @@ router
   })
   .get('/:repositoryId/pulls/diffs', (req, res, next) => {
     const { repositoryId } = req.params;
-    const { fromBranch, toBranch } = req.query;
+    const { fromCommitId, toCommitId } = req.query;
     pullsService
-      .getPullData(repositoryId, fromBranch, toBranch)
+      .getPullData(repositoryId, fromCommitId, toCommitId)
       .then(data => res.send(data))
       .catch(next);
   })
