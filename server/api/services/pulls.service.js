@@ -71,16 +71,10 @@ const mergeBranches = async (id, authorId) => {
   const {
     repository: {
       name: reponame,
-      user: {
-        username: repoOwner
-      }
+      user: { username: repoOwner }
     },
-    fromBranch: {
-      name: fromBranchName
-    },
-    toBranch: {
-      name: toBranchName
-    },
+    fromBranch: { name: fromBranchName },
+    toBranch: { name: toBranchName },
     number
   } = await pullRepository.getPullById(id);
   const { username: authorUsername, email: authorEmail } = await userRepository.getUserById(authorId);
@@ -108,14 +102,16 @@ const mergeBranches = async (id, authorId) => {
   const mergeCommit = await repo.getCommit(mergeCommitId);
 
   await repoHelper.syncDb(
-    [{
-      repoOwner,
-      reponame,
-      sha: mergeCommit.sha(),
-      message: mergeCommit.message(),
-      userEmail: authorEmail,
-      createdAt: new Date()
-    }],
+    [
+      {
+        repoOwner,
+        reponame,
+        sha: mergeCommit.sha(),
+        message: mergeCommit.message(),
+        userEmail: authorEmail,
+        createdAt: new Date()
+      }
+    ],
     {
       name: toBranchName,
       newHeadSha: mergeCommit.sha()

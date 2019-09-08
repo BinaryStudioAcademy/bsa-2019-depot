@@ -2,7 +2,13 @@ const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
 const PRStatusRepository = require('./pr-status.repository');
 const {
-  PullRequestModel, UserModel, RepositoryModel, PRStatusModel, BranchModel, PullLabelModel, LabelModel
+  PullRequestModel,
+  UserModel,
+  RepositoryModel,
+  PRStatusModel,
+  BranchModel,
+  PullLabelModel,
+  LabelModel
 } = require('../models/index');
 
 const sequelize = require('../db/connection');
@@ -70,7 +76,7 @@ class PullRepository extends BaseRepository {
             {
               model: LabelModel,
               where: {
-                repositoryId,
+                repositoryId
               }
             }
           ]

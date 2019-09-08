@@ -6,12 +6,35 @@ class IssueLabelRepository extends BaseRepository {
     return this.findById(id);
   }
 
-  addIssueLabel({ ...issueLabelData }) {
-    return this.create(issueLabelData);
+  getByIssueIdAndLabelId(issueId, labelId) {
+    return this.model.findOne({
+      where: {
+        issueId,
+        labelId
+      }
+    });
+  }
+
+  getByIssueId(issueId) {
+    return this.model.findAll({
+      where: {
+        issueId
+      }
+    });
+  }
+
+  addIssueLabel(issueId, labelId) {
+    return this.create({ issueId, labelId });
   }
 
   deleteIssueLabelById(id) {
     return this.deleteById(id);
+  }
+
+  deleteByLabelAndIssueId(labelId, issueId) {
+    return this.model.destroy({
+      where: { labelId, issueId }
+    });
   }
 }
 

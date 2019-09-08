@@ -2,6 +2,7 @@ const issueRepository = require('../../data/repositories/issue.repository');
 const repoRepository = require('../../data/repositories/repository.repository');
 const userRepository = require('../../data/repositories/user.repository');
 const issueCommentRepository = require('../../data/repositories/issue-comment.repository');
+const issueLabelService = require('../services/issue-label.service');
 const CustomError = require('../../helpers/error.helper');
 
 const addIssue = issueData => issueRepository.addIssue(issueData);
@@ -58,6 +59,14 @@ const getRepoByIssueId = id => issueRepository.getRepoByIssueId(id);
 
 const getIssueCount = (repositoryId, isOpened) => issueRepository.getIssueCount(repositoryId, isOpened);
 
+const setIssueLabels = async (newLabelIds, issueId) => {
+  const issueLabelIds = (await issueLabelService.getLabelsByIssueId(issueId)).map(issueLabel => issueLabel.id) || [];
+  const deleteLabelIds = issueLabelIds.filter(issueLabelId => !newLabelIds.includes(issueLabelId));
+  deleteLabelIds.forEach(labelId => issueLabelService.deleteByIssueAndLabelId(issueId, labelId));
+  const addLabelIds = newLabelIds.filter(labelId => !issueLabelIds.includes(labelId));
+  addLabelIds.forEach(labelId => issueLabelService.addIssueLabel(issueId, labelId));
+};
+
 module.exports = {
   addIssue,
   updateIssueById,
@@ -76,5 +85,6 @@ module.exports = {
   getAllIssueComments,
   getRepoIssueByIdNumber,
   getRepoByIssueId,
-  getIssueCount
+  getIssueCount,
+  setIssueLabels
 };
