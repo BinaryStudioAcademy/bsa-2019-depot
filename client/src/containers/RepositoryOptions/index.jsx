@@ -66,7 +66,10 @@ class RepositoryOptions extends React.Component {
   }
 
   onClickDelete = () => {
-    const { owner, repoInfo: {id} } = this.state;
+    const {
+      owner,
+      repoInfo: { id }
+    } = this.state;
     const { deleteRepo, history } = this.props;
     const { oldName } = this;
 
@@ -79,7 +82,10 @@ class RepositoryOptions extends React.Component {
   };
 
   onClickRename = ({ name }) => {
-    const { owner, repoInfo: {id} } = this.state;
+    const {
+      owner,
+      repoInfo: { id }
+    } = this.state;
     const { oldName } = this;
     const { renameRepo, history } = this.props;
 
@@ -106,6 +112,11 @@ class RepositoryOptions extends React.Component {
       reponame: name,
       request: { isPublic: repoInfo.isPublic, repositoryId: id, userId }
     });
+    if (repoInfo.isPublic) {
+      elasticHelper.addRepo(id, name, owner);
+    } else {
+      elasticHelper.deleteRepo(id);
+    }
     history.push(`/${owner}/${name}/settings`);
     window.location.reload();
   };

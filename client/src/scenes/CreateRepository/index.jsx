@@ -89,11 +89,9 @@ class CreateRepository extends React.Component {
       ...values
     });
     const { reponame, owner } = values;
-    elasticHelper.addRepo(
-      result.id,
-      result.name,
-      owner
-    );
+    if (values.isPublic) {
+      elasticHelper.addRepo(result.id, result.name, owner);
+    }
     if (result.url) {
       this.props.history.push(`/${owner}/${reponame}`);
     }
