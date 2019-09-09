@@ -1,7 +1,12 @@
 const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
 const {
-  IssueModel, UserModel, RepositoryModel, LabelModel, IssueLabelModel
+  IssueModel,
+  UserModel,
+  RepositoryModel,
+  LabelModel,
+  IssueLabelModel,
+  IssueAssigneeModel
 } = require('../models/index');
 const sequelize = require('../db/connection');
 
@@ -119,6 +124,14 @@ class IssueRepository extends BaseRepository {
             model: LabelModel,
             attributes: ['id', 'name', 'color', 'description']
           }
+        },
+        {
+          model: IssueAssigneeModel,
+          attributes: ['id'],
+          include: {
+            model: UserModel,
+            attributes: ['id', 'name', 'username', 'imgUrl']
+          }
         }
       ]
     });
@@ -169,6 +182,14 @@ class IssueRepository extends BaseRepository {
           include: {
             model: LabelModel,
             attributes: ['id', 'name', 'color', 'description']
+          }
+        },
+        {
+          model: IssueAssigneeModel,
+          attributes: ['id'],
+          include: {
+            model: UserModel,
+            attributes: ['id', 'name', 'username', 'imgUrl']
           }
         }
       ]
@@ -286,6 +307,14 @@ class IssueRepository extends BaseRepository {
               attributes: ['name', 'description', 'color', 'id']
             }
           ]
+        },
+        {
+          model: IssueAssigneeModel,
+          attributes: ['id'],
+          include: {
+            model: UserModel,
+            attributes: ['id', 'name', 'username', 'imgUrl']
+          }
         }
       ],
       order: parseSortQuery(sort)
@@ -327,6 +356,14 @@ class IssueRepository extends BaseRepository {
           include: {
             model: LabelModel,
             attributes: ['id', 'name', 'color', 'description']
+          }
+        },
+        {
+          model: IssueAssigneeModel,
+          attributes: ['id'],
+          include: {
+            model: UserModel,
+            attributes: ['id', 'name', 'username', 'imgUrl']
           }
         }
       ]
