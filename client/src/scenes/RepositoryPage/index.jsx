@@ -40,7 +40,7 @@ class RepositoryPage extends React.Component {
     this.onChangeToPrivate = this.onChangeToPrivate.bind(this);
   }
 
-  async componentDidMount() {
+  async fetchData() {
     const {
       fetchCurrentRepo,
       match: {
@@ -54,6 +54,10 @@ class RepositoryPage extends React.Component {
       isAccessGranted
     });
     this.initSocket();
+  }
+
+  componentDidMount() {
+    this.fetchData();
   }
 
   componentWillUnmount() {
@@ -71,7 +75,7 @@ class RepositoryPage extends React.Component {
     let { username: prevUsername, reponame: prevReponame } = prevProps.match.params;
     const prevRepo = prevUsername + prevReponame;
     if (currentRepo !== prevRepo) {
-      this.componentDidMount();
+      this.fetchData();
       const { id } = this.props;
       this.socket.emit('createRoom', id);
     }
