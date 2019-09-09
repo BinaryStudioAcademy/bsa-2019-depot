@@ -1,9 +1,12 @@
+/* eslint-disable react/jsx-no-bind */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Grid, Menu, Sidebar, Icon, Dropdown, Responsive, Modal, Form, Button } from 'semantic-ui-react';
-import Octicon, { Smiley } from '@primer/octicons-react';
+import { Grid, Menu, Sidebar, Icon, Dropdown, Responsive, Modal, Form, Button, Search } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import Octicon, { Repo, Smiley, Person, Organization } from '@primer/octicons-react';
 import { getUserImgLink } from '../../helpers/imageHelper';
+import * as searchService from '../../services/searchService';
 
 import styles from './styles.module.scss';
 import { ReactComponent as LogoSVG } from '../../styles/assets/icons/logo_icon_bright.svg';
@@ -17,11 +20,79 @@ const signOut = () => {
 
 const SearchInp = () => {
   const [text, setText] = useState('');
-  function onTextChange({ target }) {
-    setText(target.value);
-  }
+  const [results, setResults] = useState('');
+  const [isLoading, setLoading] = useState(false);
+  const [timeout, changeTimeout] = useState(null);
 
-  return <input placeholder="Search Depot" onChange={onTextChange} value={text} type="text" />;
+  const resultRenderer = ({ content }) => {
+    const [type, username, reponame] = content;
+    if (type === 'REPO') {
+      return (
+        <Link
+          onClick={() => {
+            setText('');
+            setResults([]);
+          }}
+          to={`/${username}/${reponame}`}
+        >
+          <p className={styles.searchItem}>
+            <Octicon className={styles.searchItemIcon} icon={Repo} />
+            {`/${username}/${reponame}`}
+          </p>
+        </Link>
+      );
+    } else {
+      return (
+        <Link
+          onClick={() => {
+            setText('');
+            setResults([]);
+          }}
+          to={`/${username}`}
+        >
+          <p className={styles.searchItem}>
+            <Octicon className={styles.searchItemIcon} icon={type === 'USER' ? Person : Organization} />
+            {`/${username}`}
+          </p>
+        </Link>
+      );
+    }
+  };
+
+  const handleSearchChange = async (e, { value }) => {
+    if (!value) {
+      setResults([]);
+      return setText('');
+    }
+    setLoading(true);
+    setText(value);
+    if (timeout) {
+      clearTimeout(timeout);
+      changeTimeout(null);
+    }
+    changeTimeout(
+      setTimeout(async () => {
+        const results = (await searchService.find(value)).map(({ type, username, reponame }) => ({
+          content: [type, username, reponame]
+        }));
+        setResults(results);
+        setLoading(false);
+      }, 300)
+    );
+  };
+
+  return (
+    <Search
+      className={styles.searchInput}
+      input={{ icon: 'search' }}
+      placeholder="Search Depot"
+      onSearchChange={handleSearchChange}
+      loading={isLoading}
+      results={results}
+      value={text}
+      resultRenderer={resultRenderer}
+    />
+  );
 };
 
 const signIn = <a href="/login">Sign in</a>;

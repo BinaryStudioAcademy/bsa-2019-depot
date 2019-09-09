@@ -34,8 +34,6 @@ class CodeTab extends React.Component {
   async componentDidMount() {
     const {
       repoID,
-      ownername,
-      reponame,
       userId,
       fetchBranch,
       fetchFileTree,
@@ -45,7 +43,7 @@ class CodeTab extends React.Component {
       history
     } = this.props;
     let {
-      params: { branch }
+      params: { branch, username: ownername, reponame }
     } = match;
     if (!branch) {
       branch = defaultBranch || (branches[0] && branches[0].name);
@@ -63,6 +61,7 @@ class CodeTab extends React.Component {
     }
 
     const defaultPath = `/${ownername}/${reponame}/tree/${branch}`;
+
     history.push(defaultPath);
 
     fetchBranch({ repoID, branch });

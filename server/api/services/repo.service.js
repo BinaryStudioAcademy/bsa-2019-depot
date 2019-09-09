@@ -110,7 +110,11 @@ const createRepo = async (repoData) => {
     });
   }
 
-  return result;
+  return {
+    ...result,
+    id,
+    name
+  };
 };
 
 const checkName = async ({ owner, reponame }) => {

@@ -31,6 +31,14 @@ class Dashboard extends React.Component {
     this.getCurrentRepoTypeFilter = this.getCurrentRepoTypeFilter.bind(this);
     this.handleFindRepo = this.handleFindRepo.bind(this);
   }
+  componentDidUpdate(prevProps) {
+    if (!prevProps) {
+      return false;
+    }
+    if (this.props.match.params.username !== prevProps.match.params.username) {
+      this.componentDidMount();
+    }
+  }
 
   async getUserData() {
     const {
