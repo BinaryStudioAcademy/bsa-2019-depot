@@ -40,7 +40,7 @@ $black: #363a44;
   max-width: 100%;
   padding: 10px 5px;
   width: 100%;
-  font-size: 87.5%;
+  font-size: 150%;
 }
 
 .repoActions {
@@ -138,4 +138,8 @@ $black: #363a44;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+:local(.branchHeader) {
+  font-size: 120% !important;
 }
