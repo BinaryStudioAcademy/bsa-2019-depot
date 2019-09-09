@@ -42,11 +42,11 @@ const UserInfo = ({ imgUrl, name, username, status, currentUsername, fetchCurren
             {username}
           </h1>
         </div>
-        <Link to="/settings/profile" className={styles.edit_profile}>
+        { isMyInfo && <Link to="/settings/profile" className={styles.edit_profile}>
           <Button fluid className={styles.editButton}>
             Edit profile
           </Button>
-        </Link>
+        </Link>}
       </div>
       <StatusModal showStatusModal={showStatusModal} hideModal={hideModal} username={username} />
     </div>
