@@ -10,6 +10,7 @@ const branchRepository = require('../../data/repositories/branch.repository');
 const commitRepository = require('../../data/repositories/commit.repository');
 const collaboratorRepository = require('../../data/repositories/collaborator.repository');
 const LabelRepository = require('../../data/repositories/label.repository');
+const orgUsersRepository = require('../../data/repositories/org-user.repository');
 
 const CustomError = require('../../helpers/error.helper');
 const { defaultLabels } = require('../../config/labels.config');
@@ -178,7 +179,7 @@ const deleteByUserAndReponame = async ({ owner, reponame }) => {
   return repoRepository.deleteByUserAndReponame(user.id, reponame);
 };
 
-const renameRepo = ({
+const renameRepo = async ({
   reponame, newName, username, orgName
 }) => {
   const renameRepository = async (pathName) => {
@@ -186,17 +187,17 @@ const renameRepo = ({
       const oldDirectory = repoHelper.getPathToRepo(pathName, reponame);
       const newDirectory = repoHelper.getPathToRepo(pathName, newName);
       fs.renameSync(oldDirectory, newDirectory);
-      await updateByUserAndReponame({ owner: pathName, reponame, data: { name: newName } });
-      return true;
+      const result = await updateByUserAndReponame({ owner: pathName, reponame, data: { name: newName } });
+      return result;
     } catch (e) {
       return e;
     }
   };
 
   if (username === orgName) {
-    renameRepository(username);
+    return renameRepository(username);
   }
-  renameRepository(orgName);
+  return renameRepository(orgName);
 };
 
 const deleteRepo = ({ reponame, username, orgName }) => {
@@ -237,12 +238,16 @@ const getReposNames = async ({
   return repos.map(({ name }) => name);
 };
 
-const getReposData = async ({ username, isOwner }) => {
+const getReposData = async ({ username, isOwner, userId }) => {
   const user = await userRepository.getByUsername(username);
   if (!user) {
     return Promise.reject(new CustomError(404, `User ${username} not found`));
   }
-  return repoRepository.getByUserWithOptions(user.id, isOwner);
+  if (isOwner) {
+    return repoRepository.getByUserWithOptions(user.id, isOwner);
+  }
+  const isOrgOwner = Boolean(await orgUsersRepository.getUserWithOwnerRole({ userId, orgId: user.id }));
+  return repoRepository.getByUserWithOptions(user.id, isOrgOwner);
 };
 
 const forkRepo = async ({
