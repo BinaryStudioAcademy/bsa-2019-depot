@@ -43,7 +43,9 @@ class RepositoryOptions extends React.Component {
   }
 
   validationSchema = Yup.object().shape({
-    name: Yup.string().matches(/^.*[\w]+.*$/, 'Invalid repository name').required('Required')
+    name: Yup.string()
+      .matches(/^.*[\w]+.*$/, 'Invalid repository name')
+      .required('Required')
   });
 
   componentDidMount() {

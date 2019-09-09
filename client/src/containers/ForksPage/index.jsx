@@ -114,7 +114,10 @@ class ForksPage extends Component {
                       </Grid>
                     </div>
                   </Popup>
-                  /<Link to="" onClick={this.goToPath(history, `/${user.username}/${name}`)}>{name}</Link>
+                  /
+                  <Link to="" onClick={this.goToPath(history, `/${user.username}/${name}`)}>
+                    {name}
+                  </Link>
                 </span>
               </li>
             ))}

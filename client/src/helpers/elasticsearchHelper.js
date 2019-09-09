@@ -1,12 +1,12 @@
 import { Client } from 'elasticsearch';
-import { elasticHost, elasticPort, elasticIndex as index} from '../app.config';
+import { elasticHost, elasticPort, elasticIndex as index } from '../app.config';
 
 const client = new Client({
   host: elasticHost,
   port: elasticPort
 });
 
-export const addUser = async ( username ) =>
+export const addUser = async username =>
   client.index({
     index,
     body: {
@@ -15,7 +15,7 @@ export const addUser = async ( username ) =>
     }
   });
 
-export const addOrg = async ( orgname ) =>
+export const addOrg = async orgname =>
   client.index({
     index,
     body: {
@@ -24,7 +24,7 @@ export const addOrg = async ( orgname ) =>
     }
   });
 
-export const addRepo = async ( id, reponame, username ) =>
+export const addRepo = async (id, reponame, username) =>
   client.index({
     index,
     id,
@@ -35,7 +35,7 @@ export const addRepo = async ( id, reponame, username ) =>
     }
   });
 
-export const updateRepo = async ( id, reponame, username ) =>
+export const updateRepo = async (id, reponame, username) =>
   client.update({
     index,
     id,
@@ -48,7 +48,7 @@ export const updateRepo = async ( id, reponame, username ) =>
     }
   });
 
-export const deleteRepo = async ( id ) =>
+export const deleteRepo = async id =>
   client.delete({
     index,
     id

@@ -75,7 +75,10 @@ const RepositoryHeader = ({
 
   const renderOrignalRepoLink = () => {
     if (originalRepo) {
-      const { name: forkedRepoName, user: { username: forkedRepoOwner } } = originalRepo;
+      const {
+        name: forkedRepoName,
+        user: { username: forkedRepoOwner }
+      } = originalRepo;
       if (forkedRepoName && forkedRepoOwner) {
         return (
           <div className={styles.originalRepoLink}>
