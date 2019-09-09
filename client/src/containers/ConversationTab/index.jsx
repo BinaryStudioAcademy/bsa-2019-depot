@@ -295,7 +295,7 @@ class ConversationTab extends React.Component {
               isIssue={false}
               labels={labels}
               currentLabels={currentLabels}
-              setLabelsToPull={this.setLabelsToPull}
+              setLabels={this.setLabelsToPull}
               reviewers={reviewers}
               collaborators={collaborators.filter(({ isActivated }) => isActivated)}
               setReviewerToPull={this.setReviewerToPull}

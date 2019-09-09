@@ -28,13 +28,11 @@ class IssuePrSidebar extends React.Component {
   };
 
   onChangeLabels = async (event, { value }) => {
-    const { setLabelsOnCreateItem, isIssue, setLabelsToPull } = this.props;
+    const { setLabelsOnCreateItem, setLabels } = this.props;
     if (setLabelsOnCreateItem) {
       setLabelsOnCreateItem(value);
     } else {
-      if (!isIssue) {
-        setLabelsToPull(value);
-      }
+      setLabels(value);
     }
   };
 
@@ -198,20 +196,24 @@ class IssuePrSidebar extends React.Component {
             <Divider />
           </>
         )}
-        <h5 className={styles.sectionHeader}>Assignees</h5>
-        <Dropdown
-          options={assigneeOptions}
-          selection
-          multiple
-          search
-          fluid
-          text="Select Assignees"
-          name="assignees"
-          defaultValue={initialAssignees.map(({ username }) => username)}
-          onChange={this.onPropChange}
-          renderLabel={this.renderLabel}
-        />
-        <Divider />
+        {!isIssue && (
+          <>
+            <h5 className={styles.sectionHeader}>Assignees</h5>
+            <Dropdown
+              options={assigneeOptions}
+              selection
+              multiple
+              search
+              fluid
+              text="Select Assignees"
+              name="assignees"
+              defaultValue={initialAssignees.map(({ username }) => username)}
+              onChange={this.onPropChange}
+              renderLabel={this.renderLabel}
+            />
+            <Divider />
+          </>
+        )}
         <h5 className={styles.sectionHeader}>Labels</h5>
         <Dropdown
           options={labelOptions}
@@ -237,7 +239,7 @@ IssuePrSidebar.propTypes = {
   labels: PropTypes.array.isRequired,
   setLabelsOnCreateItem: PropTypes.func,
   currentLabels: PropTypes.array,
-  setLabelsToPull: PropTypes.func,
+  setLabels: PropTypes.func,
   setReviewersOnCreateItem: PropTypes.func,
   setReviewerToPull: PropTypes.func,
   removeReviewerFromPull: PropTypes.func

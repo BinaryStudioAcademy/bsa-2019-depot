@@ -34,8 +34,6 @@ class CodeTab extends React.Component {
   async componentDidMount() {
     const {
       repoID,
-      ownername,
-      reponame,
       userId,
       fetchBranch,
       fetchFileTree,
@@ -45,7 +43,7 @@ class CodeTab extends React.Component {
       history
     } = this.props;
     let {
-      params: { branch }
+      params: { branch, username: ownername, reponame }
     } = match;
     if (!branch) {
       branch = defaultBranch || (branches[0] && branches[0].name);
@@ -63,6 +61,7 @@ class CodeTab extends React.Component {
     }
 
     const defaultPath = `/${ownername}/${reponame}/tree/${branch}`;
+
     history.push(defaultPath);
 
     fetchBranch({ repoID, branch });
@@ -100,8 +99,17 @@ class CodeTab extends React.Component {
   };
 
   onCreateFile = () => {
-    const { location, history } = this.props;
-    history.push(location.pathname.replace('/tree', '/new'));
+    const {
+      history,
+      location: { pathname }
+    } = this.props;
+    const { branch } = this.state;
+
+    if (pathname.match('/' + branch + '$')) {
+      history.push(pathname.replace('/tree', '/new'));
+    } else {
+      history.push(pathname + '/new/' + branch);
+    }
   };
 
   onReadmeEdit = () => {
@@ -112,8 +120,8 @@ class CodeTab extends React.Component {
         tree: { currentPath }
       }
     } = this.props;
-    const { username, reponame, branch } = match.params;
-
+    const { username, reponame } = match.params;
+    const { branch } = this.state;
     history.push(`/${username}/${reponame}/edit/${branch}/${currentPath}/README.md`);
   };
 
@@ -245,7 +253,9 @@ class CodeTab extends React.Component {
                 <Breadcrumb.Section>{currentDir}</Breadcrumb.Section>
               </Breadcrumb>
             </div>
-          ) : null}
+          ) : (
+            <div>{currentDir}</div>
+          )}
           <RepoFileTree
             lastCommitData={headCommit}
             fileTreeData={fileTreeData}

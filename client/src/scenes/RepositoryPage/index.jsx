@@ -47,7 +47,6 @@ class RepositoryPage extends React.Component {
       },
       userId
     } = this.props;
-
     const isAccessGranted = await getAllUserPermissions(username, reponame, userId);
     fetchCurrentRepo({ username, reponame });
     this.setState({
@@ -63,7 +62,15 @@ class RepositoryPage extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.id !== prevProps.id) {
+    if (!prevProps) {
+      return;
+    }
+    const { username, reponame } = this.props.match.params;
+    const currentRepo = username + reponame;
+    let { username: prevUsername, reponame: prevReponame } = prevProps.match.params;
+    const prevRepo = prevUsername + prevReponame;
+    if (currentRepo !== prevRepo) {
+      this.componentDidMount();
       const { id } = this.props;
       this.socket.emit('createRoom', id);
     }
@@ -116,6 +123,10 @@ class RepositoryPage extends React.Component {
       return <Spinner />;
     }
 
+    function defaultRedirect() {
+      return <Redirect to={`${match.url}/tree/${branch}`} />;
+    }
+
     return username === currentUserName || isPublic || isAccessGranted ? (
       <>
         <RepositoryHeader
@@ -128,7 +139,7 @@ class RepositoryPage extends React.Component {
         />
         <Container>
           <Switch>
-            <Route exact path={`${match.path}`} component={CodeTab} />
+            <Route exact path={`${match.path}`} render={defaultRedirect} />
             <Route exact path={`${match.path}/tree/:branch`} component={CodeTab} />
             <Route exact path={`${match.path}/tree/:branch/${params}`} component={CodeTab} />
             <Route exact path={`${match.path}/commits/:branch`} component={CommitsPage} />

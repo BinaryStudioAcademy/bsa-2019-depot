@@ -8,6 +8,7 @@ import Octicon, { getIconByName } from '@primer/octicons-react';
 import { InputError } from '../../components/InputError';
 import { createRepository, checkName } from '../../services/repositoryService';
 import { getRelationUserOrg } from '../../services/orgService';
+import * as elasticHelper from '../../helpers/elasticsearchHelper';
 import * as Yup from 'yup';
 import styles from './styles.module.scss';
 
@@ -88,6 +89,9 @@ class CreateRepository extends React.Component {
       ...values
     });
     const { reponame, owner } = values;
+    if (values.isPublic) {
+      elasticHelper.addRepo(result.id, result.name, owner);
+    }
     if (result.url) {
       this.props.history.push(`/${owner}/${reponame}`);
     }
