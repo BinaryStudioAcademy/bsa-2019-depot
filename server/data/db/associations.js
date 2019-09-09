@@ -56,6 +56,7 @@ module.exports = (models) => {
   Branch.belongsTo(Repository);
   Branch.belongsTo(Commit, { foreignKey: 'headCommitId', as: 'headCommit' }); // 'headCommitId' will be added to Branch
   Branch.hasMany(LanguageStats);
+  Branch.hasMany(PullRequest, { foreignKey: 'fromBranchId' });
   Repository.hasMany(Commit, { foreignKey: 'repositoryId' });
   Commit.hasMany(CommitComment, { foreignKey: 'commitId' });
   Commit.belongsTo(User);
