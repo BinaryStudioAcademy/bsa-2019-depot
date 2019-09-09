@@ -35,6 +35,7 @@ const RepoSettings = props => {
       <Grid container>
         <Grid.Column computer={4} tablet={8} mobile={16}>
           <Menu vertical>
+            <Menu.Item header>Settings</Menu.Item>
             <NavLink to={`${match.url}/options`} activeClassName="active">
               <Menu.Item>Options</Menu.Item>
             </NavLink>
