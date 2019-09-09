@@ -23,12 +23,16 @@ class OrgPeopleTab extends React.Component {
   };
 
   render() {
-    const { orgMembers, orgInfo, isOwner } = this.props;
+    const { orgMembers, orgInfo, isOwner, handleChangeFilter } = this.props;
     const { invite } = this.state;
     return !invite ? (
       <Container className={styles.memberListContainer}>
         <div className={styles.memberListFilters}>
-          <Input placeholder="Find a member…" className={styles.memberSearchInput}></Input>
+          <Input
+            placeholder="Find a member…"
+            className={styles.memberSearchInput}
+            onChange={handleChangeFilter}
+          ></Input>
           {isOwner && (
             <Button onClick={this.changeInvite} className={styles.inviteButton}>
               Invite Member
@@ -82,7 +86,8 @@ OrgPeopleTab.propTypes = {
   repositories: PropTypes.array,
   orgMembers: PropTypes.any,
   orgInfo: PropTypes.any,
-  isOwner: PropTypes.any
+  isOwner: PropTypes.any,
+  handleChangeFilter: PropTypes.func.isRequired
 };
 
 export default OrgPeopleTab;
