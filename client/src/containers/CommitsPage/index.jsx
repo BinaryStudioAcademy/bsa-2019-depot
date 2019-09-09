@@ -45,10 +45,10 @@ class CommitsPage extends React.Component {
       }
     } = this.props;
 
-    const branchOptions = branchesData.map((branch, index) => ({
+    const branchOptions = branchesData.map(({ name }, index) => ({
       key: index,
-      text: branch,
-      value: branch
+      text: name,
+      value: name
     }));
     branchOptions.sort(({ text: textA }, { text: textB }) => (textA > textB ? 1 : -1));
 
@@ -72,12 +72,7 @@ CommitsPage.propTypes = {
     error: PropTypes.string,
     commits: PropTypes.array
   }).isRequired,
-  branchesData: PropTypes.exact({
-    loading: PropTypes.bool.isRequired,
-    error: PropTypes.string,
-    branches: PropTypes.array,
-    lastCommits: PropTypes.object
-  }).isRequired,
+  branchesData: PropTypes.array.isRequired,
   fetchCommits: PropTypes.func.isRequired,
   fetchBranches: PropTypes.func.isRequired,
   username: PropTypes.string,
