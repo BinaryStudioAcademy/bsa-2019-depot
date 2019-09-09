@@ -106,7 +106,7 @@ router.get('/:username/contribution-activity', (req, res, next) => {
 router.get('/:username/repos', (req, res, next) => {
   const { username } = req.params;
   const isOwner = req.user.get({ plain: true }).username === username;
-  getReposData({ username, isOwner })
+  getReposData({ username, isOwner, userId: req.user.id })
     .then(repos => res.send(repos))
     .catch(next);
 });
