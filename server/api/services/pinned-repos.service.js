@@ -3,11 +3,11 @@ const repositoryRepository = require('../../data/repositories/repository.reposit
 
 const LIMIT = 6;
 
-const getPinnedRepos = async (userId) => {
+const getPinnedRepos = async (userId, isOwner) => {
   try {
     const pinnedRepos = await pinnedReposRepository.getAll(userId);
     if (!pinnedRepos || !pinnedRepos.length) {
-      const popularRepos = await repositoryRepository.getByUserWithOptions(userId, true, { limit: LIMIT });
+      const popularRepos = await repositoryRepository.getByUserWithOptions(userId, isOwner, { limit: LIMIT });
       return { popularRepos };
     }
     return { pinnedRepos };
