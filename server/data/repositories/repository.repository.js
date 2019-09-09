@@ -146,7 +146,6 @@ class RepositoryRepository extends BaseRepository {
       include: [
         {
           model: UserModel,
-          attributes: ['username']
         }
       ]
     });
