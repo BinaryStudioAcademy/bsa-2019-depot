@@ -9,9 +9,9 @@ import { withNavigation } from 'react-navigation';
 import styles from './styles';
 
 const IssueItem = ({ data, data: { title, number, user, updatedAt }, isOpened, navigation }) => {
-  openIssue = () => {
+  function openIssue() {
     navigation.navigate('IssueView', { data: data });
-  };
+  }
 
   return (
     <View style={styles.issue}>
@@ -21,7 +21,7 @@ const IssueItem = ({ data, data: { title, number, user, updatedAt }, isOpened, n
         ) : (
           <Icon name="issue-closed" size={20} color="#ff0000" />
         )}
-        <Text style={styles.headerText} onPress={this.openIssue}>
+        <Text style={styles.headerText} onPress={openIssue}>
           {title}
         </Text>
       </View>

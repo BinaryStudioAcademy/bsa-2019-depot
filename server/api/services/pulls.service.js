@@ -165,14 +165,17 @@ const getRepoOwnerId = pullId => pullRepository.getRepoOwnerId(pullId);
 
 const getRepoByPullId = pullId => pullRepository.getRepoByPullId(pullId);
 
+<<<<<<< HEAD
 const getRepoPulls = async (repositoryId, sort, authorId, title, isOpened) => {
   const status = await prStatusRepository.getByName('OPEN');
   const { id: statusId } = status.get({ plain: true });
   const pullsObjects = await Promise.all(
     await pullRepository.getPulls(repositoryId, sort, authorId, title, isOpened, statusId)
   );
+=======
+const addPullStatuses = async (pullsObjects) => {
+>>>>>>> 6787a0f7ea3f96032966cff1c0812f2619d9fca9
   const pulls = pullsObjects.map(pull => pull.get({ plain: true }));
-
   const pullsReviews = await Promise.all(pulls.map(({ id }) => pullReviewerRepository.getReviewersForPull(id)));
 
   const statuses = pullsReviews.map((reviewObjs) => {
@@ -197,9 +200,26 @@ const getRepoPulls = async (repositoryId, sort, authorId, title, isOpened) => {
   return pulls.map((pull, index) => ({ ...pull, reviewStatus: statuses[index] }));
 };
 
-const getPullCount = async (repositoryId, isOpened) => {
-  const statusOpen = await prStatusRepository.getByName('OPEN');
-  return pullRepository.getPullCount(repositoryId, isOpened, statusOpen);
+const getRepoPulls = async (repositoryId, sort, authorId, title, isOpened) => {
+  const status = await prStatusRepository.getByName('OPEN');
+  const { id: statusOpenedId } = status.get({ plain: true });
+  const pullsObjects = await pullRepository.getPulls({
+    repositoryId, sort, userId: authorId, title, isOpened, statusOpenedId
+  });
+  return addPullStatuses(pullsObjects);
+};
+
+const getUserPulls = async (params) => {
+  const { id: statusOpenedId } = await prStatusRepository.getByName('OPEN');
+  const pullsObjects = await pullRepository.getPulls({ ...params, statusOpenedId });
+  return addPullStatuses(pullsObjects);
+};
+
+const getAllPullsOwners = userId => pullRepository.getAllPullsOwners(userId);
+
+const getPullCount = async (params) => {
+  const { id: statusOpenedId } = await prStatusRepository.getByName('OPEN');
+  return pullRepository.getPullCount({ ...params, statusOpenedId });
 };
 
 const setLabels = async (labelIds, pullId) => {
@@ -223,6 +243,8 @@ module.exports = {
   mergePullById,
   getRepoByPullId,
   getRepoPulls,
+  getAllPullsOwners,
+  getUserPulls,
   getPullCount,
   setLabels
 };

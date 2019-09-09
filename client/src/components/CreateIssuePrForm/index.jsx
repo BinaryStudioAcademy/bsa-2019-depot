@@ -27,7 +27,7 @@ const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels, collabora
     return Promise.resolve(<ReactMarkdown source={body} />);
   }
 
-  function updateLabelIds(labelIds){
+  function updateLabelIds(labelIds) {
     setLabels(labelIds);
   }
 

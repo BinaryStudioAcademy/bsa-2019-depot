@@ -40,6 +40,7 @@ module.exports = (models) => {
   Issue.hasMany(IssueComment, { onDelete: 'cascade' });
   PullRequest.hasMany(PullComment, { foreignKey: 'pullId', onDelete: 'cascade' });
   PullRequest.hasMany(PullLabel, { foreignKey: 'pullId', onDelete: 'cascade' });
+  PullRequest.hasMany(PullReviewer, { foreignKey: 'pullId', onDelete: 'cascade' });
 
   User.hasMany(OrgUser, { foreignKey: 'userId' });
   User.hasMany(OrgUser, { foreignKey: 'orgId' });
