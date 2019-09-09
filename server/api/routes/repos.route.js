@@ -148,7 +148,10 @@ router
     const { reponame, username: orgName } = req.params;
     const { newName } = req.body;
     renameRepo({
-      reponame, newName, username: req.user.username, orgName
+      reponame,
+      newName,
+      username: req.user.username,
+      orgName
     })
       .then(result => res.send(result))
       .catch(next);
@@ -188,7 +191,7 @@ router
     const { repositoryId } = req.query;
     getAllRepoIssues({ repositoryId })
       .then(result => res.send(result))
-      .catch(next);        
+      .catch(next);
   })
   .put('/:username/:reponame', isAdminMiddleware, (req, res, next) => {
     const { username, reponame } = req.params;
