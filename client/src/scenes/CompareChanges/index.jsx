@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import * as queryString from 'query-string';
 import { Item, Loader, Segment } from 'semantic-ui-react';
 import Octicon, { Comment, Diff, GitCommit, Organization } from '@primer/octicons-react';
 import SelectCompareBranches from '../../components/SelectCompareBranches';
@@ -36,14 +37,62 @@ class CompareChanges extends React.Component {
     this.onToBranchChange = this.onToBranchChange.bind(this);
     this.onFromBranchChange = this.onFromBranchChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.updateLink = this.updateLink.bind(this);
   }
 
   async componentDidMount() {
-    const { repositoryId } = this.props;
+    const { repositoryId, branches } = this.props;
+
+    const { fromBranch: fromBranchName, toBranch: toBranchName } = this.getBranchesFromQuery();
+
+    if (fromBranchName && toBranchName) {
+      this.setState({
+        fromBranch: branches.find(({ name }) => name === fromBranchName),
+        toBranch: branches.find(({ name }) => name === toBranchName),
+      });
+    }
+
     const labels = await getLabels(repositoryId);
     const collaborators = await getRepositoryCollaborators(repositoryId);
     this.setState({ labels, collaborators });
     this.updateBranchDiffs();
+  }
+
+  getBranchesFromQuery() {
+    const { fromBranch: { name: fromBranch }, toBranch: { name: toBranch } } = this.state;
+
+    if (!this.props.location.search) {
+      return {
+        fromBranch,
+        toBranch
+      };
+    }
+
+    return {
+      fromBranch: queryString.parse(this.props.location.search, { ignoreQueryPrefix: true }).fromBranch || fromBranch,
+      toBranch: queryString.parse(this.props.location.search, { ignoreQueryPrefix: true }).toBranch || toBranch
+    };
+  };
+
+  updateLink() {
+    const { location, history } = this.props;
+    const { fromBranch: { name: fromBranch }, toBranch: { name: toBranch } } = this.state;
+    const { fromBranchQuery, toBranchQuery } = this.getBranchesFromQuery();
+    const queryParams = [];
+
+    if (fromBranch !== fromBranchQuery) {
+      queryParams.push(`fromBranch=${fromBranch}`);
+    }
+    if (toBranch !== toBranchQuery) {
+      queryParams.push(`toBranch=${toBranch}`);
+    }
+
+    if (queryParams.length > 0) {
+      const queryParamsStr = queryParams.join('&');
+      history.push(`${location.pathname}?${queryParamsStr}`);
+    } else {
+      history.push(`${location.pathname}`);
+    }
   }
 
   updateBranchDiffs() {
@@ -77,6 +126,7 @@ class CompareChanges extends React.Component {
     const toBranch = this.props.branches.find(({ name }) => name === value);
     this.setState({ toBranch }, () => {
       this.updateBranchDiffs();
+      this.updateLink();
     });
   }
 
@@ -84,6 +134,7 @@ class CompareChanges extends React.Component {
     const fromBranch = this.props.branches.find(({ name }) => name === value);
     this.setState({ fromBranch }, () => {
       this.updateBranchDiffs();
+      this.updateLink();
     });
   }
 
@@ -228,7 +279,8 @@ CompareChanges.propTypes = {
     isExact: PropTypes.bool.isRequired,
     path: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired
-  }).isRequired
+  }).isRequired,
+  location: PropTypes.object.isRequired
 };
 
 const mapStateToProps = ({

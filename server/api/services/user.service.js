@@ -99,8 +99,8 @@ const getUsersForCollaboratorsAddition = async ({ username, repositoryId, userId
   const { user: { username: owner } } = await RepoRepository.getRepoOwnerByRepoId(repositoryId);
   return users
     .filter(({ id }) => !repos.includes(id))
-    .map(({ username }) => username)
-    .filter(username => username !== owner)
+    .map(({ username: name }) => name)
+    .filter(name => name !== owner)
     .slice(0, 6);
 };
 

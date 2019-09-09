@@ -22,6 +22,14 @@
   margin-right: 0.75em;
 }
 
+.prIcon {
+  margin-right: 5px;
+}
+
+:global(.ui.button):local(.newPrButton) {
+  margin-right: 0;
+}
+
 :local(.listItemGroup) {
   padding-top: 0.5em;
 }
