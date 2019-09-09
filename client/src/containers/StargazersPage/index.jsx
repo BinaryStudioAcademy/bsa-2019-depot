@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 
 import Octicon, { getIconByName } from '@primer/octicons-react';
-import { Container, Header, Image, Loader } from 'semantic-ui-react';
+import { Segment, Header, Image, Loader } from 'semantic-ui-react';
 import styles from './styles.module.scss';
 
 const StargazersPage = ({ stars, loading }) => {
@@ -14,7 +14,7 @@ const StargazersPage = ({ stars, loading }) => {
       <Loader />
     </div>
   ) : (
-    <Container>
+    <Segment basic>
       <Header as="h2" className={styles.stargazerHeader}>
         Stargazers
       </Header>
@@ -41,7 +41,7 @@ const StargazersPage = ({ stars, loading }) => {
           </div>
         ))}
       </div>
-    </Container>
+    </Segment>
   );
 };
 

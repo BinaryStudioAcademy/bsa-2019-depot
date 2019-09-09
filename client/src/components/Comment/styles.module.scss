@@ -79,13 +79,18 @@
   object-fit: contain;
 }
 
-:global(.ui.icon.message) {
-  flex-direction: row-reverse;
-}
-
 :local(.questionLink) {
   display: inline-block;
-  width: 94%;
+  width: calc(100% - 50px);
+  border-radius: 5px;
+  :global(.ui.icon.message) {
+    flex-direction: row-reverse;
+    :global(.content) {
+      :global(.header) {
+        margin-bottom: 0.5em;
+      }
+    }
+  }
 }
 
 :local(.questionWrapper) {
