@@ -1,0 +1,61 @@
+$red: #ed1a37;
+$blue: #2e53db;
+
+.prDiffHeader {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .diffFilters {
+    margin: 8px 0;
+    :global(.ui.dropdown:first-child) {
+      margin-right: 25px;
+    }
+  }
+
+  .fileNameRow {
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .fileName {
+      font-weight: bold;
+      margin-right: 15px;
+    }
+
+    .fileChangesCounters {
+      .newLines {
+        color: #28a745;
+        margin-right: 5px;
+      }
+
+      .oldLines {
+        color: $red;
+      }
+    }
+  }
+}
+
+:global(.ui.button.dropdown):local(.reviewChanges) {
+  background-color: $blue;
+  color: white;
+
+  &:global(.active) {
+    background-color: $blue;
+    color: white;
+  }
+
+  .reviewChangesItemHeader {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  :global(.menu.transition.visible) {
+    :global(.item) {
+      display: flex;
+      align-items: center;
+    }
+  }
+}

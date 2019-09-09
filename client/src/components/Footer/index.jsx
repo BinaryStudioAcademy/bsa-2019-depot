@@ -11,7 +11,7 @@ const Footer = ({ isAuthorized, username }) =>
     <Container>
       <Grid centered>
         <Grid.Row>
-          <Grid.Column computer={12} mobile={16}>
+          <Grid.Column computer={16} mobile={16}>
             <Grid.Row className={styles.footer}>
               <Grid.Column mobile={7}>
                 <ul className={styles.menuLeft}>

@@ -26,18 +26,29 @@ class PinnableRepos extends React.Component {
     this.renderForm = this.renderForm.bind(this);
     this.validate = this.validate.bind(this);
     this.onFilter = this.onFilter.bind(this);
-    this.getRepositories = this.getRepositories.bind(this);
+    this.getPublicOnlyRepositories = this.getPublicOnlyRepositories.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  async getRepositories() {
+  async getPublicOnlyRepositories() {
     const { username } = this.props;
-    const repositories = await repositoryService.getRepositories(username);
+    const repositories = await repositoryService.getPublicOnlyRepositories(username);
 
     this.setState({
       repositories,
       loading: false
     });
+  }
+
+  get initialValues() {
+    const { pinnedRepos } = this.props;
+    if (!pinnedRepos) {
+      return {};
+    }
+
+    const initialValues = {};
+    pinnedRepos.forEach(({ repository: { id } }) => (initialValues[id] = true));
+    return initialValues;
   }
 
   filterRepositories(repositories, searchValue) {
@@ -80,8 +91,8 @@ class PinnableRepos extends React.Component {
     });
   }
 
-  handleOpen = () => this.setState({ ...this.state, modalOpen: true });
-  handleClose = () => this.setState({ ...this.state, modalOpen: false });
+  handleOpen = () => this.setState({ modalOpen: true });
+  handleClose = () => this.setState({ modalOpen: false });
 
   renderTrigger() {
     return (
@@ -100,7 +111,7 @@ class PinnableRepos extends React.Component {
     this.props.onSetPinned();
   }
 
-  renderItem({ id, name, disabled, starsCount }, handleChange) {
+  renderItem({ id, name, disabled, starsCount }, handleChange, checked) {
     return (
       <Form.Field key={name}>
         <Checkbox
@@ -121,18 +132,19 @@ class PinnableRepos extends React.Component {
           }
           disabled={disabled}
           onChange={handleChange}
+          checked={checked}
         />
       </Form.Field>
     );
   }
 
-  renderForm({ errors, touched, handleChange, handleSubmit }) {
+  renderForm({ errors, touched, handleChange, handleSubmit, values }) {
     const { repositories, remaining, searchValue, loading } = this.state;
     const filteredRepos = this.filterRepositories(repositories, searchValue);
 
     return (
       <Form onSubmit={handleSubmit} loading={loading}>
-        {filteredRepos.map(repo => this.renderItem(repo, handleChange))}
+        {filteredRepos.map(repo => this.renderItem(repo, handleChange, values[repo.id]))}
         <Divider />
         <div className={styles.formFooter}>
           <span className={!remaining ? styles.warning : ''}>{remaining} remaining</span>
@@ -150,7 +162,7 @@ class PinnableRepos extends React.Component {
       <Modal
         trigger={this.renderTrigger()}
         open={modalOpen}
-        onOpen={this.getRepositories}
+        onOpen={this.getPublicOnlyRepositories}
         onClose={this.handleClose}
         size="tiny"
       >
@@ -162,7 +174,12 @@ class PinnableRepos extends React.Component {
         <Modal.Content>
           <Input placeholder="Filter repositories" fluid onChange={this.onFilter} value={searchValue} />
           <Divider />
-          <Formik onSubmit={this.onSubmit} render={this.renderForm} validate={this.validate} />
+          <Formik
+            onSubmit={this.onSubmit}
+            render={this.renderForm}
+            validate={this.validate}
+            initialValues={this.initialValues}
+          />
         </Modal.Content>
       </Modal>
     );
@@ -178,7 +195,8 @@ const mapStateToProps = ({
 PinnableRepos.propTypes = {
   username: PropTypes.string,
   userId: PropTypes.string,
-  onSetPinned: PropTypes.func
+  onSetPinned: PropTypes.func,
+  pinnedRepos: PropTypes.array
 };
 
 export default connect(mapStateToProps)(PinnableRepos);

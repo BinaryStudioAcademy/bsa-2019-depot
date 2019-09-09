@@ -1,0 +1,64 @@
+:local(.header_row) {
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+:local(.pull_header) {
+  margin-right: auto !important;
+}
+
+:local(.input) {
+  margin-right: 0.6em;
+  flex: 1;
+}
+
+:local(.comment_author_name) {
+  font-weight: bold;
+  span {
+    font-weight: normal;
+  }
+}
+
+:local(.pull_label) {
+  margin-right: 0.8em !important;
+}
+
+:local(.red) {
+  margin-left: 2px;
+  color: #cb2431 !important;
+}
+
+:local(.green) {
+  color: #2cbe4e !important;
+}
+
+:local(.block_added) {
+  background-color: #2cbe4e;
+}
+
+:local(.block_deleted) {
+  background-color: #cb2431;
+}
+
+:local(.block_neutral) {
+  background-color: #d1d5da;
+}
+
+:local(.block_container) {
+  display: flex;
+  align-items: center;
+  margin-left: 5px;
+  margin-top: 2px;
+  span {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-left: 1px;
+  }
+}
+
+:local(.last) {
+  margin-left: auto !important;
+}

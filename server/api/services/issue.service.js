@@ -1,4 +1,6 @@
 const issueRepository = require('../../data/repositories/issue.repository');
+const repoRepository = require('../../data/repositories/repository.repository');
+const userRepository = require('../../data/repositories/user.repository');
 const issueCommentRepository = require('../../data/repositories/issue-comment.repository');
 const CustomError = require('../../helpers/error.helper');
 
@@ -17,7 +19,7 @@ const getAllRepoIssues = async (repositoryId) => {
   return issues || Promise.reject(new CustomError(404, `Repository with id ${repositoryId} not found`));
 };
 
-const getRepoIssues = (repositoryId, sort, authorId, title, isOpened) => issueRepository.getIssues(repositoryId, sort, authorId, title, isOpened);
+const getRepoIssues = (repositoryId, sort, author, title, isOpened) => issueRepository.getIssues(repositoryId, sort, author, title, isOpened);
 
 const getRepoIssueByIdNumber = (repositoryId, number) => issueRepository.getIssueByIdNumber(repositoryId, number);
 

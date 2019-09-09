@@ -18,8 +18,7 @@ export const updateIssueComment = async request => {
   return response ? response.json() : false;
 };
 
-export const deleteIssueComment = async request => {
-  const { id } = request;
+export const deleteIssueComment = async id => {
   const response = await callWebApi({
     endpoint: `/api/issue-comments/${id}`,
     type: 'DELETE'

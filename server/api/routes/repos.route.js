@@ -8,9 +8,12 @@ const {
   isEmpty,
   forkRepo,
   setStar,
-  updateByUserAndReponame
+  updateByUserAndReponame,
+  getRepositoryForks
 } = require('../services/repo.service');
-const { getCommits, getCommitDiff, getCommitCount } = require('../services/commit.service');
+const {
+  getCommits, getCommitDiff, getCommitCount, getCommitActivityData
+} = require('../services/commit.service');
 const { deleteStarsByRepoId } = require('../services/star.service');
 const {
   getBranches,
@@ -138,23 +141,28 @@ router
       .then(result => res.send(result))
       .catch(next);
   })
-  .get('/:username/:reponame/settings', ownerOnlyMiddleware, (req, res) => {
+  .get('/:username/:reponame/settings', isAdminMiddleware, (req, res) => {
     res.sendStatus(200);
   })
   .post('/:username/:reponame/settings/rename', isAdminMiddleware, (req, res, next) => {
-    const { reponame } = req.params;
+    const { reponame, username: orgName } = req.params;
     const { newName } = req.body;
-    renameRepo({ reponame, newName, username: req.user.username })
+    renameRepo({
+      reponame,
+      newName,
+      username: req.user.username,
+      orgName
+    })
       .then(result => res.send(result))
       .catch(next);
   })
   .delete('/:username/:reponame/settings', ownerOnlyMiddleware, (req, res, next) => {
-    const { reponame } = req.params;
-    deleteRepo({ reponame, username: req.user.username })
+    const { reponame, username: orgName } = req.params;
+    deleteRepo({ reponame, username: req.user.username, orgName })
       .then(result => res.send(result))
       .catch(next);
   })
-  .post('/fork', isAdminMiddleware, (req, res, next) => {
+  .post('/fork', (req, res, next) => {
     const {
       body: {
         owner,
@@ -244,22 +252,62 @@ router
   })
   .get('/:repositoryId/pulls/diffs', (req, res, next) => {
     const { repositoryId } = req.params;
-    const { fromBranch, toBranch } = req.query;
+    const { fromCommitId, toCommitId } = req.query;
     pullsService
-      .getPullData(repositoryId, fromBranch, toBranch)
+      .getPullData(repositoryId, fromCommitId, toCommitId)
       .then(data => res.send(data))
       .catch(next);
   })
-  .get('/:repositoryId/pulls', (req, res, next) => {
-    const { repositoryId } = req.params;
+  .get('/:username/:reponame/pulls', isReaderMiddleware, (req, res, next) => {
+    const { repositoryId } = req.query;
     pullsService
       .getPulls(repositoryId)
-      .then(data => res.send(data))
+      .then(result => res.send(result))
       .catch(next);
   })
+  .get('/:repositoryId/pulls', isReaderMiddleware, async (req, res, next) => {
+    const { repositoryId } = req.params;
+    const {
+      sort, authorId, title, isOpened
+    } = req.query;
+    try {
+      const pulls = await pullsService.getRepoPulls(repositoryId, sort, authorId, title, isOpened);
+      const authors = await userService.getPullsAuthors(repositoryId);
+      const openCount = await pullsService.getPullCount({ repositoryId, isOpened: true });
+      const closedCount = await pullsService.getPullCount({ repositoryId, isOpened: false });
+      res.send({
+        openCount,
+        closedCount,
+        authors,
+        pulls
+      });
+    } catch (e) {
+      next(e);
+    }
+  })
+  .post('/:repositoryId/pulls/labels', async (req, res, next) => {
+    const { labelIds, pullId } = req.body;
+    pullsService
+      .setLabels(labelIds, pullId)
+      .then(() => res.send({}))
+      .catch(next);
+  })
+
   .get('/:repositoryId/collaborators', (req, res, next) => {
     const { repositoryId } = req.params;
     getRepositoryCollaborators(repositoryId)
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .get('/:repositoryId/forks', (req, res, next) => {
+    const { repositoryId } = req.params;
+    getRepositoryForks(repositoryId)
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .get('/:repositoryId/commit-activity-data', (req, res, next) => {
+    const { repositoryId } = req.params;
+    getCommitActivityData(repositoryId)
       .then(data => res.send(data))
       .catch(next);
   });

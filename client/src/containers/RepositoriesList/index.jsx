@@ -75,14 +75,14 @@ export class RepositoriesList extends React.Component {
   }
 
   filterRepositories = repositories => {
-    const { filter } = this.props;
+    const { filter, repoNameFilter } = this.props;
     switch (filter) {
     case 'Public':
-      return repositories.filter(({ isPublic }) => isPublic);
+      return repositories.filter(({ isPublic, name }) => isPublic && name.includes(repoNameFilter));
     case 'Private':
-      return repositories.filter(({ isPublic }) => !isPublic);
+      return repositories.filter(({ isPublic, name }) => !isPublic && name.includes(repoNameFilter));
     default:
-      return repositories;
+      return repositories.filter(({ name }) => name.includes(repoNameFilter));
     }
   };
 
@@ -114,7 +114,8 @@ RepositoriesList.propTypes = {
   }).isRequired,
   id: PropTypes.string,
   filter: PropTypes.string,
-  onDataChange: PropTypes.func
+  onDataChange: PropTypes.func,
+  repoNameFilter: PropTypes.string
 };
 
 const mapStateToProps = ({

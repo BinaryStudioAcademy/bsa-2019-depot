@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { Icon, Label, Container, Segment, Button } from 'semantic-ui-react';
 import ForkButton from '../ForkButton';
 import StarButton from '../../components/StarButton';
 import { setStar } from '../../services/repositoryService';
+import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 
 import styles from './styles.module.scss';
 
@@ -36,17 +37,26 @@ const RepositoryHeader = ({
   case 'commits':
     activeTab = 'code';
     break;
+  case 'insights':
+    activeTab = 'insights';
+    break;
   case 'settings':
     activeTab = 'settings';
     break;
   default:
     activeTab = 'code';
   }
+  const [isAccessGranted, setIsAccessGranted] = useState(false);
 
-  const goToRootDir = (history, url) => () => {
-    history.push(url);
-    window.location.reload();
+  const getPermissions = async () => {
+    const accessPermissions = await getWriteUserPermissions(owner, repoName, userId);
+    setIsAccessGranted(accessPermissions);
   };
+
+  useEffect(() => {
+    getPermissions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const stargazersLinkClickHandler = useCallback(() => history.push(`/${owner}/${repoName}/stargazers`), [
     owner,
@@ -85,11 +95,9 @@ const RepositoryHeader = ({
             <div className={styles.repoName}>
               <Octicon icon={Repo} />
               <span className={styles.repoPath}>
-                <Link to="">{owner}</Link>
+                <Link to={`/${owner}`}>{owner}</Link>
                 <span className={styles.pathDivider}>/</span>
-                <Link to="" onClick={goToRootDir(history, baseUrl)}>
-                  {repoName}
-                </Link>
+                <Link to={`/${owner}/${repoName}`}>{repoName}</Link>
               </span>
               {renderOrignalRepoLink()}
             </div>
@@ -124,7 +132,12 @@ const RepositoryHeader = ({
                 Pull Requests<Label circular>{pullCount}</Label>
               </Link>
             </div>
-            {username && username === owner && (
+            <div className={`${activeTab === 'insights' && 'active'} item`}>
+              <Link to={`${baseUrl}/insights`}>
+                <Icon name="chart bar outline" /> Insights
+              </Link>
+            </div>
+            {((username && username === owner) || isAccessGranted) && (
               <div className={`${activeTab === 'settings' && 'active'} item`}>
                 <Link to={`${baseUrl}/settings`}>
                   <Icon name="cog" /> Settings

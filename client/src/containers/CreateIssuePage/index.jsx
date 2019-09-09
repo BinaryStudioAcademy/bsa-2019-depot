@@ -2,17 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createIssue, fetchCurrentRepo } from '../../routines/routines';
-import { Container } from 'semantic-ui-react';
+import { Container, Loader } from 'semantic-ui-react';
 import CreateIssuePrForm from '../../components/CreateIssuePrForm';
+import { getLabels } from '../../services/labelsService';
 
 class CreateIssuePage extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      labels: [],
+      loading: true
+    };
 
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const {
       repositoryId,
       fetchCurrentRepo,
@@ -23,6 +28,8 @@ class CreateIssuePage extends React.Component {
     if (!repositoryId) {
       fetchCurrentRepo({ username, reponame });
     }
+    const labels = await getLabels(repositoryId);
+    this.setState({ labels, loading: false });
   }
 
   onSubmit(title, body) {
@@ -41,6 +48,7 @@ class CreateIssuePage extends React.Component {
       repositoryId,
       isOpened: true
     });
+
     const newUrl = url
       .split('/')
       .slice(0, -1)
@@ -49,10 +57,14 @@ class CreateIssuePage extends React.Component {
   }
 
   render() {
-    return (
+    const { repositoryId } = this.props;
+    const { labels, loading } = this.state;
+    return !loading ? (
       <Container fluid>
-        <CreateIssuePrForm isIssues onSubmit={this.onSubmit} />
+        <CreateIssuePrForm isIssues={true} onSubmit={this.onSubmit} repositoryId={repositoryId} labels={labels} />
       </Container>
+    ) : (
+      <Loader active />
     );
   }
 }

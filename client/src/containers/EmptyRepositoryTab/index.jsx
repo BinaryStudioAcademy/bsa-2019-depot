@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Icon, Segment } from 'semantic-ui-react';
 import Octicon, { Clippy } from '@primer/octicons-react';
@@ -12,15 +12,8 @@ function EmptyRepositoryTab(props) {
       params: { username, reponame }
     }
   } = props;
-  const [protocol, setProtocol] = useState('HTTPS');
 
-  const getUrl = ({ protocol, username, reponame }) => {
-    return protocol === 'HTTPS'
-      ? `https://${window.location.host}/${username}/${reponame}.git`
-      : `git@${window.location.host}:${username}/${reponame}.git`;
-  };
-
-  const url = getUrl({ protocol, username, reponame });
+  const url = `git@${window.location.host}:${username}/${reponame}.git`;
 
   const createRepoStr = [
     'echo "# test" >> README.md\n',
@@ -43,34 +36,13 @@ function EmptyRepositoryTab(props) {
     navigator.clipboard.writeText(url);
   }
 
-  function setHttp() {
-    setProtocol('HTTPS');
-  }
-
-  function setSsh() {
-    setProtocol('SSH');
-  }
-
   return (
     <Segment basic>
       <div className={styles.box}>
         <section className={styles.boxSectionHeader}>
           <h3>Quick setup — if you’ve done this kind of thing before</h3>
           <div className={styles.urlGroup}>
-            <Button
-              className={[styles.protocolButton, styles.buttonUnshaded]}
-              active={protocol === 'HTTPS'}
-              attached="left"
-              onClick={setHttp}
-            >
-              HTTPS
-            </Button>
-            <Button
-              className={[styles.protocolButton, styles.buttonUnshaded]}
-              active={protocol === 'SSH'}
-              attached={true}
-              onClick={setSsh}
-            >
+            <Button className={[styles.protocolButton, styles.buttonUnshaded]} attached={true}>
               SSH
             </Button>
             <span className={styles.clipboardInput}>{url}</span>

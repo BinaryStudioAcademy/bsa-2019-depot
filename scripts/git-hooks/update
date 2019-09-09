@@ -20,18 +20,18 @@ async function sendPushData() {
   }
 
   const repoOwner = pathToRepo[pathToRepo.length - 2];
-  let repoName = pathToRepo[pathToRepo.length - 1];
-  if (repoName.endsWith('.git')) {
-    repoName = repoName.slice(0, -4);
+  let reponame = pathToRepo[pathToRepo.length - 1];
+  if (reponame.endsWith('.git')) {
+    reponame = reponame.slice(0, -4);
   }
 
-  const commits = await getCommitsData(prevHeadSha, newHeadSha, repoOwner, repoName);
+  const commits = await getCommitsData(prevHeadSha, newHeadSha, repoOwner, reponame);
 
   const branch = {
     name: branchName,
     newHeadSha,
     repoOwner,
-    repoName
+    reponame
   };
 
   const data = {
@@ -52,7 +52,7 @@ async function sendPushData() {
   process.exit(0);
 }
 
-async function getCommitsData(shaFrom, shaTo, repoOwner, repoName) {
+async function getCommitsData(shaFrom, shaTo, repoOwner, reponame) {
   const revList = (shaFrom === '0000000000000000000000000000000000000000')
     ? await exec(`git rev-list ${shaTo} --not --branches=*`)
     : await exec(`git rev-list ${shaFrom}..${shaTo}`);
@@ -65,7 +65,7 @@ async function getCommitsData(shaFrom, shaTo, repoOwner, repoName) {
     userEmail: email,
     createdAt: time,
     repoOwner,
-    repoName
+    reponame
   }));
 }
 

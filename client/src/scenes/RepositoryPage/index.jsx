@@ -12,21 +12,22 @@ import CommitsPage from '../../containers/CommitsPage/index';
 import DiffCommitView from '../../components/DiffCommitView/index';
 import RepoSettings from '../../containers/SettingsTab/index';
 import FileViewPage from '../../containers/FileViewPage';
+import BlameViewPage from '../../containers/BlameViewPage';
 import FileEditPage from '../../containers/FileEditPage';
 import StargazersPage from '../../containers/StargazersPage/index';
 import BranchesTab from '../../containers/BranchesTab/index';
 import CreateIssuePage from '../../containers/CreateIssuePage';
 import PrivateTab from '../../containers/PrivateTab';
+import InsightsTab from '../../containers/InsightsTab';
 import { fetchCurrentRepo } from '../../routines/routines';
 import { clearRepoState } from './actions';
 import Spinner from '../../components/Spinner';
 import CodeTab from '../../scenes/CodeTab';
 import CollaboratorInvitation from '../../containers/CollaboratorInvitation';
 import LabelTab from '../../containers/LabelsTab';
+import PullView from '../../containers/PullView';
 import { getAllUserPermissions } from '../../helpers/checkPermissionsHelper';
 import { socketInit } from '../../helpers/socketInitHelper';
-
-import styles from './styles.module.scss';
 
 class RepositoryPage extends React.Component {
   constructor(props) {
@@ -46,7 +47,6 @@ class RepositoryPage extends React.Component {
       },
       userId
     } = this.props;
-
     const isAccessGranted = await getAllUserPermissions(username, reponame, userId);
     fetchCurrentRepo({ username, reponame });
     this.setState({
@@ -62,7 +62,15 @@ class RepositoryPage extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.id !== prevProps.id) {
+    if (!prevProps) {
+      return;
+    }
+    const { username, reponame } = this.props.match.params;
+    const currentRepo = username + reponame;
+    let { username: prevUsername, reponame: prevReponame } = prevProps.match.params;
+    const prevRepo = prevUsername + prevReponame;
+    if (currentRepo !== prevRepo) {
+      this.componentDidMount();
       const { id } = this.props;
       this.socket.emit('createRoom', id);
     }
@@ -115,6 +123,10 @@ class RepositoryPage extends React.Component {
       return <Spinner />;
     }
 
+    function defaultRedirect() {
+      return <Redirect to={`${match.url}/tree/${branch}`} />;
+    }
+
     return username === currentUserName || isPublic || isAccessGranted ? (
       <>
         <RepositoryHeader
@@ -125,15 +137,17 @@ class RepositoryPage extends React.Component {
           activePage={pathname.split('/')[3]}
           baseUrl={match.url}
         />
-        <Container className={styles.contentContainer}>
+        <Container>
           <Switch>
-            <Route exact path={`${match.path}`} component={CodeTab} />
+            <Route exact path={`${match.path}`} render={defaultRedirect} />
             <Route exact path={`${match.path}/tree/:branch`} component={CodeTab} />
             <Route exact path={`${match.path}/tree/:branch/${params}`} component={CodeTab} />
             <Route exact path={`${match.path}/commits/:branch`} component={CommitsPage} />
             <Route exact path={`${match.path}/commit/:hash`} component={DiffCommitView} />
             <Route exact path={`${match.path}/issues`} component={IssuesTab} />
             <Route exact path={`${match.path}/pulls`} component={PullRequestsTab} />
+            <Route path={`${match.path}/insights`} component={InsightsTab} />
+            <Route path={`${match.path}/pulls/:number`} component={PullView} />
             <Route exact path={`${match.path}/compare`} component={CompareChanges} />
             <Route exact path={`${match.path}/issues/new`} component={CreateIssuePage} />
             <Route exact path={`${match.path}/issues/:number`} component={IssueComments} />
@@ -143,6 +157,7 @@ class RepositoryPage extends React.Component {
             <Route exact path={`${match.path}/branches`} component={BranchesTab} />
             <PrivateTab path={[`${match.path}/new/:branch`, `${match.path}/edit/:branch`]} component={FileEditPage} />
             <Route path={`${match.path}/blob/:branch`} component={FileViewPage} />
+            <Route path={`${match.path}/blame/:branch`} component={BlameViewPage} />
             <Route exact path={`${match.path}/invitations`} component={CollaboratorInvitation} />
           </Switch>
         </Container>
@@ -169,12 +184,12 @@ RepositoryPage.propTypes = {
     state: PropTypes.array
   }).isRequired,
   id: PropTypes.string.isRequired,
-  issuesCount: PropTypes.number.isRequired,
-  pullCount: PropTypes.number,
+  issuesCount: PropTypes.string,
+  pullCount: PropTypes.string,
   branches: PropTypes.array.isRequired,
-  defaultBranch: PropTypes.string.isRequired,
+  defaultBranch: PropTypes.string,
   loading: PropTypes.bool.isRequired,
-  isPublic: PropTypes.bool.isRequired,
+  isPublic: PropTypes.bool,
   userId: PropTypes.string.isRequired,
   currentUserName: PropTypes.string.isRequired,
   owner: PropTypes.object,

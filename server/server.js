@@ -8,13 +8,20 @@ const uppy = require('@uppy/companion');
 const cors = require('cors');
 const socketIO = require('socket.io');
 const http = require('http');
+const { Client } = require('elasticsearch');
 const { options } = require('./config/aws.config');
 const routes = require('./api/routes/index');
 const routesWhiteList = require('./config/routes-white-list.config');
 const authorizationMiddleware = require('./api/middlewares/authorization.middleware');
 const errorHandlerMiddleware = require('./api/middlewares/error-handler.middleware');
 const socketHandlers = require('./socket/socket-handlers');
-const { issuesSocketInjector, commitsSocketInjector, reposSocketInjector } = require('./socket/injector');
+const {
+  issuesSocketInjector,
+  pullsSocketInjector,
+  commitsSocketInjector,
+  reposSocketInjector
+} = require('./socket/injector');
+const { elasticHost, elasticPort, elasticIndex } = require('./config/elastic.config');
 
 const app = express();
 app.use(cors());
@@ -22,6 +29,7 @@ const socketServer = http.Server(app);
 const io = socketIO(socketServer);
 
 const issuesNsp = io.of('/issues').on('connection', socketHandlers);
+const pullsNsp = io.of('/pulls').on('connection', socketHandlers);
 const commitsNsp = io.of('/commits').on('connection', socketHandlers);
 const reposNsp = io.of('/repos').on('connection', socketHandlers);
 
@@ -30,6 +38,7 @@ app.use(passport.initialize());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/', authorizationMiddleware(routesWhiteList));
 app.use(issuesSocketInjector(issuesNsp));
+app.use(pullsSocketInjector(pullsNsp));
 app.use(commitsSocketInjector(commitsNsp));
 app.use(reposSocketInjector(reposNsp));
 
@@ -53,3 +62,37 @@ const server = app.listen(port, () => {
 });
 
 socketServer.listen(server);
+
+const client = new Client({
+  host: elasticHost,
+  port: elasticPort
+});
+
+const init = async () => {
+  await client.indices.create({
+    index: elasticIndex,
+    body: {
+      mappings: {
+        properties: {
+          type: { type: 'keyword' },
+          username: { type: 'text' },
+          reponame: { type: 'text' }
+        }
+      }
+    }
+  });
+};
+
+client.indices.exists(
+  {
+    index: elasticIndex
+  },
+  (error, exists) => {
+    if (!exists) {
+      init();
+      console.warn(`Index ${elasticIndex} was created`);
+    } else {
+      console.warn('Index already exists, not creating again');
+    }
+  }
+);

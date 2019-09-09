@@ -1,0 +1,48 @@
+$gray: #f7f7fb;
+$black: #363a44;
+
+:global(a.ui.label.optionLabel) {
+  background-color: $gray;
+
+  img {
+    height: 1.6em !important;
+    margin-left: -10px;
+    border-radius: 0.28571429rem 0 0 0.28571429rem;
+  }
+
+  :global(.octicon) {
+    margin-right: 5px;
+  }
+}
+
+.sectionHeader {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+:global(.ui.button):local(.actionButton) {
+  background-color: $gray;
+  border: 1px solid rgba(27, 31, 35, 0.2);
+  color: $black;
+  font-size: 100%;
+  line-height: 20px;
+  padding: 3px 10px;
+}
+
+.participantAvatars {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.labelName {
+  margin-bottom: 5px;
+  font-weight: bold;
+
+  .labelColor {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+  }
+}

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as repositoryService from '../../services/repositoryService';
 import { Button, Label, Modal, Loader } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Octicon, { getIconByName } from '@primer/octicons-react';
@@ -37,7 +38,8 @@ class ForkButton extends Component {
     const {
       repoName,
       currentRepoInfo: { forkedCount },
-      isOwnRepo
+      isOwnRepo,
+      owner
     } = this.props;
     const { username, loading } = this.state;
     return (
@@ -49,23 +51,23 @@ class ForkButton extends Component {
         size="small"
         trigger={
           isOwnRepo ? (
-            <Button disabled size="small" as="div" compact labelPosition="right" onClick={this.handleOpen}>
-              <Button compact className={styles.forkButton}>
+            <Button size="small" as="div" compact labelPosition="right">
+              <Button disabled compact className={styles.forkButton} onClick={this.handleOpen}>
                 <Octicon className={styles.forkButtonIcon} icon={getIconByName('repo-forked')} />
                 Fork
               </Button>
-              <Label as="a" basic>
-                {forkedCount}
+              <Label basic>
+                <Link to={`/${owner}/${repoName}/insights`}>{forkedCount}</Link>
               </Label>
             </Button>
           ) : (
-            <Button size="small" as="div" compact labelPosition="right" onClick={this.handleOpen}>
-              <Button compact className={styles.forkButton}>
+            <Button size="small" as="div" compact labelPosition="right">
+              <Button compact className={styles.forkButton} onClick={this.handleOpen}>
                 <Octicon className={styles.forkButtonIcon} icon={getIconByName('repo-forked')} />
                 Fork
               </Button>
-              <Label as="a" basic>
-                {forkedCount}
+              <Label basic>
+                <Link to={`/${owner}/${repoName}/insights`}>{forkedCount}</Link>
               </Label>
             </Button>
           )

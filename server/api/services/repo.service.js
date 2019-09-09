@@ -110,7 +110,11 @@ const createRepo = async (repoData) => {
     });
   }
 
-  return result;
+  return {
+    ...result,
+    id,
+    name
+  };
 };
 
 const checkName = async ({ owner, reponame }) => {
@@ -172,30 +176,47 @@ const deleteByUserAndReponame = async ({ owner, reponame }) => {
   return repoRepository.deleteByUserAndReponame(user.id, reponame);
 };
 
-const renameRepo = async ({ reponame, newName, username }) => {
-  try {
-    const oldDirectory = repoHelper.getPathToRepo(username, reponame);
-    const newDirectory = repoHelper.getPathToRepo(username, newName);
-    fs.renameSync(oldDirectory, newDirectory);
-    await updateByUserAndReponame({ owner: username, reponame, data: { name: newName } });
-    return true;
-  } catch (e) {
-    return e;
+const renameRepo = ({
+  reponame, newName, username, orgName
+}) => {
+  const renameRepository = async (pathName) => {
+    try {
+      const oldDirectory = repoHelper.getPathToRepo(pathName, reponame);
+      const newDirectory = repoHelper.getPathToRepo(pathName, newName);
+      fs.renameSync(oldDirectory, newDirectory);
+      await updateByUserAndReponame({ owner: pathName, reponame, data: { name: newName } });
+      return true;
+    } catch (e) {
+      return e;
+    }
+  };
+
+  if (username === orgName) {
+    renameRepository(username);
   }
+  renameRepository(orgName);
 };
 
-const deleteRepo = async ({ reponame, username }) => {
-  try {
-    const directory = repoHelper.getPathToRepo(username, reponame);
-    await fs.remove(directory);
-    const { id: repositoryId } = await getByUserAndReponame({ owner: username, reponame });
-    await deleteByUserAndReponame({ owner: username, reponame });
-    await branchRepository.deleteByRepoId(repositoryId);
-    await commitRepository.deleteByRepoId(repositoryId);
-    return true;
-  } catch (e) {
-    return e;
+const deleteRepo = ({ reponame, username, orgName }) => {
+  const deleteRepository = async (pathName) => {
+    try {
+      const directory = repoHelper.getPathToRepo(pathName, reponame);
+      await fs.remove(directory);
+
+      const { id: repositoryId } = await getByUserAndReponame({ owner: pathName, reponame });
+      await deleteByUserAndReponame({ owner: pathName, reponame });
+      await branchRepository.deleteByRepoId(repositoryId);
+      await commitRepository.deleteByRepoId(repositoryId);
+      return true;
+    } catch (e) {
+      return e;
+    }
+  };
+
+  if (username === orgName) {
+    deleteRepository(username);
   }
+  return deleteRepository(orgName);
 };
 
 const getReposNames = async ({
@@ -246,7 +267,7 @@ const forkRepo = async ({
     const currentRepoBranches = await branchRepository.getAllRepoBranches(forkedFromRepoId);
     const currentRepoCommits = await commitRepository.getAllRepoCommits(forkedFromRepoId);
 
-    const {id} = await repoRepository.create({
+    const { id } = await repoRepository.create({
       userId,
       name,
       website,
@@ -254,11 +275,11 @@ const forkRepo = async ({
       forkedFromRepoId
     });
 
-    const branchesPromises = currentRepoBranches.map(branch => branchRepository.create({...branch, repositoryId: id}));
+    const branchesPromises = currentRepoBranches.map(branch => branchRepository.create({ ...branch, repositoryId: id }));
     await Promise.all(branchesPromises);
-    const commitPromises = currentRepoCommits.map(commit => commitRepository.create({...commit, repositoryId: id}));
+    const commitPromises = currentRepoCommits.map(commit => commitRepository.create({ ...commit, repositoryId: id }));
     await Promise.all(commitPromises);
-    return {status: true, username};
+    return { status: true, username };
   } catch (err) {
     return Promise.reject(new CustomError(500, err.message));
   }
@@ -278,6 +299,8 @@ const getRepoData = async repositoryId => repoRepository.getRepositoryById(repos
 
 const getRepositoryCollaborators = repositoryId => collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId);
 
+const getRepositoryForks = async repositoryId => repoRepository.getRepositoryForks(repositoryId);
+
 module.exports = {
   createRepo,
   renameRepo,
@@ -291,5 +314,6 @@ module.exports = {
   getByUserAndReponame,
   updateByUserAndReponame,
   getRepoData,
-  getRepositoryCollaborators
+  getRepositoryCollaborators,
+  getRepositoryForks
 };
