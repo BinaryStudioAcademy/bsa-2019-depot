@@ -58,7 +58,6 @@ UserInfo.propTypes = {
   name: PropTypes.string,
   imgUrl: PropTypes.string,
   status: PropTypes.string,
-  updateData: PropTypes.func,
   currentUsername: PropTypes.string,
   fetchCurrentUser: PropTypes.func
 };
