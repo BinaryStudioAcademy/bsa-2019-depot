@@ -168,30 +168,31 @@ const getRepoByPullId = pullId => pullRepository.getRepoByPullId(pullId);
 const getRepoPulls = async (repositoryId, sort, authorId, title, isOpened) => {
   const status = await prStatusRepository.getByName('OPEN');
   const { id: statusId } = status.get({ plain: true });
-  const pullsObjects = await Promise.all(await pullRepository.getPulls(repositoryId, sort, authorId, title, isOpened, statusId));
+  const pullsObjects = await Promise.all(
+    await pullRepository.getPulls(repositoryId, sort, authorId, title, isOpened, statusId)
+  );
   const pulls = pullsObjects.map(pull => pull.get({ plain: true }));
 
   const pullsReviews = await Promise.all(pulls.map(({ id }) => pullReviewerRepository.getReviewersForPull(id)));
 
-  const statuses = pullsReviews
-    .map(((reviewObjs) => {
-      if (!reviewObjs.length) {
-        return '';
-      }
+  const statuses = pullsReviews.map((reviewObjs) => {
+    if (!reviewObjs.length) {
+      return '';
+    }
 
-      const reviews = reviewObjs.map(review => review.get({ plain: true }));
+    const reviews = reviewObjs.map(review => review.get({ plain: true }));
 
-      reviews.sort(({ updatedAt: updatedAtA }, { updatedAt: updatedAtB }) => new Date(updatedAtB) - new Date(updatedAtA));
-      const approvedId = reviews.findIndex(review => review.status.name === 'APPROVED');
-      const changesRequestedId = reviews.findIndex(review => review.status.name === 'CHANGES REQUESTED');
-      if (approvedId === -1 && changesRequestedId === -1) {
-        return 'Review required';
-      }
-      if (approvedId > changesRequestedId) {
-        return 'Approved';
-      }
-      return 'Requested changes';
-    }));
+    reviews.sort(({ updatedAt: updatedAtA }, { updatedAt: updatedAtB }) => new Date(updatedAtB) - new Date(updatedAtA));
+    const approvedId = reviews.findIndex(review => review.status.name === 'APPROVED');
+    const changesRequestedId = reviews.findIndex(review => review.status.name === 'CHANGES REQUESTED');
+    if (approvedId === -1 && changesRequestedId === -1) {
+      return 'Review required';
+    }
+    if (approvedId > changesRequestedId) {
+      return 'Approved';
+    }
+    return 'Requested changes';
+  });
 
   return pulls.map((pull, index) => ({ ...pull, reviewStatus: statuses[index] }));
 };

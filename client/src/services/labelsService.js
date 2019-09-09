@@ -36,10 +36,11 @@ export const deleteLabel = async labelId => {
 
 export const setLabelsToIssue = async (labelIds, issueId) => {
   const response = await callWebApi({
-    endpoint: `/api/issues/${issueId}/labels`,
+    endpoint: '/api/issue-labels',
     type: 'POST',
     request: {
-      labelIds
+      labelIds,
+      issueId
     }
   });
   return response.json();

@@ -39,10 +39,21 @@ const deleteByIssueAndLabelId = async (issueId, labelId) => {
   return IssueLabelRepository.deleteByIssueAndLabelId(issueId, labelId);
 };
 
+const setIssueLabels = async (labelIds, issueId) => {
+  const issueLabels = await getLabelsByIssueId(issueId);
+  const issueLabelIds = issueLabels && issueLabels.length ? issueLabels.map(issueLabel => issueLabel.labelId) : [];
+  const deleteLabelIds = issueLabelIds.filter(issueLabelId => !labelIds.includes(issueLabelId));
+  await Promise.all(deleteLabelIds.map(labelId => deleteByIssueAndLabelId(issueId, labelId)));
+  const addLabelIds = labelIds.filter(labelId => !issueLabelIds.includes(labelId));
+  await Promise.all(addLabelIds.map(async labelId => addIssueLabel(issueId, labelId)));
+  return IssueLabelRepository.getByIssueId(issueId);
+};
+
 module.exports = {
   getIssueLabelById,
   addIssueLabel,
   deleteIssueLabelById,
   deleteByIssueAndLabelId,
-  getLabelsByIssueId
+  getLabelsByIssueId,
+  setIssueLabels
 };

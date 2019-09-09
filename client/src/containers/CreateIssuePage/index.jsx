@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { createIssue, fetchCurrentRepo } from '../../routines/routines';
 import { Container, Loader } from 'semantic-ui-react';
 import CreateIssuePrForm from '../../components/CreateIssuePrForm';
-
 import { getLabels } from '../../services/labelsService';
 
 class CreateIssuePage extends React.Component {
