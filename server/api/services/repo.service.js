@@ -216,7 +216,7 @@ const deleteRepo = ({ reponame, username, orgName }) => {
   if (username === orgName) {
     deleteRepository(username);
   }
-  deleteRepository(orgName);
+  return deleteRepository(orgName);
 };
 
 const getReposNames = async ({
