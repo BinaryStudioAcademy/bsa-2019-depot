@@ -4,6 +4,7 @@ import { Grid, Menu } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import ForksPage from '../ForksPage';
 import CommitsInsight from '../CommitsInsight';
+import ContributorsInsights from '../ContributorsInsights';
 
 const InsightsTab = ({ match }) => {
   function defaultRedirect(props) {
@@ -21,6 +22,9 @@ const InsightsTab = ({ match }) => {
             <NavLink to={`${match.url}/commits`} activeClassName="active">
               <Menu.Item>Commits</Menu.Item>
             </NavLink>
+            <NavLink to={`${match.url}/contributors`} activeClassName="active">
+              <Menu.Item>Contributors</Menu.Item>
+            </NavLink>
           </Menu>
         </Grid.Column>
         <Grid.Column computer={12} tablet={16} mobile={16}>
@@ -28,6 +32,7 @@ const InsightsTab = ({ match }) => {
             <Route exact path={`${match.path}`} render={defaultRedirect} />
             <Route exact path={`${match.path}/forks`} component={ForksPage} />
             <Route exact path={`${match.path}/commits`} component={CommitsInsight} />
+            <Route exact path={`${match.path}/contributors`} component={ContributorsInsights} />
           </Switch>
         </Grid.Column>
       </Grid>

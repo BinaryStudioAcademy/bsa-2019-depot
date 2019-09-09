@@ -1,6 +1,8 @@
 const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
-const { UserModel, IssueModel, PullRequestModel } = require('../models/index');
+const {
+  UserModel, IssueModel, PullRequestModel, CommitModel
+} = require('../models/index');
 const cryptoHelper = require('../../helpers/crypto.helper');
 const sequelize = require('../db/connection');
 
@@ -98,6 +100,17 @@ class UserRepository extends BaseRepository {
         model: PullRequestModel,
         where: { repositoryId },
         attributes: []
+      }
+    });
+  }
+
+  getUsersCommits(repositoryId) {
+    return this.model.findAll({
+      attributes: ['id', 'username', 'imgUrl'],
+      include: {
+        model: CommitModel,
+        where: { repositoryId },
+        attributes: ['id', 'createdAt']
       }
     });
   }
