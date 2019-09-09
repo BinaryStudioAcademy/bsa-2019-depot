@@ -177,7 +177,7 @@ const deleteByUserAndReponame = async ({ owner, reponame }) => {
   return repoRepository.deleteByUserAndReponame(user.id, reponame);
 };
 
-const renameRepo = ({
+const renameRepo = async ({
   reponame, newName, username, orgName
 }) => {
   const renameRepository = async (pathName) => {
@@ -185,17 +185,17 @@ const renameRepo = ({
       const oldDirectory = repoHelper.getPathToRepo(pathName, reponame);
       const newDirectory = repoHelper.getPathToRepo(pathName, newName);
       fs.renameSync(oldDirectory, newDirectory);
-      await updateByUserAndReponame({ owner: pathName, reponame, data: { name: newName } });
-      return true;
+      const result = await updateByUserAndReponame({ owner: pathName, reponame, data: { name: newName } });
+      return result;
     } catch (e) {
       return e;
     }
   };
 
   if (username === orgName) {
-    renameRepository(username);
+    return renameRepository(username);
   }
-  renameRepository(orgName);
+  return renameRepository(orgName);
 };
 
 const deleteRepo = ({ reponame, username, orgName }) => {

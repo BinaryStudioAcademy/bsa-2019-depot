@@ -216,7 +216,8 @@ router.get('/:username/repos/:reponame/pulls/:number', (req, res, next) => {
 
 router.get('/:userId/pinned-repositories', (req, res, next) => {
   const { userId } = req.params;
-  PinnedReposService.getPinnedRepos(userId)
+  const isOwner = req.user.get({ plain: true }).id === userId;
+  PinnedReposService.getPinnedRepos(userId, isOwner)
     .then(result => res.send(result))
     .catch(next);
 });

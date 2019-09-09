@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
+import { Loader } from 'semantic-ui-react';
 
 import RepositoryItem from '../../components/RepositoryItem';
 import { getRepositories, setStar } from '../../services/repositoryService';
@@ -11,7 +12,8 @@ export class RepositoriesList extends React.Component {
     super(props);
 
     this.state = {
-      repositories: []
+      repositories: [],
+      loading: true
     };
 
     this.onStar = this.onStar.bind(this);
@@ -23,7 +25,9 @@ export class RepositoriesList extends React.Component {
         params: { username }
       }
     } = this.props;
-    this.getRepositories(username);
+    this.getRepositories(username).then(() => {
+      this.setState({ loading: false });
+    });
   }
 
   async getRepositories(username) {
@@ -31,7 +35,6 @@ export class RepositoriesList extends React.Component {
     const mappedRepositories = this.checkIfStar(repositories);
 
     this.setState({
-      ...this.state,
       repositories: mappedRepositories
     });
   }
@@ -45,7 +48,6 @@ export class RepositoriesList extends React.Component {
     const updatedRepositories = repositories.map(repo => (repository.id === repo.id ? repository : repo));
 
     this.setState({
-      ...this.state,
       repositories: updatedRepositories
     });
     await setStar({ userId, repositoryId });
@@ -87,7 +89,7 @@ export class RepositoriesList extends React.Component {
   };
 
   render() {
-    const { repositories } = this.state;
+    const { repositories, loading } = this.state;
     const filteredRepositories = this.filterRepositories(repositories);
     const {
       match: {
@@ -95,13 +97,17 @@ export class RepositoriesList extends React.Component {
       }
     } = this.props;
 
-    return (
+    return loading
+      ? (
+        <Loader active/>
+      )
+      : (
       <>
-        {filteredRepositories.map(repo => {
-          return <RepositoryItem repo={repo} key={repo.name} onStar={this.onStar} username={username} />;
-        })}
+        {filteredRepositories.map(repo => (
+          <RepositoryItem repo={repo} key={repo.name} onStar={this.onStar} username={username} />
+        ))}
       </>
-    );
+      );
   }
 }
 
