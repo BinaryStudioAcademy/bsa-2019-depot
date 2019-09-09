@@ -101,6 +101,19 @@ class UserRepository extends BaseRepository {
       }
     });
   }
+
+  setStatusById(id, status) {
+    return this.updateById(id, { status });
+  }
+
+  getStatusByUsername(username) {
+    return this.model.findOne({
+      where: {
+        username
+      },
+      attributes: ['status']
+    });
+  }
 }
 
 module.exports = new UserRepository(UserModel);

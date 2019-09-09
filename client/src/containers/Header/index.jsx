@@ -2,12 +2,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Grid, Menu, Sidebar, Icon, Dropdown, Responsive, Modal, Form, Button, Search } from 'semantic-ui-react';
+import { Grid, Menu, Sidebar, Icon, Dropdown, Responsive, Search } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import Octicon, { Repo, Smiley, Person, Organization } from '@primer/octicons-react';
+import StatusModal from '../../components/StatusModal';
+import { fetchCurrentUser } from '../../routines/routines';
 import { getUserImgLink } from '../../helpers/imageHelper';
 import * as searchService from '../../services/searchService';
-
 import styles from './styles.module.scss';
 import { ReactComponent as LogoSVG } from '../../styles/assets/icons/logo_icon_bright.svg';
 import { ReactComponent as BurgerSVG } from '../../styles/assets/icons/burger.svg';
@@ -217,34 +218,16 @@ const SidebarAuth = (closeSidebar, sidebarOpened, userName, imgUrl) => (
   </Sidebar>
 );
 
-const StatusModal = (showStatusModal, hideModal) => {
-  return (
-    <Modal open={showStatusModal} onClose={hideModal} size="tiny">
-      <Modal.Header>Edit status</Modal.Header>
-      <Modal.Content>
-        <Form>
-          <Form.Field control="input" placeholder="What's happening?" />
-          <div className={styles.statusFormButtons}>
-            <Button type="submit" color="blue" fluid>
-              Set status
-            </Button>
-            <Button basic fluid>
-              Clear status
-            </Button>
-          </div>
-        </Form>
-      </Modal.Content>
-    </Modal>
-  );
-};
-
-const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: { username, imgUrl } }) => {
+const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: { username, imgUrl, status, fetchCurrentUser } }) => {
   const [showStatusModal, setShowStatusModal] = useState(false);
+
   function showModal() {
     setShowStatusModal(true);
   }
+
   function hideModal() {
     setShowStatusModal(false);
+    fetchCurrentUser();
   }
 
   return (
@@ -305,7 +288,7 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
                   <Dropdown.Item onClick={showModal}>
                     <div className={styles.statusItem}>
                       <Octicon icon={Smiley} />
-                      Set status
+                      {status || 'Set Status'}
                     </div>
                   </Dropdown.Item>
                   <Dropdown.Divider />
@@ -322,7 +305,7 @@ const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: 
       </Grid>
 
       {SidebarAuth(closeSidebar, sidebarOpened, username, imgUrl)}
-      {StatusModal(showStatusModal, hideModal)}
+      <StatusModal showStatusModal={showStatusModal} hideModal={hideModal} username={username} />
     </div>
   );
 };
@@ -333,23 +316,34 @@ HeaderDesktopAuth.propTypes = {
   sidebarOpened: PropTypes.bool.isRequired,
   options: PropTypes.exact({
     username: PropTypes.string,
-    imgUrl: PropTypes.string
+    imgUrl: PropTypes.string,
+    status: PropTypes.string,
+    fetchCurrentUser: PropTypes.func
   })
 };
 
-const Header = ({ isAuthorized, username, imgUrl }) => {
-  return isAuthorized ? WithSidebar(HeaderDesktopAuth, { username, imgUrl }) : WithSidebar(HeaderDesktopUnauth);
+const Header = ({ isAuthorized, username, imgUrl, status, fetchCurrentUser }) => {
+  return isAuthorized ? WithSidebar(HeaderDesktopAuth, { username, imgUrl, status, fetchCurrentUser }) : WithSidebar(HeaderDesktopUnauth);
 };
 
 const mapStateToProps = ({
   profile: {
     isAuthorized,
-    currentUser: { username, imgUrl }
+    currentUser: { username, imgUrl, status }
   }
 }) => ({
   isAuthorized,
   username,
-  imgUrl
+  imgUrl,
+  status
 });
 
-export default connect(mapStateToProps)(Header);
+const mapDispatchToProps = {
+  fetchCurrentUser
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Header);
+

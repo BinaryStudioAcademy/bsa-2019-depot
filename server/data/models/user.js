@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       company: DataTypes.STRING,
       location: DataTypes.STRING,
       imgUrl: DataTypes.STRING,
+      status: DataTypes.STRING,
       // ------------------
       type: DataTypes.ENUM('USER', 'ORG')
     },
