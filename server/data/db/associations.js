@@ -23,7 +23,8 @@ module.exports = (models) => {
     IssueLabel,
     PullReviewer,
     ReviewStatus,
-    PullLabel
+    PullLabel,
+    IssueAssignee
   } = models;
 
   SshKey.belongsTo(User);
@@ -123,4 +124,9 @@ module.exports = (models) => {
   IssueLabel.belongsTo(Issue);
   Label.hasMany(IssueLabel, { foreignKey: 'labelId' });
   IssueLabel.belongsTo(Label);
+
+  Issue.hasMany(IssueAssignee, { foreignKey: 'issueId' });
+  IssueAssignee.belongsTo(Issue);
+  User.hasMany(IssueAssignee, { foreignKey: 'assigneeId' });
+  IssueAssignee.belongsTo(User);
 };
