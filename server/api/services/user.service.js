@@ -96,7 +96,9 @@ const getUsersForCollaboratorsAddition = async ({ username, repositoryId, userId
   const users = (await UserRepository.findUserByLetter(username)).filter(({ id }) => id !== userId);
 
   const repos = (await CollaboratorRepository.findRepoById(repositoryId)).map(data => data.userId);
-  const { user: { username: owner } } = await RepoRepository.getRepoOwnerByRepoId(repositoryId);
+  const {
+    user: { username: owner }
+  } = await RepoRepository.getRepoOwnerByRepoId(repositoryId);
   return users
     .filter(({ id }) => !repos.includes(id))
     .map(({ username: name }) => name)

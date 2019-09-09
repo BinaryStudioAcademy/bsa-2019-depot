@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const issueService = require('../services/issue.service');
 const issueCommentService = require('../services/issue-comment.service');
+const issueAssigneeService = require('../services/issue-assignee.service');
 const { checkIssuePermissions } = require('../../helpers/check.permission.level.helper');
 
 const router = Router();
@@ -115,6 +116,13 @@ router
     const { issueId } = req.params;
     issueCommentService
       .getAllIssueComments({ issueId })
+      .then(result => res.send(result))
+      .catch(next);
+  })
+  .get('/:issueId/available-assignees', (req, res, next) => {
+    const { issueId } = req.params;
+    issueAssigneeService
+      .getAvailableAssigneesByIssueId(issueId)
       .then(result => res.send(result))
       .catch(next);
   });

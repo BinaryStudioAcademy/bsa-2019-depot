@@ -99,3 +99,11 @@ export const getAllQuestionOnSO = async params => {
 
   return response.json();
 };
+
+export const getAvailableAssignees = async issueId => {
+  const response = await callWebApi({
+    endpoint: `/api/issues/${issueId}/available-assignees`,
+    type: 'GET'
+  });
+  return response.json();
+};
