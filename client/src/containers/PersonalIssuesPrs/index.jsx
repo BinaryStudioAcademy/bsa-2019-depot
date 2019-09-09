@@ -262,7 +262,6 @@ class PersonalIssuesPrs extends Component {
                 Created
               </Button>
               <Button disabled>Assigned</Button>
-              <Button disabled>Mentioned</Button>
               {isPull && (
                 <Button active={activeTab === tabs.reviewRequests} onClick={this.handleGetReviewRequests}>
                   Review requests
