@@ -97,7 +97,7 @@ class CreateOrganization extends Component {
                   </Grid.Column>
                 </Grid>
                 <Header as="h4" className={styles.field_title}>
-                  Billing email
+                  Email
                 </Header>
 
                 <Grid>
