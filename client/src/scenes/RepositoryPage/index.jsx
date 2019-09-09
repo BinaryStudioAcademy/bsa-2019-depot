@@ -28,6 +28,7 @@ import LabelTab from '../../containers/LabelsTab';
 import PullView from '../../containers/PullView';
 import { getAllUserPermissions } from '../../helpers/checkPermissionsHelper';
 import { socketInit } from '../../helpers/socketInitHelper';
+import * as branchesHelper from '../../helpers/branchesHelper';
 
 class RepositoryPage extends React.Component {
   constructor(props) {
@@ -100,7 +101,7 @@ class RepositoryPage extends React.Component {
       issuesCount,
       pullCount,
       branches,
-      defaultBranch,
+      defaultBranchId,
       location: { pathname },
       currentUserName,
       isPublic,
@@ -112,7 +113,7 @@ class RepositoryPage extends React.Component {
     const branchExists = pathname.match(/tree\/.+/);
     let branch = '';
     if (branchExists) branch = branchExists[0].split('/')[1]; // branchExists[0] has format 'tree/nameOfBranch/...'
-    branch = branch || defaultBranch || (branches[0] && branches[0].name);
+    branch = branch || branchesHelper.getBranchName(branches, defaultBranchId) || (branches[0] && branches[0].name);
     const pathToDir = pathname.replace(`${match.url}/tree/${branch}`, '').split('/');
     const params = pathToDir
       .filter(path => path)
@@ -187,7 +188,7 @@ RepositoryPage.propTypes = {
   issuesCount: PropTypes.string,
   pullCount: PropTypes.string,
   branches: PropTypes.array.isRequired,
-  defaultBranch: PropTypes.string,
+  defaultBranchId: PropTypes.string,
   loading: PropTypes.bool.isRequired,
   isPublic: PropTypes.bool,
   userId: PropTypes.string.isRequired,
@@ -198,7 +199,7 @@ RepositoryPage.propTypes = {
 const mapStateToProps = ({
   currentRepo: {
     repository: {
-      currentRepoInfo: { id, issuesCount, pullCount, branches, defaultBranch, user: owner, isPublic },
+      currentRepoInfo: { id, issuesCount, pullCount, branches, defaultBranchId, user: owner, isPublic },
       loading
     }
   },
@@ -213,7 +214,7 @@ const mapStateToProps = ({
   issuesCount,
   pullCount,
   branches,
-  defaultBranch,
+  defaultBranchId,
   isPublic,
   loading
 });
