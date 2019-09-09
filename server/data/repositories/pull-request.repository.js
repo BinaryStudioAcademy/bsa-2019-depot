@@ -77,7 +77,7 @@ class PullRepository extends BaseRepository {
             {
               model: LabelModel,
               where: {
-                repositoryId,
+                repositoryId
               }
             }
           ]
@@ -245,12 +245,13 @@ class PullRepository extends BaseRepository {
           ]
         },
         ...(reviewRequests === 'true'
-          ? [{
-            model: PullReviewerModel,
-            where: { userId }
-          }]
-          : []
-        )
+          ? [
+            {
+              model: PullReviewerModel,
+              where: { userId }
+            }
+          ]
+          : [])
       ],
       order: [mapSort(sort)]
     });
@@ -284,12 +285,13 @@ class PullRepository extends BaseRepository {
           ]
         },
         ...(reviewRequests === 'true'
-          ? [{
-            model: PullReviewerModel,
-            where: { userId }
-          }]
-          : []
-        )
+          ? [
+            {
+              model: PullReviewerModel,
+              where: { userId }
+            }
+          ]
+          : [])
       ]
     });
   }

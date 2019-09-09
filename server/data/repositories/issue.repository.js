@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
 const {
-  IssueModel, UserModel, RepositoryModel
+  IssueModel, UserModel, RepositoryModel, LabelModel, IssueLabelModel
 } = require('../models/index');
 const sequelize = require('../db/connection');
 
@@ -111,6 +111,14 @@ class IssueRepository extends BaseRepository {
         {
           model: RepositoryModel,
           attributes: ['name']
+        },
+        {
+          model: IssueLabelModel,
+          attributes: ['id'],
+          include: {
+            model: LabelModel,
+            attributes: ['id', 'name', 'color', 'description']
+          }
         }
       ]
     });
@@ -154,6 +162,14 @@ class IssueRepository extends BaseRepository {
           model: UserModel,
           where: { id: userId },
           attributes: ['id', 'username']
+        },
+        {
+          model: IssueLabelModel,
+          attributes: ['id'],
+          include: {
+            model: LabelModel,
+            attributes: ['id', 'name', 'color', 'description']
+          }
         }
       ]
     };
@@ -206,7 +222,7 @@ class IssueRepository extends BaseRepository {
               where: { userId }
             }
           ]
-        },
+        }
       ],
       where: {
         [Op.or]: {
@@ -260,6 +276,16 @@ class IssueRepository extends BaseRepository {
               attributes: ['username']
             }
           ]
+        },
+        {
+          model: IssueLabelModel,
+          attributes: ['id'],
+          include: [
+            {
+              model: LabelModel,
+              attributes: ['name', 'description', 'color', 'id']
+            }
+          ]
         }
       ],
       order: parseSortQuery(sort)
@@ -294,6 +320,14 @@ class IssueRepository extends BaseRepository {
         {
           model: UserModel,
           attributes: ['username', 'imgUrl']
+        },
+        {
+          model: IssueLabelModel,
+          attributes: ['id'],
+          include: {
+            model: LabelModel,
+            attributes: ['id', 'name', 'color', 'description']
+          }
         }
       ]
     });

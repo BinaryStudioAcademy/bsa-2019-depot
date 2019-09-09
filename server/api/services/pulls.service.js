@@ -77,16 +77,10 @@ const mergeBranches = async (id, authorId) => {
   const {
     repository: {
       name: reponame,
-      user: {
-        username: repoOwner
-      }
+      user: { username: repoOwner }
     },
-    fromBranch: {
-      name: fromBranchName
-    },
-    toBranch: {
-      name: toBranchName
-    },
+    fromBranch: { name: fromBranchName },
+    toBranch: { name: toBranchName },
     number
   } = await pullRepository.getPullById(id);
   const { username: authorUsername, email: authorEmail } = await userRepository.getUserById(authorId);
@@ -114,14 +108,16 @@ const mergeBranches = async (id, authorId) => {
   const mergeCommit = await repo.getCommit(mergeCommitId);
 
   await repoHelper.syncDb(
-    [{
-      repoOwner,
-      reponame,
-      sha: mergeCommit.sha(),
-      message: mergeCommit.message(),
-      userEmail: authorEmail,
-      createdAt: new Date()
-    }],
+    [
+      {
+        repoOwner,
+        reponame,
+        sha: mergeCommit.sha(),
+        message: mergeCommit.message(),
+        userEmail: authorEmail,
+        createdAt: new Date()
+      }
+    ],
     {
       name: toBranchName,
       newHeadSha: mergeCommit.sha()
@@ -173,25 +169,24 @@ const addPullStatuses = async (pullsObjects) => {
   const pulls = pullsObjects.map(pull => pull.get({ plain: true }));
   const pullsReviews = await Promise.all(pulls.map(({ id }) => pullReviewerRepository.getReviewersForPull(id)));
 
-  const statuses = pullsReviews
-    .map(((reviewObjs) => {
-      if (!reviewObjs.length) {
-        return '';
-      }
+  const statuses = pullsReviews.map((reviewObjs) => {
+    if (!reviewObjs.length) {
+      return '';
+    }
 
-      const reviews = reviewObjs.map(review => review.get({ plain: true }));
+    const reviews = reviewObjs.map(review => review.get({ plain: true }));
 
-      reviews.sort(({ updatedAt: updatedAtA }, { updatedAt: updatedAtB }) => new Date(updatedAtB) - new Date(updatedAtA));
-      const approvedId = reviews.findIndex(review => review.status.name === 'APPROVED');
-      const changesRequestedId = reviews.findIndex(review => review.status.name === 'CHANGES REQUESTED');
-      if (approvedId === -1 && changesRequestedId === -1) {
-        return 'Review required';
-      }
-      if (approvedId > changesRequestedId) {
-        return 'Approved';
-      }
-      return 'Requested changes';
-    }));
+    reviews.sort(({ updatedAt: updatedAtA }, { updatedAt: updatedAtB }) => new Date(updatedAtB) - new Date(updatedAtA));
+    const approvedId = reviews.findIndex(review => review.status.name === 'APPROVED');
+    const changesRequestedId = reviews.findIndex(review => review.status.name === 'CHANGES REQUESTED');
+    if (approvedId === -1 && changesRequestedId === -1) {
+      return 'Review required';
+    }
+    if (approvedId > changesRequestedId) {
+      return 'Approved';
+    }
+    return 'Requested changes';
+  });
 
   return pulls.map((pull, index) => ({ ...pull, reviewStatus: statuses[index] }));
 };
@@ -200,7 +195,12 @@ const getRepoPulls = async (repositoryId, sort, authorId, title, isOpened) => {
   const status = await prStatusRepository.getByName('OPEN');
   const { id: statusOpenedId } = status.get({ plain: true });
   const pullsObjects = await pullRepository.getPulls({
-    repositoryId, sort, userId: authorId, title, isOpened, statusOpenedId
+    repositoryId,
+    sort,
+    userId: authorId,
+    title,
+    isOpened,
+    statusOpenedId
   });
   return addPullStatuses(pullsObjects);
 };

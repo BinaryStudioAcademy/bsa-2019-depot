@@ -148,7 +148,10 @@ router
     const { reponame, username: orgName } = req.params;
     const { newName } = req.body;
     renameRepo({
-      reponame, newName, username: req.user.username, orgName
+      reponame,
+      newName,
+      username: req.user.username,
+      orgName
     })
       .then(result => res.send(result))
       .catch(next);

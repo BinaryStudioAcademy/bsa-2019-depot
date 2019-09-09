@@ -1,4 +1,6 @@
 const issueRepository = require('../../data/repositories/issue.repository');
+const repoRepository = require('../../data/repositories/repository.repository');
+const userRepository = require('../../data/repositories/user.repository');
 const issueCommentRepository = require('../../data/repositories/issue-comment.repository');
 const CustomError = require('../../helpers/error.helper');
 

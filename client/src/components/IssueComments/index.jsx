@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { CheckCircleFill } from '@ant-design/icons';
 import AntdIcon from '@ant-design/icons-react';
-import { Button, Label, Icon, Loader, Segment } from 'semantic-ui-react';
+import { Button, Label, Icon, Loader, Segment, Grid } from 'semantic-ui-react';
 import {
   getIssueByNumber,
   getIssueComments,
@@ -13,9 +13,11 @@ import {
   reopenIssue,
   deleteIssue
 } from '../../services/issuesService';
+import { getLabels, setLabelsToIssue } from '../../services/labelsService';
 import { createIssueComment, updateIssueComment, deleteIssueComment } from '../../services/issueCommentsService';
 import Comment from '../Comment';
 import IssuePrHeader from '../IssuePrHeader';
+import IssuePrSidebar from '../../containers/IssuePrSidebar';
 import { getAllQuestionOnSO } from '../../services/issuesService';
 import { socketInit } from '../../helpers/socketInitHelper';
 import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
@@ -42,7 +44,9 @@ class IssueComments extends React.Component {
       isDisabled: true,
       isOwnIssue: false,
       issuesBaseUrl: this.props.match.url.replace(/\/[^/]+$/, ''),
-      isAccessGranted: false
+      isAccessGranted: false,
+      labels: [],
+      currentLabels: []
     };
 
     this.onCommentCreate = this.onCommentCreate.bind(this);
@@ -53,20 +57,24 @@ class IssueComments extends React.Component {
     this.onIssueDelete = this.onIssueDelete.bind(this);
     this.onIssueToggle = this.onIssueToggle.bind(this);
     this.redirectToCreateNewIssue = this.redirectToCreateNewIssue.bind(this);
+    this.setLabelsToIssue = this.setLabelsToIssue.bind(this);
   }
 
   async componentDidMount() {
     const {
       userId,
+      repositoryId,
       match: {
         params: { username, reponame, number }
       }
     } = this.props;
-
     const currentIssue = await getIssueByNumber(username, reponame, number);
     const { id, title } = currentIssue;
 
     const issueComments = await getIssueComments(id);
+
+    const labels = await getLabels(repositoryId);
+    const { issueLabels: currentLabels } = currentIssue;
 
     const isAccessGranted = await getWriteUserPermissions(username, reponame, userId);
 
@@ -86,6 +94,8 @@ class IssueComments extends React.Component {
       issueComments,
       isAccessGranted,
       questions: soQuestions,
+      labels,
+      currentLabels,
       loading: false
     });
     this.initSocket();
@@ -214,8 +224,15 @@ class IssueComments extends React.Component {
     this.props.history.push(this.state.issuesBaseUrl + '/new');
   }
 
+  async setLabelsToIssue(labelIds) {
+    const {
+      currentIssue: { id: issueId }
+    } = this.state;
+    return setLabelsToIssue(labelIds, issueId);
+  }
+
   render() {
-    const { currentIssue, issueComments, loading, questions } = this.state;
+    const { currentIssue, issueComments, loading, questions, labels, currentLabels } = this.state;
     const { userImg, userName, userId } = this.props;
 
     return loading || questions.length ? (
@@ -230,6 +247,7 @@ class IssueComments extends React.Component {
           onSubmit={this.onIssueUpdateTitle}
           isIssue={true}
         />
+
         <div className={styles.status_line}>
           <Label color={currentIssue.isOpened ? 'green' : 'red'} className={styles.issue_label}>
             <Icon name="exclamation circle" /> {currentIssue.isOpened ? 'Open' : 'Closed'}
@@ -241,85 +259,97 @@ class IssueComments extends React.Component {
             } comments`}</span>
           </span>
         </div>
-        <Comment
-          id={currentIssue.id}
-          avatar={currentIssue.user.imgUrl}
-          username={currentIssue.user.username}
-          body={currentIssue.body}
-          createdAt={currentIssue.createdAt}
-          newComment={false}
-          onSubmit={this.onIssueUpdateBody}
-          submitBtnTxt="Update comment"
-          cancelBtnTxt="Cancel"
-          ownComment={this.isOwnIssue()}
-        />
+        <Grid>
+          <Grid.Column width={12}>
+            <Comment
+              id={currentIssue.id}
+              avatar={currentIssue.user.imgUrl}
+              username={currentIssue.user.username}
+              body={currentIssue.body}
+              createdAt={currentIssue.createdAt}
+              newComment={false}
+              onSubmit={this.onIssueUpdateBody}
+              submitBtnTxt="Update comment"
+              cancelBtnTxt="Cancel"
+              ownComment={this.isOwnIssue()}
+            />
 
-        {questions.items.length && currentIssue.isOpened ? (
-          <>
-            <h2 className={styles.questionsHeader}>
-              <span>Related questions from </span>
-              <SOLogoSVG className={styles.SOIcon} />
-            </h2>
-            {questions.items.map((question, index) => (
-              <Comment key={index} avatar={SOAvatarSVG} isQuestion question={question} />
-            ))}
-          </>
-        ) : null}
+            {questions.items && questions.items.length && currentIssue.isOpened ? (
+              <>
+                <h2 className={styles.questionsHeader}>
+                  <span>Related questions from </span>
+                  <SOLogoSVG className={styles.SOIcon} />
+                </h2>
+                {questions.items.map((question, index) => (
+                  <Comment key={index} avatar={SOAvatarSVG} isQuestion question={question} />
+                ))}
+              </>
+            ) : null}
 
-        {issueComments.length > 0 &&
-          issueComments.map(issueComment => {
-            const {
-              id,
-              user: { username, imgUrl },
-              body,
-              createdAt,
-              userId: commentUserId
-            } = issueComment;
-            return (
-              <Comment
-                key={id}
-                id={id}
-                avatar={imgUrl}
-                username={username}
-                body={body}
-                createdAt={createdAt}
-                newComment={false}
-                onSubmit={this.onCommentUpdate}
-                submitBtnTxt="Update comment"
-                cancelBtnTxt="Cancel"
-                onDelete={this.onCommentDelete}
-                ownComment={userId === commentUserId}
-              />
-            );
-          })}
-        <Comment
-          avatar={userImg}
-          username={userName}
-          newComment={true}
-          onSubmit={this.onCommentCreate}
-          submitBtnTxt="Comment"
-          createdAt={currentIssue.createdAt}
-          buttons={
-            this.isOwnIssue()
-              ? [
-                currentIssue.isOpened ? (
-                  <Button compact floated="right" secondary key="close" onClick={this.onIssueToggle}>
-                    <Icon name="check circle outline" />
-                      Close issue
-                  </Button>
-                ) : (
-                  <Button compact floated="right" secondary color="red" key="close" onClick={this.onIssueToggle}>
-                      Reopen issue
-                  </Button>
-                ),
-                <Button compact floated="right" basic color="grey" key="delete" onClick={this.onIssueDelete}>
-                  <Icon name="exclamation" color="grey" />
-                    Delete issue
-                </Button>
-              ]
-              : null
-          }
-        />
+            {issueComments.length > 0 &&
+              issueComments.map(issueComment => {
+                const {
+                  id,
+                  user: { username, imgUrl },
+                  body,
+                  createdAt,
+                  userId: commentUserId
+                } = issueComment;
+                return (
+                  <Comment
+                    key={id}
+                    id={id}
+                    avatar={imgUrl}
+                    username={username}
+                    body={body}
+                    createdAt={createdAt}
+                    newComment={false}
+                    onSubmit={this.onCommentUpdate}
+                    submitBtnTxt="Update comment"
+                    cancelBtnTxt="Cancel"
+                    onDelete={this.onCommentDelete}
+                    ownComment={userId === commentUserId}
+                  />
+                );
+              })}
+            <Comment
+              avatar={userImg}
+              username={userName}
+              newComment={true}
+              onSubmit={this.onCommentCreate}
+              submitBtnTxt="Comment"
+              createdAt={currentIssue.createdAt}
+              buttons={
+                this.isOwnIssue()
+                  ? [
+                    currentIssue.isOpened ? (
+                      <Button compact floated="right" secondary key="close" onClick={this.onIssueToggle}>
+                        <Icon name="check circle outline" />
+                          Close issue
+                      </Button>
+                    ) : (
+                      <Button compact floated="right" secondary color="red" key="close" onClick={this.onIssueToggle}>
+                          Reopen issue
+                      </Button>
+                    ),
+                    <Button compact floated="right" basic color="grey" key="delete" onClick={this.onIssueDelete}>
+                      <Icon name="exclamation" color="grey" />
+                        Delete issue
+                    </Button>
+                  ]
+                  : null
+              }
+            />
+          </Grid.Column>
+          <Grid.Column width={4}>
+            <IssuePrSidebar
+              isIssue={true}
+              labels={labels}
+              currentLabels={currentLabels}
+              setLabels={this.setLabelsToIssue}
+            />
+          </Grid.Column>
+        </Grid>
       </Segment>
     );
   }
@@ -333,6 +363,7 @@ IssueComments.propTypes = {
     url: PropTypes.string.isRequired
   }).isRequired,
   userId: PropTypes.string.isRequired,
+  repositoryId: PropTypes.string.isRequired,
   userImg: PropTypes.string,
   userName: PropTypes.string.isRequired,
   history: PropTypes.shape({
@@ -343,11 +374,17 @@ IssueComments.propTypes = {
 const mapStateToProps = ({
   profile: {
     currentUser: { id, imgUrl, username }
+  },
+  currentRepo: {
+    repository: {
+      currentRepoInfo: { id: repositoryId }
+    }
   }
 }) => ({
   userId: id,
   userImg: imgUrl,
-  userName: username
+  userName: username,
+  repositoryId
 });
 
 export default connect(mapStateToProps)(IssueComments);

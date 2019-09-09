@@ -20,6 +20,7 @@ module.exports = (models) => {
     Permission,
     Collaborator,
     PinnedRepository,
+    IssueLabel,
     PullReviewer,
     ReviewStatus,
     PullLabel
@@ -116,4 +117,9 @@ module.exports = (models) => {
   User.hasMany(PinnedRepository);
   PinnedRepository.belongsTo(User);
   PinnedRepository.belongsTo(Repository);
+
+  Issue.hasMany(IssueLabel, { foreignKey: 'issueId' });
+  IssueLabel.belongsTo(Issue);
+  Label.hasMany(IssueLabel, { foreignKey: 'labelId' });
+  IssueLabel.belongsTo(Label);
 };
