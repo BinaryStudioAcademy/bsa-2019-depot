@@ -116,6 +116,10 @@ class RepositoryPage extends React.Component {
       return <Spinner />;
     }
 
+    function defaultRedirect() {
+      return <Redirect to={`${match.url}/tree/${branch}`} />;
+    }
+
     return username === currentUserName || isPublic || isAccessGranted ? (
       <>
         <RepositoryHeader
@@ -128,7 +132,7 @@ class RepositoryPage extends React.Component {
         />
         <Container>
           <Switch>
-            <Route exact path={`${match.path}`} component={CodeTab} />
+            <Route exact path={`${match.path}`} render={defaultRedirect} />
             <Route exact path={`${match.path}/tree/:branch`} component={CodeTab} />
             <Route exact path={`${match.path}/tree/:branch/${params}`} component={CodeTab} />
             <Route exact path={`${match.path}/commits/:branch`} component={CommitsPage} />
