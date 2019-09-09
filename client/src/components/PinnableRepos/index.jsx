@@ -26,13 +26,13 @@ class PinnableRepos extends React.Component {
     this.renderForm = this.renderForm.bind(this);
     this.validate = this.validate.bind(this);
     this.onFilter = this.onFilter.bind(this);
-    this.getRepositories = this.getRepositories.bind(this);
+    this.getPublicOnlyRepositories = this.getPublicOnlyRepositories.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  async getRepositories() {
+  async getPublicOnlyRepositories() {
     const { username } = this.props;
-    const repositories = await repositoryService.getRepositories(username);
+    const repositories = await repositoryService.getPublicOnlyRepositories(username);
 
     this.setState({
       repositories,
@@ -162,7 +162,7 @@ class PinnableRepos extends React.Component {
       <Modal
         trigger={this.renderTrigger()}
         open={modalOpen}
-        onOpen={this.getRepositories}
+        onOpen={this.getPublicOnlyRepositories}
         onClose={this.handleClose}
         size="tiny"
       >

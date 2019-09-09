@@ -14,7 +14,7 @@ const {
   uploadPhoto,
   deletePhoto
 } = require('../services/user.service');
-const { getReposData, getByUserAndReponame } = require('../services/repo.service');
+const { getReposData, getPublicReposData, getByUserAndReponame } = require('../services/repo.service');
 const { getCommitsAndCreatedRepoByDate } = require('../services/commit.service');
 const { getKeysByUser } = require('../services/ssh-key.service');
 const { getRepoIssueByNumber } = require('../services/issue.service');
@@ -107,6 +107,13 @@ router.get('/:username/repos', (req, res, next) => {
   const { username } = req.params;
   const isOwner = req.user.get({ plain: true }).username === username;
   getReposData({ username, isOwner })
+    .then(repos => res.send(repos))
+    .catch(next);
+});
+
+router.get('/:username/public-repos', (req, res, next) => {
+  const { username } = req.params;
+  getReposData({ username, isOwner: false })
     .then(repos => res.send(repos))
     .catch(next);
 });
