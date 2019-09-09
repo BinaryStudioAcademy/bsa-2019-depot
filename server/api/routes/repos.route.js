@@ -141,7 +141,7 @@ router
       .then(result => res.send(result))
       .catch(next);
   })
-  .get('/:username/:reponame/settings', ownerOnlyMiddleware, (req, res) => {
+  .get('/:username/:reponame/settings', isAdminMiddleware, (req, res) => {
     res.sendStatus(200);
   })
   .post('/:username/:reponame/settings/rename', isAdminMiddleware, (req, res, next) => {

@@ -112,6 +112,8 @@ class RepositoryOptions extends React.Component {
   render() {
     const { repoInfo } = this.state;
     const { loading } = this.props.repoSettingsData;
+    const { match, currentUserName } = this.props;
+    const { username } = match.params;
     if (!repoInfo || loading) {
       return <Loader />;
     }
@@ -138,18 +140,20 @@ class RepositoryOptions extends React.Component {
           </Formik>
           <Header as="h2">Danger Zone</Header>
           <div className={styles.dangerZone}>
-            {renderDangerField(
-              isPublic ? 'Make this repository private' : 'Make this repository public',
-              isPublic ? 'Hide this repository from the public.' : 'Make this repository visible to anyone.',
-              isPublic ? 'Make private' : 'Make public',
-              this.onClickUpdateRepoType
-            )}
-            {renderDangerField(
-              'Delete this repository',
-              'Once you delete a repository, there is no going back. Please be certain.',
-              'Delete this repository',
-              this.onClickDelete
-            )}
+            {currentUserName === username &&
+              renderDangerField(
+                isPublic ? 'Make this repository private' : 'Make this repository public',
+                isPublic ? 'Hide this repository from the public.' : 'Make this repository visible to anyone.',
+                isPublic ? 'Make private' : 'Make public',
+                this.onClickUpdateRepoType
+              )}
+            {currentUserName === username &&
+              renderDangerField(
+                'Delete this repository',
+                'Once you delete a repository, there is no going back. Please be certain.',
+                'Delete this repository',
+                this.onClickDelete
+              )}
           </div>
         </Grid.Column>
       </Grid>
@@ -177,11 +181,13 @@ RepositoryOptions.propTypes = {
   history: PropTypes.object,
   fetchRepoSettings: PropTypes.func.isRequired,
   renameRepo: PropTypes.func.isRequired,
-  deleteRepo: PropTypes.func.isRequired
+  deleteRepo: PropTypes.func.isRequired,
+  currentUserName: PropTypes.string.isRequired
 };
 
-const mapStateToProps = ({ repoSettingsData }) => ({
-  repoSettingsData
+const mapStateToProps = ({ repoSettingsData, profile }) => ({
+  repoSettingsData,
+  currentUserName: profile.currentUser.username
 });
 
 const mapDispatchToProps = {

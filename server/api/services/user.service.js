@@ -2,6 +2,7 @@ const UserRepository = require('../../data/repositories/user.repository');
 const StarRepository = require('../../data/repositories/star.repository');
 const OrgUserRepository = require('../../data/repositories/org-user.repository');
 const CollaboratorRepository = require('../../data/repositories/collaborator.repository');
+const RepoRepository = require('../../data/repositories/repository.repository');
 const CustomError = require('../../helpers/error.helper');
 const tokenHelper = require('../../helpers/token.helper');
 
@@ -95,10 +96,11 @@ const getUsersForCollaboratorsAddition = async ({ username, repositoryId, userId
   const users = (await UserRepository.findUserByLetter(username)).filter(({ id }) => id !== userId);
 
   const repos = (await CollaboratorRepository.findRepoById(repositoryId)).map(data => data.userId);
-
+  const { user: { username: owner } } = await RepoRepository.getRepoOwnerByRepoId(repositoryId);
   return users
     .filter(({ id }) => !repos.includes(id))
-    .map(data => data.username)
+    .map(({ username }) => username)
+    .filter(username => username !== owner)
     .slice(0, 6);
 };
 
