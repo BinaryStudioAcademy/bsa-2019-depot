@@ -79,7 +79,7 @@ class BranchesTab extends React.Component {
   };
 
   createNewPullRequest = () => {
-    const { username, reponame, history } = this.props;
+    const { match: { params: { username, reponame } }, history } = this.props;
     history.push(`/${username}/${reponame}/compare`);
   };
 
@@ -98,7 +98,7 @@ class BranchesTab extends React.Component {
         {tabFilters.map(tabFilter => (
           <Menu.Item
             className={styles.branchMenuItem}
-            key={tabFilter.id}
+            key={tabFilter.key}
             name={tabFilter.text}
             active={filter.type === tabFilter.value}
             onClick={this.filterBranches}
@@ -113,20 +113,14 @@ class BranchesTab extends React.Component {
       branchesData: { loading, branches },
       username,
       match: {
-        params: { reponame }
+        params: { reponame },
+        url
       }
     } = this.props;
 
-    const displayBranches = branches.map((branch, idx) => ({
+    const displayBranches = branches.map((branch) => ({
       name: branch.name,
-      // generate mock PR status
-      merged:
-        idx % 2
-          ? null
-          : {
-            number: idx * 3,
-            status: idx % 4 === 1 ? 'Merged' : 'Open'
-          },
+      ...(branch.pullrequests[0] ? { prNumber: branch.pullrequests[0].number } : {}),
       status: this.getBranchStatus(branch.headCommit.createdAt),
       ownedByCurrentUser: username === branch.headCommit.user.username,
       author: branch.headCommit.user.username,
@@ -156,6 +150,7 @@ class BranchesTab extends React.Component {
             username={username}
             reponame={reponame}
             createNewPullRequest={this.createNewPullRequest}
+            repoUrl={url.split('/').slice(0, -1).join('/')}
           />
         </Segment>
       </>

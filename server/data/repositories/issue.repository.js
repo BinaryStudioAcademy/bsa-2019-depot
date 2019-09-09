@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
 const {
-  IssueModel, UserModel, RepositoryModel, LabelModel, IssueLabelModel
+  IssueModel, UserModel, RepositoryModel, LabelModel, IssueLabelModel, OrgUserModel
 } = require('../models/index');
 const sequelize = require('../db/connection');
 
@@ -222,14 +222,12 @@ class IssueRepository extends BaseRepository {
               where: { userId }
             }
           ]
+        },
+        {
+          model: OrgUserModel,
+          where: { userId }
         }
-      ],
-      where: {
-        [Op.or]: {
-          type: 'ORG',
-          id: userId
-        }
-      }
+      ]
     });
   }
 
