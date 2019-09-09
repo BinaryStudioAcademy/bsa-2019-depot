@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Header, Divider, Form, Dropdown, Input, Modal, Button } from 'semantic-ui-react';
+import { Header, Divider, Form, Dropdown, Modal, Button } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import * as repositoryService from '../../services/repositoryService';
+import { fetchCurrentRepo } from '../../routines/routines';
 
 import styles from './styles.module.scss';
 
@@ -27,13 +28,19 @@ const BranchesSettings = props => {
 
   async function onSubmit() {
     const {
-      params: { username: owner, reponame }
-    } = props.match;
+      fetchCurrentRepo,
+      match: {
+        params: { username, reponame }
+      }
+    } = props;
+
     await repositoryService.updateRepositoryByOwnerAndName({
-      owner,
+      owner: username,
       reponame,
       request: { defaultBranchId: currentBranch }
     });
+
+    fetchCurrentRepo({ username, reponame });
     handleClose();
   }
 
@@ -75,7 +82,6 @@ const BranchesSettings = props => {
           <Dropdown button text={getCurrentBranchName()}>
             <Dropdown.Menu>
               <Dropdown.Header content="Switch default branch" />
-              <Input placeholder="Filter branches" />
               <Dropdown.Divider />
               {branches.map(({ name, id }) => (
                 <Dropdown.Item key={id} value={id} text={name} onClick={handleChange} />
@@ -97,7 +103,8 @@ BranchesSettings.propTypes = {
     isExact: PropTypes.bool.isRequired,
     path: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired
-  }).isRequired
+  }).isRequired,
+  fetchCurrentRepo: PropTypes.func.isRequired
 };
 
 const mapStateToProps = ({
@@ -111,4 +118,11 @@ const mapStateToProps = ({
   defaultBranchId
 });
 
-export default connect(mapStateToProps)(BranchesSettings);
+const mapDispatchToProps = {
+  fetchCurrentRepo
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BranchesSettings);
