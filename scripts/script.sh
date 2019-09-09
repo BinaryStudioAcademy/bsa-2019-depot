@@ -5,7 +5,7 @@ rm -rf !("build")
 cd ..
 rm -rf mobile
 pip install --user awscli
-aws s3 cp s3://depotbucket/.env.stage server/.env
-zip -r latest * > /dev/null
+aws s3 cp s3://depotbucket/.env.prod server/.env
+zip -r prod * > /dev/null
 mkdir -p dpl_cd_upload
-mv latest.zip dpl_cd_upload/latest.zip
+mv prod.zip dpl_cd_upload/prod.zip
