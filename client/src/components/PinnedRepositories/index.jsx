@@ -26,8 +26,21 @@ class PinnedRepositories extends React.Component {
     this.getRepositories = this.getRepositories.bind(this);
   }
 
-  componentDidMount() {
+  fetchData() {
     this.getRepositories();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps) {
+      return false;
+    }
+    if (this.props.userId !== prevProps.userId) {
+      this.fetchData();
+    }
+  }
+
+  componentDidMount() {
+    this.fetchData();
   }
 
   async getRepositories() {

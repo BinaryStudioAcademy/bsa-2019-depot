@@ -14,7 +14,7 @@ const {
   uploadPhoto,
   deletePhoto
 } = require('../services/user.service');
-const { getReposData, getPublicReposData, getByUserAndReponame } = require('../services/repo.service');
+const { getReposData, getByUserAndReponame } = require('../services/repo.service');
 const { getCommitsAndCreatedRepoByDate } = require('../services/commit.service');
 const { getKeysByUser } = require('../services/ssh-key.service');
 const { getRepoIssueByNumber } = require('../services/issue.service');

@@ -1,0 +1,22 @@
+$red: #ed1a37;
+
+$white_linear_gradient: linear-gradient(-180deg, rgb(250, 251, 252), rgb(239, 243, 246) 90%);
+$red_text: $red;
+$dark_text: #24292e;
+$red_border: $red;
+$dark_border: rgba(27, 31, 35, 0.2);
+$dark_border_hover: rgba(27, 31, 35, 0.5);
+$grey_border: #e1e4e8;
+
+:global(.ui.button):local(.dangerButton) {
+  background-image: $white_linear_gradient;
+  color: $red_text;
+  border: 1px solid $dark_border !important;
+  padding: 11px 5px 11px 5px !important;
+  &:hover {
+    background-color: $red;
+    background-image: none;
+    border-color: $dark_border_hover !important;
+    color: white !important;
+  }
+}

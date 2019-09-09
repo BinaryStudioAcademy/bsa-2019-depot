@@ -9,10 +9,11 @@ const starRepository = require('../../data/repositories/star.repository');
 const branchRepository = require('../../data/repositories/branch.repository');
 const commitRepository = require('../../data/repositories/commit.repository');
 const collaboratorRepository = require('../../data/repositories/collaborator.repository');
+const LabelRepository = require('../../data/repositories/label.repository');
 
 const CustomError = require('../../helpers/error.helper');
 const { defaultLabels } = require('../../config/labels.config');
-const { createLabel } = require('./label.service');
+
 
 const initialCommit = async ({
   owner, email, reponame, files
@@ -98,7 +99,8 @@ const createRepo = async (repoData) => {
 
   // add default labels for repository
   const { id } = repository;
-  await Promise.all(defaultLabels.map(label => createLabel({ repositoryId: id, ...label })));
+  const newLabels = defaultLabels.map(label => ({ repositoryId: id, ...label }));
+  await LabelRepository.bulkCreate(newLabels);
 
   const initialData = repoHelper.generateInitialData({ ...repoData });
   // Initial data has to contain 'email' (of user) and 'files' in form of [ { filename, content }, {... ]
@@ -216,7 +218,7 @@ const deleteRepo = ({ reponame, username, orgName }) => {
   if (username === orgName) {
     deleteRepository(username);
   }
-  deleteRepository(orgName);
+  return deleteRepository(orgName);
 };
 
 const getReposNames = async ({
