@@ -17,8 +17,11 @@ class OrganizationDashboard extends React.Component {
       orgMembers: [],
       isOwner: false,
       repositories: [],
-      filter: 'All'
+      filter: 'All',
+      repoNameFilter: ''
     };
+    this.handleFindRepo = this.handleFindRepo.bind(this);
+    this.getCurrentRepoTypeFilter = this.getCurrentRepoTypeFilter.bind(this);
   }
 
   componentDidMount() {
@@ -57,8 +60,20 @@ class OrganizationDashboard extends React.Component {
     });
   }
 
+  getCurrentRepoTypeFilter(e, { value: filter }) {
+    this.setState({
+      filter
+    });
+  }
+
+  handleFindRepo({ target }) {
+    this.setState({
+      repoNameFilter: target.value
+    });
+  }
+
   render() {
-    const { repositories, orgMembers, currentOrg, isOwner, isMember, filter } = this.state;
+    const { repositories, orgMembers, currentOrg, isOwner, isMember, filter, repoNameFilter } = this.state;
     return (
       <>
         <OrganizationHeader
@@ -74,6 +89,9 @@ class OrganizationDashboard extends React.Component {
             isOwner={isOwner}
             isMember={isMember}
             filter={filter}
+            repoNameFilter={repoNameFilter}
+            handleFindRepo={this.handleFindRepo}
+            getCurrentRepoTypeFilter={this.getCurrentRepoTypeFilter}
           />
         </Container>
       </>
