@@ -125,20 +125,18 @@ class RepositoryItem extends React.Component {
 
   render() {
     const {
-      repo,
       repo: { name, isStar, isPublic, defaultBranch },
       username,
       type,
     } = this.props;
-    console.log(repo);
     const { updatedAt, isEmpty, commitsPerYear } = this.state;
     const starsCount = Number(this.props.repo.starsCount);
     const repoType = isPublic ? '' : 'Private';
-    const language = defaultBranch
-    && defaultBranch.languageStats
-    && defaultBranch.languageStats.length
-      ? defaultBranch.languageStats[0].language
-      : null;
+
+    const hasLanguageStats = defaultBranch
+      && defaultBranch.languageStats
+      && defaultBranch.languageStats.length;
+    const language = hasLanguageStats ? defaultBranch.languageStats[0].language : null;
 
     return (
       <div className={styles.repo_item}>
