@@ -1,5 +1,6 @@
 const RepositoryRepository = require('../../data/repositories/repository.repository');
 const CollaboratorRepository = require('../../data/repositories/collaborator.repository');
+const { getOrganizationOwner } = require('../services/organization.service');
 const CustomError = require('../../helpers/error.helper');
 
 module.exports = async (req, res, next) => {
@@ -15,6 +16,22 @@ module.exports = async (req, res, next) => {
 
   if (repo.userId === req.user.id || repo.isPublic) {
     return next();
+  }
+
+  const { user: { id: orgId } } = await RepositoryRepository.getRepoOwnerByRepoId(repo.id);
+  const owners = await getOrganizationOwner(orgId);
+  const owner = owners.filter(({ username }) => username === req.user.username);
+  if (owner.length) {
+    return next();
+  }
+
+  if(req.params.repositoryId) {
+    const { user: { id: orgId } } = await RepositoryRepository.getRepoOwnerByRepoId(req.params.repositoryId);
+    const owners = await getOrganizationOwner(orgId);
+    const owner = owners.filter(({ username }) => username === req.user.username);
+    if (owner.length) {
+      return next();
+    }
   }
 
   const collaborator = await CollaboratorRepository.findOne({
