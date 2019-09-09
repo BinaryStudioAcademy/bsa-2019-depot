@@ -61,17 +61,11 @@ const RepoNav = props => {
         </Button>
       </div>
       <div className={styles.repoActions}>
-        <Button.Group>
-          {isOwn && (
-            <>
-              <Button className={styles.actionButton} onClick={onCreateFile}>
-                Create New File
-              </Button>
-              <Button className={styles.actionButton}>Upload files</Button>
-            </>
-          )}
-          <Button className={styles.actionButton}>Find file</Button>
-        </Button.Group>
+        {isOwn && (
+          <Button className={styles.actionButton} onClick={onCreateFile}>
+            Create New File
+          </Button>
+        )}
         <Popup
           trigger={
             <Dropdown
