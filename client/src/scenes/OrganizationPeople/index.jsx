@@ -15,8 +15,10 @@ class OrganizationDashboard extends React.Component {
     this.state = {
       currentOrg: {},
       orgMembers: [],
-      repositories: []
+      repositories: [],
+      filter: ''
     };
+    this.handleChangeFilter = this.handleChangeFilter.bind(this);
   }
 
   async componentDidMount() {
@@ -62,8 +64,18 @@ class OrganizationDashboard extends React.Component {
     });
   }
 
+  handleChangeFilter(e) {
+    this.setState({ filter: e.target.value.toLowerCase() });
+  }
+
+  filterMembers(members) {
+    const { filter } = this.state;
+    return members.filter(({ username }) => username.toLowerCase().includes(filter));
+  }
+
   render() {
     const { repositories, orgMembers, currentOrg, isOwner } = this.state;
+    const filteredOrgMembers = this.filterMembers(orgMembers);
     return (
       <>
         <OrganizationHeader
@@ -73,7 +85,12 @@ class OrganizationDashboard extends React.Component {
           tab="people"
         />
         <Container>
-          <OrgPeopleTab orgMembers={orgMembers} orgInfo={currentOrg} isOwner={isOwner} />
+          <OrgPeopleTab
+            orgMembers={filteredOrgMembers}
+            orgInfo={currentOrg}
+            isOwner={isOwner}
+            handleChangeFilter={this.handleChangeFilter}
+          />
         </Container>
       </>
     );
