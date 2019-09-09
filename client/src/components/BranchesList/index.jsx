@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { List, Icon, Button, Label } from 'semantic-ui-react';
-// import { ReactComponent as PRIconSvg } from '../../styles/assets/icons/pullrequest.svg';
+import { Link } from 'react-router-dom';
+import Octicon, { GitPullRequest } from '@primer/octicons-react';
 
 import styles from './styles.module.scss';
 
-const BranchesList = ({ branches, username, reponame, createNewPullRequest }) => {
+const BranchesList = ({ branches, username, reponame, createNewPullRequest, repoUrl }) => {
   const branchesCount = branches.length;
   if (!branchesCount) {
     return (
@@ -36,21 +37,20 @@ const BranchesList = ({ branches, username, reponame, createNewPullRequest }) =>
               </span>
             </List.Content>
             <List.Content floated="right">
-              {branch.merged ? (
-                <p className={styles.pullRequest}>
-                  <span className={styles.pullRequestNumber}>#{branch.merged.number}</span>
-                  <Label color="green" className={styles.pullRequestStatus}>
-                    #{branch.merged.status}
-                  </Label>
-                </p>
+              {branch.prNumber ? (
+                <div className={styles.pullRequest}>
+                  <span className={styles.pullRequestNumber}>#{branch.prNumber}</span>
+                  <Link to={`${repoUrl}/pulls/${branch.prNumber}`}>
+                    <Label color="green" className={styles.pullRequestStatus}>
+                      <Octicon icon={GitPullRequest} className={styles.prIcon}/>Open
+                    </Label>
+                  </Link>
+                </div>
               ) : (
                 <>
-                  <Button size="tiny" onClick={createNewPullRequest}>
+                  <Button size="tiny" className={styles.newPrButton} onClick={createNewPullRequest}>
                     <Icon name="window restore outline" />
                     New Pull Request
-                  </Button>
-                  <Button icon size="tiny">
-                    <Icon name="trash" color="red" />
                   </Button>
                 </>
               )}
@@ -78,7 +78,8 @@ BranchesList.propTypes = {
   ).isRequired,
   username: PropTypes.string.isRequired,
   reponame: PropTypes.string.isRequired,
-  createNewPullRequest: PropTypes.func.isRequired
+  createNewPullRequest: PropTypes.func.isRequired,
+  repoUrl: PropTypes.string.isRequired
 };
 
 export default BranchesList;
