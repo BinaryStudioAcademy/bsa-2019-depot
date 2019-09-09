@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import * as repositoryService from '../../services/repositoryService';
 
+import styles from './styles.module.scss';
+
 const BranchesSettings = props => {
   const { branches, defaultBranchId } = props;
   const defaultBranch = defaultBranchId ? branches.find(branch => defaultBranchId === branch.id) : branches[0];
@@ -51,7 +53,7 @@ const BranchesSettings = props => {
         </Modal.Content>
         <Modal.Actions>
           <span>
-            <Button fluid onClick={onSubmit}>
+            <Button fluid onClick={onSubmit} className={styles.dangerButton}>
               I understand, update the default branch.
             </Button>
           </span>
