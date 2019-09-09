@@ -1,5 +1,4 @@
 const newman = require('newman');
-
 const { DEV } = process.env;
 
 newman.run(
