@@ -9,13 +9,25 @@ import React from 'react';
 import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
 import Notifications from '../../components/Notifications';
 import IssueView from '../../views/IssueView';
+import colors from '../../config/color.config';
 
-const TabNav = createMaterialTopTabNavigator({
-  Repos: { screen: ReposView },
-  Pulls: { screen: PullsView },
-  Issues: { screen: IssuesView },
-  Stars: { screen: StarsView }
-});
+const TabNav = createMaterialTopTabNavigator(
+  {
+    Issues: { screen: IssuesView },
+    Pulls: { screen: PullsView },
+    Repos: { screen: ReposView },
+    Stars: { screen: StarsView }
+  },
+  {
+    tabBarOptions: {
+      style: {
+        backgroundColor: colors.greyHeader
+      },
+      indicatorStyle: {}
+    },
+    lazy: true
+  }
+);
 
 const StackTab = createStackNavigator({
   Tabs: {
@@ -28,7 +40,14 @@ const StackTab = createStackNavigator({
     screen: Notifications
   },
   IssueView: {
-    screen: IssueView
+    screen: IssueView,
+    navigationOptions: {
+      title: 'Issue',
+      headerStyle: {
+        backgroundColor: colors.greyHeader
+      },
+      headerTintColor: colors.white
+    }
   }
 });
 

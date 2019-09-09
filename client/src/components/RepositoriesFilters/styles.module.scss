@@ -12,6 +12,10 @@ $button-color: #4f60ac;
     width: 55%;
   }
 
+  :local(.repos_filters_dropdown_repotype) {
+    width: 105%;
+  }
+
   :local(.new_repo) {
     color: #fff;
     height: 100%;

@@ -20,6 +20,7 @@ module.exports = (models) => {
     Permission,
     Collaborator,
     PinnedRepository,
+    IssueLabel,
     PullReviewer,
     ReviewStatus,
     PullLabel
@@ -39,6 +40,7 @@ module.exports = (models) => {
   Issue.hasMany(IssueComment, { onDelete: 'cascade' });
   PullRequest.hasMany(PullComment, { foreignKey: 'pullId', onDelete: 'cascade' });
   PullRequest.hasMany(PullLabel, { foreignKey: 'pullId', onDelete: 'cascade' });
+  PullRequest.hasMany(PullReviewer, { foreignKey: 'pullId', onDelete: 'cascade' });
 
   User.hasMany(OrgUser, { foreignKey: 'userId' });
   User.hasMany(OrgUser, { foreignKey: 'orgId' });
@@ -115,4 +117,9 @@ module.exports = (models) => {
   User.hasMany(PinnedRepository);
   PinnedRepository.belongsTo(User);
   PinnedRepository.belongsTo(Repository);
+
+  Issue.hasMany(IssueLabel, { foreignKey: 'issueId' });
+  IssueLabel.belongsTo(Issue);
+  Label.hasMany(IssueLabel, { foreignKey: 'labelId' });
+  IssueLabel.belongsTo(Label);
 };

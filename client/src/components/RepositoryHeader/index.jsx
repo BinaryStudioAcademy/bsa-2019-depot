@@ -58,11 +58,6 @@ const RepositoryHeader = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const goToRootDir = (history, url) => () => {
-    history.push(url);
-    window.location.reload();
-  };
-
   const stargazersLinkClickHandler = useCallback(() => history.push(`/${owner}/${repoName}/stargazers`), [
     owner,
     repoName,
@@ -100,11 +95,9 @@ const RepositoryHeader = ({
             <div className={styles.repoName}>
               <Octicon icon={Repo} />
               <span className={styles.repoPath}>
-                <Link to="">{owner}</Link>
+                <Link to={`/${owner}`}>{owner}</Link>
                 <span className={styles.pathDivider}>/</span>
-                <Link to="" onClick={goToRootDir(history, baseUrl)}>
-                  {repoName}
-                </Link>
+                <Link to={`/${owner}/${repoName}`}>{repoName}</Link>
               </span>
               {renderOrignalRepoLink()}
             </div>

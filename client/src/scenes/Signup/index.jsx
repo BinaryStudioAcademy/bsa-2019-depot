@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { Grid, Header, Form, Button, Segment, Message } from 'semantic-ui-react';
 import { signupRoutine } from '../../routines/routines';
 import { checkUsernameExists } from '../../services/userService';
+import * as elasticHelper from '../../helpers/elasticsearchHelper';
 import GoogleAuth from '../../components/GoogleAuth';
 import { InputError } from '../../components/InputError';
 import { serverUrl } from '../../app.config';
@@ -56,14 +57,16 @@ class Signup extends React.Component {
   }
 
   submit(values) {
+    const { username, email, password} = values;
     const user = {
-      username: values.username,
-      email: values.email,
-      password: values.password
+      username,
+      email,
+      password
     };
     this.props.signupRoutine({
       user
     });
+    elasticHelper.addUser(username);
   }
 
   renderSignupForm({ errors, touched, handleChange, handleBlur, handleSubmit, values }) {

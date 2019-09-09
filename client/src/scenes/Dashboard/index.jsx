@@ -22,12 +22,22 @@ class Dashboard extends React.Component {
     this.state = {
       userData: initialUserData,
       userOrgs: [],
-      filter: 'All'
+      filter: 'All',
+      repoNameFilter: ''
     };
 
     this.getUserData = this.getUserData.bind(this);
     this.getUsersOrgs = this.getUsersOrgs.bind(this);
-    this.getCurrentRepoFilter = this.getCurrentRepoFilter.bind(this);
+    this.getCurrentRepoTypeFilter = this.getCurrentRepoTypeFilter.bind(this);
+    this.handleFindRepo = this.handleFindRepo.bind(this);
+  }
+  componentDidUpdate(prevProps) {
+    if (!prevProps) {
+      return false;
+    }
+    if (this.props.match.params.username !== prevProps.match.params.username) {
+      this.componentDidMount();
+    }
   }
 
   async getUserData() {
@@ -61,23 +71,34 @@ class Dashboard extends React.Component {
     await this.getUsersOrgs();
   }
 
-  getCurrentRepoFilter(e, { value: filter }) {
+  getCurrentRepoTypeFilter(e, { value: filter }) {
     this.setState({
       filter
+    });
+  }
+
+  handleFindRepo({ target }) {
+    this.setState({
+      repoNameFilter: target.value
     });
   }
 
   renderTab(tab) {
     const {
       userData: { id: userId },
-      filter
+      filter,
+      repoNameFilter
     } = this.state;
     switch (tab) {
     case tabs.repositories:
       return (
           <>
-            <RepositoriesFilters filter={filter} getCurrentRepoFilter={this.getCurrentRepoFilter} />
-            <RepositoriesList filter={filter} onDataChange={this.getUserData} />
+            <RepositoriesFilters
+              filter={filter}
+              getCurrentRepoTypeFilter={this.getCurrentRepoTypeFilter}
+              handleFindRepo={this.handleFindRepo}
+            />
+            <RepositoriesList filter={filter} onDataChange={this.getUserData} repoNameFilter={repoNameFilter} />
           </>
       );
     case tabs.stars:

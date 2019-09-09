@@ -5,6 +5,7 @@ import { getIssueComments, createIssueComment, closeIssue, reopenIssue } from '.
 import IssueComment from '../../components/IssueComment';
 import moment from 'moment';
 import styles from './styles';
+import PropTypes from 'prop-types';
 
 class IssueView extends Component {
   constructor(props) {
@@ -129,6 +130,7 @@ class IssueView extends Component {
           <TextInput
             multiline={true}
             numberOfLines={4}
+            /* eslint-disable-next-line react/jsx-no-bind */
             onChangeText={comment => this.setState({ ...this.state, comment })}
             value={this.state.comment}
             style={styles.commentInput}
@@ -156,5 +158,9 @@ class IssueView extends Component {
     );
   }
 }
+
+IssueView.propTypes = {
+  navigation: PropTypes.object
+};
 
 export default IssueView;

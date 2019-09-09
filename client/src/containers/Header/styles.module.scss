@@ -144,13 +144,6 @@ $grey-color: #f7f7fb;
       float: right !important;
     }
   }
-  input {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 15px;
-    border: 1px solid gray;
-    border-radius: 3px;
-  }
   .sidebarForm {
     margin-top: 20px;
     div {
@@ -271,4 +264,24 @@ $grey-color: #f7f7fb;
 .logo {
   color: #fff;
   fill: currentColor;
+}
+
+:local(.searchItem){
+  color: $black-color !important;
+  font-weight: 500;
+}
+
+:local(.searchItemIcon){
+  color: $black-color !important;
+  margin-right: 3px;
+}
+
+:global(.search.icon){
+  top: inherit !important;
+  color: $grey-color; 
+}
+
+:global(.ui.search .prompt){
+  border-radius: 3px !important;
+  background-color: $input-background;
 }

@@ -37,7 +37,7 @@ export default StyleSheet.create({
   },
   commentHeaderInfo: {
     alignItems: 'center',
-    backgroundColor: '#f1f8ff',
+    backgroundColor: colors.white,
     color: colors.greyText,
     flexDirection: 'row',
     flex: 1,
