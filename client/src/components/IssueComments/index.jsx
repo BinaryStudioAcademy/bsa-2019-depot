@@ -87,8 +87,7 @@ class IssueComments extends React.Component {
       sort: 'votes',
       order: 'desc'
     };
-    // const soQuestions = await getAllQuestionOnSO(filter);
-    const soQuestions = [];
+    const soQuestions = await getAllQuestionOnSO(filter);
 
     this.setState({
       currentIssue,
