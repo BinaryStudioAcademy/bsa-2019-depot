@@ -28,10 +28,14 @@ class ForksPage extends Component {
       this.setState({ forks, loading: false });
     });
   }
+  goToPath = (history, url) => () => {
+    history.push(url);
+    window.location.reload();
+  };
 
   render() {
     const { loading, forks } = this.state;
-    const { repositoryId, name, username, imgUrl } = this.props;
+    const { repositoryId, name, username, imgUrl, history } = this.props;
     return (
       <div>
         {loading ? (
@@ -110,7 +114,7 @@ class ForksPage extends Component {
                       </Grid>
                     </div>
                   </Popup>
-                  /<Link to={`/${user.username}/${name}`}>{name}</Link>
+                  /<Link to="" onClick={this.goToPath(history, `/${user.username}/${name}`)}>{name}</Link>
                 </span>
               </li>
             ))}
@@ -136,7 +140,8 @@ ForksPage.propTypes = {
   repositoryId: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
-  imgUrl: PropTypes.string
+  imgUrl: PropTypes.string,
+  history: PropTypes.object
 };
 
 const mapStateToProps = ({
