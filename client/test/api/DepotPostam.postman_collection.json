@@ -1,0 +1,3337 @@
+{
+  "info": {
+    "_postman_id": "4ff0b7de-8722-47b4-877d-1ef0c595bdcb",
+    "name": "DepotPostam",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Login",
+      "item": [
+        {
+          "name": "User login w/ valid credentials",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "5b6c0331-d3cb-47f9-a28d-4a1df2beaf1c",
+                "exec": [
+                  "pm.test(`\"Should receive 200 OK\"`, function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "var json = JSON.parse(responseBody);\r",
+                  "pm.globals.set(\"token\", json.token);\r",
+                  "\r",
+                  "pm.globals.set(\"id\", json.user.id);\r",
+                  "pm.globals.set(\"username\", json.user.username);\r",
+                  "pm.globals.set(\"name\", json.user.name);\r",
+                  "pm.globals.set(\"bio\", json.user.bio);\r",
+                  "pm.globals.set(\"url\", json.user.url);\r",
+                  "pm.globals.set(\"company\", json.user.company);\r",
+                  "pm.globals.set(\"location\", json.user.location);\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\"username\":\"{{loginEmail}}\",\n\"password\":\"{{loginPass}}\"\n}\n"
+            },
+            "url": {
+              "raw": "{{depotApi}}/auth/login",
+              "host": ["{{depotApi}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User login w/ invalid credentials",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "5b6c0331-d3cb-47f9-a28d-4a1df2beaf1c",
+                "exec": [
+                  "pm.test(\"Status code is 401\", function () {\r",
+                  "    pm.response.to.have.status(401);\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\"username\":\"{{invalidEmail}}\",\n\"password\":\"{{invalidPass}}\"\n}\n"
+            },
+            "url": {
+              "raw": "{{depotApi}}/auth/login",
+              "host": ["{{depotApi}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User Settings",
+      "item": [
+        {
+          "name": "Change user settings",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "374287dd-d082-44c3-9cc9-48db4811ec9c",
+                "exec": [
+                  "pm.test(\"Should receive 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"id\":\"{{id}}\",\n\t\"settings\":{\n\t\t\"bio\":\"{{ChangeBio}}\",\n\t\t\"company\":\"{{ChangeCompany}}\",\n\t\t\"location\":\"{{ChangeLocation}}\",\n\t\t\"name\":\"{{ChangeName}}\",\n\t\t\"imgUrl\":null,\n\t\t\"url\":\"{{ChangeUrl}}\"\n\t}\n}\n"
+            },
+            "url": {
+              "raw": "{{depotApi}}/users",
+              "host": ["{{depotApi}}"],
+              "path": ["users"]
+            },
+            "description": "Verify that user can change settings"
+          },
+          "response": []
+        },
+        {
+          "name": "Checks that settings is changed",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "c4bad428-e18b-4c6b-8370-08288d1ad634",
+                "exec": [
+                  "pm.test(\"Should receive 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "let ChangeBio = pm.variables.get(\"ChangeBio\");",
+                  "let ChangeCompany = pm.variables.get(\"ChangeCompany\");",
+                  "let ChangeLocation = pm.variables.get(\"ChangeLocation\");",
+                  "let ChangeName = pm.variables.get(\"ChangeName\");",
+                  "let ChangeUrl = pm.variables.get(\"ChangeUrl\");",
+                  "",
+                  "pm.test(\"Check that settings was changed\", function () {",
+                  "    let json = JSON.parse(responseBody);",
+                  "    pm.expect(json.bio).to.eql(ChangeBio);",
+                  "    pm.expect(json.name).to.eql(ChangeName);",
+                  "    pm.expect(json.url).to.eql(ChangeUrl);",
+                  "    pm.expect(json.location).to.eql(ChangeLocation);",
+                  "    pm.expect(json.company).to.eql(ChangeCompany);",
+                  "});",
+                  "",
+                  ""
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{depotApi}}/auth/user",
+              "host": ["{{depotApi}}"],
+              "path": ["auth", "user"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Postcondition/Initial settings",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "374287dd-d082-44c3-9cc9-48db4811ec9c",
+                "exec": [
+                  "pm.test(\"Should receive 200 OK\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "name": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"id\":\"{{id}}\",\n\t\"settings\":{\n\t\t\"bio\":\"{{bio}}\",\n\t\t\"company\":\"{{company}}\",\n\t\t\"location\":\"{{location}}\",\n\t\t\"name\":\"{{name}}\",\n\t\t\"imgUrl\":null,\n\t\t\"url\":\"{{url}}\"\n\t}\n}"
+            },
+            "url": {
+              "raw": "{{depotApi}}/users",
+              "host": ["{{depotApi}}"],
+              "path": ["users"]
+            }
+          },
+          "response": []
+        }
+      ],
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "d3764564-5fd0-4db0-a5ef-769978b4a9f0",
+            "type": "text/javascript",
+            "exec": [""]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "fa9d282f-9368-4130-9293-48667eab6899",
+            "type": "text/javascript",
+            "exec": [""]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Repository",
+      "item": [
+        {
+          "name": "Create repository",
+          "item": [
+            {
+              "name": "Create Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "839aa58b-2cf8-4454-b711-b471c9fbc5ea",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"owner\":\"tester\",\n\"ownerID\":\"{{id}}\",\n\"reponame\":\"{{repo_name1}}\",\n\"description\":\"qwtqwe\",\n\"privacy\":\"public\",\n\"readme\":true,\n\"gitignore\":false,\n\"license\":false,\n\"email\":\"{{loginEmail}}\"\n}\n"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Verify - repo was created",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "f90dc24e-6deb-4f02-87d6-23c84085b4a7",
+                    "exec": [
+                      "let json = JSON.parse(responseBody);",
+                      "let repoName = pm.variables.get(\"repo_name1\");",
+                      "    for(let i = 0; i < json.length; i++){",
+                      "        if(json[i].name === repoName){",
+                      "         var createdRepoName = json[i].name",
+                      "        }",
+                      "    }",
+                      "pm.test(\"Repository was created\", function () {",
+                      "    pm.expect(createdRepoName).to.eql(repoName);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/users/{{username}}/repos",
+                  "host": ["{{depotApi}}"],
+                  "path": ["users", "{{username}}", "repos"]
+                },
+                "description": "Verify if repo was created"
+              },
+              "response": []
+            },
+            {
+              "name": "Postcondition/Delete Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a7eff5ae-7dc6-4571-a1af-898e71dfb27a",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{username}}/{{repo_name1}}/settings",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{username}}", "{{repo_name1}}", "settings"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Delete repository",
+          "item": [
+            {
+              "name": "Create Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "839aa58b-2cf8-4454-b711-b471c9fbc5ea",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"owner\":\"tester\",\n\"ownerID\":\"{{id}}\",\n\"reponame\":\"{{repo_name2}}\",\n\"description\":\"qwtqwe\",\n\"privacy\":\"public\",\n\"readme\":true,\n\"gitignore\":false,\n\"license\":false,\n\"email\":\"{{loginEmail}}\"\n}\n"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a7eff5ae-7dc6-4571-a1af-898e71dfb27a",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{username}}/{{repo_name2}}/settings",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{username}}", "{{repo_name2}}", "settings"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Verify - repo was deleted",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "f90dc24e-6deb-4f02-87d6-23c84085b4a7",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "let json = JSON.parse(responseBody);",
+                      "let repoName = pm.variables.get(\"repo_name2\");",
+                      "",
+                      "for(let i = 0; i < json.length; i++){",
+                      "    if(json[i].name === repoName){",
+                      "        var createdRepoName = json[i].name",
+                      "    }",
+                      "}",
+                      "",
+                      "pm.test(\"Repository was deleted\", function () {",
+                      "    pm.expect(createdRepoName).not.eql(repoName);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/users/{{username}}/repos",
+                  "host": ["{{depotApi}}"],
+                  "path": ["users", "{{username}}", "repos"]
+                },
+                "description": "Verify if repo was created"
+              },
+              "response": []
+            }
+          ],
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Create new file",
+          "item": [
+            {
+              "name": "Create Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "839aa58b-2cf8-4454-b711-b471c9fbc5ea",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"owner\":\"tester\",\n\"ownerID\":\"{{id}}\",\n\"reponame\":\"{{repo_name3}}\",\n\"description\":\"qwtqwe\",\n\"privacy\":\"public\",\n\"readme\":true,\n\"gitignore\":false,\n\"license\":false,\n\"email\":\"{{loginEmail}}\"\n}\n"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create and commit file",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "7d0151cb-ed64-4bd0-be17-bea83b072623",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"author\":\"{{username}}\",\n\"email\":\"{{loginEmail}}\",\n\"message\":\"new file\",\n\"commitBranch\":\"master\",\n\"oldFilepath\":\"{{fileName}}\",\n\"filepath\":\"{{fileName}}\",\n\"fileData\":\"Some code\"\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/commits/{{username}}/{{repo_name3}}/master/",
+                  "host": ["{{depotApi}}"],
+                  "path": ["commits", "{{username}}", "{{repo_name3}}", "master", ""]
+                },
+                "description": "Creates new file and commit him to new branch"
+              },
+              "response": []
+            },
+            {
+              "name": "Verify - file was created",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "20942b0f-9ed5-4cf1-b6de-59515121cca2",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "let json = JSON.parse(responseBody);",
+                      "let fileName = pm.variables.get(\"fileName\");",
+                      "    for(let i = 0; i < json.files.length; i++){",
+                      "        if(json.files[i].name === fileName){",
+                      "         var createdFileName = json.files[i].name",
+                      "        }",
+                      "    }",
+                      "pm.test(\"New file was created and commited to master branch\", function () {",
+                      "    pm.expect(createdFileName).to.eql(fileName);",
+                      "});",
+                      "",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{username}}/{{repo_name3}}/master/tree?pathToDir=",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{username}}", "{{repo_name3}}", "master", "tree"],
+                  "query": [
+                    {
+                      "key": "pathToDir",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Postcondition/Delete Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a7eff5ae-7dc6-4571-a1af-898e71dfb27a",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{username}}/{{repo_name3}}/settings",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{username}}", "{{repo_name3}}", "settings"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Commit file to new branch",
+          "item": [
+            {
+              "name": "Create Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "839aa58b-2cf8-4454-b711-b471c9fbc5ea",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"owner\":\"tester\",\n\"ownerID\":\"{{id}}\",\n\"reponame\":\"{{repo_name4}}\",\n\"description\":\"qwtqwe\",\n\"privacy\":\"public\",\n\"readme\":true,\n\"gitignore\":false,\n\"license\":false,\n\"email\":\"{{loginEmail}}\"\n}\n"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create and commit file",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "7d0151cb-ed64-4bd0-be17-bea83b072623",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"author\":\"{{username}}\",\n\"email\":\"{{loginEmail}}\",\n\"message\":\"new branch\",\n\"commitBranch\":\"{{branch}}\",\n\"oldFilepath\":\"{{fileName}}\",\n\"filepath\":\"{{fileName}}\",\n\"fileData\":\"Some code\"\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/commits/{{username}}/{{repo_name4}}/master/",
+                  "host": ["{{depotApi}}"],
+                  "path": ["commits", "{{username}}", "{{repo_name4}}", "master", ""]
+                },
+                "description": "Creates new file and commit him to new branch"
+              },
+              "response": []
+            },
+            {
+              "name": "Verify - branch was created",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "20942b0f-9ed5-4cf1-b6de-59515121cca2",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "let json = JSON.parse(responseBody);",
+                      "let branchName = pm.variables.get(\"branch\");",
+                      "    for(let i = 0; i < json.branches.length; i++){",
+                      "        if(json.branches[i].name === branchName){",
+                      "         var createdBranchName = json.branches[i].name",
+                      "        }",
+                      "    }",
+                      "pm.test(\"New branch was created with new file\", function () {",
+                      "    pm.expect(createdBranchName).to.eql(branchName);",
+                      "});",
+                      "",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/users/{{username}}/repos/{{repo_name4}}",
+                  "host": ["{{depotApi}}"],
+                  "path": ["users", "{{username}}", "repos", "{{repo_name4}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Postcondition/Delete Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a7eff5ae-7dc6-4571-a1af-898e71dfb27a",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "afb356bb-8a65-4486-8835-64ae5d67a98b",
+                    "exec": [""],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{username}}/{{repo_name4}}/settings",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{username}}", "{{repo_name4}}", "settings"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "5535527f-599e-48de-84ae-e109ca353256",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "f96d7bc0-31f5-42e8-9a31-7281cc09e23f",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            }
+          ],
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Delete file",
+          "item": [
+            {
+              "name": "Create Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "839aa58b-2cf8-4454-b711-b471c9fbc5ea",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"owner\":\"tester\",\n\"ownerID\":\"{{id}}\",\n\"reponame\":\"{{repo_name5}}\",\n\"description\":\"qwtqwe\",\n\"privacy\":\"public\",\n\"readme\":true,\n\"gitignore\":false,\n\"license\":false,\n\"email\":\"{{loginEmail}}\"\n}\n"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create and commit new file",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "7d0151cb-ed64-4bd0-be17-bea83b072623",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"author\":\"{{username}}\",\n\"email\":\"{{loginEmail}}\",\n\"message\":\"new branch\",\n\"commitBranch\":\"{{branch}}\",\n\"oldFilepath\":\"{{fileName}}\",\n\"filepath\":\"{{fileName}}\",\n\"fileData\":\"Some code\"\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/commits/{{username}}/{{repo_name5}}/master/",
+                  "host": ["{{depotApi}}"],
+                  "path": ["commits", "{{username}}", "{{repo_name5}}", "master", ""]
+                },
+                "description": "Creates new file and commit him to new branch"
+              },
+              "response": []
+            },
+            {
+              "name": "Delete file",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "84e77d89-b6d8-45f1-bee6-941fe225508d",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"author\":\"{{username}}\",\n\"email\":\"{{loginEmail}}\",\n\"filepath\":\"{{fileName}}\",\n\"toDelete\":true\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/commits/{{username}}/{{repo_name5}}/{{branch}}/",
+                  "host": ["{{depotApi}}"],
+                  "path": ["commits", "{{username}}", "{{repo_name5}}", "{{branch}}", ""]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Verify - file was deleted",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "20942b0f-9ed5-4cf1-b6de-59515121cca2",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "let json = JSON.parse(responseBody);",
+                      "let fileName = pm.variables.get(\"fileName\");",
+                      "    for(let i = 0; i < json.files.length; i++){",
+                      "        if(json.files[i].name === fileName){",
+                      "         var createdFileName = json.files[i].name",
+                      "        }",
+                      "    }",
+                      "pm.test(\"New file was created and commited to master branch\", function () {",
+                      "    pm.expect(createdFileName).not.eql(fileName);",
+                      "});",
+                      "",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{username}}/{{repo_name5}}/{{branch}}/tree",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{username}}", "{{repo_name5}}", "{{branch}}", "tree"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Postcondition/Delete Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a7eff5ae-7dc6-4571-a1af-898e71dfb27a",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{username}}/{{repo_name5}}/settings",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{username}}", "{{repo_name5}}", "settings"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "5535527f-599e-48de-84ae-e109ca353256",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "f96d7bc0-31f5-42e8-9a31-7281cc09e23f",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            }
+          ],
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Change file",
+          "item": [
+            {
+              "name": "Create Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "839aa58b-2cf8-4454-b711-b471c9fbc5ea",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"owner\":\"tester\",\n\"ownerID\":\"{{id}}\",\n\"reponame\":\"{{repo_name6}}\",\n\"description\":\"qwtqwe\",\n\"privacy\":\"public\",\n\"readme\":true,\n\"gitignore\":false,\n\"license\":false,\n\"email\":\"{{loginEmail}}\"\n}\n"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create and commit new file",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "7d0151cb-ed64-4bd0-be17-bea83b072623",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"author\":\"{{username}}\",\n\"email\":\"{{loginEmail}}\",\n\"message\":\"add new file\",\n\"commitBranch\":\"master\",\n\"oldFilepath\":\"{{fileName}}\",\n\"filepath\":\"{{fileName}}\",\n\"fileData\":\"Some code\"\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/commits/{{username}}/{{repo_name6}}/master/",
+                  "host": ["{{depotApi}}"],
+                  "path": ["commits", "{{username}}", "{{repo_name6}}", "master", ""]
+                },
+                "description": "Creates new file and commit him to new branch"
+              },
+              "response": []
+            },
+            {
+              "name": "Change file",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "724289a1-2342-4a3f-b5bf-8b7c6bec0e7b",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"author\":\"{{username}}\",\n\"email\":\"{{loginEmail}}\",\n\"message\":\"first commit\",\n\"commitBranch\":\"master\",\n\"oldFilepath\":\"{{fileName}}\",\n\"filepath\":\"{{fileName}}\",\n\"fileData\":\"{{fileData}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/commits/{{username}}/{{repo_name6}}/master/",
+                  "host": ["{{depotApi}}"],
+                  "path": ["commits", "{{username}}", "{{repo_name6}}", "master", ""]
+                },
+                "description": "Change file and commit diff"
+              },
+              "response": []
+            },
+            {
+              "name": "Verify - file was changed",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "20942b0f-9ed5-4cf1-b6de-59515121cca2",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "let json = JSON.parse(responseBody);",
+                      "let fileData = pm.variables.get(\"fileData\");",
+                      "",
+                      "pm.test(\"File was successfully changed\", function () {",
+                      "    pm.expect(fileData).to.eql(json.content);",
+                      "});",
+                      "",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{username}}/{{repo_name6}}/master/file?filepath={{fileName}}",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{username}}", "{{repo_name6}}", "master", "file"],
+                  "query": [
+                    {
+                      "key": "filepath",
+                      "value": "{{fileName}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Postcondition/Delete Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a7eff5ae-7dc6-4571-a1af-898e71dfb27a",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{username}}/{{repo_name6}}/settings",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{username}}", "{{repo_name6}}", "settings"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "5535527f-599e-48de-84ae-e109ca353256",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "f96d7bc0-31f5-42e8-9a31-7281cc09e23f",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            }
+          ],
+          "_postman_isSubFolder": true
+        }
+      ]
+    },
+    {
+      "name": "Repository labels",
+      "item": [
+        {
+          "name": "Create label",
+          "item": [
+            {
+              "name": "Create Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "839aa58b-2cf8-4454-b711-b471c9fbc5ea",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"owner\":\"tester\",\n\"ownerID\":\"{{id}}\",\n\"reponame\":\"{{repo_labels1}}\",\n\"description\":\"qwtqwe\",\n\"privacy\":\"public\",\n\"readme\":true,\n\"gitignore\":false,\n\"license\":false,\n\"email\":\"{{loginEmail}}\"\n}\n"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get repo id",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "724d8eb6-263b-4ca7-9cd1-1b4539101f5a",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var json = JSON.parse(responseBody);",
+                      "pm.globals.set(\"id_repo_labels1\", json.id);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/users/{{username}}/repos/{{repo_labels1}}",
+                  "host": ["{{depotApi}}"],
+                  "path": ["users", "{{username}}", "repos", "{{repo_labels1}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create label",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "176881d0-7f06-4226-95f6-25cc07fa86d0",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"repositoryId\":\"{{id_repo_labels1}}\",\n\"id\":\"\",\n\"name\":\"{{labelName}}\",\n\"color\":\"{{labelColor}}\",\n\"description\":\"\"\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/labels",
+                  "host": ["{{depotApi}}"],
+                  "path": ["labels"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Verify - label was created",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "ed7aef2a-820c-4258-8859-9b413487d71e",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "let json = JSON.parse(responseBody);",
+                      "let labelName = pm.variables.get(\"labelName\");",
+                      "    for(let i = 0; i < json.length; i++){",
+                      "        if(json[i].name === labelName){",
+                      "         var createdLabelName = json[i].name",
+                      "        }",
+                      "    }",
+                      "pm.test(\"New label was created\", function () {",
+                      "    pm.expect(createdLabelName).to.eql(labelName);",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{id_repo_labels1}}/labels",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{id_repo_labels1}}", "labels"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Postcondition/Delete Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a7eff5ae-7dc6-4571-a1af-898e71dfb27a",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{username}}/{{repo_labels1}}/settings",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{username}}", "{{repo_labels1}}", "settings"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Edit label",
+          "item": [
+            {
+              "name": "Create Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "839aa58b-2cf8-4454-b711-b471c9fbc5ea",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"owner\":\"tester\",\n\"ownerID\":\"{{id}}\",\n\"reponame\":\"{{repo_labels2}}\",\n\"description\":\"qwtqwe\",\n\"privacy\":\"public\",\n\"readme\":true,\n\"gitignore\":false,\n\"license\":false,\n\"email\":\"{{loginEmail}}\"\n}\n"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get repo id",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "724d8eb6-263b-4ca7-9cd1-1b4539101f5a",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var json = JSON.parse(responseBody);",
+                      "pm.globals.set(\"id_repo_labels2\", json.id);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/users/{{username}}/repos/{{repo_labels2}}",
+                  "host": ["{{depotApi}}"],
+                  "path": ["users", "{{username}}", "repos", "{{repo_labels2}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create label",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "2fe7caff-b15d-4d56-8a57-a5d1419cd3dc",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var json = JSON.parse(responseBody);",
+                      "pm.globals.set(\"label_id1\", json.id);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"repositoryId\":\"{{id_repo_labels2}}\",\n\"id\":\"\",\n\"name\":\"{{labelName}}\",\n\"color\":\"{{labelColor}}\",\n\"description\":\"\"\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/labels",
+                  "host": ["{{depotApi}}"],
+                  "path": ["labels"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Change label name",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "b0614c99-f168-4868-8b0f-fe7881adc7b5",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "type": "text",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"id\":\"{{label_id1}}\",\n\"name\":\"{{change_label_name}}\",\n\"color\":\"{{labelColor}}\",\n\"description\":\"\"\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/labels",
+                  "host": ["{{depotApi}}"],
+                  "path": ["labels"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Verify - label name was changed",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "ed7aef2a-820c-4258-8859-9b413487d71e",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "let json = JSON.parse(responseBody);",
+                      "let changeLabelName = pm.variables.get(\"change_label_name\");",
+                      "    for(let i = 0; i < json.length; i++){",
+                      "        if(json[i].name === changeLabelName){",
+                      "         var changedLabelName = json[i].name",
+                      "        }",
+                      "    }",
+                      "pm.test(\"New label was created\", function () {",
+                      "    pm.expect(changedLabelName).to.eql(changeLabelName);",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{id_repo_labels2}}/labels",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{id_repo_labels2}}", "labels"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Postcondition/Delete Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a7eff5ae-7dc6-4571-a1af-898e71dfb27a",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{username}}/{{repo_labels2}}/settings",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{username}}", "{{repo_labels2}}", "settings"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "e2aa5fa6-28a3-4551-bcb9-970216158d3d",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "f3f4c8ff-b4d9-4f39-8e63-6c23d9292f5f",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            }
+          ],
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Delete label",
+          "item": [
+            {
+              "name": "Create Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "839aa58b-2cf8-4454-b711-b471c9fbc5ea",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"owner\":\"tester\",\n\"ownerID\":\"{{id}}\",\n\"reponame\":\"{{repo_labels3}}\",\n\"description\":\"qwtqwe\",\n\"privacy\":\"public\",\n\"readme\":true,\n\"gitignore\":false,\n\"license\":false,\n\"email\":\"{{loginEmail}}\"\n}\n"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get repo id",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "724d8eb6-263b-4ca7-9cd1-1b4539101f5a",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var json = JSON.parse(responseBody);",
+                      "pm.globals.set(\"id_repo_labels3\", json.id);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/users/{{username}}/repos/{{repo_labels3}}",
+                  "host": ["{{depotApi}}"],
+                  "path": ["users", "{{username}}", "repos", "{{repo_labels3}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create label",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "2fe7caff-b15d-4d56-8a57-a5d1419cd3dc",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var json = JSON.parse(responseBody);",
+                      "pm.globals.set(\"label_id2\", json.id);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"repositoryId\":\"{{id_repo_labels3}}\",\n\"id\":\"\",\n\"name\":\"{{labelName}}\",\n\"color\":\"{{labelColor}}\",\n\"description\":\"\"\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/labels",
+                  "host": ["{{depotApi}}"],
+                  "path": ["labels"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete label",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "7e1f8501-299f-4add-a616-60da8570898e",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "type": "text",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/labels/{{label_id2}}",
+                  "host": ["{{depotApi}}"],
+                  "path": ["labels", "{{label_id2}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Verify - label was deleted",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "ed7aef2a-820c-4258-8859-9b413487d71e",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "let json = JSON.parse(responseBody);",
+                      "let labelName = pm.variables.get(\"labelName\");",
+                      "    for(let i = 0; i < json.length; i++){",
+                      "        if(json[i].name === labelName){",
+                      "         var deletedLabelName = json[i].name",
+                      "        }",
+                      "    }",
+                      "pm.test(\"Label was deleted successfully\", function () {",
+                      "    pm.expect(deletedLabelName).not.eql(labelName);",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{id_repo_labels3}}/labels",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{id_repo_labels3}}", "labels"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Postcondition/Delete Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a7eff5ae-7dc6-4571-a1af-898e71dfb27a",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{username}}/{{repo_labels3}}/settings",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{username}}", "{{repo_labels3}}", "settings"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "e2aa5fa6-28a3-4551-bcb9-970216158d3d",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "f3f4c8ff-b4d9-4f39-8e63-6c23d9292f5f",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            }
+          ],
+          "_postman_isSubFolder": true
+        }
+      ]
+    },
+    {
+      "name": "Issues",
+      "item": [
+        {
+          "name": "Create issue",
+          "item": [
+            {
+              "name": "Create Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "839aa58b-2cf8-4454-b711-b471c9fbc5ea",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"owner\":\"tester\",\n\"ownerID\":\"{{id}}\",\n\"reponame\":\"{{repo_issue1}}\",\n\"description\":\"qwtqwe\",\n\"privacy\":\"public\",\n\"readme\":true,\n\"gitignore\":false,\n\"license\":false,\n\"email\":\"{{loginEmail}}\"\n}\n"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get repo id",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "724d8eb6-263b-4ca7-9cd1-1b4539101f5a",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var json = JSON.parse(responseBody);",
+                      "pm.globals.set(\"id_repo_issue1\", json.id);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/users/{{username}}/repos/{{repo_issue1}}",
+                  "host": ["{{depotApi}}"],
+                  "path": ["users", "{{username}}", "repos", "{{repo_issue1}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create issue",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "381bdbd6-ded7-4a68-bd61-5ff02dff8e18",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"title\":\"{{issue_title}}\",\n\"body\":\"{{issue_body}}\",\n\"userId\":\"{{id}}\",\n\"repositoryId\":\"{{id_repo_issue1}}\",\n\"isOpened\":true\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/issues",
+                  "host": ["{{depotApi}}"],
+                  "path": ["issues"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Verify - issues was created",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "83c7dabc-2066-4fe1-ab5d-30d9450499bf",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "let json = JSON.parse(responseBody);",
+                      "let issueName = pm.variables.get(\"issue_title\");",
+                      "    for(let i = 0; i < json.issues.length; i++){",
+                      "        if(json.issues[i].title === issueName){",
+                      "         var createdIssueName = json.issues[i].title",
+                      "        }",
+                      "    }",
+                      "pm.test(\"New label was created\", function () {",
+                      "    pm.expect(createdIssueName).to.eql(issueName);",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{id_repo_issue1}}/issues?authorId=&isOpened=true&sort=created_desc&title=",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{id_repo_issue1}}", "issues"],
+                  "query": [
+                    {
+                      "key": "authorId",
+                      "value": ""
+                    },
+                    {
+                      "key": "isOpened",
+                      "value": "true"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "created_desc"
+                    },
+                    {
+                      "key": "title",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Postcondition/Delete Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a7eff5ae-7dc6-4571-a1af-898e71dfb27a",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{username}}/{{repo_issue1}}/settings",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{username}}", "{{repo_issue1}}", "settings"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "bab7751b-891b-4e1b-9277-aa198672b78d",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "ae5f01b9-993c-4630-86ad-0203fe5953c5",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            }
+          ],
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Delete issue",
+          "item": [
+            {
+              "name": "Create Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "839aa58b-2cf8-4454-b711-b471c9fbc5ea",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"owner\":\"tester\",\n\"ownerID\":\"{{id}}\",\n\"reponame\":\"{{repo_issue2}}\",\n\"description\":\"qwtqwe\",\n\"privacy\":\"public\",\n\"readme\":true,\n\"gitignore\":false,\n\"license\":false,\n\"email\":\"{{loginEmail}}\"\n}\n"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get repo id",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "724d8eb6-263b-4ca7-9cd1-1b4539101f5a",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var json = JSON.parse(responseBody);",
+                      "pm.globals.set(\"id_repo_issue2\", json.id);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/users/{{username}}/repos/{{repo_issue2}}",
+                  "host": ["{{depotApi}}"],
+                  "path": ["users", "{{username}}", "repos", "{{repo_issue2}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create issue",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "9c34133f-9add-42b2-ae4f-6cb859da5c73",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var json = JSON.parse(responseBody);",
+                      "pm.globals.set(\"issue_id1\", json.data.id);",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"title\":\"{{issue_title}}\",\n\"body\":\"{{issue_body}}\",\n\"userId\":\"{{id}}\",\n\"repositoryId\":\"{{id_repo_issue2}}\",\n\"isOpened\":true\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/issues",
+                  "host": ["{{depotApi}}"],
+                  "path": ["issues"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete issue",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "f7be5166-5c91-4e29-abeb-73c3948742b9",
+                    "exec": [
+                      "pm.test(\"Status code is 204\", function () {",
+                      "    pm.response.to.have.status(204);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "type": "text",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/issues/{{issue_id1}}",
+                  "host": ["{{depotApi}}"],
+                  "path": ["issues", "{{issue_id1}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Verify - issues was deleted",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "83c7dabc-2066-4fe1-ab5d-30d9450499bf",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "let json = JSON.parse(responseBody);",
+                      "let issueName = pm.variables.get(\"issue_title\");",
+                      "    for(let i = 0; i < json.issues.length; i++){",
+                      "        if(json.issues[i].title === issueName){",
+                      "         var createdIssueName = json.issues[i].title",
+                      "        }",
+                      "    }",
+                      "pm.test(\"New issue was deleted\", function () {",
+                      "    pm.expect(createdIssueName).not.eql(issueName);",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{id_repo_issue2}}/issues?authorId=&isOpened=true&sort=created_desc&title=",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{id_repo_issue2}}", "issues"],
+                  "query": [
+                    {
+                      "key": "authorId",
+                      "value": ""
+                    },
+                    {
+                      "key": "isOpened",
+                      "value": "true"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "created_desc"
+                    },
+                    {
+                      "key": "title",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Postcondition/Delete Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a7eff5ae-7dc6-4571-a1af-898e71dfb27a",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{username}}/{{repo_issue2}}/settings",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{username}}", "{{repo_issue2}}", "settings"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "bab7751b-891b-4e1b-9277-aa198672b78d",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "ae5f01b9-993c-4630-86ad-0203fe5953c5",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            }
+          ],
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Edit issue",
+          "item": [
+            {
+              "name": "Create Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "839aa58b-2cf8-4454-b711-b471c9fbc5ea",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"owner\":\"tester\",\n\"ownerID\":\"{{id}}\",\n\"reponame\":\"{{repo_issue3}}\",\n\"description\":\"qwtqwe\",\n\"privacy\":\"public\",\n\"readme\":true,\n\"gitignore\":false,\n\"license\":false,\n\"email\":\"{{loginEmail}}\"\n}\n"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get repo id",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "724d8eb6-263b-4ca7-9cd1-1b4539101f5a",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var json = JSON.parse(responseBody);",
+                      "pm.globals.set(\"id_repo_issue3\", json.id);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/users/{{username}}/repos/{{repo_issue3}}",
+                  "host": ["{{depotApi}}"],
+                  "path": ["users", "{{username}}", "repos", "{{repo_issue3}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Create issue",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "9c34133f-9add-42b2-ae4f-6cb859da5c73",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "var json = JSON.parse(responseBody);",
+                      "pm.globals.set(\"issue_id2\", json.data.id);",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"title\":\"{{issue_title}}\",\n\"body\":\"{{issue_body}}\",\n\"userId\":\"{{id}}\",\n\"repositoryId\":\"{{id_repo_issue3}}\",\n\"isOpened\":true\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/issues",
+                  "host": ["{{depotApi}}"],
+                  "path": ["issues"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Edit issue",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "f7be5166-5c91-4e29-abeb-73c3948742b9",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "name": "Content-Type",
+                    "type": "text",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n\"id\":\"{{issue_id2}}\",\n\"title\":\"{{issueEditName}}\",\n\"body\":\"cloning of repository does not work\"\n}"
+                },
+                "url": {
+                  "raw": "{{depotApi}}/issues",
+                  "host": ["{{depotApi}}"],
+                  "path": ["issues"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Verify - issues was deleted",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "83c7dabc-2066-4fe1-ab5d-30d9450499bf",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "let json = JSON.parse(responseBody);",
+                      "let issueName = pm.variables.get(\"issueEditName\");",
+                      "    for(let i = 0; i < json.issues.length; i++){",
+                      "        if(json.issues[i].title === issueName){",
+                      "         var editedIssueName = json.issues[i].title",
+                      "        }",
+                      "    }",
+                      "pm.test(\"New issue was edited\", function () {",
+                      "    pm.expect(editedIssueName).to.eql(issueName);",
+                      "});",
+                      "",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{id_repo_issue3}}/issues?authorId=&isOpened=true&sort=created_desc&title=",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{id_repo_issue3}}", "issues"],
+                  "query": [
+                    {
+                      "key": "authorId",
+                      "value": ""
+                    },
+                    {
+                      "key": "isOpened",
+                      "value": "true"
+                    },
+                    {
+                      "key": "sort",
+                      "value": "created_desc"
+                    },
+                    {
+                      "key": "title",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Postcondition/Delete Repository",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a7eff5ae-7dc6-4571-a1af-898e71dfb27a",
+                    "exec": [
+                      "pm.test(\"Should receive 200 OK\", function () {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{depotApi}}/repos/{{username}}/{{repo_issue3}}/settings",
+                  "host": ["{{depotApi}}"],
+                  "path": ["repos", "{{username}}", "{{repo_issue3}}", "settings"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "bab7751b-891b-4e1b-9277-aa198672b78d",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "id": "ae5f01b9-993c-4630-86ad-0203fe5953c5",
+                "type": "text/javascript",
+                "exec": [""]
+              }
+            }
+          ],
+          "_postman_isSubFolder": true
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "51ebee55-610b-42b7-be4c-f5f08898990d",
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "155dbb9c-c05b-4b3f-a6f2-ad345c423f3a",
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ]
+}

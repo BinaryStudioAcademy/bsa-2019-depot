@@ -1,0 +1,254 @@
+{
+  "id": "cfd9bcc0-f3d0-4e1d-83a0-e87ab68cb032",
+  "values": [
+    {
+      "key": "loginEmail",
+      "value": "depot.project.tester@gmail.com",
+      "enabled": true
+    },
+    {
+      "key": "loginPass",
+      "value": "Q!w2e3r4t5",
+      "enabled": true
+    },
+    {
+      "key": "token",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU5YTBhODE3LWZmZTQtNDc3MS1iMjlhLTZjZGIwN2MyN2Y4MCIsImVtYWlsIjoiZGVwb3QucHJvamVjdC50ZXN0ZXJAZ21haWwuY29tIiwiaWF0IjoxNTY3ODYxMTEwLCJleHAiOjE1Njc5NDc1MTB9.LJx9dAvONjQVQBOJDoD3hsn8Buwu3TGBVXLPijDD0Ys",
+      "enabled": true
+    },
+    {
+      "key": "repo_name1",
+      "value": "PostmanRepo",
+      "enabled": true
+    },
+    {
+      "key": "repo_name2",
+      "value": "PostmanRepo2",
+      "enabled": true
+    },
+    {
+      "key": "repo_name3",
+      "value": "PostmanRepo3",
+      "enabled": true
+    },
+    {
+      "key": "repo_name4",
+      "value": "PostmanRepo4",
+      "enabled": true
+    },
+    {
+      "key": "depotApi",
+      "value": "https://stage.depothub.xyz/api",
+      "enabled": true
+    },
+    {
+      "key": "id",
+      "value": "e9a0a817-ffe4-4771-b29a-6cdb07c27f80",
+      "enabled": true
+    },
+    {
+      "key": "username",
+      "value": "tester",
+      "enabled": true
+    },
+    {
+      "key": "ChangeName",
+      "value": "Elon Mask",
+      "enabled": true
+    },
+    {
+      "key": "ChangeBio",
+      "value": "a long time ago",
+      "enabled": true
+    },
+    {
+      "key": "ChangeUrl",
+      "value": "mysite.com",
+      "enabled": true
+    },
+    {
+      "key": "ChangeCompany",
+      "value": "my Company",
+      "enabled": true
+    },
+    {
+      "key": "ChangeLocation",
+      "value": "Kiev",
+      "enabled": true
+    },
+    {
+      "key": "bio",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "company",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "location",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "url",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "name",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "branch",
+      "value": "new1",
+      "enabled": true
+    },
+    {
+      "key": "repo_name5",
+      "value": "PstmnRepo5",
+      "enabled": true
+    },
+    {
+      "key": "repo_name6",
+      "value": "PstmnRepo6",
+      "enabled": true
+    },
+    {
+      "key": "fileName",
+      "value": "style.css",
+      "enabled": true
+    },
+    {
+      "key": "fileData",
+      "value": "Some css text",
+      "enabled": true
+    },
+    {
+      "key": "invalidEmail",
+      "value": "notester@gmail.com",
+      "enabled": true
+    },
+    {
+      "key": "invalidPass",
+      "value": "password123",
+      "enabled": true
+    },
+    {
+      "key": "repo_labels1",
+      "value": "RepoForLabels1",
+      "enabled": true
+    },
+    {
+      "key": "repo_labels2",
+      "value": "RepoForLabels2",
+      "enabled": true
+    },
+    {
+      "key": "repo_labels3",
+      "value": "RepoForLabels3",
+      "enabled": true
+    },
+    {
+      "key": "id_repo_labels1",
+      "value": "27a337f9-68b1-4724-adaf-74859719c423",
+      "enabled": true
+    },
+    {
+      "key": "id_repo_labels2",
+      "value": "5c10f04b-dc48-4aa9-b64f-557d1a8b437d",
+      "enabled": true
+    },
+    {
+      "key": "id_repo_labels3",
+      "value": "ff5ab70d-ee3f-4312-b65b-ba97c1621dbb",
+      "enabled": true
+    },
+    {
+      "key": "labelName",
+      "value": "New lable",
+      "enabled": true
+    },
+    {
+      "key": "labelColor",
+      "value": "#fcc400",
+      "enabled": true
+    },
+    {
+      "key": "change_label_name",
+      "value": "Changed label",
+      "enabled": true
+    },
+    {
+      "key": "label_id1",
+      "value": "dc436d93-81ab-4ef3-b3a0-4c828ccc0f19",
+      "enabled": true
+    },
+    {
+      "key": "label_id2",
+      "value": "cf90888c-4a82-46aa-8ea8-f45266eae468",
+      "enabled": true
+    },
+    {
+      "key": "repo_issue1",
+      "value": "RepoIssue1",
+      "enabled": true
+    },
+    {
+      "key": "repo_issue2",
+      "value": "RepoIssue2",
+      "enabled": true
+    },
+    {
+      "key": "repo_issue3",
+      "value": "RepoIssue3",
+      "enabled": true
+    },
+    {
+      "key": "issue_title",
+      "value": "New issue",
+      "enabled": true
+    },
+    {
+      "key": "issue_body",
+      "value": "cloning of repository does not work",
+      "enabled": true
+    },
+    {
+      "key": "id_repo_issue1",
+      "value": "74219003-3f70-4113-b5d5-f888a44d6dce",
+      "enabled": true
+    },
+    {
+      "key": "id_repo_issue2",
+      "value": "04c3e3f3-7cb4-455d-bebf-868393ad8c68",
+      "enabled": true
+    },
+    {
+      "key": "issue_id1",
+      "value": "ce589aa0-45a7-4a3f-8833-98b13ac16bce",
+      "enabled": true
+    },
+    {
+      "key": "id_repo_issue3",
+      "value": "046e0020-e256-4435-a1fb-909d8cd28814",
+      "enabled": true
+    },
+    {
+      "key": "issue_id2",
+      "value": "3c9b925d-5684-488c-bca9-bb4fd0744227",
+      "enabled": true
+    },
+    {
+      "key": "issueEditName",
+      "value": "Edited issue api",
+      "enabled": true
+    }
+  ],
+  "name": "GlobalEnvVar Globals",
+  "_postman_variable_scope": "globals",
+  "_postman_exported_at": "2019-09-07T12:59:04.903Z",
+  "_postman_exported_using": "Postman/7.6.0"
+}
