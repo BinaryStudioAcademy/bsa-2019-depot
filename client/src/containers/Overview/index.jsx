@@ -34,22 +34,26 @@ export class Overview extends React.Component {
     });
   }
 
-  componentDidUpdate(prevProps) {
-    if (!prevProps) {
-      return false;
-    }
-    if (this.props.match.params.username !== prevProps.match.params.username) {
-      this.componentDidMount();
-    }
-  }
-
-  componentDidMount() {
+  fetchData() {
     const {
       match: {
         params: { username }
       }
     } = this.props;
     this.getActivity(username);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps) {
+      return false;
+    }
+    if (this.props.match.params.username !== prevProps.match.params.username) {
+      this.fetchData();
+    }
+  }
+
+  componentDidMount() {
+    this.fetchData();
   }
 
   handleActivityState = (e, titleProps) => {
@@ -97,7 +101,7 @@ export class Overview extends React.Component {
       },
       userId
     } = this.props;
- 
+
     const {
       userActivity: { userActivityByDate, userMonthActivity }
     } = this.state;
