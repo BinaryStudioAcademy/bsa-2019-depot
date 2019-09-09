@@ -8,12 +8,8 @@ const {
   PRStatusModel,
   BranchModel,
   PullLabelModel,
-<<<<<<< HEAD
-  LabelModel
-=======
   LabelModel,
   PullReviewerModel
->>>>>>> 6787a0f7ea3f96032966cff1c0812f2619d9fca9
 } = require('../models/index');
 
 const sequelize = require('../db/connection');
@@ -249,12 +245,13 @@ class PullRepository extends BaseRepository {
           ]
         },
         ...(reviewRequests === 'true'
-          ? [{
-            model: PullReviewerModel,
-            where: { userId }
-          }]
-          : []
-        )
+          ? [
+            {
+              model: PullReviewerModel,
+              where: { userId }
+            }
+          ]
+          : [])
       ],
       order: [mapSort(sort)]
     });
@@ -288,12 +285,13 @@ class PullRepository extends BaseRepository {
           ]
         },
         ...(reviewRequests === 'true'
-          ? [{
-            model: PullReviewerModel,
-            where: { userId }
-          }]
-          : []
-        )
+          ? [
+            {
+              model: PullReviewerModel,
+              where: { userId }
+            }
+          ]
+          : [])
       ]
     });
   }

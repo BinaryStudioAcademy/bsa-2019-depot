@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react';
 import { View, FlatList, ScrollView, RefreshControl } from 'react-native';
 import styles from './styles';

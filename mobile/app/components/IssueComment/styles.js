@@ -1,4 +1,3 @@
-/* eslint-disable */
 import colors from '../../config/color.config';
 import { StyleSheet } from 'react-native';
 

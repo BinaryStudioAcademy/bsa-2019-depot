@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React from 'react';
 import moment from 'moment';
 import { Text, View } from 'react-native';

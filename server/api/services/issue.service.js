@@ -14,18 +14,9 @@ const getAllIssuesCount = (userId, params) => issueRepository.getAllIssuesCount(
 
 const getAllIssuesOwners = userId => issueRepository.getAllIssuesOwners(userId);
 
-const getAllRepoIssues = async (username, reponame) => {
-  const user = await userRepository.getByUsername(username);
-  if (!user) {
-    return Promise.reject(new CustomError(404, `User ${username} not found`));
-  }
-  const repository = await repoRepository.getByUserAndReponame(user.id, reponame);
-  if (!repository) {
-    return Promise.reject(new CustomError(404, `Repository ${reponame} for user ${username} not found`));
-  }
-  const { id } = repository;
-  const issues = await issueRepository.getRepositoryIssues({ repositoryId: id });
-  return issues || Promise.reject(new CustomError(404, `Issues for repository with id ${id} not found`));
+const getAllRepoIssues = async (repositoryId) => {
+  const issues = await issueRepository.getRepositoryIssues(repositoryId);
+  return issues || Promise.reject(new CustomError(404, `Repository with id ${repositoryId} not found`));
 };
 
 const getRepoIssues = (repositoryId, sort, author, title) => issueRepository.getIssues(repositoryId, sort, author, title);

@@ -185,10 +185,10 @@ router
       .catch(next);
   })
   .get('/:username/:reponame/issues', isReaderMiddleware, (req, res, next) => {
-    const { username, reponame } = req.params;
-    getAllRepoIssues(username, reponame)
+    const { repositoryId } = req.query;
+    getAllRepoIssues({ repositoryId })
       .then(result => res.send(result))
-      .catch(next);
+      .catch(next);        
   })
   .put('/:username/:reponame', isAdminMiddleware, (req, res, next) => {
     const { username, reponame } = req.params;
