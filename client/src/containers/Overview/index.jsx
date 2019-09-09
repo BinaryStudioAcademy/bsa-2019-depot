@@ -34,6 +34,15 @@ export class Overview extends React.Component {
     });
   }
 
+  componentDidUpdate(prevProps) {
+    if (!prevProps) {
+      return false;
+    }
+    if (this.props.match.params.username !== prevProps.match.params.username) {
+      this.componentDidMount();
+    }
+  }
+
   componentDidMount() {
     const {
       match: {
@@ -88,6 +97,7 @@ export class Overview extends React.Component {
       },
       userId
     } = this.props;
+    console.log(this.state.repositories);
     const {
       userActivity: { userActivityByDate, userMonthActivity }
     } = this.state;
