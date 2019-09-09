@@ -141,6 +141,7 @@ class RepositoryPage extends React.Component {
           pullCount={pullCount}
           activePage={pathname.split('/')[3]}
           baseUrl={match.url}
+          isPublic={isPublic}
         />
         <Container>
           <Switch>

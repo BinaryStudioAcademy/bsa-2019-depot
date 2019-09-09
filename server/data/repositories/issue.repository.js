@@ -6,7 +6,8 @@ const {
   RepositoryModel,
   LabelModel,
   IssueLabelModel,
-  IssueAssigneeModel
+  IssueAssigneeModel,
+  OrgUserModel
 } = require('../models/index');
 const sequelize = require('../db/connection');
 
@@ -243,14 +244,12 @@ class IssueRepository extends BaseRepository {
               where: { userId }
             }
           ]
+        },
+        {
+          model: OrgUserModel,
+          where: { userId }
         }
-      ],
-      where: {
-        [Op.or]: {
-          type: 'ORG',
-          id: userId
-        }
-      }
+      ]
     });
   }
 

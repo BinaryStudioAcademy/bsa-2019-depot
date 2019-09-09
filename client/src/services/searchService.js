@@ -5,7 +5,7 @@ export const find = async input => {
     endpoint: '/api/search',
     type: 'GET',
     query: {
-      input 
+      input
     }
   });
   return response.json();
