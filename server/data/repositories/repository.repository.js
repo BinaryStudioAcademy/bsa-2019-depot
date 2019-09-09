@@ -1,6 +1,8 @@
 const { Op } = require('sequelize');
 const BaseRepository = require('./base.repository');
-const { RepositoryModel, UserModel, StarModel } = require('../models/index');
+const {
+  RepositoryModel, UserModel, StarModel, BranchModel, LanguageStatsModel, LanguageModel
+} = require('../models/index');
 const sequelize = require('../db/connection');
 
 class RepositoryRepository extends BaseRepository {
@@ -38,6 +40,18 @@ class RepositoryRepository extends BaseRepository {
         {
           model: StarModel,
           attributes: ['userId']
+        },
+        {
+          model: BranchModel,
+          as: 'defaultBranch',
+          include: [
+            {
+              model: LanguageStatsModel,
+              include: [LanguageModel],
+              order: [['percentage', 'DESC']],
+              limit: 1
+            }
+          ]
         }
       ]
     };

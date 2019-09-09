@@ -183,7 +183,8 @@ RepositoryHeader.propTypes = {
   activePage: PropTypes.string,
   baseUrl: PropTypes.string.isRequired,
   history: PropTypes.object,
-  isBlamePage: PropTypes.bool
+  isBlamePage: PropTypes.bool,
+  isPublic: PropTypes.bool
 };
 
 const mapStateToProps = ({
