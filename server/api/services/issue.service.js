@@ -19,7 +19,7 @@ const getAllRepoIssues = async (repositoryId) => {
   return issues || Promise.reject(new CustomError(404, `Repository with id ${repositoryId} not found`));
 };
 
-const getRepoIssues = (repositoryId, sort, author, title) => issueRepository.getIssues(repositoryId, sort, author, title);
+const getRepoIssues = (repositoryId, sort, author, title, isOpened) => issueRepository.getIssues(repositoryId, sort, author, title, isOpened);
 
 const getRepoIssueByIdNumber = (repositoryId, number) => issueRepository.getIssueByIdNumber(repositoryId, number);
 
