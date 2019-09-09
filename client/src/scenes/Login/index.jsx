@@ -9,6 +9,7 @@ import { InputError } from '../../components/InputError';
 import { serverUrl } from '../../app.config';
 import { authorizeUser, loginGoogleRoutine, setUsernameRoutine } from '../../routines/routines';
 import { checkUsernameExists } from '../../services/userService';
+import * as elasticHelper from '../../helpers/elasticsearchHelper';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -94,11 +95,13 @@ class Login extends Component {
 
   submitUsername(values) {
     const { currentUser, history } = this.props;
+    const { username } = values;
     this.props.setUsernameRoutine({
-      username: values.username,
+      username,
       user: currentUser,
       history
     });
+    elasticHelper.addUser(username);
   }
 
   renderComponent({ errors, touched, handleChange, handleBlur, handleSubmit, values }) {

@@ -1,11 +1,23 @@
 const pullCommentRepository = require('../../data/repositories/pull-comment.repository');
+const pullReviewerRepository = require('../../data/repositories/pull-reviewer.repository');
+const reviewStatusRepository = require('../../data/repositories/review-status.repository');
 const CustomError = require('../../helpers/error.helper');
 
 const getAuthorId = id => pullCommentRepository.getAuthorId(id);
 
 const getAllPullComments = pullId => pullCommentRepository.getPullComments(pullId);
 
-const addPullComment = pullCommentData => pullCommentRepository.addPullComment(pullCommentData);
+const addPullComment = async (pullCommentData) => {
+  const { userId, pullId } = pullCommentData;
+
+  const reviewer = await pullReviewerRepository.getByUserAndPull(userId, pullId);
+  if (reviewer && reviewer.status.name === 'PENDING') {
+    const { id: statusId } = await reviewStatusRepository.getStatusByName('COMMENTED');
+    await pullReviewerRepository.updateByUserAndPull(userId, pullId, { statusId });
+  }
+
+  return pullCommentRepository.addPullComment(pullCommentData);
+};
 
 const updatePullCommentById = async (id, userId, issueCommentData) => {
   const authorId = await getAuthorId(id);

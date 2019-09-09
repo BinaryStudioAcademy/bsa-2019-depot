@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
 const {
-  IssueModel, UserModel, RepositoryModel, OrgUserModel
+  IssueModel, UserModel, RepositoryModel, LabelModel, IssueLabelModel, OrgUserModel
 } = require('../models/index');
 const sequelize = require('../db/connection');
 
@@ -18,9 +18,9 @@ const parseSortQuery = (sort) => {
   case 'updated_desc':
     return [['updatedAt', 'DESC']];
   case 'comments_desc':
-    return [[sequelize.literal('"commentsCount"'), 'DESC']];
+    return [[sequelize.literal('"commentCount"'), 'DESC']];
   case 'comments_asc':
-    return [[sequelize.literal('"commentsCount"'), 'ASC']];
+    return [[sequelize.literal('"commentCount"'), 'ASC']];
   default:
     return [];
   }
@@ -111,6 +111,14 @@ class IssueRepository extends BaseRepository {
         {
           model: RepositoryModel,
           attributes: ['name']
+        },
+        {
+          model: IssueLabelModel,
+          attributes: ['id'],
+          include: {
+            model: LabelModel,
+            attributes: ['id', 'name', 'color', 'description']
+          }
         }
       ]
     });
@@ -154,6 +162,14 @@ class IssueRepository extends BaseRepository {
           model: UserModel,
           where: { id: userId },
           attributes: ['id', 'username']
+        },
+        {
+          model: IssueLabelModel,
+          attributes: ['id'],
+          include: {
+            model: LabelModel,
+            attributes: ['id', 'name', 'color', 'description']
+          }
         }
       ]
     };
@@ -208,7 +224,6 @@ class IssueRepository extends BaseRepository {
           ]
         },
         {
-          attributes: [],
           model: OrgUserModel,
           where: { userId }
         }
@@ -241,7 +256,7 @@ class IssueRepository extends BaseRepository {
           FROM "issueComments"
           WHERE "issue"."id" = "issueComments"."issueId"
           AND "issueComments"."deletedAt" IS NULL)`),
-            'commentsCount'
+            'commentCount'
           ]
         ]
       },
@@ -257,6 +272,16 @@ class IssueRepository extends BaseRepository {
             {
               model: UserModel,
               attributes: ['username']
+            }
+          ]
+        },
+        {
+          model: IssueLabelModel,
+          attributes: ['id'],
+          include: [
+            {
+              model: LabelModel,
+              attributes: ['name', 'description', 'color', 'id']
             }
           ]
         }
@@ -293,6 +318,14 @@ class IssueRepository extends BaseRepository {
         {
           model: UserModel,
           attributes: ['username', 'imgUrl']
+        },
+        {
+          model: IssueLabelModel,
+          attributes: ['id'],
+          include: {
+            model: LabelModel,
+            attributes: ['id', 'name', 'color', 'description']
+          }
         }
       ]
     });

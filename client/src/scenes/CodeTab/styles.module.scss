@@ -4,7 +4,8 @@ $black: #363a44;
 
 .actionButton,
 :global(.ui.selectable.single.line.unstackable.bottom.attached.table),
-:global(.ui.borderless.top.attached.four.item.menu) {
+:global(.ui.borderless.top.attached.four.item.menu),
+:global(.ui.borderless.top.attached.three.item.menu) {
   :global(.octicon) {
     color: rgba(3, 47, 98, 0.55);
     margin-right: 5px;

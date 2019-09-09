@@ -16,6 +16,7 @@ const InsightsTab = ({ match }) => {
       <Grid container>
         <Grid.Column computer={4} tablet={8} mobile={16}>
           <Menu vertical>
+            <Menu.Item header>Insights</Menu.Item>
             <NavLink to={`${match.url}/forks`} activeClassName="active">
               <Menu.Item>Forks</Menu.Item>
             </NavLink>

@@ -7,21 +7,10 @@ import styles from './styles.module.scss';
 export const tabs = {
   overview: 'overview',
   repositories: 'repositories',
-  projects: 'projects',
-  stars: 'stars',
-  followers: 'followers',
-  following: 'following'
+  stars: 'stars'
 };
 
-const DashboardHeader = ({
-  repoCount,
-  projectsCount,
-  starsCount,
-  followersCount,
-  followingCount,
-  baseUrl,
-  activeTab
-}) => {
+const DashboardHeader = ({ repoCount, starsCount, baseUrl, activeTab }) => {
   const getClassName = (tab, activeTab) => {
     if (!activeTab && tab === 'overview') {
       return 'dashboard_link selected';
@@ -45,27 +34,9 @@ const DashboardHeader = ({
           </Link>
         </li>
         <li>
-          <Link to={`${baseUrl}?tab=projects`} className={getClassName(tabs.projects, activeTab)}>
-            <span className={styles.tabName}>Projects</span>
-            <span>{projectsCount || 0}</span>
-          </Link>
-        </li>
-        <li>
           <Link to={`${baseUrl}?tab=stars`} className={getClassName(tabs.stars, activeTab)}>
             <span className={styles.tabName}>Stars</span>
             <span>{starsCount || 0}</span>
-          </Link>
-        </li>
-        <li>
-          <Link to={`${baseUrl}?tab=followers`} className={getClassName(tabs.followers, activeTab)}>
-            <span className={styles.tabName}>Followers</span>
-            <span>{followersCount || 0}</span>
-          </Link>
-        </li>
-        <li>
-          <Link to={`${baseUrl}?tab=following`} className={getClassName(tabs.following, activeTab)}>
-            <span className={styles.tabName}>Following</span>
-            <span>{followingCount || 0}</span>
           </Link>
         </li>
       </ul>
@@ -75,10 +46,7 @@ const DashboardHeader = ({
 
 DashboardHeader.propTypes = {
   repoCount: PropTypes.string,
-  projectsCount: PropTypes.string,
   starsCount: PropTypes.string,
-  followersCount: PropTypes.string,
-  followingCount: PropTypes.string,
   baseUrl: PropTypes.string,
   activeTab: PropTypes.string
 };

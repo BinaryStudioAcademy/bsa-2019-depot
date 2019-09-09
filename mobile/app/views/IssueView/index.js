@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Text, View, FlatList, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
-import { getIssueComments, createIssueComment } from '../../services/issueService';
+import { getIssueComments, createIssueComment, closeIssue, reopenIssue } from '../../services/issueService';
 import IssueComment from '../../components/IssueComment';
 import moment from 'moment';
 import styles from './styles';
+import PropTypes from 'prop-types';
 
 class IssueView extends Component {
   constructor(props) {
@@ -24,6 +25,7 @@ class IssueView extends Component {
       navigation: {
         state: {
           params: {
+            data,
             data: { id }
           }
         }
@@ -32,7 +34,8 @@ class IssueView extends Component {
     try {
       const issueComments = await getIssueComments(id);
       this.setState({
-        issueComments
+        issueComments,
+        issueData: data
       });
     } catch (err) {}
   }
@@ -59,6 +62,40 @@ class IssueView extends Component {
       issueComments: [...this.state.issueComments, result],
       comment: ''
     });
+  };
+
+  handleClose = async () => {
+    const {
+      navigation,
+      navigation: {
+        state: {
+          params: {
+            data: { id }
+          }
+        }
+      }
+    } = this.props;
+    await closeIssue({
+      id
+    });
+    navigation.navigate('Issues');
+  };
+
+  handleReopen = async () => {
+    const {
+      navigation,
+      navigation: {
+        state: {
+          params: {
+            data: { id }
+          }
+        }
+      }
+    } = this.props;
+    await reopenIssue({
+      id
+    });
+    navigation.navigate('Issues');
   };
 
   render() {
@@ -93,17 +130,37 @@ class IssueView extends Component {
           <TextInput
             multiline={true}
             numberOfLines={4}
+            /* eslint-disable-next-line react/jsx-no-bind */
             onChangeText={comment => this.setState({ ...this.state, comment })}
             value={this.state.comment}
             style={styles.commentInput}
           />
-          <TouchableOpacity style={styles.button} onPress={this.handleSubmit}>
-            <Text style={styles.text}>{'Comment'}</Text>
-          </TouchableOpacity>
+          <View style={styles.issueButtons}>
+            <TouchableOpacity
+              style={styles.commentButton}
+              onPress={this.handleSubmit}
+              disabled={this.state.comment.length < 1}
+            >
+              <Text style={styles.commentText}>{'Comment'}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.closeButton} onPress={data.isOpened ? this.handleClose : this.handleReopen}>
+              <Icon
+                name={data.isOpened ? 'issue-closed' : 'issue-reopened'}
+                size={15}
+                color="#DC6767"
+                style={styles.closeIcon}
+              />
+              <Text style={styles.closeText}>{data.isOpened ? 'Close Issue' : 'Reopen Issue'}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ScrollView>
     );
   }
 }
+
+IssueView.propTypes = {
+  navigation: PropTypes.object
+};
 
 export default IssueView;

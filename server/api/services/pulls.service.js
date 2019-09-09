@@ -7,11 +7,14 @@ const userRepository = require('../../data/repositories/user.repository');
 const pullRepository = require('../../data/repositories/pull-request.repository');
 const prStatusRepository = require('../../data/repositories/pr-status.repository');
 const pullLabelRepository = require('../../data/repositories/pull-label.repository');
+const pullReviewerRepository = require('../../data/repositories/pull-reviewer.repository');
 const repoHelper = require('../../helpers/repo.helper');
 const CustomError = require('../../helpers/error.helper');
 
-const getDiffCommits = async (pathToRepo, fromBranch, toBranch) => {
+const getDiffCommits = async (pathToRepo, fromCommitId, toCommitId) => {
   const repo = await NodeGit.Repository.open(pathToRepo);
+  const { sha: fromCommitSha } = await commitRepository.getById(fromCommitId);
+  const { sha: toCommitSha } = await commitRepository.getById(toCommitId);
 
   const setListeners = headCommit => new Promise((resolve, reject) => {
     const walker = headCommit.history();
@@ -24,8 +27,8 @@ const getDiffCommits = async (pathToRepo, fromBranch, toBranch) => {
     walker.start();
   });
 
-  const fromBranchCommits = await repo.getBranchCommit(fromBranch).then(setListeners);
-  const toBranchCommits = await repo.getBranchCommit(toBranch).then(setListeners);
+  const fromBranchCommits = await repo.getCommit(fromCommitSha).then(setListeners);
+  const toBranchCommits = await repo.getCommit(toCommitSha).then(setListeners);
 
   const fromBranchShas = fromBranchCommits.map(commit => commit.sha());
   const toBranchShas = toBranchCommits.map(commit => commit.sha());
@@ -42,8 +45,11 @@ const getDiffCommits = async (pathToRepo, fromBranch, toBranch) => {
   return Promise.all(filteredShas.map(sha => commitRepository.getByHash(sha)));
 };
 
-const getBranchDiffs = async (pathToRepo, fromBranch, toBranch) => {
-  const getDiffsCommand = `cd ${pathToRepo} && git diff -U1 ${toBranch}...${fromBranch}`;
+const getBranchDiffs = async (pathToRepo, fromCommitId, toCommitId) => {
+  const { sha: fromCommitSha } = await commitRepository.getById(fromCommitId);
+  const { sha: toCommitSha } = await commitRepository.getById(toCommitId);
+
+  const getDiffsCommand = `cd ${pathToRepo} && git diff -U1 ${toCommitSha}...${fromCommitSha}`;
   const diffsOutput = await exec(getDiffsCommand);
 
   if (diffsOutput.stderr) {
@@ -53,13 +59,13 @@ const getBranchDiffs = async (pathToRepo, fromBranch, toBranch) => {
   return diffsOutput.stdout;
 };
 
-const getPullData = async (repoId, fromBranch, toBranch) => {
+const getPullData = async (repoId, fromCommitId, toCommitId) => {
   const { userId, name: reponame } = await repoRepository.getById(repoId);
   const { username: owner } = await userRepository.getUserById(userId);
   const pathToRepo = repoHelper.getPathToRepo(owner, reponame);
 
-  const diffs = await getBranchDiffs(pathToRepo, fromBranch, toBranch);
-  const commits = await getDiffCommits(pathToRepo, fromBranch, toBranch);
+  const diffs = await getBranchDiffs(pathToRepo, fromCommitId, toCommitId);
+  const commits = await getDiffCommits(pathToRepo, fromCommitId, toCommitId);
 
   return {
     diffs,
@@ -71,16 +77,10 @@ const mergeBranches = async (id, authorId) => {
   const {
     repository: {
       name: reponame,
-      user: {
-        username: repoOwner
-      }
+      user: { username: repoOwner }
     },
-    fromBranch: {
-      name: fromBranchName
-    },
-    toBranch: {
-      name: toBranchName
-    },
+    fromBranch: { name: fromBranchName },
+    toBranch: { name: toBranchName },
     number
   } = await pullRepository.getPullById(id);
   const { username: authorUsername, email: authorEmail } = await userRepository.getUserById(authorId);
@@ -108,14 +108,16 @@ const mergeBranches = async (id, authorId) => {
   const mergeCommit = await repo.getCommit(mergeCommitId);
 
   await repoHelper.syncDb(
-    [{
-      repoOwner,
-      reponame,
-      sha: mergeCommit.sha(),
-      message: mergeCommit.message(),
-      userEmail: authorEmail,
-      createdAt: new Date()
-    }],
+    [
+      {
+        repoOwner,
+        reponame,
+        sha: mergeCommit.sha(),
+        message: mergeCommit.message(),
+        userEmail: authorEmail,
+        createdAt: new Date()
+      }
+    ],
     {
       name: toBranchName,
       newHeadSha: mergeCommit.sha()
@@ -163,20 +165,66 @@ const getRepoOwnerId = pullId => pullRepository.getRepoOwnerId(pullId);
 
 const getRepoByPullId = pullId => pullRepository.getRepoByPullId(pullId);
 
+const addPullStatuses = async (pullsObjects) => {
+  const pulls = pullsObjects.map(pull => pull.get({ plain: true }));
+  const pullsReviews = await Promise.all(pulls.map(({ id }) => pullReviewerRepository.getReviewersForPull(id)));
+
+  const statuses = pullsReviews.map((reviewObjs) => {
+    if (!reviewObjs.length) {
+      return '';
+    }
+
+    const reviews = reviewObjs.map(review => review.get({ plain: true }));
+
+    reviews.sort(({ updatedAt: updatedAtA }, { updatedAt: updatedAtB }) => new Date(updatedAtB) - new Date(updatedAtA));
+    const approvedId = reviews.findIndex(review => review.status.name === 'APPROVED');
+    const changesRequestedId = reviews.findIndex(review => review.status.name === 'CHANGES REQUESTED');
+    if (approvedId === -1 && changesRequestedId === -1) {
+      return 'Review required';
+    }
+    if (approvedId > changesRequestedId) {
+      return 'Approved';
+    }
+    return 'Requested changes';
+  });
+
+  return pulls.map((pull, index) => ({ ...pull, reviewStatus: statuses[index] }));
+};
+
 const getRepoPulls = async (repositoryId, sort, authorId, title, isOpened) => {
   const status = await prStatusRepository.getByName('OPEN');
-  const { id: statusId } = status.get({ plain: true });
-  return pullRepository.getPulls(repositoryId, sort, authorId, title, isOpened, statusId);
+  const { id: statusOpenedId } = status.get({ plain: true });
+  const pullsObjects = await pullRepository.getPulls({
+    repositoryId,
+    sort,
+    userId: authorId,
+    title,
+    isOpened,
+    statusOpenedId
+  });
+  return addPullStatuses(pullsObjects);
 };
 
-const getPullCount = async (repositoryId, isOpened) => {
-  const statusOpen = await prStatusRepository.getByName('OPEN');
-  return pullRepository.getPullCount(repositoryId, isOpened, statusOpen);
+const getUserPulls = async (params) => {
+  const { id: statusOpenedId } = await prStatusRepository.getByName('OPEN');
+  const pullsObjects = await pullRepository.getPulls({ ...params, statusOpenedId });
+  return addPullStatuses(pullsObjects);
 };
 
-const setLabel = async (labelId, pullId) => pullLabelRepository.create({ labelId, pullId });
+const getAllPullsOwners = userId => pullRepository.getAllPullsOwners(userId);
 
-const removeLabel = async id => pullLabelRepository.delete(id);
+const getPullCount = async (params) => {
+  const { id: statusOpenedId } = await prStatusRepository.getByName('OPEN');
+  return pullRepository.getPullCount({ ...params, statusOpenedId });
+};
+
+const setLabels = async (labelIds, pullId) => {
+  const currentPullLabelIds = (await pullLabelRepository.getLabelsByPR(pullId)).map(pullLabel => pullLabel.labelId);
+  const toAddIds = labelIds.filter(labelId => !currentPullLabelIds.includes(labelId));
+  const toDeleteIds = currentPullLabelIds.filter(labelId => !labelIds.includes(labelId));
+  toAddIds.forEach(labelId => pullLabelRepository.create({ labelId, pullId }));
+  toDeleteIds.forEach(labelId => pullLabelRepository.deleteByLabelAndPullId(labelId, pullId));
+};
 
 module.exports = {
   getPulls,
@@ -191,7 +239,8 @@ module.exports = {
   mergePullById,
   getRepoByPullId,
   getRepoPulls,
+  getAllPullsOwners,
+  getUserPulls,
   getPullCount,
-  setLabel,
-  removeLabel
+  setLabels
 };

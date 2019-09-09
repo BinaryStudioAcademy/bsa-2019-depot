@@ -1,13 +1,15 @@
-import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
+import React, { useState } from 'react';
+import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { Button, Header, Dropdown, Input, Popup } from 'semantic-ui-react';
-import Octicon, { getIconByName } from '@primer/octicons-react';
+import { Button, Header, Dropdown, Popup } from 'semantic-ui-react';
+import CopyableInput from '../../components/CopyableInput';
 
 import styles from './styles.module.scss';
 
 const RepoNav = props => {
-  const { isOwn, branch, branches, onBranchChange, onCreateFile, OnDropdownClick } = props;
+  const { isOwn, branch, branches, onBranchChange, onCreateFile, match } = props;
+  const { username, reponame } = match.params;
+  const [branchFilter, setBranchFilter] = useState('');
 
   function handleBranchChange(event, data) {
     const { value } = data;
@@ -15,10 +17,25 @@ const RepoNav = props => {
   }
 
   function handleCreatePull() {
-    const { match, history } = props;
-    const { username, reponame } = match.params;
+    const { history } = props;
     history.push(`/${username}/${reponame}/compare`);
   }
+
+  function handleBranchFilterChange({ target: { value } }) {
+    setBranchFilter(value);
+  }
+
+  function handleBranchFilterClick(e) {
+    e.stopPropagation();
+  }
+
+  function handleBranchFilterKeyDown(e) {
+    if (e.key === 'Enter') {
+      setBranchFilter('');
+    }
+  }
+
+  const url = `git@${window.location.host}:${username}/${reponame}.git`;
 
   return (
     <div className={styles.repoNav}>
@@ -36,20 +53,26 @@ const RepoNav = props => {
               <Dropdown.SearchInput
                 type="text"
                 className={styles.searchBranchInput}
-                placeholder="Find or create a branch"
+                placeholder="Find branch"
+                onChange={handleBranchFilterChange}
+                onClick={handleBranchFilterClick}
+                onKeyDown={handleBranchFilterKeyDown}
+                value={branchFilter}
               />
               <Dropdown.Divider />
-              <Dropdown.Header content="branch" as="h4" />
-              {branches.map((branch, index) => (
-                <Dropdown.Item
-                  key={index}
-                  onClick={handleBranchChange}
-                  value={branch}
-                  className={styles.branchesMenuItem}
-                >
-                  {branch}
-                </Dropdown.Item>
-              ))}
+              <Dropdown.Header content="branch" as="h4" className={styles.branchHeader} />
+              {branches
+                .filter(branch => branch.includes(branchFilter.toLowerCase()))
+                .map((branch, index) => (
+                  <Dropdown.Item
+                    key={index}
+                    onClick={handleBranchChange}
+                    value={branch}
+                    className={styles.branchesMenuItem}
+                  >
+                    {branch}
+                  </Dropdown.Item>
+                ))}
             </React.Fragment>
           </Dropdown.Menu>
         </Dropdown>
@@ -58,17 +81,11 @@ const RepoNav = props => {
         </Button>
       </div>
       <div className={styles.repoActions}>
-        <Button.Group>
-          {isOwn && (
-            <>
-              <Button className={styles.actionButton} onClick={onCreateFile}>
-                Create New File
-              </Button>
-              <Button className={styles.actionButton}>Upload files</Button>
-            </>
-          )}
-          <Button className={styles.actionButton}>Find file</Button>
-        </Button.Group>
+        {isOwn && (
+          <Button className={styles.actionButton} onClick={onCreateFile}>
+            Create New File
+          </Button>
+        )}
         <Popup
           trigger={
             <Dropdown
@@ -85,35 +102,12 @@ const RepoNav = props => {
           <div className={styles.repoPopupBody}>
             <Header className={styles.readmeHeader} as="h4">
               <div>
-                Clone with HTTPS <Octicon className={styles.actionButton} icon={getIconByName('question')} />
+                Clone with SSH
               </div>
-              <Link className={styles.link} to="">
-                Use SSH
-              </Link>
             </Header>
-            <p>Use Git or checkout with SVN using the web URL.</p>
-            <Input
-              type="text"
-              action={
-                <Button className={styles.actionButton}>
-                  <Octicon verticalAlign="middle" icon={getIconByName('clippy')} />
-                </Button>
-              }
-              onClick={OnDropdownClick}
-              size="small"
-              className={styles.repoLinkInput}
-              defaultValue="https://github.com/BinaryStudioAcademy/bsa-2019-depot.git"
-            />
+            <p>Use a password protected SSH key.</p>
+            <CopyableInput url={url} />
           </div>
-
-          <Button.Group className={styles.repoPopupActions} attached="bottom">
-            <Button compact className={styles.repoPopupAction}>
-              Open in Desktop
-            </Button>
-            <Button compact className={styles.repoPopupAction}>
-              Download ZIP
-            </Button>
-          </Button.Group>
         </Popup>
       </div>
     </div>
@@ -126,7 +120,6 @@ RepoNav.propTypes = {
   branches: PropTypes.array,
   onBranchChange: PropTypes.func.isRequired,
   onCreateFile: PropTypes.func.isRequired,
-  OnDropdownClick: PropTypes.func,
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
     isExact: PropTypes.bool.isRequired,

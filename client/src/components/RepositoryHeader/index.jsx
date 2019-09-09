@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { Icon, Label, Container, Segment, Button } from 'semantic-ui-react';
 import ForkButton from '../ForkButton';
 import StarButton from '../../components/StarButton';
 import { setStar } from '../../services/repositoryService';
+import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 
 import styles from './styles.module.scss';
 
@@ -21,7 +22,8 @@ const RepositoryHeader = ({
   activePage,
   baseUrl,
   isBlamePage,
-  history
+  history,
+  isPublic
 }) => {
   const [isStar, setIsStar] = useState(Boolean(stars.find(star => star.user.id === userId)));
   const [starCount, setStarCount] = useState(starsCount);
@@ -45,11 +47,17 @@ const RepositoryHeader = ({
   default:
     activeTab = 'code';
   }
+  const [isAccessGranted, setIsAccessGranted] = useState(false);
 
-  const goToRootDir = (history, url) => () => {
-    history.push(url);
-    window.location.reload();
+  const getPermissions = async () => {
+    const accessPermissions = await getWriteUserPermissions(owner, repoName, userId);
+    setIsAccessGranted(accessPermissions);
   };
+
+  useEffect(() => {
+    getPermissions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const stargazersLinkClickHandler = useCallback(() => history.push(`/${owner}/${repoName}/stargazers`), [
     owner,
@@ -67,7 +75,10 @@ const RepositoryHeader = ({
 
   const renderOrignalRepoLink = () => {
     if (originalRepo) {
-      const { name: forkedRepoName, owner: forkedRepoOwner } = originalRepo;
+      const {
+        name: forkedRepoName,
+        user: { username: forkedRepoOwner }
+      } = originalRepo;
       if (forkedRepoName && forkedRepoOwner) {
         return (
           <div className={styles.originalRepoLink}>
@@ -88,11 +99,10 @@ const RepositoryHeader = ({
             <div className={styles.repoName}>
               <Octicon icon={Repo} />
               <span className={styles.repoPath}>
-                <Link to="">{owner}</Link>
+                <Link to={`/${owner}`}>{owner}</Link>
                 <span className={styles.pathDivider}>/</span>
-                <Link to="" onClick={goToRootDir(history, baseUrl)}>
-                  {repoName}
-                </Link>
+                <Link to={`/${owner}/${repoName}`}>{repoName}</Link>
+                {!isPublic && <span className={styles.repoPrivateLabel}>Private</span>}
               </span>
               {renderOrignalRepoLink()}
             </div>
@@ -132,7 +142,7 @@ const RepositoryHeader = ({
                 <Icon name="chart bar outline" /> Insights
               </Link>
             </div>
-            {username && username === owner && (
+            {((username && username === owner) || isAccessGranted) && (
               <div className={`${activeTab === 'settings' && 'active'} item`}>
                 <Link to={`${baseUrl}/settings`}>
                   <Icon name="cog" /> Settings
@@ -176,7 +186,8 @@ RepositoryHeader.propTypes = {
   activePage: PropTypes.string,
   baseUrl: PropTypes.string.isRequired,
   history: PropTypes.object,
-  isBlamePage: PropTypes.bool
+  isBlamePage: PropTypes.bool,
+  isPublic: PropTypes.bool
 };
 
 const mapStateToProps = ({

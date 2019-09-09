@@ -29,6 +29,7 @@ $gray: #f7f7fb;
   display: inline-block;
   color: $primary-color;
   padding: 1em 0.5em;
+  border-bottom: 2px solid transparent;
 
   &:hover {
     color: #24292e;

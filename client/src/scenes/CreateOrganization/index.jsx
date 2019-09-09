@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { Grid, Header, Divider, Step, Icon, Button, Input } from 'semantic-ui-react';
 import { Formik, Form, Field } from 'formik';
-import { Link } from 'react-router-dom';
 import styles from './styles.module.scss';
 import { createOrg } from '../../routines/routines';
 import * as Yup from 'yup';
 import { InputError } from '../../components/InputError';
 import { checkUsernameExists } from '../../services/userService';
+import * as elasticHelper from '../../helpers/elasticsearchHelper';
 
 import PropTypes from 'prop-types';
 
@@ -39,6 +39,8 @@ class CreateOrganization extends Component {
 
   onSubmit = (values, { setSubmitting }) => {
     this.props.createOrg({ ...values });
+    const { username } = values;
+    elasticHelper.addOrg(username);
   };
 
   render() {
@@ -94,7 +96,7 @@ class CreateOrganization extends Component {
                   </Grid.Column>
                 </Grid>
                 <Header as="h4" className={styles.field_title}>
-                  Billing email
+                  Email
                 </Header>
 
                 <Grid>
@@ -108,13 +110,6 @@ class CreateOrganization extends Component {
                     <InputError name="email" />
                   </Grid.Column>
                 </Grid>
-
-                <Divider hidden />
-                <div>
-                  By clicking on "Create organization" below, you are agreeing to the{' '}
-                  <Link to="#">Terms of Service</Link>. For more information about Depot's privacy practices, see the
-                  <Link to="#"> Depot Privacy Statement</Link>.
-                </div>
                 <Divider hidden />
                 <Button color="blue" type="submit" disabled={loading || !isValid || !touched}>
                   Create organization

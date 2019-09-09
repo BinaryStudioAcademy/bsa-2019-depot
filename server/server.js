@@ -8,6 +8,7 @@ const uppy = require('@uppy/companion');
 const cors = require('cors');
 const socketIO = require('socket.io');
 const http = require('http');
+const { Client } = require('elasticsearch');
 const { options } = require('./config/aws.config');
 const routes = require('./api/routes/index');
 const routesWhiteList = require('./config/routes-white-list.config');
@@ -15,8 +16,12 @@ const authorizationMiddleware = require('./api/middlewares/authorization.middlew
 const errorHandlerMiddleware = require('./api/middlewares/error-handler.middleware');
 const socketHandlers = require('./socket/socket-handlers');
 const {
-  issuesSocketInjector, pullsSocketInjector, commitsSocketInjector, reposSocketInjector
+  issuesSocketInjector,
+  pullsSocketInjector,
+  commitsSocketInjector,
+  reposSocketInjector
 } = require('./socket/injector');
+const { elasticHost, elasticPort, elasticIndex } = require('./config/elastic.config');
 
 const app = express();
 app.use(cors());
@@ -57,3 +62,37 @@ const server = app.listen(port, () => {
 });
 
 socketServer.listen(server);
+
+const client = new Client({
+  host: elasticHost,
+  port: elasticPort
+});
+
+const init = async () => {
+  await client.indices.create({
+    index: elasticIndex,
+    body: {
+      mappings: {
+        properties: {
+          type: { type: 'keyword' },
+          username: { type: 'text' },
+          reponame: { type: 'text' }
+        }
+      }
+    }
+  });
+};
+
+client.indices.exists(
+  {
+    index: elasticIndex
+  },
+  (error, exists) => {
+    if (!exists) {
+      init();
+      console.warn(`Index ${elasticIndex} was created`);
+    } else {
+      console.warn('Index already exists, not creating again');
+    }
+  }
+);

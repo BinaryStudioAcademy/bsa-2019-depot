@@ -57,9 +57,6 @@ class OrganizationsPage extends React.Component {
                   </a>
                   <span className={styles.roleName}>{name}</span>
                 </div>
-                <Button secondary compact>
-                  Leave
-                </Button>
               </li>
             );
           })}

@@ -128,11 +128,46 @@ const createInviteCollaboratorEmail = (email, url, username, reponame) => {
   return params;
 };
 
+const createReviewAssignmentEmail = (email, url, repoOwner, reponame, pullNumber, pullTitle) => {
+  const params = {
+    Destination: {
+      /* required */
+      ToAddresses: [
+        email
+        /* more items */
+      ]
+    },
+    Message: {
+      /* required */
+      Body: {
+        /* required */
+        Html: {
+          Charset: 'UTF-8',
+          Data: `<html><body> 
+                    <p>Your review was requested on: <a href="${url}/${repoOwner}/${reponame}/pulls/${pullNumber}">#${pullNumber}</a> ${pullTitle}</p>
+                    </body></html>`
+        },
+        Text: {
+          Charset: 'UTF-8',
+          Data: 'TEXT_FORMAT_BODY'
+        }
+      },
+      Subject: {
+        Charset: 'UTF-8',
+        Data: `[${repoOwner}/${reponame}] ${pullTitle} (#${pullNumber})`
+      }
+    },
+    Source: emailSender /* required */
+  };
+  return params;
+};
+
 const sendEmail = message => ses.sendEmail(message).promise();
 
 module.exports = {
   createTokenEmail,
   createInviteEmail,
   createInviteCollaboratorEmail,
+  createReviewAssignmentEmail,
   sendEmail
 };

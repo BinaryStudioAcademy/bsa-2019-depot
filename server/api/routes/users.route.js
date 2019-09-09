@@ -18,7 +18,9 @@ const { getReposData, getByUserAndReponame } = require('../services/repo.service
 const { getCommitsAndCreatedRepoByDate } = require('../services/commit.service');
 const { getKeysByUser } = require('../services/ssh-key.service');
 const { getRepoIssueByNumber } = require('../services/issue.service');
-const { getRepoPullByNumber } = require('../services/pulls.service');
+const {
+  getRepoPullByNumber, getAllPullsOwners, getUserPulls, getPullCount
+} = require('../services/pulls.service');
 const { getAllIssues, getAllIssuesCount, getAllIssuesOwners } = require('../services/issue.service');
 const { getUserByUsername } = require('../services/user.service');
 const { clientUrl } = require('../../config/common.config');
@@ -104,7 +106,14 @@ router.get('/:username/contribution-activity', (req, res, next) => {
 router.get('/:username/repos', (req, res, next) => {
   const { username } = req.params;
   const isOwner = req.user.get({ plain: true }).username === username;
-  getReposData({ username, isOwner })
+  getReposData({ username, isOwner, userId: req.user.id })
+    .then(repos => res.send(repos))
+    .catch(next);
+});
+
+router.get('/:username/public-repos', (req, res, next) => {
+  const { username } = req.params;
+  getReposData({ username, isOwner: false })
     .then(repos => res.send(repos))
     .catch(next);
 });
@@ -164,6 +173,33 @@ router.get('/:username/issues', (req, res, next) => {
     .catch(next);
 });
 
+router.get('/:username/pulls', async (req, res, next) => {
+  try {
+    const { username } = req.params;
+    const {
+      isOpened, sort, owner, reviewRequests
+    } = req.query;
+
+    const { id: userId } = await getUserByUsername(username);
+    const open = await getPullCount({
+      userId, isOpened: true, sort, owner, reviewRequests
+    });
+    const close = await getPullCount({
+      userId, isOpened: false, sort, owner, reviewRequests
+    });
+    const owners = await getAllPullsOwners(userId);
+    const pulls = await getUserPulls({
+      userId, isOpened, sort, owner, reviewRequests
+    });
+
+    res.send({
+      open, close, owners, pulls
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get('/:username/repos/:reponame/issues/:number', (req, res, next) => {
   const { username, reponame, number } = req.params;
   getRepoIssueByNumber(username, reponame, number)
@@ -180,7 +216,8 @@ router.get('/:username/repos/:reponame/pulls/:number', (req, res, next) => {
 
 router.get('/:userId/pinned-repositories', (req, res, next) => {
   const { userId } = req.params;
-  PinnedReposService.getPinnedRepos(userId)
+  const isOwner = req.user.get({ plain: true }).id === userId;
+  PinnedReposService.getPinnedRepos(userId, isOwner)
     .then(result => res.send(result))
     .catch(next);
 });

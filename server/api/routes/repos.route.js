@@ -145,19 +145,24 @@ router
       .then(result => res.send(result))
       .catch(next);
   })
-  .get('/:username/:reponame/settings', ownerOnlyMiddleware, (req, res) => {
+  .get('/:username/:reponame/settings', isAdminMiddleware, (req, res) => {
     res.sendStatus(200);
   })
   .post('/:username/:reponame/settings/rename', isAdminMiddleware, (req, res, next) => {
-    const { reponame } = req.params;
+    const { reponame, username: orgName } = req.params;
     const { newName } = req.body;
-    renameRepo({ reponame, newName, username: req.user.username })
+    renameRepo({
+      reponame,
+      newName,
+      username: req.user.username,
+      orgName
+    })
       .then(result => res.send(result))
       .catch(next);
   })
   .delete('/:username/:reponame/settings', ownerOnlyMiddleware, (req, res, next) => {
-    const { reponame } = req.params;
-    deleteRepo({ reponame, username: req.user.username })
+    const { reponame, username: orgName } = req.params;
+    deleteRepo({ reponame, username: req.user.username, orgName })
       .then(result => res.send(result))
       .catch(next);
   })
@@ -251,9 +256,9 @@ router
   })
   .get('/:repositoryId/pulls/diffs', (req, res, next) => {
     const { repositoryId } = req.params;
-    const { fromBranch, toBranch } = req.query;
+    const { fromCommitId, toCommitId } = req.query;
     pullsService
-      .getPullData(repositoryId, fromBranch, toBranch)
+      .getPullData(repositoryId, fromCommitId, toCommitId)
       .then(data => res.send(data))
       .catch(next);
   })
@@ -272,8 +277,8 @@ router
     try {
       const pulls = await pullsService.getRepoPulls(repositoryId, sort, authorId, title, isOpened);
       const authors = await userService.getPullsAuthors(repositoryId);
-      const openCount = await pullsService.getPullCount(repositoryId, true);
-      const closedCount = await pullsService.getPullCount(repositoryId, false);
+      const openCount = await pullsService.getPullCount({ repositoryId, isOpened: true });
+      const closedCount = await pullsService.getPullCount({ repositoryId, isOpened: false });
       res.send({
         openCount,
         closedCount,
@@ -285,19 +290,13 @@ router
     }
   })
   .post('/:repositoryId/pulls/labels', async (req, res, next) => {
-    const { labelId, pullId } = req.body;
+    const { labelIds, pullId } = req.body;
     pullsService
-      .setLabel(labelId, pullId)
-      .then(data => res.send(data))
+      .setLabels(labelIds, pullId)
+      .then(() => res.send({}))
       .catch(next);
   })
-  .delete('/:repositoryId/pulls/labels', async (req, res, next) => {
-    const { labelId } = req.body;
-    pullsService
-      .removeLabel(labelId)
-      .then(data => res.send(data))
-      .catch(next);
-  })
+
   .get('/:repositoryId/collaborators', (req, res, next) => {
     const { repositoryId } = req.params;
     getRepositoryCollaborators(repositoryId)

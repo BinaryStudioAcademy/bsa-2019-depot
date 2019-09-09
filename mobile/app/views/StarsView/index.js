@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, ScrollView, RefreshControl } from 'react-native';
 import styles from './styles';
 import Spinner from '../../components/Spinner';
 import { getAllStars } from '../../services/starsService';
@@ -12,7 +12,8 @@ class StarsView extends React.Component {
     super(props);
     this.state = {
       isLoading: true,
-      starsData: []
+      starsData: [],
+      refreshing: false
     };
   }
 
@@ -32,17 +33,25 @@ class StarsView extends React.Component {
     } catch (err) {}
   }
 
+  handleRefresh = async () => {
+    this.setState({
+      refreshing: true
+    });
+    await this.fetchStars();
+    this.setState({ refreshing: false });
+  };
+
   render() {
     const { isLoading, starsData } = this.state;
     return !isLoading ? (
-      <View>
+      <ScrollView refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.handleRefresh} />}>
         <View style={styles.starsHeader}></View>
         <FlatList
           data={starsData}
           // eslint-disable-next-line react/jsx-no-bind
           renderItem={({ item }) => <StarItem data={item} />}
         />
-      </View>
+      </ScrollView>
     ) : (
       <Spinner />
     );

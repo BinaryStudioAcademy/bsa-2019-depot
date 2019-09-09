@@ -9,6 +9,8 @@ import { fetchRepoSettings } from '../../routines/routines';
 import { renameRepo, deleteRepo } from './actions';
 import styles from './styles.module.scss';
 import { getRepositoryByOwnerAndName, changeRepoType } from '../../services/repositoryService';
+import * as elasticHelper from '../../helpers/elasticsearchHelper';
+import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 
 const renderDangerField = (header, description, buttonName, clickHandler) => (
   <Message className={styles.dangerField}>
@@ -37,17 +39,25 @@ class RepositoryOptions extends React.Component {
     this.state = {
       name: reponame,
       owner: username,
-      repoInfo: null
+      repoInfo: null,
+      isAccessGranted: null
     };
   }
 
   validationSchema = Yup.object().shape({
-    name: Yup.string().required('Required')
+    name: Yup.string()
+      .matches(/^.*[\w]+.*$/, 'Invalid repository name')
+      .required('Required')
   });
 
-  componentDidMount() {
+  async componentDidMount() {
     const { owner, name } = this.state;
-    const { fetchRepoSettings } = this.props;
+    const { fetchRepoSettings, match, userId } = this.props;
+    const { username, reponame } = match.params;
+    const isAccessGranted = await getWriteUserPermissions(username, reponame, userId);
+    this.setState({
+      isAccessGranted
+    });
     fetchRepoSettings({
       owner,
       name
@@ -65,7 +75,10 @@ class RepositoryOptions extends React.Component {
   }
 
   onClickDelete = () => {
-    const { owner } = this.state;
+    const {
+      owner,
+      repoInfo: { id }
+    } = this.state;
     const { deleteRepo, history } = this.props;
     const { oldName } = this;
 
@@ -73,22 +86,26 @@ class RepositoryOptions extends React.Component {
       owner,
       name: oldName
     });
+    elasticHelper.deleteRepo(id);
     history.push(`/${owner}`);
-    window.location.reload();
   };
 
   onClickRename = ({ name }) => {
-    const { owner } = this.state;
+    const {
+      owner,
+      repoInfo: { id }
+    } = this.state;
     const { oldName } = this;
     const { renameRepo, history } = this.props;
+    const transformedName = name.trim().replace(/\s+/g, '-');
 
     renameRepo({
       owner,
       oldName,
-      name
+      name: transformedName
     });
-    history.push(`/${owner}/${name}/settings`);
-    window.location.reload();
+    elasticHelper.updateRepo(id, transformedName, owner);
+    history.push(`/${owner}/${transformedName}/settings`);
   };
 
   onClickUpdateRepoType = async () => {
@@ -105,13 +122,20 @@ class RepositoryOptions extends React.Component {
       reponame: name,
       request: { isPublic: repoInfo.isPublic, repositoryId: id, userId }
     });
+    if (repoInfo.isPublic) {
+      elasticHelper.addRepo(id, name, owner);
+    } else {
+      elasticHelper.deleteRepo(id);
+    }
     history.push(`/${owner}/${name}/settings`);
     window.location.reload();
   };
 
   render() {
-    const { repoInfo } = this.state;
+    const { repoInfo, isAccessGranted } = this.state;
     const { loading } = this.props.repoSettingsData;
+    const { match, currentUserName } = this.props;
+    const { username } = match.params;
     if (!repoInfo || loading) {
       return <Loader />;
     }
@@ -121,7 +145,7 @@ class RepositoryOptions extends React.Component {
     } = this.state;
     return (
       <Grid container stackable className={styles.box}>
-        <Grid.Column width={12} className={styles.second_column}>
+        <Grid.Column className={styles.second_column}>
           <Header as="h2">Settings</Header>
           <Divider />
           {repoInfo && <Header as="h4">Repository name</Header>}
@@ -129,7 +153,7 @@ class RepositoryOptions extends React.Component {
             {({ values: { name }, errors, handleChange, handleSubmit }) => (
               <Form onSubmit={handleSubmit}>
                 <Field name="name" value={name} className={styles.text_input} onChange={handleChange} />
-                <Button className={styles.button_rename} disabled={errors.name} type="submit">
+                <Button className={styles.button_rename} disabled={!!errors.name} type="submit">
                   Rename
                 </Button>
                 <InputError name="name" />
@@ -138,18 +162,20 @@ class RepositoryOptions extends React.Component {
           </Formik>
           <Header as="h2">Danger Zone</Header>
           <div className={styles.dangerZone}>
-            {renderDangerField(
-              isPublic ? 'Make this repository private' : 'Make this repository public',
-              isPublic ? 'Hide this repository from the public.' : 'Make this repository visible to anyone.',
-              isPublic ? 'Make private' : 'Make public',
-              this.onClickUpdateRepoType
-            )}
-            {renderDangerField(
-              'Delete this repository',
-              'Once you delete a repository, there is no going back. Please be certain.',
-              'Delete this repository',
-              this.onClickDelete
-            )}
+            {(currentUserName === username || isAccessGranted) &&
+              renderDangerField(
+                isPublic ? 'Make this repository private' : 'Make this repository public',
+                isPublic ? 'Hide this repository from the public.' : 'Make this repository visible to anyone.',
+                isPublic ? 'Make private' : 'Make public',
+                this.onClickUpdateRepoType
+              )}
+            {(currentUserName === username || isAccessGranted) &&
+              renderDangerField(
+                'Delete this repository',
+                'Once you delete a repository, there is no going back. Please be certain.',
+                'Delete this repository',
+                this.onClickDelete
+              )}
           </div>
         </Grid.Column>
       </Grid>
@@ -177,11 +203,15 @@ RepositoryOptions.propTypes = {
   history: PropTypes.object,
   fetchRepoSettings: PropTypes.func.isRequired,
   renameRepo: PropTypes.func.isRequired,
-  deleteRepo: PropTypes.func.isRequired
+  deleteRepo: PropTypes.func.isRequired,
+  currentUserName: PropTypes.string.isRequired,
+  userId: PropTypes.string.isRequired
 };
 
-const mapStateToProps = ({ repoSettingsData }) => ({
-  repoSettingsData
+const mapStateToProps = ({ repoSettingsData, profile: { currentUser } }) => ({
+  repoSettingsData,
+  currentUserName: currentUser.username,
+  userId: currentUser.id
 });
 
 const mapDispatchToProps = {
