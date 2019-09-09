@@ -2,7 +2,6 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button, Header, Dropdown, Popup } from 'semantic-ui-react';
-import Octicon, { getIconByName } from '@primer/octicons-react';
 import CopyableInput from '../../components/CopyableInput';
 
 import styles from './styles.module.scss';
@@ -82,20 +81,12 @@ const RepoNav = props => {
           <div className={styles.repoPopupBody}>
             <Header className={styles.readmeHeader} as="h4">
               <div>
-                Clone with SSH <Octicon className={styles.actionButton} icon={getIconByName('question')} />
+                Clone with SSH
               </div>
             </Header>
             <p>Use a password protected SSH key.</p>
             <CopyableInput url={url} />
           </div>
-          <Button.Group className={styles.repoPopupActions} attached="bottom">
-            <Button compact className={styles.repoPopupAction}>
-              Open in Desktop
-            </Button>
-            <Button compact className={styles.repoPopupAction}>
-              Download ZIP
-            </Button>
-          </Button.Group>
         </Popup>
       </div>
     </div>
