@@ -97,7 +97,7 @@ export class Overview extends React.Component {
       },
       userId
     } = this.props;
-    console.log(this.state.repositories);
+ 
     const {
       userActivity: { userActivityByDate, userMonthActivity }
     } = this.state;
