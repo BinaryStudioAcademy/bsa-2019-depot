@@ -50,11 +50,11 @@
   display: flex;
   justify-content: space-between;
   background-color: #f1f8ff;
-  padding: 10px;
+  padding: 0.7em 1.5em;
 }
 
 :local(.issue_comment_desc) {
-  padding: 15px 10px;
+  padding: 1em 1.5em;
 }
 
 :local(.commentEditor) {
@@ -86,8 +86,10 @@
   :global(.ui.icon.message) {
     flex-direction: row-reverse;
     :global(.content) {
+      color: #777;
       :global(.header) {
         margin-bottom: 0.5em;
+        color: #444;
       }
     }
   }
@@ -98,7 +100,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 1em;
 }
 
 :local(.questionAvatar) {

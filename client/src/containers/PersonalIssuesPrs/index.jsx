@@ -76,14 +76,17 @@ class PersonalIssuesPrs extends Component {
   }
 
   componentDidMount() {
-    this.setState({
-      isOpened: this.getIsOpenedFromQuery(),
-      sort: this.getSortFromQuery(),
-      owner: this.getOwnerFromQuery(),
-      activeTab: this.getActiveTabFromQuery()
-    }, () => {
-      this.fetchData();
-    });
+    this.setState(
+      {
+        isOpened: this.getIsOpenedFromQuery(),
+        sort: this.getSortFromQuery(),
+        owner: this.getOwnerFromQuery(),
+        activeTab: this.getActiveTabFromQuery()
+      },
+      () => {
+        this.fetchData();
+      }
+    );
   }
 
   getIsOpenedFromQuery = () => {
@@ -130,9 +133,13 @@ class PersonalIssuesPrs extends Component {
     try {
       this.setState({ loading: true });
       const itemsData = await (isPull
-        ? pullsService.getUserPulls(username, { isOpened, sort, owner, reviewRequests: activeTab === tabs.reviewRequests })
-        : issuesService.getAllIssues(username, { isOpened, sort, owner })
-      );
+        ? pullsService.getUserPulls(username, {
+          isOpened,
+          sort,
+          owner,
+          reviewRequests: activeTab === tabs.reviewRequests
+        })
+        : issuesService.getAllIssues(username, { isOpened, sort, owner }));
 
       const { open, close, owners } = itemsData;
       this.setState({
@@ -251,10 +258,16 @@ class PersonalIssuesPrs extends Component {
         <div className={styles.container}>
           <div className={styles.filterRow}>
             <Button.Group>
-              <Button active={activeTab === tabs.created} onClick={this.handleGetCreated}>Created</Button>
+              <Button active={activeTab === tabs.created} onClick={this.handleGetCreated}>
+                Created
+              </Button>
               <Button disabled>Assigned</Button>
               <Button disabled>Mentioned</Button>
-              {isPull && <Button active={activeTab === tabs.reviewRequests} onClick={this.handleGetReviewRequests}>Review requests</Button>}
+              {isPull && (
+                <Button active={activeTab === tabs.reviewRequests} onClick={this.handleGetReviewRequests}>
+                  Review requests
+                </Button>
+              )}
             </Button.Group>
             <Input labelPosition="left" placeholder="Filter by title" onChange={this.filterItems} />
           </div>
@@ -278,7 +291,7 @@ class PersonalIssuesPrs extends Component {
                   search
                   selection
                 />
-                <Dropdown text="Sort" icon="caret down" onChange={this.handleSortChange} options={sortOptions}/>
+                <Dropdown text="Sort" icon="caret down" onChange={this.handleSortChange} options={sortOptions} />
               </div>
             </div>
             <DataList data={filteredItems} isPull={isPull} />
@@ -294,10 +307,14 @@ PersonalIssuesPrs.propTypes = {
   location: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   currentUserId: PropTypes.string.isRequired,
-  isPull: PropTypes.bool.isRequired,
+  isPull: PropTypes.bool.isRequired
 };
 
-const mapStateToProps = ({ profile: { currentUser: { id: currentUserId } } }) => ({
+const mapStateToProps = ({
+  profile: {
+    currentUser: { id: currentUserId }
+  }
+}) => ({
   currentUserId
 });
 
