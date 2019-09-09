@@ -78,6 +78,11 @@ class BranchesTab extends React.Component {
     }
   };
 
+  createNewPullRequest = () => {
+    const { username, reponame, history } = this.props;
+    history.push(`/${username}/${reponame}/compare`);
+  };
+
   renderMenuItems = () => {
     const { filter } = this.state;
     const tabFilters = [
@@ -85,21 +90,6 @@ class BranchesTab extends React.Component {
         key: 1,
         text: 'Overview',
         value: 'Overview'
-      },
-      {
-        key: 2,
-        text: 'Yours',
-        value: 'Yours'
-      },
-      {
-        key: 3,
-        text: 'Active',
-        value: 'Active'
-      },
-      {
-        key: 4,
-        text: 'Stale',
-        value: 'Stale'
       }
     ];
 
@@ -161,7 +151,12 @@ class BranchesTab extends React.Component {
         </Menu>
 
         <Segment className={styles.branchesListContainer}>
-          <BranchesList branches={renderedBranches} username={username} reponame={reponame} />
+          <BranchesList
+            branches={renderedBranches}
+            username={username}
+            reponame={reponame}
+            createNewPullRequest={this.createNewPullRequest}
+          />
         </Segment>
       </>
     );
@@ -177,7 +172,9 @@ BranchesTab.propTypes = {
   repoID: PropTypes.string.isRequired,
   fetchBranches: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired,
-  username: PropTypes.string
+  username: PropTypes.string,
+  reponame: PropTypes.string,
+  history: PropTypes.object
 };
 
 const mapStateToProps = ({
@@ -187,12 +184,13 @@ const mapStateToProps = ({
   },
   currentRepo: {
     repository: {
-      currentRepoInfo: { id: repoID }
+      currentRepoInfo: { id: repoID, name: reponame }
     }
   }
 }) => ({
   branchesData,
   username,
+  reponame,
   repoID
 });
 

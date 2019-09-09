@@ -11,10 +11,11 @@ import IssuePrSidebar from '../../containers/IssuePrSidebar';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 import styles from './styles.module.scss';
 
-const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels }) => {
+const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels, collaborators }) => {
   const [selectedTab, setSelectedTab] = useState('write');
   const [body, setBody] = useState('');
-  const [labelNames, setLabels] = useState('');
+  const [labelIds, setLabels] = useState([]);
+  const [reviewers, setReviewers] = useState([]);
 
   const validationSchema = Yup.object().shape({
     title: Yup.string()
@@ -26,12 +27,16 @@ const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels }) => {
     return Promise.resolve(<ReactMarkdown source={body} />);
   }
 
-  function updateLabelNames(labelNames) {
-    setLabels(labelNames);
+  function updateLabelIds(labelIds) {
+    setLabels(labelIds);
+  }
+
+  function updateReviewers(reviewers) {
+    setReviewers(reviewers);
   }
 
   function handleSubmit({ title }) {
-    onSubmit(title, body, labelNames);
+    onSubmit(title, body, labelIds, reviewers);
   }
 
   return (
@@ -68,7 +73,9 @@ const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels }) => {
                   isIssue={isIssues}
                   repositoryId={repositoryId}
                   labels={labels}
-                  setLabelsOnCreateItem={updateLabelNames}
+                  collaborators={collaborators ? collaborators.filter(({ isActivated }) => isActivated) : null}
+                  setLabelsOnCreateItem={updateLabelIds}
+                  setReviewersOnCreateItem={updateReviewers}
                 />
               </Grid.Column>
             </Grid>
@@ -83,7 +90,8 @@ CreateIssuePrForm.propTypes = {
   isIssues: PropTypes.bool.isRequired,
   onSubmit: PropTypes.func.isRequired,
   repositoryId: PropTypes.string.isRequired,
-  labels: PropTypes.array.isRequired
+  labels: PropTypes.array.isRequired,
+  collaborators: PropTypes.array
 };
 
 export default CreateIssuePrForm;

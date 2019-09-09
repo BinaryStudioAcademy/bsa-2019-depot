@@ -10,4 +10,9 @@
   :global(.item):hover {
     background-color: #f6f6f6;
   }
+
+  :global(.circle.mini.icon):local(.circleDivider) {
+    margin: 0 5px;
+    vertical-align: middle;
+  }
 }

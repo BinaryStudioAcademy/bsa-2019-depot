@@ -11,9 +11,16 @@ import CommitsList from '../../components/CommitsList';
 import ConversationTab from '../ConversationTab';
 import PrDiffs from '../PrDiffs';
 
-import { getPullByNumber, getPullComments, getBranchDiffs, updatePull } from '../../services/pullsService';
+import {
+  getPullByNumber,
+  getPullComments,
+  getBranchDiffs,
+  updatePull,
+  getReviewers
+} from '../../services/pullsService';
 import { getLabels } from '../../services/labelsService';
 import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
+import { getRepositoryCollaborators } from '../../services/repositoryService';
 
 import styles from './styles.module.scss';
 
@@ -41,13 +48,11 @@ class PullView extends React.Component {
     const currentPull = await getPullByNumber(username, reponame, number);
     const labels = await getLabels(repositoryId);
     this.setState({ labels });
-    const {
-      fromBranch: { name: fromBranch },
-      toBranch: { name: toBranch },
-      id
-    } = currentPull;
+    const { fromCommitId, toCommitId, id } = currentPull;
+    const collaborators = await getRepositoryCollaborators(repositoryId);
+    const reviewers = await getReviewers(currentPull.id);
 
-    const { commits, diffs } = await getBranchDiffs(repositoryId, { fromBranch, toBranch });
+    const { commits, diffs } = await getBranchDiffs(repositoryId, { fromCommitId, toCommitId });
     this.getLineChanges(diffs);
     const pullComments = await getPullComments(id);
     const isAccessGranted = await getWriteUserPermissions(username, reponame, userId);
@@ -59,6 +64,8 @@ class PullView extends React.Component {
       pullComments,
       pullDiffs: diffs,
       isAccessGranted,
+      collaborators,
+      reviewers,
       loading: false
     });
   }
@@ -153,7 +160,8 @@ class PullView extends React.Component {
   render() {
     const {
       match,
-      location: { pathname }
+      location: { pathname },
+      userId
     } = this.props;
     const {
       currentPull,
@@ -165,11 +173,15 @@ class PullView extends React.Component {
       filesCount,
       pullCommits,
       pullDiffs,
-      labels
+      labels,
+      reviewers,
+      collaborators
     } = this.state;
-    const { pullLabels } = currentPull;
+    const { id: currentPullId, pullLabels } = currentPull;
     const baseUrl = match.url;
     const activePage = pathname.split('/')[5];
+
+    const isReviewer = loading ? null : reviewers.map(({ userId: reviewerId }) => reviewerId).includes(userId);
 
     let activeTab;
     switch (activePage) {
@@ -244,7 +256,18 @@ class PullView extends React.Component {
             <Route
               exact
               path={`${match.path}/files-changed`}
-              render={() => this.renderComponent(PrDiffs, { diffs: pullDiffs })}
+              render={() =>
+                this.renderComponent(PrDiffs, {
+                  diffs: pullDiffs,
+                  currentUserId: userId,
+                  currentPullId: currentPullId,
+                  isReviewer,
+                  reviewStatus: isReviewer
+                    ? reviewers.find(({ userId: reviewerId }) => reviewerId === userId).status.name
+                    : null,
+                  pullUrl: match.url
+                })
+              }
             />
             {/* eslint-disable react/jsx-no-bind */}
             <Route
@@ -258,6 +281,8 @@ class PullView extends React.Component {
                   updateState={this.updateState}
                   currentLabels={pullLabels}
                   labels={labels}
+                  reviewers={reviewers}
+                  collaborators={collaborators}
                 />
               )}
             />
@@ -278,6 +303,7 @@ PullView.propTypes = {
     url: PropTypes.string.isRequired
   }).isRequired,
   location: PropTypes.object,
+  history: PropTypes.object.isRequired,
   repositoryId: PropTypes.string,
   userId: PropTypes.string
 };

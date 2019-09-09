@@ -21,6 +21,9 @@ const PullRequest = orm.import('./pullrequest');
 const PRStatus = orm.import('./prstatus');
 const PullComment = orm.import('./pullComment');
 const PinnedRepository = orm.import('./pinnedRepository');
+const IssueLabel = orm.import('./issueLabel');
+const PullReviewer = orm.import('./pullReviewer');
+const ReviewStatus = orm.import('./reviewStatus');
 const PullLabel = orm.import('./pullLabel');
 
 associate({
@@ -44,6 +47,9 @@ associate({
   PRStatus,
   PullComment,
   PinnedRepository,
+  IssueLabel,
+  PullReviewer,
+  ReviewStatus,
   PullLabel
 });
 
@@ -68,5 +74,8 @@ module.exports = {
   PRStatusModel: PRStatus,
   PullCommentModel: PullComment,
   PinnedRepositoryModel: PinnedRepository,
+  IssueLabelModel: IssueLabel,
+  PullReviewerModel: PullReviewer,
+  ReviewStatusModel: ReviewStatus,
   PullLabelModel: PullLabel
 };

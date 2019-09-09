@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Divider, Dropdown, Loader } from 'semantic-ui-react';
+import Octicon, { Comment, RequestChanges, Check, PrimitiveDot } from '@primer/octicons-react';
+import { Divider, Dropdown } from 'semantic-ui-react';
 import { getUserImgLink } from '../../helpers/imageHelper';
 
 import styles from './styles.module.scss';
@@ -9,64 +10,95 @@ class IssuePrSidebar extends React.Component {
   constructor(props) {
     super(props);
 
+    const { currentLabels, reviewers } = this.props;
+
     this.state = {
-      initialReviewers: [],
-      initialAssignees: [],
-      initialLabels: [],
-      reviewers: [],
-      assignees: [],
-      labels: [],
-      loading: true
+      currentLabels,
+      reviewers
     };
 
     this.onPropChange = this.onPropChange.bind(this);
+    this.onChangeReviewers = this.onChangeReviewers.bind(this);
+    this.renderReviewerLabel = this.renderReviewerLabel.bind(this);
     this.renderLabel = this.renderLabel.bind(this);
-  }
-
-  async componentDidMount() {
-    // Fetch data
-    const { currentLabels } = this.props;
-    this.setState({ currentLabels, loading: false });
   }
 
   onPropChange = (event, { name, value }) => {
     this.setState({ [name]: value });
   };
 
-  onChangeLables = async (event, { value }) => {
-    const { setLabelsOnCreateItem, isIssue, setLabelToPull, labels, removeLabelFromPull } = this.props;
-    const { currentLabels } = this.state;
+  onChangeLabels = async (event, { value }) => {
+    const { setLabelsOnCreateItem, setLabels } = this.props;
     if (setLabelsOnCreateItem) {
-      setLabelsOnCreateItem(value.join(' '));
+      setLabelsOnCreateItem(value);
     } else {
-      const selectedLabels = value.length;
-      if (currentLabels.length < selectedLabels) {
-        const label = labels.find(label => label.name === value[selectedLabels - 1]);
-        if (!isIssue) {
-          setLabelToPull(label.id).then(({ id }) => {
-            currentLabels.push({
-              id,
-              label
-            });
-            this.setState({ currentLabels });
-          });
-        }
-      } else {
-        const label =
-          currentLabels.length !== 1
-            ? currentLabels.find(({ label }) => label.name === value[selectedLabels - 1])
-            : currentLabels[0];
-        if (!isIssue) {
-          removeLabelFromPull(label.id).then(data => {
-            const newCurrentLabels = currentLabels.filter(({ id }) => id !== data.id);
-            this.setState({
-              currentLabels: newCurrentLabels
-            });
-          });
-        }
-      }
+      setLabels(value);
     }
   };
+
+  onChangeReviewers(event, { value }) {
+    const { collaborators, setReviewerToPull, removeReviewerFromPull, setReviewersOnCreateItem } = this.props;
+    const { reviewers } = this.state;
+
+    const newNumOfReviewers = value.length;
+
+    if (setReviewersOnCreateItem) {
+      setReviewersOnCreateItem(value);
+    } else {
+      if (newNumOfReviewers < reviewers.length) {
+        const deletedReviewerIdx = reviewers.findIndex(({ user: { username } }) => !value.includes(username));
+        removeReviewerFromPull(reviewers[deletedReviewerIdx].id).then(() => {
+          reviewers.splice(deletedReviewerIdx, 1);
+          this.setState({ reviewers });
+        });
+      } else {
+        const { userId } = collaborators.find(({ user: { username } }) => username === value[newNumOfReviewers - 1]);
+        setReviewerToPull(userId).then(result => {
+          reviewers.push(result);
+          this.setState({ reviewers });
+        });
+      }
+    }
+  }
+
+  renderReviewerLabel(label) {
+    const reviewer = this.state.reviewers.find(({ user: { username } }) => username === label.text);
+    const statusName = reviewer ? reviewer.status.name : 'PENDING';
+
+    let labelColor, labelIcon;
+    switch (statusName) {
+    case 'PENDING':
+      labelColor = 'yellow';
+      labelIcon = <Octicon icon={PrimitiveDot} />;
+      break;
+    case 'COMMENTED':
+      labelIcon = <Octicon icon={Comment} />;
+      break;
+    case 'APPROVED':
+      labelColor = 'green';
+      labelIcon = <Octicon icon={Check} />;
+      break;
+    case 'CHANGES REQUESTED':
+      labelColor = 'red';
+      labelIcon = <Octicon icon={RequestChanges} />;
+      break;
+    default:
+      labelColor = 'yellow';
+      labelIcon = <Octicon icon={PrimitiveDot} />;
+      break;
+    }
+
+    return {
+      content: (
+        <>
+          {labelIcon}
+          {label.text}
+        </>
+      ),
+      className: 'optionLabel',
+      color: labelColor
+    };
+  }
 
   renderLabel(label) {
     return {
@@ -76,24 +108,12 @@ class IssuePrSidebar extends React.Component {
   }
 
   render() {
-    const { isIssue, labels } = this.props;
-    const { currentLabels, loading } = this.state;
+    const { isIssue, collaborators, labels } = this.props;
+    const { currentLabels, reviewers } = this.state;
     let defaultLabelValues = null;
     if (currentLabels) {
-      defaultLabelValues = currentLabels.map(({ label }) => label.name);
+      defaultLabelValues = currentLabels.map(({ label }) => label.id);
     }
-    const reviewers = [
-      {
-        id: '5d7e8149-c61f-444e-a998-15c3d3d92624',
-        username: 'thesubliminalfffffffffffff',
-        imgUrl: null
-      },
-      {
-        id: '5d7e8149-c61f-444e-a998-15c3dd3d92624',
-        username: 'sublimini',
-        imgUrl: 'https://api.adorable.io/avatars/face/eyes4/nose3/mouth7/8e8895'
-      }
-    ];
 
     const assignees = [
       {
@@ -113,14 +133,6 @@ class IssuePrSidebar extends React.Component {
       }
     ];
 
-    const initialReviewers = [
-      {
-        id: '5d7e8149-c61f-444e-a998-15c3dd3d92624',
-        username: 'sublimini',
-        imgUrl: 'https://api.adorable.io/avatars/face/eyes4/nose3/mouth7/8e8895'
-      }
-    ];
-
     const initialAssignees = [
       {
         id: '5d7e8149-c61e-444e-a998-15c3d3d92624',
@@ -134,12 +146,15 @@ class IssuePrSidebar extends React.Component {
       }
     ];
 
-    const reviewerOptions = reviewers.map(({ id, username, imgUrl }) => ({
-      key: id,
-      text: username,
-      value: username,
-      image: { avatar: true, src: getUserImgLink(imgUrl) }
-    }));
+    let reviewerOptions;
+    if (!isIssue) {
+      reviewerOptions = collaborators.map(({ id, user: { username, imgUrl } }) => ({
+        key: id,
+        text: username,
+        value: username,
+        image: { avatar: true, src: getUserImgLink(imgUrl) }
+      }));
+    }
 
     const assigneeOptions = assignees.map(({ id, username, imgUrl }) => ({
       key: id,
@@ -147,11 +162,10 @@ class IssuePrSidebar extends React.Component {
       value: username,
       image: { avatar: true, src: getUserImgLink(imgUrl) }
     }));
-
     const labelOptions = labels.map(({ id, name, description, color }) => ({
       key: id,
       text: name,
-      value: name,
+      value: id,
       content: (
         <>
           <div className={styles.labelName}>
@@ -162,7 +176,7 @@ class IssuePrSidebar extends React.Component {
       )
     }));
 
-    return !loading ? (
+    return (
       <>
         {!isIssue && (
           <>
@@ -175,27 +189,31 @@ class IssuePrSidebar extends React.Component {
               fluid
               text="Select Reviewers"
               name="reviewers"
-              defaultValue={initialReviewers.map(({ username }) => username)}
+              defaultValue={reviewers.map(({ user: { username } }) => username)}
+              onChange={this.onChangeReviewers}
+              renderLabel={this.renderReviewerLabel}
+            />
+            <Divider />
+          </>
+        )}
+        {!isIssue && (
+          <>
+            <h5 className={styles.sectionHeader}>Assignees</h5>
+            <Dropdown
+              options={assigneeOptions}
+              selection
+              multiple
+              search
+              fluid
+              text="Select Assignees"
+              name="assignees"
+              defaultValue={initialAssignees.map(({ username }) => username)}
               onChange={this.onPropChange}
               renderLabel={this.renderLabel}
             />
             <Divider />
           </>
         )}
-        <h5 className={styles.sectionHeader}>Assignees</h5>
-        <Dropdown
-          options={assigneeOptions}
-          selection
-          multiple
-          search
-          fluid
-          text="Select Assignees"
-          name="assignees"
-          defaultValue={initialAssignees.map(({ username }) => username)}
-          onChange={this.onPropChange}
-          renderLabel={this.renderLabel}
-        />
-        <Divider />
         <h5 className={styles.sectionHeader}>Labels</h5>
         <Dropdown
           options={labelOptions}
@@ -206,23 +224,29 @@ class IssuePrSidebar extends React.Component {
           text="Select Labels"
           name="labels"
           defaultValue={defaultLabelValues || null}
-          onChange={this.onChangeLables}
+          onChange={this.onChangeLabels}
           renderLabel={this.renderLabel}
         />
       </>
-    ) : (
-      <Loader active />
     );
   }
 }
 
 IssuePrSidebar.propTypes = {
   isIssue: PropTypes.bool.isRequired,
+  reviewers: PropTypes.array,
+  collaborators: PropTypes.array,
   labels: PropTypes.array.isRequired,
   setLabelsOnCreateItem: PropTypes.func,
   currentLabels: PropTypes.array,
-  setLabelToPull: PropTypes.func,
-  removeLabelFromPull: PropTypes.func
+  setLabels: PropTypes.func,
+  setReviewersOnCreateItem: PropTypes.func,
+  setReviewerToPull: PropTypes.func,
+  removeReviewerFromPull: PropTypes.func
+};
+
+IssuePrSidebar.defaultProps = {
+  reviewers: []
 };
 
 export default IssuePrSidebar;

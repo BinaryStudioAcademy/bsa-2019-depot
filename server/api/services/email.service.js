@@ -1,6 +1,11 @@
 const jwt = require('jsonwebtoken');
 const UserRepository = require('../../data/repositories/user.repository');
-const { createTokenEmail, createInviteEmail, createInviteCollaboratorEmail } = require('../../helpers/email.helper');
+const {
+  createTokenEmail,
+  createInviteEmail,
+  createInviteCollaboratorEmail,
+  createReviewAssignmentEmail
+} = require('../../helpers/email.helper');
 const { emailQueue } = require('../../config/rabbitmq.config');
 
 const secret = process.env.SECRET_KEY;
@@ -46,8 +51,16 @@ async function sendInviteCollaboratorEmail({
   await sendToQueue(emailQueue, message);
 }
 
+async function sendReviewAssignmentEmail({
+  email, url, repoOwner, reponame, pullNumber, pullTitle
+}) {
+  const message = createReviewAssignmentEmail(email, url, repoOwner, reponame, pullNumber, pullTitle);
+  await sendToQueue(emailQueue, message);
+}
+
 module.exports = {
   sendForgetPasswordEmail,
   sendInviteEmail,
-  sendInviteCollaboratorEmail
+  sendInviteCollaboratorEmail,
+  sendReviewAssignmentEmail
 };

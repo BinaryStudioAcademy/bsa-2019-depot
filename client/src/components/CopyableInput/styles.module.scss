@@ -1,0 +1,18 @@
+$gray: #f7f7fb;
+$black: #363a44;
+
+.actionButton {
+  :global(.octicon) {
+    color: rgba(3, 47, 98, 0.55);
+    margin-right: 5px;
+  }
+}
+
+:global(.ui.button):local(.actionButton) {
+  background-color: $gray;
+  border: 1px solid rgba(27, 31, 35, 0.2);
+  color: $black;
+  font-size: 75%;
+  line-height: 1.25em;
+  padding: 3px 10px;
+}

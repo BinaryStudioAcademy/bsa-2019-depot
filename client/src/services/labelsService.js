@@ -34,24 +34,25 @@ export const deleteLabel = async labelId => {
   return response.json();
 };
 
-export const setLabelToPull = async (labelId, pullId, repositoryId) => {
+export const setLabelsToIssue = async (labelIds, issueId) => {
   const response = await callWebApi({
-    endpoint: `/api/repos/${repositoryId}/pulls/labels`,
+    endpoint: '/api/issue-labels',
     type: 'POST',
     request: {
-      labelId,
-      pullId
+      labelIds,
+      issueId
     }
   });
   return response.json();
 };
 
-export const removeLabelFromPull = async (labelId, repositoryId) => {
+export const setLabelsToPull = async (labelIds, pullId, repositoryId) => {
   const response = await callWebApi({
     endpoint: `/api/repos/${repositoryId}/pulls/labels`,
-    type: 'DELETE',
+    type: 'POST',
     request: {
-      labelId
+      labelIds,
+      pullId
     }
   });
   return response.json();

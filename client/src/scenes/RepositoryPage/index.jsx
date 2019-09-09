@@ -12,7 +12,7 @@ import CommitsPage from '../../containers/CommitsPage/index';
 import DiffCommitView from '../../components/DiffCommitView/index';
 import RepoSettings from '../../containers/SettingsTab/index';
 import FileViewPage from '../../containers/FileViewPage';
-import BlameViewPage from  '../../containers/BlameViewPage';
+import BlameViewPage from '../../containers/BlameViewPage';
 import FileEditPage from '../../containers/FileEditPage';
 import StargazersPage from '../../containers/StargazersPage/index';
 import BranchesTab from '../../containers/BranchesTab/index';
@@ -28,8 +28,6 @@ import LabelTab from '../../containers/LabelsTab';
 import PullView from '../../containers/PullView';
 import { getAllUserPermissions } from '../../helpers/checkPermissionsHelper';
 import { socketInit } from '../../helpers/socketInitHelper';
-
-import styles from './styles.module.scss';
 
 class RepositoryPage extends React.Component {
   constructor(props) {
@@ -49,7 +47,6 @@ class RepositoryPage extends React.Component {
       },
       userId
     } = this.props;
-
     const isAccessGranted = await getAllUserPermissions(username, reponame, userId);
     fetchCurrentRepo({ username, reponame });
     this.setState({
@@ -65,7 +62,15 @@ class RepositoryPage extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.id !== prevProps.id) {
+    if (!prevProps) {
+      return;
+    }
+    const { username, reponame } = this.props.match.params;
+    const currentRepo = username + reponame;
+    let { username: prevUsername, reponame: prevReponame } = prevProps.match.params;
+    const prevRepo = prevUsername + prevReponame;
+    if (currentRepo !== prevRepo) {
+      this.componentDidMount();
       const { id } = this.props;
       this.socket.emit('createRoom', id);
     }
@@ -118,6 +123,10 @@ class RepositoryPage extends React.Component {
       return <Spinner />;
     }
 
+    function defaultRedirect() {
+      return <Redirect to={`${match.url}/tree/${branch}`} />;
+    }
+
     return username === currentUserName || isPublic || isAccessGranted ? (
       <>
         <RepositoryHeader
@@ -128,9 +137,9 @@ class RepositoryPage extends React.Component {
           activePage={pathname.split('/')[3]}
           baseUrl={match.url}
         />
-        <Container className={styles.contentContainer}>
+        <Container>
           <Switch>
-            <Route exact path={`${match.path}`} component={CodeTab} />
+            <Route exact path={`${match.path}`} render={defaultRedirect} />
             <Route exact path={`${match.path}/tree/:branch`} component={CodeTab} />
             <Route exact path={`${match.path}/tree/:branch/${params}`} component={CodeTab} />
             <Route exact path={`${match.path}/commits/:branch`} component={CommitsPage} />
@@ -175,12 +184,12 @@ RepositoryPage.propTypes = {
     state: PropTypes.array
   }).isRequired,
   id: PropTypes.string.isRequired,
-  issuesCount: PropTypes.number.isRequired,
-  pullCount: PropTypes.number,
+  issuesCount: PropTypes.string,
+  pullCount: PropTypes.string,
   branches: PropTypes.array.isRequired,
-  defaultBranch: PropTypes.string.isRequired,
+  defaultBranch: PropTypes.string,
   loading: PropTypes.bool.isRequired,
-  isPublic: PropTypes.bool.isRequired,
+  isPublic: PropTypes.bool,
   userId: PropTypes.string.isRequired,
   currentUserName: PropTypes.string.isRequired,
   owner: PropTypes.object,

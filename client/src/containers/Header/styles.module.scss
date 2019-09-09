@@ -1,5 +1,6 @@
 $black-color: #363a44;
 $input-background: #1d1f28;
+$grey-color: #f7f7fb;
 
 :local(.headerWrp) {
   background-color: $black-color;
@@ -90,17 +91,25 @@ $input-background: #1d1f28;
     }
   }
   a {
-    padding: 10px;
+    padding: 7px;
+    border-radius: 5px;
+    background-color: $grey-color;
     color: #fff;
     &:not(:last-child) {
       margin-right: 16px;
+      color: #fff;
+      background-color: $black-color;
+      &:hover {
+        color: darken(#fff, 20%);
+      }
+    }
+    &:nth-child(2) {
+      box-shadow: 0 0 1px 1px $grey-color;
+      color: #fff;
     }
     &:nth-child(3) {
       border: 1px solid #fff;
       border-radius: 3px;
-    }
-    &:hover {
-      color: #fff;
     }
   }
 }
@@ -111,10 +120,12 @@ $input-background: #1d1f28;
     display: none !important;
   }
 }
+
 :global(.ui.visible.right.overlay.sidebar) {
   max-width: 320px;
   width: 100%;
 }
+
 :local(.sidebar) {
   background-color: #fff !important;
   font-size: 100% !important;
@@ -132,13 +143,6 @@ $input-background: #1d1f28;
     i {
       float: right !important;
     }
-  }
-  input {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 15px;
-    border: 1px solid gray;
-    border-radius: 3px;
   }
   .sidebarForm {
     margin-top: 20px;
@@ -260,4 +264,24 @@ $input-background: #1d1f28;
 .logo {
   color: #fff;
   fill: currentColor;
+}
+
+:local(.searchItem){
+  color: $black-color !important;
+  font-weight: 500;
+}
+
+:local(.searchItemIcon){
+  color: $black-color !important;
+  margin-right: 3px;
+}
+
+:global(.search.icon){
+  top: inherit !important;
+  color: $grey-color; 
+}
+
+:global(.ui.search .prompt){
+  border-radius: 3px !important;
+  background-color: $input-background;
 }

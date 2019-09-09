@@ -8,6 +8,14 @@ export const getRepositories = async owner => {
   return response.json();
 };
 
+export const getPublicOnlyRepositories = async owner => {
+  const response = await callWebApi({
+    endpoint: `/api/users/${owner}/public-repos`,
+    type: 'GET'
+  });
+  return response.json();
+};
+
 export const getRepositoryByOwnerAndName = async ({ username: owner, reponame }) => {
   const response = await callWebApi({
     endpoint: `/api/users/${owner}/repos/${reponame}`,

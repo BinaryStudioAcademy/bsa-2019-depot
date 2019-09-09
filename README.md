@@ -131,6 +131,9 @@ REACT_APP_SERVER_URL = "http://localhost:3000"  # default. has to be changed if 
 REACT_APP_RAW_SERVER_URL = http://localhost:3003  # default. has to be changed if it is different
 REACT_APP_STACK_OVERFLOW_API_KEY = "K)aMbXa)izv27xUSCXUW8A(("
 REACT_APP_STACK_OVERFLOW_API_URL = "https://api.stackexchange.com/2.2/search"
+REACT_APP_ELASTIC_HOST = https://search-xxxx-elastic-xxxxxxxxfqsenxxxsm.eu-central-1.es.amazonaws.com # need to be changed
+REACT_APP_ELASTIC_PORT = 443 # default. has to be changed if it is different
+REACT_APP_ELASTIC_INDEX = search-test # default. has to be changed if it is different
 ```
 
 _/server/.env_
@@ -167,6 +170,10 @@ SECRET_KEY = secretkey # has to be changed to own random secret key
 
 GIT_PATH = '' # Has to be changed to path where you want to save repositories
 SSH_KEYS = .ssh/authorized_keys # default path to 'authorized_keys' file to store SSH keys in
+
+ELASTIC_HOST = https://search-xxxx-elastic-xxxxxxxxfqsenxxxsm.eu-central-1.es.amazonaws.com  # need to be changed
+ELASTIC_PORT = 443 # default. has to be changed if it is different
+ELASTIC_INDEX = search-test # default. has to be changed if it is different
 ```
 
 _/raw-server/.env_

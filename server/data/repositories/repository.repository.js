@@ -140,10 +140,23 @@ class RepositoryRepository extends BaseRepository {
     });
   }
 
+  getRepoOwnerByRepoId(id) {
+    return this.model.findOne({
+      where: { id },
+      include: [
+        {
+          model: UserModel,
+          attributes: ['username']
+        }
+      ]
+    });
+  }
+
   deleteByUserAndReponame(userId, reponame) {
     return this.model.destroy({ where: { name: reponame, userId } });
   }
-  getRepositoryForks(repositoryId){
+
+  getRepositoryForks(repositoryId) {
     return this.model.findAll({
       where: { forkedFromRepoId: repositoryId },
       include: [

@@ -9,6 +9,7 @@ import { createOrg } from '../../routines/routines';
 import * as Yup from 'yup';
 import { InputError } from '../../components/InputError';
 import { checkUsernameExists } from '../../services/userService';
+import * as elasticHelper from '../../helpers/elasticsearchHelper';
 
 import PropTypes from 'prop-types';
 
@@ -39,6 +40,8 @@ class CreateOrganization extends Component {
 
   onSubmit = (values, { setSubmitting }) => {
     this.props.createOrg({ ...values });
+    const { username } = values;
+    elasticHelper.addOrg(username);
   };
 
   render() {
