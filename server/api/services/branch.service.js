@@ -136,7 +136,7 @@ const getFileBlame = async ({
   const blob = await entry.getBlob();
   const BlameArray = [];
 
-  await NodeGit.Blame.file(repo, filepath).then(async (blame) => {
+  await NodeGit.Blame.file(repo, filepath, { newestCommit: lastCommitOnBranch.id() }).then(async (blame) => {
     let count = 0;
     for (let i = 0; i < blame.getHunkCount(); i += 1) {
       const hunk = blame.getHunkByIndex(i);
