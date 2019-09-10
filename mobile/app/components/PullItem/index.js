@@ -7,19 +7,24 @@ import { withNavigation } from 'react-navigation';
 
 import styles from './styles';
 
-const IssueItem = ({ data, data: { title, number, user, updatedAt }, isOpened, navigation }) => {
+const PullItem = ({ data, data: { title, number, user, updatedAt, prstatus }, isOpened, navigation }) => {
+  let PullIcon;
+  if (prstatus.name === 'OPEN') {
+    PullIcon = <Icon name="git-pull-request" size={20} color="#28a745" />;
+  } else if (prstatus.name === 'CLOSED') {
+    PullIcon = <Icon name="git-pull-request" size={20} color="#F05166" />;
+  } else {
+    PullIcon = <Icon name="git-pull-request" size={20} color="#916FCF" />;
+  }
+
   function openIssue() {
-    navigation.navigate('IssueView', { data: data });
+    navigation.navigate('PullView', { data: data, PullIcon: PullIcon });
   }
 
   return (
     <View style={styles.issue}>
       <View style={styles.header}>
-        {isOpened ? (
-          <Icon name="issue-opened" size={20} color="#28a745" />
-        ) : (
-          <Icon name="issue-closed" size={20} color="#F05166" />
-        )}
+        {PullIcon}
         <Text style={styles.headerText} onPress={openIssue}>
           {title}
         </Text>
@@ -33,10 +38,10 @@ const IssueItem = ({ data, data: { title, number, user, updatedAt }, isOpened, n
   );
 };
 
-IssueItem.propTypes = {
+PullItem.propTypes = {
   data: PropTypes.object,
   isOpened: PropTypes.bool,
   navigation: PropTypes.object
 };
 
-export default withNavigation(IssueItem);
+export default withNavigation(PullItem);
