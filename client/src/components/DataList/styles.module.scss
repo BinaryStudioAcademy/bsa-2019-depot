@@ -5,6 +5,12 @@
     &:last-child {
       border-radius: 0 0 5px 5px;
     }
+
+    :local(.assignees) {
+      width: 6em;
+      margin-right: 1em !important;
+      text-align: center;
+    }
   }
 
   :global(.item):hover {

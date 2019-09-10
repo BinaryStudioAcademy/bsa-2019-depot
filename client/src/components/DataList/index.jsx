@@ -53,7 +53,7 @@ const DataList = props => {
               <List.Content floated="right">
                 <Icon name="comments outline" /> {item.commentCount}
               </List.Content>
-              <List.Content floated="right">
+              <List.Content floated="right" className={styles.assignees}>
                 {assignees &&
                   assignees
                     .slice(0, 3)
