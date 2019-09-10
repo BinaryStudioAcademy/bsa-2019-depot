@@ -15,7 +15,6 @@ const orgUsersRepository = require('../../data/repositories/org-user.repository'
 const CustomError = require('../../helpers/error.helper');
 const { defaultLabels } = require('../../config/labels.config');
 
-
 const initialCommit = async ({
   owner, email, reponame, files
 }) => {

@@ -1,6 +1,8 @@
 const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
-const { UserModel, IssueModel, PullRequestModel } = require('../models/index');
+const {
+  UserModel, IssueModel, PullRequestModel, IssueAssigneeModel
+} = require('../models/index');
 const cryptoHelper = require('../../helpers/crypto.helper');
 const sequelize = require('../db/connection');
 
@@ -29,6 +31,14 @@ class UserRepository extends BaseRepository {
 
   getUserById(id) {
     return this.model.findOne({ where: { id } });
+  }
+
+  getUsersByIds(ids) {
+    return this.model.findAll({ where: { id: ids } });
+  }
+
+  getUsersByUsernames(usernames) {
+    return this.model.findAll({ where: { username: usernames } });
   }
 
   async setUserPassword(email, password) {
@@ -98,6 +108,19 @@ class UserRepository extends BaseRepository {
         model: PullRequestModel,
         where: { repositoryId },
         attributes: []
+      }
+    });
+  }
+
+  getIssuesAssignees(repositoryId) {
+    return this.model.findAll({
+      attributes: ['id', 'username', 'imgUrl'],
+      include: {
+        model: IssueAssigneeModel,
+        include: {
+          model: IssueModel,
+          where: { repositoryId }
+        }
       }
     });
   }

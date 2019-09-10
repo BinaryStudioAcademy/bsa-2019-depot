@@ -42,10 +42,17 @@ const deleteByIssueAndLabelId = async (issueId, labelId) => {
 const setIssueLabels = async (labelIds, issueId) => {
   const issueLabels = await getLabelsByIssueId(issueId);
   const issueLabelIds = issueLabels && issueLabels.length ? issueLabels.map(issueLabel => issueLabel.labelId) : [];
-  const deleteLabelIds = issueLabelIds.filter(issueLabelId => !labelIds.includes(issueLabelId));
-  await Promise.all(deleteLabelIds.map(labelId => deleteByIssueAndLabelId(issueId, labelId)));
-  const addLabelIds = labelIds.filter(labelId => !issueLabelIds.includes(labelId));
-  await Promise.all(addLabelIds.map(async labelId => addIssueLabel(issueId, labelId)));
+  const deleteIssueLabelIds = issueLabels
+    .filter(issueLabel => !labelIds.includes(issueLabel.labelId))
+    .map(issueLabel => issueLabel.id);
+  await IssueLabelRepository.bulkDelete(deleteIssueLabelIds);
+  const addIssueLabels = labelIds
+    .filter(labelId => !issueLabelIds.includes(labelId))
+    .map(labelId => ({
+      issueId,
+      labelId
+    }));
+  await IssueLabelRepository.bulkCreate(addIssueLabels);
   return IssueLabelRepository.getByIssueId(issueId);
 };
 
