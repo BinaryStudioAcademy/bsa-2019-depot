@@ -35,6 +35,10 @@ class UserRepository extends BaseRepository {
     return this.model.findAll({ where: { id: ids } });
   }
 
+  getUsersByUsernames(usernames) {
+    return this.model.findAll({ where: { username: usernames } });
+  }
+
   async setUserPassword(email, password) {
     const user = (await this.getByEmail(email)).get({ plain: true });
     return this.updateById(user.id, { password: cryptoHelper.encryptSync(password) });

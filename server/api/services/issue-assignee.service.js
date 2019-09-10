@@ -6,7 +6,7 @@ const OrgUserRepository = require('../../data/repositories/org-user.repository')
 const CustomError = require('../../helpers/error.helper');
 
 const getAvailableAssigneesByIssueId = async (issueId) => {
-  const issue = IssueRepository.getById(issueId);
+  const issue = await IssueRepository.getById(issueId);
   if (!issue) {
     Promise.reject(new CustomError(400, `Issue ${issueId} is not found`));
   }
@@ -17,7 +17,7 @@ const getAvailableAssigneesByIssueId = async (issueId) => {
   const orgUsersIds = (await OrgUserRepository.getAllOrganizationUsers(userId)) || [];
   const assigneeIds = Array.from(new Set([userId, ...collaboratorIds, ...orgUsersIds]));
   const assignees = await UserRepository.getUsersByIds(assigneeIds);
-  return assignees.sort((assignee1, assignee2) => assignee2.username > assignee1.username);
+  return assignees.sort((assignee1, assignee2) => assignee2.username < assignee1.username);
 };
 
 const getIssueAssigneeById = async (id) => {
@@ -51,7 +51,8 @@ const deleteByIssueAndAssigneeId = async (issueId, assigneeId) => {
   return IssueAssigneeRepository.deleteByIssueAndAssigneeId(issueId, assigneeId);
 };
 
-const setIssueAssignees = async (assigneeIds, issueId) => {
+const setIssueAssignees = async (assignees, issueId) => {
+  const assigneeIds = (await UserRepository.getUsersByUsernames(assignees)).map(user => user.id);
   const issueAssignees = await getAssigneesByIssueId(issueId);
   const issueAssigneeIds = issueAssignees && issueAssignees.length ? issueAssignees.map(issueAssignee => issueAssignee.assigneeId) : [];
   const deleteIds = issueAssignees
