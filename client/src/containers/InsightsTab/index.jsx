@@ -24,7 +24,7 @@ const InsightsTab = ({ match }) => {
             </NavLink>
           </Menu>
         </Grid.Column>
-        <Grid.Column computer={12} tablet={16} mobile={16}>
+        <Grid.Column computer={12} tablet={8} mobile={16}>
           <Switch>
             <Route exact path={`${match.path}`} render={defaultRedirect} />
             <Route exact path={`${match.path}/forks`} component={ForksPage} />

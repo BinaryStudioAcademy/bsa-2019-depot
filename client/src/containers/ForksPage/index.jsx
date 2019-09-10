@@ -24,8 +24,8 @@ class ForksPage extends Component {
 
   getForksList() {
     const { repositoryId } = this.props;
-    getForksList(repositoryId).then(forks => {
-      this.setState({ forks, loading: false });
+    getForksList(repositoryId).then(async forks => {
+      await this.setState({ forks, loading: false });
     });
   }
 
@@ -35,36 +35,28 @@ class ForksPage extends Component {
   };
 
   render() {
-    const {
-      loading,
-      forks: { original, forks }
-    } = this.state;
-    const { /*repositoryId,*/ history } = this.props;
-    console.warn(forks);
+    const { loading, forks } = this.state;
+    const { repositoryId, history } = this.props;
     const showChildrenForks = forksList => {
       return forksList.length > 0 ? (
-        <li>
-          <ul>
-            {forksList.map(fork => (
+        <li className="child-fork-wrapper">
+          <ul className="child-fork-list">
+            {forksList.map(({ id, name, user, forks }) => (
               <>
-                <li key={fork.id} className="forked-item">
-                  <Popup
-                    trigger={<Image src={getUserImgLink(fork['user.imgUrl'])} size="mini" spaced />}
-                    flowing
-                    on="hover"
-                  >
+                <li key={id} className={`fork-item ${repositoryId === id ? ' current' : ''}`}>
+                  <Popup trigger={<Image src={getUserImgLink(user.imgUrl)} size="mini" spaced />} flowing on="hover">
                     <div className="popup-body">
                       <Grid columns="equal">
                         <Grid.Column>
-                          <Image src={getUserImgLink(fork['user.imgUrl'])} size="small" spaced />
+                          <Image src={getUserImgLink(user.imgUrl)} size="small" spaced />
                         </Grid.Column>
                         <Grid.Column width={12}>
-                          <Header as="h4">{fork['user.username']}</Header>
-                          {fork['user.bio'] ? <p>{fork['user.bio']}</p> : null}
-                          {fork['user.location'] ? (
+                          <Header as="h4">{user.username}</Header>
+                          {user.bio ? <p>{user.bio}</p> : null}
+                          {user.location ? (
                             <p>
                               <Icon name="map marker" />
-                              {fork['user.location']}
+                              {user.location}
                             </p>
                           ) : null}
                         </Grid.Column>
@@ -72,23 +64,19 @@ class ForksPage extends Component {
                     </div>
                   </Popup>
                   <span>
-                    <Popup
-                      trigger={<Link to={`/${fork['user.username']}`}>{fork['user.username']}</Link>}
-                      flowing
-                      on="hover"
-                    >
+                    <Popup trigger={<Link to={`/${user.username}`}>{user.username}</Link>} flowing on="hover">
                       <div className="popup-body">
                         <Grid columns="equal">
                           <Grid.Column>
-                            <Image src={getUserImgLink(fork['user.imgUrl'])} size="small" spaced />
+                            <Image src={getUserImgLink(user.imgUrl)} size="small" spaced />
                           </Grid.Column>
                           <Grid.Column width={12}>
-                            <Header as="h4">{fork['user.username']}</Header>
-                            {fork['user.bio'] ? <p>{fork['user.bio']}</p> : null}
-                            {fork['user.location'] ? (
+                            <Header as="h4">{user.username}</Header>
+                            {user.bio ? <p>{user.bio}</p> : null}
+                            {user.location ? (
                               <p>
                                 <Icon name="map marker" />
-                                {fork['user.location']}
+                                {user.location}
                               </p>
                             ) : null}
                           </Grid.Column>
@@ -96,12 +84,12 @@ class ForksPage extends Component {
                       </div>
                     </Popup>
                     /
-                    <Link to="" onClick={this.goToPath(history, `/${fork['user.username']}/${fork.name}`)}>
-                      {fork.name}
+                    <Link to="" onClick={this.goToPath(history, `/${user.username}/${name}`)}>
+                      {name}
                     </Link>
                   </span>
                 </li>
-                {showChildrenForks(fork.forks)}
+                {showChildrenForks(forks)}
               </>
             ))}
           </ul>
@@ -112,106 +100,40 @@ class ForksPage extends Component {
       <div>
         {loading ? (
           <Loader active />
-        ) : forks.length > 0 ? (
+        ) : forks ? (
           <ul>
-            <li key={original.id} className="forked-item">
-              <Popup
-                trigger={<Image src={getUserImgLink(original.user.imgUrl)} size="mini" spaced />}
-                flowing
-                on="hover"
-              >
+            <li key={forks.id} className={`fork-item ${repositoryId === forks.id ? ' current' : ''}`}>
+              <Popup trigger={<Image src={getUserImgLink(forks.user.imgUrl)} size="mini" spaced />} flowing on="hover">
                 <div className="popup-body">
                   <Grid columns="equal">
                     <Grid.Column>
-                      <Image src={getUserImgLink(original.user.imgUrl)} size="small" spaced />
+                      <Image src={getUserImgLink(forks.user.imgUrl)} size="small" spaced />
                     </Grid.Column>
                     <Grid.Column width={12}>
-                      <Header as="h4">{original.user.username}</Header>
+                      <Header as="h4">{forks.user.username}</Header>
                       <p>Owner</p>
                     </Grid.Column>
                   </Grid>
                 </div>
               </Popup>
               <span>
-                <Popup
-                  trigger={<Link to={`/${original.user.username}`}>{original.user.username}</Link>}
-                  flowing
-                  on="hover"
-                >
+                <Popup trigger={<Link to={`/${forks.user.username}`}>{forks.user.username}</Link>} flowing on="hover">
                   <div className="popup-body">
                     <Grid columns="equal">
                       <Grid.Column>
-                        <Image src={getUserImgLink(original.user.imgUrl)} size="small" spaced />
+                        <Image src={getUserImgLink(forks.user.imgUrl)} size="small" spaced />
                       </Grid.Column>
                       <Grid.Column width={12}>
-                        <Header as="h4">{original.user.username}</Header>
+                        <Header as="h4">{forks.user.username}</Header>
                         <p>Owner</p>
                       </Grid.Column>
                     </Grid>
                   </div>
                 </Popup>
-                /<Link to={`/${original.user.username}/${original.name}`}>{original.name}</Link>
+                /<Link to={`/${forks.user.username}/${forks.name}`}>{forks.name}</Link>
               </span>
             </li>
-            {forks.map(fork => (
-              <>
-                <li key={fork.id} className="forked-item">
-                  <Popup
-                    trigger={<Image src={getUserImgLink(fork['user.imgUrl'])} size="mini" spaced />}
-                    flowing
-                    on="hover"
-                  >
-                    <div className="popup-body">
-                      <Grid columns="equal">
-                        <Grid.Column>
-                          <Image src={getUserImgLink(fork['user.imgUrl'])} size="small" spaced />
-                        </Grid.Column>
-                        <Grid.Column width={12}>
-                          <Header as="h4">{fork['user.username']}</Header>
-                          {fork['user.bio'] ? <p>{fork['user.bio']}</p> : null}
-                          {fork['user.location'] ? (
-                            <p>
-                              <Icon name="map marker" />
-                              {fork['user.location']}
-                            </p>
-                          ) : null}
-                        </Grid.Column>
-                      </Grid>
-                    </div>
-                  </Popup>
-                  <span>
-                    <Popup
-                      trigger={<Link to={`/${fork['user.username']}`}>{fork['user.username']}</Link>}
-                      flowing
-                      on="hover"
-                    >
-                      <div className="popup-body">
-                        <Grid columns="equal">
-                          <Grid.Column>
-                            <Image src={getUserImgLink(fork['user.imgUrl'])} size="small" spaced />
-                          </Grid.Column>
-                          <Grid.Column width={12}>
-                            <Header as="h4">{fork['user.username']}</Header>
-                            {fork['user.bio'] ? <p>{fork['user.bio']}</p> : null}
-                            {fork['user.location'] ? (
-                              <p>
-                                <Icon name="map marker" />
-                                {fork['user.location']}
-                              </p>
-                            ) : null}
-                          </Grid.Column>
-                        </Grid>
-                      </div>
-                    </Popup>
-                    /
-                    <Link to="" onClick={this.goToPath(history, `/${fork['user.username']}/${fork.name}`)}>
-                      {fork.name}
-                    </Link>
-                  </span>
-                </li>
-                {showChildrenForks(fork.forks)}
-              </>
-            ))}
+            {showChildrenForks(forks.forks)}
           </ul>
         ) : (
           <Container text textAlign="center">
