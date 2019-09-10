@@ -221,13 +221,8 @@ class LabelItem extends React.Component {
           )}
           {isNewLabel ? null : (
             <List.Content floated="right" className={styles.labelButtons}>
-              <Button
-                content="Edit"
-                icon="pencil alternate"
-                className={styles.actionButton}
-                onClick={this.startEditing}
-              />
-              <Button content="Delete" icon="times" className={styles.actionButton} onClick={this.handleDelete} />
+              <Button icon="pencil alternate" className={styles.actionButton} onClick={this.startEditing} />
+              <Button icon="times" className={styles.actionButton} onClick={this.handleDelete} />
             </List.Content>
           )}
         </List.Item>
