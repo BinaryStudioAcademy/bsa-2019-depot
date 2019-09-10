@@ -3,7 +3,7 @@ node_js:
 - "10.16.2"
 branches:
   only:
-  - develop
+  - master
 notifications:
   slack: binary-academy-2019:zu0JzpVwZUPF9GSv8vPwHcI1
 install:
@@ -18,16 +18,16 @@ deploy:
   skip_cleanup: true
   on: &2
     repo: BinaryStudioAcademy/bsa-2019-depot
-    branch: develop
+    branch: master
   bucket: depotbucket
   region: eu-central-1
 - provider: codedeploy
   access_key_id: $AWS_ACCESS_KEY_ID
   secret_access_key: $AWS_SECRET_ACCESS_KEY
   bucket: depotbucket
-  key: latest.zip
+  key: prod.zip
   bundle_type: zip
-  application: depot-deploy-app
-  deployment_group: depot-deploy-app-group
+  application: depot-prod-app
+  deployment_group: depot-prod-app-group
   region: eu-central-1
   on: *2
