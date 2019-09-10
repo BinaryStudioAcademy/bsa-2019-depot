@@ -24,8 +24,8 @@ class ForksPage extends Component {
 
   getForksList() {
     const { repositoryId } = this.props;
-    getForksList(repositoryId).then(async forks => {
-      await this.setState({ forks, loading: false });
+    getForksList(repositoryId).then(forks => {
+      this.setState({ forks, loading: false });
     });
   }
 

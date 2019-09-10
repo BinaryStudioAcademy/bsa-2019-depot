@@ -307,7 +307,7 @@ router
       .then(data => res.send(data))
       .catch(next);
   })
-  .get('/:repositoryId/forks', async (req, res, next)  => {
+  .get('/:repositoryId/forks', (req, res, next)  => {
     const { repositoryId } = req.params;
      getRepositoryForks(repositoryId)
        .then(data => res.send(data))
