@@ -109,6 +109,7 @@ const getUsersForCollaboratorsAddition = async ({ username, repositoryId, userId
 const getIssuesAuthors = async repositoryId => UserRepository.getIssuesAuthors(repositoryId);
 
 const getPullsAuthors = async repositoryId => UserRepository.getPullsAuthors(repositoryId);
+const getIssuesAssignees = async repositoryId => UserRepository.getIssuesAssignees(repositoryId);
 
 module.exports = {
   getUserById,
@@ -125,5 +126,6 @@ module.exports = {
   uploadPhoto,
   deletePhoto,
   getIssuesAuthors,
-  getPullsAuthors
+  getPullsAuthors,
+  getIssuesAssignees
 };

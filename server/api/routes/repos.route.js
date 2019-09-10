@@ -232,12 +232,14 @@ router
     try {
       const issues = await issueService.getRepoIssues(repositoryId, sort, authorId, title, isOpened);
       const authors = await userService.getIssuesAuthors(repositoryId);
+      const assignees = await userService.getIssuesAssignees(repositoryId);
       const openCount = await issueService.getIssueCount(repositoryId, true);
       const closedCount = await issueService.getIssueCount(repositoryId, false);
       res.send({
         openCount,
         closedCount,
         authors,
+        assignees,
         issues
       });
     } catch (e) {
