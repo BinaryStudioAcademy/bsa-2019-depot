@@ -15,12 +15,8 @@ describe('Settings', () => {
 
   it('should change user public information', () => {
     profileSteps.navigateToProfileSettings();
-    profileSteps.enterName(credentials.profileSettings.name);
-    profileSteps.enterBio(credentials.profileSettings.bio);
-    profileSteps.enterUrl(credentials.profileSettings.url);
-    profileSteps.enterCompany(credentials.profileSettings.company);
-    profileSteps.enterLocation(credentials.profileSettings.location);
-    profileSteps.updateProfileBtn();
+    profileSteps.fillUpUserProfile(credentials);
+    profileSteps.updateProfile();
     profileSteps.navigateToYourProfile();
 
     assert.strictEqual(credentials.profileSettings.name, profileObj.updatedName.getText());
