@@ -11,28 +11,25 @@ import { InputError } from '../../components/InputError';
 import { serverUrl } from '../../app.config';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import debounce from 'debounce-promise';
 
 import './styles.module.scss';
 
 const isUsernameValid = async username => {
-  const { usernameExists } = await checkUsernameExists(username);
+  const { usernameExists } = await debouncedCheckUsernameExists(username);
   return !usernameExists;
 };
 
-Yup.addMethod(Yup.string, 'validateUsername', function() {
-  return this.test('validateUsername', 'This username is already taken', function(value) {
-    return isUsernameValid(value);
-  });
-});
+const debouncedCheckUsernameExists = debounce(checkUsernameExists, 500);
 
 const validationSchema = Yup.object().shape({
   username: Yup.string()
     .required('Username is required!')
     .matches(
       /^(([a-zA-Z0-9]+-)*[a-zA-Z0-9]+){1,39}$/,
-      'Username contains of only alphanumeric characters or single hyphens. Cannot have multiple consecutive hyphens'
+      'Username should contain only alphanumeric characters or single hyphens. Cannot have multiple consecutive hyphens'
     )
-    .validateUsername('This username is already taken'),
+    .test('username', 'This username is already taken', isUsernameValid),
   email: Yup.string()
     .email('Invalid email address!')
     .matches(
