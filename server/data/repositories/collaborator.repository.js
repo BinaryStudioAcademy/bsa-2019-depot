@@ -46,7 +46,7 @@ class CollaboratorRepository extends BaseRepository {
       include: [
         {
           model: UserModel,
-          attributes: ['username', 'imgUrl']
+          attributes: ['id', 'username', 'imgUrl']
         }
       ]
     });

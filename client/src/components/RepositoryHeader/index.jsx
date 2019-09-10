@@ -22,7 +22,8 @@ const RepositoryHeader = ({
   activePage,
   baseUrl,
   isBlamePage,
-  history
+  history,
+  isPublic
 }) => {
   const [isStar, setIsStar] = useState(Boolean(stars.find(star => star.user.id === userId)));
   const [starCount, setStarCount] = useState(starsCount);
@@ -74,7 +75,10 @@ const RepositoryHeader = ({
 
   const renderOrignalRepoLink = () => {
     if (originalRepo) {
-      const { name: forkedRepoName, user: { username: forkedRepoOwner } } = originalRepo;
+      const {
+        name: forkedRepoName,
+        user: { username: forkedRepoOwner }
+      } = originalRepo;
       if (forkedRepoName && forkedRepoOwner) {
         return (
           <div className={styles.originalRepoLink}>
@@ -98,6 +102,7 @@ const RepositoryHeader = ({
                 <Link to={`/${owner}`}>{owner}</Link>
                 <span className={styles.pathDivider}>/</span>
                 <Link to={`/${owner}/${repoName}`}>{repoName}</Link>
+                {!isPublic && <span className={styles.repoPrivateLabel}>Private</span>}
               </span>
               {renderOrignalRepoLink()}
             </div>
@@ -181,7 +186,8 @@ RepositoryHeader.propTypes = {
   activePage: PropTypes.string,
   baseUrl: PropTypes.string.isRequired,
   history: PropTypes.object,
-  isBlamePage: PropTypes.bool
+  isBlamePage: PropTypes.bool,
+  isPublic: PropTypes.bool
 };
 
 const mapStateToProps = ({

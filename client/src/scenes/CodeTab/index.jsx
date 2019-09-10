@@ -32,16 +32,7 @@ class CodeTab extends React.Component {
   }
 
   async componentDidMount() {
-    const {
-      repoID,
-      userId,
-      fetchBranch,
-      fetchFileTree,
-      branches,
-      defaultBranch,
-      match,
-      history
-    } = this.props;
+    const { repoID, userId, fetchBranch, fetchFileTree, branches, defaultBranch, match, history } = this.props;
     let {
       params: { branch, username: ownername, reponame }
     } = match;

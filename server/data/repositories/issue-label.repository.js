@@ -31,9 +31,9 @@ class IssueLabelRepository extends BaseRepository {
     return this.deleteById(id);
   }
 
-  deleteByIssueAndLabelId(issueId, labelId) {
+  bulkDelete(issueLabelIds) {
     return this.model.destroy({
-      where: { labelId, issueId }
+      where: { id: issueLabelIds }
     });
   }
 }

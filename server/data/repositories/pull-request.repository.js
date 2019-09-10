@@ -9,7 +9,8 @@ const {
   BranchModel,
   PullLabelModel,
   LabelModel,
-  PullReviewerModel
+  PullReviewerModel,
+  OrgUserModel
 } = require('../models/index');
 
 const sequelize = require('../db/connection');
@@ -310,14 +311,12 @@ class PullRepository extends BaseRepository {
               where: { userId }
             }
           ]
+        },
+        {
+          model: OrgUserModel,
+          where: { userId }
         }
-      ],
-      where: {
-        [Op.or]: {
-          type: 'ORG',
-          id: userId
-        }
-      }
+      ]
     });
   }
 

@@ -10,15 +10,17 @@ class IssuePrSidebar extends React.Component {
   constructor(props) {
     super(props);
 
-    const { currentLabels, reviewers } = this.props;
+    const { currentLabels, currentAssignees, reviewers } = this.props;
 
     this.state = {
       currentLabels,
+      currentAssignees,
       reviewers
     };
 
     this.onPropChange = this.onPropChange.bind(this);
     this.onChangeReviewers = this.onChangeReviewers.bind(this);
+    this.onChangeAssignees = this.onChangeAssignees.bind(this);
     this.renderReviewerLabel = this.renderReviewerLabel.bind(this);
     this.renderLabel = this.renderLabel.bind(this);
   }
@@ -33,6 +35,15 @@ class IssuePrSidebar extends React.Component {
       setLabelsOnCreateItem(value);
     } else {
       setLabels(value);
+    }
+  };
+
+  onChangeAssignees = async (event, { value }) => {
+    const { setAssigneesOnCreateItem, setAssignees } = this.props;
+    if (setAssigneesOnCreateItem) {
+      setAssigneesOnCreateItem(value);
+    } else {
+      setAssignees(value);
     }
   };
 
@@ -108,43 +119,12 @@ class IssuePrSidebar extends React.Component {
   }
 
   render() {
-    const { isIssue, collaborators, labels } = this.props;
-    const { currentLabels, reviewers } = this.state;
+    const { isIssue, collaborators, labels, assignees } = this.props;
+    const { currentLabels, reviewers, currentAssignees } = this.state;
     let defaultLabelValues = null;
     if (currentLabels) {
       defaultLabelValues = currentLabels.map(({ label }) => label.id);
     }
-
-    const assignees = [
-      {
-        id: '5d7e8149-c61e-444e-a998-15c3d3d92624',
-        username: 'thesublimidwe',
-        imgUrl: 'https://tinyfac.es/data/avatars/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg'
-      },
-      {
-        id: '5d7e8d-c61e-444e-a998-15c3d3d92624',
-        username: 'sdfsdf',
-        imgUrl: 'https://randomuser.me/api/portraits/women/47.jpg'
-      },
-      {
-        id: '5d7e8d-c61e-444e-a998-15c3wd3d92624',
-        username: 'abcdef',
-        imgUrl: 'https://randomuser.me/api/portraits/women/65.jpg'
-      }
-    ];
-
-    const initialAssignees = [
-      {
-        id: '5d7e8149-c61e-444e-a998-15c3d3d92624',
-        username: 'thesublimidwe',
-        imgUrl: 'https://tinyfac.es/data/avatars/B0298C36-9751-48EF-BE15-80FB9CD11143-500w.jpeg'
-      },
-      {
-        id: '5d7e8d-c61e-444e-a998-15c3d3d92624',
-        username: 'sdfsdf',
-        imgUrl: 'https://randomuser.me/api/portraits/women/47.jpg'
-      }
-    ];
 
     let reviewerOptions;
     if (!isIssue) {
@@ -156,12 +136,18 @@ class IssuePrSidebar extends React.Component {
       }));
     }
 
-    const assigneeOptions = assignees.map(({ id, username, imgUrl }) => ({
-      key: id,
-      text: username,
-      value: username,
-      image: { avatar: true, src: getUserImgLink(imgUrl) }
-    }));
+    let assigneeOptions;
+    if (isIssue) {
+      assigneeOptions = assignees
+        ? assignees.map(({ id, username, imgUrl }) => ({
+          key: id,
+          text: username,
+          value: username,
+          image: { avatar: true, src: getUserImgLink(imgUrl) }
+        }))
+        : [];
+    }
+
     const labelOptions = labels.map(({ id, name, description, color }) => ({
       key: id,
       text: name,
@@ -196,7 +182,7 @@ class IssuePrSidebar extends React.Component {
             <Divider />
           </>
         )}
-        {!isIssue && (
+        {isIssue && (
           <>
             <h5 className={styles.sectionHeader}>Assignees</h5>
             <Dropdown
@@ -207,8 +193,8 @@ class IssuePrSidebar extends React.Component {
               fluid
               text="Select Assignees"
               name="assignees"
-              defaultValue={initialAssignees.map(({ username }) => username)}
-              onChange={this.onPropChange}
+              defaultValue={currentAssignees ? currentAssignees.map(({ username }) => username) : []}
+              onChange={this.onChangeAssignees}
               renderLabel={this.renderLabel}
             />
             <Divider />
@@ -240,6 +226,10 @@ IssuePrSidebar.propTypes = {
   setLabelsOnCreateItem: PropTypes.func,
   currentLabels: PropTypes.array,
   setLabels: PropTypes.func,
+  assignees: PropTypes.array,
+  currentAssignees: PropTypes.array,
+  setAssignees: PropTypes.func,
+  setAssigneesOnCreateItem: PropTypes.func,
   setReviewersOnCreateItem: PropTypes.func,
   setReviewerToPull: PropTypes.func,
   removeReviewerFromPull: PropTypes.func
