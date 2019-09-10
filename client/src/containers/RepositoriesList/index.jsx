@@ -78,13 +78,14 @@ export class RepositoriesList extends React.Component {
 
   filterRepositories = repositories => {
     const { filter, repoNameFilter } = this.props;
+    const value = repoNameFilter.toLowerCase();
     switch (filter) {
     case 'Public':
-      return repositories.filter(({ isPublic, name }) => isPublic && name.includes(repoNameFilter));
+      return repositories.filter(({ isPublic, name }) => isPublic && name.includes(value));
     case 'Private':
-      return repositories.filter(({ isPublic, name }) => !isPublic && name.includes(repoNameFilter));
+      return repositories.filter(({ isPublic, name }) => !isPublic && name.includes(value));
     default:
-      return repositories.filter(({ name }) => name.includes(repoNameFilter));
+      return repositories.filter(({ name }) => name.includes(value));
     }
   };
 
@@ -97,17 +98,15 @@ export class RepositoriesList extends React.Component {
       }
     } = this.props;
 
-    return loading
-      ? (
-        <Loader active/>
-      )
-      : (
+    return loading ? (
+      <Loader active />
+    ) : (
       <>
         {filteredRepositories.map(repo => (
           <RepositoryItem repo={repo} key={repo.name} onStar={this.onStar} username={username} />
         ))}
       </>
-      );
+    );
   }
 }
 
