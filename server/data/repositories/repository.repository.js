@@ -159,7 +159,6 @@ class RepositoryRepository extends BaseRepository {
   getRepositoryForks(repositoryId) {
     return this.model.findAll({
       where: { forkedFromRepoId: repositoryId },
-      raw: true,
       required: true,
       include: [
         {

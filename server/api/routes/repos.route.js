@@ -10,8 +10,7 @@ const {
   forkRepo,
   setStar,
   updateByUserAndReponame,
-  getRepositoryForks,
-  getRepositoryForksById
+  getRepositoryForks
 } = require('../services/repo.service');
 const {
   getCommits, getCommitDiff, getCommitCount, getCommitActivityData
@@ -301,23 +300,11 @@ router
       .then(data => res.send(data))
       .catch(next);
   })
-  .get('/:repositoryId/forks', (req, res, next) => {
+  .get('/:repositoryId/forks', async (req, res, next)  => {
     const { repositoryId } = req.params;
-    getRepositoryForks(repositoryId)
-      .then((data) => {
-        Promise.all([
-          getRepoData(data[0].forkedFromRepoId),
-          data
-        ])
-          .then((result) => {
-            res.send({
-              original: result[0],
-              forks: result[1]
-            });
-          })
-          .catch(next);
-      })
-      .catch(next);
+     getRepositoryForks(repositoryId)
+       .then(data => res.send(data))
+       .catch(next);
   })
   .get('/:repositoryId/commit-activity-data', (req, res, next) => {
     const { repositoryId } = req.params;

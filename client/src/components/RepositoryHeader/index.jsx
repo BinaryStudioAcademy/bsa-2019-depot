@@ -186,6 +186,7 @@ RepositoryHeader.propTypes = {
   activePage: PropTypes.string,
   baseUrl: PropTypes.string.isRequired,
   history: PropTypes.object,
+  isPublic: PropTypes.bool.isRequired,
   isBlamePage: PropTypes.bool
 };
 

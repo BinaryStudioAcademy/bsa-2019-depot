@@ -12,25 +12,25 @@ const collaboratorRepository = require('../../data/repositories/collaborator.rep
 const LabelRepository = require('../../data/repositories/label.repository');
 
 const CustomError = require('../../helpers/error.helper');
-const { defaultLabels } = require('../../config/labels.config');
+const {defaultLabels} = require('../../config/labels.config');
 
 
 const initialCommit = async ({
-  owner, email, reponame, files
-}) => {
+                               owner, email, reponame, files
+                             }) => {
   const pathToRepo = repoHelper.getPathToRepo(owner, reponame);
   const repo = await NodeGit.Repository.open(pathToRepo);
   const treeBuilder = await NodeGit.Treebuilder.create(repo, null);
   const authorSignature = NodeGit.Signature.now(owner, email);
 
   const fileBlobOids = await Promise.all(
-    files.map(({ content, filename }) => {
+    files.map(({content, filename}) => {
       const fileBuffer = Buffer.from(content);
-      return NodeGit.Blob.createFromBuffer(repo, fileBuffer, fileBuffer.length).then(oid => ({ oid, filename }));
+      return NodeGit.Blob.createFromBuffer(repo, fileBuffer, fileBuffer.length).then(oid => ({oid, filename}));
     })
   );
 
-  fileBlobOids.forEach(({ oid, filename }) => {
+  fileBlobOids.forEach(({oid, filename}) => {
     treeBuilder.insert(filename, oid, NodeGit.TreeEntry.FILEMODE.BLOB);
   });
 
@@ -98,11 +98,11 @@ const createRepo = async (repoData) => {
   });
 
   // add default labels for repository
-  const { id } = repository;
-  const newLabels = defaultLabels.map(label => ({ repositoryId: id, ...label }));
+  const {id} = repository;
+  const newLabels = defaultLabels.map(label => ({repositoryId: id, ...label}));
   await LabelRepository.bulkCreate(newLabels);
 
-  const initialData = repoHelper.generateInitialData({ ...repoData });
+  const initialData = repoHelper.generateInitialData({...repoData});
   // Initial data has to contain 'email' (of user) and 'files' in form of [ { filename, content }, {... ]
   if (initialData) {
     await initialCommit({
@@ -119,13 +119,13 @@ const createRepo = async (repoData) => {
   };
 };
 
-const checkName = async ({ owner, reponame }) => {
-  const { id } = await userRepository.getByUsername(owner);
+const checkName = async ({owner, reponame}) => {
+  const {id} = await userRepository.getByUsername(owner);
   const repository = await repoRepository.getByUserAndReponame(id, reponame);
   return Boolean(repository);
 };
 
-const isEmpty = async ({ owner, reponame }) => {
+const isEmpty = async ({owner, reponame}) => {
   try {
     let result;
     const pathToRepo = repoHelper.getPathToRepo(owner, reponame);
@@ -142,27 +142,27 @@ const isEmpty = async ({ owner, reponame }) => {
   }
 };
 
-const getByUserAndReponame = async ({ owner, reponame }) => {
+const getByUserAndReponame = async ({owner, reponame}) => {
   const user = await userRepository.getByUsername(owner);
   if (!user) {
     return Promise.reject(new CustomError(404, `User ${owner} not found`));
   }
-  const repository = await repoRepository.getByUserAndReponame(user.get({ plain: true }).id, reponame);
+  const repository = await repoRepository.getByUserAndReponame(user.get({plain: true}).id, reponame);
   if (!repository) {
     return Promise.reject(new CustomError(404, `Repository ${reponame} not found`));
   }
-  const branches = await branchRepository.getByRepoId(repository.get({ plain: true }).id);
+  const branches = await branchRepository.getByRepoId(repository.get({plain: true}).id);
   /* const branchesNames = branches.map((branch) => {
     const { name } = branch.get({ plain: true });
     return name;
   }); */
   return {
-    ...repository.get({ plain: true }),
+    ...repository.get({plain: true}),
     branches
   };
 };
 
-const updateByUserAndReponame = async ({ owner, reponame, data }) => {
+const updateByUserAndReponame = async ({owner, reponame, data}) => {
   const user = await userRepository.getByUsername(owner);
   if (!user) {
     return Promise.reject(new CustomError(404, `User ${owner} not found`));
@@ -170,7 +170,7 @@ const updateByUserAndReponame = async ({ owner, reponame, data }) => {
   return repoRepository.updateByUserAndReponame(user.id, reponame, data);
 };
 
-const deleteByUserAndReponame = async ({ owner, reponame }) => {
+const deleteByUserAndReponame = async ({owner, reponame}) => {
   const user = await userRepository.getByUsername(owner);
   if (!user) {
     return Promise.reject(new CustomError(404, `User ${owner} not found`));
@@ -179,14 +179,14 @@ const deleteByUserAndReponame = async ({ owner, reponame }) => {
 };
 
 const renameRepo = ({
-  reponame, newName, username, orgName
-}) => {
+                      reponame, newName, username, orgName
+                    }) => {
   const renameRepository = async (pathName) => {
     try {
       const oldDirectory = repoHelper.getPathToRepo(pathName, reponame);
       const newDirectory = repoHelper.getPathToRepo(pathName, newName);
       fs.renameSync(oldDirectory, newDirectory);
-      await updateByUserAndReponame({ owner: pathName, reponame, data: { name: newName } });
+      await updateByUserAndReponame({owner: pathName, reponame, data: {name: newName}});
       return true;
     } catch (e) {
       return e;
@@ -199,14 +199,14 @@ const renameRepo = ({
   renameRepository(orgName);
 };
 
-const deleteRepo = ({ reponame, username, orgName }) => {
+const deleteRepo = ({reponame, username, orgName}) => {
   const deleteRepository = async (pathName) => {
     try {
       const directory = repoHelper.getPathToRepo(pathName, reponame);
       await fs.remove(directory);
 
-      const { id: repositoryId } = await getByUserAndReponame({ owner: pathName, reponame });
-      await deleteByUserAndReponame({ owner: pathName, reponame });
+      const {id: repositoryId} = await getByUserAndReponame({owner: pathName, reponame});
+      await deleteByUserAndReponame({owner: pathName, reponame});
       await branchRepository.deleteByRepoId(repositoryId);
       await commitRepository.deleteByRepoId(repositoryId);
       return true;
@@ -222,8 +222,8 @@ const deleteRepo = ({ reponame, username, orgName }) => {
 };
 
 const getReposNames = async ({
-  user: username, isOwner, filter, limit
-}) => {
+                               user: username, isOwner, filter, limit
+                             }) => {
   const user = await userRepository.getByUsername(username);
   if (!user) {
     return Promise.reject(new CustomError(404, `User ${username} not found`));
@@ -234,10 +234,10 @@ const getReposNames = async ({
     sortByCreatedDateDesc: true
   };
   const repos = await repoRepository.getByUserWithOptions(user.id, isOwner, findOptions);
-  return repos.map(({ name }) => name);
+  return repos.map(({name}) => name);
 };
 
-const getReposData = async ({ username, isOwner }) => {
+const getReposData = async ({username, isOwner}) => {
   const user = await userRepository.getByUsername(username);
   if (!user) {
     return Promise.reject(new CustomError(404, `User ${username} not found`));
@@ -246,13 +246,13 @@ const getReposData = async ({ username, isOwner }) => {
 };
 
 const forkRepo = async ({
-  userId, username, owner, name, website, description, forkedFromRepoId
-}) => {
+                          userId, username, owner, name, website, description, forkedFromRepoId
+                        }) => {
   try {
     const source = repoHelper.getPathToRepo(owner, name);
     const target = repoHelper.getPathToRepo(username, name);
 
-    await fs.mkdir(target, { recursive: true });
+    await fs.mkdir(target, {recursive: true});
     await copydir(
       source,
       target,
@@ -269,7 +269,7 @@ const forkRepo = async ({
     const currentRepoBranches = await branchRepository.getAllRepoBranches(forkedFromRepoId);
     const currentRepoCommits = await commitRepository.getAllRepoCommits(forkedFromRepoId);
 
-    const { id } = await repoRepository.create({
+    const {id} = await repoRepository.create({
       userId,
       name,
       website,
@@ -277,11 +277,11 @@ const forkRepo = async ({
       forkedFromRepoId
     });
 
-    const branchesPromises = currentRepoBranches.map(branch => branchRepository.create({ ...branch, repositoryId: id }));
+    const branchesPromises = currentRepoBranches.map(branch => branchRepository.create({...branch, repositoryId: id}));
     await Promise.all(branchesPromises);
-    const commitPromises = currentRepoCommits.map(commit => commitRepository.create({ ...commit, repositoryId: id }));
+    const commitPromises = currentRepoCommits.map(commit => commitRepository.create({...commit, repositoryId: id}));
     await Promise.all(commitPromises);
-    return { status: true, username };
+    return {status: true, username};
   } catch (err) {
     return Promise.reject(new CustomError(500, err.message));
   }
@@ -292,7 +292,7 @@ const setStar = async (userId, repositoryId) => {
 
   const result = star
     ? await starRepository.deleteById(star.id)
-    : await starRepository.create({ userId, repositoryId });
+    : await starRepository.create({userId, repositoryId});
 
   return Number.isInteger(result) ? {} : starRepository.getStar(userId, repositoryId);
 };
@@ -303,18 +303,24 @@ const getRepositoryCollaborators = repositoryId => collaboratorRepository.getCol
 
 const getRepositoryForks = async repositoryId => {
   const originalRepositoryId = await repoHelper.getParentRepositoryId(repositoryId);
-  console.warn(3, originalRepositoryId);
-  return getRepositoryForksById(originalRepositoryId);
+  const repo = (await getRepoData(originalRepositoryId)).get({plain: true});
+  repo['forks'] = await getRepositoryForksById(originalRepositoryId, 0);
+  return repo;
 };
 
-const getRepositoryForksById = async repositoryId => {
-  const forksList = await repoRepository.getRepositoryForks(repositoryId);
-  console.warn(1, repositoryId);
-  return forksList.map(fork => {
-   console.warn(2, fork.id);
-   return {...fork, forks: [getRepositoryForksById(fork.id)]};
- })
+const getRepositoryForksById = async (repositoryId, level) => {
+  level++;
+  const forkList = (await repoRepository.getRepositoryForks(repositoryId))
+    .map(fork => fork.get({plain: true}));
 
+  const forkIds = forkList.map(fork => fork.id);
+  const childForkList = await Promise.all(forkIds.map(id => getRepositoryForksById(id, level)));
+
+  for (let i=0;i<forkList.length;i++){
+    forkList[i]['forks'] = childForkList[i] ;
+  }
+
+  return forkList;
 };
 
 module.exports = {
