@@ -242,7 +242,9 @@ class IssuesPullsList extends React.Component {
     } = this.state;
 
     const filteredAuthorList = authorList.filter(author => author.username.includes(authorDropdownFilter));
-    const filteredAssigneeList = assigneeList.filter(assignee => assignee.username.includes(assigneeDropdownFilter));
+    const filteredAssigneeList = assigneeList.filter(
+      assignee => assignee && assignee.username && assignee.username.includes(assigneeDropdownFilter)
+    );
 
     return !loading ? (
       <Segment basic>
