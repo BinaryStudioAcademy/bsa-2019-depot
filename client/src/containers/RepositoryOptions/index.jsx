@@ -93,7 +93,7 @@ class RepositoryOptions extends React.Component {
   onClickRename = ({ name }) => {
     const {
       owner,
-      repoInfo: { id }
+      repoInfo: { id, isPublic }
     } = this.state;
     const { oldName } = this;
     const { renameRepo, history } = this.props;
@@ -104,7 +104,9 @@ class RepositoryOptions extends React.Component {
       oldName,
       name: transformedName
     });
-    elasticHelper.updateRepo(id, transformedName, owner);
+    if (isPublic) {
+      elasticHelper.updateRepo(id, transformedName, owner);
+    }
     history.push(`/${owner}/${transformedName}/settings`);
   };
 
