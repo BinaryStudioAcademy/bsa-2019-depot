@@ -175,10 +175,10 @@ class LabelItem extends React.Component {
                   <Grid.Column width={3}>
                     <InputError name="name" />
                   </Grid.Column>
-                  <Grid.Column width={6}>
+                  <Grid.Column width={5}>
                     <InputError name="description" />
                   </Grid.Column>
-                  <Grid.Column width={6}>
+                  <Grid.Column width={3}>
                     <InputError name="color" />
                   </Grid.Column>
                 </Grid.Row>

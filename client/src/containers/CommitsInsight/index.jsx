@@ -30,8 +30,8 @@ class CommitsInsight extends Component {
     const { id: repositoryId } = await getRepositoryByOwnerAndName({ username, reponame });
 
     const { byPeriods, byDaysOfWeek } = await getCommitActivity(repositoryId);
-    const byDaysOfWeekMax = byDaysOfWeek.reduce((max, { value }) => (value > max ? value : max), 0);
-    const byPeriodsMax = byPeriods.reduce((max, { value }) => (value > max ? value : max), 0);
+    const byDaysOfWeekMax = byDaysOfWeek && byDaysOfWeek.reduce((max, { value }) => (value > max ? value : max), 0);
+    const byPeriodsMax = byPeriods && byPeriods.reduce((max, { value }) => (value > max ? value : max), 0);
     await this.setState({ repositoryId, loading: false, byPeriods, byDaysOfWeek, byDaysOfWeekMax, byPeriodsMax });
   }
 

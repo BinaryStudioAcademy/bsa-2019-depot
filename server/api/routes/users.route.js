@@ -184,18 +184,33 @@ router.get('/:username/pulls', async (req, res, next) => {
 
     const { id: userId } = await getUserByUsername(username);
     const open = await getPullCount({
-      userId, isOpened: true, sort, owner, reviewRequests
+      userId,
+      isOpened: true,
+      sort,
+      owner,
+      reviewRequests
     });
     const close = await getPullCount({
-      userId, isOpened: false, sort, owner, reviewRequests
+      userId,
+      isOpened: false,
+      sort,
+      owner,
+      reviewRequests
     });
     const owners = await getAllPullsOwners(userId);
     const pulls = await getUserPulls({
-      userId, isOpened, sort, owner, reviewRequests
+      userId,
+      isOpened,
+      sort,
+      owner,
+      reviewRequests
     });
 
     res.send({
-      open, close, owners, pulls
+      open,
+      close,
+      owners,
+      pulls
     });
   } catch (error) {
     next(error);

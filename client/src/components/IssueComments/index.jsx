@@ -220,12 +220,13 @@ class IssueComments extends React.Component {
   }
 
   isOwnIssue() {
-    const { userId } = this.props;
+    const { userId, userName, match } = this.props;
+    const { username } = match.params;
     const {
       isAccessGranted,
       currentIssue: { userId: issueUserId }
     } = this.state;
-    return userId === issueUserId || isAccessGranted;
+    return username === userName || userId === issueUserId || isAccessGranted;
   }
 
   redirectToCreateNewIssue() {

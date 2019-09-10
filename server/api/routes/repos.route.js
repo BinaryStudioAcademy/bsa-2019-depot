@@ -9,10 +9,15 @@ const {
   forkRepo,
   setStar,
   updateByUserAndReponame,
-  getRepositoryForks
+  getRepositoryForks,
+  getAvailableAssigneesByRepoId
 } = require('../services/repo.service');
 const {
-  getCommits, getCommitDiff, getCommitCount, getCommitActivityData
+  getCommits,
+  getCommitDiff,
+  getCommitCount,
+  getCommitActivityData,
+  getUsersCommitsByRepositoryId
 } = require('../services/commit.service');
 const { deleteStarsByRepoId } = require('../services/star.service');
 const {
@@ -310,6 +315,18 @@ router
   .get('/:repositoryId/commit-activity-data', (req, res, next) => {
     const { repositoryId } = req.params;
     getCommitActivityData(repositoryId)
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .get('/:repositoryId/available-assignees', (req, res, next) => {
+    const { repositoryId } = req.params;
+    getAvailableAssigneesByRepoId(repositoryId)
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .get('/:repositoryId/commit-activity-data-by-user', (req, res, next) => {
+    const { repositoryId } = req.params;
+    getUsersCommitsByRepositoryId(repositoryId)
       .then(data => res.send(data))
       .catch(next);
   });
