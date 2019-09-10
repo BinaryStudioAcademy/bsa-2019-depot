@@ -128,5 +128,8 @@ module.exports = (models) => {
   Issue.hasMany(IssueAssignee, { foreignKey: 'issueId' });
   IssueAssignee.belongsTo(Issue);
   User.hasMany(IssueAssignee, { foreignKey: 'assigneeId' });
-  IssueAssignee.belongsTo(User);
+  IssueAssignee.belongsTo(User, {
+    as: 'assignee',
+    foreignKey: 'assigneeId'
+  });
 };

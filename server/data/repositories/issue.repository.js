@@ -131,6 +131,7 @@ class IssueRepository extends BaseRepository {
           attributes: ['id'],
           include: {
             model: UserModel,
+            as: 'assignee',
             attributes: ['id', 'name', 'username', 'imgUrl']
           }
         }
@@ -190,6 +191,7 @@ class IssueRepository extends BaseRepository {
           attributes: ['id'],
           include: {
             model: UserModel,
+            as: 'assignee',
             attributes: ['id', 'name', 'username', 'imgUrl']
           }
         }
@@ -312,6 +314,7 @@ class IssueRepository extends BaseRepository {
           attributes: ['id'],
           include: {
             model: UserModel,
+            as: 'assignee',
             attributes: ['id', 'name', 'username', 'imgUrl']
           }
         }
@@ -362,6 +365,7 @@ class IssueRepository extends BaseRepository {
           attributes: ['id'],
           include: {
             model: UserModel,
+            as: 'assignee',
             attributes: ['id', 'name', 'username', 'imgUrl']
           }
         }

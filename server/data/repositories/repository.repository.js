@@ -1,7 +1,12 @@
 const { Op } = require('sequelize');
 const BaseRepository = require('./base.repository');
 const {
-  RepositoryModel, UserModel, StarModel, BranchModel, LanguageStatsModel, LanguageModel
+  RepositoryModel,
+  UserModel,
+  StarModel,
+  BranchModel,
+  LanguageStatsModel,
+  LanguageModel
 } = require('../models/index');
 const sequelize = require('../db/connection');
 
@@ -159,7 +164,7 @@ class RepositoryRepository extends BaseRepository {
       where: { id },
       include: [
         {
-          model: UserModel,
+          model: UserModel
         }
       ]
     });
