@@ -5,11 +5,13 @@ const {
   renameRepo,
   deleteRepo,
   checkName,
+  getRepoData,
   isEmpty,
   forkRepo,
   setStar,
   updateByUserAndReponame,
-  getRepositoryForks
+  getRepositoryForks,
+  getRepositoryForksById
 } = require('../services/repo.service');
 const {
   getCommits, getCommitDiff, getCommitCount, getCommitActivityData
@@ -302,12 +304,30 @@ router
   .get('/:repositoryId/forks', (req, res, next) => {
     const { repositoryId } = req.params;
     getRepositoryForks(repositoryId)
-      .then(data => res.send(data))
+      .then((data) => {
+        Promise.all([
+          getRepoData(data[0].forkedFromRepoId),
+          data
+        ])
+          .then((result) => {
+            res.send({
+              original: result[0],
+              forks: result[1]
+            });
+          })
+          .catch(next);
+      })
       .catch(next);
   })
   .get('/:repositoryId/commit-activity-data', (req, res, next) => {
     const { repositoryId } = req.params;
     getCommitActivityData(repositoryId)
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .get('/:repositoryId', (req, res, next) => {
+    const { repositoryId } = req.params;
+    getRepoData(repositoryId)
       .then(data => res.send(data))
       .catch(next);
   });

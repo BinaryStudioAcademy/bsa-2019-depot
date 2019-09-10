@@ -301,7 +301,21 @@ const getRepoData = async repositoryId => repoRepository.getRepositoryById(repos
 
 const getRepositoryCollaborators = repositoryId => collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId);
 
-const getRepositoryForks = async repositoryId => repoRepository.getRepositoryForks(repositoryId);
+const getRepositoryForks = async repositoryId => {
+  const originalRepositoryId = await repoHelper.getParentRepositoryId(repositoryId);
+  console.warn(3, originalRepositoryId);
+  return getRepositoryForksById(originalRepositoryId);
+};
+
+const getRepositoryForksById = async repositoryId => {
+  const forksList = await repoRepository.getRepositoryForks(repositoryId);
+  console.warn(1, repositoryId);
+  return forksList.map(fork => {
+   console.warn(2, fork.id);
+   return {...fork, forks: [getRepositoryForksById(fork.id)]};
+ })
+
+};
 
 module.exports = {
   createRepo,
@@ -317,5 +331,6 @@ module.exports = {
   updateByUserAndReponame,
   getRepoData,
   getRepositoryCollaborators,
-  getRepositoryForks
+  getRepositoryForks,
+  getRepositoryForksById
 };
