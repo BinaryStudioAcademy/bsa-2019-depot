@@ -17,3 +17,30 @@ export const getPullComments = async pullId => {
   });
   return response.json();
 };
+
+export const mergePull = async request => {
+  const { id } = request;
+  const response = await callWebApi({
+    endpoint: `${MOBILE_SERVER}/api/pulls/${id}/merge`,
+    type: 'PUT'
+  });
+  return response.json();
+};
+
+export const closePull = async request => {
+  const { id } = request;
+  const response = await callWebApi({
+    endpoint: `${MOBILE_SERVER}/api/pulls/${id}/close`,
+    type: 'PUT'
+  });
+  return response.json();
+};
+
+export const reopenPull = async request => {
+  const { id } = request;
+  const response = await callWebApi({
+    endpoint: `${MOBILE_SERVER}/api/pulls/${id}/reopen`,
+    type: 'PUT'
+  });
+  return response.json();
+};

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, FlatList, TextInput, TouchableOpacity, ScrollView } from 'react-native';
-import { getPullComments } from '../../services/pullsService';
+import { getPullComments, mergePull, closePull, reopenPull } from '../../services/pullsService';
 import PullComment from '../../components/PullComment';
 import moment from 'moment';
 import styles from './styles';
@@ -13,7 +13,8 @@ class IssueView extends Component {
     super(props);
     this.state = {
       pullComments: [],
-      comment: ''
+      comment: '',
+      pullData: []
     };
   }
 
@@ -100,7 +101,29 @@ class IssueView extends Component {
   //   navigation.navigate('Issues');
   // };
 
+  handleMerge = async () => {
+    const id = this.state.pullData.id;
+    await mergePull({ id });
+    this.props.navigation.goBack();
+  };
+
+  handleCLose = async () => {
+    console.log('handleCLose');
+    const id = this.state.pullData.id;
+    console.log(id);
+    const result = await closePull({ id });
+    console.log(result);
+    this.props.navigation.goBack();
+  };
+
+  handleReopen = async () => {
+    const id = this.state.pullData.id;
+    await reopenPull({ id });
+    this.props.navigation.goBack();
+  };
+
   render() {
+    console.log('state', this.state);
     console.log(this.props);
     const { pullComments } = this.state;
     const { data, PullIcon } = this.props.navigation.state.params;
@@ -108,12 +131,12 @@ class IssueView extends Component {
     if (data.prstatus.name === 'OPEN') {
       PRButtons = (
         <>
-          <Button title="Merge PR" type="outline" />
-          <Button title="Close PR" type="outline" />
+          <Button title="Merge PR" type="outline" onPress={this.handleMerge} />
+          <Button title="Close PR" type="outline" onPress={this.handleCLose} />
         </>
       );
     } else if (data.prstatus.name === 'CLOSED') {
-      PRButtons = <Button title="Reopen PR" type="outline" />;
+      PRButtons = <Button title="Reopen PR" type="outline" onPress={this.handleReopen} />;
     }
 
     return (
@@ -155,15 +178,6 @@ class IssueView extends Component {
               <Text style={styles.commentText}>{'Comment'}</Text>
             </TouchableOpacity>
             {PRButtons}
-            {/*<TouchableOpacity style={styles.closeButton} onPress={data.isOpened ? this.handleClose : this.handleReopen}>*/}
-            {/*  <Icon*/}
-            {/*    name={data.isOpened ? 'issue-closed' : 'issue-reopened'}*/}
-            {/*    size={15}*/}
-            {/*    color="#DC6767"*/}
-            {/*    style={styles.closeIcon}*/}
-            {/*  />*/}
-            {/*  <Text style={styles.closeText}>{data.isOpened ? 'Close PR' : 'Reopen PR'}</Text>*/}
-            {/*</TouchableOpacity>*/}
           </View>
         </View>
       </ScrollView>
