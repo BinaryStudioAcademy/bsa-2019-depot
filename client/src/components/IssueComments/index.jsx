@@ -11,7 +11,9 @@ import {
   updateIssue,
   closeIssue,
   reopenIssue,
-  deleteIssue
+  deleteIssue,
+  getAvailableAssignees,
+  setAssigneesToIssue
 } from '../../services/issuesService';
 import { getLabels, setLabelsToIssue } from '../../services/labelsService';
 import { createIssueComment, updateIssueComment, deleteIssueComment } from '../../services/issueCommentsService';
@@ -58,6 +60,7 @@ class IssueComments extends React.Component {
     this.onIssueToggle = this.onIssueToggle.bind(this);
     this.redirectToCreateNewIssue = this.redirectToCreateNewIssue.bind(this);
     this.setLabelsToIssue = this.setLabelsToIssue.bind(this);
+    this.setAssigneesToIssue = this.setAssigneesToIssue.bind(this);
   }
 
   async componentDidMount() {
@@ -75,6 +78,9 @@ class IssueComments extends React.Component {
 
     const labels = await getLabels(repositoryId);
     const { issueLabels: currentLabels } = currentIssue;
+
+    const assignees = await getAvailableAssignees(id);
+    const currentAssignees = currentIssue.issueAssignees.map(issueAssignee => issueAssignee.assignee);
 
     const isAccessGranted = await getWriteUserPermissions(username, reponame, userId);
 
@@ -96,6 +102,8 @@ class IssueComments extends React.Component {
       questions: soQuestions,
       labels,
       currentLabels,
+      assignees,
+      currentAssignees,
       loading: false
     });
     this.initSocket();
@@ -212,12 +220,13 @@ class IssueComments extends React.Component {
   }
 
   isOwnIssue() {
-    const { userId } = this.props;
+    const { userId, userName, match } = this.props;
+    const { username } = match.params;
     const {
       isAccessGranted,
       currentIssue: { userId: issueUserId }
     } = this.state;
-    return userId === issueUserId || isAccessGranted;
+    return username === userName || userId === issueUserId || isAccessGranted;
   }
 
   redirectToCreateNewIssue() {
@@ -231,8 +240,24 @@ class IssueComments extends React.Component {
     return setLabelsToIssue(labelIds, issueId);
   }
 
+  async setAssigneesToIssue(assigneeIds) {
+    const {
+      currentIssue: { id: issueId }
+    } = this.state;
+    return setAssigneesToIssue(assigneeIds, issueId);
+  }
+
   render() {
-    const { currentIssue, issueComments, loading, questions, labels, currentLabels } = this.state;
+    const {
+      currentIssue,
+      issueComments,
+      loading,
+      questions,
+      labels,
+      currentLabels,
+      assignees,
+      currentAssignees
+    } = this.state;
     const { userImg, userName, userId } = this.props;
 
     return loading || questions.length ? (
@@ -347,6 +372,9 @@ class IssueComments extends React.Component {
               labels={labels}
               currentLabels={currentLabels}
               setLabels={this.setLabelsToIssue}
+              assignees={assignees}
+              currentAssignees={currentAssignees}
+              setAssignees={this.setAssigneesToIssue}
             />
           </Grid.Column>
         </Grid>

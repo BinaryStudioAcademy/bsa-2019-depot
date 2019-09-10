@@ -12,7 +12,9 @@ const {
   getUsersOrganizations,
   getUsersForCollaboratorsAddition,
   uploadPhoto,
-  deletePhoto
+  deletePhoto,
+  setStatus,
+  getStatus
 } = require('../services/user.service');
 const { getReposData, getByUserAndReponame } = require('../services/repo.service');
 const { getCommitsAndCreatedRepoByDate } = require('../services/commit.service');
@@ -106,7 +108,7 @@ router.get('/:username/contribution-activity', (req, res, next) => {
 router.get('/:username/repos', (req, res, next) => {
   const { username } = req.params;
   const isOwner = req.user.get({ plain: true }).username === username;
-  getReposData({ username, isOwner })
+  getReposData({ username, isOwner, userId: req.user.id })
     .then(repos => res.send(repos))
     .catch(next);
 });
@@ -182,18 +184,33 @@ router.get('/:username/pulls', async (req, res, next) => {
 
     const { id: userId } = await getUserByUsername(username);
     const open = await getPullCount({
-      userId, isOpened: true, sort, owner, reviewRequests
+      userId,
+      isOpened: true,
+      sort,
+      owner,
+      reviewRequests
     });
     const close = await getPullCount({
-      userId, isOpened: false, sort, owner, reviewRequests
+      userId,
+      isOpened: false,
+      sort,
+      owner,
+      reviewRequests
     });
     const owners = await getAllPullsOwners(userId);
     const pulls = await getUserPulls({
-      userId, isOpened, sort, owner, reviewRequests
+      userId,
+      isOpened,
+      sort,
+      owner,
+      reviewRequests
     });
 
     res.send({
-      open, close, owners, pulls
+      open,
+      close,
+      owners,
+      pulls
     });
   } catch (error) {
     next(error);
@@ -216,7 +233,8 @@ router.get('/:username/repos/:reponame/pulls/:number', (req, res, next) => {
 
 router.get('/:userId/pinned-repositories', (req, res, next) => {
   const { userId } = req.params;
-  PinnedReposService.getPinnedRepos(userId)
+  const isOwner = req.user.get({ plain: true }).id === userId;
+  PinnedReposService.getPinnedRepos(userId, isOwner)
     .then(result => res.send(result))
     .catch(next);
 });
@@ -224,6 +242,21 @@ router.get('/:userId/pinned-repositories', (req, res, next) => {
 router.post('/set-pinned-repos', (req, res, next) => {
   const { userId, repositories } = req.body;
   PinnedReposService.setPinnedRepos(userId, repositories)
+    .then(result => res.send(result))
+    .catch(next);
+});
+
+router.post('/set-status', (req, res, next) => {
+  const { status } = req.body;
+  const { id: userId } = req.user;
+  setStatus(userId, status)
+    .then(result => res.send(result))
+    .catch(next);
+});
+
+router.get('/:username/status', (req, res, next) => {
+  const { username } = req.params;
+  getStatus(username)
     .then(result => res.send(result))
     .catch(next);
 });

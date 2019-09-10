@@ -3,26 +3,21 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { Grid, Header, Divider, Step, Icon, Button, Input } from 'semantic-ui-react';
 import { Formik, Form, Field } from 'formik';
-import { Link } from 'react-router-dom';
 import styles from './styles.module.scss';
 import { createOrg } from '../../routines/routines';
 import * as Yup from 'yup';
 import { InputError } from '../../components/InputError';
 import { checkUsernameExists } from '../../services/userService';
 import * as elasticHelper from '../../helpers/elasticsearchHelper';
-
+import debounce from 'debounce-promise';
 import PropTypes from 'prop-types';
 
-const isOrgNameValid = async username => {
-  const { usernameExists } = await checkUsernameExists(username);
+const isUsernameValid = async username => {
+  const { usernameExists } = await debouncedCheckUsernameExists(username);
   return !usernameExists;
 };
 
-Yup.addMethod(Yup.string, 'validateOrgName', function() {
-  return this.test('validateOrgName', 'This name is already taken', function(value) {
-    return isOrgNameValid(value);
-  });
-});
+const debouncedCheckUsernameExists = debounce(checkUsernameExists, 500);
 
 class CreateOrganization extends Component {
   renderField = ({ field }) => <Input fluid {...field} />;
@@ -32,7 +27,7 @@ class CreateOrganization extends Component {
       .min(2, 'Too Short!')
       .max(50, 'Too Long!')
       .required('Required')
-      .validateOrgName('This name is already taken'),
+      .test('username', 'This username is already taken', isUsernameValid),
     email: Yup.string()
       .email('Invalid email')
       .required('Required')
@@ -111,13 +106,6 @@ class CreateOrganization extends Component {
                     <InputError name="email" />
                   </Grid.Column>
                 </Grid>
-
-                <Divider hidden />
-                <div>
-                  By clicking on "Create organization" below, you are agreeing to the{' '}
-                  <Link to="#">Terms of Service</Link>. For more information about Depot's privacy practices, see the
-                  <Link to="#"> Depot Privacy Statement</Link>.
-                </div>
                 <Divider hidden />
                 <Button color="blue" type="submit" disabled={loading || !isValid || !touched}>
                   Create organization

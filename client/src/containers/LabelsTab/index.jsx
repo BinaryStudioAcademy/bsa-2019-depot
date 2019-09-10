@@ -55,7 +55,7 @@ class LabelsTab extends React.Component {
   setSearchText = e => {
     this.setState({
       ...this.state,
-      searchText: e.target.value
+      searchText: e.target.value.toLowerCase()
     });
   };
 

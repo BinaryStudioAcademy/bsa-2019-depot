@@ -96,7 +96,9 @@ const getUsersForCollaboratorsAddition = async ({ username, repositoryId, userId
   const users = (await UserRepository.findUserByLetter(username)).filter(({ id }) => id !== userId);
 
   const repos = (await CollaboratorRepository.findRepoById(repositoryId)).map(data => data.userId);
-  const { user: { username: owner } } = await RepoRepository.getRepoOwnerByRepoId(repositoryId);
+  const {
+    user: { username: owner }
+  } = await RepoRepository.getRepoOwnerByRepoId(repositoryId);
   return users
     .filter(({ id }) => !repos.includes(id))
     .map(({ username: name }) => name)
@@ -107,6 +109,11 @@ const getUsersForCollaboratorsAddition = async ({ username, repositoryId, userId
 const getIssuesAuthors = async repositoryId => UserRepository.getIssuesAuthors(repositoryId);
 
 const getPullsAuthors = async repositoryId => UserRepository.getPullsAuthors(repositoryId);
+const getIssuesAssignees = async repositoryId => UserRepository.getIssuesAssignees(repositoryId);
+
+const setStatus = async (userId, status) => UserRepository.setStatusById(userId, status);
+
+const getStatus = async username => UserRepository.getStatusByUsername(username);
 
 module.exports = {
   getUserById,
@@ -123,5 +130,8 @@ module.exports = {
   uploadPhoto,
   deletePhoto,
   getIssuesAuthors,
-  getPullsAuthors
+  getPullsAuthors,
+  setStatus,
+  getStatus,
+  getIssuesAssignees
 };

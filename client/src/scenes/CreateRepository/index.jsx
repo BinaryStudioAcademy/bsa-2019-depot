@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Container, Form, Dropdown, Input, Radio, Checkbox, Divider, Button } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
 import { Formik, Field } from 'formik';
 import Octicon, { getIconByName } from '@primer/octicons-react';
 import { InputError } from '../../components/InputError';
@@ -145,11 +144,7 @@ class CreateRepository extends React.Component {
       <Container>
         <Divider hidden />
         <h1 className={styles.title}>Create a new repository</h1>
-        <p>
-          A repository contains all project files, including the revision history. Already have a project repository
-          elsewhere?
-        </p>
-        <Link to="/">Import a repository.</Link>
+        <p>A repository contains all project files, including the revision history.</p>
         <Divider section />
         <Form onSubmit={handleSubmit}>
           <Form.Group>

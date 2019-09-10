@@ -40,12 +40,12 @@ class RepositoryItem extends React.Component {
         const { repoBranches } = this.state;
 
         let allRepoCommits = [];
-        repoBranches.forEach(async branch => {
+        repoBranches.forEach(branch => {
           const allBranchCommits = this.getRepoCommits(repoId, branch.name);
           allRepoCommits.push(allBranchCommits);
         });
 
-        Promise.all(allRepoCommits).then(data => {
+        await Promise.all(allRepoCommits).then(data => {
           const allRepoCommitsSorted = data.flat().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
           const lastCommitDate = moment(allRepoCommitsSorted[0].createdAt).fromNow();
           this.setState({ repoCommits: allRepoCommitsSorted, updatedAt: lastCommitDate });
@@ -125,13 +125,16 @@ class RepositoryItem extends React.Component {
 
   render() {
     const {
-      repo: { name, isStar, isPublic },
+      repo: { name, isStar, isPublic, defaultBranch },
       username,
       type
     } = this.props;
     const { updatedAt, isEmpty, commitsPerYear } = this.state;
     const starsCount = Number(this.props.repo.starsCount);
     const repoType = isPublic ? '' : 'Private';
+
+    const hasLanguageStats = defaultBranch && defaultBranch.languageStats && defaultBranch.languageStats.length;
+    const language = hasLanguageStats ? defaultBranch.languageStats[0].language : null;
 
     return (
       <div className={styles.repo_item}>
@@ -141,11 +144,14 @@ class RepositoryItem extends React.Component {
             {!isPublic && <span className={styles.repoTypeLabel}>{repoType}</span>}
           </h3>
           <div className="repo-info">
-            <span className={styles.repo_info_item}>
-              <span className={styles.repo_item_lang}>
-                <span></span>JavaScript
+            {language && (
+              <span className={styles.repo_info_item}>
+                <span className={styles.repo_item_lang}>
+                  <span className={styles.languageColorDot} style={{ backgroundColor: language.color }} />
+                  {language.name}
+                </span>
               </span>
-            </span>
+            )}
             {starsCount ? (
               <span className={styles.repo_info_item}>
                 <StarLink href={`${username}/${name}/stargazers`} starsCount={starsCount} />

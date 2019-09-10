@@ -1,11 +1,29 @@
 const { Op } = require('sequelize');
 const BaseRepository = require('./base.repository');
-const { RepositoryModel, UserModel, StarModel } = require('../models/index');
+const {
+  RepositoryModel,
+  UserModel,
+  StarModel,
+  BranchModel,
+  LanguageStatsModel,
+  LanguageModel
+} = require('../models/index');
 const sequelize = require('../db/connection');
 
 class RepositoryRepository extends BaseRepository {
   addRepository({ ...repositoryData }) {
     return this.create(repositoryData);
+  }
+
+  getById(repositoryId) {
+    return this.model.findOne({
+      where: { id: repositoryId },
+      include: {
+        model: BranchModel,
+        as: 'defaultBranch',
+        attributes: ['id', 'name']
+      }
+    });
   }
 
   getByUser(userId) {
@@ -38,6 +56,18 @@ class RepositoryRepository extends BaseRepository {
         {
           model: StarModel,
           attributes: ['userId']
+        },
+        {
+          model: BranchModel,
+          as: 'defaultBranch',
+          include: [
+            {
+              model: LanguageStatsModel,
+              include: [LanguageModel],
+              order: [['percentage', 'DESC']],
+              limit: 1
+            }
+          ]
         }
       ]
     };
@@ -96,6 +126,16 @@ class RepositoryRepository extends BaseRepository {
             WHERE "repository"."id" = "pullrequests"."repositoryId"
             AND "pullrequests"."deletedAt" IS NULL)`),
             'pullCount'
+          ],
+          [
+            sequelize.literal(`
+            (SELECT COUNT(DISTINCT "commits"."userId")
+            FROM "commits"
+            INNER JOIN "users"
+            ON "users"."id" = "commits"."userId"
+            AND "commits"."deletedAt" IS NULL
+            AND "commits"."repositoryId" = "repository"."id")`),
+            'contributorsCount'
           ]
         ]
       },
@@ -110,6 +150,11 @@ class RepositoryRepository extends BaseRepository {
               attributes: ['id', 'username']
             }
           ]
+        },
+        {
+          model: BranchModel,
+          as: 'defaultBranch',
+          attributes: ['id', 'name']
         },
         {
           model: UserModel,
@@ -145,8 +190,7 @@ class RepositoryRepository extends BaseRepository {
       where: { id },
       include: [
         {
-          model: UserModel,
-          attributes: ['username']
+          model: UserModel
         }
       ]
     });

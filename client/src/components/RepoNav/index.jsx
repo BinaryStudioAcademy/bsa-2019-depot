@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button, Header, Dropdown, Popup } from 'semantic-ui-react';
-import Octicon, { getIconByName } from '@primer/octicons-react';
 import CopyableInput from '../../components/CopyableInput';
 
 import styles from './styles.module.scss';
@@ -10,6 +9,7 @@ import styles from './styles.module.scss';
 const RepoNav = props => {
   const { isOwn, branch, branches, onBranchChange, onCreateFile, match } = props;
   const { username, reponame } = match.params;
+  const [branchFilter, setBranchFilter] = useState('');
 
   function handleBranchChange(event, data) {
     const { value } = data;
@@ -19,6 +19,20 @@ const RepoNav = props => {
   function handleCreatePull() {
     const { history } = props;
     history.push(`/${username}/${reponame}/compare`);
+  }
+
+  function handleBranchFilterChange({ target: { value } }) {
+    setBranchFilter(value);
+  }
+
+  function handleBranchFilterClick(e) {
+    e.stopPropagation();
+  }
+
+  function handleBranchFilterKeyDown(e) {
+    if (e.key === 'Enter') {
+      setBranchFilter('');
+    }
   }
 
   const url = `git@${window.location.host}:${username}/${reponame}.git`;
@@ -39,20 +53,26 @@ const RepoNav = props => {
               <Dropdown.SearchInput
                 type="text"
                 className={styles.searchBranchInput}
-                placeholder="Find or create a branch"
+                placeholder="Find branch"
+                onChange={handleBranchFilterChange}
+                onClick={handleBranchFilterClick}
+                onKeyDown={handleBranchFilterKeyDown}
+                value={branchFilter}
               />
               <Dropdown.Divider />
-              <Dropdown.Header content="branch" as="h4" />
-              {branches.map((branch, index) => (
-                <Dropdown.Item
-                  key={index}
-                  onClick={handleBranchChange}
-                  value={branch}
-                  className={styles.branchesMenuItem}
-                >
-                  {branch}
-                </Dropdown.Item>
-              ))}
+              <Dropdown.Header content="branch" as="h4" className={styles.branchHeader} />
+              {branches
+                .filter(branch => branch.includes(branchFilter.toLowerCase()))
+                .map((branch, index) => (
+                  <Dropdown.Item
+                    key={index}
+                    onClick={handleBranchChange}
+                    value={branch}
+                    className={styles.branchesMenuItem}
+                  >
+                    {branch}
+                  </Dropdown.Item>
+                ))}
             </React.Fragment>
           </Dropdown.Menu>
         </Dropdown>
@@ -81,21 +101,11 @@ const RepoNav = props => {
         >
           <div className={styles.repoPopupBody}>
             <Header className={styles.readmeHeader} as="h4">
-              <div>
-                Clone with SSH <Octicon className={styles.actionButton} icon={getIconByName('question')} />
-              </div>
+              <div>Clone with SSH</div>
             </Header>
             <p>Use a password protected SSH key.</p>
             <CopyableInput url={url} />
           </div>
-          <Button.Group className={styles.repoPopupActions} attached="bottom">
-            <Button compact className={styles.repoPopupAction}>
-              Open in Desktop
-            </Button>
-            <Button compact className={styles.repoPopupAction}>
-              Download ZIP
-            </Button>
-          </Button.Group>
         </Popup>
       </div>
     </div>

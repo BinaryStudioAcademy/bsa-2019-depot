@@ -133,3 +133,22 @@ export const getPinnedRepos = async userId => {
   });
   return response.json();
 };
+
+export const setStatus = async status => {
+  const response = await callWebApi({
+    endpoint: '/api/users/set-status',
+    type: 'POST',
+    request: {
+      status
+    }
+  });
+  return response.json();
+};
+
+export const getStatus = async username => {
+  const response = await callWebApi({
+    endpoint: `/api/users/${username}/status`,
+    type: 'GET'
+  });
+  return response.json();
+};

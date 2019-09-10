@@ -10,10 +10,15 @@ const {
   forkRepo,
   setStar,
   updateByUserAndReponame,
-  getRepositoryForks
+  getRepositoryForks,
+  getAvailableAssigneesByRepoId
 } = require('../services/repo.service');
 const {
-  getCommits, getCommitDiff, getCommitCount, getCommitActivityData
+  getCommits,
+  getCommitDiff,
+  getCommitCount,
+  getCommitActivityData,
+  getUsersCommitsByRepositoryId
 } = require('../services/commit.service');
 const { deleteStarsByRepoId } = require('../services/star.service');
 const {
@@ -233,12 +238,14 @@ router
     try {
       const issues = await issueService.getRepoIssues(repositoryId, sort, authorId, title, isOpened);
       const authors = await userService.getIssuesAuthors(repositoryId);
+      const assignees = await userService.getIssuesAssignees(repositoryId);
       const openCount = await issueService.getIssueCount(repositoryId, true);
       const closedCount = await issueService.getIssueCount(repositoryId, false);
       res.send({
         openCount,
         closedCount,
         authors,
+        assignees,
         issues
       });
     } catch (e) {
@@ -315,6 +322,18 @@ router
   .get('/:repositoryId', (req, res, next) => {
     const { repositoryId } = req.params;
     getRepoData(repositoryId)
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .get('/:repositoryId/available-assignees', (req, res, next) => {
+    const { repositoryId } = req.params;
+    getAvailableAssigneesByRepoId(repositoryId)
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .get('/:repositoryId/commit-activity-data-by-user', (req, res, next) => {
+    const { repositoryId } = req.params;
+    getUsersCommitsByRepositoryId(repositoryId)
       .then(data => res.send(data))
       .catch(next);
   });

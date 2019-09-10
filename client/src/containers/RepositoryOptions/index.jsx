@@ -10,6 +10,7 @@ import { renameRepo, deleteRepo } from './actions';
 import styles from './styles.module.scss';
 import { getRepositoryByOwnerAndName, changeRepoType } from '../../services/repositoryService';
 import * as elasticHelper from '../../helpers/elasticsearchHelper';
+import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 
 const renderDangerField = (header, description, buttonName, clickHandler) => (
   <Message className={styles.dangerField}>
@@ -38,7 +39,8 @@ class RepositoryOptions extends React.Component {
     this.state = {
       name: reponame,
       owner: username,
-      repoInfo: null
+      repoInfo: null,
+      isAccessGranted: null
     };
   }
 
@@ -48,9 +50,14 @@ class RepositoryOptions extends React.Component {
       .required('Required')
   });
 
-  componentDidMount() {
+  async componentDidMount() {
     const { owner, name } = this.state;
-    const { fetchRepoSettings } = this.props;
+    const { fetchRepoSettings, match, userId } = this.props;
+    const { username, reponame } = match.params;
+    const isAccessGranted = await getWriteUserPermissions(username, reponame, userId);
+    this.setState({
+      isAccessGranted
+    });
     fetchRepoSettings({
       owner,
       name
@@ -70,7 +77,7 @@ class RepositoryOptions extends React.Component {
   onClickDelete = () => {
     const {
       owner,
-      repoInfo: { id }
+      repoInfo: { id, isPublic }
     } = this.state;
     const { deleteRepo, history } = this.props;
     const { oldName } = this;
@@ -79,14 +86,16 @@ class RepositoryOptions extends React.Component {
       owner,
       name: oldName
     });
-    elasticHelper.deleteRepo(id);
+    if (isPublic) {
+      elasticHelper.deleteRepo(id);
+    }
     history.push(`/${owner}`);
   };
 
   onClickRename = ({ name }) => {
     const {
       owner,
-      repoInfo: { id }
+      repoInfo: { id, isPublic }
     } = this.state;
     const { oldName } = this;
     const { renameRepo, history } = this.props;
@@ -97,7 +106,9 @@ class RepositoryOptions extends React.Component {
       oldName,
       name: transformedName
     });
-    elasticHelper.updateRepo(id, transformedName, owner);
+    if (isPublic) {
+      elasticHelper.updateRepo(id, transformedName, owner);
+    }
     history.push(`/${owner}/${transformedName}/settings`);
   };
 
@@ -125,7 +136,7 @@ class RepositoryOptions extends React.Component {
   };
 
   render() {
-    const { repoInfo } = this.state;
+    const { repoInfo, isAccessGranted } = this.state;
     const { loading } = this.props.repoSettingsData;
     const { match, currentUserName } = this.props;
     const { username } = match.params;
@@ -155,14 +166,14 @@ class RepositoryOptions extends React.Component {
           </Formik>
           <Header as="h2">Danger Zone</Header>
           <div className={styles.dangerZone}>
-            {currentUserName === username &&
+            {(currentUserName === username || isAccessGranted) &&
               renderDangerField(
                 isPublic ? 'Make this repository private' : 'Make this repository public',
                 isPublic ? 'Hide this repository from the public.' : 'Make this repository visible to anyone.',
                 isPublic ? 'Make private' : 'Make public',
                 this.onClickUpdateRepoType
               )}
-            {currentUserName === username &&
+            {(currentUserName === username || isAccessGranted) &&
               renderDangerField(
                 'Delete this repository',
                 'Once you delete a repository, there is no going back. Please be certain.',
@@ -197,12 +208,14 @@ RepositoryOptions.propTypes = {
   fetchRepoSettings: PropTypes.func.isRequired,
   renameRepo: PropTypes.func.isRequired,
   deleteRepo: PropTypes.func.isRequired,
-  currentUserName: PropTypes.string.isRequired
+  currentUserName: PropTypes.string.isRequired,
+  userId: PropTypes.string.isRequired
 };
 
-const mapStateToProps = ({ repoSettingsData, profile }) => ({
+const mapStateToProps = ({ repoSettingsData, profile: { currentUser } }) => ({
   repoSettingsData,
-  currentUserName: profile.currentUser.username
+  currentUserName: currentUser.username,
+  userId: currentUser.id
 });
 
 const mapDispatchToProps = {

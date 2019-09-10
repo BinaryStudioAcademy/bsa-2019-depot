@@ -16,7 +16,6 @@ import { Formik, Form, Field } from 'formik';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { updateUserSettings, uploadUserPhoto, deleteUserPhoto } from '../../routines/routines';
-import { NavLink } from 'react-router-dom';
 import * as Yup from 'yup';
 import { DashboardModal } from '@uppy/react';
 import '@uppy/core/dist/style.css';
@@ -83,12 +82,7 @@ class SettingsProfile extends Component {
     name: (
       <div>Your name may appear around Depot where you contribute or are mentioned. You can remove it at any time.</div>
     ),
-    email: (
-      <div>
-        You have set your email address to private. To toggle email privacy, go to email settings and uncheck "Keep my
-        email address private."
-      </div>
-    ),
+    email: <div>You cannot change your email at this time.</div>,
     bio: (
       <div>
         You can @<strong>mention</strong> other users and organizations to link to them.
@@ -102,8 +96,7 @@ class SettingsProfile extends Component {
     disclaimer: (
       <div>
         All of the fields on this page are optional and can be deleted at any time, and by filling them out, you're
-        giving us consent to share this data wherever your user profile appears. Please see our{' '}
-        <NavLink to="/">privacy statement</NavLink> to learn more about how we use this information.
+        giving us consent to share this data wherever your user profile appears.
       </div>
     )
   };
