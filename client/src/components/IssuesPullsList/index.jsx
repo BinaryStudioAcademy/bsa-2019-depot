@@ -127,34 +127,57 @@ class IssuesPullsList extends React.Component {
     this.fetchData();
   };
 
-  onDropdownChange = async (e, { value }) => {
-    switch (e.target.name) {
-    case 'author':
-      const {
-        filter: { authorId: oldAuthorId }
-      } = this.state;
+  onAuthorChange = async (e, { value: newAuthorId }) => {
+    const {
+      filter: { authorId: oldAuthorId }
+    } = this.state;
 
-      const { newAuthorId } = value;
-      const authorId = newAuthorId === oldAuthorId ? '' : newAuthorId;
+    const authorId = newAuthorId === oldAuthorId ? '' : newAuthorId;
 
-      await this.setState({ filter: { ...this.state.filter, authorId } });
-      break;
-    case 'assignee':
-      const {
-        filter: { assigneeId: oldAssigneeId }
-      } = this.state;
-
-      const { newAssigneeId } = value;
-      const assigneeId = newAssigneeId === oldAssigneeId ? '' : newAssigneeId;
-
-      await this.setState({ filter: { ...this.state.filter, assigneeId } });
-      break;
-    default:
-      return;
-    }
-
+    await this.setState({ filter: { ...this.state.filter, authorId } });
     this.fetchData();
   };
+
+  onAssigneeChange = async (e, { value: newAssigneeId }) => {
+    const {
+      filter: { assigneeId: oldAssigneeId }
+    } = this.state;
+
+    const assigneeId = newAssigneeId === oldAssigneeId ? '' : newAssigneeId;
+
+    await this.setState({ filter: { ...this.state.filter, assigneeId } });
+    this.fetchData();
+  };
+
+  // onDropdownItemChange = async (e, { value }) => {
+  //   debugger;
+  //   switch (e.target.name) {
+  //   case 'author':
+  //     const {
+  //       filter: { authorId: oldAuthorId }
+  //     } = this.state;
+
+  //     const newAuthorId = value;
+  //     const authorId = newAuthorId === oldAuthorId ? '' : newAuthorId;
+
+  //     await this.setState({ filter: { ...this.state.filter, authorId } });
+  //     break;
+  //   case 'assignee':
+  //     const {
+  //       filter: { assigneeId: oldAssigneeId }
+  //     } = this.state;
+
+  //     const newAssigneeId = value;
+  //     const assigneeId = newAssigneeId === oldAssigneeId ? '' : newAssigneeId;
+
+  //     await this.setState({ filter: { ...this.state.filter, assigneeId } });
+  //     break;
+  //   default:
+  //     return;
+  //   }
+
+  //   this.fetchData();
+  // };
 
   onTitleChange = (e, { value }) => {
     this.setState({ filter: { ...this.state.filter, title: value.toLowerCase() } });
@@ -304,7 +327,12 @@ class IssuesPullsList extends React.Component {
                   />
                   <Dropdown.Menu scrolling>
                     {filteredAuthorList.map((author, index) => (
-                      <Dropdown.Item key={author.id} value={author.id} onClick={this.onDropdownChange}>
+                      <Dropdown.Item
+                        key={author.id}
+                        value={author.id}
+                        onClick={this.onAuthorChange}
+                        onChange={this.onUserInputChange}
+                      >
                         <Icon name="check" className={authorId !== author.id ? styles.hide_check : null} />
                         <img alt="user avatar" src={getUserImgLink(author.imgUrl)} className={styles.avatar} />
                         <span>{author.username}</span>
@@ -333,7 +361,7 @@ class IssuesPullsList extends React.Component {
                     />
                     <Dropdown.Menu scrolling>
                       {filteredAssigneeList.map((assignee, index) => (
-                        <Dropdown.Item key={assignee.id} value={assignee.id} onClick={this.onDropdownChange}>
+                        <Dropdown.Item key={assignee.id} value={assignee.id} onClick={this.onAssigneeChange}>
                           <Icon name="check" className={assigneeId !== assignee.id ? styles.hide_check : null} />
                           <img alt="user avatar" src={getUserImgLink(assignee.imgUrl)} className={styles.avatar} />
                           <span>{assignee.username}</span>

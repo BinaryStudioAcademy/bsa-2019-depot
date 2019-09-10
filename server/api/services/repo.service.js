@@ -316,7 +316,7 @@ const getAvailableAssigneesByRepoId = async (repositoryId) => {
   const collaboratorIds = (await collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId)).map(
     collaborator => collaborator.userId
   );
-  const orgUsersIds = (await orgUsersRepository.getAllOrganizationUsers(userId)) || [];
+  const orgUsersIds = (await orgUsersRepository.getAllOrganizationUsers(userId)).map(user => user.userId);
   const assigneeIds = Array.from(new Set([userId, ...collaboratorIds, ...orgUsersIds]));
   const assignees = await userRepository.getUsersByIds(assigneeIds);
   return assignees.sort((assignee1, assignee2) => assignee2.username < assignee1.username);
