@@ -4,7 +4,7 @@ module.exports = {
       'users',
       'status',
       {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       { transaction }
     )

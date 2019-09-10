@@ -9,6 +9,7 @@ const branchRepository = require('../../data/repositories/branch.repository');
 const RepoRepository = require('../../data/repositories/repository.repository');
 const CustomError = require('../../helpers/error.helper');
 const CommitActivityHelper = require('../../helpers/commit-activity.helper');
+const CommitActivityByUserHelper = require('../../helpers/commit-activity-by-user.helper');
 
 const getCommitsAndCreatedRepoByDate = async (data) => {
   const { user, isOwner } = data;
@@ -286,6 +287,41 @@ const getCommitActivityData = async (repositoryId) => {
   }
 };
 
+const getUsersCommitsByRepositoryId = async (repositoryId) => {
+  try {
+    const currentRepo = await RepoRepository.getById(repositoryId);
+    const {
+      createdAt: createdRepoDate,
+      defaultBranch: { name: branchname }
+    } = currentRepo;
+    const usersCommits = await userRepository.getUsersCommits(repositoryId);
+    const commitsInDefaultBranch = await getCommits(branchname, repositoryId);
+
+    const usersActivity = usersCommits.map((user) => {
+      const {
+        id, username, commits, imgUrl
+      } = user.get({ plain: true });
+      const byWeeks = CommitActivityByUserHelper.getActivityByUser(commits, createdRepoDate);
+      // console.log(byWeeks);
+      return {
+        id,
+        username,
+        imgUrl,
+        commitsCount: commits.length,
+        activity: byWeeks
+      };
+    });
+    const defaultBranchActivity = CommitActivityByUserHelper.getActivityByUser(commitsInDefaultBranch, createdRepoDate);
+
+    return {
+      defaultBranchActivity,
+      usersActivity
+    };
+  } catch (error) {
+    return Promise.reject(new Error(error.message));
+  }
+};
+
 module.exports = {
   getCommits,
   getCommitDiff,
@@ -295,5 +331,6 @@ module.exports = {
   createCommit,
   getCommitCount,
   getRepoByCommitId,
-  getCommitActivityData
+  getCommitActivityData,
+  getUsersCommitsByRepositoryId
 };

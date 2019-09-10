@@ -127,3 +127,11 @@ export const getCommitActivity = async repositoryId => {
   });
   return response.json();
 };
+
+export const getCommitActivityByUser = async repositoryId => {
+  const response = await callWebApi({
+    endpoint: `/api/repos/${repositoryId}/commit-activity-data-by-user`,
+    type: 'GET'
+  });
+  return response.json();
+};
