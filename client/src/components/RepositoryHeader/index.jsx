@@ -75,7 +75,10 @@ const RepositoryHeader = ({
 
   const renderOrignalRepoLink = () => {
     if (originalRepo) {
-      const { name: forkedRepoName, user: { username: forkedRepoOwner } } = originalRepo;
+      const {
+        name: forkedRepoName,
+        user: { username: forkedRepoOwner }
+      } = originalRepo;
       if (forkedRepoName && forkedRepoOwner) {
         return (
           <div className={styles.originalRepoLink}>
@@ -183,7 +186,8 @@ RepositoryHeader.propTypes = {
   activePage: PropTypes.string,
   baseUrl: PropTypes.string.isRequired,
   history: PropTypes.object,
-  isBlamePage: PropTypes.bool
+  isBlamePage: PropTypes.bool,
+  isPublic: PropTypes.bool
 };
 
 const mapStateToProps = ({

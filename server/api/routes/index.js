@@ -15,6 +15,7 @@ const pullsRoutes = require('./pulls.route');
 const pullCommentsRoutes = require('./pull-comments.route');
 const searchRoutes = require('./search.route');
 const pullReviewersRoute = require('./pull-reviewers.route');
+const issueAssigneeRoutes = require('./issue-assignees.route');
 
 module.exports = (app) => {
   app.use('/api/auth', authRoutes);
@@ -34,4 +35,5 @@ module.exports = (app) => {
   app.use('/api/pull-comments', pullCommentsRoutes);
   app.use('/api/search', searchRoutes);
   app.use('/api/pull-reviewers', pullReviewersRoute);
+  app.use('/api/issue-assignees', issueAssigneeRoutes);
 };

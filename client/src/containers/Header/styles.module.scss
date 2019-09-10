@@ -260,22 +260,22 @@ $grey-color: #f7f7fb;
   fill: currentColor;
 }
 
-:local(.searchItem){
+:local(.searchItem) {
   color: $black-color !important;
   font-weight: 500;
 }
 
-:local(.searchItemIcon){
+:local(.searchItemIcon) {
   color: $black-color !important;
   margin-right: 3px;
 }
 
-:global(.search.icon){
+:global(.search.icon) {
   top: inherit !important;
-  color: $grey-color; 
+  color: $grey-color;
 }
 
-:global(.ui.search .prompt){
+:global(.ui.search .prompt) {
   border-radius: 3px !important;
   background-color: $input-background;
 }

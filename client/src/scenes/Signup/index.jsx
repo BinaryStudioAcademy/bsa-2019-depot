@@ -57,7 +57,7 @@ class Signup extends React.Component {
   }
 
   submit(values) {
-    const { username, email, password} = values;
+    const { username, email, password } = values;
     const user = {
       username,
       email,

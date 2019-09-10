@@ -108,7 +108,7 @@ router.get('/:username/contribution-activity', (req, res, next) => {
 router.get('/:username/repos', (req, res, next) => {
   const { username } = req.params;
   const isOwner = req.user.get({ plain: true }).username === username;
-  getReposData({ username, isOwner })
+  getReposData({ username, isOwner, userId: req.user.id })
     .then(repos => res.send(repos))
     .catch(next);
 });
@@ -218,7 +218,8 @@ router.get('/:username/repos/:reponame/pulls/:number', (req, res, next) => {
 
 router.get('/:userId/pinned-repositories', (req, res, next) => {
   const { userId } = req.params;
-  PinnedReposService.getPinnedRepos(userId)
+  const isOwner = req.user.get({ plain: true }).id === userId;
+  PinnedReposService.getPinnedRepos(userId, isOwner)
     .then(result => res.send(result))
     .catch(next);
 });

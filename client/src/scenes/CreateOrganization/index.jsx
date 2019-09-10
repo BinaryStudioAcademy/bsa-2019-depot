@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { Grid, Header, Divider, Step, Icon, Button, Input } from 'semantic-ui-react';
 import { Formik, Form, Field } from 'formik';
-import { Link } from 'react-router-dom';
 import styles from './styles.module.scss';
 import { createOrg } from '../../routines/routines';
 import * as Yup from 'yup';
@@ -111,13 +110,6 @@ class CreateOrganization extends Component {
                     <InputError name="email" />
                   </Grid.Column>
                 </Grid>
-
-                <Divider hidden />
-                <div>
-                  By clicking on "Create organization" below, you are agreeing to the{' '}
-                  <Link to="#">Terms of Service</Link>. For more information about Depot's privacy practices, see the
-                  <Link to="#"> Depot Privacy Statement</Link>.
-                </div>
                 <Divider hidden />
                 <Button color="blue" type="submit" disabled={loading || !isValid || !touched}>
                   Create organization
