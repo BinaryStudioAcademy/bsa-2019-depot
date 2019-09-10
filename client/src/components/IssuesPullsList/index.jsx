@@ -86,13 +86,10 @@ class IssuesPullsList extends React.Component {
       } = await RepoService.getRepositoryIssues(repositoryId, filter);
       this.setState({ openCount, closedCount, authorList, assigneeList, items, labelsCount, loading: false });
     } else {
-      const {
-        openCount,
-        closedCount,
-        authors: authorList,
-        // retrieve assignees for PR
-        pulls: items
-      } = await RepoService.getRepositoryPulls(repositoryId, filter);
+      const { openCount, closedCount, authors: authorList, pulls: items } = await RepoService.getRepositoryPulls(
+        repositoryId,
+        filter
+      );
       this.setState({ isIssues, openCount, closedCount, authorList, items, labelsCount, loading: false });
     }
   };
@@ -316,34 +313,36 @@ class IssuesPullsList extends React.Component {
                   </Dropdown.Menu>
                 </Dropdown.Menu>
               </Dropdown>
-              <Dropdown
-                text="Assignee"
-                icon="angle down"
-                className={styles.active}
-                onKeyDown={this.onUserInputHitEnter}
-              >
-                <Dropdown.Menu>
-                  <Input
-                    name="assignee"
-                    value={assigneeDropdownFilter}
-                    icon="search"
-                    iconPosition="left"
-                    className="search"
-                    placeholder="Filter assignees"
-                    onClick={this.onUserInputClick}
-                    onChange={this.onUserInputChange}
-                  />
-                  <Dropdown.Menu scrolling>
-                    {filteredAssigneeList.map((assignee, index) => (
-                      <Dropdown.Item key={assignee.id} value={assignee.id} onClick={this.onDropdownChange}>
-                        <Icon name="check" className={assigneeId !== assignee.id ? styles.hide_check : null} />
-                        <img alt="user avatar" src={getUserImgLink(assignee.imgUrl)} className={styles.avatar} />
-                        <span>{assignee.username}</span>
-                      </Dropdown.Item>
-                    ))}
+              {isIssues && (
+                <Dropdown
+                  text="Assignee"
+                  icon="angle down"
+                  className={styles.active}
+                  onKeyDown={this.onUserInputHitEnter}
+                >
+                  <Dropdown.Menu>
+                    <Input
+                      name="assignee"
+                      value={assigneeDropdownFilter}
+                      icon="search"
+                      iconPosition="left"
+                      className="search"
+                      placeholder="Filter assignees"
+                      onClick={this.onUserInputClick}
+                      onChange={this.onUserInputChange}
+                    />
+                    <Dropdown.Menu scrolling>
+                      {filteredAssigneeList.map((assignee, index) => (
+                        <Dropdown.Item key={assignee.id} value={assignee.id} onClick={this.onDropdownChange}>
+                          <Icon name="check" className={assigneeId !== assignee.id ? styles.hide_check : null} />
+                          <img alt="user avatar" src={getUserImgLink(assignee.imgUrl)} className={styles.avatar} />
+                          <span>{assignee.username}</span>
+                        </Dropdown.Item>
+                      ))}
+                    </Dropdown.Menu>
                   </Dropdown.Menu>
-                </Dropdown.Menu>
-              </Dropdown>
+                </Dropdown>
+              )}
               <Dropdown text="Sort" icon="angle down" className={sort ? styles.active : null}>
                 <Dropdown.Menu>
                   {sortOptions.map(({ key, text, value }) => (
