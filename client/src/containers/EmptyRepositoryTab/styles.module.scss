@@ -46,14 +46,16 @@
 }
 
 :global(.ui.attached.button):local(.protocolButton) {
+  display: flex !important;
+  align-items: center !important;
   padding-right: 1em !important;
   padding-left: 1em !important;
 }
 
 :local(.clipboardInput) {
-  display: inline-block;
+  display: flex;
+  align-items: center;
   flex-grow: 1;
-  font-size: 75%;
   padding: 0.5em 1em;
   border: 1px solid #d1d5da;
   background-color: #fff;

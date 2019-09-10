@@ -9,11 +9,6 @@
       border-radius: 0 0 5px 5px;
     }
   }
-
-  :global(.item):local(.labelItem):hover {
-    background-color: white;
-    border-left: 1px solid #eaecef;
-  }
 }
 
 :local(.leftGroup) {
@@ -85,6 +80,11 @@
 
 :global(.ui.grid) {
   :local(.errorFields):global(.row) {
-    padding: 0.5em 1em 1em;
+    padding: 0.5em 0.6em 1em;
   }
+}
+
+:global(.ui.grid) > :global(.row) > :global(.column) {
+  padding-left: 0.5em !important;
+  padding-right: 0.5em !important;
 }

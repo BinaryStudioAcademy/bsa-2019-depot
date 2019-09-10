@@ -25,6 +25,7 @@ const IssueLabel = orm.import('./issueLabel');
 const PullReviewer = orm.import('./pullReviewer');
 const ReviewStatus = orm.import('./reviewStatus');
 const PullLabel = orm.import('./pullLabel');
+const IssueAssignee = orm.import('./issueAssignee');
 
 associate({
   User,
@@ -50,7 +51,8 @@ associate({
   IssueLabel,
   PullReviewer,
   ReviewStatus,
-  PullLabel
+  PullLabel,
+  IssueAssignee
 });
 
 module.exports = {
@@ -77,5 +79,6 @@ module.exports = {
   IssueLabelModel: IssueLabel,
   PullReviewerModel: PullReviewer,
   ReviewStatusModel: ReviewStatus,
-  PullLabelModel: PullLabel
+  PullLabelModel: PullLabel,
+  IssueAssigneeModel: IssueAssignee
 };

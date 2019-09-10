@@ -47,14 +47,15 @@ const DataList = props => {
       <List divided verticalAlign="middle">
         {data.map(item => {
           const labels = isPull ? item.pullLabels : item.issueLabels;
+          const assignees = isPull ? item.assignees : item.issueAssignees.map(issueAssignee => issueAssignee.assignee);
           return (
             <List.Item key={item.id} className={styles.container}>
               <List.Content floated="right">
                 <Icon name="comments outline" /> {item.commentCount}
               </List.Content>
               <List.Content floated="right">
-                {item.assignees &&
-                  item.assignees
+                {assignees &&
+                  assignees
                     .slice(0, 3)
                     .map(assignee => (
                       <Popup

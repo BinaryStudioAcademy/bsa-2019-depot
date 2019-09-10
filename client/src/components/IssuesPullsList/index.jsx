@@ -8,6 +8,7 @@ import DataList from '../DataList';
 import * as RepoService from '../../services/repositoryService';
 import { getLabels } from '../../services/labelsService';
 import { getUserImgLink } from '../../helpers/imageHelper';
+import { debounce } from 'debounce';
 
 import styles from './styles.module.scss';
 AntdIcon.add(PullRequestOutline);
@@ -56,14 +57,17 @@ class IssuesPullsList extends React.Component {
         title: '',
         isOpened: true,
         authorId: '',
+        assigneeId: '',
         sort: 'created_desc'
       },
       labelsCount: 0,
       openCount: 0,
       closedCount: 0,
       authorList: [],
+      assigneeList: [],
       loading: true,
-      authorDropdownFilter: ''
+      authorDropdownFilter: '',
+      assigneeDropdownFilter: ''
     };
   }
 
@@ -73,19 +77,27 @@ class IssuesPullsList extends React.Component {
     const labelsCount = (await getLabels(repositoryId)).length;
 
     if (isIssues) {
-      const { openCount, closedCount, authors: authorList, issues: items } = await RepoService.getRepositoryIssues(
-        repositoryId,
-        filter
-      );
-      this.setState({ openCount, closedCount, authorList, items, labelsCount, loading: false });
+      const {
+        openCount,
+        closedCount,
+        authors: authorList,
+        assignees: assigneeList,
+        issues: items
+      } = await RepoService.getRepositoryIssues(repositoryId, filter);
+      this.setState({ openCount, closedCount, authorList, assigneeList, items, labelsCount, loading: false });
     } else {
-      const { openCount, closedCount, authors: authorList, pulls: items } = await RepoService.getRepositoryPulls(
-        repositoryId,
-        filter
-      );
+      const {
+        openCount,
+        closedCount,
+        authors: authorList,
+        // retrieve assignees for PR
+        pulls: items
+      } = await RepoService.getRepositoryPulls(repositoryId, filter);
       this.setState({ isIssues, openCount, closedCount, authorList, items, labelsCount, loading: false });
     }
   };
+
+  debouncedFetchData = debounce(this.fetchData, 500);
 
   async componentDidMount() {
     await this.fetchData();
@@ -118,19 +130,38 @@ class IssuesPullsList extends React.Component {
     this.fetchData();
   };
 
-  onAuthorChange = async (e, { value: newAuthorId }) => {
-    const {
-      filter: { authorId: oldAuthorId }
-    } = this.state;
+  onDropdownChange = async (e, { value }) => {
+    switch (e.target.name) {
+    case 'author':
+      const {
+        filter: { authorId: oldAuthorId }
+      } = this.state;
 
-    const authorId = newAuthorId === oldAuthorId ? '' : newAuthorId;
+      const { newAuthorId } = value;
+      const authorId = newAuthorId === oldAuthorId ? '' : newAuthorId;
 
-    await this.setState({ filter: { ...this.state.filter, authorId } });
+      await this.setState({ filter: { ...this.state.filter, authorId } });
+      break;
+    case 'assignee':
+      const {
+        filter: { assigneeId: oldAssigneeId }
+      } = this.state;
+
+      const { newAssigneeId } = value;
+      const assigneeId = newAssigneeId === oldAssigneeId ? '' : newAssigneeId;
+
+      await this.setState({ filter: { ...this.state.filter, assigneeId } });
+      break;
+    default:
+      return;
+    }
+
     this.fetchData();
   };
 
   onTitleChange = (e, { value }) => {
-    this.setState({ filter: { ...this.state.filter, title: value } });
+    this.setState({ filter: { ...this.state.filter, title: value.toLowerCase() } });
+    this.debouncedFetchData();
   };
 
   onTitleHitEnter = e => {
@@ -144,19 +175,47 @@ class IssuesPullsList extends React.Component {
   };
 
   onUserInputChange = async (e, { value }) => {
-    await this.setState({ authorDropdownFilter: value });
+    switch (e.target.name) {
+    case 'author':
+      await this.setState({ authorDropdownFilter: value });
+      break;
+    case 'assignee':
+      await this.setState({ assigneeDropdownFilter: value });
+      break;
+    default:
+      return;
+    }
   };
 
   onUserInputHitEnter = async e => {
     if (e.key === 'Enter') {
-      const { authorList, authorDropdownFilter } = this.state;
-      const filteredAuthorList = authorList.filter(author => author.username.includes(authorDropdownFilter));
-      if (filteredAuthorList.length > 0) {
-        await this.setState({
-          authorDropdownFilter: '',
-          filter: { ...this.state.filter, authorId: filteredAuthorList[0].id }
-        });
-        this.fetchData();
+      switch (e.target.name) {
+      case 'author':
+        const { authorList, authorDropdownFilter } = this.state;
+        const filteredAuthorList = authorList.filter(author => author.username.includes(authorDropdownFilter));
+        if (filteredAuthorList.length > 0) {
+          await this.setState({
+            authorDropdownFilter: '',
+            filter: { ...this.state.filter, authorId: filteredAuthorList[0].id }
+          });
+          this.fetchData();
+        }
+        break;
+      case 'assignee':
+        const { assigneeList, assigneeDropdownFilter } = this.state;
+        const filteredAssigneeList = assigneeList.filter(assignee =>
+          assignee.username.includes(assigneeDropdownFilter)
+        );
+        if (filteredAssigneeList.length > 0) {
+          await this.setState({
+            assigneeDropdownFilter: '',
+            filter: { ...this.state.filter, assigneeId: filteredAssigneeList[0].id }
+          });
+          this.fetchData();
+        }
+        break;
+      default:
+        return;
       }
     }
   };
@@ -170,16 +229,19 @@ class IssuesPullsList extends React.Component {
     const {
       items,
       isIssues,
-      filter: { title, isOpened, authorId, sort },
+      filter: { title, isOpened, authorId, assigneeId, sort },
       openCount,
       closedCount,
       authorDropdownFilter,
+      assigneeDropdownFilter,
       authorList,
+      assigneeList,
       labelsCount,
       loading
     } = this.state;
 
     const filteredAuthorList = authorList.filter(author => author.username.includes(authorDropdownFilter));
+    const filteredAssigneeList = assigneeList.filter(assignee => assignee.username.includes(assigneeDropdownFilter));
 
     return !loading ? (
       <Segment basic>
@@ -231,6 +293,7 @@ class IssuesPullsList extends React.Component {
               >
                 <Dropdown.Menu>
                   <Input
+                    name="author"
                     value={authorDropdownFilter}
                     icon="search"
                     iconPosition="left"
@@ -241,7 +304,7 @@ class IssuesPullsList extends React.Component {
                   />
                   <Dropdown.Menu scrolling>
                     {filteredAuthorList.map((author, index) => (
-                      <Dropdown.Item key={author.id} value={author.id} onClick={this.onAuthorChange}>
+                      <Dropdown.Item key={author.id} value={author.id} onClick={this.onDropdownChange}>
                         <Icon name="check" className={authorId !== author.id ? styles.hide_check : null} />
                         <img alt="user avatar" src={getUserImgLink(author.imgUrl)} className={styles.avatar} />
                         <span>{author.username}</span>
@@ -250,17 +313,32 @@ class IssuesPullsList extends React.Component {
                   </Dropdown.Menu>
                 </Dropdown.Menu>
               </Dropdown>
-              <Dropdown text="Assignee" icon="angle down">
+              <Dropdown
+                text="Assignee"
+                icon="angle down"
+                className={styles.active}
+                onKeyDown={this.onUserInputHitEnter}
+              >
                 <Dropdown.Menu>
-                  <Input icon="search" iconPosition="left" className="search" placeholder="Filter assignees" />
-                  {/* <Dropdown.Menu scrolling>
-                    {data
-                      .map(dataItem => data.assignees)
-                      .flat()
-                      .map(assignee => (
-                        <Dropdown.Item key={assignee.username} text={assignee.username} value={assignee.username} />
-                      ))}
-                  </Dropdown.Menu> */}
+                  <Input
+                    name="assignee"
+                    value={assigneeDropdownFilter}
+                    icon="search"
+                    iconPosition="left"
+                    className="search"
+                    placeholder="Filter assignees"
+                    onClick={this.onUserInputClick}
+                    onChange={this.onUserInputChange}
+                  />
+                  <Dropdown.Menu scrolling>
+                    {filteredAssigneeList.map((assignee, index) => (
+                      <Dropdown.Item key={assignee.id} value={assignee.id} onClick={this.onDropdownChange}>
+                        <Icon name="check" className={assigneeId !== assignee.id ? styles.hide_check : null} />
+                        <img alt="user avatar" src={getUserImgLink(assignee.imgUrl)} className={styles.avatar} />
+                        <span>{assignee.username}</span>
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown.Menu>
                 </Dropdown.Menu>
               </Dropdown>
               <Dropdown text="Sort" icon="angle down" className={sort ? styles.active : null}>
