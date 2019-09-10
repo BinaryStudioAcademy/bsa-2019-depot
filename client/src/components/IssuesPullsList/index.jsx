@@ -8,6 +8,7 @@ import DataList from '../DataList';
 import * as RepoService from '../../services/repositoryService';
 import { getLabels } from '../../services/labelsService';
 import { getUserImgLink } from '../../helpers/imageHelper';
+import { debounce } from 'debounce';
 
 import styles from './styles.module.scss';
 AntdIcon.add(PullRequestOutline);
@@ -96,6 +97,8 @@ class IssuesPullsList extends React.Component {
     }
   };
 
+  debouncedFetchData = debounce(this.fetchData, 500);
+
   async componentDidMount() {
     await this.fetchData();
   }
@@ -129,28 +132,28 @@ class IssuesPullsList extends React.Component {
 
   onDropdownChange = async (e, { value }) => {
     switch (e.target.name) {
-    case 'author':
-      const {
-        filter: { authorId: oldAuthorId }
-      } = this.state;
+      case 'author':
+        const {
+          filter: { authorId: oldAuthorId }
+        } = this.state;
 
-      const { newAuthorId } = value;
-      const authorId = newAuthorId === oldAuthorId ? '' : newAuthorId;
+        const { newAuthorId } = value;
+        const authorId = newAuthorId === oldAuthorId ? '' : newAuthorId;
 
-      await this.setState({ filter: { ...this.state.filter, authorId } });
-      break;
-    case 'assignee':
-      const {
-        filter: { assigneeId: oldAssigneeId }
-      } = this.state;
+        await this.setState({ filter: { ...this.state.filter, authorId } });
+        break;
+      case 'assignee':
+        const {
+          filter: { assigneeId: oldAssigneeId }
+        } = this.state;
 
-      const { newAssigneeId } = value;
-      const assigneeId = newAssigneeId === oldAssigneeId ? '' : newAssigneeId;
+        const { newAssigneeId } = value;
+        const assigneeId = newAssigneeId === oldAssigneeId ? '' : newAssigneeId;
 
-      await this.setState({ filter: { ...this.state.filter, assigneeId } });
-      break;
-    default:
-      return;
+        await this.setState({ filter: { ...this.state.filter, assigneeId } });
+        break;
+      default:
+        return;
     }
 
     this.fetchData();
@@ -158,6 +161,7 @@ class IssuesPullsList extends React.Component {
 
   onTitleChange = (e, { value }) => {
     this.setState({ filter: { ...this.state.filter, title: value } });
+    this.debouncedFetchData();
   };
 
   onTitleHitEnter = e => {
@@ -172,46 +176,46 @@ class IssuesPullsList extends React.Component {
 
   onUserInputChange = async (e, { value }) => {
     switch (e.target.name) {
-    case 'author':
-      await this.setState({ authorDropdownFilter: value });
-      break;
-    case 'assignee':
-      await this.setState({ assigneeDropdownFilter: value });
-      break;
-    default:
-      return;
+      case 'author':
+        await this.setState({ authorDropdownFilter: value });
+        break;
+      case 'assignee':
+        await this.setState({ assigneeDropdownFilter: value });
+        break;
+      default:
+        return;
     }
   };
 
   onUserInputHitEnter = async e => {
     if (e.key === 'Enter') {
       switch (e.target.name) {
-      case 'author':
-        const { authorList, authorDropdownFilter } = this.state;
-        const filteredAuthorList = authorList.filter(author => author.username.includes(authorDropdownFilter));
-        if (filteredAuthorList.length > 0) {
-          await this.setState({
-            authorDropdownFilter: '',
-            filter: { ...this.state.filter, authorId: filteredAuthorList[0].id }
-          });
-          this.fetchData();
-        }
-        break;
-      case 'assignee':
-        const { assigneeList, assigneeDropdownFilter } = this.state;
-        const filteredAssigneeList = assigneeList.filter(assignee =>
-          assignee.username.includes(assigneeDropdownFilter)
-        );
-        if (filteredAssigneeList.length > 0) {
-          await this.setState({
-            assigneeDropdownFilter: '',
-            filter: { ...this.state.filter, assigneeId: filteredAssigneeList[0].id }
-          });
-          this.fetchData();
-        }
-        break;
-      default:
-        return;
+        case 'author':
+          const { authorList, authorDropdownFilter } = this.state;
+          const filteredAuthorList = authorList.filter(author => author.username.includes(authorDropdownFilter));
+          if (filteredAuthorList.length > 0) {
+            await this.setState({
+              authorDropdownFilter: '',
+              filter: { ...this.state.filter, authorId: filteredAuthorList[0].id }
+            });
+            this.fetchData();
+          }
+          break;
+        case 'assignee':
+          const { assigneeList, assigneeDropdownFilter } = this.state;
+          const filteredAssigneeList = assigneeList.filter(assignee =>
+            assignee.username.includes(assigneeDropdownFilter)
+          );
+          if (filteredAssigneeList.length > 0) {
+            await this.setState({
+              assigneeDropdownFilter: '',
+              filter: { ...this.state.filter, assigneeId: filteredAssigneeList[0].id }
+            });
+            this.fetchData();
+          }
+          break;
+        default:
+          return;
       }
     }
   };
