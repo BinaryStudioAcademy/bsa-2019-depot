@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const BaseRepository = require('./base.repository');
 const {
-  UserModel, IssueModel, PullRequestModel, IssueAssigneeModel
+  UserModel, IssueModel, PullRequestModel, CommitModel, IssueAssigneeModel
 } = require('../models/index');
 const cryptoHelper = require('../../helpers/crypto.helper');
 const sequelize = require('../db/connection');
@@ -112,6 +112,17 @@ class UserRepository extends BaseRepository {
     });
   }
 
+  getUsersCommits(repositoryId) {
+    return this.model.findAll({
+      attributes: ['id', 'username', 'imgUrl'],
+      include: {
+        model: CommitModel,
+        where: { repositoryId },
+        attributes: ['id', 'createdAt']
+      }
+    });
+  }
+
   setStatusById(id, status) {
     return this.updateById(id, { status });
   }
@@ -124,7 +135,7 @@ class UserRepository extends BaseRepository {
       attributes: ['status']
     });
   }
-  
+
   getIssuesAssignees(repositoryId) {
     return this.model.findAll({
       attributes: ['id', 'username', 'imgUrl'],
