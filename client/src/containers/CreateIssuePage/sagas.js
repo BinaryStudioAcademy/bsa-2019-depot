@@ -7,8 +7,6 @@ function* createIssueRequest({ payload }) {
   try {
     yield put(createIssue.request());
     const { userId, repositoryId, title, body, labelIds, assigneeNames } = payload;
-    debugger;
-
     const response = yield call(issuesService.createIssue, { userId, repositoryId, title, body });
     if (response && response.data) {
       const { repositoryId } = payload;
