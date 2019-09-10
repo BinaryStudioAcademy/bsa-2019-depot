@@ -9,19 +9,15 @@ import * as Yup from 'yup';
 import { InputError } from '../../components/InputError';
 import { checkUsernameExists } from '../../services/userService';
 import * as elasticHelper from '../../helpers/elasticsearchHelper';
-
+import debounce from 'debounce-promise';
 import PropTypes from 'prop-types';
 
-const isOrgNameValid = async username => {
-  const { usernameExists } = await checkUsernameExists(username);
+const isUsernameValid = async username => {
+  const { usernameExists } = await debouncedCheckUsernameExists(username);
   return !usernameExists;
 };
 
-Yup.addMethod(Yup.string, 'validateOrgName', function() {
-  return this.test('validateOrgName', 'This name is already taken', function(value) {
-    return isOrgNameValid(value);
-  });
-});
+const debouncedCheckUsernameExists = debounce(checkUsernameExists, 500);
 
 class CreateOrganization extends Component {
   renderField = ({ field }) => <Input fluid {...field} />;
@@ -31,7 +27,7 @@ class CreateOrganization extends Component {
       .min(2, 'Too Short!')
       .max(50, 'Too Long!')
       .required('Required')
-      .validateOrgName('This name is already taken'),
+      .test('username', 'This username is already taken', isUsernameValid),
     email: Yup.string()
       .email('Invalid email')
       .required('Required')
