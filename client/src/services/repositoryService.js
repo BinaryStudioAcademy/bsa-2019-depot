@@ -127,3 +127,11 @@ export const getCommitActivity = async repositoryId => {
   });
   return response.json();
 };
+
+export const getAvailableAssigneesByRepoId = async repositoryId => {
+  const response = await callWebApi({
+    endpoint: `/api/repos/${repositoryId}/available-assignees`,
+    type: 'GET'
+  });
+  return response.json();
+};

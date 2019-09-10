@@ -1,23 +1,16 @@
 const IssueAssigneeRepository = require('../../data/repositories/issue-assignee.repository');
 const IssueRepository = require('../../data/repositories/issue.repository');
 const UserRepository = require('../../data/repositories/user.repository');
-const CollaboratorRepository = require('../../data/repositories/collaborator.repository');
-const OrgUserRepository = require('../../data/repositories/org-user.repository');
 const CustomError = require('../../helpers/error.helper');
+const { getAvailableAssigneesByRepoId } = require('../services/repo.service');
 
 const getAvailableAssigneesByIssueId = async (issueId) => {
   const issue = await IssueRepository.getById(issueId);
   if (!issue) {
     Promise.reject(new CustomError(400, `Issue ${issueId} is not found`));
   }
-  const { userId, repositoryId } = issue;
-  const collaboratorIds = (await CollaboratorRepository.getCollaboratorsByRepositoryId(repositoryId)).map(
-    collaborator => collaborator.userId
-  );
-  const orgUsersIds = (await OrgUserRepository.getAllOrganizationUsers(userId)) || [];
-  const assigneeIds = Array.from(new Set([userId, ...collaboratorIds, ...orgUsersIds]));
-  const assignees = await UserRepository.getUsersByIds(assigneeIds);
-  return assignees.sort((assignee1, assignee2) => assignee2.username < assignee1.username);
+  const { repositoryId } = issue;
+  return getAvailableAssigneesByRepoId(repositoryId);
 };
 
 const getIssueAssigneeById = async (id) => {

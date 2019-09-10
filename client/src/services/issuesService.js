@@ -108,12 +108,12 @@ export const getAvailableAssignees = async issueId => {
   return response.json();
 };
 
-export const setAssigneesToIssue = async (assignees, issueId) => {
+export const setAssigneesToIssue = async (assigneeNames, issueId) => {
   const response = await callWebApi({
     endpoint: '/api/issue-assignees',
     type: 'POST',
     request: {
-      assignees,
+      assigneeNames,
       issueId
     }
   });
