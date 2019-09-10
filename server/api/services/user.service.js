@@ -111,6 +111,10 @@ const getIssuesAuthors = async repositoryId => UserRepository.getIssuesAuthors(r
 const getPullsAuthors = async repositoryId => UserRepository.getPullsAuthors(repositoryId);
 const getIssuesAssignees = async repositoryId => UserRepository.getIssuesAssignees(repositoryId);
 
+const setStatus = async (userId, status) => UserRepository.setStatusById(userId, status);
+
+const getStatus = async username => UserRepository.getStatusByUsername(username);
+
 module.exports = {
   getUserById,
   getUserByUsername,
@@ -127,5 +131,7 @@ module.exports = {
   deletePhoto,
   getIssuesAuthors,
   getPullsAuthors,
+  setStatus,
+  getStatus,
   getIssuesAssignees
 };

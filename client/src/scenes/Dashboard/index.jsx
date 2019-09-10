@@ -123,7 +123,8 @@ class Dashboard extends React.Component {
         url: link,
         email,
         company,
-        location
+        location,
+        status
       }
     } = this.state;
     const {
@@ -144,7 +145,7 @@ class Dashboard extends React.Component {
         <Grid>
           <Grid.Row columns={2}>
             <Grid.Column mobile={16} tablet={4} computer={4}>
-              <UserInfo username={username} name={name} imgUrl={imgUrl} />
+              <UserInfo username={username} name={name} imgUrl={imgUrl} status={status} />
               <AdditionalUserInfo
                 bio={bio}
                 link={link}

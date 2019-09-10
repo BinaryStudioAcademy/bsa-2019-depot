@@ -112,6 +112,19 @@ class UserRepository extends BaseRepository {
     });
   }
 
+  setStatusById(id, status) {
+    return this.updateById(id, { status });
+  }
+
+  getStatusByUsername(username) {
+    return this.model.findOne({
+      where: {
+        username
+      },
+      attributes: ['status']
+    });
+  }
+  
   getIssuesAssignees(repositoryId) {
     return this.model.findAll({
       attributes: ['id', 'username', 'imgUrl'],
