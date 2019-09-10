@@ -5,12 +5,14 @@ import { createIssue, fetchCurrentRepo } from '../../routines/routines';
 import { Container, Loader } from 'semantic-ui-react';
 import CreateIssuePrForm from '../../components/CreateIssuePrForm';
 import { getLabels } from '../../services/labelsService';
+import { getAvailableAssigneesByRepoId } from '../../services/repositoryService';
 
 class CreateIssuePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       labels: [],
+      assignees: [],
       loading: true
     };
 
@@ -29,10 +31,11 @@ class CreateIssuePage extends React.Component {
       fetchCurrentRepo({ username, reponame });
     }
     const labels = await getLabels(repositoryId);
-    this.setState({ labels, loading: false });
+    const assignees = await getAvailableAssigneesByRepoId(repositoryId);
+    this.setState({ labels, assignees, loading: false });
   }
 
-  onSubmit(title, body) {
+  onSubmit(title, body, labelIds, assigneeNames) {
     const {
       createIssue,
       repositoryId,
@@ -46,7 +49,9 @@ class CreateIssuePage extends React.Component {
       body,
       userId,
       repositoryId,
-      isOpened: true
+      isOpened: true,
+      labelIds,
+      assigneeNames
     });
 
     const newUrl = url
@@ -58,10 +63,16 @@ class CreateIssuePage extends React.Component {
 
   render() {
     const { repositoryId } = this.props;
-    const { labels, loading } = this.state;
+    const { labels, assignees, loading } = this.state;
     return !loading ? (
       <Container fluid>
-        <CreateIssuePrForm isIssues={true} onSubmit={this.onSubmit} repositoryId={repositoryId} labels={labels} />
+        <CreateIssuePrForm
+          isIssues={true}
+          onSubmit={this.onSubmit}
+          repositoryId={repositoryId}
+          labels={labels}
+          assignees={assignees}
+        />
       </Container>
     ) : (
       <Loader active />

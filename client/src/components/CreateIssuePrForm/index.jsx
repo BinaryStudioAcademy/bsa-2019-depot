@@ -11,10 +11,11 @@ import IssuePrSidebar from '../../containers/IssuePrSidebar';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 import styles from './styles.module.scss';
 
-const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels, collaborators }) => {
+const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels, collaborators, assignees }) => {
   const [selectedTab, setSelectedTab] = useState('write');
   const [body, setBody] = useState('');
   const [labelIds, setLabels] = useState([]);
+  const [assigneeNames, setAssignees] = useState([]);
   const [reviewers, setReviewers] = useState([]);
 
   const validationSchema = Yup.object().shape({
@@ -35,8 +36,16 @@ const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels, collabora
     setReviewers(reviewers);
   }
 
+  function updateAssigneeNames(assigneeNames) {
+    setAssignees(assigneeNames);
+  }
+
   function handleSubmit({ title }) {
-    onSubmit(title, body, labelIds, reviewers);
+    if (isIssues) {
+      onSubmit(title, body, labelIds, assigneeNames);
+    } else {
+      onSubmit(title, body, labelIds, reviewers);
+    }
   }
 
   return (
@@ -73,8 +82,10 @@ const CreateIssuePrForm = ({ isIssues, onSubmit, repositoryId, labels, collabora
                   isIssue={isIssues}
                   repositoryId={repositoryId}
                   labels={labels}
+                  assignees={assignees}
                   collaborators={collaborators ? collaborators.filter(({ isActivated }) => isActivated) : null}
                   setLabelsOnCreateItem={updateLabelIds}
+                  setAssigneesOnCreateItem={updateAssigneeNames}
                   setReviewersOnCreateItem={updateReviewers}
                 />
               </Grid.Column>
@@ -91,6 +102,7 @@ CreateIssuePrForm.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   repositoryId: PropTypes.string.isRequired,
   labels: PropTypes.array.isRequired,
+  assignees: PropTypes.array,
   collaborators: PropTypes.array
 };
 

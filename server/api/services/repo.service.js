@@ -307,6 +307,21 @@ const getRepositoryCollaborators = repositoryId => collaboratorRepository.getCol
 
 const getRepositoryForks = async repositoryId => repoRepository.getRepositoryForks(repositoryId);
 
+const getAvailableAssigneesByRepoId = async (repositoryId) => {
+  const repository = await repoRepository.getById(repositoryId);
+  if (!repository) {
+    Promise.reject(new CustomError(400, `Repository ${repositoryId} is not found`));
+  }
+  const { userId } = repository;
+  const collaboratorIds = (await collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId)).map(
+    collaborator => collaborator.userId
+  );
+  const orgUsersIds = (await orgUsersRepository.getAllOrganizationUsers(userId)) || [];
+  const assigneeIds = Array.from(new Set([userId, ...collaboratorIds, ...orgUsersIds]));
+  const assignees = await userRepository.getUsersByIds(assigneeIds);
+  return assignees.sort((assignee1, assignee2) => assignee2.username < assignee1.username);
+};
+
 module.exports = {
   createRepo,
   renameRepo,
@@ -321,5 +336,6 @@ module.exports = {
   updateByUserAndReponame,
   getRepoData,
   getRepositoryCollaborators,
-  getRepositoryForks
+  getRepositoryForks,
+  getAvailableAssigneesByRepoId
 };

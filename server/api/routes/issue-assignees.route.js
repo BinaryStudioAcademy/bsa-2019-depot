@@ -15,8 +15,8 @@ router.get('/:issueAssigneeId', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  const { assignees, issueId } = req.body;
-  setIssueAssignees(assignees, issueId)
+  const { assigneeNames, issueId } = req.body;
+  setIssueAssignees(assigneeNames, issueId)
     .then(issueAssignees => res.send(issueAssignees))
     .catch(next);
 });
