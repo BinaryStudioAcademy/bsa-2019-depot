@@ -6,7 +6,8 @@ import moment from 'moment';
 import { ResponsiveContainer, XAxis, YAxis, CartesianGrid, AreaChart, Area } from 'recharts';
 import { getCommitActivityByUser } from '../../services/repositoryService';
 
-import { Segment, Image, Loader, } from 'semantic-ui-react';
+import { Segment, Image, Loader, Container, Icon, Header, Divider } from 'semantic-ui-react';
+import Octicon, { getIconByName } from '@primer/octicons-react';
 import styles from './styles.module.scss';
 
 class ContributorsInsights extends React.Component {
@@ -27,20 +28,36 @@ class ContributorsInsights extends React.Component {
 
   render() {
     const { usersActivity, defaultBranchActivity, loading } = this.state;
-    const { createdRepoDate, defaultBranchName } = this.props;
+    const { createdRepoDate, defaultBranch, reponame } = this.props;
     const defaultBranchActivityData = defaultBranchActivity.map(({ date, value }) => ({ value, date: moment(date).format('MMM DD, YYYY') }));
-
+    
     return loading
       ? (
         <div>
           <Loader active />
         </div>
+      ) : (!usersActivity.length && !defaultBranchActivity.length) ? (
+        <Container textAlign="center">
+          <Icon size="big" name="chart bar outline" />
+          <Divider hidden />
+          <Header as="h2">Welcome to the {reponame} graphs!</Header>
+          <Segment basic>
+            Once code is added to this repository, you’ll be able to see graphs for the commit timeline and forking
+            activity.
+          </Segment>
+        </Container>
+      ) : !defaultBranch ? (
+        <Container textAlign="center">
+          <Octicon icon={getIconByName('git-pull-request')} />
+          <Divider hidden />
+          <Header as="h2">The default branch isn't set</Header>
+        </Container>
       ) : (
         <Segment basic>
           <div className={styles.contributorsHeader}>
             <h2 className={styles.timeDuration}>{moment(createdRepoDate).format('MMM DD, YYYY')} – {moment().format('MMM DD, YYYY')}</h2>
           </div>
-          <p className={styles.chartInfo}>Contributions to {defaultBranchName}, excluding merge commits</p>
+          <p className={styles.chartInfo}>Contributions to {defaultBranch.name}, excluding merge commits</p>
           <div className={styles.allContributorsChart}>
             <ResponsiveContainer width="100%" height={125}>
               <AreaChart data={defaultBranchActivityData}>
@@ -92,13 +109,14 @@ ContributorsInsights.propTypes = {
 const mapStateToProps = ({
   currentRepo: {
     repository: {
-      currentRepoInfo: { id: repoId, createdAt: createdRepoDate, defaultBranch: { name: defaultBranchName } }
+      currentRepoInfo: { id: repoId, createdAt: createdRepoDate, defaultBranch, name: reponame }
     }
   }
 }) => ({
   repoId,
   createdRepoDate,
-  defaultBranchName
+  defaultBranch,
+  reponame
 });
 
 export default connect(mapStateToProps)(ContributorsInsights);
