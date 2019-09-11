@@ -7,13 +7,16 @@ export default StyleSheet.create({
     paddingLeft: 25
   },
   dataDate: {
+    color: colors.greyText,
     fontSize: 15,
     paddingLeft: 7
   },
   dataNumber: {
+    color: colors.greyText,
     fontSize: 15
   },
   dataUsername: {
+    color: colors.greyText,
     fontSize: 15,
     paddingLeft: 7
   },
@@ -24,6 +27,7 @@ export default StyleSheet.create({
     paddingRight: 10
   },
   headerText: {
+    color: colors.blueLink,
     fontSize: 20,
     paddingLeft: 10
   },
