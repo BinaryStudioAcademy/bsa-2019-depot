@@ -76,7 +76,7 @@ class IssuesPullsList extends React.Component {
     const { filter } = this.state;
     const labelsCount = (await getLabels(repositoryId)).length;
     const queryFilter = { ...filter };
-    Object.keys(queryFilter).forEach(key => !queryFilter[key] && delete queryFilter[key]);
+    Object.keys(queryFilter).forEach(key => queryFilter[key] === '' && delete queryFilter[key]);
 
     if (isIssues) {
       const {
