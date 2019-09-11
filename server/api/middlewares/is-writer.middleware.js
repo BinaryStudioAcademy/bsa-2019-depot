@@ -9,22 +9,39 @@ module.exports = async (req, res, next) => {
   }
 
   const { username, reponame } = req.params;
+  const userId = req.user.id;
 
   const repo = req.params.repositoryId
     ? await RepositoryRepository.getById(req.params.repositoryId)
     : await RepositoryRepository.getByUsernameAndReponame(username, reponame);
 
-  if (repo.userId === req.user.id) {
+  if (repo && repo.userId === userId) {
     return next();
   }
 
-  const collaborator = await CollaboratorRepository.getCollaboratorWithPermissions({
-    userId: req.user.id,
+  const isWriter = await CollaboratorRepository.getCollaboratorWithPermissions({
+    userId,
     repositoryId: repo.id,
     name: permissionLevel.write
   });
 
-  return collaborator
+  const isAdmin = await CollaboratorRepository.getCollaboratorWithPermissions({
+    userId,
+    repositoryId: repo.id,
+    name: permissionLevel.admin
+  });
+
+  if (isWriter || isAdmin) {
+    return next();
+  }
+
+  const { id: orgId } = await UserRepository.getByUsername(username);
+  const result = await OrgUserRepository.getUserWithOwnerRole({ userId, orgId });
+  let userRole;
+  if (result) {
+    userRole = result.role.name;
+  }
+  return userRole === orgRole.owner
     ? next()
     : next(new CustomError(403, `User ${req.user.username} doesn't have permission to access this page`));
 };
