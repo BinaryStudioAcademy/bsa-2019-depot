@@ -60,8 +60,6 @@ class CreateIssuePage extends React.Component {
       history,
       newUrl
     });
-
-    // history.push(newUrl);
   }
 
   render() {
