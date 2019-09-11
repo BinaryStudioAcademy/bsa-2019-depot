@@ -123,6 +123,40 @@ class RepositoryItem extends React.Component {
     );
   }
 
+  renderOrignalRepoLink = () => {
+    const {
+      repo: { originalRepo }
+    } = this.props;
+    if (originalRepo) {
+      const {
+        name: forkedRepoName,
+        user: { username: forkedRepoOwner }
+      } = originalRepo;
+      if (forkedRepoName && forkedRepoOwner) {
+        return (
+          <div className={styles.originalRepoLink}>
+            <span>
+              Forked from <a href={`/${forkedRepoOwner}/${forkedRepoName}`}>{`${forkedRepoOwner}/${forkedRepoName}`}</a>
+            </span>
+          </div>
+        );
+      }
+    }
+  };
+
+  getDescription = () => {
+    const {
+      repo: { description }
+    } = this.props;
+    if (description) {
+      return (
+        <div className={styles.repo_description}>
+          <span>{description}</span>
+        </div>
+      );
+    }
+  };
+
   render() {
     const {
       repo: { name, isStar, isPublic, defaultBranch },
@@ -141,6 +175,8 @@ class RepositoryItem extends React.Component {
         <div className={styles.repo_item_left}>
           <h3>
             {this.getRepoLink({ username, name, type })}
+            {this.renderOrignalRepoLink()}
+            {this.getDescription()}
             {!isPublic && <span className={styles.repoTypeLabel}>{repoType}</span>}
           </h3>
           <div className="repo-info">

@@ -154,7 +154,7 @@ class BlameViewPage extends React.Component {
     return loading || deleting ? (
       <Loader active inline="centered" />
     ) : (
-      <>
+      <Segment basic>
         <div className={styles.filePathRow}>
           <Breadcrumb size="big" className={styles.filePath}>
             <Breadcrumb.Section>
@@ -164,24 +164,24 @@ class BlameViewPage extends React.Component {
             <FilePathBreadcrumbSections owner={owner} reponame={reponame} branch={branch} filepath={filepathDirs} />
             <Breadcrumb.Section>{filename}</Breadcrumb.Section>
           </Breadcrumb>
-          <Button compact size="small" className={styles.copyButton} onClick={this.handleCopyPath}>
-            Copy path
-          </Button>
+          <div>
+            <Button compact size="small" className={styles.copyButton} onClick={this.onNormalView}>
+              Normal View
+            </Button>
+            <Button compact size="small" className={styles.copyButton} onClick={this.handleCopyPath}>
+              Copy path
+            </Button>
+          </div>
         </div>
         <Segment.Group className={styles.fileViewContainer}>
           <Segment className={styles.fileViewHeader}>
             <div className={styles.fileMetaData}>
               <p>{blameData.length} lines</p>
             </div>
-            <div className={styles.fileControls}>
-              <Button compact size="small" className={styles.copyButton} onClick={this.onNormalView}>
-                Normal View
-              </Button>
-            </div>
           </Segment>
           <Segment className={styles.blameSegment}>{blamesRaws}</Segment>
         </Segment.Group>
-      </>
+      </Segment>
     );
   }
 }
