@@ -31,7 +31,7 @@ const setUsername = async ({ id, username }) => {
 };
 
 const checkUsernameExists = async ({ username }) => {
-  const user = await UserRepository.getByUsername(username);
+  const user = await UserRepository.getByUsername(username.toLowerCase());
   return {
     usernameExists: Boolean(user)
   };

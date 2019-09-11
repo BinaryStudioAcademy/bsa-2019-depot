@@ -178,6 +178,7 @@ const modifyFile = async ({
   const oid = await NodeGit.Blob.createFromBuffer(repo, fileBuffer, fileBuffer.length);
 
   const indexEntry = new NodeGit.IndexEntry();
+  indexEntry.flags = 0;
   indexEntry.path = filepath;
   indexEntry.id = oid;
   indexEntry.mode = NodeGit.TreeEntry.FILEMODE.BLOB;
