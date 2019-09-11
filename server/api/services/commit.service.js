@@ -167,7 +167,7 @@ const modifyFile = async ({
   const lastCommitOnBranch = await repo.getBranchCommit(baseBranch);
   const lastCommitTree = await lastCommitOnBranch.getTree();
   const authorSignature = NodeGit.Signature.now(author, email);
-  const index = await repo.index();
+  const index = await repo.refreshIndex();
 
   if (baseBranch !== commitBranch) {
     await NodeGit.Branch.create(repo, commitBranch, lastCommitOnBranch, 1);
