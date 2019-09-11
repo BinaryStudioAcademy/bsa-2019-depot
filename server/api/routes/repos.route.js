@@ -232,10 +232,10 @@ router
   .get('/:repositoryId/issues', isReaderMiddleware, async (req, res, next) => {
     const { repositoryId } = req.params;
     const {
-      sort, authorId, title, isOpened
+      sort, authorId, assigneeId, title, isOpened
     } = req.query;
     try {
-      const issues = await issueService.getRepoIssues(repositoryId, sort, authorId, title, isOpened);
+      const issues = await issueService.getRepoIssues(repositoryId, sort, authorId, assigneeId, title, isOpened);
       const authors = await userService.getIssuesAuthors(repositoryId);
       const assignees = await userService.getIssuesAssignees(repositoryId);
       const openCount = await issueService.getIssueCount(repositoryId, true);

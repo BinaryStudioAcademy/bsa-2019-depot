@@ -264,7 +264,7 @@ class IssueRepository extends BaseRepository {
     });
   }
 
-  getIssues(repositoryId, sort, authorId, title, isOpened = true) {
+  getIssues(repositoryId, sort, authorId, assigneeId, title, isOpened = true) {
     return this.model.findAll({
       where: {
         repositoryId,
