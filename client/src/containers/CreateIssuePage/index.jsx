@@ -44,6 +44,11 @@ class CreateIssuePage extends React.Component {
       match: { url }
     } = this.props;
 
+    const newUrl = url
+      .split('/')
+      .slice(0, -1)
+      .join('/');
+
     createIssue({
       title,
       body,
@@ -51,14 +56,10 @@ class CreateIssuePage extends React.Component {
       repositoryId,
       isOpened: true,
       labelIds,
-      assigneeNames
+      assigneeNames,
+      history,
+      newUrl
     });
-
-    const newUrl = url
-      .split('/')
-      .slice(0, -1)
-      .join('/');
-    history.push(newUrl);
   }
 
   render() {

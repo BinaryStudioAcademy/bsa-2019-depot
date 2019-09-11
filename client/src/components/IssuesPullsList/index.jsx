@@ -75,6 +75,8 @@ class IssuesPullsList extends React.Component {
     const { repositoryId, isIssues } = this.props;
     const { filter } = this.state;
     const labelsCount = (await getLabels(repositoryId)).length;
+    const queryFilter = { ...filter };
+    Object.keys(queryFilter).forEach(key => !queryFilter[key] && delete queryFilter[key]);
 
     if (isIssues) {
       const {
@@ -83,12 +85,12 @@ class IssuesPullsList extends React.Component {
         authors: authorList,
         assignees: assigneeList,
         issues: items
-      } = await RepoService.getRepositoryIssues(repositoryId, filter);
+      } = await RepoService.getRepositoryIssues(repositoryId, queryFilter);
       this.setState({ openCount, closedCount, authorList, assigneeList, items, labelsCount, loading: false });
     } else {
       const { openCount, closedCount, authors: authorList, pulls: items } = await RepoService.getRepositoryPulls(
         repositoryId,
-        filter
+        queryFilter
       );
       this.setState({ isIssues, openCount, closedCount, authorList, items, labelsCount, loading: false });
     }
