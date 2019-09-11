@@ -23,7 +23,7 @@ export default StyleSheet.create({
     color: colors.blueButton
   },
   commentButton: {
-    backgroundColor: colors.blueLink
+    backgroundColor: colors.blueButton
   },
   commentButtonContainer: {
     marginRight: 10
