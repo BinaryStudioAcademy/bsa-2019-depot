@@ -23,9 +23,6 @@ export default StyleSheet.create({
     color: colors.blueButton
   },
   commentButton: {
-    backgroundColor: colors.blueLink
-  },
-  commentButton: {
     backgroundColor: colors.blueButton
   },
   commentButtonContainer: {
