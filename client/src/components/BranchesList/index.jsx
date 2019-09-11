@@ -42,7 +42,8 @@ const BranchesList = ({ branches, username, reponame, createNewPullRequest, repo
                   <span className={styles.pullRequestNumber}>#{branch.prNumber}</span>
                   <Link to={`${repoUrl}/pulls/${branch.prNumber}`}>
                     <Label color="green" className={styles.pullRequestStatus}>
-                      <Octicon icon={GitPullRequest} className={styles.prIcon}/>Open
+                      <Octicon icon={GitPullRequest} className={styles.prIcon} />
+                      Open
                     </Label>
                   </Link>
                 </div>

@@ -1,0 +1,71 @@
+:local(.allContributorsChart) {
+  background: #f6f8fa;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  padding: 20px;
+}
+
+:local(.chartInfo) {
+  margin-bottom: 20px;
+  color: #586069;
+}
+
+:local(.contributorsHeader) {
+  padding-bottom: 8px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #e1e4e8;
+}
+
+:local(.timeDuration) {
+  font-size: 1.6em;
+  font-weight: 400;
+}
+
+:local(.contributorsGrid) {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  grid-gap: 8px;
+}
+
+:local(.contributorsBox) {
+  background-color: #fff;
+  border: 1px solid #d1d5da;
+  border-radius: 3px;
+}
+
+:local(.contributorsBoxHeader) {
+  padding: 8px;
+  width: 100%;
+  display: flex;
+}
+
+:local(.contributorsImage) {
+  width: 38px;
+  height: 38px;
+}
+
+:local(.contributorsInfo) {
+  margin-left: 8px;
+}
+
+:local(.contributorsLink) {
+  display: block;
+  font-weight: 400;
+  font-size: 1.35em;
+  color: #0366d6;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+:local(.contributorsCommitCount) {
+  color: #586069;
+  font-size: 0.85em;
+}
+
+:local(.contributorsChart) {
+  background: #f6f8fa;
+  padding: 0 8px 10px 8px;
+}

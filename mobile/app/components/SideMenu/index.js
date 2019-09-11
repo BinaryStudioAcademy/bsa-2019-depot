@@ -24,7 +24,7 @@ class SideMenu extends Component {
       <View style={styles.menu}>
         <UserInfo data={currentUser} />
         <View style={styles.menuBottom}>
-          <Button title="Log out" type="solid" onPress={this.logOut} />
+          <Button title="Log out" type="solid" onPress={this.logOut} buttonStyle={styles.button} />
         </View>
       </View>
     );

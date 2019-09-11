@@ -27,6 +27,10 @@ $gray: #f7f7fb;
 .markdownContainer > * {
   word-wrap: break-word;
   white-space: pre-wrap;
+  > code {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+  }
 }
 
 .markdownContainer img {

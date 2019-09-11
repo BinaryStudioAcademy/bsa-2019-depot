@@ -82,12 +82,7 @@ class SettingsProfile extends Component {
     name: (
       <div>Your name may appear around Depot where you contribute or are mentioned. You can remove it at any time.</div>
     ),
-    email: (
-      <div>
-        You have set your email address to private. To toggle email privacy, go to email settings and uncheck "Keep my
-        email address private."
-      </div>
-    ),
+    email: <div>You cannot change your email at this time.</div>,
     bio: (
       <div>
         You can @<strong>mention</strong> other users and organizations to link to them.

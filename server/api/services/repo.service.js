@@ -305,7 +305,41 @@ const getRepoData = async repositoryId => repoRepository.getRepositoryById(repos
 
 const getRepositoryCollaborators = repositoryId => collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId);
 
-const getRepositoryForks = async repositoryId => repoRepository.getRepositoryForks(repositoryId);
+const getRepositoryForksById = async (repositoryId, level) => {
+  const forkLevel = level + 1;
+  const forkList = (await repoRepository.getRepositoryForks(repositoryId)).map(fork => fork.get({ plain: true }));
+
+  const forkIds = forkList.map(fork => fork.id);
+  const childForkList = await Promise.all(forkIds.map(id => getRepositoryForksById(id, forkLevel)));
+
+  for (let i = 0; i < forkList.length; i += 1) {
+    forkList[i].forks = childForkList[i];
+  }
+
+  return forkList;
+};
+
+const getRepositoryForks = async (repositoryId) => {
+  const originalRepositoryId = await repoHelper.getParentRepositoryId(repositoryId);
+  const repo = (await getRepoData(originalRepositoryId)).get({ plain: true });
+  repo.forks = await getRepositoryForksById(originalRepositoryId, 0);
+  return repo;
+};
+
+const getAvailableAssigneesByRepoId = async (repositoryId) => {
+  const repository = await repoRepository.getById(repositoryId);
+  if (!repository) {
+    Promise.reject(new CustomError(400, `Repository ${repositoryId} is not found`));
+  }
+  const { userId } = repository;
+  const collaboratorIds = (await collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId)).map(
+    collaborator => collaborator.userId
+  );
+  const orgUsersIds = (await orgUsersRepository.getAllOrganizationUsers(userId)) || [];
+  const assigneeIds = Array.from(new Set([userId, ...collaboratorIds, ...orgUsersIds]));
+  const assignees = await userRepository.getUsersByIds(assigneeIds);
+  return assignees.sort((assignee1, assignee2) => assignee2.username < assignee1.username);
+};
 
 module.exports = {
   createRepo,
@@ -321,5 +355,7 @@ module.exports = {
   updateByUserAndReponame,
   getRepoData,
   getRepositoryCollaborators,
-  getRepositoryForks
+  getRepositoryForks,
+  getRepositoryForksById,
+  getAvailableAssigneesByRepoId
 };

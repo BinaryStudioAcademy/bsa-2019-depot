@@ -62,4 +62,12 @@ $black: #363a44;
 
 .markdownContainer {
   padding: 20px;
+  > * {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    > code {
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+  }
 }

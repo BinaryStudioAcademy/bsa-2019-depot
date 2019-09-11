@@ -169,7 +169,8 @@ class CodeTab extends React.Component {
       currentUserName,
       fetchFileTree,
       location,
-      history
+      history,
+      contributorsCount
     } = this.props;
 
     if (!branches.length) {
@@ -217,6 +218,7 @@ class CodeTab extends React.Component {
             reponame={reponame}
             commitsCount={count}
             branchesCount={branchesCount}
+            contributorsCount={contributorsCount}
           />
           <RepoNav
             isOwn={isOwn}
@@ -271,6 +273,7 @@ const mapStateToProps = ({
         name: reponame,
         branches,
         defaultBranch,
+        contributorsCount,
         description,
         website,
         user: { username: ownername }
@@ -293,7 +296,8 @@ const mapStateToProps = ({
   currentUserName,
   userId,
   currentBranchData,
-  fileTreeData
+  fileTreeData,
+  contributorsCount
 });
 
 const mapDispatchToProps = {
@@ -318,6 +322,7 @@ CodeTab.propTypes = {
   reponame: PropTypes.string,
   branch: PropTypes.string,
   repoID: PropTypes.string.isRequired,
+  contributorsCount: PropTypes.string.isRequired,
   ownername: PropTypes.string,
   fetchBranch: PropTypes.func,
   fetchFileTree: PropTypes.func,

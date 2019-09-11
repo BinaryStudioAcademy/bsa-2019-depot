@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import * as queryString from 'query-string';
-import { Container, Loader, Icon, Input, Dropdown, Button } from 'semantic-ui-react';
+import { Segment, Loader, Icon, Input, Dropdown, Button } from 'semantic-ui-react';
 import DataList from '../../components/DataList';
 import * as issuesService from '../../services/issuesService';
 import * as pullsService from '../../services/pullsService';
@@ -254,14 +254,14 @@ class PersonalIssuesPrs extends Component {
     return loading ? (
       <Loader active />
     ) : (
-      <Container>
+      <Segment basic>
         <div className={styles.container}>
           <div className={styles.filterRow}>
             <Button.Group>
               <Button active={activeTab === tabs.created} onClick={this.handleGetCreated}>
                 Created
               </Button>
-              <Button disabled>Assigned</Button>
+              {!isPull ? <Button>Assigned</Button> : null}
               {isPull && (
                 <Button active={activeTab === tabs.reviewRequests} onClick={this.handleGetReviewRequests}>
                   Review requests
@@ -296,7 +296,7 @@ class PersonalIssuesPrs extends Component {
             <DataList data={filteredItems} isPull={isPull} />
           </div>
         </div>
-      </Container>
+      </Segment>
     );
   }
 }

@@ -80,13 +80,6 @@ export default StyleSheet.create({
     paddingLeft: 30,
     padding: 10
   },
-  issueButton: {
-    borderColor: colors.blueLink,
-    borderWidth: 0.6
-  },
-  issueButtonTitle: {
-    color: colors.blueLink
-  },
   issueButtons: {
     alignItems: 'flex-end',
     flexDirection: 'row',
@@ -94,5 +87,18 @@ export default StyleSheet.create({
     marginLeft: 11,
     marginTop: 10,
     width: '100%'
+  },
+  mergeButton: {
+    marginRight: 10
+  },
+  pullButton: {
+    borderColor: colors.blueLink,
+    borderWidth: 0.6
+  },
+  pullButtons: {
+    flexDirection: 'row'
+  },
+  pullButtonsTitle: {
+    color: colors.blueLink
   }
 });

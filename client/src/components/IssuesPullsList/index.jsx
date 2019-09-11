@@ -8,7 +8,7 @@ import DataList from '../DataList';
 import * as RepoService from '../../services/repositoryService';
 import { getLabels } from '../../services/labelsService';
 import { getUserImgLink } from '../../helpers/imageHelper';
-import { debounce } from 'debounce';
+import debounce from 'debounce-promise';
 
 import styles from './styles.module.scss';
 AntdIcon.add(PullRequestOutline);
@@ -75,6 +75,8 @@ class IssuesPullsList extends React.Component {
     const { repositoryId, isIssues } = this.props;
     const { filter } = this.state;
     const labelsCount = (await getLabels(repositoryId)).length;
+    const queryFilter = { ...filter };
+    Object.keys(queryFilter).forEach(key => queryFilter[key] === '' && delete queryFilter[key]);
 
     if (isIssues) {
       const {
@@ -83,16 +85,13 @@ class IssuesPullsList extends React.Component {
         authors: authorList,
         assignees: assigneeList,
         issues: items
-      } = await RepoService.getRepositoryIssues(repositoryId, filter);
+      } = await RepoService.getRepositoryIssues(repositoryId, queryFilter);
       this.setState({ openCount, closedCount, authorList, assigneeList, items, labelsCount, loading: false });
     } else {
-      const {
-        openCount,
-        closedCount,
-        authors: authorList,
-        // retrieve assignees for PR
-        pulls: items
-      } = await RepoService.getRepositoryPulls(repositoryId, filter);
+      const { openCount, closedCount, authors: authorList, pulls: items } = await RepoService.getRepositoryPulls(
+        repositoryId,
+        queryFilter
+      );
       this.setState({ isIssues, openCount, closedCount, authorList, items, labelsCount, loading: false });
     }
   };
@@ -203,9 +202,10 @@ class IssuesPullsList extends React.Component {
         break;
       case 'assignee':
         const { assigneeList, assigneeDropdownFilter } = this.state;
-        const filteredAssigneeList = assigneeList.filter(assignee =>
-          assignee.username.includes(assigneeDropdownFilter)
+        const filteredAssigneeList = assigneeList.filter(
+          assignee => assignee && assignee.username && assignee.username.includes(assigneeDropdownFilter)
         );
+
         if (filteredAssigneeList.length > 0) {
           await this.setState({
             assigneeDropdownFilter: '',
@@ -241,7 +241,9 @@ class IssuesPullsList extends React.Component {
     } = this.state;
 
     const filteredAuthorList = authorList.filter(author => author.username.includes(authorDropdownFilter));
-    const filteredAssigneeList = assigneeList.filter(assignee => assignee.username.includes(assigneeDropdownFilter));
+    const filteredAssigneeList = assigneeList.filter(
+      assignee => assignee && assignee.username && assignee.username.includes(assigneeDropdownFilter)
+    );
 
     return !loading ? (
       <Segment basic>

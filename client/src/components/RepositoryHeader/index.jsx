@@ -7,7 +7,7 @@ import { Icon, Label, Container, Segment, Button } from 'semantic-ui-react';
 import ForkButton from '../ForkButton';
 import StarButton from '../../components/StarButton';
 import { setStar } from '../../services/repositoryService';
-import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
+import { getAdminUserPermissions } from '../../helpers/checkPermissionsHelper';
 
 import styles from './styles.module.scss';
 
@@ -50,7 +50,7 @@ const RepositoryHeader = ({
   const [isAccessGranted, setIsAccessGranted] = useState(false);
 
   const getPermissions = async () => {
-    const accessPermissions = await getWriteUserPermissions(owner, repoName, userId);
+    const accessPermissions = await getAdminUserPermissions(owner, repoName, userId);
     setIsAccessGranted(accessPermissions);
   };
 
@@ -83,6 +83,7 @@ const RepositoryHeader = ({
         return (
           <div className={styles.originalRepoLink}>
             <span>
+              <Icon name="fork small" />
               forked from <a href={`/${forkedRepoOwner}/${forkedRepoName}`}>{`${forkedRepoOwner}/${forkedRepoName}`}</a>
             </span>
           </div>
@@ -129,12 +130,12 @@ const RepositoryHeader = ({
             </div>
             <div className={`${activeTab === 'issues' && 'active'} item`}>
               <Link to={`${baseUrl}/issues`}>
-                Issues<Label circular>{issueCount}</Label>
+                <Icon name="info circle" /> Issues<Label circular>{issueCount}</Label>
               </Link>
             </div>
             <div className={`${activeTab === 'pulls' && 'active'} item`}>
               <Link to={`${baseUrl}/pulls`}>
-                Pull Requests<Label circular>{pullCount}</Label>
+                <Icon name="random" /> Pull Requests<Label circular>{pullCount}</Label>
               </Link>
             </div>
             <div className={`${activeTab === 'insights' && 'active'} item`}>

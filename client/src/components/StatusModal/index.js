@@ -10,7 +10,7 @@ import styles from './styles.module.scss';
 const StatusModal = ({ showStatusModal, hideModal, username }) => {
   const [status, setStatusText] = useState('');
   const [prevStatus, setPrevStatusText] = useState('0');
-  if (prevStatus) {
+  if (prevStatus && username) {
     getStatus(username).then(({ status }) => setPrevStatusText(status));
   }
 
@@ -57,7 +57,7 @@ const StatusModal = ({ showStatusModal, hideModal, username }) => {
 StatusModal.propTypes = {
   showStatusModal: PropTypes.bool.isRequired,
   hideModal: PropTypes.func.isRequired,
-  username: PropTypes.string.isRequired
+  username: PropTypes.string
 };
 
 export default StatusModal;

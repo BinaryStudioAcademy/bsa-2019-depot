@@ -7,7 +7,7 @@ import LanguageStats from '../../containers/LanguageStats';
 
 import styles from './styles.module.scss';
 
-const CodeTabMenu = ({ ownername, reponame, branch, branchesCount, commitsCount }) => (
+const CodeTabMenu = ({ ownername, reponame, branch, branchesCount, commitsCount, contributorsCount }) => (
   <>
     <Menu borderless attached="top" widths={3}>
       <Menu.Item>
@@ -24,8 +24,8 @@ const CodeTabMenu = ({ ownername, reponame, branch, branchesCount, commitsCount 
       </Menu.Item>
       <Menu.Item>
         <Octicon icon={getIconByName('organization')} />
-        <Link className={styles.repoMetaDataLinks} to="">
-          <b>10</b> contributors
+        <Link className={styles.repoMetaDataLinks} to={`/${ownername}/${reponame}/insights/contributors`}>
+          <b>{contributorsCount}</b> contributors
         </Link>
       </Menu.Item>
     </Menu>
@@ -38,7 +38,8 @@ CodeTabMenu.propTypes = {
   reponame: PropTypes.string.isRequired,
   branch: PropTypes.string.isRequired,
   branchesCount: PropTypes.number.isRequired,
-  commitsCount: PropTypes.number.isRequired
+  commitsCount: PropTypes.number.isRequired,
+  contributorsCount: PropTypes.string.isRequired
 };
 
 export default CodeTabMenu;
