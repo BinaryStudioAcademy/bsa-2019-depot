@@ -94,13 +94,8 @@ class CodeTab extends React.Component {
       history,
       location: { pathname }
     } = this.props;
-    const { branch } = this.state;
 
-    if (pathname.match('/' + branch + '$')) {
-      history.push(pathname.replace('/tree', '/new'));
-    } else {
-      history.push(pathname + '/new/' + branch);
-    }
+    history.push(pathname.replace('/tree', '/new'));
   };
 
   onReadmeEdit = () => {
