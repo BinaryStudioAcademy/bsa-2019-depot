@@ -264,13 +264,31 @@ class IssueRepository extends BaseRepository {
     });
   }
 
-  getIssues(repositoryId, sort, authorId, assigneeId, title, isOpened = true) {
-    return this.model.findAll({
+  async getIssues(repositoryId, sort, authorId, assigneeId, title, isOpened = true) {
+    const filterObject = {
       where: {
         repositoryId,
         isOpened,
         ...(title ? { title: { [Op.substring]: title } } : {}),
         ...(authorId ? { userId: authorId } : {})
+      },
+      include: [
+        {
+          model: IssueAssigneeModel,
+          attributes: ['id']
+        }
+      ]
+    };
+
+    if (assigneeId) {
+      filterObject.include[0].where = { assigneeId };
+    }
+
+    const filteredIssueIds = (await this.model.findAll(filterObject)).map(issue => issue.id);
+
+    return this.model.findAll({
+      where: {
+        id: filteredIssueIds
       },
       attributes: {
         include: [
@@ -312,9 +330,6 @@ class IssueRepository extends BaseRepository {
         {
           model: IssueAssigneeModel,
           attributes: ['id'],
-          where: {
-            ...(assigneeId ? { assigneeId } : {})
-          },
           include: {
             model: UserModel,
             as: 'assignee',
