@@ -91,10 +91,6 @@
   white-space: pre;
 }
 
-:global(.ui.button):local(.copyButton) {
-  margin-right: 0;
-}
-
 :global(.ui.segments):local(.fileViewContainer) {
   margin-top: 0;
 }
