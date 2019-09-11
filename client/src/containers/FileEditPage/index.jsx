@@ -87,18 +87,10 @@ class FileEditPage extends React.Component {
       history,
       location: { pathname }
     } = this.props;
-    const { toEdit } = this.state;
+    
+    const pathTo = pathname.replace('/blob', '/tree').replace('/new', '/tree');
 
-    let folderUrl = pathname.replace('/edit', '/tree').replace('/new', '/tree');
-    if (toEdit) {
-      folderUrl = folderUrl
-        .split('/')
-        .slice(0, -1)
-        .join('/');
-    }
-
-    history.push(`${folderUrl}`);
-    window.location.reload();
+    window.location.href = `${window.location.origin}${pathTo}`;
   }
 
   handleCommitFile({ message, commitBranch }) {
