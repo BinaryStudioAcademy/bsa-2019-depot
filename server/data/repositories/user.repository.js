@@ -141,11 +141,13 @@ class UserRepository extends BaseRepository {
       attributes: ['id', 'username', 'imgUrl'],
       include: {
         model: IssueAssigneeModel,
+        required: true,
         include: {
           model: IssueModel,
           where: { repositoryId }
         }
-      }
+      },
+      order: [['username', 'ASC']]
     });
   }
 }

@@ -264,8 +264,8 @@ class IssueRepository extends BaseRepository {
     });
   }
 
-  getIssues(repositoryId, sort, authorId, title, isOpened = true) {
-    return this.model.findAll({
+  async getIssues(repositoryId, sort, authorId, assigneeId, title, isOpened = true) {
+    const queryObject = {
       where: {
         repositoryId,
         isOpened,
@@ -320,7 +320,23 @@ class IssueRepository extends BaseRepository {
         }
       ],
       order: parseSortQuery(sort)
-    });
+    };
+
+    if (assigneeId) {
+      const issues = await sequelize.query(`(SELECT "issues"."id"
+      FROM "issues"
+      LEFT JOIN "issueAssignees"
+      ON "issueAssignees"."issueId"="issues"."id"
+      WHERE "issueAssignees"."assigneeId" = '${assigneeId}'
+      AND "issues"."repositoryId" = '${repositoryId}'
+      AND "issues"."deletedAt" IS NULL )`);
+      if (issues) {
+        const issueIds = issues[0].map(issue => issue.id);
+        queryObject.where.id = issueIds;
+      }
+    }
+
+    return this.model.findAll(queryObject);
   }
 
   getIssueCount(repositoryId, isOpened) {

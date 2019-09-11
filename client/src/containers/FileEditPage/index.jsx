@@ -84,12 +84,10 @@ class FileEditPage extends React.Component {
 
   handleCancel() {
     const {
-      history,
       location: { pathname }
     } = this.props;
     
-    const pathTo = pathname.replace('/blob', '/tree').replace('/new', '/tree');
-
+    const pathTo = pathname.replace('/edit/', '/blob/').replace('/new/', '/tree/');
     window.location.href = `${window.location.origin}${pathTo}`;
   }
 

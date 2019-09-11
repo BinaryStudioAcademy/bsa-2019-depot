@@ -1,5 +1,4 @@
 import * as queryString from 'query-string';
-import { toast } from 'react-toastify';
 
 function getFetchUrl(args) {
   return args.endpoint + (args.query ? `?${queryString.stringify(args.query)}` : '');
