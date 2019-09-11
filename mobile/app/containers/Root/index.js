@@ -5,20 +5,13 @@ import { AppNavigator } from '../../routes';
 import { fetchCurrentUser } from '../../routines/routines';
 import firebase from 'react-native-firebase';
 import { AsyncStorage } from 'react-native';
+import { updateUserDeviceToken } from '../../services/userService';
 
 import NavigationService from '../../navigation';
 import storageHelper from '../../helpers/storageHelper';
 
 class Root extends React.Component {
   async componentDidMount() {
-    const channel = new firebase.notifications.Android.Channel(
-      'insider',
-      'insider channel',
-      firebase.notifications.Android.Importance.Max
-    );
-    firebase.notifications().android.createChannel(channel);
-    this.checkPermission();
-    this.createNotificationListeners();
     const { fetchCurrentUser } = this.props;
     const token = await storageHelper.get('token');
     if (token)
@@ -28,12 +21,22 @@ class Root extends React.Component {
         })
         .then(() => {
           fetchCurrentUser();
+          const channel = new firebase.notifications.Android.Channel(
+            'insider',
+            'insider channel',
+            firebase.notifications.Android.Importance.Max
+          );
+          firebase.notifications().android.createChannel(channel);
+          this.checkPermission();
+          this.createNotificationListeners();
         });
     else NavigationService.navigate('Auth');
   }
 
   async componentDidUpdate(prevProps) {
     const { isAuthorized, currentUser } = this.props;
+
+    this.getToken().then(token => updateUserDeviceToken({ id: currentUser.id, settings: { deviceToken: token } }));
     if (prevProps.isAuthorized !== isAuthorized && isAuthorized) {
       if (!currentUser.username) {
         NavigationService.navigate('SetUsername');
@@ -45,14 +48,13 @@ class Root extends React.Component {
 
   async getToken() {
     let fcmToken = await AsyncStorage.getItem('fcmToken');
-    //console.log(fcmToken);
     if (!fcmToken) {
       fcmToken = await firebase.messaging().getToken();
       if (fcmToken) {
         await AsyncStorage.setItem('fcmToken', fcmToken);
-        //console.log(fcmToken);
       }
     }
+    return fcmToken;
   }
 
   async checkPermission() {
