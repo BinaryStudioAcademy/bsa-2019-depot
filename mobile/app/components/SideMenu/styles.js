@@ -1,6 +1,10 @@
 import { StyleSheet } from 'react-native';
+import colors from '../../config/color.config';
 
 export default StyleSheet.create({
+  button: {
+    backgroundColor: colors.blueLink
+  },
   menu: {
     alignItems: 'center',
     flex: 1,

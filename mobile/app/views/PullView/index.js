@@ -81,8 +81,21 @@ class IssueView extends Component {
     if (data.prstatus.name === 'OPEN') {
       PRButtons = (
         <View style={styles.pullButtons}>
-          <Button containerStyle={styles.mergeButton} title="Merge PR" type="outline" onPress={this.handleMerge} />
-          <Button title="Close PR" type="outline" onPress={this.handleCLose} />
+          <Button
+            buttonStyle={styles.pullButton}
+            containerStyle={styles.mergeButton}
+            title="Merge PR"
+            titleStyle={styles.pullButtonsTitle}
+            type="outline"
+            onPress={this.handleMerge}
+          />
+          <Button
+            buttonStyle={styles.pullButton}
+            title="Close PR"
+            titleStyle={styles.pullButtonsTitle}
+            type="outline"
+            onPress={this.handleCLose}
+          />
         </View>
       );
     } else if (data.prstatus.name === 'CLOSED') {
@@ -125,7 +138,8 @@ class IssueView extends Component {
               type="solid"
               onPress={this.handleSubmit}
               disabled={this.state.comment.length < 1}
-              containerStyle={styles.commentButton}
+              containerStyle={styles.commentButtonContainer}
+              buttonStyle={styles.commentButton}
             />
             {PRButtons}
           </View>
