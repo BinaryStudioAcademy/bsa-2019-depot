@@ -31,8 +31,6 @@ module.exports = async (req, res, next) => {
     name: permissionLevel.admin
   });
 
-  console.log('isWriter: ', isWriter);
-  console.log('isAdmin: ', isAdmin);
   if (isWriter || isAdmin) {
     return next();
   }
