@@ -10,6 +10,7 @@ import { getRelationUserOrg } from '../../services/orgService';
 import * as elasticHelper from '../../helpers/elasticsearchHelper';
 import * as Yup from 'yup';
 import styles from './styles.module.scss';
+import debounce from 'debounce-promise';
 
 const gitingnoreOptions = [
   {
@@ -55,6 +56,8 @@ const validationSchema = Yup.object().shape({
     .max(100, 'Maximum length - 100 characters')
 });
 
+const debouncedCheckName = debounce(checkName, 500);
+
 class CreateRepository extends React.Component {
   constructor(props) {
     super(props);
@@ -72,7 +75,7 @@ class CreateRepository extends React.Component {
 
   async validate(values) {
     let errors = {};
-    const { exists } = await checkName(values);
+    const { exists } = await debouncedCheckName(values);
     if (exists) {
       errors.reponame = `The repository ${values.reponame} already exists on this account`;
     }
