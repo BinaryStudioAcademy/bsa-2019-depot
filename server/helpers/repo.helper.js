@@ -150,12 +150,12 @@ const syncDb = async (commits, branch) => {
 };
 
 const getParentRepositoryId = async (repositoryId) => {
-  let currentRepository = await repoRepository.getById(repositoryId);
-  if (!currentRepository.forkedFromRepoId){
-    return repositoryId
-  } else {
-    return await getParentRepositoryId(currentRepository.forkedFromRepoId);
+  const currentRepository = await repoRepository.getById(repositoryId);
+  if (!currentRepository.forkedFromRepoId) {
+    return repositoryId;
   }
+  const parentRepoId = await getParentRepositoryId(currentRepository.forkedFromRepoId);
+  return parentRepoId;
 };
 
 module.exports = {

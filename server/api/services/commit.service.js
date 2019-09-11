@@ -290,19 +290,19 @@ const getCommitActivityData = async (repositoryId) => {
 const getUsersCommitsByRepositoryId = async (repositoryId) => {
   try {
     const currentRepo = await RepoRepository.getById(repositoryId);
-    const {
-      createdAt: createdRepoDate,
-      defaultBranch: { name: branchname }
-    } = currentRepo;
+    let defaultBranchActivity = [];
+    const { createdAt: createdRepoDate, defaultBranch } = currentRepo;
     const usersCommits = await userRepository.getUsersCommits(repositoryId);
-    const commitsInDefaultBranch = await getCommits(branchname, repositoryId);
+    if (defaultBranch) {
+      const commitsInDefaultBranch = await getCommits(defaultBranch.name, repositoryId);
+      defaultBranchActivity = CommitActivityByUserHelper.getActivityByUser(commitsInDefaultBranch, createdRepoDate);
+    }
 
     const usersActivity = usersCommits.map((user) => {
       const {
         id, username, commits, imgUrl
       } = user.get({ plain: true });
       const byWeeks = CommitActivityByUserHelper.getActivityByUser(commits, createdRepoDate);
-      // console.log(byWeeks);
       return {
         id,
         username,
@@ -311,7 +311,6 @@ const getUsersCommitsByRepositoryId = async (repositoryId) => {
         activity: byWeeks
       };
     });
-    const defaultBranchActivity = CommitActivityByUserHelper.getActivityByUser(commitsInDefaultBranch, createdRepoDate);
 
     return {
       defaultBranchActivity,
