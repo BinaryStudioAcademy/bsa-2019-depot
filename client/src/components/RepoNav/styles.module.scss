@@ -30,7 +30,6 @@ $black: #363a44;
   border-radius: 3px;
   box-shadow: 0 3px 12px rgba(27, 31, 35, 0.15);
   color: #586069;
-  font-size: 75%;
 }
 
 :global(.ui.dropdown input):local(.searchBranchInput) {
@@ -40,7 +39,7 @@ $black: #363a44;
   max-width: 100%;
   padding: 10px 5px;
   width: 100%;
-  font-size: 150%;
+  font-size: 120%;
 }
 
 .repoActions {

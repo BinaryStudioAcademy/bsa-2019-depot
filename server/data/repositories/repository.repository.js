@@ -58,6 +58,17 @@ class RepositoryRepository extends BaseRepository {
           attributes: ['userId']
         },
         {
+          model: this.model,
+          as: 'originalRepo',
+          attributes: ['id', 'name'],
+          include: [
+            {
+              model: UserModel,
+              attributes: ['id', 'username']
+            }
+          ]
+        },
+        {
           model: BranchModel,
           as: 'defaultBranch',
           include: [

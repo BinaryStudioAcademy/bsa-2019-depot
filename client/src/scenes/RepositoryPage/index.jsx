@@ -133,7 +133,7 @@ class RepositoryPage extends React.Component {
     }
 
     return username === currentUserName || isPublic || isAccessGranted ? (
-      <>
+      <Container>
         <RepositoryHeader
           owner={username}
           repoName={reponame}
@@ -143,31 +143,29 @@ class RepositoryPage extends React.Component {
           baseUrl={match.url}
           isPublic={isPublic}
         />
-        <Container>
-          <Switch>
-            <Route exact path={`${match.path}`} render={defaultRedirect} />
-            <Route exact path={`${match.path}/tree/:branch`} component={CodeTab} />
-            <Route exact path={`${match.path}/tree/:branch/${params}`} component={CodeTab} />
-            <Route exact path={`${match.path}/commits/:branch`} component={CommitsPage} />
-            <Route exact path={`${match.path}/commit/:hash`} component={DiffCommitView} />
-            <Route exact path={`${match.path}/issues`} component={IssuesTab} />
-            <Route exact path={`${match.path}/pulls`} component={PullRequestsTab} />
-            <Route path={`${match.path}/insights`} component={InsightsTab} />
-            <Route path={`${match.path}/pulls/:number`} component={PullView} />
-            <Route exact path={`${match.path}/compare`} component={CompareChanges} />
-            <Route exact path={`${match.path}/issues/new`} component={CreateIssuePage} />
-            <Route exact path={`${match.path}/issues/:number`} component={IssueComments} />
-            <Route exact path={`${match.path}/labels`} component={LabelTab} />
-            <PrivateTab path={`${match.path}/settings`} component={RepoSettings} />
-            <Route exact path={`${match.path}/stargazers`} component={StargazersPage} />
-            <Route exact path={`${match.path}/branches`} component={BranchesTab} />
-            <PrivateTab path={[`${match.path}/new/:branch`, `${match.path}/edit/:branch`]} component={FileEditPage} />
-            <Route path={`${match.path}/blob/:branch`} component={FileViewPage} />
-            <Route path={`${match.path}/blame/:branch`} component={BlameViewPage} />
-            <Route exact path={`${match.path}/invitations`} component={CollaboratorInvitation} />
-          </Switch>
-        </Container>
-      </>
+        <Switch>
+          <Route exact path={`${match.path}`} render={defaultRedirect} />
+          <Route exact path={`${match.path}/tree/:branch`} component={CodeTab} />
+          <Route exact path={`${match.path}/tree/:branch/${params}`} component={CodeTab} />
+          <Route exact path={`${match.path}/commits/:branch`} component={CommitsPage} />
+          <Route exact path={`${match.path}/commit/:hash`} component={DiffCommitView} />
+          <Route exact path={`${match.path}/issues`} component={IssuesTab} />
+          <Route exact path={`${match.path}/pulls`} component={PullRequestsTab} />
+          <Route path={`${match.path}/insights`} component={InsightsTab} />
+          <Route path={`${match.path}/pulls/:number`} component={PullView} />
+          <Route exact path={`${match.path}/compare`} component={CompareChanges} />
+          <Route exact path={`${match.path}/issues/new`} component={CreateIssuePage} />
+          <Route exact path={`${match.path}/issues/:number`} component={IssueComments} />
+          <Route exact path={`${match.path}/labels`} component={LabelTab} />
+          <PrivateTab path={`${match.path}/settings`} component={RepoSettings} />
+          <Route exact path={`${match.path}/stargazers`} component={StargazersPage} />
+          <Route exact path={`${match.path}/branches`} component={BranchesTab} />
+          <PrivateTab path={[`${match.path}/new/:branch`, `${match.path}/edit/:branch`]} component={FileEditPage} />
+          <Route path={`${match.path}/blob/:branch`} component={FileViewPage} />
+          <Route path={`${match.path}/blame/:branch`} component={BlameViewPage} />
+          <Route exact path={`${match.path}/invitations`} component={CollaboratorInvitation} />
+        </Switch>
+      </Container>
     ) : (
       <Redirect to={`/${username}`} />
     );
