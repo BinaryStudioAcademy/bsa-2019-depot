@@ -105,7 +105,7 @@ class PullRepository extends BaseRepository {
         },
         {
           model: UserModel,
-          attributes: ['username']
+          attributes: ['username', 'imgUrl']
         },
         {
           model: PRStatusModel,
