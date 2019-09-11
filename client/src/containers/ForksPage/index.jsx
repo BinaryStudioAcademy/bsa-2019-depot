@@ -100,7 +100,7 @@ class ForksPage extends Component {
       <div>
         {loading ? (
           <Loader active />
-        ) : forks.forks.length > 0 ? (
+        ) : forks && forks.forks && forks.forks.length > 0 ? (
           <ul>
             <li key={forks.id} className={`fork-item ${repositoryId === forks.id ? ' current' : ''}`}>
               <Popup trigger={<Image src={getUserImgLink(forks.user.imgUrl)} size="mini" spaced />} flowing on="hover">
