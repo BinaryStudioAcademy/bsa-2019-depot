@@ -83,7 +83,8 @@ const RepositoryHeader = ({
         return (
           <div className={styles.originalRepoLink}>
             <span>
-              <Icon name="fork small"/>forked from <a href={`/${forkedRepoOwner}/${forkedRepoName}`}>{`${forkedRepoOwner}/${forkedRepoName}`}</a>
+              <Icon name="fork small" />
+              forked from <a href={`/${forkedRepoOwner}/${forkedRepoName}`}>{`${forkedRepoOwner}/${forkedRepoName}`}</a>
             </span>
           </div>
         );
