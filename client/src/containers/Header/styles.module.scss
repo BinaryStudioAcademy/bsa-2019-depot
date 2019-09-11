@@ -220,7 +220,11 @@ $grey-color: #f7f7fb;
     justify-content: flex-end;
   }
   .statusItem {
+    display: inline-block;
     border: 1px solid rgb(223, 226, 230);
+    max-width: 170px;
+    overflow: hidden;
+    text-overflow: ellipsis;
     border-radius: 5px;
     padding: 10px;
 

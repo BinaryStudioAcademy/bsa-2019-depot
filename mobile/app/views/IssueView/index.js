@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, FlatList, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { Text, View, FlatList, TextInput, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
 import { getIssueComments, createIssueComment, closeIssue, reopenIssue } from '../../services/issueService';
 import IssueComment from '../../components/IssueComment';
@@ -7,6 +7,7 @@ import { socketInit } from '../../helpers/socketInitHelper';
 import moment from 'moment';
 import styles from './styles';
 import PropTypes from 'prop-types';
+import { Button } from 'react-native-elements';
 
 class IssueView extends Component {
   constructor(props) {
@@ -174,22 +175,30 @@ class IssueView extends Component {
             style={styles.commentInput}
           />
           <View style={styles.issueButtons}>
-            <TouchableOpacity
-              style={styles.commentButton}
+            <Button
+              title="Comment"
+              type="solid"
               onPress={this.handleSubmit}
               disabled={this.state.comment.length < 1}
-            >
-              <Text style={styles.commentText}>{'Comment'}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.closeButton} onPress={data.isOpened ? this.handleClose : this.handleReopen}>
-              <Icon
-                name={data.isOpened ? 'issue-closed' : 'issue-reopened'}
-                size={15}
-                color="#DC6767"
-                style={styles.closeIcon}
-              />
-              <Text style={styles.closeText}>{data.isOpened ? 'Close Issue' : 'Reopen Issue'}</Text>
-            </TouchableOpacity>
+              containerStyle={styles.commentButtonContainer}
+              buttonStyle={styles.commentButton}
+            />
+            <Button
+              onPress={data.isOpened ? this.handleClose : this.handleReopen}
+              title={data.isOpened ? 'Close Issue' : 'Reopen Issue'}
+              buttonStyle={styles.issueButton}
+              containerStyle={styles.issueButtonContainer}
+              titleStyle={styles.issueButtonTitle}
+              type="outline"
+              icon={
+                <Icon
+                  name={data.isOpened ? 'issue-closed' : 'issue-reopened'}
+                  size={15}
+                  color="#DC6767"
+                  style={styles.closeIcon}
+                />
+              }
+            />
           </View>
         </View>
       </ScrollView>

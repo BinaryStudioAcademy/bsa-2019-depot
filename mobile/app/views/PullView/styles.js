@@ -23,6 +23,9 @@ export default StyleSheet.create({
     color: colors.blueButton
   },
   commentButton: {
+    backgroundColor: colors.blueButton
+  },
+  commentButtonContainer: {
     marginRight: 10
   },
   commentInput: {
@@ -80,6 +83,7 @@ export default StyleSheet.create({
   issueButtons: {
     alignItems: 'flex-end',
     flexDirection: 'row',
+    marginBottom: 10,
     marginLeft: 11,
     marginTop: 10,
     width: '100%'
@@ -87,7 +91,14 @@ export default StyleSheet.create({
   mergeButton: {
     marginRight: 10
   },
+  pullButton: {
+    borderColor: colors.blueLink,
+    borderWidth: 0.6
+  },
   pullButtons: {
     flexDirection: 'row'
+  },
+  pullButtonsTitle: {
+    color: colors.blueLink
   }
 });

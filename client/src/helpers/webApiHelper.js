@@ -60,7 +60,8 @@ export default async function callWebApi(args) {
     if (args.endpoint !== '/api/auth/user') await throwIfResponseFailed(res);
     return res;
   } catch (err) {
-    toast.error(`Status: ${err.status}. ${err.message}`);
+    //toast.error(`Status: ${err.status}. ${err.message}`);
+    console.error(`Status: ${err.status}. ${err.message}`);
     handleError(err);
   }
 }
@@ -69,6 +70,7 @@ export async function callExternalApi(args) {
   try {
     return fetch(getFetchUrl(args));
   } catch (err) {
-    toast.error(`Status: ${err.status}. ${err.message}`);
+    //toast.error(`Status: ${err.status}. ${err.message}`);
+    console.error(`Status: ${err.status}. ${err.message}`);
   }
 }

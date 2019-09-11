@@ -3,7 +3,7 @@ import { FlatList, RefreshControl, ScrollView, View } from 'react-native';
 import { getUserPulls } from '../../services/pullsService';
 import { connect } from 'react-redux';
 import { fetchCurrentUser } from '../../routines/routines';
-import styles from '../IssuesView/styles';
+import styles from '../PullsView/styles';
 import { Button } from 'react-native-elements';
 import PullItem from '../../components/PullItem';
 import Spinner from '../../components/Spinner';
@@ -76,7 +76,7 @@ class PullsView extends React.Component {
 
     return !isLoading ? (
       <ScrollView refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.handleRefresh} />}>
-        <View style={styles.issueHeader}>
+        <View style={styles.pullHeader}>
           <Button
             title={pullsData.open + ' Open'}
             type="solid"

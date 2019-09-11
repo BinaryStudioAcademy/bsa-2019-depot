@@ -2,6 +2,9 @@ import { StyleSheet } from 'react-native';
 import colors from '../../config/color.config';
 
 export default StyleSheet.create({
+  buttons: {
+    backgroundColor: colors.blueButton
+  },
   leftButton: {
     paddingRight: 5
   },

@@ -2,7 +2,9 @@ import { StyleSheet } from 'react-native';
 import colors from '../../config/color.config';
 
 export default StyleSheet.create({
-  buttons: {},
+  buttons: {
+    backgroundColor: colors.blueButton
+  },
   issueHeader: {
     borderBottomColor: colors.greyBorder,
     borderBottomWidth: 1,

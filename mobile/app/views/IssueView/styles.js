@@ -23,17 +23,10 @@ export default StyleSheet.create({
     color: colors.blueButton
   },
   commentButton: {
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    backgroundColor: colors.blueButton,
-    borderColor: colors.white,
-    borderRadius: 4,
-    borderWidth: StyleSheet.hairlineWidth,
-    color: colors.white,
-    justifyContent: 'center',
-    margin: 10,
-    paddingVertical: 8,
-    width: '20%'
+    backgroundColor: colors.blueButton
+  },
+  commentButtonContainer: {
+    marginRight: 10
   },
   commentInput: {
     alignSelf: 'center',
@@ -87,9 +80,19 @@ export default StyleSheet.create({
     paddingLeft: 30,
     padding: 10
   },
+  issueButton: {
+    borderColor: colors.blueLink,
+    borderWidth: 0.6
+  },
+  issueButtonTitle: {
+    color: colors.blueLink
+  },
   issueButtons: {
     alignItems: 'flex-end',
     flexDirection: 'row',
+    marginBottom: 10,
+    marginLeft: 11,
+    marginTop: 10,
     width: '100%'
   }
 });

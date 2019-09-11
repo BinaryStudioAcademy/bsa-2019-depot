@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 import Octicon, { Repo } from '@primer/octicons-react';
-import { Icon, Label, Container, Segment, Button } from 'semantic-ui-react';
+import { Icon, Label, Segment, Button } from 'semantic-ui-react';
 import ForkButton from '../ForkButton';
 import StarButton from '../../components/StarButton';
 import { setStar } from '../../services/repositoryService';
@@ -21,7 +21,6 @@ const RepositoryHeader = ({
   pullCount,
   activePage,
   baseUrl,
-  isBlamePage,
   history,
   isPublic
 }) => {
@@ -29,23 +28,23 @@ const RepositoryHeader = ({
   const [starCount, setStarCount] = useState(starsCount);
   let activeTab;
   switch (activePage) {
-  case 'issues':
-    activeTab = 'issues';
-    break;
-  case 'pulls':
-    activeTab = 'pulls';
-    break;
-  case 'commits':
-    activeTab = 'code';
-    break;
-  case 'insights':
-    activeTab = 'insights';
-    break;
-  case 'settings':
-    activeTab = 'settings';
-    break;
-  default:
-    activeTab = 'code';
+    case 'issues':
+      activeTab = 'issues';
+      break;
+    case 'pulls':
+      activeTab = 'pulls';
+      break;
+    case 'commits':
+      activeTab = 'code';
+      break;
+    case 'insights':
+      activeTab = 'insights';
+      break;
+    case 'settings':
+      activeTab = 'settings';
+      break;
+    default:
+      activeTab = 'code';
   }
   const [isAccessGranted, setIsAccessGranted] = useState(false);
 
@@ -93,67 +92,63 @@ const RepositoryHeader = ({
   };
 
   return (
-    <header className={styles.repoHeader}>
-      <Container fluid={isBlamePage}>
-        <Segment basic>
-          <div className={styles.repoNameRow}>
-            <div className={styles.repoName}>
-              <Octicon icon={Repo} />
-              <span className={styles.repoPath}>
-                <Link to={`/${owner}`}>{owner}</Link>
-                <span className={styles.pathDivider}>/</span>
-                <Link to={`/${owner}/${repoName}`}>{repoName}</Link>
-                {!isPublic && <span className={styles.repoPrivateLabel}>Private</span>}
-              </span>
-              {renderOrignalRepoLink()}
-            </div>
-            <div>
-              <Button size="small" as="div" compact labelPosition="right">
-                <StarButton starClickHandler={starClickHandler} isStar={isStar} />
-                <Label as="a" basic onClick={stargazersLinkClickHandler}>
-                  {starCount}
-                </Label>
-              </Button>
+    <Segment as="header" basic className={[styles.repoHeader, 'm0', 'pb-0']}>
+      <div className={styles.repoNameRow}>
+        <div className={styles.repoName}>
+          <Octicon icon={Repo} />
+          <span className={styles.repoPath}>
+            <Link to={`/${owner}`}>{owner}</Link>
+            <span className={styles.pathDivider}>/</span>
+            <Link to={`/${owner}/${repoName}`}>{repoName}</Link>
+            {!isPublic && <span className={styles.repoPrivateLabel}>Private</span>}
+          </span>
+          {renderOrignalRepoLink()}
+        </div>
+        <div>
+          <Button size="small" as="div" compact labelPosition="right">
+            <StarButton starClickHandler={starClickHandler} isStar={isStar} />
+            <Label as="a" basic onClick={stargazersLinkClickHandler}>
+              {starCount}
+            </Label>
+          </Button>
 
-              {repoOwnerId !== userId ? (
-                <ForkButton isOwnRepo={false} owner={owner} repoName={repoName} />
-              ) : (
-                <ForkButton isOwnRepo owner={owner} repoName={repoName} />
-              )}
-            </div>
+          {repoOwnerId !== userId ? (
+            <ForkButton isOwnRepo={false} owner={owner} repoName={repoName} />
+          ) : (
+            <ForkButton isOwnRepo owner={owner} repoName={repoName} />
+          )}
+        </div>
+      </div>
+      <div className="ui top attached tabular menu">
+        <div className={`${activeTab === 'code' && 'active'} item`}>
+          <Link to={baseUrl}>
+            <Icon name="code" /> Code
+          </Link>
+        </div>
+        <div className={`${activeTab === 'issues' && 'active'} item`}>
+          <Link to={`${baseUrl}/issues`}>
+            <Icon name="info circle" /> Issues<Label circular>{issueCount}</Label>
+          </Link>
+        </div>
+        <div className={`${activeTab === 'pulls' && 'active'} item`}>
+          <Link to={`${baseUrl}/pulls`}>
+            <Icon name="random" /> Pull Requests<Label circular>{pullCount}</Label>
+          </Link>
+        </div>
+        <div className={`${activeTab === 'insights' && 'active'} item`}>
+          <Link to={`${baseUrl}/insights`}>
+            <Icon name="chart bar outline" /> Insights
+          </Link>
+        </div>
+        {((username && username === owner) || isAccessGranted) && (
+          <div className={`${activeTab === 'settings' && 'active'} item`}>
+            <Link to={`${baseUrl}/settings`}>
+              <Icon name="cog" /> Settings
+            </Link>
           </div>
-          <div className="ui top attached tabular menu">
-            <div className={`${activeTab === 'code' && 'active'} item`}>
-              <Link to={baseUrl}>
-                <Icon name="code" /> Code
-              </Link>
-            </div>
-            <div className={`${activeTab === 'issues' && 'active'} item`}>
-              <Link to={`${baseUrl}/issues`}>
-                <Icon name="info circle" /> Issues<Label circular>{issueCount}</Label>
-              </Link>
-            </div>
-            <div className={`${activeTab === 'pulls' && 'active'} item`}>
-              <Link to={`${baseUrl}/pulls`}>
-                <Icon name="random" /> Pull Requests<Label circular>{pullCount}</Label>
-              </Link>
-            </div>
-            <div className={`${activeTab === 'insights' && 'active'} item`}>
-              <Link to={`${baseUrl}/insights`}>
-                <Icon name="chart bar outline" /> Insights
-              </Link>
-            </div>
-            {((username && username === owner) || isAccessGranted) && (
-              <div className={`${activeTab === 'settings' && 'active'} item`}>
-                <Link to={`${baseUrl}/settings`}>
-                  <Icon name="cog" /> Settings
-                </Link>
-              </div>
-            )}
-          </div>
-        </Segment>
-      </Container>
-    </header>
+        )}
+      </div>
+    </Segment>
   );
 };
 
@@ -187,7 +182,6 @@ RepositoryHeader.propTypes = {
   activePage: PropTypes.string,
   baseUrl: PropTypes.string.isRequired,
   history: PropTypes.object,
-  isBlamePage: PropTypes.bool,
   isPublic: PropTypes.bool
 };
 
