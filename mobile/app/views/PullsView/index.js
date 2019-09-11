@@ -36,7 +36,6 @@ class PullsView extends React.Component {
     if (username) {
       try {
         const pullsData = await getUserPulls(username, { isOpened, sort, owner, reviewRequests });
-        console.log(pullsData);
         this.setState({
           ...this.state,
           isLoading: false,
@@ -109,7 +108,7 @@ PullsView.propTypes = {
   navigation: PropTypes.object
 };
 
-const mapStateToProps = ({ profile: { currentUser, isAuthorized, loading } }) => ({
+const mapStateToProps = ({ profile: { currentUser } }) => ({
   currentUser
 });
 

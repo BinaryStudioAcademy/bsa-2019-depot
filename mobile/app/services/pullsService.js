@@ -18,6 +18,15 @@ export const getPullComments = async pullId => {
   return response.json();
 };
 
+export const createPullComment = async request => {
+  const response = await callWebApi({
+    endpoint: `${MOBILE_SERVER}/api/pull-comments`,
+    type: 'POST',
+    request
+  });
+  return response.json();
+};
+
 export const mergePull = async request => {
   const { id } = request;
   const response = await callWebApi({

@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { Text, View, FlatList, TextInput, TouchableOpacity, ScrollView } from 'react-native';
-import { getPullComments, mergePull, closePull, reopenPull } from '../../services/pullsService';
+import { Text, View, FlatList, TextInput, ScrollView } from 'react-native';
+import { getPullComments, mergePull, closePull, reopenPull, createPullComment } from '../../services/pullsService';
 import PullComment from '../../components/PullComment';
 import moment from 'moment';
 import styles from './styles';
 import PropTypes from 'prop-types';
 import { Button } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/Octicons';
 
 class IssueView extends Component {
   constructor(props) {
@@ -35,71 +34,12 @@ class IssueView extends Component {
     } = this.props;
     try {
       const pullComments = await getPullComments(id);
-      console.log('pullComments', pullComments);
       this.setState({
-        pullComments,
+        pullComments: pullComments.data,
         pullData: data
       });
     } catch (err) {}
   }
-
-  // handleSubmit = async () => {
-  //   const { comment } = this.state;
-  //   const {
-  //     navigation: {
-  //       state: {
-  //         params: {
-  //           data: { id, user }
-  //         }
-  //       }
-  //     }
-  //   } = this.props;
-  //   const userId = user.id;
-  //   const result = await createIssueComment({
-  //     comment,
-  //     issueId: id,
-  //     userId
-  //   });
-  //   this.setState({
-  //     ...this.state,
-  //     issueComments: [...this.state.issueComments, result],
-  //     comment: ''
-  //   });
-  // };
-  //
-  // handleClose = async () => {
-  //   const {
-  //     navigation,
-  //     navigation: {
-  //       state: {
-  //         params: {
-  //           data: { id }
-  //         }
-  //       }
-  //     }
-  //   } = this.props;
-  //   await closeIssue({
-  //     id
-  //   });
-  //   navigation.navigate('Issues');
-  // };
-  //
-  // handleReopen = async () => {
-  //   const {
-  //     navigation,
-  //     navigation: {
-  //       state: {
-  //         params: {
-  //           data: { id }
-  //         }
-  //       }
-  //     }
-  //   } = this.props;
-  //   await reopenIssue({
-  //     id
-  //   });
-  //   navigation.navigate('Issues');
-  // };
 
   handleMerge = async () => {
     const id = this.state.pullData.id;
@@ -108,11 +48,8 @@ class IssueView extends Component {
   };
 
   handleCLose = async () => {
-    console.log('handleCLose');
     const id = this.state.pullData.id;
-    console.log(id);
-    const result = await closePull({ id });
-    console.log(result);
+    await closePull({ id });
     this.props.navigation.goBack();
   };
 
@@ -122,18 +59,31 @@ class IssueView extends Component {
     this.props.navigation.goBack();
   };
 
+  handleSubmit = async () => {
+    const { comment } = this.state;
+    const { data } = this.props.navigation.state.params;
+    const result = await createPullComment({
+      comment,
+      pullId: data.id,
+      userId: data.userId
+    });
+    this.setState({
+      ...this.state,
+      pullComments: [...this.state.pullComments, result],
+      comment: ''
+    });
+  };
+
   render() {
-    console.log('state', this.state);
-    console.log(this.props);
     const { pullComments } = this.state;
     const { data, PullIcon } = this.props.navigation.state.params;
     let PRButtons;
     if (data.prstatus.name === 'OPEN') {
       PRButtons = (
-        <>
-          <Button title="Merge PR" type="outline" onPress={this.handleMerge} />
+        <View style={styles.pullButtons}>
+          <Button containerStyle={styles.mergeButton} title="Merge PR" type="outline" onPress={this.handleMerge} />
           <Button title="Close PR" type="outline" onPress={this.handleCLose} />
-        </>
+        </View>
       );
     } else if (data.prstatus.name === 'CLOSED') {
       PRButtons = <Button title="Reopen PR" type="outline" onPress={this.handleReopen} />;
@@ -156,7 +106,7 @@ class IssueView extends Component {
           <Text style={styles.issueBody}>{data.body}</Text>
         </View>
         <FlatList
-          data={pullComments.data}
+          data={pullComments}
           // eslint-disable-next-line react/jsx-no-bind
           renderItem={({ item }) => <PullComment data={item} />}
         />
@@ -170,13 +120,13 @@ class IssueView extends Component {
             style={styles.commentInput}
           />
           <View style={styles.issueButtons}>
-            <TouchableOpacity
-              style={styles.commentButton}
+            <Button
+              title="Comment"
+              type="solid"
               onPress={this.handleSubmit}
               disabled={this.state.comment.length < 1}
-            >
-              <Text style={styles.commentText}>{'Comment'}</Text>
-            </TouchableOpacity>
+              containerStyle={styles.commentButton}
+            />
             {PRButtons}
           </View>
         </View>

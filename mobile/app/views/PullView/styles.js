@@ -23,17 +23,7 @@ export default StyleSheet.create({
     color: colors.blueButton
   },
   commentButton: {
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    backgroundColor: colors.blueButton,
-    borderColor: colors.white,
-    borderRadius: 4,
-    borderWidth: StyleSheet.hairlineWidth,
-    color: colors.white,
-    justifyContent: 'center',
-    margin: 10,
-    paddingVertical: 8,
-    width: '20%'
+    marginRight: 10
   },
   commentInput: {
     alignSelf: 'center',
@@ -90,6 +80,14 @@ export default StyleSheet.create({
   issueButtons: {
     alignItems: 'flex-end',
     flexDirection: 'row',
+    marginLeft: 11,
+    marginTop: 10,
     width: '100%'
+  },
+  mergeButton: {
+    marginRight: 10
+  },
+  pullButtons: {
+    flexDirection: 'row'
   }
 });

@@ -7,7 +7,7 @@ import { withNavigation } from 'react-navigation';
 
 import styles from './styles';
 
-const PullItem = ({ data, data: { title, number, user, updatedAt, prstatus }, isOpened, navigation }) => {
+const PullItem = ({ data, data: { title, number, user, updatedAt, prstatus }, navigation }) => {
   let PullIcon;
   if (prstatus.name === 'OPEN') {
     PullIcon = <Icon name="git-pull-request" size={20} color="#28a745" />;
