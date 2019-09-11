@@ -8,7 +8,7 @@ import DataList from '../DataList';
 import * as RepoService from '../../services/repositoryService';
 import { getLabels } from '../../services/labelsService';
 import { getUserImgLink } from '../../helpers/imageHelper';
-import { debounce } from 'debounce';
+import debounce from 'debounce-promise';
 
 import styles from './styles.module.scss';
 AntdIcon.add(PullRequestOutline);

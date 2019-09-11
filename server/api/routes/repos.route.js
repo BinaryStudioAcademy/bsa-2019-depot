@@ -5,6 +5,7 @@ const {
   renameRepo,
   deleteRepo,
   checkName,
+  getRepoData,
   isEmpty,
   forkRepo,
   setStar,
@@ -315,6 +316,12 @@ router
   .get('/:repositoryId/commit-activity-data', (req, res, next) => {
     const { repositoryId } = req.params;
     getCommitActivityData(repositoryId)
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .get('/:repositoryId', (req, res, next) => {
+    const { repositoryId } = req.params;
+    getRepoData(repositoryId)
       .then(data => res.send(data))
       .catch(next);
   })

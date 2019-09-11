@@ -3,6 +3,7 @@ import { Text, View, FlatList, TextInput, TouchableOpacity, ScrollView } from 'r
 import Icon from 'react-native-vector-icons/Octicons';
 import { getIssueComments, createIssueComment, closeIssue, reopenIssue } from '../../services/issueService';
 import IssueComment from '../../components/IssueComment';
+import { socketInit } from '../../helpers/socketInitHelper';
 import moment from 'moment';
 import styles from './styles';
 import PropTypes from 'prop-types';
@@ -18,6 +19,45 @@ class IssueView extends Component {
 
   async componentDidMount() {
     await this.fetchIssueComments();
+    this.initSocket();
+  }
+
+  initSocket() {
+    this.socket = socketInit('issues');
+    const {
+      navigation: {
+        state: {
+          params: {
+            data: { id }
+          }
+        }
+      }
+    } = this.props;
+
+    this.socket.emit('createRoom', id);
+
+    this.socket.on('newIssueComment', data => {
+      this.setState({
+        issueComments: [...this.state.issueComments, data]
+      });
+    });
+
+    this.socket.on('changedIssueComments', async () => {
+      this.fetchIssueComments();
+    });
+  }
+
+  componentWillUnmount() {
+    const {
+      navigation: {
+        state: {
+          params: {
+            data: { id }
+          }
+        }
+      }
+    } = this.props;
+    this.socket.emit('leaveRoom', id);
   }
 
   async fetchIssueComments() {
@@ -52,14 +92,12 @@ class IssueView extends Component {
       }
     } = this.props;
     const userId = user.id;
-    const result = await createIssueComment({
+    await createIssueComment({
       comment,
       issueId: id,
       userId
     });
     this.setState({
-      ...this.state,
-      issueComments: [...this.state.issueComments, result],
       comment: ''
     });
   };

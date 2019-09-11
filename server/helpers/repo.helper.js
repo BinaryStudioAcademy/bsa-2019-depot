@@ -149,9 +149,19 @@ const syncDb = async (commits, branch) => {
   await updateLanguageStats(repoOwner, reponame, branch.name);
 };
 
+const getParentRepositoryId = async (repositoryId) => {
+  const currentRepository = await repoRepository.getById(repositoryId);
+  if (!currentRepository.forkedFromRepoId) {
+    return repositoryId;
+  }
+  const parentRepoId = await getParentRepositoryId(currentRepository.forkedFromRepoId);
+  return parentRepoId;
+};
+
 module.exports = {
   getPathToRepo,
   getPathToRepos,
   generateInitialData,
-  syncDb
+  syncDb,
+  getParentRepositoryId
 };

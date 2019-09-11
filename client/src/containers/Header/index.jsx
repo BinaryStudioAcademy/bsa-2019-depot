@@ -218,7 +218,12 @@ const SidebarAuth = (closeSidebar, sidebarOpened, userName, imgUrl) => (
   </Sidebar>
 );
 
-const HeaderDesktopAuth = ({ openSidebar, closeSidebar, sidebarOpened, options: { username, imgUrl, status, fetchCurrentUser } }) => {
+const HeaderDesktopAuth = ({
+  openSidebar,
+  closeSidebar,
+  sidebarOpened,
+  options: { username, imgUrl, status, fetchCurrentUser }
+}) => {
   const [showStatusModal, setShowStatusModal] = useState(false);
 
   function showModal() {
@@ -323,7 +328,9 @@ HeaderDesktopAuth.propTypes = {
 };
 
 const Header = ({ isAuthorized, username, imgUrl, status, fetchCurrentUser }) => {
-  return isAuthorized ? WithSidebar(HeaderDesktopAuth, { username, imgUrl, status, fetchCurrentUser }) : WithSidebar(HeaderDesktopUnauth);
+  return isAuthorized
+    ? WithSidebar(HeaderDesktopAuth, { username, imgUrl, status, fetchCurrentUser })
+    : WithSidebar(HeaderDesktopUnauth);
 };
 
 const mapStateToProps = ({
@@ -346,4 +353,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(Header);
-

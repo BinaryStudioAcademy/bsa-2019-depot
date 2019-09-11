@@ -7,6 +7,11 @@ export default StyleSheet.create({
     borderBottomWidth: 1,
     padding: 5
   },
+  dataDate: {
+    color: colors.greyText,
+    fontSize: 15,
+    marginLeft: 10
+  },
   descriptionText: {
     color: colors.greyText,
     fontSize: 12

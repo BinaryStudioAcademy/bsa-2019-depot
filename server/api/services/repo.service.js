@@ -305,7 +305,26 @@ const getRepoData = async repositoryId => repoRepository.getRepositoryById(repos
 
 const getRepositoryCollaborators = repositoryId => collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId);
 
-const getRepositoryForks = async repositoryId => repoRepository.getRepositoryForks(repositoryId);
+const getRepositoryForksById = async (repositoryId, level) => {
+  const forkLevel = level + 1;
+  const forkList = (await repoRepository.getRepositoryForks(repositoryId)).map(fork => fork.get({ plain: true }));
+
+  const forkIds = forkList.map(fork => fork.id);
+  const childForkList = await Promise.all(forkIds.map(id => getRepositoryForksById(id, forkLevel)));
+
+  for (let i = 0; i < forkList.length; i += 1) {
+    forkList[i].forks = childForkList[i];
+  }
+
+  return forkList;
+};
+
+const getRepositoryForks = async (repositoryId) => {
+  const originalRepositoryId = await repoHelper.getParentRepositoryId(repositoryId);
+  const repo = (await getRepoData(originalRepositoryId)).get({ plain: true });
+  repo.forks = await getRepositoryForksById(originalRepositoryId, 0);
+  return repo;
+};
 
 const getAvailableAssigneesByRepoId = async (repositoryId) => {
   const repository = await repoRepository.getById(repositoryId);
@@ -337,5 +356,6 @@ module.exports = {
   getRepoData,
   getRepositoryCollaborators,
   getRepositoryForks,
+  getRepositoryForksById,
   getAvailableAssigneesByRepoId
 };
