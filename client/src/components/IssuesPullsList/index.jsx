@@ -88,12 +88,10 @@ class IssuesPullsList extends React.Component {
       } = await RepoService.getRepositoryIssues(repositoryId, queryFilter);
       this.setState({ openCount, closedCount, authorList, assigneeList, items, labelsCount, loading: false });
     } else {
-      const {
-        openCount,
-        closedCount,
-        authors: authorList,
-        pulls: items
-      } = await RepoService.getRepositoryPulls(repositoryId, queryFilter);
+      const { openCount, closedCount, authors: authorList, pulls: items } = await RepoService.getRepositoryPulls(
+        repositoryId,
+        queryFilter
+      );
       this.setState({ isIssues, openCount, closedCount, authorList, items, labelsCount, loading: false });
     }
   };
