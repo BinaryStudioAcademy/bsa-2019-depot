@@ -115,7 +115,7 @@ router.get('/:username/repos', (req, res, next) => {
 
 router.get('/:username/public-repos', (req, res, next) => {
   const { username } = req.params;
-  getReposData({ username, isOwner: false })
+  getReposData({ username, isOwner: false, userId: req.user.id })
     .then(repos => res.send(repos))
     .catch(next);
 });
