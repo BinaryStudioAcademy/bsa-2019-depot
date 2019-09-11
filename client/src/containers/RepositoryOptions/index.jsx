@@ -10,7 +10,7 @@ import { renameRepo, deleteRepo } from './actions';
 import styles from './styles.module.scss';
 import { getRepositoryByOwnerAndName, changeRepoType } from '../../services/repositoryService';
 import * as elasticHelper from '../../helpers/elasticsearchHelper';
-import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
+import { getOwnerUserPermissions } from '../../helpers/checkPermissionsHelper';
 
 const renderDangerField = (header, description, buttonName, clickHandler) => (
   <Message className={styles.dangerField}>
@@ -54,7 +54,7 @@ class RepositoryOptions extends React.Component {
     const { owner, name } = this.state;
     const { fetchRepoSettings, match, userId } = this.props;
     const { username, reponame } = match.params;
-    const isAccessGranted = await getWriteUserPermissions(username, reponame, userId);
+    const isAccessGranted = await getOwnerUserPermissions(username, reponame, userId);
     this.setState({
       isAccessGranted
     });
