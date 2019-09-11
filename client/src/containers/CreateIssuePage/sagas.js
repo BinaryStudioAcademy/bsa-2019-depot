@@ -1,6 +1,6 @@
 import { takeEvery, put, call, all } from 'redux-saga/effects';
 import * as issuesService from '../../services/issuesService';
-import { createIssue, fetchIssues } from '../../routines/routines';
+import { createIssue } from '../../routines/routines';
 import { setLabelsToIssue } from '../../services/labelsService';
 
 function* createIssueRequest({ payload }) {
@@ -9,7 +9,6 @@ function* createIssueRequest({ payload }) {
     const { userId, repositoryId, title, body, labelIds, assigneeNames } = payload;
     const response = yield call(issuesService.createIssue, { userId, repositoryId, title, body });
     if (response && response.data) {
-      const { repositoryId } = payload;
       const { id: newIssueId } = response.data;
       if (labelIds) {
         yield call(setLabelsToIssue, labelIds, newIssueId);
@@ -18,7 +17,6 @@ function* createIssueRequest({ payload }) {
         yield call(issuesService.setAssigneesToIssue, assigneeNames, newIssueId);
       }
       yield put(createIssue.success());
-      yield put(fetchIssues.trigger({ repositoryId, filter: '' }));
     } else {
       yield put(createIssue.failure(response.error.message));
     }
@@ -26,6 +24,8 @@ function* createIssueRequest({ payload }) {
     yield put(createIssue.failure(error.message));
   } finally {
     yield put(createIssue.fulfill());
+    const { history, newUrl } = payload;
+    history.push(newUrl);
   }
 }
 
