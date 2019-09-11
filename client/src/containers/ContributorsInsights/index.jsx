@@ -29,13 +29,16 @@ class ContributorsInsights extends React.Component {
   render() {
     const { usersActivity, defaultBranchActivity, loading } = this.state;
     const { createdRepoDate, defaultBranch, reponame } = this.props;
-    const defaultBranchActivityData = defaultBranchActivity.map(({ date, value }) => ({ value, date: moment(date).format('MMM DD, YYYY') }));
-    
+    const defaultBranchActivityData = defaultBranchActivity.map(({ date, value }) => ({
+      value,
+      date: moment(date).format('MMM DD, YYYY')
+    }));
+
     return loading ? (
       <div>
         <Loader active />
       </div>
-    ) : (!usersActivity.length && !defaultBranchActivity.length) ? (
+    ) : !usersActivity.length && !defaultBranchActivity.length ? (
       <Container textAlign="center">
         <Icon size="big" name="chart bar outline" />
         <Divider hidden />
