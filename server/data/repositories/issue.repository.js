@@ -312,6 +312,9 @@ class IssueRepository extends BaseRepository {
         {
           model: IssueAssigneeModel,
           attributes: ['id'],
+          where: {
+            ...(assigneeId ? { assigneeId } : {})
+          },
           include: {
             model: UserModel,
             as: 'assignee',
