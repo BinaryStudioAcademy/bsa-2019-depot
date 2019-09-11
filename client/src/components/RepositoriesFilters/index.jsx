@@ -7,7 +7,13 @@ import Octicon, { Repo } from '@primer/octicons-react';
 import styles from './styles.module.scss';
 
 const RepositoriesFilters = ({
-  orgPage, isOwner, isMember, orgName, getCurrentRepoTypeFilter, filter, handleFindRepo
+  orgPage,
+  isOwner,
+  isMember,
+  orgName,
+  getCurrentRepoTypeFilter,
+  filter,
+  handleFindRepo
 }) => {
   const repoTypes = [
     { key: 'rt_1', text: 'Type: All', value: 'All' },
@@ -32,7 +38,7 @@ const RepositoriesFilters = ({
           <Link to={orgPage ? `/organizations/${orgName}/repositories/new` : '/new'}>
             <Button primary className={styles.new_repo}>
               <Octicon icon={Repo} className={styles.new_repo_icon} />
-                New
+              New
             </Button>
           </Link>
         </div>

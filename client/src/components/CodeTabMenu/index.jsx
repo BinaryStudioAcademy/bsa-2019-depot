@@ -39,7 +39,7 @@ CodeTabMenu.propTypes = {
   branch: PropTypes.string.isRequired,
   branchesCount: PropTypes.number.isRequired,
   commitsCount: PropTypes.number.isRequired,
-  contributorsCount: PropTypes.string.isRequired,
+  contributorsCount: PropTypes.string.isRequired
 };
 
 export default CodeTabMenu;

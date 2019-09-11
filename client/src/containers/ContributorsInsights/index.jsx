@@ -6,14 +6,14 @@ import moment from 'moment';
 import { ResponsiveContainer, XAxis, YAxis, CartesianGrid, AreaChart, Area } from 'recharts';
 import { getCommitActivityByUser } from '../../services/repositoryService';
 
-import { Segment, Image, Loader, } from 'semantic-ui-react';
+import { Segment, Image, Loader } from 'semantic-ui-react';
 import styles from './styles.module.scss';
 
 class ContributorsInsights extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      usersActivity: [], 
+      usersActivity: [],
       defaultBranchActivity: [],
       loading: true
     };
@@ -28,60 +28,68 @@ class ContributorsInsights extends React.Component {
   render() {
     const { usersActivity, defaultBranchActivity, loading } = this.state;
     const { createdRepoDate, defaultBranchName } = this.props;
-    const defaultBranchActivityData = defaultBranchActivity.map(({ date, value }) => ({ value, date: moment(date).format('MMM DD, YYYY') }));
+    const defaultBranchActivityData = defaultBranchActivity.map(({ date, value }) => ({
+      value,
+      date: moment(date).format('MMM DD, YYYY')
+    }));
 
-    return loading
-      ? (
-        <div>
-          <Loader active />
+    return loading ? (
+      <div>
+        <Loader active />
+      </div>
+    ) : (
+      <Segment basic>
+        <div className={styles.contributorsHeader}>
+          <h2 className={styles.timeDuration}>
+            {moment(createdRepoDate).format('MMM DD, YYYY')} – {moment().format('MMM DD, YYYY')}
+          </h2>
         </div>
-      ) : (
-        <Segment basic>
-          <div className={styles.contributorsHeader}>
-            <h2 className={styles.timeDuration}>{moment(createdRepoDate).format('MMM DD, YYYY')} – {moment().format('MMM DD, YYYY')}</h2>
-          </div>
-          <p className={styles.chartInfo}>Contributions to {defaultBranchName}, excluding merge commits</p>
-          <div className={styles.allContributorsChart}>
-            <ResponsiveContainer width="100%" height={125}>
-              <AreaChart data={defaultBranchActivityData}>
-                <XAxis dataKey="date" />
-                <YAxis axisLine={false} allowDecimals={false} width={13} dataKey="value" />
-                <CartesianGrid vertical={false} />
-                <Area type="monotone" dataKey="value" stroke="#82ca9d" fillOpacity={1} fill="#82ca9d" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-          <div className={styles.contributorsGrid}>
-            {usersActivity.map(({ username, commitsCount, activity, imgUrl }, idx) => {
-              const usersActivityData = activity.map(({ date, value }) => ({ value, date: moment(date).format('MMM DD, YYYY') }));
-              return (
-                <div key={idx} className={styles.contributorsBox}>
-                  <div className={styles.contributorsBoxHeader}>
-                    <Image src={imgUrl} alt="contributors avatar" className={styles.contributorsImage} />
-                    <div className={styles.contributorsInfo}>
-                      <Link to={`/${username}`} className={styles.contributorsLink}>{username}</Link>
-                      <span className={styles.contributorsCommitCount}>{commitsCount} commits</span>
-                    </div>
-                  </div>
-                  <div className={styles.contributorsChart}>
-                    <ResponsiveContainer width="100%" height={130}>
-                      <AreaChart data={usersActivityData}>
-                        <XAxis dataKey="date" />
-                        <YAxis axisLine={false} allowDecimals={false} width={13} dataKey="value" />
-                        <CartesianGrid vertical={false} />
-                        <Area type="monotone" dataKey="value" stroke="#fb8532" fillOpacity={1} fill="#fb8532" />
-                      </AreaChart>
-                    </ResponsiveContainer>
+        <p className={styles.chartInfo}>Contributions to {defaultBranchName}, excluding merge commits</p>
+        <div className={styles.allContributorsChart}>
+          <ResponsiveContainer width="100%" height={125}>
+            <AreaChart data={defaultBranchActivityData}>
+              <XAxis dataKey="date" />
+              <YAxis axisLine={false} allowDecimals={false} width={13} dataKey="value" />
+              <CartesianGrid vertical={false} />
+              <Area type="monotone" dataKey="value" stroke="#82ca9d" fillOpacity={1} fill="#82ca9d" />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+        <div className={styles.contributorsGrid}>
+          {usersActivity.map(({ username, commitsCount, activity, imgUrl }, idx) => {
+            const usersActivityData = activity.map(({ date, value }) => ({
+              value,
+              date: moment(date).format('MMM DD, YYYY')
+            }));
+            return (
+              <div key={idx} className={styles.contributorsBox}>
+                <div className={styles.contributorsBoxHeader}>
+                  <Image src={imgUrl} alt="contributors avatar" className={styles.contributorsImage} />
+                  <div className={styles.contributorsInfo}>
+                    <Link to={`/${username}`} className={styles.contributorsLink}>
+                      {username}
+                    </Link>
+                    <span className={styles.contributorsCommitCount}>{commitsCount} commits</span>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        </Segment>
-      );
+                <div className={styles.contributorsChart}>
+                  <ResponsiveContainer width="100%" height={130}>
+                    <AreaChart data={usersActivityData}>
+                      <XAxis dataKey="date" />
+                      <YAxis axisLine={false} allowDecimals={false} width={13} dataKey="value" />
+                      <CartesianGrid vertical={false} />
+                      <Area type="monotone" dataKey="value" stroke="#fb8532" fillOpacity={1} fill="#fb8532" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </Segment>
+    );
   }
 }
-
 
 ContributorsInsights.propTypes = {
   repoId: PropTypes.string.isRequired,
@@ -92,7 +100,11 @@ ContributorsInsights.propTypes = {
 const mapStateToProps = ({
   currentRepo: {
     repository: {
-      currentRepoInfo: { id: repoId, createdAt: createdRepoDate, defaultBranch: { name: defaultBranchName } }
+      currentRepoInfo: {
+        id: repoId,
+        createdAt: createdRepoDate,
+        defaultBranch: { name: defaultBranchName }
+      }
     }
   }
 }) => ({

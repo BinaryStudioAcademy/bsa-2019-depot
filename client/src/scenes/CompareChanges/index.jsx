@@ -48,7 +48,7 @@ class CompareChanges extends React.Component {
     if (fromBranchName && toBranchName) {
       this.setState({
         fromBranch: branches.find(({ name }) => name === fromBranchName),
-        toBranch: branches.find(({ name }) => name === toBranchName),
+        toBranch: branches.find(({ name }) => name === toBranchName)
       });
     }
 
@@ -59,7 +59,10 @@ class CompareChanges extends React.Component {
   }
 
   getBranchesFromQuery() {
-    const { fromBranch: { name: fromBranch }, toBranch: { name: toBranch } } = this.state;
+    const {
+      fromBranch: { name: fromBranch },
+      toBranch: { name: toBranch }
+    } = this.state;
 
     if (!this.props.location.search) {
       return {
@@ -72,11 +75,14 @@ class CompareChanges extends React.Component {
       fromBranch: queryString.parse(this.props.location.search, { ignoreQueryPrefix: true }).fromBranch || fromBranch,
       toBranch: queryString.parse(this.props.location.search, { ignoreQueryPrefix: true }).toBranch || toBranch
     };
-  };
+  }
 
   updateLink() {
     const { location, history } = this.props;
-    const { fromBranch: { name: fromBranch }, toBranch: { name: toBranch } } = this.state;
+    const {
+      fromBranch: { name: fromBranch },
+      toBranch: { name: toBranch }
+    } = this.state;
     const { fromBranchQuery, toBranchQuery } = this.getBranchesFromQuery();
     const queryParams = [];
 
