@@ -7,7 +7,7 @@ import { Icon, Label, Container, Segment, Button } from 'semantic-ui-react';
 import ForkButton from '../ForkButton';
 import StarButton from '../../components/StarButton';
 import { setStar } from '../../services/repositoryService';
-import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
+import { getAdminUserPermissions } from '../../helpers/checkPermissionsHelper';
 
 import styles from './styles.module.scss';
 
@@ -50,7 +50,7 @@ const RepositoryHeader = ({
   const [isAccessGranted, setIsAccessGranted] = useState(false);
 
   const getPermissions = async () => {
-    const accessPermissions = await getWriteUserPermissions(owner, repoName, userId);
+    const accessPermissions = await getAdminUserPermissions(owner, repoName, userId);
     setIsAccessGranted(accessPermissions);
   };
 

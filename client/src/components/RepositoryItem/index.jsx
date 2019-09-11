@@ -127,15 +127,13 @@ class RepositoryItem extends React.Component {
     const {
       repo: { name, isStar, isPublic, defaultBranch },
       username,
-      type,
+      type
     } = this.props;
     const { updatedAt, isEmpty, commitsPerYear } = this.state;
     const starsCount = Number(this.props.repo.starsCount);
     const repoType = isPublic ? '' : 'Private';
 
-    const hasLanguageStats = defaultBranch
-      && defaultBranch.languageStats
-      && defaultBranch.languageStats.length;
+    const hasLanguageStats = defaultBranch && defaultBranch.languageStats && defaultBranch.languageStats.length;
     const language = hasLanguageStats ? defaultBranch.languageStats[0].language : null;
 
     return (
@@ -149,7 +147,8 @@ class RepositoryItem extends React.Component {
             {language && (
               <span className={styles.repo_info_item}>
                 <span className={styles.repo_item_lang}>
-                  <span className={styles.languageColorDot} style={{ backgroundColor: language.color }} />{language.name}
+                  <span className={styles.languageColorDot} style={{ backgroundColor: language.color }} />
+                  {language.name}
                 </span>
               </span>
             )}

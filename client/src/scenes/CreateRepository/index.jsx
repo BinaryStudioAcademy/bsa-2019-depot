@@ -144,9 +144,7 @@ class CreateRepository extends React.Component {
       <Container>
         <Divider hidden />
         <h1 className={styles.title}>Create a new repository</h1>
-        <p>
-          A repository contains all project files, including the revision history.
-        </p>
+        <p>A repository contains all project files, including the revision history.</p>
         <Divider section />
         <Form onSubmit={handleSubmit}>
           <Form.Group>

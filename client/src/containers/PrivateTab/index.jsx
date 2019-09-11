@@ -3,7 +3,7 @@ import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Loader } from 'semantic-ui-react';
-import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
+import { getAdminUserPermissions } from '../../helpers/checkPermissionsHelper';
 
 const renderComponent = ({ Component, ...rest }) => <Component {...rest} />;
 
@@ -18,7 +18,7 @@ const PrivateTab = ({ username, location, ...props }) => {
 
   const getPermissions = async () => {
     const { userId } = props;
-    const accessPermissions = await getWriteUserPermissions(owner, reponame, userId);
+    const accessPermissions = await getAdminUserPermissions(owner, reponame, userId);
     setIsAccessGranted(accessPermissions);
     setIsLoading(false);
   };

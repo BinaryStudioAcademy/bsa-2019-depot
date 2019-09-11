@@ -12,7 +12,7 @@ import styles from './styles.module.scss';
 
 const UserInfo = ({ imgUrl, name, username, status, currentUsername, fetchCurrentUser }) => {
   const [showStatusModal, setShowStatusModal] = useState(false);
- 
+
   function showModal() {
     setShowStatusModal(true);
   }
@@ -42,11 +42,13 @@ const UserInfo = ({ imgUrl, name, username, status, currentUsername, fetchCurren
             {username}
           </h1>
         </div>
-        { isMyInfo && <Link to="/settings/profile" className={styles.edit_profile}>
-          <Button fluid className={styles.editButton}>
-            Edit profile
-          </Button>
-        </Link>}
+        {isMyInfo && (
+          <Link to="/settings/profile" className={styles.edit_profile}>
+            <Button fluid className={styles.editButton}>
+              Edit profile
+            </Button>
+          </Link>
+        )}
       </div>
       <StatusModal showStatusModal={showStatusModal} hideModal={hideModal} username={username} />
     </div>
@@ -74,4 +76,7 @@ const mapDispatchToProps = {
   fetchCurrentUser
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserInfo);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(UserInfo);

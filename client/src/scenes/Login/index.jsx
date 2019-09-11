@@ -12,19 +12,16 @@ import { checkUsernameExists } from '../../services/userService';
 import * as elasticHelper from '../../helpers/elasticsearchHelper';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import debounce from 'debounce-promise';
 
 import './styles.module.scss';
 
 const isUsernameValid = async username => {
-  const { usernameExists } = await checkUsernameExists(username);
+  const { usernameExists } = await debouncedCheckUsernameExists(username);
   return !usernameExists;
 };
 
-Yup.addMethod(Yup.string, 'validateUsername', function() {
-  return this.test('validateUsername', 'This username is already taken', function(value) {
-    return isUsernameValid(value);
-  });
-});
+const debouncedCheckUsernameExists = debounce(checkUsernameExists, 500);
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -48,7 +45,7 @@ const usernameValidationSchema = Yup.object().shape({
   username: Yup.string()
     .required('Username is required!')
     .matches(/^(([a-zA-Z0-9]+-)*[a-zA-Z0-9]+){1,39}$/)
-    .validateUsername('This username is already taken')
+    .test('username', 'This username is already taken', isUsernameValid)
 });
 
 class Login extends Component {

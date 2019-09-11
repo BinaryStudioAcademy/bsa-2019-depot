@@ -101,9 +101,7 @@ const RepoNav = props => {
         >
           <div className={styles.repoPopupBody}>
             <Header className={styles.readmeHeader} as="h4">
-              <div>
-                Clone with SSH
-              </div>
+              <div>Clone with SSH</div>
             </Header>
             <p>Use a password protected SSH key.</p>
             <CopyableInput url={url} />
