@@ -184,9 +184,10 @@ const modifyFile = async ({
 
   await index.readTree(lastCommitTree);
   if (oldFilepath !== filepath) {
-    index.remove(oldFilepath, 0); // 0 === NodeGit.Index.STAGE.NORMAL, but this Enum doesn't work for some reason
+    await index.remove(oldFilepath, 0); // 0 === NodeGit.Index.STAGE.NORMAL, but this Enum doesn't work for some reason
   }
   await index.add(indexEntry);
+  await index.write();
   const newCommitTree = await index.writeTree();
 
   const commitId = await repo.createCommit(branchRef, authorSignature, authorSignature, message, newCommitTree, [
