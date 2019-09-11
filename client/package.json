@@ -11,7 +11,7 @@
     "@uppy/core": "^1.2.0",
     "@uppy/react": "^1.2.0",
     "color": "^3.1.2",
-    "debounce": "^1.2.0",
+    "debounce-promise": "^3.1.2",
     "dotenv": "^8.0.0",
     "elasticsearch": "^16.3.0",
     "formik": "^1.5.8",

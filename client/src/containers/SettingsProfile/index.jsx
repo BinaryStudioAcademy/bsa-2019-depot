@@ -84,8 +84,7 @@ class SettingsProfile extends Component {
     ),
     email: (
       <div>
-        You have set your email address to private. To toggle email privacy, go to email settings and uncheck "Keep my
-        email address private."
+        You cannot change your email at this time.
       </div>
     ),
     bio: (
