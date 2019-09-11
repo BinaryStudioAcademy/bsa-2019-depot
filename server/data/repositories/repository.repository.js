@@ -212,6 +212,7 @@ class RepositoryRepository extends BaseRepository {
       ]
     });
   }
+
   getRepositoryById(id) {
     return this.model.findOne({
       where: { id },

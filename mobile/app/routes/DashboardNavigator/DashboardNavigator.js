@@ -9,6 +9,7 @@ import React from 'react';
 import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
 import Notifications from '../../components/Notifications';
 import IssueView from '../../views/IssueView';
+import PullView from '../../views/PullView';
 import colors from '../../config/color.config';
 
 const TabNav = createMaterialTopTabNavigator(
@@ -43,6 +44,16 @@ const StackTab = createStackNavigator({
     screen: IssueView,
     navigationOptions: {
       title: 'Issue',
+      headerStyle: {
+        backgroundColor: colors.greyHeader
+      },
+      headerTintColor: colors.white
+    }
+  },
+  PullView: {
+    screen: PullView,
+    navigationOptions: {
+      title: 'Pull Request',
       headerStyle: {
         backgroundColor: colors.greyHeader
       },
