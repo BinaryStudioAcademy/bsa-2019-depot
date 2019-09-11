@@ -84,7 +84,6 @@ class FileEditPage extends React.Component {
 
   handleCancel() {
     const {
-      history,
       location: { pathname }
     } = this.props;
     
