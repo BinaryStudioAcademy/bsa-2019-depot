@@ -24,6 +24,7 @@ import { getAllQuestionOnSO } from '../../services/issuesService';
 import { socketInit } from '../../helpers/socketInitHelper';
 import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
 import 'react-mde/lib/styles/css/react-mde-all.css';
+import { fetchCurrentRepo } from '../../routines/routines';
 
 import styles from './styles.module.scss';
 
@@ -169,8 +170,10 @@ class IssueComments extends React.Component {
     }
 
     const { id } = this.state.currentIssue;
+    const { owner, reponame, fetchCurrentRepo } = this.props;
     const result = await deleteIssue({ id });
     if (result) {
+      fetchCurrentRepo({ username: owner, reponame });
       this.props.history.push(this.state.issuesBaseUrl);
     }
   }
@@ -412,14 +415,23 @@ const mapStateToProps = ({
   },
   currentRepo: {
     repository: {
-      currentRepoInfo: { id: repositoryId }
+      currentRepoInfo: { id: repositoryId, name: reponame, user: { username: owner } }
     }
   }
 }) => ({
   userId: id,
   userImg: imgUrl,
   userName: username,
-  repositoryId
+  repositoryId,
+  reponame,
+  owner
 });
 
-export default connect(mapStateToProps)(IssueComments);
+const mapDispatchToProps = {
+  fetchCurrentRepo
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(IssueComments);

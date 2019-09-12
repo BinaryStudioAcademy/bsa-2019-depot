@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Grid, Menu, Sidebar, Icon, Dropdown, Responsive, Search } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
 import Octicon, { Repo, Smiley, Person, Organization } from '@primer/octicons-react';
 import StatusModal from '../../components/StatusModal';
 import { fetchCurrentUser } from '../../routines/routines';
@@ -25,40 +24,34 @@ const SearchInp = () => {
   const [isLoading, setLoading] = useState(false);
   const [timeout, changeTimeout] = useState(null);
 
-  const resultRenderer = ({ content }) => {
-    const [type, username, reponame] = content;
-    if (type === 'REPO') {
-      return (
-        <Link
-          onClick={() => {
-            setText('');
-            setResults([]);
-          }}
-          to={`/${username}/${reponame}`}
-        >
-          <p className={styles.searchItem}>
-            <Octicon className={styles.searchItemIcon} icon={Repo} />
-            {`/${username}/${reponame}`}
-          </p>
-        </Link>
-      );
-    } else {
-      return (
-        <Link
-          onClick={() => {
-            setText('');
-            setResults([]);
-          }}
-          to={`/${username}`}
-        >
-          <p className={styles.searchItem}>
-            <Octicon className={styles.searchItemIcon} icon={type === 'USER' ? Person : Organization} />
-            {`/${username}`}
-          </p>
-        </Link>
-      );
+  const getIcon = (type) => {
+    switch (type.toLowerCase()) {
+    case 'repo': return Repo;
+    case 'user': return Person;
+    case 'org': return Organization;
+    default: return null;
     }
   };
+
+  const resultRenderer = ({ content }) => {
+    const [type, username, reponame] = content;
+    const endpoint = type === 'REPO' ? `/${username}/${reponame}` : `/${username}`;
+    const icon = getIcon(type);
+    return (
+      <div
+        onClick={() => {
+          setText('');
+          setResults([]);
+          window.location.href = `${window.location.origin}${endpoint}`; 
+        }}
+      >
+        <p className={styles.searchItem}>
+          <Octicon className={styles.searchItemIcon} icon={icon} />
+          {endpoint}
+        </p>
+      </div>
+    );
+  }; 
 
   const handleSearchChange = async (e, { value }) => {
     if (!value) {
