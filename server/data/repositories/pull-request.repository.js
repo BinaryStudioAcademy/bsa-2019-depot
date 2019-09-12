@@ -19,11 +19,17 @@ const { Op } = Sequelize;
 
 const mapSort = (sort) => {
   switch (sort) {
-  case 'createdAt_DESC':
-  case 'createdAt_ASC':
-  case 'updatedAt_DESC':
-  case 'updatedAt_ASC':
-    return sort.split('_');
+  case 'created_asc':
+    return ['createdAt', 'ASC'];
+
+  case 'created_desc':
+    return ['createdAt', 'DESC'];
+
+  case 'updated_asc':
+    return ['updatedAt', 'ASC'];
+
+  case 'updated_desc':
+    return ['updatedAt', 'DESC'];
 
   case 'commentCount_DESC':
     return [[sequelize.col('commentCount'), 'DESC']];
@@ -193,17 +199,21 @@ class PullRepository extends BaseRepository {
     repositoryId, sort, userId, owner, title, isOpened, statusOpenedId, reviewRequests
   }) {
     const ownerWhere = owner ? { username: owner.split(',') } : {};
+    const titleWhere = title
+      ? sequelize.where(sequelize.fn('lower', sequelize.col('pullrequest.title')), {
+        [Op.substring]: title.toLowerCase()
+      })
+      : {};
+    const repositoryIdWhere = repositoryId ? { repositoryId } : {};
+    const statusIdWhere = sequelize.where(
+      sequelize.col('pullrequest.statusId'),
+      isOpened === 'true' ? { [Op.eq]: statusOpenedId } : { [Op.ne]: statusOpenedId }
+    );
+    const userIdWhere = userId && reviewRequests !== 'true' ? { userId } : {};
+
     return this.model.findAll({
       where: {
-        ...(repositoryId ? { repositoryId } : {}),
-        statusId:
-          isOpened === 'true'
-            ? statusOpenedId
-            : {
-              [Op.ne]: statusOpenedId
-            },
-        ...(title ? { title: { [Op.substring]: title } } : {}),
-        ...(userId && reviewRequests !== 'true' ? { userId } : {})
+        [Op.and]: [ownerWhere, titleWhere, statusIdWhere, repositoryIdWhere, userIdWhere]
       },
       attributes: {
         include: [
