@@ -82,23 +82,16 @@ class FileEditPage extends React.Component {
     this.setState({ fileData: { content } });
   }
 
-  cancel(filepath = '') {
-    const {
-      location: { pathname }
-    } = this.props;
-
-    const pathTo = pathname.includes('/new/')
-      ? filepath
-        ? `${pathname.replace('/new/', '/blob/')}${filepath}`
-        : pathname.replace('/new/', '/tree/')
-      : pathname.replace('/edit/', '/blob/');
-
-    window.location.href = `${window.location.origin}${pathTo}`;
+  handleCancel(filepath = '', commitBranch = '') {
+    window.location.href = this.mapRedirectPath(filepath, commitBranch);
   }
 
-  handleCancel(filepath = '') {
-    const path = typeof filepath === 'string' ? `/${filepath}` : '';
-    this.cancel(path);
+  mapRedirectPath(filepath = '', commitBranch = '') {
+    const { username, reponame } = this.props.match.params;
+    const replaceHandler = g1 => g1 === '/new/' ? '/tree/' : '/blob/';
+    return typeof filepath === 'string'
+      ? `${window.location.origin}/${username}/${reponame}/blob/${commitBranch}${filepath ? `/${filepath}` : ''}`
+      : `${window.location.origin}${this.props.location.pathname.replace(/\/edit\/|\/new\/{0,1}/, replaceHandler)}`;
   }
 
   handleCommitFile({ message, commitBranch }) {
@@ -129,7 +122,7 @@ class FileEditPage extends React.Component {
       fileData: content
     })
       .then(() => {
-        this.handleCancel(newFilePath);
+        this.handleCancel(newFilePath, commitBranch);
       })
       .catch(() => {
         this.handleCancel();
