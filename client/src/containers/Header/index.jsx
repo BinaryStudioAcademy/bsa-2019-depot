@@ -24,18 +24,19 @@ const SearchInp = () => {
   const [isLoading, setLoading] = useState(false);
   const [timeout, changeTimeout] = useState(null);
 
+  const getIcon = (type) => {
+    switch (type.toLowerCase()) {
+    case 'repo': return Repo;
+    case 'user': return Person;
+    case 'org': return Organization;
+    default: return null;
+    }
+  };
+
   const resultRenderer = ({ content }) => {
     const [type, username, reponame] = content;
-    let endpoint = '';
-    let icon = null;
-    if (type === 'REPO'){
-      endpoint = `/${username}/${reponame}`;
-      icon = Repo;
-    }
-    else {
-      endpoint = `/${username}`;
-      icon = type === 'USER' ? Person : Organization;
-    }
+    const endpoint = type === 'REPO' ? `/${username}/${reponame}` : `/${username}`;
+    const icon = getIcon(type);
     return (
       <div
         onClick={() => {
