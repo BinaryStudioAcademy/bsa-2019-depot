@@ -9,44 +9,39 @@ const wait = require('../../helpers/waiters');
 describe('Repositories  ', () => {
   beforeEach(() => {
     help.loginWithDefaultUser();
-    wait.forSpinner();
   });
 
   afterEach(() => {
+    repoSteps.navigateToRepoSettings();
+    repoSteps.deleteRepo();
     browser.reloadSession();
   });
 
   it('should create repository', () => {
     menuSteps.navigateToNewRepository();
     wait.forSpinner();
-    repoSteps.enterRepoName(credentials.repo.repoName);
+    repoSteps.enterRepoName(credentials.repo.repoName1);
     repoSteps.enterDescription(credentials.repo.repoDescription);
     repoSteps.selectReadme();
     repoSteps.addGitignore();
     repoSteps.addLicense();
-    repoSteps.submitCreateRepoBtn();
-    assert.strictEqual(credentials.repo.repoName, repoPage.createdRepoName.getText());
-    //postconditions
-    repoSteps.navigateToRepoSettings();
-    repoSteps.deleteRepo();
+    repoSteps.submitCreateRepoForm();
+    assert.strictEqual(credentials.repo.repoName1, repoPage.createdRepoName.getText());
   });
 
   it('should create new file in repository', () => {
     menuSteps.navigateToNewRepository();
     wait.forSpinner();
-    repoSteps.enterRepoName(credentials.repo.repoName);
+    repoSteps.enterRepoName(credentials.repo.repoName2);
     repoSteps.enterDescription(credentials.repo.repoDescription);
     repoSteps.selectReadme();
     repoSteps.addGitignore();
     repoSteps.addLicense();
-    repoSteps.submitCreateRepoBtn();
+    repoSteps.submitCreateRepoForm();
     repoSteps.createNewFileBtn();
     repoSteps.enterNewFileName(credentials.newFileName);
     repoSteps.enterCommitMessage(credentials.commitMessage);
     repoSteps.submitCommit();
-    assert.strictEqual(credentials.newFileName, repoPage.createdFileName.getText());
-    //postconditions
-    repoSteps.navigateToRepoSettings();
-    repoSteps.deleteRepo();
+    assert.strictEqual(credentials.newFileName2, repoSteps.getFileName());
   });
 });

@@ -27,13 +27,13 @@ class RepoPage {
     return $$('span.styles_repoPath__3Ye3J a')[1];
   }
   get repoSettings() {
-    return $$('div.false a')[1];
+    return $$('div.false a')[3];
   }
   get deleteBtn() {
     return $$('button[type=button]')[1];
   }
   get createNewFileBtn() {
-    return $$('div.ui.buttons button')[0];
+    return $('div.styles_repoActions__3UqWR button');
   }
   get newFileNameInput() {
     return $('div.styles_fileNameInput__1baIY input');
@@ -45,7 +45,7 @@ class RepoPage {
     return $('div button[type="submit"]');
   }
   get createdFileName() {
-    return $$('tbody tr td a')[6];
+    return $$('tbody tr td a.styles_link__2E3TI')[6];
   }
 }
 

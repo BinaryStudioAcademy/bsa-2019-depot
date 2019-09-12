@@ -12,7 +12,7 @@ class MenuSteps {
   }
   navigateToNewOrganization() {
     this.moveToMenu();
-    MenuPage.newRepositoryLink.waitForDisplayed(2000);
+    MenuPage.newOrganizationLink.waitForDisplayed(2000);
     MenuPage.newOrganizationLink.click();
   }
 }
