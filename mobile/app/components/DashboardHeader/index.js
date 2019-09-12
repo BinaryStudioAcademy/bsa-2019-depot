@@ -22,16 +22,15 @@ class DashboardHeader extends React.Component {
         <Icon name="bars" size={30} color="#ffffff" onPress={this.openDrawer} />
       </View>
     );
-    const notification = (
+    /*const notification = (
       <View style={styles.hamburger}>
         <Icon name="bell-o" size={30} color="#ffffff" onPress={this.openNotifications} />
       </View>
-    );
+    );*/
     return (
       <Header
         leftComponent={hamburger}
         centerComponent={{ text: 'Dashboard', style: { color: '#fff', paddingBottom: 20, fontSize: 25 } }}
-        rightComponent={notification}
         containerStyle={styles.containerStyle}
       />
     );

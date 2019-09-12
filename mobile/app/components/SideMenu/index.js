@@ -10,6 +10,10 @@ import { fetchCurrentUser } from '../../routines/routines';
 import PropTypes from 'prop-types';
 
 class SideMenu extends Component {
+  componentDidMount() {
+    this.props.fetchCurrentUser();
+  }
+
   logOut = async () => {
     const { navigation, fetchCurrentUser } = this.props;
     await storageHelper.clear();
