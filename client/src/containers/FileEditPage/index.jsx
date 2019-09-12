@@ -235,7 +235,7 @@ class FileEditPage extends React.Component {
     ];
 
     return loading ? (
-      <Loader active inline="centered" />
+      <Loader active />
     ) : (
       <Segment basic>
         <Breadcrumb size="big" className={styles.filePath}>

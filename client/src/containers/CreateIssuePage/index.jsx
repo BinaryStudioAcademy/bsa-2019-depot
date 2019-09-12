@@ -39,6 +39,8 @@ class CreateIssuePage extends React.Component {
     const {
       createIssue,
       repositoryId,
+      owner,
+      reponame,
       userId,
       history,
       match: { url },
@@ -56,6 +58,8 @@ class CreateIssuePage extends React.Component {
       body,
       userId,
       username,
+      owner,
+      reponame,
       repositoryId,
       isOpened: true,
       labelIds,
@@ -92,6 +96,7 @@ CreateIssuePage.propTypes = {
   userId: PropTypes.string.isRequired,
   createIssue: PropTypes.func.isRequired,
   fetchCurrentRepo: PropTypes.func.isRequired,
+  owner: PropTypes.string.isRequired,
   history: PropTypes.object.isRequired,
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
@@ -108,12 +113,13 @@ const mapStateToProps = ({
   issuesData: { issues },
   currentRepo: {
     repository: {
-      currentRepoInfo: { id, name }
+      currentRepoInfo: { id, name, user: { username: owner } }
     }
   }
 }) => ({
   userId,
   username,
+  owner,
   issues,
   reponame: name,
   repositoryId: id

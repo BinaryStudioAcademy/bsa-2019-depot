@@ -81,11 +81,11 @@ export class RepositoriesList extends React.Component {
     const value = repoNameFilter.toLowerCase();
     switch (filter) {
     case 'Public':
-      return repositories.filter(({ isPublic, name }) => isPublic && name.includes(value));
+      return repositories.filter(({ isPublic, name }) => isPublic && name.toLowerCase().includes(value));
     case 'Private':
-      return repositories.filter(({ isPublic, name }) => !isPublic && name.includes(value));
+      return repositories.filter(({ isPublic, name }) => !isPublic && name.toLowerCase().includes(value));
     default:
-      return repositories.filter(({ name }) => name.includes(value));
+      return repositories.filter(({ name }) => name.toLowerCase().includes(value));
     }
   };
 
