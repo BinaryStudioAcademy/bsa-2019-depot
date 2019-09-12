@@ -118,7 +118,11 @@ class ConversationTab extends React.Component {
       isDisabled: true
     });
     const {
-      currentPull: { id: pullId }
+      currentPull: { id: pullId, title },
+      updateState,
+      match: {
+        params: { username }
+      }
     } = this.props;
 
     if (!comment) return;
@@ -127,7 +131,9 @@ class ConversationTab extends React.Component {
     await createPullComment({
       comment,
       pullId,
-      userId
+      userId,
+      username,
+      title
     });
   };
 

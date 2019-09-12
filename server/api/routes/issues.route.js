@@ -1,6 +1,8 @@
 const { Router } = require('express');
+const admin = require('firebase-admin');
 const issueService = require('../services/issue.service');
 const issueCommentService = require('../services/issue-comment.service');
+const userService = require('../services/user.service');
 const issueAssigneeService = require('../services/issue-assignee.service');
 const { checkIssuePermissions } = require('../../helpers/check.permission.level.helper');
 
@@ -9,8 +11,30 @@ const router = Router();
 router
   .post('/', (req, res, next) => {
     const {
-      userId, repositoryId, title, body
+      userId, repositoryId, title, body, username
     } = req.body;
+    userService.getUserDetailed(username).then((data) => {
+      const token = data.get({ plain: true }).deviceToken;
+      if (token) {
+        const message = {
+          notification: {
+            title: `New issue: ${title}`,
+            body
+          },
+          token
+        };
+        admin
+          .messaging()
+          .send(message)
+          .then((response) => {
+            console.log('Successfully sent message:', response);
+          })
+          .catch((error) => {
+            console.log('Error sending message:', error);
+          });
+      }
+    });
+
     issueService
       .addIssue({
         userId,

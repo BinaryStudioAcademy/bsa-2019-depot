@@ -16,3 +16,12 @@ export const getUserDetailed = async username => {
   });
   return response.json();
 };
+
+export const updateUserDeviceToken = async request => {
+  const response = await callWebApi({
+    endpoint: `${MOBILE_SERVER}/api/users`,
+    type: 'PUT',
+    request
+  });
+  return response.json();
+};

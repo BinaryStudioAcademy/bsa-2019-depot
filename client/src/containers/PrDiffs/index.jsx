@@ -7,6 +7,11 @@ import { updateReviewStatus } from '../../services/pullReviewersService';
 
 import styles from './styles.module.scss';
 
+const getExtension = filename => {
+  const [, ext] = filename.split('.');
+  return ext ? '.' + ext : 'No extension';
+};
+
 const PrDiffs = ({ diffs, currentUserId, currentPullId, isReviewer, reviewStatus, pullUrl }) => {
   const filepaths = diffs
     .split('diff --git')
@@ -14,7 +19,7 @@ const PrDiffs = ({ diffs, currentUserId, currentPullId, isReviewer, reviewStatus
     .map(hunk => hunk.slice(0, hunk.indexOf('\n')))
     .map(firstHunkLine => firstHunkLine.slice(firstHunkLine.indexOf('b/') + 2));
 
-  const fileExtensions = new Set(filepaths.map(filename => filename.split('.').pop()));
+  const fileExtensions = new Set(filepaths.map(filename => getExtension(filename)));
 
   const files = parse(diffs);
   const fileChangeCounters = new Map(
@@ -34,10 +39,7 @@ const PrDiffs = ({ diffs, currentUserId, currentPullId, isReviewer, reviewStatus
         .split('diff --git')
         .filter(hunk => {
           const firstHunkLine = hunk.slice(0, hunk.indexOf('\n'));
-          const extension = firstHunkLine
-            .slice(firstHunkLine.indexOf('b/'))
-            .split('.')
-            .pop();
+          const extension = getExtension(firstHunkLine.slice(firstHunkLine.indexOf('b/')));
 
           return extensionFilter.has(extension) || !hunk;
         })
@@ -89,7 +91,7 @@ const PrDiffs = ({ diffs, currentUserId, currentPullId, isReviewer, reviewStatus
                     onClick={blockPropagation}
                     onChange={onExtensionChange}
                     value={extension}
-                    label={`.${extension}`}
+                    label={`${extension}`}
                   />
                 </Dropdown.Item>
               ))}
@@ -101,7 +103,7 @@ const PrDiffs = ({ diffs, currentUserId, currentPullId, isReviewer, reviewStatus
           <Dropdown text="Jump to...">
             <Dropdown.Menu>
               {filepaths
-                .filter(filepath => [...extensionFilter].some(extension => filepath.endsWith(extension)))
+                .filter(filepath => [...extensionFilter].some(extension => getExtension(filepath) === extension))
                 .map((filepath, index) => (
                   <Dropdown.Item key={index} value={filepath} onClick={scrollToFile}>
                     <div className={styles.fileNameRow}>

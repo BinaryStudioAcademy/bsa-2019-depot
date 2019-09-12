@@ -104,7 +104,12 @@ class RepositoryRepository extends BaseRepository {
 
   getByUserAndReponame(userId, reponame) {
     return this.model.findOne({
-      where: { name: reponame, userId },
+      where: {
+        [Op.and]: [
+          sequelize.where(sequelize.fn('lower', sequelize.col('repository.name')), sequelize.fn('lower', reponame)),
+          { userId }
+        ]
+      },
       attributes: {
         include: [
           [
