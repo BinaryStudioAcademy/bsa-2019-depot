@@ -87,7 +87,14 @@ class IssueView extends Component {
       navigation: {
         state: {
           params: {
-            data: { id, user }
+            data: {
+              id,
+              title,
+              user,
+              repository: {
+                user: { username }
+              }
+            }
           }
         }
       }
@@ -96,7 +103,9 @@ class IssueView extends Component {
     await createIssueComment({
       comment,
       issueId: id,
-      userId
+      userId,
+      username,
+      title
     });
     this.setState({
       comment: ''

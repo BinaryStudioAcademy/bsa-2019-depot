@@ -6,8 +6,8 @@ import { setLabelsToIssue } from '../../services/labelsService';
 function* createIssueRequest({ payload }) {
   try {
     yield put(createIssue.request());
-    const { userId, repositoryId, title, body, labelIds, assigneeNames } = payload;
-    const response = yield call(issuesService.createIssue, { userId, repositoryId, title, body });
+    const { userId, repositoryId, title, body, labelIds, assigneeNames, username } = payload;
+    const response = yield call(issuesService.createIssue, { userId, repositoryId, title, body, username });
     if (response && response.data) {
       const { id: newIssueId } = response.data;
       if (labelIds) {
