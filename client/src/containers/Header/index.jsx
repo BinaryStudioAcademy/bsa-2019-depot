@@ -42,7 +42,7 @@ const SearchInp = () => {
         onClick={() => {
           setText('');
           setResults([]);
-          window.location.href = `${window.location.origin}${endpoint}`; 
+          window.location.href = `${window.location.origin}${endpoint}`;
         }}
       >
         <p className={styles.searchItem}>
@@ -51,7 +51,7 @@ const SearchInp = () => {
         </p>
       </div>
     );
-  }; 
+  };
 
   const handleSearchChange = async (e, { value }) => {
     if (!value) {
@@ -337,6 +337,10 @@ const mapStateToProps = ({
   imgUrl,
   status
 });
+
+SearchInp.propTypes = {
+  content: PropTypes.array.isRequired
+};
 
 const mapDispatchToProps = {
   fetchCurrentUser

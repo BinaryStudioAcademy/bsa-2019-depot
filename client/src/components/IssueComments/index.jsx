@@ -401,6 +401,9 @@ IssueComments.propTypes = {
     url: PropTypes.string.isRequired
   }).isRequired,
   userId: PropTypes.string.isRequired,
+  owner: PropTypes.string.isRequired,
+  reponame: PropTypes.string.isRequired,
+  fetchCurrentRepo: PropTypes.func.isRequired,
   repositoryId: PropTypes.string.isRequired,
   userImg: PropTypes.string,
   userName: PropTypes.string.isRequired,
@@ -415,7 +418,11 @@ const mapStateToProps = ({
   },
   currentRepo: {
     repository: {
-      currentRepoInfo: { id: repositoryId, name: reponame, user: { username: owner } }
+      currentRepoInfo: {
+        id: repositoryId,
+        name: reponame,
+        user: { username: owner }
+      }
     }
   }
 }) => ({
