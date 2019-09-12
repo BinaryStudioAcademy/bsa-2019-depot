@@ -285,6 +285,9 @@ const forkRepo = async ({
     await Promise.all(branchesPromises);
     const commitPromises = currentRepoCommits.map(commit => commitRepository.create({ ...commit, repositoryId: id }));
     await Promise.all(commitPromises);
+    const newLabels = defaultLabels.map(label => ({ repositoryId: id, ...label }));
+    await LabelRepository.bulkCreate(newLabels);
+
     return { status: true, username };
   } catch (err) {
     return Promise.reject(new CustomError(500, err.message));

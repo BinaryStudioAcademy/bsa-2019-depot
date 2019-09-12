@@ -28,23 +28,23 @@ const RepositoryHeader = ({
   const [starCount, setStarCount] = useState(starsCount);
   let activeTab;
   switch (activePage) {
-    case 'issues':
-      activeTab = 'issues';
-      break;
-    case 'pulls':
-      activeTab = 'pulls';
-      break;
-    case 'commits':
-      activeTab = 'code';
-      break;
-    case 'insights':
-      activeTab = 'insights';
-      break;
-    case 'settings':
-      activeTab = 'settings';
-      break;
-    default:
-      activeTab = 'code';
+  case 'issues':
+    activeTab = 'issues';
+    break;
+  case 'pulls':
+    activeTab = 'pulls';
+    break;
+  case 'commits':
+    activeTab = 'code';
+    break;
+  case 'insights':
+    activeTab = 'insights';
+    break;
+  case 'settings':
+    activeTab = 'settings';
+    break;
+  default:
+    activeTab = 'code';
   }
   const [isAccessGranted, setIsAccessGranted] = useState(false);
 
