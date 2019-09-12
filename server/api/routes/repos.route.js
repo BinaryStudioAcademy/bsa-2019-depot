@@ -20,7 +20,7 @@ const {
   getCommitActivityData,
   getUsersCommitsByRepositoryId
 } = require('../services/commit.service');
-const { deleteStarsByRepoId } = require('../services/star.service');
+const { deleteStarsByRepoId, getRepositoryStargazers } = require('../services/star.service');
 const {
   getBranches,
   getBranchTree,
@@ -310,6 +310,12 @@ router
   .get('/:repositoryId/forks', (req, res, next) => {
     const { repositoryId } = req.params;
     getRepositoryForks(repositoryId)
+      .then(data => res.send(data))
+      .catch(next);
+  })
+  .get('/:repositoryId/stargazers', (req, res, next) => {
+    const { repositoryId } = req.params;
+    getRepositoryStargazers(repositoryId)
       .then(data => res.send(data))
       .catch(next);
   })
