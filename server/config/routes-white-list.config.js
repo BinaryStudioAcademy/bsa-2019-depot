@@ -7,7 +7,7 @@ module.exports = [
   '/repos',
   '/commit',
   '/users/username-exists',
-  '/users/forget-password',
+  '/users/forgot-password',
   '/users/reset-password',
   '/files'
 ];
