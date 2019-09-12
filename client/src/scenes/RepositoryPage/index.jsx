@@ -124,7 +124,6 @@ class RepositoryPage extends React.Component {
       .filter(path => path)
       .map(param => `:${param}`)
       .join('/');
-    console.log(`from repo page ${branch}`);
 
     if (loading) {
       return <Spinner />;
