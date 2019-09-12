@@ -303,6 +303,8 @@ const setStar = async (userId, repositoryId) => {
 
 const getRepoData = async repositoryId => repoRepository.getRepositoryById(repositoryId);
 
+const getRepoOwner = async repositoryId => repoRepository.getRepoOwnerByRepoId(repositoryId);
+
 const getRepositoryCollaborators = repositoryId => collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId);
 
 const getRepositoryForksById = async (repositoryId, level) => {
@@ -358,5 +360,6 @@ module.exports = {
   getRepositoryCollaborators,
   getRepositoryForks,
   getRepositoryForksById,
-  getAvailableAssigneesByRepoId
+  getAvailableAssigneesByRepoId,
+  getRepoOwner
 };

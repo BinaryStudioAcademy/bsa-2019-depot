@@ -22,7 +22,10 @@ const addCollaborator = async ({
   });
 
   await sendInviteCollaboratorEmail({
-    email, url, username, reponame
+    email,
+    url,
+    username,
+    reponame
   });
   return collaboratorRepository.getCollaboratorById(id);
 };

@@ -9,6 +9,7 @@ const cors = require('cors');
 const socketIO = require('socket.io');
 const http = require('http');
 const { Client } = require('elasticsearch');
+const admin = require('firebase-admin');
 const { options } = require('./config/aws.config');
 const routes = require('./api/routes/index');
 const routesWhiteList = require('./config/routes-white-list.config');
@@ -22,6 +23,12 @@ const {
   reposSocketInjector
 } = require('./socket/injector');
 const { elasticHost, elasticPort, elasticIndex } = require('./config/elastic.config');
+const serviceAccount = require('./depot-dc9be-firebase-adminsdk-kbzec-eb0ca888df.json');
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://depot-dc9be.firebaseio.com'
+});
 
 const app = express();
 app.use(cors());

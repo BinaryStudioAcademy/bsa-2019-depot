@@ -1,5 +1,7 @@
 const { Router } = require('express');
+const admin = require('firebase-admin');
 const issueCommentService = require('../services/issue-comment.service');
+const userService = require('../services/user.service');
 
 const router = Router();
 
@@ -12,7 +14,33 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  const { issueId, userId, comment: body } = req.body;
+  const {
+    issueId, userId, username, comment: body, title
+  } = req.body;
+  userService.getUserDetailed(username).then((data) => {
+    const token = data.get({ plain: true }).deviceToken;
+    const issueOwnerId = data.get({ plain: true }).id;
+    if (token) {
+      const message = {
+        notification: {
+          title: `New comment for issue ${title}`,
+          body
+        },
+        token
+      };
+      if (userId !== issueOwnerId) {
+        admin
+          .messaging()
+          .send(message)
+          .then((response) => {
+            console.log('Successfully sent message:', response);
+          })
+          .catch((error) => {
+            console.log('Error sending message:', error);
+          });
+      }
+    }
+  });
   issueCommentService
     .addIssueComment({ userId, issueId, body })
     .then((data) => {
