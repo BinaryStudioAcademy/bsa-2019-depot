@@ -265,12 +265,17 @@ class IssueRepository extends BaseRepository {
   }
 
   async getIssues(repositoryId, sort, authorId, assigneeId, title, isOpened = true) {
+    const whereTitle = title
+      ? sequelize.where(sequelize.fn('lower', sequelize.col('issue.title')), {
+        [Op.substring]: title.toLowerCase()
+      })
+      : {};
+
+    const whereAuthor = authorId ? { userId: authorId } : {};
+
     const queryObject = {
       where: {
-        repositoryId,
-        isOpened,
-        ...(title ? { title: { [Op.substring]: title } } : {}),
-        ...(authorId ? { userId: authorId } : {})
+        [Op.and]: [{ repositoryId }, { isOpened }, whereTitle, whereAuthor]
       },
       attributes: {
         include: [
