@@ -119,7 +119,6 @@ class ConversationTab extends React.Component {
     });
     const {
       currentPull: { id: pullId, title },
-      updateState,
       match: {
         params: { username }
       }
