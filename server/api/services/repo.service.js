@@ -285,6 +285,9 @@ const forkRepo = async ({
     await Promise.all(branchesPromises);
     const commitPromises = currentRepoCommits.map(commit => commitRepository.create({ ...commit, repositoryId: id }));
     await Promise.all(commitPromises);
+    const newLabels = defaultLabels.map(label => ({ repositoryId: id, ...label }));
+    await LabelRepository.bulkCreate(newLabels);
+
     return { status: true, username };
   } catch (err) {
     return Promise.reject(new CustomError(500, err.message));
@@ -302,6 +305,8 @@ const setStar = async (userId, repositoryId) => {
 };
 
 const getRepoData = async repositoryId => repoRepository.getRepositoryById(repositoryId);
+
+const getRepoOwner = async repositoryId => repoRepository.getRepoOwnerByRepoId(repositoryId);
 
 const getRepositoryCollaborators = repositoryId => collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId);
 
@@ -335,8 +340,9 @@ const getAvailableAssigneesByRepoId = async (repositoryId) => {
   const collaboratorIds = (await collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId)).map(
     collaborator => collaborator.userId
   );
-  const orgUsersIds = (await orgUsersRepository.getAllOrganizationUsers(userId)) || [];
-  const assigneeIds = Array.from(new Set([userId, ...collaboratorIds, ...orgUsersIds]));
+  const orgUsersIds = (await orgUsersRepository.getAllOrganizationUsers(userId)).map(user => user.userId);
+  const allIds = orgUsersIds && orgUsersIds.length ? [...collaboratorIds, ...orgUsersIds] : [userId, ...collaboratorIds];
+  const assigneeIds = Array.from(new Set(allIds));
   const assignees = await userRepository.getUsersByIds(assigneeIds);
   return assignees.sort((assignee1, assignee2) => assignee2.username < assignee1.username);
 };
@@ -357,5 +363,6 @@ module.exports = {
   getRepositoryCollaborators,
   getRepositoryForks,
   getRepositoryForksById,
-  getAvailableAssigneesByRepoId
+  getAvailableAssigneesByRepoId,
+  getRepoOwner
 };

@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       location: DataTypes.STRING,
       imgUrl: DataTypes.STRING,
       status: DataTypes.STRING,
+      deviceToken: DataTypes.STRING,
       // ------------------
       type: DataTypes.ENUM('USER', 'ORG')
     },

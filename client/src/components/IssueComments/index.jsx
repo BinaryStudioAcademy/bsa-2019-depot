@@ -193,15 +193,22 @@ class IssueComments extends React.Component {
       isDisabled: true
     });
     const {
-      currentIssue: { id: issueId }
+      currentIssue: { id: issueId, title }
     } = this.state;
     if (!comment) return;
+    const {
+      userId,
+      match: {
+        params: { username }
+      }
+    } = this.props;
 
-    const { userId } = this.props;
     const result = await createIssueComment({
       comment,
       issueId,
-      userId
+      userId,
+      username,
+      title
     });
 
     if (result) {

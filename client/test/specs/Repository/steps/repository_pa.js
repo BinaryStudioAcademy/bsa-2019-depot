@@ -28,7 +28,7 @@ class RepoSteps {
     repoPage.selectLicense.click();
   }
 
-  submitCreateRepoBtn() {
+  submitCreateRepoForm() {
     repoPage.createRepoBtn.click();
     browser.pause(500);
   }
@@ -55,13 +55,19 @@ class RepoSteps {
 
   enterCommitMessage(commitMessage) {
     repoPage.commitMessageInput.clearValue();
+    repoPage.commitMessageInput.scrollIntoView();
     repoPage.commitMessageInput.setValue(commitMessage);
   }
 
   submitCommit() {
     repoPage.commitFileBtn.scrollIntoView();
+    repoPage.commitFileBtn.waitForDisplayed(2000);
     repoPage.commitFileBtn.click();
-    browser.pause(500);
+    browser.pause(750);
+  }
+  getFileName() {
+    browser.pause(750);
+    repoPage.createdFileName.getText();
   }
 }
 

@@ -82,13 +82,16 @@ class FileEditPage extends React.Component {
     this.setState({ fileData: { content } });
   }
 
-  handleCancel() {
-    const {
-      location: { pathname }
-    } = this.props;
-    
-    const pathTo = pathname.replace('/edit/', '/blob/').replace('/new/', '/tree/');
-    window.location.href = `${window.location.origin}${pathTo}`;
+  handleCancel(filepath = '', commitBranch = '') {
+    window.location.href = this.mapRedirectPath(filepath, commitBranch);
+  }
+
+  mapRedirectPath(filepath = '', commitBranch = '') {
+    const { username, reponame } = this.props.match.params;
+    const replaceHandler = g1 => g1 === '/new/' ? '/tree/' : '/blob/';
+    return typeof filepath === 'string'
+      ? `${window.location.origin}/${username}/${reponame}/blob/${commitBranch}${filepath ? `/${filepath}` : ''}`
+      : `${window.location.origin}${this.props.location.pathname.replace(/\/edit\/|\/new\/{0,1}/, replaceHandler)}`;
   }
 
   handleCommitFile({ message, commitBranch }) {
@@ -119,7 +122,7 @@ class FileEditPage extends React.Component {
       fileData: content
     })
       .then(() => {
-        this.handleCancel();
+        this.handleCancel(newFilePath, commitBranch);
       })
       .catch(() => {
         this.handleCancel();

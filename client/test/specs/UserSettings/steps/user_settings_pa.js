@@ -1,8 +1,16 @@
 const SettingsPages = require('../pages/user_settings_po');
 
 class SettingsSteps {
-  enterName(name) {
+  fillUpUserProfile(info) {
     SettingsPages.nameInput.waitForDisplayed(2000);
+    this.enterName(info.profileSettings.name);
+    this.enterBio(info.profileSettings.bio);
+    this.enterUrl(info.profileSettings.url);
+    this.enterCompany(info.profileSettings.company);
+    this.enterLocation(info.profileSettings.location);
+  }
+
+  enterName(name) {
     SettingsPages.nameInput.clearValue();
     SettingsPages.nameInput.setValue(name);
   }
@@ -27,7 +35,8 @@ class SettingsSteps {
     SettingsPages.locationInput.setValue(location);
   }
 
-  updateProfileBtn() {
+  updateProfile() {
+    SettingsPages.updateProfileButton.waitForDisplayed(2000);
     SettingsPages.updateProfileButton.click();
   }
 

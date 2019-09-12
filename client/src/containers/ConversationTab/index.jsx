@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Icon, Button, Grid, Segment } from 'semantic-ui-react';
+import { Icon, Button, Grid, Segment, Loader } from 'semantic-ui-react';
 import { withRouter } from 'react-router-dom';
 
 import IssuePrSidebar from '../IssuePrSidebar';
@@ -30,27 +30,31 @@ class ConversationTab extends React.Component {
     this.state = {
       loading: true,
       collaborators: null,
-      reviewers: null
+      reviewers: null,
+      pullComments: []
     };
   }
 
   async componentDidMount() {
+    const { pullComments } = this.props;
+    this.setState({
+      pullComments,
+      loading: false
+    });
     this.initSocket();
   }
 
   initSocket() {
     this.socket = socketInit('pulls');
     const {
-      currentPull: { id },
-      updateState,
-      pullComments
+      currentPull: { id }
     } = this.props;
-
     this.socket.emit('createRoom', id);
 
     this.socket.on('newPullComment', data => {
+      const { pullComments } = this.state;
       pullComments.data.push(data);
-      updateState({
+      this.setState({
         pullComments
       });
     });
@@ -72,6 +76,7 @@ class ConversationTab extends React.Component {
       updateState({ currentPull });
     });
   }
+
   generateButtons = status => {
     const buttons = [];
     switch (status) {
@@ -113,27 +118,22 @@ class ConversationTab extends React.Component {
       isDisabled: true
     });
     const {
-      currentPull: { id: pullId },
-      updateState
+      currentPull: { id: pullId, title },
+      match: {
+        params: { username }
+      }
     } = this.props;
 
     if (!comment) return;
 
     const { userId } = this.props;
-    const result = await createPullComment({
+    await createPullComment({
       comment,
       pullId,
-      userId
+      userId,
+      username,
+      title
     });
-    if (result) {
-      const pullComments = await getPullComments(pullId);
-      updateState({
-        comment: '',
-        pullComments
-      });
-
-      return result;
-    }
   };
 
   onCommentDelete = id => {
@@ -219,13 +219,13 @@ class ConversationTab extends React.Component {
       username,
       userImg,
       currentPull,
-      pullComments,
       isOwnPull,
       labels,
       currentLabels,
       reviewers,
       collaborators
     } = this.props;
+    const { pullComments, loading } = this.state;
     const {
       user: { imgUrl, username: owner },
       body,
@@ -234,8 +234,7 @@ class ConversationTab extends React.Component {
       createdAt
     } = currentPull;
     const { data: comments } = pullComments;
-
-    return (
+    return !loading ? (
       <Segment className={styles.noBorder}>
         <Grid>
           <Grid.Column width={12}>
@@ -304,6 +303,8 @@ class ConversationTab extends React.Component {
           </Grid.Column>
         </Grid>
       </Segment>
+    ) : (
+      <Loader active />
     );
   }
 }

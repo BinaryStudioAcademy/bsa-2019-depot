@@ -129,32 +129,25 @@ class IssuesPullsList extends React.Component {
     this.fetchData();
   };
 
-  onDropdownChange = async (e, { value }) => {
-    switch (e.target.name) {
-    case 'author':
-      const {
-        filter: { authorId: oldAuthorId }
-      } = this.state;
+  onAuthorChange = async (e, { value: newAuthorId }) => {
+    const {
+      filter: { authorId: oldAuthorId }
+    } = this.state;
 
-      const { newAuthorId } = value;
-      const authorId = newAuthorId === oldAuthorId ? '' : newAuthorId;
+    const authorId = newAuthorId === oldAuthorId ? '' : newAuthorId;
 
-      await this.setState({ filter: { ...this.state.filter, authorId } });
-      break;
-    case 'assignee':
-      const {
-        filter: { assigneeId: oldAssigneeId }
-      } = this.state;
+    await this.setState({ filter: { ...this.state.filter, authorId } });
+    this.fetchData();
+  };
 
-      const { newAssigneeId } = value;
-      const assigneeId = newAssigneeId === oldAssigneeId ? '' : newAssigneeId;
+  onAssigneeChange = async (e, { value: newAssigneeId }) => {
+    const {
+      filter: { assigneeId: oldAssigneeId }
+    } = this.state;
 
-      await this.setState({ filter: { ...this.state.filter, assigneeId } });
-      break;
-    default:
-      return;
-    }
+    const assigneeId = newAssigneeId === oldAssigneeId ? '' : newAssigneeId;
 
+    await this.setState({ filter: { ...this.state.filter, assigneeId } });
     this.fetchData();
   };
 
@@ -306,7 +299,12 @@ class IssuesPullsList extends React.Component {
                   />
                   <Dropdown.Menu scrolling>
                     {filteredAuthorList.map((author, index) => (
-                      <Dropdown.Item key={author.id} value={author.id} onClick={this.onDropdownChange}>
+                      <Dropdown.Item
+                        key={author.id}
+                        value={author.id}
+                        onClick={this.onAuthorChange}
+                        onChange={this.onUserInputChange}
+                      >
                         <Icon name="check" className={authorId !== author.id ? styles.hide_check : null} />
                         <img alt="user avatar" src={getUserImgLink(author.imgUrl)} className={styles.avatar} />
                         <span>{author.username}</span>
@@ -315,34 +313,36 @@ class IssuesPullsList extends React.Component {
                   </Dropdown.Menu>
                 </Dropdown.Menu>
               </Dropdown>
-              <Dropdown
-                text="Assignee"
-                icon="angle down"
-                className={styles.active}
-                onKeyDown={this.onUserInputHitEnter}
-              >
-                <Dropdown.Menu>
-                  <Input
-                    name="assignee"
-                    value={assigneeDropdownFilter}
-                    icon="search"
-                    iconPosition="left"
-                    className="search"
-                    placeholder="Filter assignees"
-                    onClick={this.onUserInputClick}
-                    onChange={this.onUserInputChange}
-                  />
-                  <Dropdown.Menu scrolling>
-                    {filteredAssigneeList.map((assignee, index) => (
-                      <Dropdown.Item key={assignee.id} value={assignee.id} onClick={this.onDropdownChange}>
-                        <Icon name="check" className={assigneeId !== assignee.id ? styles.hide_check : null} />
-                        <img alt="user avatar" src={getUserImgLink(assignee.imgUrl)} className={styles.avatar} />
-                        <span>{assignee.username}</span>
-                      </Dropdown.Item>
-                    ))}
+              {isIssues && (
+                <Dropdown
+                  text="Assignee"
+                  icon="angle down"
+                  className={styles.active}
+                  onKeyDown={this.onUserInputHitEnter}
+                >
+                  <Dropdown.Menu>
+                    <Input
+                      name="assignee"
+                      value={assigneeDropdownFilter}
+                      icon="search"
+                      iconPosition="left"
+                      className="search"
+                      placeholder="Filter assignees"
+                      onClick={this.onUserInputClick}
+                      onChange={this.onUserInputChange}
+                    />
+                    <Dropdown.Menu scrolling>
+                      {filteredAssigneeList.map((assignee, index) => (
+                        <Dropdown.Item key={assignee.id} value={assignee.id} onClick={this.onAssigneeChange}>
+                          <Icon name="check" className={assigneeId !== assignee.id ? styles.hide_check : null} />
+                          <img alt="user avatar" src={getUserImgLink(assignee.imgUrl)} className={styles.avatar} />
+                          <span>{assignee.username}</span>
+                        </Dropdown.Item>
+                      ))}
+                    </Dropdown.Menu>
                   </Dropdown.Menu>
-                </Dropdown.Menu>
-              </Dropdown>
+                </Dropdown>
+              )}
               <Dropdown text="Sort" icon="angle down" className={sort ? styles.active : null}>
                 <Dropdown.Menu>
                   {sortOptions.map(({ key, text, value }) => (

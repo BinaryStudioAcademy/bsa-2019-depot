@@ -1,5 +1,7 @@
 const { Router } = require('express');
+const admin = require('firebase-admin');
 const pullService = require('../services/pulls.service');
+const repoService = require('../services/repo.service');
 const pullCommentService = require('../services/pull-comment.service');
 const pullReviewerService = require('../services/pull-reviewer.service');
 const { checkPullPermissions } = require('../../helpers/check.permission.level.helper');
@@ -7,6 +9,28 @@ const { checkPullPermissions } = require('../../helpers/check.permission.level.h
 const router = Router();
 
 router.post('/', (req, res, next) => {
+  const { repositoryId } = req.body;
+  repoService.getRepoOwner(repositoryId).then((data) => {
+    const token = data.get({ plain: true }).user.deviceToken;
+    if (token) {
+      const message = {
+        notification: {
+          title: 'New pull request',
+          body: 'You have a new pull request. Check out the app'
+        },
+        token
+      };
+      admin
+        .messaging()
+        .send(message)
+        .then((response) => {
+          console.log('Successfully sent message:', response);
+        })
+        .catch((error) => {
+          console.log('Error sending message:', error);
+        });
+    }
+  });
   pullService
     .addPull({ ...req.body })
     .then(data => res.send({ data }))
