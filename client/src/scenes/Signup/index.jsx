@@ -59,12 +59,12 @@ class Signup extends React.Component {
       username,
       email,
       password,
-      imgUrl: `http://tinygraphs.com/squares/${username}?theme=frogideas&numcolors=4&size=220&fmt=svg`
+      imgUrl: 'https://avatars1.githubusercontent.com/u/43038168?s=60&v=4'
     };
     this.props.signupRoutine({
       user
     });
-    // elasticHelper.addUser(username);
+    elasticHelper.addUser(username);
   }
 
   renderSignupForm({ errors, touched, handleChange, handleBlur, handleSubmit, values }) {
