@@ -12,14 +12,10 @@ const getReviewersForPull = pullId => pullReviewerRepository.getReviewersForPull
 const getAvailableReviewers = async (repositoryId, pullAuthorId) => {
   const { userId: repoOwnerId } = await repoRepository.getById(repositoryId);
   const reviewers = (await collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId))
-    .map(collaborator => collaborator.user)
-    .filter(reviewer => reviewer.id !== pullAuthorId && reviewer.isActivated);
-  if (pullAuthorId === repoOwnerId) {
-    return reviewers;
-  }
-  // when pull author is not repo owner, then repo owner should also be added as a potential reviewer
+    .filter(reviewer => reviewer.user.id !== pullAuthorId && reviewer.isActivated);
+
   const repoOwner = await userRepository.getById(repoOwnerId);
-  return [...reviewers, repoOwner].sort((user1, user2) => user1.username > user2.username);
+  return [...reviewers, { userId: repoOwner.id, user: repoOwner }].sort((user1, user2) => user1.user.username > user2.user.username);
 };
 
 const addReviewer = async (pullId, userId) => {

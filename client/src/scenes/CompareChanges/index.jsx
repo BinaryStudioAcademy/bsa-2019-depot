@@ -168,7 +168,6 @@ class CompareChanges extends React.Component {
     createPull(request).then(pull => {
       setLabelsToPull(labelIds, pull.data.id, repositoryId);
       reviewers.forEach(reviewer => {
-        debugger;
         const { userId } = collaborators.find(({ user: { username } }) => username === reviewer);
         addReviewer({ userId, pullId: pull.data.id });
       });
@@ -197,7 +196,6 @@ class CompareChanges extends React.Component {
       collaborators
     } = this.state;
     const { branches, repositoryId } = this.props;
-    debugger;
 
     const commentsList =
       commitComments && commitComments.length ? (
