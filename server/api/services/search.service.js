@@ -7,7 +7,8 @@ const client = new Client({
   port: elasticPort
 });
 
-const find = async (query) => {
+const find = async (user, repo) => {
+  const query = `${user}${repo ? ` AND ${repo}` : ''}`;
   const results = await client.search({
     index: elasticIndex,
     size: 5,
