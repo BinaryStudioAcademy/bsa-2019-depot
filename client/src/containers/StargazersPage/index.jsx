@@ -40,7 +40,6 @@ class StargazersPage extends Component {
       </div>
     ) : (
       <Segment basic>
-
         {stars.length
           ? (
               <>
@@ -78,7 +77,7 @@ class StargazersPage extends Component {
               <Divider hidden />
               <Header as="h2">Be the first to star this repository.</Header>
               <Segment basic>
-                <a href="https://help.github.com/articles/about-stars">Learn more{' '}</a>about how starring works on GitHub.
+                <a href="https://help.github.com/articles/about-stars">Learn more{' '}</a>about how starring works on Depot.
               </Segment>
             </Container>
           )
