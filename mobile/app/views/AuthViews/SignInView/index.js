@@ -9,6 +9,7 @@ import * as Yup from 'yup';
 
 import styles from '../styles';
 import imageLogo from '../../../assets/depot-logo.png';
+import googleLogo from '../../../assets/google.png';
 
 import { scope, google_api, GoogleManager } from '../../../config/google.config';
 
@@ -83,10 +84,11 @@ class SignInView extends React.Component {
             value={password}
           />
           {errors.password && <Text style={styles.error}>{errors.password}</Text>}
-          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+          <TouchableOpacity style={styles.buttonSign} onPress={handleSubmit}>
             <Text style={styles.text}>{'Sign In'}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.button, styles.buttonGoogle]} onPress={this.googleLogin}>
+          <TouchableOpacity style={styles.buttonGoogle} onPress={this.googleLogin}>
+            <Image source={googleLogo} style={styles.logoGoogle} />
             <Text style={[styles.text, styles.textGoogle]}>{'Sign in with Google'}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={[styles.button, styles.signInUp]} onPress={this.toSignUp}>
