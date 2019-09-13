@@ -25,7 +25,7 @@ module.exports = async (req, res, next) => {
     return next();
   }
 
-  if(req.params.repositoryId) {
+  if (req.params.repositoryId) {
     const { user: { id: orgId } } = await RepositoryRepository.getRepoOwnerByRepoId(req.params.repositoryId);
     const owners = await getOrganizationOwner(orgId);
     const owner = owners.filter(({ username }) => username === req.user.username);

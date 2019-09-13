@@ -26,3 +26,11 @@ export const removeReviewer = async id => {
 
   return response.status === 200;
 };
+
+export const getAvailableReviewers = async (repositoryId, pullAuthorId) => {
+  const response = await callWebApi({
+    endpoint: `/api/pull-reviewers/available/${repositoryId}/${pullAuthorId}`,
+    type: 'GET'
+  });
+  return response.json();
+};

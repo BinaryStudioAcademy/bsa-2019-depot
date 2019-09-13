@@ -10,6 +10,7 @@ import IssuePrHeader from '../../components/IssuePrHeader';
 import CommitsList from '../../components/CommitsList';
 import ConversationTab from '../ConversationTab';
 import PrDiffs from '../PrDiffs';
+import { getAvailableReviewers } from '../../services/pullReviewersService';
 
 import {
   getPullByNumber,
@@ -20,7 +21,6 @@ import {
 } from '../../services/pullsService';
 import { getLabels } from '../../services/labelsService';
 import { getWriteUserPermissions } from '../../helpers/checkPermissionsHelper';
-import { getRepositoryCollaborators } from '../../services/repositoryService';
 
 import styles from './styles.module.scss';
 
@@ -49,7 +49,7 @@ class PullView extends React.Component {
     const labels = await getLabels(repositoryId);
     this.setState({ labels });
     const { fromCommitId, toCommitId, id } = currentPull;
-    const collaborators = await getRepositoryCollaborators(repositoryId);
+    const collaborators = await getAvailableReviewers(repositoryId, userId);
     const reviewers = await getReviewers(currentPull.id);
 
     const { commits, diffs } = await getBranchDiffs(repositoryId, { fromCommitId, toCommitId });
