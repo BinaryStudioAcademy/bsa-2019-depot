@@ -62,44 +62,40 @@ class StarsTab extends React.Component {
 
     return (
       <>
-      {loading ? (
-        <div>
-          <Loader active />
-        </div>
-      ) : repositories.length
-        ? (
-            <>
-              <div className={styles.tabHeader}>
-                <h2>Repositories</h2>
-              </div>
-              <div>
-                {repositories.map(repo => {
-                  const {
-                    user: { username }
-                  } = repo;
-                  return (
-                    <RepositoryItem
-                      repo={repo}
-                      key={`${repo.name}-${username}`}
-                      onStar={this.onStar}
-                      username={username}
-                      type="stars"
-                    />
-                  );
-                })}
-              </div>
-            </>
+        {loading ? (
+          <div>
+            <Loader active />
+          </div>
+        ) : repositories.length ? (
+          <>
+            <div className={styles.tabHeader}>
+              <h2>Repositories</h2>
+            </div>
+            <div>
+              {repositories.map(repo => {
+                const {
+                  user: { username }
+                } = repo;
+                return (
+                  <RepositoryItem
+                    repo={repo}
+                    key={`${repo.name}-${username}`}
+                    onStar={this.onStar}
+                    username={username}
+                    type="stars"
+                  />
+                );
+              })}
+            </div>
+          </>
         ) : (
           <Container textAlign="center">
             <Octicon icon={getIconByName('star')} />
             <Divider hidden />
             <Header as="h2">You don’t have any starred repositories yet.</Header>
-            <Segment basic>
-                Star repositories to save them for later and they’ll show up here.
-            </Segment>
+            <Segment basic>Star repositories to save them for later and they’ll show up here.</Segment>
           </Container>
         )}
-
       </>
     );
   }
