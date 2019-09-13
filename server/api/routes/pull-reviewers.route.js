@@ -27,4 +27,12 @@ router.delete('/:reviewerId', (req, res, next) => {
     .catch(next);
 });
 
+router.get('/available/:repositoryId/:pullAuthorId', (req, res, next) => {
+  const { repositoryId, pullAuthorId } = req.params;
+  pullReviewerService
+    .getAvailableReviewers(repositoryId, pullAuthorId)
+    .then(data => res.send(data))
+    .catch(next);
+});
+
 module.exports = router;

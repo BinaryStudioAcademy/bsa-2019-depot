@@ -1,4 +1,6 @@
+const repoRepository = require('../../data/repositories/repository.repository');
 const pullRepository = require('../../data/repositories/pull-request.repository');
+const collaboratorRepository = require('../../data/repositories/collaborator.repository');
 const pullReviewerRepository = require('../../data/repositories/pull-reviewer.repository');
 const reviewStatusRepository = require('../../data/repositories/review-status.repository');
 const userRepository = require('../../data/repositories/user.repository');
@@ -7,14 +9,28 @@ const { clientUrl } = require('../../config/common.config');
 
 const getReviewersForPull = pullId => pullReviewerRepository.getReviewersForPull(pullId);
 
+const getAvailableReviewers = async (repositoryId, pullAuthorId) => {
+  const { userId: repoOwnerId } = await repoRepository.getById(repositoryId);
+  const reviewers = (await collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId))
+    .filter(reviewer => reviewer.user.id !== pullAuthorId && reviewer.isActivated);
+
+  const repoOwner = await userRepository.getById(repoOwnerId);
+  return [...reviewers, { userId: repoOwner.id, user: repoOwner }].sort((user1, user2) => user1.user.username > user2.user.username);
+};
+
 const addReviewer = async (pullId, userId) => {
   const status = await reviewStatusRepository.getStatusByName('PENDING');
   const {
-    repository: { name: reponame, user: { username: repoOwner } },
+    repository: {
+      name: reponame,
+      user: { username: repoOwner }
+    },
     title,
     number
   } = await pullRepository.getPullById(pullId);
-  const newPullReviewer = (await pullReviewerRepository.create({ userId, pullId, statusId: status.id })).get({ plain: true });
+  const newPullReviewer = (await pullReviewerRepository.create({ userId, pullId, statusId: status.id })).get({
+    plain: true
+  });
   const user = await userRepository.getUserById(userId);
 
   await sendReviewAssignmentEmail({
@@ -40,5 +56,6 @@ module.exports = {
   getReviewersForPull,
   addReviewer,
   updateReviewStatus,
-  removeReviewer
+  removeReviewer,
+  getAvailableReviewers
 };

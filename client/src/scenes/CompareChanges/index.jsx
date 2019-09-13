@@ -12,7 +12,7 @@ import CreateIssuePrForm from '../../components/CreateIssuePrForm';
 import { getBranchDiffs } from '../../services/pullsService';
 import { createPull } from '../../services/pullsService';
 import { getLabels, setLabelsToPull } from '../../services/labelsService';
-import { getRepositoryCollaborators } from '../../services/repositoryService';
+import { getAvailableReviewers } from '../../services/pullReviewersService';
 import { addReviewer } from '../../services/pullReviewersService';
 
 import styles from './styles.module.scss';
@@ -31,7 +31,8 @@ class CompareChanges extends React.Component {
       numOfCommits: 0,
       numOfFiles: 0,
       numOfCommitComments: 0,
-      numOfContributors: 0
+      numOfContributors: 0,
+      collaborators: []
     };
 
     this.onToBranchChange = this.onToBranchChange.bind(this);
@@ -41,7 +42,7 @@ class CompareChanges extends React.Component {
   }
 
   async componentDidMount() {
-    const { repositoryId, branches } = this.props;
+    const { repositoryId, branches, userId } = this.props;
 
     const { fromBranch: fromBranchName, toBranch: toBranchName } = this.getBranchesFromQuery();
 
@@ -53,7 +54,7 @@ class CompareChanges extends React.Component {
     }
 
     const labels = await getLabels(repositoryId);
-    const collaborators = await getRepositoryCollaborators(repositoryId);
+    const collaborators = await getAvailableReviewers(repositoryId, userId);
     this.setState({ labels, collaborators });
     this.updateBranchDiffs();
   }
