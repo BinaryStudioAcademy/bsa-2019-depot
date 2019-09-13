@@ -40,48 +40,47 @@ class StargazersPage extends Component {
       </div>
     ) : (
       <Segment basic>
-        {stars.length
-          ? (
-              <>
-                <Header as="h2" className={styles.stargazerHeader}>
-                  Stargazers
-                </Header>
-                <div className={styles.stargazersGrid}>
-                  {stars.map(({ user: { username, imgUrl, location, createdAt } }, id) => (
-                    <div key={id} className={styles.stargazerBox}>
-                      <Image src={getUserImgLink(imgUrl)} width="75" height="75" className={styles.stargazerImage} />
-                      <div className={styles.stargazerInfo}>
-                        <Link className={styles.profileLink} to={`/${username}`}>
-                          {username}
-                        </Link>
-                        {location ? (
-                          <>
-                            <Octicon className={styles.icon} icon={getIconByName('location')} />
-                            <span className={styles.stargazerDate}>{location}</span>
-                          </>
-                        ) : (
-                            <>
-                              <Octicon className={styles.icon} icon={getIconByName('clock')} />
-                              <span className={styles.stargazerDate}>Joined on {moment(createdAt).format('MMM DD, YYYY')}</span>
-                            </>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+        {stars.length ? (
+          <>
+            <Header as="h2" className={styles.stargazerHeader}>
+              Stargazers
+            </Header>
+            <div className={styles.stargazersGrid}>
+              {stars.map(({ user: { username, imgUrl, location, createdAt } }, id) => (
+                <div key={id} className={styles.stargazerBox}>
+                  <Image src={getUserImgLink(imgUrl)} width="75" height="75" className={styles.stargazerImage} />
+                  <div className={styles.stargazerInfo}>
+                    <Link className={styles.profileLink} to={`/${username}`}>
+                      {username}
+                    </Link>
+                    {location ? (
+                      <>
+                        <Octicon className={styles.icon} icon={getIconByName('location')} />
+                        <span className={styles.stargazerDate}>{location}</span>
+                      </>
+                    ) : (
+                      <>
+                        <Octicon className={styles.icon} icon={getIconByName('clock')} />
+                        <span className={styles.stargazerDate}>
+                          Joined on {moment(createdAt).format('MMM DD, YYYY')}
+                        </span>
+                      </>
+                    )}
+                  </div>
                 </div>
-              </>
-          )
-          : (
-            <Container textAlign="center">
-              <Octicon className={styles.icon} icon={getIconByName('star')} />
-              <Divider hidden />
-              <Header as="h2">Be the first to star this repository.</Header>
-              <Segment basic>
-                <a href="https://help.github.com/articles/about-stars">Learn more{' '}</a>about how starring works on Depot.
-              </Segment>
-            </Container>
-          )
-        }
+              ))}
+            </div>
+          </>
+        ) : (
+          <Container textAlign="center">
+            <Octicon className={styles.icon} icon={getIconByName('star')} />
+            <Divider hidden />
+            <Header as="h2">Be the first to star this repository.</Header>
+            <Segment basic>
+              <a href="https://help.github.com/articles/about-stars">Learn more </a>about how starring works on Depot.
+            </Segment>
+          </Container>
+        )}
       </Segment>
     );
   }
