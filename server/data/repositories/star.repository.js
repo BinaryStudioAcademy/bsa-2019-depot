@@ -46,7 +46,7 @@ class StarRepository extends BaseRepository {
   getStargazers(repositoryId) {
     return this.model.findAll({
       attributes: ['id', 'repositoryId'],
-      where: {repositoryId},
+      where: { repositoryId },
       include: [
         {
           model: UserModel,

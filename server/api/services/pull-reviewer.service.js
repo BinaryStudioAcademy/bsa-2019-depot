@@ -9,7 +9,7 @@ const { clientUrl } = require('../../config/common.config');
 
 const getReviewersForPull = pullId => pullReviewerRepository.getReviewersForPull(pullId);
 
-const getAvailableReviewers = async (repositoryId, pullAuthorId) => {
+const getAvailableReviewers = async (repositoryId) => {
   const { userId: repoOwnerId } = await repoRepository.getById(repositoryId);
   const reviewers = (await collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId))
     .filter(reviewer => reviewer.isActivated);
