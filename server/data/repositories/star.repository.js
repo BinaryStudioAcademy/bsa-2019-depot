@@ -42,6 +42,19 @@ class StarRepository extends BaseRepository {
       ]
     });
   }
+
+  getStargazers(repositoryId) {
+    return this.model.findAll({
+      attributes: ['id', 'repositoryId'],
+      where: {repositoryId},
+      include: [
+        {
+          model: UserModel,
+          attributes: ['id', 'username', 'imgUrl', 'location', 'createdAt']
+        }
+      ]
+    });
+  }
 }
 
 module.exports = new StarRepository(StarModel);

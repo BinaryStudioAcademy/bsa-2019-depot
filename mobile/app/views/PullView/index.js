@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, FlatList, TextInput, ScrollView } from 'react-native';
 import { getPullComments, mergePull, closePull, reopenPull, createPullComment } from '../../services/pullsService';
 import PullComment from '../../components/PullComment';
+import { socketInit } from '../../helpers/socketInitHelper';
 import moment from 'moment';
 import styles from './styles';
 import PropTypes from 'prop-types';
@@ -17,8 +18,45 @@ class IssueView extends Component {
     };
   }
 
+  initSocket() {
+    this.socket = socketInit('pulls');
+    const {
+      navigation: {
+        state: {
+          params: {
+            data: { id }
+          }
+        }
+      }
+    } = this.props;
+
+    this.socket.emit('createRoom', id);
+
+    this.socket.on('newPullComment', async data => {
+      this.fetchPullComments();
+    });
+
+    this.socket.on('changedPullComments', async () => {
+      this.fetchPullComments();
+    });
+  }
+
   async componentDidMount() {
     await this.fetchPullComments();
+    this.initSocket();
+  }
+
+  componentWillUnmount() {
+    const {
+      navigation: {
+        state: {
+          params: {
+            data: { id }
+          }
+        }
+      }
+    } = this.props;
+    this.socket.emit('leaveRoom', id);
   }
 
   async fetchPullComments() {
