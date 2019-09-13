@@ -176,8 +176,8 @@ class RepositoryItem extends React.Component {
           <h3>
             {this.getRepoLink({ username, name, type })}
             {this.renderOrignalRepoLink()}
-            {this.getDescription()}
             {!isPublic && <span className={styles.repoTypeLabel}>{repoType}</span>}
+            {this.getDescription()}
           </h3>
           <div className="repo-info">
             {language && (

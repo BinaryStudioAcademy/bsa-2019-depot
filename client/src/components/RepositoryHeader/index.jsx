@@ -174,6 +174,7 @@ RepositoryHeader.propTypes = {
       })
     })
   }).isRequired,
+  branch: PropTypes.string,
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
     isExact: PropTypes.bool.isRequired,
