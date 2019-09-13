@@ -9,10 +9,10 @@ const { clientUrl } = require('../../config/common.config');
 
 const getReviewersForPull = pullId => pullReviewerRepository.getReviewersForPull(pullId);
 
-const getAvailableReviewers = async (repositoryId, pullAuthorId) => {
+const getAvailableReviewers = async (repositoryId) => {
   const { userId: repoOwnerId } = await repoRepository.getById(repositoryId);
   const reviewers = (await collaboratorRepository.getCollaboratorsByRepositoryId(repositoryId))
-    .filter(reviewer => reviewer.user.id !== pullAuthorId && reviewer.isActivated);
+    .filter(reviewer => reviewer.isActivated);
 
   const repoOwner = await userRepository.getById(repoOwnerId);
   return [...reviewers, { userId: repoOwner.id, user: repoOwner }].sort((user1, user2) => user1.user.username > user2.user.username);

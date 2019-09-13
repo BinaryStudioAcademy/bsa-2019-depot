@@ -8,7 +8,7 @@ const deleteStarsByRepoId = async (userId, repositoryId) => {
   }
 };
 
-const getRepositoryStargazers = async (repositoryId) => starRepository.getStargazers(repositoryId);
+const getRepositoryStargazers = async repositoryId => starRepository.getStargazers(repositoryId);
 
 module.exports = {
   deleteStarsByRepoId,
