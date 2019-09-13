@@ -22,7 +22,8 @@ const RepositoryHeader = ({
   activePage,
   baseUrl,
   history,
-  isPublic
+  isPublic,
+  branch
 }) => {
   const [isStar, setIsStar] = useState(Boolean(stars.find(star => star.user.id === userId)));
   const [starCount, setStarCount] = useState(starsCount);
@@ -121,7 +122,7 @@ const RepositoryHeader = ({
       </div>
       <div className="ui top attached tabular menu">
         <div className={`${activeTab === 'code' && 'active'} item`}>
-          <Link to={baseUrl}>
+          <Link to={`${baseUrl}/tree/${branch}`}>
             <Icon name="code" /> Code
           </Link>
         </div>
@@ -173,6 +174,7 @@ RepositoryHeader.propTypes = {
       })
     })
   }).isRequired,
+  branch: PropTypes.string,
   match: PropTypes.exact({
     params: PropTypes.object.isRequired,
     isExact: PropTypes.bool.isRequired,

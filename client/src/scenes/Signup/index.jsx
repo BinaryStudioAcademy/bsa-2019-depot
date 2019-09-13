@@ -58,7 +58,8 @@ class Signup extends React.Component {
     const user = {
       username,
       email,
-      password
+      password,
+      imgUrl: 'https://avatars1.githubusercontent.com/u/43038168?s=60&v=4'
     };
     this.props.signupRoutine({
       user

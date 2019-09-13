@@ -8,9 +8,10 @@ import { setStatus, getStatus } from '../../services/userService';
 import styles from './styles.module.scss';
 
 const StatusModal = ({ showStatusModal, hideModal, username }) => {
+  const defaultStatus = 'defaultValue';
   const [status, setStatusText] = useState('');
-  const [prevStatus, setPrevStatusText] = useState('0');
-  if (prevStatus && username) {
+  const [prevStatus, setPrevStatusText] = useState(defaultStatus);
+  if (prevStatus === defaultStatus && username) {
     getStatus(username).then(({ status }) => setPrevStatusText(status));
   }
 

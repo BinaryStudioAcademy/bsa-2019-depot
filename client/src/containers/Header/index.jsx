@@ -24,12 +24,16 @@ const SearchInp = () => {
   const [isLoading, setLoading] = useState(false);
   const [timeout, changeTimeout] = useState(null);
 
-  const getIcon = (type) => {
+  const getIcon = type => {
     switch (type.toLowerCase()) {
-    case 'repo': return Repo;
-    case 'user': return Person;
-    case 'org': return Organization;
-    default: return null;
+    case 'repo':
+      return Repo;
+    case 'user':
+      return Person;
+    case 'org':
+      return Organization;
+    default:
+      return null;
     }
   };
 
@@ -42,7 +46,7 @@ const SearchInp = () => {
         onClick={() => {
           setText('');
           setResults([]);
-          window.location.href = `${window.location.origin}${endpoint}`; 
+          window.location.href = `${window.location.origin}${endpoint}`;
         }}
       >
         <p className={styles.searchItem}>
@@ -51,7 +55,7 @@ const SearchInp = () => {
         </p>
       </div>
     );
-  }; 
+  };
 
   const handleSearchChange = async (e, { value }) => {
     if (!value) {
@@ -64,9 +68,10 @@ const SearchInp = () => {
       clearTimeout(timeout);
       changeTimeout(null);
     }
+    const [user, repo] = value.split('/');
     changeTimeout(
       setTimeout(async () => {
-        const results = (await searchService.find(value)).map(({ type, username, reponame }) => ({
+        const results = (await searchService.find(user, repo)).map(({ type, username, reponame }) => ({
           content: [type, username, reponame]
         }));
         setResults(results);
@@ -318,6 +323,10 @@ HeaderDesktopAuth.propTypes = {
     status: PropTypes.string,
     fetchCurrentUser: PropTypes.func
   })
+};
+
+SearchInp.propTypes = {
+  content: PropTypes.array.isRequired
 };
 
 const Header = ({ isAuthorized, username, imgUrl, status, fetchCurrentUser }) => {

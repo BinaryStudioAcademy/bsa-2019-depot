@@ -37,7 +37,11 @@ router.post('/google/mobile', (req, res, next) => {
 });
 
 router.post('/register', registrationMiddleware, (req, res, next) => {
-  register(req.user)
+  const { imgUrl } = req.body;
+  register({
+    ...req.user,
+    imgUrl
+  })
     .then(data => res.send(data))
     .catch(next);
 });

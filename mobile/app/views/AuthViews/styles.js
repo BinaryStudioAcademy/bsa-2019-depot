@@ -14,7 +14,35 @@ export default StyleSheet.create({
     width: '100%'
   },
   buttonGoogle: {
-    backgroundColor: colors.greyButton
+    alignItems: 'center',
+    backgroundColor: colors.white,
+    borderRadius: 4,
+    elevation: 6,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 12,
+    paddingVertical: 12,
+    shadowColor: colors.shadowColor,
+    shadowOffset: { width: 1, height: 13 },
+    shadowOpacity: 0.8,
+    shadowRadius: 15,
+    width: '100%'
+  },
+  buttonSign: {
+    alignItems: 'center',
+    backgroundColor: colors.blueButton,
+    borderColor: colors.blueButton,
+    borderRadius: 4,
+    borderWidth: StyleSheet.hairlineWidth,
+    elevation: 6,
+    justifyContent: 'center',
+    marginBottom: 12,
+    paddingVertical: 12,
+    shadowColor: colors.shadowColor,
+    shadowOffset: { width: 1, height: 13 },
+    shadowOpacity: 0.8,
+    shadowRadius: 15,
+    width: '100%'
   },
   container: {
     alignItems: 'center',
@@ -41,6 +69,10 @@ export default StyleSheet.create({
     resizeMode: 'contain',
     width: '90%'
   },
+  logoGoogle: {
+    height: 20,
+    width: 20
+  },
   // eslint-disable-next-line react-native/no-color-literals
   signInUp: {
     backgroundColor: 'rgba(0, 0, 0, 0)'
@@ -57,7 +89,8 @@ export default StyleSheet.create({
     textAlign: 'center'
   },
   textGoogle: {
-    color: colors.greyText
+    color: colors.greyText,
+    marginLeft: 10
   },
   textInput: {
     borderBottomWidth: StyleSheet.hairlineWidth,
