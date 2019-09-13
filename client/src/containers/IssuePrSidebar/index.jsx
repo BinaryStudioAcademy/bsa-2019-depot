@@ -120,6 +120,7 @@ class IssuePrSidebar extends React.Component {
 
   render() {
     const { isIssue, collaborators, labels, assignees } = this.props;
+    debugger;
     const { currentLabels, reviewers, currentAssignees } = this.state;
     let defaultLabelValues = null;
     if (currentLabels) {

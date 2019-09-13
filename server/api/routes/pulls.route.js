@@ -24,9 +24,11 @@ router.post('/', (req, res, next) => {
         .messaging()
         .send(message)
         .then((response) => {
+          // eslint-disable-next-line no-console
           console.log('Successfully sent message:', response);
         })
         .catch((error) => {
+          // eslint-disable-next-line no-console
           console.log('Error sending message:', error);
         });
     }
