@@ -4,9 +4,9 @@ const searchService = require('../services/search.service');
 const router = Router();
 
 router.get('/', (req, res, next) => {
-  const { input } = req.query;
+  const { user, repo } = req.query;
   searchService
-    .find(input)
+    .find(user, repo)
     .then(data => res.send(data))
     .catch(next);
 });

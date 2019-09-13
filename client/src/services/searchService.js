@@ -1,11 +1,12 @@
 import callWebApi from '../helpers/webApiHelper';
 
-export const find = async input => {
+export const find = async (user, repo) => {
   const response = await callWebApi({
     endpoint: '/api/search',
     type: 'GET',
     query: {
-      input
+      user,
+      repo
     }
   });
   return response.json();
