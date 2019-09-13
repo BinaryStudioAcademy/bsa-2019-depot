@@ -24,12 +24,16 @@ const SearchInp = () => {
   const [isLoading, setLoading] = useState(false);
   const [timeout, changeTimeout] = useState(null);
 
-  const getIcon = (type) => {
+  const getIcon = type => {
     switch (type.toLowerCase()) {
-    case 'repo': return Repo;
-    case 'user': return Person;
-    case 'org': return Organization;
-    default: return null;
+    case 'repo':
+      return Repo;
+    case 'user':
+      return Person;
+    case 'org':
+      return Organization;
+    default:
+      return null;
     }
   };
 
