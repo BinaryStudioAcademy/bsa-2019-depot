@@ -64,9 +64,10 @@ const SearchInp = () => {
       clearTimeout(timeout);
       changeTimeout(null);
     }
+    const [user, repo] = value.split('/');
     changeTimeout(
       setTimeout(async () => {
-        const results = (await searchService.find(value)).map(({ type, username, reponame }) => ({
+        const results = (await searchService.find(user, repo)).map(({ type, username, reponame }) => ({
           content: [type, username, reponame]
         }));
         setResults(results);
