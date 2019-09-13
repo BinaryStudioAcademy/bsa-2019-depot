@@ -9,7 +9,8 @@ const colors = {
   blueLink: '#4f60ac',
   red: '#ed1a37',
   yellow: '#f1e05a',
-  greyHeader: '#363A44'
+  greyHeader: '#363A44',
+  shadowColor: 'rgba(0, 0, 0, 0.1)'
 };
 
 export default colors;
