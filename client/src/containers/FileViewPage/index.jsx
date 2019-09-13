@@ -131,7 +131,7 @@ class FileViewPage extends React.Component {
     }
 
     return loading || deleting ? (
-      <Loader active inline="centered" />
+      <Loader active />
     ) : (
       <Segment basic>
         <div className={styles.filePathRow}>

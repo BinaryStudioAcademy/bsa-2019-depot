@@ -6,6 +6,8 @@ import RepositoryItem from '../../components/RepositoryItem';
 import { getStars } from '../../services/userService';
 import { setStar } from '../../services/repositoryService';
 
+import Octicon, { getIconByName } from '@primer/octicons-react';
+import { Segment, Header, Container, Divider, Loader } from 'semantic-ui-react';
 import styles from './styles.module.scss';
 
 class StarsTab extends React.Component {
@@ -13,7 +15,8 @@ class StarsTab extends React.Component {
     super(props);
 
     this.state = {
-      repositories: []
+      repositories: [],
+      loading: true
     };
 
     this.onStar = this.onStar.bind(this);
@@ -34,7 +37,8 @@ class StarsTab extends React.Component {
 
     this.setState({
       ...this.state,
-      repositories
+      repositories,
+      loading: false
     });
   }
 
@@ -54,29 +58,48 @@ class StarsTab extends React.Component {
   }
 
   render() {
-    const { repositories } = this.state;
+    const { repositories, loading } = this.state;
 
     return (
       <>
-        <div className={styles.tabHeader}>
-          <h2>Repositories</h2>
-        </div>
+      {loading ? (
         <div>
-          {repositories.map(repo => {
-            const {
-              user: { username }
-            } = repo;
-            return (
-              <RepositoryItem
-                repo={repo}
-                key={`${repo.name}-${username}`}
-                onStar={this.onStar}
-                username={username}
-                type="stars"
-              />
-            );
-          })}
+          <Loader active />
         </div>
+      ) : repositories.length
+        ? (
+            <>
+              <div className={styles.tabHeader}>
+                <h2>Repositories</h2>
+              </div>
+              <div>
+                {repositories.map(repo => {
+                  const {
+                    user: { username }
+                  } = repo;
+                  return (
+                    <RepositoryItem
+                      repo={repo}
+                      key={`${repo.name}-${username}`}
+                      onStar={this.onStar}
+                      username={username}
+                      type="stars"
+                    />
+                  );
+                })}
+              </div>
+            </>
+        ) : (
+          <Container textAlign="center">
+            <Octicon icon={getIconByName('star')} />
+            <Divider hidden />
+            <Header as="h2">You don’t have any starred repositories yet.</Header>
+            <Segment basic>
+                Star repositories to save them for later and they’ll show up here.
+            </Segment>
+          </Container>
+        )}
+
       </>
     );
   }

@@ -111,10 +111,11 @@ class RepositoryPage extends React.Component {
       isPublic,
       loading
     } = this.props;
+
     const { isAccessGranted } = this.state;
     const { username, reponame } = match.params;
 
-    const branchExists = pathname.match(/tree\/.+/);
+    const branchExists = pathname.match(/tree\/.+/) || pathname.match(/blob\/.+/);
     let branch = '';
     if (branchExists) branch = branchExists[0].split('/')[1]; // branchExists[0] has format 'tree/nameOfBranch/...'
     branch = branch || branchesHelper.getBranchName(branches, defaultBranchId) || (branches[0] && branches[0].name);
@@ -142,6 +143,7 @@ class RepositoryPage extends React.Component {
           activePage={pathname.split('/')[3]}
           baseUrl={match.url}
           isPublic={isPublic}
+          branch={branch}
         />
         <Switch>
           <Route exact path={`${match.path}`} render={defaultRedirect} />

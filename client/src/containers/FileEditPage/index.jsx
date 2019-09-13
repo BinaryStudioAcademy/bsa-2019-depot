@@ -88,7 +88,7 @@ class FileEditPage extends React.Component {
 
   mapRedirectPath(filepath = '', commitBranch = '') {
     const { username, reponame } = this.props.match.params;
-    const replaceHandler = g1 => g1 === '/new/' ? '/tree/' : '/blob/';
+    const replaceHandler = g1 => (g1 === '/new/' ? '/tree/' : '/blob/');
     return typeof filepath === 'string'
       ? `${window.location.origin}/${username}/${reponame}/blob/${commitBranch}${filepath ? `/${filepath}` : ''}`
       : `${window.location.origin}${this.props.location.pathname.replace(/\/edit\/|\/new\/{0,1}/, replaceHandler)}`;
@@ -235,7 +235,7 @@ class FileEditPage extends React.Component {
     ];
 
     return loading ? (
-      <Loader active inline="centered" />
+      <Loader active />
     ) : (
       <Segment basic>
         <Breadcrumb size="big" className={styles.filePath}>

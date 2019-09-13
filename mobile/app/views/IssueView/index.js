@@ -37,10 +37,14 @@ class IssueView extends Component {
 
     this.socket.emit('createRoom', id);
 
-    this.socket.on('newIssueComment', data => {
+    this.socket.on('newIssueComment', async data => {
+      const issueComments = await getIssueComments(id);
       this.setState({
-        issueComments: [...this.state.issueComments, data]
+        issueComments
       });
+      /*this.setState({
+        issueComments: [...this.state.issueComments, data]
+      });*/
     });
 
     this.socket.on('changedIssueComments', async () => {

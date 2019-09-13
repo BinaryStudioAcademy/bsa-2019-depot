@@ -111,6 +111,14 @@ export const getForksList = async repositoryId => {
   return response.json();
 };
 
+export const getStargazersList = async repositoryId => {
+  const response = await callWebApi({
+    endpoint: `/api/repos/${repositoryId}/stargazers`,
+    type: 'GET'
+  });
+  return response.json();
+};
+
 export const getRepositoryPulls = async (repositoryId, query) => {
   const response = await callWebApi({
     endpoint: `/api/repos/${repositoryId}/pulls`,
