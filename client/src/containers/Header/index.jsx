@@ -46,7 +46,7 @@ const SearchInp = () => {
         onClick={() => {
           setText('');
           setResults([]);
-          window.location.href = `${window.location.origin}${endpoint}`; 
+          window.location.href = `${window.location.origin}${endpoint}`;
         }}
       >
         <p className={styles.searchItem}>
@@ -55,7 +55,7 @@ const SearchInp = () => {
         </p>
       </div>
     );
-  }; 
+  };
 
   const handleSearchChange = async (e, { value }) => {
     if (!value) {
@@ -323,6 +323,10 @@ HeaderDesktopAuth.propTypes = {
     status: PropTypes.string,
     fetchCurrentUser: PropTypes.func
   })
+};
+
+SearchInp.propTypes = {
+  content: PropTypes.array.isRequired
 };
 
 const Header = ({ isAuthorized, username, imgUrl, status, fetchCurrentUser }) => {

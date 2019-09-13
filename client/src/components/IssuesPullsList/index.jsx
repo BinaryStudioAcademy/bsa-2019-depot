@@ -168,47 +168,47 @@ class IssuesPullsList extends React.Component {
 
   onUserInputChange = async (e, { value }) => {
     switch (e.target.name) {
-      case 'author':
-        await this.setState({ authorDropdownFilter: value });
-        break;
-      case 'assignee':
-        await this.setState({ assigneeDropdownFilter: value });
-        break;
-      default:
-        return;
+    case 'author':
+      await this.setState({ authorDropdownFilter: value });
+      break;
+    case 'assignee':
+      await this.setState({ assigneeDropdownFilter: value });
+      break;
+    default:
+      return;
     }
   };
 
   onUserInputHitEnter = async e => {
     if (e.key === 'Enter') {
       switch (e.target.name) {
-        case 'author':
-          const { authorList, authorDropdownFilter } = this.state;
-          const filteredAuthorList = authorList.filter(author => author.username.includes(authorDropdownFilter));
-          if (filteredAuthorList.length > 0) {
-            await this.setState({
-              authorDropdownFilter: '',
-              filter: { ...this.state.filter, authorId: filteredAuthorList[0].id }
-            });
-            this.fetchData();
-          }
-          break;
-        case 'assignee':
-          const { assigneeList, assigneeDropdownFilter } = this.state;
-          const filteredAssigneeList = assigneeList.filter(
-            assignee => assignee && assignee.username && assignee.username.includes(assigneeDropdownFilter)
-          );
+      case 'author':
+        const { authorList, authorDropdownFilter } = this.state;
+        const filteredAuthorList = authorList.filter(author => author.username.includes(authorDropdownFilter));
+        if (filteredAuthorList.length > 0) {
+          await this.setState({
+            authorDropdownFilter: '',
+            filter: { ...this.state.filter, authorId: filteredAuthorList[0].id }
+          });
+          this.fetchData();
+        }
+        break;
+      case 'assignee':
+        const { assigneeList, assigneeDropdownFilter } = this.state;
+        const filteredAssigneeList = assigneeList.filter(
+          assignee => assignee && assignee.username && assignee.username.includes(assigneeDropdownFilter)
+        );
 
-          if (filteredAssigneeList.length > 0) {
-            await this.setState({
-              assigneeDropdownFilter: '',
-              filter: { ...this.state.filter, assigneeId: filteredAssigneeList[0].id }
-            });
-            this.fetchData();
-          }
-          break;
-        default:
-          return;
+        if (filteredAssigneeList.length > 0) {
+          await this.setState({
+            assigneeDropdownFilter: '',
+            filter: { ...this.state.filter, assigneeId: filteredAssigneeList[0].id }
+          });
+          this.fetchData();
+        }
+        break;
+      default:
+        return;
       }
     }
   };

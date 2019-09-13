@@ -83,16 +83,6 @@ class SettingsProfile extends Component {
       <div>Your name may appear around Depot where you contribute or are mentioned. You can remove it at any time.</div>
     ),
     email: <div>You cannot change your email at this time.</div>,
-    bio: (
-      <div>
-        You can @<strong>mention</strong> other users and organizations to link to them.
-      </div>
-    ),
-    company: (
-      <div>
-        You can @<strong>mention</strong> your company’s Depot organization to link it.
-      </div>
-    ),
     disclaimer: (
       <div>
         All of the fields on this page are optional and can be deleted at any time, and by filling them out, you're
@@ -204,7 +194,6 @@ class SettingsProfile extends Component {
                     <Header as="h4">Bio</Header>
                     <Field name="bio" render={this.renderTextArea} />
                     <InputError name="bio" />
-                    <div className={styles.note}>{this.NOTES.bio}</div>
 
                     <Header as="h4">URL</Header>
                     <Field type="text" name="url" render={this.renderField} />
@@ -213,7 +202,6 @@ class SettingsProfile extends Component {
                     <Header as="h4">Company</Header>
                     <Field type="text" name="company" render={this.renderField} />
                     <InputError name="company" />
-                    <div className={styles.note}>{this.NOTES.company}</div>
 
                     <Divider />
 
